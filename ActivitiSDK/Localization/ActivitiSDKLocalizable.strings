@@ -1,0 +1,56 @@
+/*******************************************************************************
+ * Copyright (C) 2005-2016 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Activiti Mobile SDK.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
+
+// Form fields
+"defaultFormOutcome"                                            = "Complete";
+"startProcessFormOutcome"                                       = "Start process";
+"formDateComponentRemoveButtonText"                             = "Remove";
+"formDateComponentPickDateLabelText"                            = "Pick a date";
+"formDateComponentDoneButtonText"                               = "Done";
+"formDropdownComponentPickOptionLabelText"                      = "Pick an option";
+"formAttachFileComponentButtonText"                             = "Select a file";
+"formAttachFilesComponentButtonText"                            = "Select some files";
+"formAttachFileNoContentText"                                   = "No content attached";
+"formAttachFileItemsAttachedText"                               = "%ld items attached";
+"formPeopleNoSelectedText"                                      = "No people selected";
+
+// Content picker component
+"formContentPickerComponentLocalContentText"                    = "Open from Device";
+"formContentPickerComponentCameraContentText"                   = "Camera";
+"formContentPickerComponentCameraNotAvailableErrorText"         = "Seems the current device doesn't have a camera. You can still pick content from the device's photo gallery";
+"formContentPickerComponentProgressPercentFormat"               = "%d%% Complete";
+"formContentPickerComponentUploadingText"                       = "Uploading...";
+"formContentPickerComponentSuccessText"                         = "Success";
+"formContentPickerComponentFailedText"                          = "Failed";
+"formContentPickerComponentLocalVersionAvailableText"           = "We found a local version of the content you're trying to download. Would you like to preview it, or get the latest version from the server?";
+"formContentPickerComponentPreviewLocalVersionText"             = "View local";
+"formContentPickerComponentGetLatestVersionText"                = "Get latest";
+
+// Alert dialogs use
+"formAlertDialogOopsTitleText"                                  = "Oops...";
+"formAlertDialogOkButtonText"                                   = "Ok";
+"formAlertDialogDeleteContentQuestionFormat"                    = "Are you sure you want to delete %@?";
+"formAlertDialogYesButtonText"                                  = "Yes";
+"formAlertDialogNoButtonText"                                   = "No";
+"formAlertDialogGenericNetworkErrorText"                        = "A network error has occured while fetching your data.\nPlease try again...";
+
+// People picker component
+"peoplePickerControllerTitleText"                               = "Add person";
+"peoplePickerControllerInstructionText"                         = "You add contributors by searching them using the search bar above.";
+"peoplePickerControllerInvolvingUserFormat"                     = "%@ is now involved";
+"peoplePickerControllerRemovingUserFormat"                      = "%@ is no longer involved";

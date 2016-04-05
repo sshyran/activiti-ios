@@ -1,0 +1,175 @@
+/*******************************************************************************
+ * Copyright (C) 2005-2016 Alfresco Software Limited.
+ *
+ * This file is part of the Alfresco Activiti Mobile iOS App.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ ******************************************************************************/
+
+
+// Login screen
+"loginScreenEmailInputTextFieldPlaceholderText"          = "username";
+"loginScreenPasswordInputTextFieldPlaceholderText"       = "password";
+"loginScreenHostnameSwitchButtonONText"                  = "ON";
+"loginScreenHostnameSwitchButtonOFFText"                 = "OFF";
+"loginScreenHostnameSwitchHTTPSText"                     = "HTTPS";
+"loginScreenHostnameInputTextFieldPlaceholderText"       = "hostname";
+"loginScreenRememberCredentialsLabelText"                = "Remember credentials";
+
+// Applications screen
+"appScreenTitleText"                                     = "Applications";
+
+// List screen
+"listScreenDueDateTodayText"                             = "Today";
+"listScreenCreatedOnFormat"                              = "Created on %@";
+"listScreenEndedOnFormat"                                = "Ended on %@";
+"listScreenNoTasksAvailableText"                         = "No matching tasks found...";
+"listScreenSortNewestFirstText"                          = "Newest";
+"listScreenSortOldestFirstText"                          = "Oldest";
+"listScreenSortDueLastText"                              = "Due last";
+"listScreenSortDueFirstText"                             = "Due first";
+"listScreenSortButtonText"                               = "sort";
+"listScreenNoTaskNameText"                               = "Nameless task";
+"listScreenFilterByText"                                 = "FILTER BY";
+"listScreenSortByText"                                   = "SORT BY";
+"listScreenClearAllButtonTitleText"                      = "CLEAR ALL";
+"listScreenTaskAppText"                                  = "Task app";
+
+// Process instance screen
+"processInstanceScreenStartedOnFormat"                   = "Started on %@";
+"processInstanceScreenNoInstancesAvailableText"          = "No matching process instances found...";
+"processInstanceStartNewInstanceTitleText"               = "Start process";
+"processInstanceStartInProgressText"                     = "Starting process...";
+
+// Start process instance screen
+"startProcessInstanceScreenNoResultsText"                = "You cannot start a process as there are no process definitions available.";
+
+// Task details screen
+"taskDetailsScreenTaskDetailsText"                       = "Task Details";
+"taskDetailsScreenCompleteTaskButtonText"                = "Complete";
+"taskDetailsScreenAssignedToText"                        = "Assigned to";
+"taskDetailsScreenDueText"                               = "Due";
+"taskDetailsScreenNoDueDateText"                         = "No due date";
+"taskDetailsScreenAddDueDateText"                        = "Add Due Date";
+"taskDetailsScreenChangeDueDateText"                     = "Change Date";
+"taskDetailsScreenDescriptionText"                       = "Description";
+"taskDetailsScreenInvolvedPeopleText"                    = "Involved people";
+"taskDetailsScreenNoInvolvedPeopleText"                  = "Assigned to nobody";
+"taskDetailsScreenAddPeopleButtonText"                   = "Add people";
+"taskDetailsScreenRelatedContentText"                    = "Related content";
+"taskDetailsScreenAddContentText"                        = "Add content";
+"taskDetailsScreenCommentFormat"                         = "%d comment";
+"taskDetailsScreenCommentsFormat"                        = "%d comments";
+"taskDetailsScreenTaskDetailsTitleText"                  = "Task details";
+"taskDetailsScreenTaskFormTitleText"                     = "Attached form";
+"taskDetailsScreenContentTitleText"                      = "Attached content";
+"taskDetailsScreenContributorsTitleText"                 = "Involved people";
+"taskDetailsScreenCommentsTitleText"                     = "Comments";
+"taskDetailsScreenPartOfProcessText"                     = "Part of process";
+"taskDetailsScreenCompletedDateText"                     = "Completed date";
+"taskDetailsScreenDurationText"                          = "Duration";
+"taskDetailsScreenClaimButtonText"                       = "Claim";
+
+// Process instance details screen
+"processInstanceDetailsScreenTitleText"                  = "Process instance details";
+"processInstanceDetailsScreenNoTitleNameText"            = "Nameless process instance";
+"processInstanceDetailsScreenStartedOnFormat"            = "Started on %@";
+"processInstanceDetailsScreenStartedByText"              = "Started by";
+"processInstanceDetailsScreenShowDiagram"                = "Show diagram";
+"processInstanceDetailsScreenTaskNameText"               = "Task name";
+"processInstanceDetailsScreenActiveTasksText"            = "Active tasks";
+"processInstanceDetailsScreenCompletedTasksText"         = "Completed tasks";
+"processInstanceDetailsScreenNoTasksAvailableText"       = "There are no available tasks for this process instance.";
+"processInstanceDetailsScreenActiveAndCompletedTasksText"= "Active and completed tasks";
+"processInstanceDetailsScreenCancelProcessButtonText"    = "Cancel process";
+"processInstanceDetailsScreenDeleteProcessButtonText"    = "Delete process";
+"processInstanceDetailsScreenCancelProcessConfirmationFormat" = "Are you sure you want to cancel process %@?";
+"processInstanceDetailsScreenDeleteProcessConfirmationFormat" = "Are you sure you want to delete process %@? All tasks, content and comments related to this process will be deleted permanently.";
+
+// Content picker component
+"contentPickerComponentLocalContentText"                 = "Open from Device";
+"contentPickerComponentCameraContentText"                = "Camera";
+"contentPickerComponentCameraNotAvailableErrorText"      = "Seems the current device doesn't have a camera. You can still pick content from the device's photo gallery";
+"contentPickerComponentProgressPercentFormat"            = "%d%% Complete";
+"contentPickerComponentDownloadProgressFormat"           = "Downloaded %@";
+"contentPickerComponentUploadingText"                    = "Uploading...";
+"contentPickerComponentDownloadingText"                  = "Downloading...";
+"contentPickerComponentLocalVersionAvailableText"        = "We found a local version of the content you're trying to download. Would you like to preview it, or get the latest version from the server?";
+"contentPickerComponentPreviewLocalVersionText"          = "View local";
+"contentPickerComponentGetLatestVersionText"             = "Get latest";
+
+// People picker component
+"peoplePickerControllerTitleText"                        = "Add person";
+"peoplePickerControllerInstructionText"                  = "You add contributors by searching them using the search bar above.";
+"peoplePickerControllerInvolvingUserFormat"              = "%@ is now involved";
+"peoplePickerControllerAssigningUserFormat"              = "%@ is now assigned";
+"peoplePickerControllerRemovingUserFormat"               = "%@ is no longer involved";
+
+// General use
+"generalUseLastUpdateTextFormat"                         = "Last update: %@";
+"generalUseNoneText"                                     = "None";
+"successText"                                            = "Success";
+
+// Alert dialogs use
+"alertDialogOopsTitleText"                               = "Oops...";
+"alertDialogGenericNetworkErrorText"                     = "A network error has occured while fetching your data.\nPlease try again...";
+"alertDialogOkButtonText"                                = "OK";
+"alertDialogYesButtonText"                               = "Yes";
+"alertDialogCancelButtonText"                            = "Cancel";
+"alertDialogLogoutDescriptionText"                       = "Are you sure you want to log out of Activiti mobile?";
+"alertDialogTaskContentFetchErrorText"                   = "We've encountered an issue while fetching the content associated with this task.\nPlease try again...";
+"alertDialogTaskContentUploadErrorText"                  = "We've encountered an issue while uploading your content.\nPlease try again...";
+"alertDialogTaskContentDownloadErrorText"                = "We've encountered an issue while downloading your content.\nPlase try again...";
+"alertDialogTaskDetailsUpdateErrorText"                  = "Seems that we've encountered an issue while trying to update the current task.\nPlease try again...";
+"alertDialogTaskContentDeleteErrorText"                  = "Seems that we've encountered an issue while trying to delete the content that you selected.\nPlease try again...";
+"alertDialogConfirmText"                                 = "Confirm";
+"alertDialogDeleteContentQuestionFormat"                 = "Are you sure you want to delete %@?";
+"alertDialogDeleteContributorQuestionFormat"             = "Are you sure you want %@ not to be involved anymore?";
+"alertDialogTaskFormCannotSetupErrorText"                = "We've encountered an issue while setting up the internals of the form screen. Please try again...";
+
+// Time formatting strings
+"timeInFutureTextFormat"                                 = "in %d %@";
+"timeInPastTextFormat"                                   = "%d %@ ago";
+"timeUnitSecond"                                         = "second";
+"timeUnitSeconds"                                        = "seconds";
+"timeUnitMinute"                                         = "minute";
+"timeUnitMinutes"                                        = "minutes";
+"timeUnitHour"                                           = "hour";
+"timeUnitHours"                                          = "hours";
+"timeUnitDayText"                                        = "day";
+"timeUnitDaysText"                                       = "days";
+"timeUnitMonthText"                                      = "month";
+"timeUnitMonthsText"                                     = "months";
+"timeUnitYearText"                                       = "year";
+"timeUnitYearsText"                                      = "years";
+
+// No content screen
+"noContentScreenFilesText"                               = "You have no available content but you can add some by using the + button.";
+"noContentScreenFilesNotEditableText"                    = "You have no available content.";
+"noContentScreenContributorsText"                        = "There aren't any involved people but you can add some by using the + button.";
+"noContentScreenContributorsNotEditableText"             = "There aren't any involved people.";
+"noContentScreenCommentsText"                            = "There aren't any comments but you can add some by using the + button.";
+"noContentScreenCommentsNotEditableText"                 = "There aren't any comments.";
+
+// Add comments screen
+"addCommentScreenTitle"                                  = "Add a comment";
+"addCommentScreenEmptyCommentErrorText"                  = "To add a comment please add some text for it first...";
+"addCommentScreenPostInProgressText"                     = "Adding comment...";
+
+// Add task screen
+"addTaskScreenTitleText"                                 = "New task";
+"addTaskScreenNameLabelText"                             = "Name";
+"addTaskScreenDescriptionLabelText"                      = "Description";
+"addTaskScreenCreateButtonText"                          = "Create";
+"addTaskScreenCreatingTaskText"                          = "Creating task...";
+
