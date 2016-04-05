@@ -14,6 +14,11 @@ The SDK can be used seperatly to create your own tailormade iOS client for the A
 
 Alfresco Activiti iOS is still in the development phase and is not yet published to the Apple iOS app store.
 
+## Contributors
+
+* Yvo Swillens (Alfresco) <yvoswillens@gmail.com>
+* Emanuel Lupu-Marinei (Ness Technologies) <emanuel.lupu@ness.com>
+
 ## What's the code License ?
 
 ```
