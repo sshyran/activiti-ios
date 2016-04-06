@@ -27,6 +27,7 @@
 #import "ASDKModelHyperlinkFormField.h"
 #import "ASDKModelRestFormField.h"
 #import "ASDKModelPeopleFormField.h"
+#import "ASDKModelFormVisibilityCondition.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -95,7 +96,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
            @"sizeY"                : @"sizeY",
            @"formFields"           : @"fields",
            @"formFieldParams"      : @"params",
-           @"formFieldOptions"     : @"options"
+           @"formFieldOptions"     : @"options",
+           @"visibilityCondition"  : @"visibilityCondition"
            }];
     }
     
@@ -239,6 +241,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         return nil;
     }];
+}
+
++ (NSValueTransformer *)visibilityConditionJSONTransformer {
+    return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelFormVisibilityCondition.class];
 }
 
 @end

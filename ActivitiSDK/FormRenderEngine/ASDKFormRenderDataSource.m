@@ -31,6 +31,9 @@
 #import "ASDKModelFormDescription.h"
 #import "ASDKModelFormOutcome.h"
 
+// Managers
+#import "ASDKFormVisibilityConditionsProcessor.h"
+
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
@@ -61,6 +64,7 @@
     
     if (self) {
         self.visibleFormFields = [self parseVisibleFormFieldsFromContainerList:formDescription.formFields];
+        self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:[self parseToArrayFormFieldsFromDictionary:self.visibleFormFields]];
         self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
         self.formOutcomesIndexPaths = [NSMutableArray array];
         
@@ -188,6 +192,18 @@
     }
     
     return formFieldSections;
+}
+
+- (NSArray *)parseToArrayFormFieldsFromDictionary:(NSDictionary *)formFieldDict {
+    NSMutableArray *formFieldArr = [NSMutableArray array];
+    
+    for (ASDKModelFormField *formField in formFieldDict.allValues) {
+        if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+            [formFieldArr addObjectsFromArray:formField.formFields];
+        }
+    }
+    
+    return formFieldArr;
 }
 
 

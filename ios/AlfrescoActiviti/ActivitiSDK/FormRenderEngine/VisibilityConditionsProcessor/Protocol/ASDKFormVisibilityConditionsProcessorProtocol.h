@@ -17,14 +17,18 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineDataSourceProtocol.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineDataSourceProtocol>
+@protocol ASDKFormVisibilityConditionsProcessorProtocol <NSObject>
 
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType    dataSourceType;
-@property (assign, nonatomic) BOOL                                  isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary                          *visibleFormFields;
-@property (assign, nonatomic) BOOL                                  formHasUserdefinedOutcomes;
-@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor *visibilityConditionsProcessor;
+/**
+ *  Designated set up method for the visibility condition processor when it is used
+ *  to determine which of the provided form fields are visible and which should 
+ *  become or be hidden depending on the input of the user.
+ *
+ *  @param formFieldArr Form fields to be parsed for visibility conditions
+ *
+ *  @return Instance of the visibility conditions processor
+ */
+- (instancetype)initWithFormFields:(NSArray *)formFieldArr;
 
 @end

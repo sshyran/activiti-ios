@@ -16,15 +16,18 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineDataSourceProtocol.h"
+#import "ASDKModelBase.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineDataSourceProtocol>
 
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType    dataSourceType;
-@property (assign, nonatomic) BOOL                                  isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary                          *visibleFormFields;
-@property (assign, nonatomic) BOOL                                  formHasUserdefinedOutcomes;
-@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor *visibilityConditionsProcessor;
+@interface ASDKModelFormVisibilityCondition : ASDKModelBase
+
+@property (strong, nonatomic) NSString *leftFormFieldID;
+@property (strong, nonatomic) NSString *leftRestResponseID;
+@property (strong, nonatomic) NSString *operationOperator;
+@property (strong, nonatomic) NSString *rightValue;
+@property (strong, nonatomic) NSString *rightFormFieldID;
+@property (strong, nonatomic) NSString *rightRestResponseID;
+@property (strong, nonatomic) NSString *nextConditionOperator;
+@property (strong, nonatomic) ASDKModelFormVisibilityCondition *nextCondition;
 
 @end

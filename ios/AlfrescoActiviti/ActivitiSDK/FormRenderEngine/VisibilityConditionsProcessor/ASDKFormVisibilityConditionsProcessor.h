@@ -17,14 +17,8 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineDataSourceProtocol.h"
+#import "ASDKFormVisibilityConditionsProcessorProtocol.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineDataSourceProtocol>
-
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType    dataSourceType;
-@property (assign, nonatomic) BOOL                                  isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary                          *visibleFormFields;
-@property (assign, nonatomic) BOOL                                  formHasUserdefinedOutcomes;
-@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor *visibilityConditionsProcessor;
+@interface ASDKFormVisibilityConditionsProcessor : NSObject <ASDKFormVisibilityConditionsProcessorProtocol>
 
 @end

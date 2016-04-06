@@ -20,7 +20,8 @@
 
 @class ASDKModelFormDescription,
 ASDKModelBase,
-ASDKModelFormField;
+ASDKModelFormField,
+ASDKFormVisibilityConditionsProcessor;
 
 typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
     ASDKFormRenderEngineDataSourceTypeTask = 0,
@@ -59,6 +60,13 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  *  end it.
  */
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
+
+/**
+ *  Property meant to hold a refference to the visibility condition processor.
+ *  It's purpose is to determine based on form field visibility conditions which
+ *  fields are to be displayed or hidden. 
+ */
+@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor *visibilityConditionsProcessor;
 
 /**
  *  Designated initializer method for the collection view controller datasource.

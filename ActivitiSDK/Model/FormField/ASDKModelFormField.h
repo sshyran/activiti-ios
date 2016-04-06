@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
     ASDKModelFormFieldRepresentationTypePeople
 };
 
-@class ASDKModelFormFieldValue;
+@class ASDKModelFormFieldValue, ASDKModelFormVisibilityCondition;
 
 @interface ASDKModelFormField : ASDKModelBase
 
@@ -64,5 +64,6 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
 @property (strong, nonatomic) NSArray                               *formFieldOptions;
 @property (strong, nonatomic) ASDKModelFormField                    *formFieldParams;
 @property (strong, nonatomic) ASDKModelFormFieldValue               *metadataValue;
+@property (strong, nonatomic) ASDKModelFormVisibilityCondition      *visibilityCondition;
 
 @end
