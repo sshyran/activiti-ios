@@ -18,12 +18,22 @@
 
 #import "ASDKModelBase.h"
 
+typedef NS_ENUM(NSInteger, ASDKModelFormVisibilityConditionOperatorType) {
+    ASDKModelFormVisibilityConditionOperatorTypeEqual,
+    ASDKModelFormVisibilityConditionOperatorTypeNotEqual,
+    ASDKModelFormVisibilityConditionOperatorTypeLessThan,
+    ASDKModelFormVisibilityConditionOperatorTypeLessOrEqualThan,
+    ASDKModelFormVisibilityConditionOperatorTypeGreaterThan,
+    ASDKModelFormVisibilityConditionOperatorTypeGreatOrEqualThan,
+    ASDKModelFormVisibilityConditionOperatorTypeEmpty,
+    ASDKModelFormVisibilityConditionOperatorTypeNotEmpty
+};
 
 @interface ASDKModelFormVisibilityCondition : ASDKModelBase
 
 @property (strong, nonatomic) NSString *leftFormFieldID;
 @property (strong, nonatomic) NSString *leftRestResponseID;
-@property (strong, nonatomic) NSString *operationOperator;
+@property (assign, nonatomic) ASDKModelFormVisibilityConditionOperatorType operationOperator;
 @property (strong, nonatomic) NSString *rightValue;
 @property (strong, nonatomic) NSString *rightFormFieldID;
 @property (strong, nonatomic) NSString *rightRestResponseID;

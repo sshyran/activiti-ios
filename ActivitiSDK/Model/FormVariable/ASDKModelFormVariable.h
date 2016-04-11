@@ -18,13 +18,16 @@
 
 #import "ASDKModelBase.h"
 
-@interface ASDKModelFormDescription : ASDKModelBase
+typedef NS_ENUM(NSInteger, ASDKModelFormVariableType) {
+    ASDKModelFormVariableTypeString,
+    ASDKModelFormVariableTypeInteger,
+    ASDKModelFormVariableTypeBoolean
+};
 
-@property (strong, nonatomic) NSString          *processDefinitionID;
-@property (strong, nonatomic) NSString          *processDefinitionName;
-@property (strong, nonatomic) NSString          *processDefinitionKey;
-@property (strong, nonatomic) NSArray           *formFields;
-@property (strong, nonatomic) NSArray           *formOutcomes;
-@property (strong, nonatomic) NSArray           *formVariables;
+@interface ASDKModelFormVariable : ASDKModelBase
+
+@property (strong, nonatomic) NSString                  *name;
+@property (assign, nonatomic) ASDKModelFormVariableType type;
+@property (strong, nonatomic) NSString                  *value;
 
 @end

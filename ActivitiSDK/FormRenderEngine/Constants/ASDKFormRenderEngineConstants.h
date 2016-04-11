@@ -57,11 +57,12 @@ extern NSString *kASDKCellIDFormFieldPeopleAddPeople;
 extern NSString *kASDKFormFieldTrueStringValue;
 extern NSString *kASDKFormFieldFalseStringValue;
 extern NSString *kASDKFormFieldIDParam;
-extern NSString *kASDKFormFieldCompositeValueParam;
+extern NSString *kASDKFormFieldLabelParameter;
 
 // Form errors
 extern NSString *kASDKFormRenderEngineErrorDomain;
 extern NSInteger kASDKFormRenderEngineSetupErrorCode;
+extern NSInteger kASDKFormVisibilityConditionProcessorErrorCode;
 
 // Notifications
 extern NSString *kASDKFormNotificationShowContentPicker;

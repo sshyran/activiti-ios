@@ -153,6 +153,8 @@
 		139050EB1CB3FF49004FEA89 /* ASDKFormVisibilityConditionsProcessorProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050EA1CB3FF49004FEA89 /* ASDKFormVisibilityConditionsProcessorProtocol.h */; };
 		139050EF1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050ED1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h */; };
 		139050F01CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050EE1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m */; };
+		139050F41CB68F8C004FEA89 /* ASDKModelFormVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */; };
+		139050F51CB68F8C004FEA89 /* ASDKModelFormVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */; };
 		139564E21C20512500BF6153 /* ASDKModelFileSourceFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E01C20512500BF6153 /* ASDKModelFileSourceFolder.h */; };
 		139564E31C20512500BF6153 /* ASDKModelFileSourceFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 139564E11C20512500BF6153 /* ASDKModelFileSourceFolder.m */; };
 		139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E51C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h */; };
@@ -648,6 +650,8 @@
 		139050EA1CB3FF49004FEA89 /* ASDKFormVisibilityConditionsProcessorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormVisibilityConditionsProcessorProtocol.h; path = ../ios/AlfrescoActiviti/ActivitiSDK/FormRenderEngine/VisibilityConditionsProcessor/Protocol/ASDKFormVisibilityConditionsProcessorProtocol.h; sourceTree = "<group>"; };
 		139050ED1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormVisibilityCondition.h; path = Model/FormVisibilityCondition/ASDKModelFormVisibilityCondition.h; sourceTree = "<group>"; };
 		139050EE1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormVisibilityCondition.m; path = Model/FormVisibilityCondition/ASDKModelFormVisibilityCondition.m; sourceTree = "<group>"; };
+		139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormVariable.h; path = Model/FormVariable/ASDKModelFormVariable.h; sourceTree = "<group>"; };
+		139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormVariable.m; path = Model/FormVariable/ASDKModelFormVariable.m; sourceTree = "<group>"; };
 		139564E01C20512500BF6153 /* ASDKModelFileSourceFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFileSourceFolder.h; path = Model/FormFieldFileSourceFolder/ASDKModelFileSourceFolder.h; sourceTree = "<group>"; };
 		139564E11C20512500BF6153 /* ASDKModelFileSourceFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFileSourceFolder.m; path = Model/FormFieldFileSourceFolder/ASDKModelFileSourceFolder.m; sourceTree = "<group>"; };
 		139564E51C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFileSourceFolderTreeElement.h; path = Model/FormFieldFileSourceFolderTreeElement/ASDKModelFileSourceFolderTreeElement.h; sourceTree = "<group>"; };
@@ -2162,6 +2166,15 @@
 			name = FormVisibilityCondition;
 			sourceTree = "<group>";
 		};
+		139050F61CB68FB3004FEA89 /* FormVariable */ = {
+			isa = PBXGroup;
+			children = (
+				139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */,
+				139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */,
+			);
+			name = FormVariable;
+			sourceTree = "<group>";
+		};
 		139564E41C20512B00BF6153 /* FormFieldFileSourceFolder */ = {
 			isa = PBXGroup;
 			children = (
@@ -3050,6 +3063,7 @@
 				139564E41C20512B00BF6153 /* FormFieldFileSourceFolder */,
 				139564E91C20571500BF6153 /* FormFieldFileSourceFolderTreeElement */,
 				139050F11CB5331D004FEA89 /* FormVisibilityCondition */,
+				139050F61CB68FB3004FEA89 /* FormVariable */,
 			);
 			name = "Form models";
 			sourceTree = "<group>";
@@ -3800,6 +3814,7 @@
 				137194831B6924DE00D4E1F0 /* ActivitiSDK.h in Headers */,
 				132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */,
 				136680031C89982D005E4AEA /* ASDKQuerryNetworkServices.h in Headers */,
+				139050F41CB68F8C004FEA89 /* ASDKModelFormVariable.h in Headers */,
 				8D6E969B1C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.h in Headers */,
 				8DB399AA1C9C319B0089E0AB /* ASDKAvatarInitialsView.h in Headers */,
 				13F35D471BDE8CF200FC3F4E /* ASDKFormCellProtocol.h in Headers */,
@@ -4273,6 +4288,7 @@
 				135701931B70DA1100A384A7 /* ASDKModelConfiguration.m in Sources */,
 				8DA719141C8F0D5200907218 /* ASDKContentFileTableViewCell.m in Sources */,
 				131375181B6F993000D2268E /* ASDKBootstrap.m in Sources */,
+				139050F51CB68F8C004FEA89 /* ASDKModelFormVariable.m in Sources */,
 				8D8F85FC1C8DD3D100356A5B /* UIViewController+ASDKAlertAddition.m in Sources */,
 				8D8F86051C8ED62000356A5B /* ASDKFormAttachFieldCollectionViewCell.m in Sources */,
 				1319EF551C157EEF003FA6C1 /* UIFont+ASDKGlyphicons.m in Sources */,

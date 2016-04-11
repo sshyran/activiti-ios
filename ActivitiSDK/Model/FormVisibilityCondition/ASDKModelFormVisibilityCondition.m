@@ -29,7 +29,7 @@
     
     if (inheretedPropertyKeys.allKeys.count) {
         [inheretedPropertyKeys addEntriesFromDictionary:
-         @{//Objc property        JSON property
+         @{//Objc property          JSON property
            @"leftFormFieldID"       : @"leftFormFieldId",
            @"leftRestResponseID"    : @"leftRestResponseId",
            @"operationOperator"     : @"operator",
@@ -52,5 +52,22 @@
     return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelFormVisibilityCondition.class];
 }
 
++ (NSValueTransformer *)rightValueJSONTransformer {
+    return [self valueTransformerForIDs];
+}
+
++ (NSValueTransformer *)operationOperatorJSONTransformer {
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:
+            @{
+              @"=="         : @(ASDKModelFormVisibilityConditionOperatorTypeEqual),
+              @"!="         : @(ASDKModelFormVisibilityConditionOperatorTypeNotEqual),
+              @"<"          : @(ASDKModelFormVisibilityConditionOperatorTypeLessThan),
+              @"<="         : @(ASDKModelFormVisibilityConditionOperatorTypeLessOrEqualThan),
+              @">"          : @(ASDKModelFormVisibilityConditionOperatorTypeGreaterThan),
+              @">="         : @(ASDKModelFormVisibilityConditionOperatorTypeGreatOrEqualThan),
+              @"empty"      : @(ASDKModelFormVisibilityConditionOperatorTypeEmpty),
+              @"not empty"  : @(ASDKModelFormVisibilityConditionOperatorTypeNotEmpty)
+              }];
+}
 
 @end

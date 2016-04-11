@@ -64,7 +64,8 @@
     
     if (self) {
         self.visibleFormFields = [self parseVisibleFormFieldsFromContainerList:formDescription.formFields];
-        self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:[self parseToArrayFormFieldsFromDictionary:self.visibleFormFields]];
+        self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:[self parseToArrayFormFieldsFromDictionary:self.visibleFormFields]
+                                                                                                 formVariables:formDescription.formVariables];
         self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
         self.formOutcomesIndexPaths = [NSMutableArray array];
         
@@ -282,9 +283,7 @@
     NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
     
     // completed forms; only attach fields have child view controller
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType
-        && (ASDKModelFormFieldRepresentationTypeAttach == formField.formFieldParams.representationType
-            || ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType)) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType && (ASDKModelFormFieldRepresentationTypeAttach == formField.formFieldParams.representationType || ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType)) {
         representationType = formField.formFieldParams.representationType;
     } else if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType) {
         representationType = formField.representationType;

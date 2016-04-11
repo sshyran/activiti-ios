@@ -19,6 +19,7 @@
 #import "ASDKModelFormDescription.h"
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormOutcome.h"
+#import "ASDKModelFormVariable.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -39,7 +40,8 @@
                                                           @"processDefinitionName"      : @"processDefinitionName",
                                                           @"processDefinitionKey"       : @"processDefinitionKey",
                                                           @"formFields"                 : @"fields",
-                                                          @"formOutcomes"               : @"outcomes"
+                                                          @"formOutcomes"               : @"outcomes",
+                                                          @"formVariables"              : @"variables"
                                                           }];
     }
     return inheretedPropertyKeys;
@@ -56,6 +58,9 @@
 + (NSValueTransformer *)formOutcomesJSONTransformer {
     return [MTLJSONAdapter arrayTransformerWithModelClass:ASDKModelFormOutcome.class];
 }
-    
+
++ (NSValueTransformer *)formVariablesJSONTransformer {
+    return [MTLJSONAdapter arrayTransformerWithModelClass:ASDKModelFormVariable.class];
+}
 
 @end

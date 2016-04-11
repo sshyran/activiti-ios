@@ -18,6 +18,14 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, ASDKFormFieldSupportedType) {
+    ASDKFormFieldSupportedTypeUndefined = -1,
+    ASDKFormFieldSupportedTypeString    = 0,
+    ASDKFormFieldSupportedTypeNumber,
+    ASDKFormFieldSupportedTypeBoolean,
+    ASDKFormFieldSupportedTypeDate,
+};
+
 @protocol ASDKFormVisibilityConditionsProcessorProtocol <NSObject>
 
 /**
@@ -25,10 +33,12 @@
  *  to determine which of the provided form fields are visible and which should 
  *  become or be hidden depending on the input of the user.
  *
- *  @param formFieldArr Form fields to be parsed for visibility conditions
+ *  @param formFieldArr  Form fields to be parsed for visibility conditions
+ *  @param formVariables Variables defined within the form description
  *
  *  @return Instance of the visibility conditions processor
  */
-- (instancetype)initWithFormFields:(NSArray *)formFieldArr;
+- (instancetype)initWithFormFields:(NSArray *)formFieldArr
+                     formVariables:(NSArray *)formVariables;
 
 @end

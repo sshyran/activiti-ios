@@ -67,13 +67,15 @@ NSString *kASDKCellIDFormFieldPeopleAddPeople                       = @"FormFiel
 NSString *kASDKFormFieldTrueStringValue                         = @"true";
 NSString *kASDKFormFieldFalseStringValue                        = @"false";
 NSString *kASDKFormFieldIDParam                                 = @"formFieldID";
-NSString *kASDKFormFieldCompositeValueParam                     = @"compositeValue";
+NSString *kASDKFormFieldLabelParameter                          = @"_LABEL";
+
 
 #pragma mark -
 #pragma mark Form errors
 
 NSString *kASDKFormRenderEngineErrorDomain                      = @"kASDKFormRenderEngineErrorDomain";
 NSInteger kASDKFormRenderEngineSetupErrorCode                   = 1;
+NSInteger kASDKFormVisibilityConditionProcessorErrorCode        = 2;
 
 
 #pragma mark - 
@@ -82,6 +84,7 @@ NSInteger kASDKFormRenderEngineSetupErrorCode                   = 1;
 NSString *kASDKFormNotificationShowContentPicker                 = @"kASDKFormNotificationShowContentPicker";
 NSString *kASDKFormNotificationFormFieldContentSuccessfullUpload = @"kASDKFormNotificationFormFieldContentSuccessfullUpload";
 NSString *kASDKFormNotificationFormFieldContentSuccessfullDeleted= @"kASDKFormNotificationFormFieldContentSuccessfullDeleted";
+
 
 #pragma mark -
 #pragma mark Animations
