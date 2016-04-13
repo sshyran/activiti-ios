@@ -1156,8 +1156,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 }
 
 - (void)popFormDetailController {
-    [self.navigationController popToViewController:self
-                                          animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end
