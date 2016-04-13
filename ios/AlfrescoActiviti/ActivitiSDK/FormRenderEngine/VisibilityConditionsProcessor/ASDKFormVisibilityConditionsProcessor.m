@@ -23,6 +23,7 @@
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormVariable.h"
 #import "ASDKModelFormFieldValue.h"
+#import "ASDKModelFormFieldOption.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -87,8 +88,21 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     for (ASDKModelFormField *formField in formFieldsWithVisibilityConditions) {
         NSMutableArray *influentialFormFieldsForCurrentFormField = [NSMutableArray array];
         
-        [self parseFormFieldIDsFromVisibilityCondition:formField.visibilityCondition
-                                               toArray:&influentialFormFieldsForCurrentFormField];
+        ASDKModelFormVisibilityCondition *visibilityCondition = formField.visibilityCondition;
+        
+        while (visibilityCondition) {
+            // If left and / or right form field ID properties aren't emtpy then
+            // add the coresponding form field in the influential array of form fields
+            if (visibilityCondition.leftFormFieldID.length) {
+                [influentialFormFieldsForCurrentFormField addObject:[self formFieldForID:visibilityCondition.leftFormFieldID]];
+            }
+            
+            if (visibilityCondition.rightFormFieldID.length) {
+                [influentialFormFieldsForCurrentFormField addObject:[self formFieldForID:visibilityCondition.rightFormFieldID]];
+            }
+            
+            visibilityCondition = visibilityCondition.nextCondition;
+        }
         
         [dependencyDict setObject:influentialFormFieldsForCurrentFormField
                            forKey:formField];
@@ -97,27 +111,27 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return dependencyDict;
 }
 
-- (void)parseFormFieldIDsFromVisibilityCondition:(ASDKModelFormVisibilityCondition *)formVisibilityCondition
-                                         toArray:(NSMutableArray **)influentialFormFields {
-    // Check if we finished iterating through the hierarchy
-    if (!formVisibilityCondition) {
-        return;
-    }
-    // If left and / or right form field ID properties aren't emtpy then
-    // add the coresponding form field in the influential array of form fields
-    if (formVisibilityCondition.leftFormFieldID.length) {
-        [*influentialFormFields addObject:[self formFieldForID:formVisibilityCondition.leftFormFieldID]];
-    }
-    
-    if (formVisibilityCondition.rightFormFieldID.length) {
-        [*influentialFormFields addObject:[self formFieldForID:formVisibilityCondition.rightFormFieldID]];
-    }
-    
-    [self parseFormFieldIDsFromVisibilityCondition:formVisibilityCondition.nextCondition
-                                           toArray:influentialFormFields];
-}
-
 - (ASDKModelFormField *)formFieldForID:(NSString *)formFieldID {
+    // The ID of a form field might contain the appended _LABEL parameter
+    // to denote the fact that in the comparison to be made, there should be
+    // used the name of an option and not the ID. We scan for the label tag
+    // tag in order to isolate the name of the form field within
+    BOOL searchForLabelParameter = YES;
+    if (kASDKFormFieldLabelParameter.length > formFieldID.length) {
+        searchForLabelParameter = NO;
+    }
+    
+    if (searchForLabelParameter) {
+        NSRange searchRange = NSMakeRange(formFieldID.length - kASDKFormFieldLabelParameter.length, kASDKFormFieldLabelParameter.length);
+        NSRange resultRange = [formFieldID rangeOfString:kASDKFormFieldLabelParameter
+                                                 options:NSLiteralSearch
+                                                   range:searchRange];
+        if (resultRange.location != NSNotFound) {
+            formFieldID = [formFieldID stringByReplacingCharactersInRange:resultRange
+                                                               withString:@""];
+        }
+    }
+    
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.instanceID == %@", formFieldID];
     NSArray *formFields = [self.formFields filteredArrayUsingPredicate:searchPredicate];
     
@@ -130,6 +144,66 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKModelFormVariable *formVariable = filteredResults.firstObject;
     
     return formVariable;
+}
+
+- (NSArray *)parseVisibilityConditionsForFormField:(ASDKModelFormField *)formField {
+    NSMutableArray *conditions = [NSMutableArray array];
+    
+    if (formField.visibilityCondition) {
+        [conditions addObject:formField.visibilityCondition];
+        ASDKModelFormVisibilityCondition *nextVisibilityCondition = formField.visibilityCondition.nextCondition;
+        
+        while (nextVisibilityCondition) {
+            [conditions addObject:nextVisibilityCondition];
+            nextVisibilityCondition = nextVisibilityCondition.nextCondition;
+            
+        }
+    }
+    
+    return conditions;
+}
+
+- (NSArray *)parseVisibleFormFields {
+    NSMutableArray *hiddenFields = [NSMutableArray array];
+    
+    // Because at init time the dependency dict is created which holds information on the affected
+    // form fields, we will use that to iterate over and evaluate conditions
+    for (ASDKModelFormField *affectedField in self.dependencyDict.allKeys) {
+        NSArray *visibilityConditions = [self parseVisibilityConditionsForFormField:affectedField];
+        
+        BOOL isFormFieldVisible = NO;
+        ASDKModelFormVisibilityConditionNextConditionOperatorType nextConditionOperator = ASDKModelFormVisibilityConditionNextConditionOperatorTypeUndefined;
+        for (ASDKModelFormVisibilityCondition *visibilityCondition in visibilityConditions) {
+            BOOL evaluationResult = [self isFormFieldVisibleForCondition:visibilityCondition];
+            
+            if (ASDKModelFormVisibilityConditionNextConditionOperatorTypeUndefined != nextConditionOperator) {
+                NSError *error = nil;
+                isFormFieldVisible = [self evaluateNextConditionBooleanComparisonBetween:isFormFieldVisible
+                                                                                     and:evaluationResult
+                                                                             forOperator:nextConditionOperator
+                                                                                   error:&error];
+                if (error) {
+                    ASDKLogError(@"Cannot evaluate correctly the next condition based on the provided operator");
+                }
+            } else {
+                isFormFieldVisible = evaluationResult;
+            }
+            
+            nextConditionOperator = visibilityCondition.nextConditionOperator;
+        }
+        
+        if (!isFormFieldVisible) {
+            [hiddenFields addObject:affectedField];
+        }
+    }
+    
+    // Make a difference between the set of all the form fields and the hidden form fields
+    // to report back the visible ones
+    NSMutableSet *allFieldsSet = [NSMutableSet setWithArray:self.formFields];
+    NSSet *hiddenFieldsSet = [NSSet setWithArray:hiddenFields];
+    [allFieldsSet minusSet:hiddenFieldsSet];
+    
+    return [allFieldsSet allObjects];
 }
 
 
@@ -265,7 +339,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (ASDKFormFieldSupportedType)supportedTypeForRightSideOfVisibilityCondition:(ASDKModelFormVisibilityCondition *)visibilityCondition {
-    ASDKFormFieldSupportedType rightSideType = ASDKFormFieldSupportedTypeDate;
+    ASDKFormFieldSupportedType rightSideType = ASDKFormFieldSupportedTypeUndefined;
     
     // For the right side there are 3 checks to be performed regarding type mapping:
     // rightValue field, rightFormFieldID and rightRestResponse ID
@@ -295,14 +369,27 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         id leftValue = nil;
         
         // For this we check two properties: leftFormFieldID and leftRestResponseID
-        if (visibilityCondition.leftFormFieldID) {
+        if (visibilityCondition.leftFormFieldID.length) {
             // Check if label refference is used
-            if ([visibilityCondition.leftFormFieldID rangeOfString:kASDKFormFieldLabelParameter].location == NSNotFound) {
-                leftValue = ((ASDKModelFormField *)[self formFieldForID:visibilityCondition.leftFormFieldID]).instanceID;
+            BOOL searchForLabelParameter = YES;
+            if (kASDKFormFieldLabelParameter.length > visibilityCondition.leftFormFieldID.length) {
+                searchForLabelParameter = NO;
+            }
+        
+            if (searchForLabelParameter) {
+                NSRange searchRange = NSMakeRange(visibilityCondition.leftFormFieldID.length - kASDKFormFieldLabelParameter.length, kASDKFormFieldLabelParameter.length);
+                NSRange resultRange = [visibilityCondition.leftFormFieldID rangeOfString:kASDKFormFieldLabelParameter
+                                                                                 options:NSLiteralSearch
+                                                                                   range:searchRange];
+                if (resultRange.location != NSNotFound) {
+                    leftValue = [self labelValueForFormField:[self formFieldForID:visibilityCondition.leftFormFieldID]];
+                } else {
+                    leftValue = [self valueForFormField:[self formFieldForID:visibilityCondition.leftFormFieldID]];
+                }
             } else {
                 leftValue = [self valueForFormField:[self formFieldForID:visibilityCondition.leftFormFieldID]];
             }
-        } else if (visibilityCondition.leftRestResponseID) {
+        } else if (visibilityCondition.leftRestResponseID.length) {
             leftValue = ((ASDKModelFormVariable *)[self formVariableForID:visibilityCondition.leftRestResponseID]).value;
         }
         
@@ -310,14 +397,27 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         id rightValue = nil;
         
         // For this we check three properties: rightFormFieldID, rightRestResponseID and rightValue
-        if (visibilityCondition.rightFormFieldID) {
+        if (visibilityCondition.rightFormFieldID.length) {
             // Check if label refference is used
-            if ([visibilityCondition.rightFormFieldID rangeOfString:kASDKFormFieldLabelParameter].location == NSNotFound) {
-                rightValue = ((ASDKModelFormField *)[self formFieldForID:visibilityCondition.rightFormFieldID]).instanceID;
+            BOOL searchForLabelParameter = YES;
+            if (kASDKFormFieldLabelParameter.length > visibilityCondition.rightFormFieldID.length) {
+                searchForLabelParameter = NO;
+            }
+            
+            if (searchForLabelParameter) {
+                NSRange searchRange = NSMakeRange(visibilityCondition.rightFormFieldID.length - kASDKFormFieldLabelParameter.length, kASDKFormFieldLabelParameter.length);
+                NSRange resultRange = [visibilityCondition.rightFormFieldID rangeOfString:kASDKFormFieldLabelParameter
+                                                                                 options:NSLiteralSearch
+                                                                                   range:searchRange];
+                if (resultRange.location != NSNotFound) {
+                    leftValue = [self labelValueForFormField:[self formFieldForID:visibilityCondition.rightFormFieldID]];
+                } else {
+                    leftValue = [self valueForFormField:[self formFieldForID:visibilityCondition.rightFormFieldID]];
+                }
             } else {
                 rightValue = [self valueForFormField:[self formFieldForID:visibilityCondition.rightFormFieldID]];
             }
-        } else if (visibilityCondition.rightRestResponseID) {
+        } else if (visibilityCondition.rightRestResponseID.length) {
             rightValue = ((ASDKModelFormVariable *)[self formVariableForID:visibilityCondition.rightRestResponseID]).value;
         } else {
             rightValue = visibilityCondition.rightValue;
@@ -579,6 +679,42 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return result;
 }
 
+- (BOOL)evaluateNextConditionBooleanComparisonBetween:(BOOL)firstConditionResult
+                                                  and:(BOOL)secondConditionResult
+                                          forOperator:(ASDKModelFormVisibilityConditionNextConditionOperatorType)operatorType
+                                                error:(NSError **)error {
+    BOOL result;
+    
+    switch (operatorType) {
+        case ASDKModelFormVisibilityConditionNextConditionOperatorTypeAnd: {
+            result = firstConditionResult && secondConditionResult;
+        }
+            break;
+            
+        case ASDKModelFormVisibilityConditionNextConditionOperatorTypeAndNot: {
+            result = firstConditionResult && !secondConditionResult;
+        }
+            break;
+            
+        case ASDKModelFormVisibilityConditionNextConditionOperatorTypeOr: {
+            result = firstConditionResult || secondConditionResult;
+        }
+            break;
+            
+        case ASDKModelFormVisibilityConditionNextConditionOperatorTypeOrNot: {
+            result = firstConditionResult || !secondConditionResult;
+        }
+            break;
+            
+        default: {
+            *error = [self unsupportedOperatorTypeError];
+        }
+            break;
+    }
+    
+    return result;
+}
+
 
 #pragma mark -
 #pragma mark Value extraction and conversions
@@ -600,6 +736,38 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             // value entries like attach fields
             valueToReturn = formField.values.firstObject;
         }
+    }
+    
+    return valueToReturn;
+}
+
+- (NSString *)labelValueForFormField:(ASDKModelFormField *)formField {
+    NSString *valueToReturn = nil;
+    
+    // Label values apply for form fields that offer an option list so
+    // that narrows the search to saved values and values chosen by
+    // the user stored inside the metadataValue field of the form field
+    NSString *optionID = nil;
+    
+    // Check first for saved form options
+    if (formField.values.count) {
+        // Double check that the saved value is actually an option registered
+        // in the form field options
+        NSString *savedValue = formField.values.firstObject;
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", savedValue];
+        optionID = [formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject;
+    }
+    
+    if (!optionID) {
+        // Otherwise extract information saved by the user
+        valueToReturn = formField.metadataValue.option.attachedValue;
+    }
+    
+    // If there was no value chosen by the user, but there are saved ones
+    // get the label name from the form field option property
+    if (!valueToReturn && optionID) {
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", optionID];
+        valueToReturn = [(ASDKModelFormFieldOption *)[formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject name];
     }
     
     return valueToReturn;

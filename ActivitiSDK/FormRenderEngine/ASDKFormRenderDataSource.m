@@ -63,9 +63,11 @@
     self = [super init];
     
     if (self) {
-        self.visibleFormFields = [self parseVisibleFormFieldsFromContainerList:formDescription.formFields];
-        self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:[self parseToArrayFormFieldsFromDictionary:self.visibleFormFields]
+        self.renderableFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields];
+        self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:[self parseToArrayFormFieldsFromDictionary:self.renderableFormFields]
                                                                                                  formVariables:formDescription.formVariables];
+        // TODO: Implement populating the visible form fields dict after removing hidden fields as a result of visibility condition evaluations
+        
         self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
         self.formOutcomesIndexPaths = [NSMutableArray array];
         
@@ -180,7 +182,7 @@
 #pragma mark -
 #pragma mark Form parser methods
 
-- (NSDictionary *)parseVisibleFormFieldsFromContainerList:(NSArray *)containerList {
+- (NSDictionary *)parseRenderableFormFieldsFromContainerList:(NSArray *)containerList {
     NSMutableDictionary *formFieldSections = [NSMutableDictionary dictionary];
     NSInteger section = -1;
     for (ASDKModelFormField *formField in containerList) {

@@ -24,6 +24,7 @@
 @property (assign, nonatomic) ASDKFormRenderEngineDataSourceType    dataSourceType;
 @property (assign, nonatomic) BOOL                                  isReadOnlyForm;
 @property (strong, nonatomic) NSDictionary                          *visibleFormFields;
+@property (strong, nonatomic) NSDictionary                          *renderableFormFields;
 @property (assign, nonatomic) BOOL                                  formHasUserdefinedOutcomes;
 @property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor *visibilityConditionsProcessor;
 

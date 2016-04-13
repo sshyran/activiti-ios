@@ -19,7 +19,8 @@
 #import "ASDKModelBase.h"
 
 typedef NS_ENUM(NSInteger, ASDKModelFormVisibilityConditionOperatorType) {
-    ASDKModelFormVisibilityConditionOperatorTypeEqual,
+    ASDKModelFormVisibilityConditionOperatorTypeUndefined = -1,
+    ASDKModelFormVisibilityConditionOperatorTypeEqual     = 0,
     ASDKModelFormVisibilityConditionOperatorTypeNotEqual,
     ASDKModelFormVisibilityConditionOperatorTypeLessThan,
     ASDKModelFormVisibilityConditionOperatorTypeLessOrEqualThan,
@@ -27,6 +28,14 @@ typedef NS_ENUM(NSInteger, ASDKModelFormVisibilityConditionOperatorType) {
     ASDKModelFormVisibilityConditionOperatorTypeGreatOrEqualThan,
     ASDKModelFormVisibilityConditionOperatorTypeEmpty,
     ASDKModelFormVisibilityConditionOperatorTypeNotEmpty
+};
+
+typedef NS_ENUM(NSInteger, ASDKModelFormVisibilityConditionNextConditionOperatorType) {
+    ASDKModelFormVisibilityConditionNextConditionOperatorTypeUndefined = -1,
+    ASDKModelFormVisibilityConditionNextConditionOperatorTypeAnd       = 0,
+    ASDKModelFormVisibilityConditionNextConditionOperatorTypeAndNot,
+    ASDKModelFormVisibilityConditionNextConditionOperatorTypeOr,
+    ASDKModelFormVisibilityConditionNextConditionOperatorTypeOrNot
 };
 
 @interface ASDKModelFormVisibilityCondition : ASDKModelBase
@@ -37,7 +46,7 @@ typedef NS_ENUM(NSInteger, ASDKModelFormVisibilityConditionOperatorType) {
 @property (strong, nonatomic) NSString *rightValue;
 @property (strong, nonatomic) NSString *rightFormFieldID;
 @property (strong, nonatomic) NSString *rightRestResponseID;
-@property (strong, nonatomic) NSString *nextConditionOperator;
+@property (assign, nonatomic) ASDKModelFormVisibilityConditionNextConditionOperatorType nextConditionOperator;
 @property (strong, nonatomic) ASDKModelFormVisibilityCondition *nextCondition;
 
 @end

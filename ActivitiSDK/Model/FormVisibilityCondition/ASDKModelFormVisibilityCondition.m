@@ -67,7 +67,18 @@
               @">="         : @(ASDKModelFormVisibilityConditionOperatorTypeGreatOrEqualThan),
               @"empty"      : @(ASDKModelFormVisibilityConditionOperatorTypeEmpty),
               @"not empty"  : @(ASDKModelFormVisibilityConditionOperatorTypeNotEmpty)
-              }];
+             }];
+}
+
++ (NSValueTransformer *)nextConditionOperatorJSONTransformer {
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:
+            @{
+              @""           : @(ASDKModelFormVisibilityConditionNextConditionOperatorTypeUndefined),
+              @"and"        : @(ASDKModelFormVisibilityConditionNextConditionOperatorTypeAnd),
+              @"and not"    : @(ASDKModelFormVisibilityConditionNextConditionOperatorTypeAndNot),
+              @"or"         : @(ASDKModelFormVisibilityConditionNextConditionOperatorTypeOr),
+              @"or not"     : @(ASDKModelFormVisibilityConditionNextConditionOperatorTypeOrNot)
+            }];
 }
 
 @end

@@ -37,10 +37,23 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  */
 @property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
 
+
+/**
+ *  Property meant to hold a refference to renderable but not necessarly visible
+ *  form fields, organized per section and stripped of container-like objects
+ *  that don't have a visual representation. This property is intended to act
+ *  as a refference point when visibility conditions affect a subset of
+ *  form fields and some get removed or inserted. We fallback to this property
+ *  when we want to find out what was removed, from where, and what's should be
+ *  inserted and where.
+ */
+@property (strong, nonatomic) NSDictionary *renderableFormFields;
+
 /**
  *  Property meant to hold a refference to visible form field objects
  *  organized per section and strip from the collection container-like
- *  objects that don't have a visual representation.
+ *  objects that don't have a visual representation, or objects that
+ *  after the visibility condition processing shouldn't be visible anymore
  *
  *  Convention: The index of the section represents the key
  */

@@ -41,4 +41,14 @@ typedef NS_ENUM(NSInteger, ASDKFormFieldSupportedType) {
 - (instancetype)initWithFormFields:(NSArray *)formFieldArr
                      formVariables:(NSArray *)formVariables;
 
+/**
+ *  Requests the form visibility conditions processor to return an array of form fields 
+ *  elements that are visible at the moment of the call. Internally this method parses
+ *  all the form fields that have visibility conditions attached and evaluates them
+ *  to provide a list of those visible
+ *
+ *  @return Collection of visible form fields
+ */
+- (NSArray *)parseVisibleFormFields;
+
 @end
