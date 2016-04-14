@@ -160,6 +160,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [formRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[indexPath.section]
                                                taskModel:formRenderEngine.task
+                                 dynamicTableFormFieldID:self.currentFormField.instanceID
                                    renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                        if (formController && !error) {
                                            // If there is controller assigned to the selected form field notify the delegate
@@ -266,7 +267,11 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
             
         case ASDKModelFormFieldRepresentationTypeDropdown:
         case ASDKModelFormFieldRepresentationTypeRadio: {
-            valueLabel.text = columnDefinitionformField.values.firstObject[@"name"];
+            if (columnDefinitionformField.metadataValue) {
+                valueLabel.text = columnDefinitionformField.metadataValue.option.attachedValue;
+            } else {
+                valueLabel.text = columnDefinitionformField.values.firstObject[@"name"];
+            }
         }
             break;
             

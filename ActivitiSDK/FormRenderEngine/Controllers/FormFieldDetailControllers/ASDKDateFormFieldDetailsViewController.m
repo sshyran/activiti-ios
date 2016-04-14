@@ -62,6 +62,29 @@
         
         NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.metadataValue.attachedValue];
         [self.datePicker setDate:storedDate];
+    } else if (self.currentFormField.values){
+        //format date in saved form (2016-02-23T23:00:Z)
+        NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
+        dateFormatter1.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter1.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z";
+        
+        //format date in saved form (2016-02-23T23:00:000Z)
+        NSDateFormatter *dateFormatter2 = [[NSDateFormatter alloc] init];
+        dateFormatter2.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter2.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+        
+        NSDate *storedDate = [dateFormatter1 dateFromString:self.currentFormField.values.firstObject];
+        
+        // try other date formatter
+        if (storedDate == nil) {
+            storedDate = [dateFormatter2 dateFromString:self.currentFormField.values.firstObject];
+        }
+        
+        NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
+        [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
+        
+        self.selectedDate.text = [displayDateFormatter stringFromDate:storedDate];
+        [self.datePicker setDate:storedDate];
     } else {
         self.selectedDate.text = @"Please select date";
     }

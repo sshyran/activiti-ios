@@ -64,7 +64,13 @@
         ASDKModelFormFieldOption *formFieldOption = [self.currentFormField.formFieldOptions filteredArrayUsingPredicate:metadataPredicate].firstObject;
         self.currentOptionSelection = [self.currentFormField.formFieldOptions indexOfObject:formFieldOption];
     } else if (self.currentFormField.values) {
-        NSPredicate *optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject];
+        // TODO: Should dynamic table fields be formatted conform regular drop down fields??
+        NSPredicate *optionPredicate = nil;
+        if ([self.currentFormField.values.firstObject isKindOfClass:NSDictionary.class]) {
+            optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject[@"name"]];
+        } else {
+            optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject];
+        }
         ASDKModelFormFieldOption *formFieldOption = [self.currentFormField.formFieldOptions filteredArrayUsingPredicate:optionPredicate].firstObject;
         self.currentOptionSelection = [self.currentFormField.formFieldOptions indexOfObject:formFieldOption];
     } else {
