@@ -81,8 +81,10 @@
 - (NSString *)taskFormServicePathFormat;
 - (NSString *)contentFieldUploadServicePath;
 - (NSString *)restFieldValuesServicePathFormat;
+- (NSString *)dynamicTableRestFieldValuesServicePathFormat;
 - (NSString *)startFormCompletionPath;
 - (NSString *)startFormRestFieldValuesServicePathFormat;
+- (NSString *)startFormDynamicTableRestFieldValuesServicePathFormat;
 
 // Process related
 - (NSString *)processDefinitionListServicePathFormat;
