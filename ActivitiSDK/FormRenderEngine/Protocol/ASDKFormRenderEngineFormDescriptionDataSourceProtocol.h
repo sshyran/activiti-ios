@@ -16,17 +16,23 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineFormDescriptionDataSourceProtocol.h"
+#import "ASDKFormRenderEngineDataSourceProtocol.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineFormDescriptionDataSourceProtocol>
+@class ASDKModelFormDescription,
+ASDKModelBase,
+ASDKModelFormField;
 
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
-@property (assign, nonatomic) BOOL          isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary  *visibleFormFields;
-@property (assign, nonatomic) BOOL          formHasUserdefinedOutcomes;
+@protocol ASDKFormRenderEngineFormDescriptionDataSourceProtocol <ASDKFormRenderEngineDataSourceProtocol>
 
-- (NSString *)validCellIdentifierForFormField:(ASDKModelFormField *)formField;
-
+/**
+ *  Designated initializer method for the collection view controller datasource.
+ *
+ *  @param formDescription Description containing the form field objects to be
+ *                         displayed
+ *
+ *  @return                Instance of the data source object
+ */
+- (instancetype)initWithFormDescription:(ASDKModelFormDescription *)formDescription
+                         dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType;
 
 @end

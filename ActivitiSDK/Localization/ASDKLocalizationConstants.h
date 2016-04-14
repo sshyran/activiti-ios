@@ -35,6 +35,7 @@ extern NSString *kLocalizationFormAttachFilesComponentButtonText;
 extern NSString *kLocalizationFormAttachFileNoContentText;
 extern NSString *kLocalizationFormAttachFileItemsAttachedText;
 extern NSString *kLocalizationFormPeopleNoSelectedText;
+extern NSString *kLocalizationFormDynamicTableRowsAvailableText;
 
 // Content picker component
 extern NSString *kLocalizationFormContentPickerComponentLocalContentText;

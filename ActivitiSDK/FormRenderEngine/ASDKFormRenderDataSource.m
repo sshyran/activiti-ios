@@ -98,6 +98,8 @@
     // Check if the controller requested the number of fields for the outcome section
     if (!sectionFormField) {
         fieldsCount = self.formOutcomes.count;
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+        fieldsCount = 1;
     } else {
         fieldsCount = sectionFormField.formFields.count;
     }
@@ -112,6 +114,8 @@
     // Check if the controller requested a cell identifier for the outcome section
     if (!sectionFormField) {
         cellIdentifier = kASDKCellIDFormFieldOutcomeRepresentation;
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+        cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
     } else {
         ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
         cellIdentifier = [self validCellIdentifierForFormField:formFieldAtIndexPath];
@@ -122,6 +126,7 @@
 
 - (ASDKModelBase *)modelForIndexPath:(NSIndexPath *)indexPath {
     ASDKModelFormField *sectionFormField = self.visibleFormFields[@(indexPath.section)];
+    ASDKModelBase *formFieldModel = nil;
     
     if (!sectionFormField) {
         ASDKModelFormOutcome *formOutcome = self.formOutcomes[indexPath.row];
@@ -130,11 +135,14 @@
             [self.formOutcomesIndexPaths addObject:indexPath];
         }
         
-        return formOutcome;
+        formFieldModel = formOutcome;
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+        formFieldModel = sectionFormField;
     } else {// Set up the cell from the corresponding section
-        ASDKModelFormField *formFieldAtIndexPath = [(ASDKModelFormField *)self.visibleFormFields[@(indexPath.section)] formFields][indexPath.row];
-        return formFieldAtIndexPath;
+        formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[@(indexPath.section)] formFields][indexPath.row];
     }
+    
+    return formFieldModel;
 }
 
 - (NSString *)sectionHeaderTitleForIndexPath:(NSIndexPath *)indexPath {
@@ -182,6 +190,10 @@
         if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
             section++;
             formField.formFields = [self filterSupportedFormFields:formField.formFields];
+            [formFieldSections setObject:formField
+                                  forKey:@(section)];
+        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+            section++;
             [formFieldSections setObject:formField
                                   forKey:@(section)];
         }
@@ -254,6 +266,12 @@
         }
             break;
             
+        case ASDKModelFormFieldRepresentationTypeDynamicTable: {
+            cellIdentifier = kASDKCellIDFormFieldDynamicTableRepresentation;
+        }
+            break;
+            
+            
         default:
             break;
     }
@@ -298,6 +316,11 @@
             
         case ASDKModelFormFieldRepresentationTypePeople: {
             controllerIdentifierString = kASDKStoryboardIDPeopleFormFieldDetailController;
+        }
+            break;
+            
+        case ASDKModelFormFieldRepresentationTypeDynamicTable: {
+            controllerIdentifierString = kASDKStoryboardIDDynamicTableFormFieldDetailController;
         }
             break;
             

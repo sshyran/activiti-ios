@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKFormDateFieldCollectionViewCell.h"
+#import "ASDKFormDynamicTableFieldCollectionViewCell.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
@@ -27,17 +27,16 @@
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
+#import "ASDKLocalizationConstants.h"
 
-@interface ASDKFormDateFieldCollectionViewCell ()
+@interface ASDKFormDynamicTableFieldCollectionViewCell ()
 
 @property (strong, nonatomic) ASDKModelFormField    *formField;
 @property (assign, nonatomic) BOOL                  isRequired;
 
-- (NSString *)formatLabelTextWithFormFieldValues:(NSArray *)formfieldValues;
-
 @end
 
-@implementation ASDKFormDateFieldCollectionViewCell
+@implementation ASDKFormDynamicTableFieldCollectionViewCell
 
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
     // Adjust the cell sizing parameters by constraining with a high priority on the horizontal axis
@@ -64,51 +63,26 @@
     self.formField = formField;
     self.descriptionLabel.text = formField.fieldName;
     
+    // If dealing with a read-only representation then disable the text field and copy the
+    // user-filled value
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        self.selectedDateLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
-        self.selectedDateLabel.textColor = [UIColor formViewCompletedValueColor];
-        self.disclosureIndicatorLabel.hidden = YES;
-        self.trailingToDisclosureConstraint.priority = UILayoutPriorityFittingSizeLevel;
+        self.dynamicTableLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
+        self.dynamicTableLabel.textColor = [UIColor formViewCompletedValueColor];
     } else {
         self.isRequired = formField.isRequired;
-
         // If a previously selected option is available display it
-        if (formField.metadataValue) {
-            self.selectedDateLabel.text = formField.metadataValue.attachedValue;
-        } else  {
-            self.selectedDateLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
-        }
+        self.dynamicTableLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
         self.disclosureIndicatorLabel.hidden = NO;
         
-        [self validateCellStateForText:self.selectedDateLabel.text];
+        [self validateCellStateForFormfieldValues:formField.values];
     }
 }
 
 - (NSString *)formatLabelTextWithFormFieldValues:(NSArray *)formfieldValues {
     NSString *labelText = nil;
     
-    if (formfieldValues) {
-        //format date in saved form (2016-02-23T23:00:Z)
-        NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc] init];
-        dateFormatter1.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        dateFormatter1.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z";
-        
-        //format date in saved form (2016-02-23T23:00:000Z)
-        NSDateFormatter *dateFormatter2 = [[NSDateFormatter alloc] init];
-        dateFormatter2.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        dateFormatter2.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
-        
-        NSDate *storedDate = [dateFormatter1 dateFromString:formfieldValues.firstObject];
-        
-        // try other date formatter
-        if (storedDate == nil) {
-            storedDate = [dateFormatter2 dateFromString:formfieldValues.firstObject];
-        }
-        
-        NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
-        [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
-        
-        labelText = [displayDateFormatter stringFromDate:storedDate];
+    if (formfieldValues.count) {
+        labelText = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowsAvailableText, ASDKLocalizationTable, @"Number of rows"), formfieldValues.count];
     } else {
         labelText = @"";
     }
@@ -122,7 +96,7 @@
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
     self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
-    self.selectedDateLabel.text = nil;
+    self.dynamicTableLabel.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
@@ -133,14 +107,10 @@
     self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
 }
 
-- (void)cleanInvalidCellValue {
-    self.selectedDateLabel.text = nil;
-}
-
-- (void)validateCellStateForText:(NSString *)text {
+- (void)validateCellStateForFormfieldValues:(NSArray *)formfieldValues {
     // Check input in relation to the requirement of the field
     if (self.isRequired) {
-        if (!text.length) {
+        if (!formfieldValues.count) {
             [self markCellValueAsInvalid];
         } else {
             [self markCellValueAsValid];

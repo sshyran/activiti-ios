@@ -107,7 +107,12 @@
         
         descriptionLabelText = @"";
     } else if (restFormField.values) {
-       descriptionLabelText = restFormField.values.firstObject;
+        // TODO: Should dynamic table fields be formatted conform regular drop down fields??
+        if ([restFormField.values.firstObject isKindOfClass:NSDictionary.class]) {
+            descriptionLabelText = restFormField.values.firstObject[@"name"];
+        } else {
+            descriptionLabelText = restFormField.values.firstObject;
+        }
     } else {
         descriptionLabelText = @"";
     }

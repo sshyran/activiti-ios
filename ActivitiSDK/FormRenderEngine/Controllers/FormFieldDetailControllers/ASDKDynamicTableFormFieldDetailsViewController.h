@@ -16,17 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineFormDescriptionDataSourceProtocol.h"
+#import <UIKit/UIKit.h>
+#import "ASDKFormFieldDetailsControllerProtocol.h"
+#import "ASDKFormControllerNavigationProtocol.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineFormDescriptionDataSourceProtocol>
+@interface ASDKDynamicTableFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol, ASDKFormControllerNavigationProtocol>
 
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
-@property (assign, nonatomic) BOOL          isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary  *visibleFormFields;
-@property (assign, nonatomic) BOOL          formHasUserdefinedOutcomes;
-
-- (NSString *)validCellIdentifierForFormField:(ASDKModelFormField *)formField;
-
+@property (weak, nonatomic)   id<ASDKFormControllerNavigationProtocol> navigationDelegate;
 
 @end

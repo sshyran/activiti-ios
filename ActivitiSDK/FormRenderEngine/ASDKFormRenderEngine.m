@@ -33,6 +33,7 @@
 
 // Managers
 #import "ASDKFormRenderDataSource.h"
+#import "ASDKDynamicTableRenderDataSource.h"
 
 #import "ASDKFormPreProcessor.h"
 
@@ -48,10 +49,10 @@
 @property (strong, nonatomic) ASDKFormRenderDataSource                  *dataSource;
 
 /**
- *  Property meant to hold a refference to the task model object used to
- *  populate the form.
+ *  Property meant to hold a refference to the form data source
  */
-@property (strong, nonatomic) ASDKModelTask                             *task;
+//@property (strong, nonatomic) ASDKDynamicTableRenderDataSource          *dynamicTableDataSource;
+
 
 /**
  *  Property meant to hold a refference to the process definition object
@@ -82,6 +83,17 @@
 - (UICollectionViewController *)setupWithFormDescription:(ASDKModelFormDescription *)formDescription {
     _currenFormDescription = formDescription;
     
+    // Load from nib the form collection view controller and link it's data source
+    UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
+                                                             bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
+    ASDKFormCollectionViewController *formCollectionViewController = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
+    formCollectionViewController.dataSource = self.dataSource;
+    formCollectionViewController.renderDelegate = self;
+    
+    return formCollectionViewController;
+}
+
+- (UICollectionViewController *)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields {
     // Load from nib the form collection view controller and link it's data source
     UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
                                                              bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
@@ -164,7 +176,6 @@
     self.processDefinition = processDefinition;
     self.startFormCompletionBlock = formCompletionBlock;
     
-    
     [self.formNetworkServices
      startFormForProcessDefinitionID:processDefinition.instanceID
      completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
@@ -208,6 +219,77 @@
               });
           }];
      }];
+}
+
+- (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
+                                 taskModel:(ASDKModelTask *)task
+     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
+       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock {
+    // Check mandatory parameteres
+    NSParameterAssert(dynamicTableRowFormFields);
+//    NSParameterAssert(task);
+    NSParameterAssert(renderCompletionBlock);
+    NSParameterAssert(formCompletionBlock);
+    
+    self.task = task;
+    self.formCompletionBlock = formCompletionBlock;
+
+    // Set up the data source for the form collection view controller
+    self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields
+                                                                                dataSourceType:ASDKFormRenderEngineDataSourceTypeTask];
+    self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
+
+    self.formPreProcessor = [ASDKFormPreProcessor new];
+    self.formPreProcessor.formNetworkServices = self.formNetworkServices;
+    
+    UICollectionViewController *formCollectionViewController = [self setupWithDynamicTableRowFormFields:dynamicTableRowFormFields];
+    
+    // First check for integrity errors
+    if (!formCollectionViewController) {
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Setup operation for form controller failed.",
+                                   NSLocalizedFailureReasonErrorKey     : @"The operation could not be completed because the form render engine could not generate the form view.",
+                                   NSLocalizedRecoverySuggestionErrorKey: @"Please check your form description model and make sure it has all the information needed to render."
+                                   };
+        NSError *error = [NSError errorWithDomain:kASDKFormRenderEngineErrorDomain
+                                             code:kASDKFormRenderEngineSetupErrorCode
+                                         userInfo:userInfo];
+        
+        renderCompletionBlock(nil, error);
+    } else {
+        renderCompletionBlock(formCollectionViewController, nil);
+    }
+
+//    [self.formPreProcessor setupWithTaskID:task.instanceID
+//                  withFormDescriptionModel:formDescription
+//                 preProcessCompletionBlock:^(ASDKModelFormDescription *processedFormDescription, NSError *error) {
+//      
+//        if (error) {
+//          renderCompletionBlock(nil, error);
+//          return;
+//        }
+//
+//        // Always dispath on the main queue results related to the form view
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//          
+//            UICollectionViewController *formCollectionViewController = [self setupWithFormDescription:processedFormDescription];
+//
+//            // First check for integrity errors
+//            if (!formCollectionViewController) {
+//                NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Setup operation for form controller failed.",
+//                                           NSLocalizedFailureReasonErrorKey     : @"The operation could not be completed because the form render engine could not generate the form view.",
+//                                           NSLocalizedRecoverySuggestionErrorKey: @"Please check your form description model and make sure it has all the information needed to render."
+//                                         };
+//                NSError *error = [NSError errorWithDomain:kASDKFormRenderEngineErrorDomain
+//                                                     code:kASDKFormRenderEngineSetupErrorCode
+//                                                 userInfo:userInfo];
+//
+//                renderCompletionBlock(nil, error);
+//            } else {
+//                renderCompletionBlock(formCollectionViewController, nil);
+//            }
+//        });
+//    }];
+
 }
 
 - (void)completeFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {

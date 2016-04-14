@@ -88,7 +88,7 @@
         if (self.currentFormField.metadataValue) {
             self.amountTextfield.text = formField.metadataValue.attachedValue;
         } else if (formField.values) {
-            self.amountTextfield.text = formField.values.firstObject;
+            self.amountTextfield.text = [NSString stringWithFormat:@"%@", formField.values.firstObject];
         }
 
         [self validateCellStateForText:self.amountTextfield.text];

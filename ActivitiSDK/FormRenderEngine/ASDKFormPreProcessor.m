@@ -22,6 +22,7 @@
 #import "ASDKModelRestFormField.h"
 #import "ASDKModelAmountFormField.h"
 #import "ASDKModelHyperlinkFormField.h"
+#import "ASDKModelDynamicTableFormField.h"
 
 @interface ASDKFormPreProcessor ()
 
@@ -56,6 +57,10 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
             NSArray *containerFormFields = formField.formFields;
             [self preProcessFormFields:containerFormFields
                      withDispatchGroup:group];
+        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+            NSArray *formFieldArray = [NSArray arrayWithObject:formField];
+            [self preProcessFormFields:formFieldArray
+                     withDispatchGroup:group];
         }
     }
     
@@ -88,6 +93,10 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
             NSArray *containerFormFields = formField.formFields;
             [self preProcessFormFields:containerFormFields
                      withDispatchGroup:group];
+        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+            NSArray *formFieldArray = [NSArray arrayWithObject:formField];
+            [self preProcessFormFields:formFieldArray
+                     withDispatchGroup:group];
         }
     }
     
@@ -97,6 +106,42 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
     });
     
 }
+
+//- (void)setupWithTaskID:(NSString *)taskID
+//withFormFields:(NSArray *)formFields
+//preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock {
+//    
+//    NSParameterAssert(taskID);
+//    NSParameterAssert(formFields);
+//    NSParameterAssert(preProcessCompletionBlock);
+//    
+//    self.isStartForm = NO;
+//    self.taskID = taskID;
+//    self.formDescription = formDescription;
+//    
+//    // create dispatch group
+//    // all async calls for augmenting the form description need to be completed before
+//    // the completion block is returned
+//    dispatch_group_t group = dispatch_group_create();
+//    
+//    for (ASDKModelFormField *formField in formDescription.formFields) {
+//        if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+//            NSArray *containerFormFields = formField.formFields;
+//            [self preProcessFormFields:containerFormFields
+//                     withDispatchGroup:group];
+//        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+//            NSArray *formFieldArray = [NSArray arrayWithObject:formField];
+//            [self preProcessFormFields:formFieldArray
+//                     withDispatchGroup:group];
+//        }
+//    }
+//    
+//    // dispatch group finished
+//    dispatch_group_notify(group,dispatch_get_main_queue(),^{
+//        preProcessCompletionBlock(formDescription, nil);
+//    });
+//    
+//}
 
 - (void)preProcessFormFields:(NSArray *)formFieldsArr
            withDispatchGroup:(dispatch_group_t) group {
@@ -171,10 +216,39 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                 }
                 break;
                 
+            case ASDKModelFormFieldRepresentationTypeDynamicTable:
+                // populate column definition form fields with values
+                if (formField.values) {
+                    NSMutableArray *newFormFieldValues = [[NSMutableArray alloc] init];
+                    ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) formField;
+                    
+                    // create column definition dictionary for quick access
+                    NSMutableDictionary *columnFormFieldDict = [[NSMutableDictionary alloc] init];
+                    for (ASDKModelFormField *columnFormField in dynamicTableFormField.columnDefinitions) {
+                        [columnFormFieldDict setValue:columnFormField forKey:columnFormField.instanceID];
+                    }
+                    
+                    for (NSDictionary *rowValues in dynamicTableFormField.values) {
+                        NSMutableArray *newRowFormFieldValues = [[NSMutableArray alloc] init];
+
+                        for (NSString *columnId in rowValues) {
+                            NSArray *columnDefinitionValues = [NSArray arrayWithObject:rowValues[columnId]];
+                            ASDKModelFormField *columnDefinitionWithValue = [[columnFormFieldDict valueForKey:columnId] copy];
+                            columnDefinitionWithValue.values = columnDefinitionValues;
+                            
+                            [newRowFormFieldValues addObject:columnDefinitionWithValue];
+                        }
+                        
+                        [newFormFieldValues addObject:newRowFormFieldValues];
+                    }
+                    
+                    formField.values = [NSArray arrayWithArray:newFormFieldValues];
+                }
+                break;
+                
             default:
                 break;
         }
-        
     }
 }
 

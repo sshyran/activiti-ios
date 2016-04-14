@@ -17,16 +17,9 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineFormDescriptionDataSourceProtocol.h"
+#import "ASDKFormRenderDataSource.h"
+#import "ASDKFormRenderEngineFormFieldsDataSourceProtocol.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineFormDescriptionDataSourceProtocol>
-
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
-@property (assign, nonatomic) BOOL          isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary  *visibleFormFields;
-@property (assign, nonatomic) BOOL          formHasUserdefinedOutcomes;
-
-- (NSString *)validCellIdentifierForFormField:(ASDKModelFormField *)formField;
-
+@interface ASDKDynamicTableRenderDataSource : ASDKFormRenderDataSource <ASDKFormRenderEngineFormFieldsDataSourceProtocol>
 
 @end

@@ -65,8 +65,6 @@
     } else {
         self.selectedDate.text = @"Please select date";
     }
-
-
 }
 
 - (void)didReceiveMemoryWarning {

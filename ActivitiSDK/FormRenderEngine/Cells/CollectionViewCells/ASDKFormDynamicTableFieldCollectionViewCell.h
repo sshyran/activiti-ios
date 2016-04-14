@@ -16,17 +16,13 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineFormDescriptionDataSourceProtocol.h"
+#import <UIKit/UIKit.h>
+#import "ASDKFormCellProtocol.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineFormDescriptionDataSourceProtocol>
+@interface ASDKFormDynamicTableFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
 
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
-@property (assign, nonatomic) BOOL          isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary  *visibleFormFields;
-@property (assign, nonatomic) BOOL          formHasUserdefinedOutcomes;
-
-- (NSString *)validCellIdentifierForFormField:(ASDKModelFormField *)formField;
-
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dynamicTableLabel;
+@property (weak, nonatomic) IBOutlet UILabel *disclosureIndicatorLabel;
 
 @end

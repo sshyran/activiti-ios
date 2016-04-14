@@ -61,17 +61,6 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
 
 /**
- *  Designated initializer method for the collection view controller datasource.
- *
- *  @param formDescription Description containing the form field objects to be
- *                         displayed
- *
- *  @return                Instance of the data source object
- */
-- (instancetype)initWithFormDescription:(ASDKModelFormDescription *)formDescription
-                         dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType;
-
-/**
  *  Returns the number of sections available for the current form description.
  *
  *  @return Integer value with number of sections
