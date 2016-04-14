@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "ASDKFormPreProcessor.h"
+
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelRestFormField.h"
@@ -28,126 +29,90 @@
 
 @property (strong, nonatomic) NSString                              *taskID;
 @property (strong, nonatomic) NSString                              *processDefinitionID;
-@property (strong, nonatomic) ASDKModelFormDescription              *formDescription;
 @property (assign, nonatomic) BOOL                                  isStartForm;
+@property (strong, nonatomic) NSString                              *dynamicTableFieldID;
 
 @end
 
 @implementation ASDKFormPreProcessor
 
 - (void)setupWithTaskID:(NSString *)taskID
-withFormDescriptionModel:(ASDKModelFormDescription *)formDescription
+         withFormFields:(NSArray *)formFields
+withDynamicTableFieldID:(NSString *)dynamicTableFieldID
 preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock {
     
     NSParameterAssert(taskID);
-    NSParameterAssert(formDescription);
+    NSParameterAssert(formFields);
     NSParameterAssert(preProcessCompletionBlock);
     
     self.isStartForm = NO;
     self.taskID = taskID;
-    self.formDescription = formDescription;
+    self.dynamicTableFieldID = dynamicTableFieldID;
     
     // create dispatch group
     // all async calls for augmenting the form description need to be completed before
     // the completion block is returned
     dispatch_group_t group = dispatch_group_create();
 
-    for (ASDKModelFormField *formField in formDescription.formFields) {
+    for (ASDKModelFormField *formField in formFields) {
         if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
-            NSArray *containerFormFields = formField.formFields;
-            [self preProcessFormFields:containerFormFields
-                     withDispatchGroup:group];
-        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
-            NSArray *formFieldArray = [NSArray arrayWithObject:formField];
-            [self preProcessFormFields:formFieldArray
-                     withDispatchGroup:group];
+            for (ASDKModelFormField *formFieldInContainer in formField.formFields) {
+                [self preProcessFormField:formFieldInContainer
+                        withDispatchGroup:group];
+            }
+        } else{
+            [self preProcessFormField:formField
+                    withDispatchGroup:group];
         }
     }
     
     // dispatch group finished
     dispatch_group_notify(group,dispatch_get_main_queue(),^{
-        preProcessCompletionBlock(formDescription, nil);
+        preProcessCompletionBlock(formFields, nil);
     });
 
 }
 
 - (void)setupWithProcessDefinitionID:(NSString *)processDefinitionID
-            withFormDescriptionModel:(ASDKModelFormDescription *)formDescription
+                      withFormFields:(NSArray *)formFields
+         withDynamicTableFieldID:(NSString *)dynamicTableFieldID
            preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock {
     
     NSParameterAssert(processDefinitionID);
-    NSParameterAssert(formDescription);
+    NSParameterAssert(formFields);
     NSParameterAssert(preProcessCompletionBlock);
     
     self.isStartForm = YES;
     self.processDefinitionID = processDefinitionID;
-    self.formDescription = formDescription;
+    self.dynamicTableFieldID = dynamicTableFieldID;
     
     // create dispatch group
     // all async calls for augmenting the form description need to be completed before
     // the completion block is returned
     dispatch_group_t group = dispatch_group_create();
     
-    for (ASDKModelFormField *formField in formDescription.formFields) {
+    for (ASDKModelFormField *formField in formFields) {
         if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
-            NSArray *containerFormFields = formField.formFields;
-            [self preProcessFormFields:containerFormFields
-                     withDispatchGroup:group];
-        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
-            NSArray *formFieldArray = [NSArray arrayWithObject:formField];
-            [self preProcessFormFields:formFieldArray
-                     withDispatchGroup:group];
+            for (ASDKModelFormField *formFieldInContainer in formField.formFields) {
+                [self preProcessFormField:formFieldInContainer
+                        withDispatchGroup:group];
+            }
+        } else{
+            [self preProcessFormField:formField
+                    withDispatchGroup:group];
         }
     }
     
     // dispatch group finished
     dispatch_group_notify(group,dispatch_get_main_queue(),^{
-        preProcessCompletionBlock(formDescription, nil);
+        preProcessCompletionBlock(formFields, nil);
     });
     
 }
 
-//- (void)setupWithTaskID:(NSString *)taskID
-//withFormFields:(NSArray *)formFields
-//preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock {
-//    
-//    NSParameterAssert(taskID);
-//    NSParameterAssert(formFields);
-//    NSParameterAssert(preProcessCompletionBlock);
-//    
-//    self.isStartForm = NO;
-//    self.taskID = taskID;
-//    self.formDescription = formDescription;
-//    
-//    // create dispatch group
-//    // all async calls for augmenting the form description need to be completed before
-//    // the completion block is returned
-//    dispatch_group_t group = dispatch_group_create();
-//    
-//    for (ASDKModelFormField *formField in formDescription.formFields) {
-//        if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
-//            NSArray *containerFormFields = formField.formFields;
-//            [self preProcessFormFields:containerFormFields
-//                     withDispatchGroup:group];
-//        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
-//            NSArray *formFieldArray = [NSArray arrayWithObject:formField];
-//            [self preProcessFormFields:formFieldArray
-//                     withDispatchGroup:group];
-//        }
-//    }
-//    
-//    // dispatch group finished
-//    dispatch_group_notify(group,dispatch_get_main_queue(),^{
-//        preProcessCompletionBlock(formDescription, nil);
-//    });
-//    
-//}
-
-- (void)preProcessFormFields:(NSArray *)formFieldsArr
+- (void)preProcessFormField:(ASDKModelFormField *)formField
            withDispatchGroup:(dispatch_group_t) group {
     
-    for (ASDKModelFormField *formField in formFieldsArr) {
-        
         NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
         
         // If dealing with read-only forms extract the representation type from the attached
@@ -171,26 +136,50 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                     
                     if (self.isStartForm) {
                         
-                        [self.formNetworkServices fetchRestFieldValuesForStartFormWithProcessDefinitionID:self.processDefinitionID
-                                                                                              withFieldID:formField.instanceID
-                                                                                          completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
-                                                                                              
-                                                                                              formField.formFieldOptions = restFormFieldOptions;
-                                                                                              
-                                                                                              // leaving dispatch group
-                                                                                              dispatch_group_leave(group);
-                                                                                          }];
+                        if (self.dynamicTableFieldID) {
+                            [self.formNetworkServices fetchRestFieldValuesForStartFormWithProcessDefinitionID:self.processDefinitionID
+                                                                                                  withFieldID:self.dynamicTableFieldID
+                                                                                                 withColumnID:formField.instanceID                                                                                              completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
+                                                                                                  
+                                                                                                  formField.formFieldOptions = restFormFieldOptions;
+                                                                                                  
+                                                                                                  // leaving dispatch group
+                                                                                                  dispatch_group_leave(group);
+                                                                                              }];
+                        } else {
+                            [self.formNetworkServices fetchRestFieldValuesForStartFormWithProcessDefinitionID:self.processDefinitionID
+                                                                                                  withFieldID:formField.instanceID
+                                                                                              completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
+                                                                                                  
+                                                                                                  formField.formFieldOptions = restFormFieldOptions;
+                                                                                                  
+                                                                                                  // leaving dispatch group
+                                                                                                  dispatch_group_leave(group);
+                                                                                              }];
+                        }
                     } else {
-                        
-                        [self.formNetworkServices fetchRestFieldValuesForTaskWithID:self.taskID
-                                                                        withFieldID:formField.instanceID
-                                                                    completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
-                                                                        
-                                                                        formField.formFieldOptions = restFormFieldOptions;
-                                                                        
-                                                                        // leaving dispatch group
-                                                                        dispatch_group_leave(group);
-                                                                    }];
+                        if (self.dynamicTableFieldID) {
+                            [self.formNetworkServices fetchRestFieldValuesForTaskWithID:self.taskID
+                                                                            withFieldID:self.dynamicTableFieldID
+                                                                           withColumnID:formField.instanceID
+                                                                        completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
+                                                                            
+                                                                            formField.formFieldOptions = restFormFieldOptions;
+                                                                            
+                                                                            // leaving dispatch group
+                                                                            dispatch_group_leave(group);
+                                                                        }];
+                        } else {
+                            [self.formNetworkServices fetchRestFieldValuesForTaskWithID:self.taskID
+                                                                            withFieldID:formField.instanceID
+                                                                        completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
+                                                                            
+                                                                            formField.formFieldOptions = restFormFieldOptions;
+                                                                            
+                                                                            // leaving dispatch group
+                                                                            dispatch_group_leave(group);
+                                                                        }];
+                        }
                     }
                 }
             }
@@ -249,7 +238,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
             default:
                 break;
         }
-    }
+    
 }
 
 @end

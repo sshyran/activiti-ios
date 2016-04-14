@@ -116,6 +116,7 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 
 - (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
                                  taskModel:(ASDKModelTask *)task
+                   dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
                      renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
                        formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock;
 /**
