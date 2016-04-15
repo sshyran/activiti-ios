@@ -210,7 +210,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                 if (formField.values) {
                     NSMutableArray *newFormFieldValues = [[NSMutableArray alloc] init];
                     ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) formField;
-                    
+
                     // create column definition dictionary for quick access
                     NSMutableDictionary *columnFormFieldDict = [[NSMutableDictionary alloc] init];
                     for (ASDKModelFormField *columnFormField in dynamicTableFormField.columnDefinitions) {
@@ -218,14 +218,22 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                     }
                     
                     for (NSDictionary *rowValues in dynamicTableFormField.values) {
-                        NSMutableArray *newRowFormFieldValues = [[NSMutableArray alloc] init];
-
+                        // initialize array with empty objects
+                        // needed for placing objects at specified index later
+                        NSMutableArray *newRowFormFieldValues = [[NSMutableArray alloc] initWithCapacity:dynamicTableFormField.columnDefinitions.count];
+                        for (NSInteger i = 0; i < dynamicTableFormField.columnDefinitions.count; i++) {
+                            [newRowFormFieldValues addObject:[NSNull null]];
+                        }
+                        
                         for (NSString *columnId in rowValues) {
                             NSArray *columnDefinitionValues = [NSArray arrayWithObject:rowValues[columnId]];
                             ASDKModelFormField *columnDefinitionWithValue = [[columnFormFieldDict valueForKey:columnId] copy];
                             columnDefinitionWithValue.values = columnDefinitionValues;
                             
-                            [newRowFormFieldValues addObject:columnDefinitionWithValue];
+                            NSInteger newRowFormFieldValuesIndex = [self getIndexFromObjectProperty:columnId
+                                                                                             inArray:dynamicTableFormField.columnDefinitions];
+                            [newRowFormFieldValues replaceObjectAtIndex:newRowFormFieldValuesIndex
+                                                             withObject:columnDefinitionWithValue];
                         }
                         
                         [newFormFieldValues addObject:newRowFormFieldValues];
@@ -239,6 +247,22 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                 break;
         }
     
+}
+
+- (NSInteger)getIndexFromObjectProperty:(NSString *)property
+                                inArray:(NSArray *)myArray {
+    return [myArray indexOfObjectPassingTest:
+            ^(id obj, NSUInteger idx, BOOL *stop) {
+                BOOL res;
+                ASDKModelFormField *modelFormField = (ASDKModelFormField *) obj;
+                if ([property isEqualToString:modelFormField.instanceID]) {
+                    res = YES;
+                    *stop = YES;
+                } else {
+                    res = NO;
+                }
+                return res;
+            }];
 }
 
 @end
