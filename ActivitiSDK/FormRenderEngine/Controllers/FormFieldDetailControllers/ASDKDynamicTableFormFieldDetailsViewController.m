@@ -31,6 +31,7 @@
 #import "ASDKModelDynamicTableColumnDefinitionFormField.h"
 #import "ASDKModelDynamicTableColumnDefinitionRestFormField.h"
 #import "ASDKModelDynamicTableColumnDefinitionAmountFormField.h"
+#import "ASDKModelDynamicTableFormField.h"
 
 // Cells
 #import "ASDKDynamicTableRowHeaderTableViewCell.h"
@@ -45,6 +46,7 @@
 @property (strong, nonatomic) NSArray               *visibleRowColumns;
 @property (strong, nonatomic) NSDictionary          *columnDefinitions;
 @property (weak, nonatomic)   IBOutlet UITableView  *rowsWithVisibleColumnsTableView;
+- (IBAction)addDynamicTableRow:(id)sender;
 
 @end
 
@@ -69,26 +71,6 @@
     [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
 }
 
-- (void)determineVisibleRowColumnsWithFormFieldValues:(NSArray *)values {
-    NSMutableArray *visibleColumnsInRows = [[NSMutableArray alloc] init];
-    
-    for (NSArray *row in values) {
-        NSMutableArray *visibleColumns = [[NSMutableArray alloc] init];
-
-        for (id column in row) {
-            if ([column respondsToSelector:@selector(visible)]) {
-                if ([column performSelector:@selector(visible)]) {
-                    [visibleColumns addObject:column];
-                }
-            }
-        }
-        [visibleColumnsInRows addObject:visibleColumns];
-    }
-    
-    self.visibleRowColumns = [NSArray arrayWithArray:visibleColumnsInRows];
-}
-
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -106,6 +88,41 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (IBAction)addDynamicTableRow:(id)sender {
+    ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) self.currentFormField;
+    
+    NSMutableArray *newDynamicTableRows = [NSMutableArray new];
+    if (self.currentFormField.values) {
+        [newDynamicTableRows addObjectsFromArray:dynamicTableFormField.values];
+    }
+    if (dynamicTableFormField.columnDefinitions) {
+        [newDynamicTableRows addObject:dynamicTableFormField.columnDefinitions];
+    }
+    self.currentFormField.values = [newDynamicTableRows copy];
+    [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+
+    [self.rowsWithVisibleColumnsTableView reloadData];
+}
+
+- (void)determineVisibleRowColumnsWithFormFieldValues:(NSArray *)values {
+    NSMutableArray *visibleColumnsInRows = [[NSMutableArray alloc] init];
+    
+    for (NSArray *row in values) {
+        NSMutableArray *visibleColumns = [[NSMutableArray alloc] init];
+        
+        for (id column in row) {
+            if ([column respondsToSelector:@selector(visible)]) {
+                if ([column performSelector:@selector(visible)]) {
+                    [visibleColumns addObject:column];
+                }
+            }
+        }
+        [visibleColumnsInRows addObject:visibleColumns];
+    }
+    
+    self.visibleRowColumns = [NSArray arrayWithArray:visibleColumnsInRows];
+}
 
 #pragma mark -
 #pragma mark ASDKFormFieldDetailsControllerProtocol
@@ -213,9 +230,7 @@ heightForHeaderInSection:(NSInteger)section {
 - (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
     ASDKDynamicTableRowHeaderTableViewCell *sectionHeaderView = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldDynamicTableHeaderRepresentation];
-    
     sectionHeaderView.rowHeaderLabel.text = [NSString stringWithFormat:@"row %ld", (long) section + 1];
-
     return sectionHeaderView;
 }
 
@@ -259,8 +274,10 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
             
             if (columnDefinitionformField.metadataValue) {
                 valueLabel.text = columnDefinitionformField.metadataValue.attachedValue;
-            } else {
+            } else if (columnDefinitionformField.values) {
                 valueLabel.text = [NSString stringWithFormat:@"%@", amountColumnDefinitionFormField.values.firstObject];
+            } else {
+                valueLabel.text = @"";
             }
         }
             break;
@@ -269,8 +286,14 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
         case ASDKModelFormFieldRepresentationTypeRadio: {
             if (columnDefinitionformField.metadataValue) {
                 valueLabel.text = columnDefinitionformField.metadataValue.option.attachedValue;
+            } else if (columnDefinitionformField.values) {
+                if ([columnDefinitionformField.values.firstObject isKindOfClass:NSDictionary.class]) {
+                    valueLabel.text = columnDefinitionformField.values.firstObject[@"name"];
+                } else {
+                    valueLabel.text = columnDefinitionformField.values.firstObject;
+                }
             } else {
-                valueLabel.text = columnDefinitionformField.values.firstObject[@"name"];
+                valueLabel.text = @"";
             }
         }
             break;
@@ -300,5 +323,4 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
             break;
     }
 }
-
 @end

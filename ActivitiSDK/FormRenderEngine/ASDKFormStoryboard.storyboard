@@ -766,20 +766,20 @@
             </objects>
             <point key="canvasLocation" x="1220" y="339"/>
         </scene>
-        <!--Dynamic Table Form Field Details View Controller-->
+        <!--Dynamic Table Details View Controller-->
         <scene sceneID="RzN-gm-D57">
             <objects>
-                <viewController storyboardIdentifier="ASDKFormDynamicTableFormFieldDetailController" id="0IZ-yq-bxg" customClass="ASDKDynamicTableFormFieldDetailsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ASDKFormDynamicTableFormFieldDetailController" id="0IZ-yq-bxg" userLabel="Dynamic Table Details View Controller" customClass="ASDKDynamicTableFormFieldDetailsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="xnH-Ly-zB5"/>
                         <viewControllerLayoutGuide type="bottom" id="yCH-p7-Rqb"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qDR-Np-JZh">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dST-yT-Jio" userLabel="Dynamic Table View">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <color key="backgroundColor" red="0.92156862745098034" green="0.92156862745098034" blue="0.94509803921568625" alpha="1" colorSpace="calibratedRGB"/>
                                 <edgeInsets key="layoutMargins" top="8" left="0.0" bottom="8" right="8"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -803,8 +803,11 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Muk-nD-1gt">
-                                                    <rect key="frame" x="536" y="10" width="56" height="23.5"/>
-                                                    <state key="normal" title="Edit row"/>
+                                                    <rect key="frame" x="537" y="10" width="55" height="23.5"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                    <state key="normal" title="Edit row">
+                                                        <color key="titleColor" red="0.29411764709999999" green="0.2784313725" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
                                                     <connections>
                                                         <action selector="rowEditButton:" destination="K44-5f-hxw" eventType="touchUpInside" id="V5m-id-do5"/>
                                                     </connections>
@@ -834,7 +837,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" text="Column value" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Vk-la-yde" userLabel="Column Value Label">
-                                                    <rect key="frame" x="106.5" y="10" width="485" height="23.5"/>
+                                                    <rect key="frame" x="106" y="10" width="486" height="23.5"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -884,6 +887,18 @@
                             <constraint firstItem="dST-yT-Jio" firstAttribute="leading" secondItem="qDR-Np-JZh" secondAttribute="leading" id="whu-5Z-zUS"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="R8a-OP-pfc" userLabel="Navigation Item">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="HbM-KW-cH2" userLabel="Add row">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="addDynamicTableRow:" destination="0IZ-yq-bxg" id="2k2-Li-Mqn"/>
+                            </connections>
+                        </barButtonItem>
+                        <connections>
+                            <outlet property="titleView" destination="qDR-Np-JZh" id="ncI-8E-Qko"/>
+                        </connections>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
                     <connections>
                         <outlet property="rowsWithVisibleColumnsTableView" destination="dST-yT-Jio" id="jyt-NA-2G1"/>
                     </connections>
