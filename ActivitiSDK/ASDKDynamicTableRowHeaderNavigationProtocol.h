@@ -16,16 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "ASDKDynamicTableFormFieldDetailsViewController.h"
-#import "ASDKDynamicTableRowHeaderNavigationProtocol.h"
+@protocol ASDKDynamicTableRowHeaderNavigationProtocol <NSObject>
 
-@interface ASDKDynamicTableRowHeaderTableViewCell : UITableViewCell
-
-@property (assign, nonatomic) id<ASDKDynamicTableRowHeaderNavigationProtocol> navigationDelegate;
-@property (assign, nonatomic) NSInteger selectedSection;
-@property (weak, nonatomic) IBOutlet UILabel *rowHeaderLabel;
-@property (weak, nonatomic) IBOutlet UIButton *rowEditButton;
-- (IBAction)editRow:(id)sender;
+- (void) didEditRow:(NSInteger) section;
 
 @end

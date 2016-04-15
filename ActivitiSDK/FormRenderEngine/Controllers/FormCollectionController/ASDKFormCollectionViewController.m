@@ -243,5 +243,4 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                      enableFormOutcome:self.dataSource.isReadOnlyForm ? NO : [self.dataSource areFormFieldMetadataValuesValid]];
     }
 }
-
 @end

@@ -154,72 +154,13 @@
             andValueLabel:visibleColumnCell.columnValueLabel
 withColumnDefinitionFormField:rowFormField];
     
-//    
-//    visibleColumnCell.columnNameLabel.text = rowFormField.fieldName;
-//    visibleColumnCell.columnValueLabel.text = [NSString stringWithFormat:@"value %@", rowFormField.values.firstObject];
-    
-//    visibleColumnCell.columnNameLabel.text = [(ASDKModelFormFieldOption *)self.currentFormField.formFieldOptions[indexPath.row] name];
-//    radioCell.checkMarkIconImageView.hidden = !(self.currentOptionSelection == indexPath.row);
-//    
-//    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
-//        radioCell.userInteractionEnabled = NO;
-//        radioCell.radioOptionLabel.enabled = NO;
-//        radioCell.checkMarkIconImageView.tintColor = [UIColor lightGrayColor];
-//    }
-    
     return visibleColumnCell;
 }
 
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKFormRenderEngine *formRenderEngine = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormRenderEngineProtocol)];
-    
-    [formRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[indexPath.section]
-                                               taskModel:formRenderEngine.task
-                                 dynamicTableFormFieldID:self.currentFormField.instanceID
-                                   renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-                                       if (formController && !error) {
-                                           // If there is controller assigned to the selected form field notify the delegate
-                                           // that it can begin preparing for presentation
-                                           formController.navigationDelegate = self.navigationDelegate;
-                                           [self.navigationDelegate prepareToPresentDetailController:formController];
-                                       } else {
-
-//                                           
-//                                           dispatch_async(dispatch_get_main_queue(), ^{
-//                                               renderCompletionBlock(nil, error);
-//                                           });
-                                       }
-                                   } formCompletionBlock:^(BOOL isFormCompleted, NSError *error) {
-                                       if (!error) {
-//                                           
-//                                           dispatch_async(dispatch_get_main_queue(), ^{
-//                                               formCompletionBlock(isFormCompleted, error);
-//                                           });
-                                       } else {
-
-//                                           dispatch_async(dispatch_get_main_queue(), ^{
-//                                               formCompletionBlock(NO, error);
-//                                           });
-                                       }
-                                   }];
-    
-
-    
-//    self.currentOptionSelection = indexPath.row;
-//    
-//    // Propagate the change after the state of the checkbox has changed
-//    ASDKModelFormFieldValue *formFieldValue = [ASDKModelFormFieldValue new];
-//    
-//    ASDKModelFormFieldValue *optionFormFieldValue = [ASDKModelFormFieldValue new];
-//    optionFormFieldValue.attachedValue = [(ASDKModelFormFieldOption *)self.currentFormField.formFieldOptions[indexPath.row] name];
-//    formFieldValue.option = optionFormFieldValue;
-//    
-//    self.currentFormField.metadataValue = formFieldValue;
-//    
-//    [tableView reloadData];
 }
+
 
 -  (CGFloat)tableView:(UITableView *)tableView
 heightForHeaderInSection:(NSInteger)section {
@@ -231,9 +172,64 @@ heightForHeaderInSection:(NSInteger)section {
 viewForHeaderInSection:(NSInteger)section {
     ASDKDynamicTableRowHeaderTableViewCell *sectionHeaderView = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldDynamicTableHeaderRepresentation];
     sectionHeaderView.rowHeaderLabel.text = [NSString stringWithFormat:@"row %ld", (long) section + 1];
+    sectionHeaderView.selectedSection = section;
+    sectionHeaderView.navigationDelegate = self;
     return sectionHeaderView;
 }
 
+#pragma mark -
+#pragma mark ASDKDynamicTableRowHeaderNavigationProtocol
+
+- (void)didEditRow:(NSInteger)section {
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKFormRenderEngine *formRenderEngine = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormRenderEngineProtocol)];
+    
+    __weak typeof(self) weakSelf = self;
+    
+    if (formRenderEngine.task) {
+        [formRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
+                                     dynamicTableFormFieldID:self.currentFormField.instanceID
+                                                   taskModel:formRenderEngine.task
+                                       renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                           if (formController && !error) {
+                                               // If there is controller assigned to the selected form field notify the delegate
+                                               // that it can begin preparing for presentation
+                                               formController.navigationDelegate = self.navigationDelegate;
+                                               [self.navigationDelegate prepareToPresentDetailController:formController];
+                                           }
+                                       } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
+                                           __strong typeof(self) strongSelf = weakSelf;
+
+                                           // delete current row
+                                           NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                           [formFieldValues removeObjectAtIndex:section];
+                                           strongSelf.currentFormField.values = [formFieldValues copy];
+                                           [strongSelf determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+                                           [strongSelf.navigationController popToViewController:self animated:YES];
+                                       }];
+    } else {
+        [formRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
+                                     dynamicTableFormFieldID:self.currentFormField.instanceID
+                                           processDefinition:formRenderEngine.processDefinition
+                                       renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                           if (formController && !error) {
+                                               // If there is controller assigned to the selected form field notify the delegate
+                                               // that it can begin preparing for presentation
+                                               formController.navigationDelegate = self.navigationDelegate;
+                                               [self.navigationDelegate prepareToPresentDetailController:formController];
+                                           }
+                                       } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
+                                           __strong typeof(self) strongSelf = weakSelf;
+                                           
+                                           // delete current row
+                                           NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                           [formFieldValues removeObjectAtIndex:section];
+                                           strongSelf.currentFormField.values = [formFieldValues copy];
+                                           [strongSelf determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+                                           [strongSelf.navigationController popToViewController:self animated:YES];
+                                       }];
+    }
+}
 
 
 #pragma mark -

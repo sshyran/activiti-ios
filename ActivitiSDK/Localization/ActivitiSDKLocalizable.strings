@@ -19,6 +19,7 @@
 // Form fields
 "defaultFormOutcome"                                            = "Complete";
 "startProcessFormOutcome"                                       = "Start process";
+"deleteDynamicTableRowFormOutcome"                              = "Delete row";
 "formDateComponentRemoveButtonText"                             = "Remove";
 "formDateComponentPickDateLabelText"                            = "Pick a date";
 "formDateComponentDoneButtonText"                               = "Done";

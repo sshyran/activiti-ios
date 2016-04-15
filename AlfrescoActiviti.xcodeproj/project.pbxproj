@@ -297,6 +297,7 @@
 		75CFBC6D1B81CB900018DADE /* AFASecurityLayerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CFBC6C1B81CB900018DADE /* AFASecurityLayerTableViewCell.m */; };
 		75CFBC711B81E7860018DADE /* AFARememberCredentialsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CFBC701B81E7850018DADE /* AFARememberCredentialsTableViewCell.m */; };
 		75E868071B7E75E500862D51 /* AFASwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E868061B7E75E500862D51 /* AFASwitchView.m */; };
+		8D0FFDC51CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D0FFDC41CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h */; };
 		8D25F0531C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D25F0511C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.h */; };
 		8D25F0541C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D25F0521C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.m */; };
 		8D3A51CD1C8084B000FF9A00 /* ASDKProcessDefinitionNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3A51CC1C8084B000FF9A00 /* ASDKProcessDefinitionNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -856,6 +857,7 @@
 		75CFBC701B81E7850018DADE /* AFARememberCredentialsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFARememberCredentialsTableViewCell.m; path = UI/Cells/RememberCredentialsCell/AFARememberCredentialsTableViewCell.m; sourceTree = "<group>"; };
 		75E868051B7E75E500862D51 /* AFASwitchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFASwitchView.h; path = UI/Components/SwitchButtonView/AFASwitchView.h; sourceTree = "<group>"; };
 		75E868061B7E75E500862D51 /* AFASwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFASwitchView.m; path = UI/Components/SwitchButtonView/AFASwitchView.m; sourceTree = "<group>"; };
+		8D0FFDC41CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDKDynamicTableRowHeaderNavigationProtocol.h; sourceTree = "<group>"; };
 		8D25F0511C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormBooleanFieldCollectionViewCell.h; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormBooleanFieldCollectionViewCell.h; sourceTree = "<group>"; };
 		8D25F0521C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormBooleanFieldCollectionViewCell.m; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormBooleanFieldCollectionViewCell.m; sourceTree = "<group>"; };
 		8D3A51CC1C8084B000FF9A00 /* ASDKProcessDefinitionNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProcessDefinitionNetworkServiceProtocol.h; path = NetworkServices/Proxy/ProcessDefinitionNetworkServices/Protocol/ASDKProcessDefinitionNetworkServiceProtocol.h; sourceTree = "<group>"; };
@@ -2092,6 +2094,7 @@
 			children = (
 				138F0A251C6B7C9000DA9414 /* ASDKFormFieldDetailsControllerProtocol.h */,
 				138F0A2D1C6B865700DA9414 /* ASDKFormControllerNavigationProtocol.h */,
+				8D0FFDC41CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h */,
 			);
 			name = Protocol;
 			sourceTree = "<group>";
@@ -3792,6 +3795,7 @@
 				138F0A2E1C6B865700DA9414 /* ASDKFormControllerNavigationProtocol.h in Headers */,
 				138F0A461C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.h in Headers */,
 				131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */,
+				8D0FFDC51CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h in Headers */,
 				13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */,
 				13CFF3421BBBDEF900D3DEB6 /* ASDKTaskUpdateRequestRepresentation.h in Headers */,
 				8DEA25441C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.h in Headers */,

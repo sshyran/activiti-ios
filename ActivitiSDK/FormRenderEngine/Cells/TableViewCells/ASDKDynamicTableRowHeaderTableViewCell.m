@@ -18,9 +18,22 @@
 
 #import "ASDKDynamicTableRowHeaderTableViewCell.h"
 
+// Categories
+#import "UIFont+ASDKGlyphicons.h"
+#import "NSString+ASDKFontGlyphicons.h"
+
 @implementation ASDKDynamicTableRowHeaderTableViewCell
 
-- (IBAction)rowEditButton:(id)sender {
+- (void)awakeFromNib {
+    NSAttributedString *rowEditButtonTitle = [[NSAttributedString alloc] initWithString:[NSString iconStringForIconType:ASDKGlyphIconTypeEdit]
+                                                                             attributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:14],
+                                                                                          NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+    
+    [self.rowEditButton setAttributedTitle:rowEditButtonTitle forState:UIControlStateNormal];
+}
+
+- (IBAction)editRow:(id)sender {
+    [self.navigationDelegate didEditRow:self.selectedSection];
 }
 
 @end

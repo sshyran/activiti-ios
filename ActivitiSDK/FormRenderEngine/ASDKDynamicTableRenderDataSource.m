@@ -24,6 +24,8 @@
 #import "ASDKFormRenderEngineConstants.h"
 
 // Models
+#import "ASDKModelFormField.h"
+#import "ASDKModelFormFieldValue.h"
 #import "ASDKModelFormOutcome.h"
 
 #if ! __has_feature(objc_arc)
@@ -56,21 +58,13 @@
     if (self) {
         self.visibleFormFields = [NSDictionary dictionaryWithObject:formFields
                                                              forKey:@(0)];
-
         self.formHasUserdefinedOutcomes = NO;
-        self.formOutcomesIndexPaths = [NSMutableArray array];
+        self.dataSourceType = dataSourceType;
         
         ASDKModelFormOutcome *formOutcome = [ASDKModelFormOutcome new];
-        
-        if (ASDKFormRenderEngineDataSourceTypeTask == dataSourceType) {
-            formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
-        } else {
-            formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
-        }
-        
-        self.dataSourceType = dataSourceType;
+        formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDeleteDynamicTableRowFormOutcome, ASDKLocalizationTable, @"Delete row outcome");
+
         self.formOutcomes = @[formOutcome];
-        
     }
     
     return self;
@@ -85,14 +79,20 @@
 
 - (NSInteger)numberOfFormFieldsForSection:(NSInteger)section {
     NSArray *sectionFormFields = self.visibleFormFields[@(section)];
-    
-    NSInteger fieldsCount = sectionFormFields.count;
+    NSInteger fieldsCount = 0;
+    if (sectionFormFields.count) {
+        fieldsCount = sectionFormFields.count;
+    } else {
+        // outcome
+        fieldsCount = 1;
+    }
 
     return fieldsCount;
 }
 
 - (NSString *)sectionHeaderTitleForIndexPath:(NSIndexPath *)indexPath {
     NSString *sectionHeaderTitleString = nil;
+    
     return sectionHeaderTitleString;
 }
 
@@ -105,6 +105,8 @@
         
         ASDKModelFormField *formFieldAtIndexPath = sectionFormFields[indexPath.row];
         cellIdentifier = [self validCellIdentifierForFormField:formFieldAtIndexPath];
+    } else {
+        cellIdentifier = kASDKCellIDFormFieldOutcomeRepresentation;
     }
     
     return cellIdentifier;
@@ -116,9 +118,22 @@
     
     if (sectionFormFields.count) {
         formFieldModel = sectionFormFields[indexPath.row];
+    } else {
+        ASDKModelFormOutcome *formOutcome = self.formOutcomes[indexPath.row];
+        
+        if (NSNotFound == [self.formOutcomesIndexPaths indexOfObject:indexPath]) {
+            [self.formOutcomesIndexPaths addObject:indexPath];
+        }
+        
+        formFieldModel = formOutcome;
     }
     
     return formFieldModel;
+}
+
+- (BOOL)areFormFieldMetadataValuesValid {
+    BOOL formFieldsAreValid = YES;
+    return formFieldsAreValid;
 }
 
 @end

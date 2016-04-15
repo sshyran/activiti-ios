@@ -19,8 +19,9 @@
 #import <UIKit/UIKit.h>
 #import "ASDKFormFieldDetailsControllerProtocol.h"
 #import "ASDKFormControllerNavigationProtocol.h"
+#import "ASDKDynamicTableRowHeaderNavigationProtocol.h"
 
-@interface ASDKDynamicTableFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol, ASDKFormControllerNavigationProtocol>
+@interface ASDKDynamicTableFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol, ASDKFormControllerNavigationProtocol, ASDKDynamicTableRowHeaderNavigationProtocol>
 
 @property (weak, nonatomic)   id<ASDKFormControllerNavigationProtocol> navigationDelegate;
 

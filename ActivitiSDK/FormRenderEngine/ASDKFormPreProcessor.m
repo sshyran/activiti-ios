@@ -40,7 +40,6 @@
          withFormFields:(NSArray *)formFields
 withDynamicTableFieldID:(NSString *)dynamicTableFieldID
 preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock {
-    
     NSParameterAssert(taskID);
     NSParameterAssert(formFields);
     NSParameterAssert(preProcessCompletionBlock);
@@ -77,7 +76,6 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                       withFormFields:(NSArray *)formFields
          withDynamicTableFieldID:(NSString *)dynamicTableFieldID
            preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock {
-    
     NSParameterAssert(processDefinitionID);
     NSParameterAssert(formFields);
     NSParameterAssert(preProcessCompletionBlock);
@@ -112,7 +110,6 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
 
 - (void)preProcessFormField:(ASDKModelFormField *)formField
            withDispatchGroup:(dispatch_group_t) group {
-    
         NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
         
         // If dealing with read-only forms extract the representation type from the attached
