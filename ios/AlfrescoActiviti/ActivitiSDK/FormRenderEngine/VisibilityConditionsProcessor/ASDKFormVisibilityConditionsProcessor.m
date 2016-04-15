@@ -54,6 +54,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
  */
 @property (strong, nonatomic) NSMutableDictionary *dependencyDict;
 
+
+/**
+ *  Property meant to hold a refference to the visible form fields which had
+ *  been stored as a result of condition evaluation. The property is to serve
+ *  as a refference point to future evaluations and provide information on 
+ *  whether an element has been hidden or made visible.
+ */
+@property (strong, nonatomic) NSArray *visibleFormFields;
+
 @end
 
 @implementation ASDKFormVisibilityConditionsProcessor
@@ -164,11 +173,25 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (NSArray *)parseVisibleFormFields {
-    NSMutableArray *hiddenFields = [NSMutableArray array];
-    
     // Because at init time the dependency dict is created which holds information on the affected
     // form fields, we will use that to iterate over and evaluate conditions
-    for (ASDKModelFormField *affectedField in self.dependencyDict.allKeys) {
+    NSArray *hiddenFields = [self parseHiddenFormFieldsFromCollection:self.dependencyDict.allKeys];
+    
+    // Make a difference between the set of all the form fields and the hidden form fields
+    // to report back the visible ones
+    NSMutableSet *allFieldsSet = [NSMutableSet setWithArray:self.formFields];
+    NSSet *hiddenFieldsSet = [NSSet setWithArray:hiddenFields];
+    [allFieldsSet minusSet:hiddenFieldsSet];
+    
+    self.visibleFormFields = [allFieldsSet allObjects];
+    
+    return self.visibleFormFields;
+}
+
+- (NSArray *)parseHiddenFormFieldsFromCollection:(NSArray *)formFieldCollection {
+    NSMutableArray *hiddenFields = [NSMutableArray array];
+    
+    for (ASDKModelFormField *affectedField in formFieldCollection) {
         NSArray *visibilityConditions = [self parseVisibilityConditionsForFormField:affectedField];
         
         BOOL isFormFieldVisible = NO;
@@ -197,13 +220,54 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
     }
     
-    // Make a difference between the set of all the form fields and the hidden form fields
-    // to report back the visible ones
-    NSMutableSet *allFieldsSet = [NSMutableSet setWithArray:self.formFields];
-    NSSet *hiddenFieldsSet = [NSSet setWithArray:hiddenFields];
-    [allFieldsSet minusSet:hiddenFieldsSet];
+    return hiddenFields;
+}
+
+- (NSDictionary *)reevaluateVisibilityConditionsAffectedByFormField:(ASDKModelFormField *)formField {
+    NSMutableDictionary *visibilityActionsDict = [NSMutableDictionary dictionary];
     
-    return [allFieldsSet allObjects];
+    // Given the current form field get the list of affected form fields by it
+    NSMutableArray *affectedFormFieldsArr = [NSMutableArray array];
+    for (ASDKModelFormField *affectedField in self.dependencyDict.allKeys) {
+        NSArray *influencialFormFields = self.dependencyDict[affectedField];
+        if ([influencialFormFields containsObject:formField]) {
+            [affectedFormFieldsArr addObject:affectedField];
+        }
+    }
+    
+    // Re-evaluate the visibility conditions for the affected fields
+    NSArray *hiddenFieldsArr = [self parseHiddenFormFieldsFromCollection:affectedFormFieldsArr];
+    
+    // Hidden fields, if any will be considered as a hide action
+    if (hiddenFieldsArr.count) {
+        [visibilityActionsDict setObject:hiddenFieldsArr
+                                  forKey:@(ASDKFormVisibilityConditionActionTypeHideElement)];
+        
+        NSMutableArray *mutableVisibleFormFieldsArr = [NSMutableArray arrayWithArray:self.visibleFormFields];
+        [mutableVisibleFormFieldsArr removeObjectsInArray:hiddenFieldsArr];
+        
+        self.visibleFormFields = mutableVisibleFormFieldsArr;
+    } else {
+        NSMutableArray *formFieldsToAdd = [NSMutableArray array];
+        for (ASDKModelFormField *affectedFormFied in affectedFormFieldsArr) {
+            // If the affected form field cannot be found inside the visible form fields
+            // but it's not a hidden form field than this means it a form field that
+            // became visible
+            if (![self.visibleFormFields containsObject:affectedFormFied]) {
+                [formFieldsToAdd addObject:affectedFormFied];
+            }
+        }
+        
+        if (formFieldsToAdd.count) {
+            [visibilityActionsDict setObject:formFieldsToAdd
+                                      forKey:@(ASDKFormVisibilityConditionActionTypeShowElement)];
+            
+            // Update the visible forms collection with the new visible form collection
+            self.visibleFormFields = [self.visibleFormFields arrayByAddingObjectsFromArray:formFieldsToAdd];
+        }
+    }
+    
+    return visibilityActionsDict;
 }
 
 
@@ -718,6 +782,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 #pragma mark -
 #pragma mark Value extraction and conversions
+
+- (NSSet *)visibilityInfluentialFormFields {
+    NSMutableSet *influentialFormFieldsSet = [NSMutableSet set];
+    for (NSArray *influentialFormFieldsForSection in self.dependencyDict.allValues) {
+        [influentialFormFieldsSet addObjectsFromArray:influentialFormFieldsForSection];
+    }
+    
+    return influentialFormFieldsSet;
+}
 
 - (NSString *)valueForFormField:(ASDKModelFormField *)formField {
     id valueToReturn = nil;

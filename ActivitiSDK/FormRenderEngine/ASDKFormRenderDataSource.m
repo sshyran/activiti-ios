@@ -33,6 +33,7 @@
 
 // Managers
 #import "ASDKFormVisibilityConditionsProcessor.h"
+#import "ASDKKVOManager.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -50,6 +51,12 @@
  */
 @property (strong, nonatomic) NSMutableArray *formOutcomesIndexPaths;
 
+/**
+ *  Property meant to hold a refference to a KVO manager that will be monitoring 
+ *  the state of form field objects
+ */
+@property (strong, nonatomic) ASDKKVOManager *kvoManager;
+
 @end
 
 @implementation ASDKFormRenderDataSource
@@ -63,11 +70,25 @@
     self = [super init];
     
     if (self) {
+        // Prepare the KVO manager to handle visibility conditions re-evaluations
+        self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+        
+        // Parse the renderable form fields from the form description to a section disposed dictionary
         self.renderableFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields];
+        
+        // Initialize the visibility condition processor with a plain array of form fields and form variables
         self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:[self parseToArrayFormFieldsFromDictionary:self.renderableFormFields]
                                                                                                  formVariables:formDescription.formVariables];
-        // TODO: Implement populating the visible form fields dict after removing hidden fields as a result of visibility condition evaluations
         
+        // Run a pre-process operation to evaluate visibility conditions and provide the first set of visible form
+        // fields
+        self.visibleFormFields = [self filterRenderableFormFields:self.renderableFormFields
+                                             forVisibleFormFields:[self.visibilityConditionsProcessor parseVisibleFormFields]];
+        
+        // Handle value changes for form fields that have a direct impact over visibility conditions
+        [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
+        
+        // Handle form outcomes
         self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
         self.formOutcomesIndexPaths = [NSMutableArray array];
         
@@ -207,6 +228,77 @@
     }
     
     return formFieldArr;
+}
+
+- (NSDictionary *)filterRenderableFormFields:(NSDictionary *)renderableFormFields
+                        forVisibleFormFields:(NSArray *)visibleFormFields {
+    NSMutableDictionary *filteredDict = [NSMutableDictionary dictionaryWithDictionary:renderableFormFields];
+    NSMutableArray *sectionsToBeRemoved = [NSMutableArray array];
+    for (NSNumber *section in filteredDict.allKeys) {
+        ASDKModelFormField *containerFormField = filteredDict[section];
+        NSMutableArray *formFieldsInSection = [NSMutableArray arrayWithArray:containerFormField.formFields];
+        NSMutableArray *fieldsToBeRemoved = [NSMutableArray array];
+        
+        // Iterate over the list of form fields and remove the ones that are not inside
+        // the visible form fields array
+        for (ASDKModelFormField *formField in formFieldsInSection) {
+            if (![visibleFormFields containsObject:formField]) {
+                [fieldsToBeRemoved addObject:formField];
+            }
+        }
+        [formFieldsInSection removeObjectsInArray:fieldsToBeRemoved];
+        
+        // If a section has no more attached form fields remove it, otherwise set the
+        // modified form field collection
+        if (!formFieldsInSection.count) {
+            [sectionsToBeRemoved addObject:section];
+        } else {
+            containerFormField.formFields = formFieldsInSection;
+        }
+    }
+    
+    [filteredDict removeObjectsForKeys:sectionsToBeRemoved];
+    
+    // Because indexes of the sections could have been changed after removal
+    // we recreate the indexes for our filtered dictionary
+    return [self repairFormFieldSectionIndexesForVisibleFormFields:filteredDict];
+}
+
+- (NSDictionary *)repairFormFieldSectionIndexesForVisibleFormFields:(NSDictionary *)visibleFormFields {
+    NSMutableDictionary *repairedDict = [NSMutableDictionary dictionary];
+    NSUInteger sectionIdx = 0;
+    NSArray *sortedSectionsArr = [visibleFormFields.allKeys sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self"
+                                                                                                                        ascending:YES]]];
+    
+    for (NSNumber *section in sortedSectionsArr) {
+        ASDKModelFormField *containerFormFieldForSection = visibleFormFields[section];
+        
+        [repairedDict setObject:containerFormFieldForSection
+                         forKey:@(sectionIdx)];
+        sectionIdx++;
+    }
+    
+    return repairedDict;
+}
+
+- (void)registerVisibilityHandlersForInfluencialFormFields:(NSSet *)influencialFormFields {
+    for (ASDKModelFormField *influencialFormField in influencialFormFields) {
+        __weak typeof(self) weakSelf = self;
+        
+        // TODO: Check if more keypaths are required i.e. see how user-filled data is passed in all form fields
+        [self.kvoManager observeObject:influencialFormField
+                            forKeyPath:NSStringFromSelector(@selector(metadataValue))
+                               options:NSKeyValueObservingOptionNew
+                                 block:^(id observer, id object, NSDictionary *change) {
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     
+                                     // Reevaluate visibility conditions
+                                     NSDictionary *visibilityActionsDict = [strongSelf.visibilityConditionsProcessor reevaluateVisibilityConditionsAffectedByFormField:(ASDKModelFormField *)object];
+                                     
+                                     // TODO: Based on the visibility actions provided by the visibility conditions processor,
+                                     // insert / remove rows / sections from the form collection view
+                                 }];
+    }
 }
 
 

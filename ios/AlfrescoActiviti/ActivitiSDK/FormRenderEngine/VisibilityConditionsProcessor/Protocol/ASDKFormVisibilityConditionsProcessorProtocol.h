@@ -18,12 +18,19 @@
 
 #import <Foundation/Foundation.h>
 
+@class ASDKModelFormField;
+
 typedef NS_ENUM(NSInteger, ASDKFormFieldSupportedType) {
     ASDKFormFieldSupportedTypeUndefined = -1,
     ASDKFormFieldSupportedTypeString    = 0,
     ASDKFormFieldSupportedTypeNumber,
     ASDKFormFieldSupportedTypeBoolean,
     ASDKFormFieldSupportedTypeDate,
+};
+
+typedef NS_ENUM(NSInteger, ASDKFormVisibilityConditionActionType) {
+    ASDKFormVisibilityConditionActionTypeHideElement,
+    ASDKFormVisibilityConditionActionTypeShowElement
 };
 
 @protocol ASDKFormVisibilityConditionsProcessorProtocol <NSObject>
@@ -50,5 +57,30 @@ typedef NS_ENUM(NSInteger, ASDKFormFieldSupportedType) {
  *  @return Collection of visible form fields
  */
 - (NSArray *)parseVisibleFormFields;
+
+/**
+ *  Requests a set of form fields that are a direct influence on the visibility of other 
+ *  form fields.
+ *
+ *  @return Set of visibility influential form fields
+ */
+- (NSSet *)visibilityInfluentialFormFields;
+
+/**
+ *  Requests a reevaluation of the visibility conditions that are affected by a form field's
+ *  value change. The result will be delivered as a dictionary where the key is represented
+ *  by one of the enumeration values of ASDKFormVisibilityConditionActionType and the value
+ *  is an array of form fields.
+ *  
+ *  Discussion: For example if the key is of ASDKFormVisibilityConditionActionTypeHideElement
+ *  value and it has attached an array of form field elements this will mean that those 
+ *  attached elements should be hidden from the form because their visibilit conditions 
+ *  suggest that action.
+ *
+ *  @param formField Form field for which reevaluations should be made
+ *
+ *  @return          Dictionary structure containing which fields should be made visible / hidden
+ */
+- (NSDictionary *)reevaluateVisibilityConditionsAffectedByFormField:(ASDKModelFormField *)formField;
 
 @end

@@ -102,12 +102,13 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(self) strongSelf = weakSelf;
         
-        strongSelf.formField.metadataValue = [ASDKModelFormFieldValue new];
-        strongSelf.formField.metadataValue.attachedValue = textField.text;
+        ASDKModelFormFieldValue *metadataValue = [ASDKModelFormFieldValue new];
+        metadataValue.attachedValue = textField.text;
+        strongSelf.formField.metadataValue = metadataValue;
         
         if ([strongSelf.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
             [strongSelf.delegate updatedMetadataValueForFormField:strongSelf.formField
-                                                     inCell:strongSelf];
+                                                           inCell:strongSelf];
         }
     });
 }

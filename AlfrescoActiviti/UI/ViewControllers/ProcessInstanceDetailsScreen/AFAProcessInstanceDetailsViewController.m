@@ -36,7 +36,6 @@
 
 // Managers
 #import "AFATableController.h"
-#import "AFAKVOManager.h"
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
 #import "AFAQueryServices.h"
@@ -98,7 +97,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 @property (strong, nonatomic) NSMutableDictionary                           *cellFactoryDict;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                                 *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
 
 @end
 
@@ -716,7 +715,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 #pragma mark KVO bindings
 
 - (void)handleBindingsForTaskListViewController {
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:self

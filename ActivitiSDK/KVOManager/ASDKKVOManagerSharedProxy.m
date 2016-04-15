@@ -16,28 +16,28 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFAKVOManagerSharedProxy.h"
-#import "AFAKVOManagerInfo.h"
+#import "ASDKKVOManagerSharedProxy.h"
+#import "ASDKKVOManagerInfo.h"
 #import <libkern/OSAtomic.h>
 
-@interface AFAKVOManagerSharedProxy () {
+@interface ASDKKVOManagerSharedProxy () {
     NSHashTable *_kvoManagerInfos;
     OSSpinLock _spinLock;
 }
 
 @end
 
-@implementation AFAKVOManagerSharedProxy
+@implementation ASDKKVOManagerSharedProxy
 
 
 #pragma mark -
 #pragma mark Life cycle
 
 + (instancetype)sharedInstance {
-    static AFAKVOManagerSharedProxy *kvoManagerSharedProxy = nil;
+    static ASDKKVOManagerSharedProxy *kvoManagerSharedProxy = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        kvoManagerSharedProxy = [AFAKVOManagerSharedProxy new];
+        kvoManagerSharedProxy = [ASDKKVOManagerSharedProxy new];
     });
     
     return kvoManagerSharedProxy;
@@ -60,7 +60,7 @@
 #pragma mark Public interface
 
 - (void)observe:(id)object
-withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
+withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     OSSpinLockLock(&_spinLock);
     [_kvoManagerInfos addObject:managerInfo];
     OSSpinLockUnlock(&_spinLock);
@@ -72,7 +72,7 @@ withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
 }
 
 - (void)removeObserver:(id)object
-       withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
+       withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     OSSpinLockLock(&_spinLock);
     [_kvoManagerInfos removeObject:managerInfo];
     OSSpinLockUnlock(&_spinLock);
@@ -90,14 +90,14 @@ withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
-    AFAKVOManagerInfo *managerInfo = nil;
+    ASDKKVOManagerInfo *managerInfo = nil;
     
     OSSpinLockLock(&_spinLock);
     managerInfo = [_kvoManagerInfos member:(__bridge id)context];
     OSSpinLockUnlock(&_spinLock);
     
     if (managerInfo) {
-        AFAKVOManager *kvoManager = managerInfo.kvoManager;
+        ASDKKVOManager *kvoManager = managerInfo.kvoManager;
         if (kvoManager) {
             id observer = kvoManager.observer;
             if (observer &&

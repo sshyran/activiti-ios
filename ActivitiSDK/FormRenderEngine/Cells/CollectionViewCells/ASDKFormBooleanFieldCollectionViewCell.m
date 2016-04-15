@@ -76,8 +76,9 @@
 - (IBAction)switchToggled:(id)sender {
     UISwitch *checkboxSwitch = (UISwitch *)sender;
     
-    self.formField.metadataValue = [ASDKModelFormFieldValue new];
-    self.formField.metadataValue.attachedValue = [checkboxSwitch isOn] ? kASDKFormFieldTrueStringValue : kASDKFormFieldFalseStringValue;
+    ASDKModelFormFieldValue *metadataValue = [ASDKModelFormFieldValue new];
+    metadataValue.attachedValue = [checkboxSwitch isOn] ? kASDKFormFieldTrueStringValue : kASDKFormFieldFalseStringValue;
+    self.formField.metadataValue = metadataValue;
     
     if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
         [self.delegate updatedMetadataValueForFormField:self.formField

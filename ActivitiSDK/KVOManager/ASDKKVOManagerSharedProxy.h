@@ -18,30 +18,30 @@
 
 #import <Foundation/Foundation.h>
 
-@class AFAKVOManagerInfo;
+@class ASDKKVOManagerInfo;
 
 /**
  *  The purpose of this class is to act as a single and centralized proxy to requests
  *  coming from the KVOManager class extract data encapsulated inside
- *  AFAKVOManagerInfo instances and notify changes back through provided notification 
+ *  ASDKKVOManagerInfo instances and notify changes back through provided notification
  *  blocks.
  */
 
-@interface AFAKVOManagerSharedProxy : NSObject
+@interface ASDKKVOManagerSharedProxy : NSObject
 
 + (instancetype)sharedInstance;
 
 /**
- *  Registers passed object to KVO and passes on AFAKVOManagerInfo instances as context
+ *  Registers passed object to KVO and passes on ASDKKVOManagerInfo instances as context
  *  for later internal handling inside the delegate KVO methods
  *
  *  @param object      Object to be observed
- *  @param managerInfo AFAKVOManagerInfo instance passed by AFAKVOManager
+ *  @param managerInfo ASDKKVOManagerInfo instance passed by ASDKKVOManager
  */
 - (void)observe:(id)object
-withManagerInfo:(AFAKVOManagerInfo *)managerInfo;
+withManagerInfo:(ASDKKVOManagerInfo *)managerInfo;
 
 - (void)removeObserver:(id)object
-       withManagerInfo:(AFAKVOManagerInfo *)managerInfo;
+       withManagerInfo:(ASDKKVOManagerInfo *)managerInfo;
 
 @end

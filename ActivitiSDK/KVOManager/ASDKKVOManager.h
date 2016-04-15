@@ -25,9 +25,9 @@
  *  @param object   Object that changed
  *  @param change   Change dictionary
  */
-typedef void (^AFAKVOManagerNotificationBlock)(id observer, id object, NSDictionary *change);
+typedef void (^ASDKKVOManagerNotificationBlock)(id observer, id object, NSDictionary *change);
 
-@interface AFAKVOManager : NSObject
+@interface ASDKKVOManager : NSObject
 
 /**
  *  The object observer registered to listen to key-value changes.
@@ -59,7 +59,7 @@ typedef void (^AFAKVOManagerNotificationBlock)(id observer, id object, NSDiction
 - (void)observeObject:(id)object
            forKeyPath:(NSString *)keyPath
               options:(NSKeyValueObservingOptions)options
-                block:(AFAKVOManagerNotificationBlock)notificationBlock;
+                block:(ASDKKVOManagerNotificationBlock)notificationBlock;
 
 /**
  *  Removes observer for key path

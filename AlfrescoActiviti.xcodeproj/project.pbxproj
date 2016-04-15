@@ -51,7 +51,6 @@
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
-		133352A31B7CB32900953E1A /* AFAKVOManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 133352A21B7CB32900953E1A /* AFAKVOManager.m */; };
 		133B7FDD1B78DBFE00C17D06 /* AFALoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B7FDC1B78DBFE00C17D06 /* AFALoginViewController.m */; };
 		133F053C1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 133F053A1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h */; };
 		133F053D1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 133F053B1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m */; };
@@ -75,8 +74,6 @@
 		135701931B70DA1100A384A7 /* ASDKModelConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 135701911B70DA1100A384A7 /* ASDKModelConfiguration.m */; };
 		135701971B70E09E00A384A7 /* ASDKModelProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 135701951B70E09E00A384A7 /* ASDKModelProfile.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135701981B70E09E00A384A7 /* ASDKModelProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 135701961B70E09E00A384A7 /* ASDKModelProfile.m */; };
-		135794241B7CCBE500E3BE03 /* AFAKVOManagerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 135794231B7CCBE500E3BE03 /* AFAKVOManagerInfo.m */; };
-		135794271B7CE16000E3BE03 /* AFAKVOManagerSharedProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 135794261B7CE16000E3BE03 /* AFAKVOManagerSharedProxy.m */; };
 		135DB32B1B6B616A009138FC /* ASDKLogConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830671B6A12AB0028901A /* ASDKLogConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */; };
@@ -284,6 +281,12 @@
 		13EED8751C52804A00F17105 /* ASDKAuthenticateRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EED8731C52804A00F17105 /* ASDKAuthenticateRequestRepresentation.h */; };
 		13EED8761C52804A00F17105 /* ASDKAuthenticateRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EED8741C52804A00F17105 /* ASDKAuthenticateRequestRepresentation.m */; };
 		13EED87A1C56721500F17105 /* AFAConnectivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EED8791C56721500F17105 /* AFAConnectivityViewController.m */; };
+		13F07EF71CBFC8C400002FEB /* ASDKKVOManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF11CBFC8C400002FEB /* ASDKKVOManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13F07EF81CBFC8C400002FEB /* ASDKKVOManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F07EF21CBFC8C400002FEB /* ASDKKVOManager.m */; };
+		13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF31CBFC8C400002FEB /* ASDKKVOManagerInfo.h */; };
+		13F07EFA1CBFC8C400002FEB /* ASDKKVOManagerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F07EF41CBFC8C400002FEB /* ASDKKVOManagerInfo.m */; };
+		13F07EFB1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF51CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h */; };
+		13F07EFC1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F07EF61CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m */; };
 		13F240301B6B753600533B37 /* ASDKServiceLocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F2402E1B6B753600533B37 /* ASDKServiceLocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13F240311B6B753600533B37 /* ASDKServiceLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F2402F1B6B753600533B37 /* ASDKServiceLocator.m */; };
 		13F240341B6B784A00533B37 /* ASDKServiceLocatorProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F240331B6B784A00533B37 /* ASDKServiceLocatorProtocol.h */; };
@@ -508,8 +511,6 @@
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
 		133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFATaskListStyleCell.m; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		133352A11B7CB32900953E1A /* AFAKVOManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAKVOManager.h; path = Business/KVOManager/AFAKVOManager.h; sourceTree = "<group>"; };
-		133352A21B7CB32900953E1A /* AFAKVOManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAKVOManager.m; path = Business/KVOManager/AFAKVOManager.m; sourceTree = "<group>"; };
 		133B7FDB1B78DBFE00C17D06 /* AFALoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFALoginViewController.h; path = UI/ViewControllers/LoginScreen/AFALoginViewController.h; sourceTree = "<group>"; };
 		133B7FDC1B78DBFE00C17D06 /* AFALoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFALoginViewController.m; path = UI/ViewControllers/LoginScreen/AFALoginViewController.m; sourceTree = "<group>"; };
 		133B7FE11B78FAD300C17D06 /* ASDKRoundedBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKRoundedBorderView.h; path = ../ActivitiSDK/FormRenderEngine/Components/RoundedBorderView/ASDKRoundedBorderView.h; sourceTree = "<group>"; };
@@ -541,10 +542,6 @@
 		135701911B70DA1100A384A7 /* ASDKModelConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelConfiguration.m; path = Configurations/Model/ASDKModelConfiguration.m; sourceTree = "<group>"; };
 		135701951B70E09E00A384A7 /* ASDKModelProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProfile.h; path = Model/Profile/ASDKModelProfile.h; sourceTree = "<group>"; };
 		135701961B70E09E00A384A7 /* ASDKModelProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProfile.m; path = Model/Profile/ASDKModelProfile.m; sourceTree = "<group>"; };
-		135794221B7CCBE500E3BE03 /* AFAKVOManagerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAKVOManagerInfo.h; path = Business/KVOManager/AFAKVOManagerInfo.h; sourceTree = "<group>"; };
-		135794231B7CCBE500E3BE03 /* AFAKVOManagerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAKVOManagerInfo.m; path = Business/KVOManager/AFAKVOManagerInfo.m; sourceTree = "<group>"; };
-		135794251B7CE16000E3BE03 /* AFAKVOManagerSharedProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAKVOManagerSharedProxy.h; path = Business/KVOManager/AFAKVOManagerSharedProxy.h; sourceTree = "<group>"; };
-		135794261B7CE16000E3BE03 /* AFAKVOManagerSharedProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAKVOManagerSharedProxy.m; path = Business/KVOManager/AFAKVOManagerSharedProxy.m; sourceTree = "<group>"; };
 		135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKLogFormatter.h; path = Logging/ASDKLogFormatter.h; sourceTree = "<group>"; };
 		135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLogFormatter.m; path = Logging/ASDKLogFormatter.m; sourceTree = "<group>"; };
 		135EF5631B9090E800ECD1B2 /* NSDate+AFAStringTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+AFAStringTransformation.h"; path = "Business/Categories/NSDate+AFAStringTransformation.h"; sourceTree = "<group>"; };
@@ -822,6 +819,12 @@
 		13EED8741C52804A00F17105 /* ASDKAuthenticateRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKAuthenticateRequestRepresentation.m; path = NetworkServices/RequestRepresentations/AuthentificateInformation/ASDKAuthenticateRequestRepresentation.m; sourceTree = "<group>"; };
 		13EED8781C56721500F17105 /* AFAConnectivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAConnectivityViewController.h; path = UI/ViewControllers/ConnectivityScreen/AFAConnectivityViewController.h; sourceTree = "<group>"; };
 		13EED8791C56721500F17105 /* AFAConnectivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAConnectivityViewController.m; path = UI/ViewControllers/ConnectivityScreen/AFAConnectivityViewController.m; sourceTree = "<group>"; };
+		13F07EF11CBFC8C400002FEB /* ASDKKVOManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManager.h; path = KVOManager/ASDKKVOManager.h; sourceTree = "<group>"; };
+		13F07EF21CBFC8C400002FEB /* ASDKKVOManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKKVOManager.m; path = KVOManager/ASDKKVOManager.m; sourceTree = "<group>"; };
+		13F07EF31CBFC8C400002FEB /* ASDKKVOManagerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManagerInfo.h; path = KVOManager/ASDKKVOManagerInfo.h; sourceTree = "<group>"; };
+		13F07EF41CBFC8C400002FEB /* ASDKKVOManagerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKKVOManagerInfo.m; path = KVOManager/ASDKKVOManagerInfo.m; sourceTree = "<group>"; };
+		13F07EF51CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManagerSharedProxy.h; path = KVOManager/ASDKKVOManagerSharedProxy.h; sourceTree = "<group>"; };
+		13F07EF61CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKKVOManagerSharedProxy.m; path = KVOManager/ASDKKVOManagerSharedProxy.m; sourceTree = "<group>"; };
 		13F2402E1B6B753600533B37 /* ASDKServiceLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKServiceLocator.h; path = ServiceLocator/ASDKServiceLocator.h; sourceTree = "<group>"; };
 		13F2402F1B6B753600533B37 /* ASDKServiceLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKServiceLocator.m; path = ServiceLocator/ASDKServiceLocator.m; sourceTree = "<group>"; };
 		13F240331B6B784A00533B37 /* ASDKServiceLocatorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKServiceLocatorProtocol.h; path = ServiceLocator/Protocol/ASDKServiceLocatorProtocol.h; sourceTree = "<group>"; };
@@ -1394,26 +1397,12 @@
 				13A8CAB91B8B494600B7A25E /* Logger */,
 				13C957F71B833528002A08F1 /* Constants */,
 				139050DD1CA594EC004FEA89 /* Categories */,
-				133352A51B7CB33800953E1A /* KVOManager */,
 				1323CFC81B87482300E66D6F /* ThumbnailManager */,
 				13481F301B95C4D0005D3149 /* KeychainWrapper */,
 				13A8CABD1B8B49B900B7A25E /* ServiceRepository */,
 				1328D34E1BB91CB10010757C /* TableController */,
 			);
 			name = Business;
-			sourceTree = "<group>";
-		};
-		133352A51B7CB33800953E1A /* KVOManager */ = {
-			isa = PBXGroup;
-			children = (
-				133352A11B7CB32900953E1A /* AFAKVOManager.h */,
-				133352A21B7CB32900953E1A /* AFAKVOManager.m */,
-				135794221B7CCBE500E3BE03 /* AFAKVOManagerInfo.h */,
-				135794231B7CCBE500E3BE03 /* AFAKVOManagerInfo.m */,
-				135794251B7CE16000E3BE03 /* AFAKVOManagerSharedProxy.h */,
-				135794261B7CE16000E3BE03 /* AFAKVOManagerSharedProxy.m */,
-			);
-			name = KVOManager;
 			sourceTree = "<group>";
 		};
 		1336D34C1BAAAC4D00641456 /* ListDetailsScreen */ = {
@@ -1868,6 +1857,7 @@
 				1317C34C1BCB9DC000F0B03F /* DiskServices */,
 				13E830761B6A43550028901A /* NetworkServices */,
 				137B945B1BD794FF00134BF1 /* FormRenderEngine */,
+				13F07EFD1CBFC8C800002FEB /* KVOManager */,
 				131375281B6FB38A00D2268E /* Model */,
 				131375191B6F993600D2268E /* Bootstrap */,
 				1319EF571C15827D003FA6C1 /* Resources */,
@@ -3095,6 +3085,19 @@
 			name = ConnectivityScreen;
 			sourceTree = "<group>";
 		};
+		13F07EFD1CBFC8C800002FEB /* KVOManager */ = {
+			isa = PBXGroup;
+			children = (
+				13F07EF11CBFC8C400002FEB /* ASDKKVOManager.h */,
+				13F07EF21CBFC8C400002FEB /* ASDKKVOManager.m */,
+				13F07EF31CBFC8C400002FEB /* ASDKKVOManagerInfo.h */,
+				13F07EF41CBFC8C400002FEB /* ASDKKVOManagerInfo.m */,
+				13F07EF51CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h */,
+				13F07EF61CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m */,
+			);
+			name = KVOManager;
+			sourceTree = "<group>";
+		};
 		13F2402D1B6B6F3D00533B37 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
@@ -3722,12 +3725,14 @@
 				8D3A51E41C8089A300FF9A00 /* ASDKModelUser.h in Headers */,
 				13B7E1FD1B749473002CBDF4 /* ASDKTaskNetworkServiceProtocol.h in Headers */,
 				13B7E2071B749A07002CBDF4 /* ASDKTaskNetworkServices.h in Headers */,
+				13F07EF71CBFC8C400002FEB /* ASDKKVOManager.h in Headers */,
 				13BA5C051BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.h in Headers */,
 				8D3B50E81C86E258005BEEEB /* ASDKModelRestFormField.h in Headers */,
 				131375261B6FB38500D2268E /* ASDKModelServerConfiguration.h in Headers */,
 				137B944A1BD67A8600134BF1 /* ASDKModelFormDescription.h in Headers */,
 				13F9BA2A1B734F820068BB8C /* ASDKProfileInformationRequestRepresentation.h in Headers */,
 				8DB399941C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.h in Headers */,
+				13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */,
 				8D8F85FF1C8DEE3A00356A5B /* ASDKAddContentTableViewCell.h in Headers */,
 				1315B8021BD126FE00C2EC6F /* ASDKParserOperationWorkerProtocol.h in Headers */,
 				8DEA25401C7E044900BF376F /* ASDKMultilineFormFieldDetailsViewController.h in Headers */,
@@ -3751,6 +3756,7 @@
 				8DB399A21C9B07890089E0AB /* ASDKActivityView.h in Headers */,
 				8D8F86041C8ED62000356A5B /* ASDKFormAttachFieldCollectionViewCell.h in Headers */,
 				139E54081C21935500CE4674 /* ASDKModelApp.h in Headers */,
+				13F07EFB1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h in Headers */,
 				138F0A2E1C6B865700DA9414 /* ASDKFormControllerNavigationProtocol.h in Headers */,
 				138F0A461C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.h in Headers */,
 				131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */,
@@ -4217,7 +4223,6 @@
 				1323CFC31B87065000E66D6F /* UIImage+AFAFontGlyphicons.m in Sources */,
 				13CE8ED51B85B32E0022F17A /* AFAContainerViewController.m in Sources */,
 				13FFF4101C43A6E600550747 /* AFAApplicationListViewController.m in Sources */,
-				135794271B7CE16000E3BE03 /* AFAKVOManagerSharedProxy.m in Sources */,
 				75CFBC711B81E7860018DADE /* AFARememberCredentialsTableViewCell.m in Sources */,
 				138D3D7F1C3FBAAE00266A7C /* AFALoginCredentialsViewController.m in Sources */,
 				8D7C1A4E1C808D290092EA81 /* AFADescriptionTableViewCell.m in Sources */,
@@ -4227,7 +4232,6 @@
 				13E6E2831B7E078A001F5737 /* AFASignInTableViewCell.m in Sources */,
 				7597AEE91B821E9500F8B5DE /* AFAActivityView.m in Sources */,
 				8D7C1A4A1C808D160092EA81 /* AFADueTableViewCell.m in Sources */,
-				135794241B7CCBE500E3BE03 /* AFAKVOManagerInfo.m in Sources */,
 				139DF5BE1C5A63740062D01D /* AFAProfileServices.m in Sources */,
 				1323CFD61B87719900E66D6F /* AFALogFormatter.m in Sources */,
 				8D7C1A521C808D470092EA81 /* AFAContributorTableViewCell.m in Sources */,
@@ -4246,7 +4250,6 @@
 				13BDA7371B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m in Sources */,
 				139DF5CA1C5F40970062D01D /* AFAFilterServices.m in Sources */,
 				8D7C1A891C80925D0092EA81 /* AFAProcessDefinitionListStyleTableViewCell.m in Sources */,
-				133352A31B7CB32900953E1A /* AFAKVOManager.m in Sources */,
 				13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */,
 				8D7C1A7D1C8091860092EA81 /* AFAStartProcessInstanceViewController.m in Sources */,
 				132511F51BA811F700C4CA64 /* AFAPushFadeSegue.m in Sources */,
@@ -4302,8 +4305,10 @@
 				13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */,
 				8D6E969C1C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.m in Sources */,
 				13C9B57F1B9497B90009BD27 /* ASDKModelPaging.m in Sources */,
+				13F07EF81CBFC8C400002FEB /* ASDKKVOManager.m in Sources */,
 				13AAC7D91BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m in Sources */,
 				8DB399A71C9C31420089E0AB /* ASDKPeopleTableViewCell.m in Sources */,
+				13F07EFA1CBFC8C400002FEB /* ASDKKVOManagerInfo.m in Sources */,
 				8D8F85F61C8D8E7000356A5B /* ASDKAttachFormFieldDetailsViewController.m in Sources */,
 				13B7E2111B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.m in Sources */,
 				136680041C89982D005E4AEA /* ASDKQuerryNetworkServices.m in Sources */,
@@ -4334,6 +4339,7 @@
 				13C94BE51B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m in Sources */,
 				1357018E1B70D21700A384A7 /* ASDKModelBase.m in Sources */,
 				13044FCA1BFA178A008FF6E6 /* ASDKModelAmountFormField.m in Sources */,
+				13F07EFC1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m in Sources */,
 				1313751D1B6FABCF00D2268E /* ASDKNetworkService.m in Sources */,
 				8D3E354F1C9C50F1009F7766 /* ASDKPushFadeSegueUnwind.m in Sources */,
 				1313750E1B6F927C00D2268E /* ASDKParserOperationManager.m in Sources */,
