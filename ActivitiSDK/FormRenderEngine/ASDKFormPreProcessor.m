@@ -24,6 +24,7 @@
 #import "ASDKModelAmountFormField.h"
 #import "ASDKModelHyperlinkFormField.h"
 #import "ASDKModelDynamicTableFormField.h"
+#import "ASDKModelFormFieldOption.h"
 
 @interface ASDKFormPreProcessor ()
 
