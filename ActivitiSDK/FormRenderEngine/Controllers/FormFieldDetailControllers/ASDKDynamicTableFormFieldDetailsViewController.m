@@ -185,55 +185,60 @@ viewForHeaderInSection:(NSInteger)section {
 
 - (void)didEditRow:(NSInteger)section {
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKFormRenderEngine *formRenderEngine = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormRenderEngineProtocol)];
+    ASDKFormRenderEngine *currentFormRenderEngine = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormRenderEngineProtocol)];
+    ASDKFormRenderEngine *newFormRenderEngine = [ASDKFormRenderEngine new];
+    
+    newFormRenderEngine.formNetworkServices = currentFormRenderEngine.formNetworkServices;
+    newFormRenderEngine.processDefinition = currentFormRenderEngine.processDefinition;
+    newFormRenderEngine.task = currentFormRenderEngine.task;
     
     __weak typeof(self) weakSelf = self;
     
-    if (formRenderEngine.task) {
-        [formRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
-                                     dynamicTableFormFieldID:self.currentFormField.instanceID
-                                                   taskModel:formRenderEngine.task
-                                       renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-                                           if (formController && !error) {
-                                               self.selectedRowIndex = section;
-                                               
-                                               UIBarButtonItem *deleteRowBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
-                                                                                                                          style:UIBarButtonItemStylePlain
-                                                                                                                         target:self
-                                                                                                                         action:@selector(deleteCurrentDynamicTableRow)];
-                                               [deleteRowBarButtonItem setTitleTextAttributes:@{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
-                                                                                                NSForegroundColorAttributeName : [UIColor whiteColor]}
-                                                                                     forState:UIControlStateNormal];
-                                               
-                                               formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
-                                               
-                                               UILabel *titleLabel = [[UILabel alloc] init];
-                                               titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
-                                               titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
-                                                                                 size:17];
-                                               titleLabel.textColor = [UIColor whiteColor];
-                                               [titleLabel sizeToFit];
-                                               
-                                               formController.navigationItem.titleView = titleLabel;
-                                               
-                                               // If there is controller assigned to the selected form field notify the delegate
-                                               // that it can begin preparing for presentation
-                                               formController.navigationDelegate = self.navigationDelegate;
-                                               [self.navigationDelegate prepareToPresentDetailController:formController];
-                                           }
+    if (newFormRenderEngine.task) {
+        [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
+                                        dynamicTableFormFieldID:self.currentFormField.instanceID
+                                                      taskModel:newFormRenderEngine.task
+                                          renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                              if (formController && !error) {
+                                                   self.selectedRowIndex = section;
+                                                   
+                                                   UIBarButtonItem *deleteRowBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
+                                                                                                                              style:UIBarButtonItemStylePlain
+                                                                                                                             target:self
+                                                                                                                             action:@selector(deleteCurrentDynamicTableRow)];
+                                                   [deleteRowBarButtonItem setTitleTextAttributes:@{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
+                                                                                                    NSForegroundColorAttributeName : [UIColor whiteColor]}
+                                                                                         forState:UIControlStateNormal];
+                                                   
+                                                   formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
+                                                   
+                                                   UILabel *titleLabel = [[UILabel alloc] init];
+                                                   titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
+                                                   titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
+                                                                                     size:17];
+                                                   titleLabel.textColor = [UIColor whiteColor];
+                                                   [titleLabel sizeToFit];
+                                                   
+                                                   formController.navigationItem.titleView = titleLabel;
+                                                   
+                                                   // If there is controller assigned to the selected form field notify the delegate
+                                                   // that it can begin preparing for presentation
+                                                   formController.navigationDelegate = self.navigationDelegate;
+                                                   [self.navigationDelegate prepareToPresentDetailController:formController];
+                                              }
                                        } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
                                        }];
     } else {
-        [formRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
-                                     dynamicTableFormFieldID:self.currentFormField.instanceID
-                                           processDefinition:formRenderEngine.processDefinition
-                                       renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-                                           if (formController && !error) {
-                                               // If there is controller assigned to the selected form field notify the delegate
-                                               // that it can begin preparing for presentation
-                                               formController.navigationDelegate = self.navigationDelegate;
-                                               [self.navigationDelegate prepareToPresentDetailController:formController];
-                                           }
+        [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
+                                        dynamicTableFormFieldID:self.currentFormField.instanceID
+                                              processDefinition:newFormRenderEngine.processDefinition
+                                          renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                              if (formController && !error) {
+                                                   // If there is controller assigned to the selected form field notify the delegate
+                                                   // that it can begin preparing for presentation
+                                                   formController.navigationDelegate = self.navigationDelegate;
+                                                   [self.navigationDelegate prepareToPresentDetailController:formController];
+                                              }
                                        } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
                                            __strong typeof(self) strongSelf = weakSelf;
                                            
