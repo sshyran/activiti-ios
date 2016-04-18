@@ -43,10 +43,12 @@
 @interface ASDKDynamicTableFormFieldDetailsViewController ()
 
 @property (strong, nonatomic) ASDKModelFormField    *currentFormField;
+@property (assign, nonatomic) NSInteger             selectedRowIndex;
 @property (strong, nonatomic) NSArray               *visibleRowColumns;
 @property (strong, nonatomic) NSDictionary          *columnDefinitions;
 @property (weak, nonatomic)   IBOutlet UITableView  *rowsWithVisibleColumnsTableView;
 - (IBAction)addDynamicTableRow:(id)sender;
+- (void)deleteCurrentDynamicTableRow;
 
 @end
 
@@ -192,20 +194,33 @@ viewForHeaderInSection:(NSInteger)section {
                                                    taskModel:formRenderEngine.task
                                        renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                            if (formController && !error) {
+                                               self.selectedRowIndex = section;
+                                               
+                                               UIBarButtonItem *deleteRowBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
+                                                                                                                          style:UIBarButtonItemStylePlain
+                                                                                                                         target:self
+                                                                                                                         action:@selector(deleteCurrentDynamicTableRow)];
+                                               [deleteRowBarButtonItem setTitleTextAttributes:@{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
+                                                                                                NSForegroundColorAttributeName : [UIColor whiteColor]}
+                                                                                     forState:UIControlStateNormal];
+                                               
+                                               formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
+                                               
+                                               UILabel *titleLabel = [[UILabel alloc] init];
+                                               titleLabel.text = [NSString stringWithFormat:@"Row %ld", section + 1];
+                                               titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
+                                                                                 size:17];
+                                               titleLabel.textColor = [UIColor whiteColor];
+                                               [titleLabel sizeToFit];
+                                               
+                                               formController.navigationItem.titleView = titleLabel;
+                                               
                                                // If there is controller assigned to the selected form field notify the delegate
                                                // that it can begin preparing for presentation
                                                formController.navigationDelegate = self.navigationDelegate;
                                                [self.navigationDelegate prepareToPresentDetailController:formController];
                                            }
                                        } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
-                                           __strong typeof(self) strongSelf = weakSelf;
-
-                                           // delete current row
-                                           NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
-                                           [formFieldValues removeObjectAtIndex:section];
-                                           strongSelf.currentFormField.values = [formFieldValues copy];
-                                           [strongSelf determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
-                                           [strongSelf.navigationController popToViewController:self animated:YES];
                                        }];
     } else {
         [formRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
@@ -318,5 +333,14 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
         }
             break;
     }
+}
+
+- (void)deleteCurrentDynamicTableRow {
+    // delete current row
+    NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:self.currentFormField.values];
+    [formFieldValues removeObjectAtIndex:self.selectedRowIndex];
+    self.currentFormField.values = [formFieldValues copy];
+    [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+    [self.navigationController popToViewController:self animated:YES];
 }
 @end

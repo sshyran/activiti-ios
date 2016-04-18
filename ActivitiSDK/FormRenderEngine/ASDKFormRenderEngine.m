@@ -310,47 +310,42 @@
 - (void)completeFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
     __weak typeof(self) weakSelf = self;
     
-    if ([self.dataSource isKindOfClass:ASDKDynamicTableRenderDataSource.class]) {
-        if (self.formCompletionBlock) {
-            self.formCompletionBlock(true, nil);
-        }
-    } else {
-        // Check which complete method should be used i.e tasks or process definitions based on the
-        // initialised content
-        if (self.task) {
-            [self.formNetworkServices completeFormForTaskID:self.task.instanceID
-                    withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation
-                                            completionBlock:^(BOOL isFormCompleted, NSError *error) {
-                                                __strong typeof(self) strongSelf = weakSelf;
-                                                
-                                                if (strongSelf.formCompletionBlock) {
-                                                    strongSelf.formCompletionBlock(isFormCompleted, error);
-                                                }
-                                                
-                                                // After a successfull form completion clean up the engine
-                                                // and prepare it for reuse
-                                                if (isFormCompleted) {
-                                                    [self performEngineCleanup];
-                                                }
-                                            }];
-        } else if (self.processDefinition) {
-            [self.formNetworkServices completeFormForProcessDefinition:self.processDefinition
-                                withFormFieldValuesRequestrepresentation:formFieldValueRequestRepresentation
-                                                         completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
-                                                             __strong typeof(self) strongSelf = weakSelf;
-                                                             
-                                                             if (strongSelf.startFormCompletionBlock) {
-                                                                 strongSelf.startFormCompletionBlock(processInstance, error);
-                                                             }
-                                                             
-                                                             // After a successfull form completion clean up the engine
-                                                             // and prepare it for reuse
-                                                             if (processInstance) {
-                                                                 [self performEngineCleanup];
-                                                             }
-                                                         }];
-        }
+    // Check which complete method should be used i.e tasks or process definitions based on the
+    // initialised content
+    if (self.task) {
+        [self.formNetworkServices completeFormForTaskID:self.task.instanceID
+                withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation
+                                        completionBlock:^(BOOL isFormCompleted, NSError *error) {
+                                            __strong typeof(self) strongSelf = weakSelf;
+                                            
+                                            if (strongSelf.formCompletionBlock) {
+                                                strongSelf.formCompletionBlock(isFormCompleted, error);
+                                            }
+                                            
+                                            // After a successfull form completion clean up the engine
+                                            // and prepare it for reuse
+                                            if (isFormCompleted) {
+                                                [self performEngineCleanup];
+                                            }
+                                        }];
+    } else if (self.processDefinition) {
+        [self.formNetworkServices completeFormForProcessDefinition:self.processDefinition
+                            withFormFieldValuesRequestrepresentation:formFieldValueRequestRepresentation
+                                                     completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
+                                                         __strong typeof(self) strongSelf = weakSelf;
+                                                         
+                                                         if (strongSelf.startFormCompletionBlock) {
+                                                             strongSelf.startFormCompletionBlock(processInstance, error);
+                                                         }
+                                                         
+                                                         // After a successfull form completion clean up the engine
+                                                         // and prepare it for reuse
+                                                         if (processInstance) {
+                                                             [self performEngineCleanup];
+                                                         }
+                                                     }];
     }
+    
 }
 
 - (void)performEngineCleanup {
