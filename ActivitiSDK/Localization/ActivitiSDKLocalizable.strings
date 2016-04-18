@@ -30,6 +30,7 @@
 "formAttachFileItemsAttachedText"                               = "%ld items attached";
 "formPeopleNoSelectedText"                                      = "No people selected";
 "formDynamicTableRowsAvailableText"                             = "Has %ld rows";
+"formDynamicTableRowHeaderText"                                 = "Row %ld";
 
 // Content picker component
 "formContentPickerComponentLocalContentText"                    = "Open from Device";

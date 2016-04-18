@@ -21,6 +21,7 @@
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
+#import "ASDKLocalizationConstants.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
@@ -173,7 +174,7 @@ heightForHeaderInSection:(NSInteger)section {
 - (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
     ASDKDynamicTableRowHeaderTableViewCell *sectionHeaderView = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldDynamicTableHeaderRepresentation];
-    sectionHeaderView.rowHeaderLabel.text = [NSString stringWithFormat:@"row %ld", (long) section + 1];
+    sectionHeaderView.rowHeaderLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
     sectionHeaderView.selectedSection = section;
     sectionHeaderView.navigationDelegate = self;
     return sectionHeaderView;
@@ -207,7 +208,7 @@ viewForHeaderInSection:(NSInteger)section {
                                                formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
                                                
                                                UILabel *titleLabel = [[UILabel alloc] init];
-                                               titleLabel.text = [NSString stringWithFormat:@"Row %ld", section + 1];
+                                               titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
                                                titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
                                                                                  size:17];
                                                titleLabel.textColor = [UIColor whiteColor];

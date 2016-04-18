@@ -37,6 +37,7 @@ NSString *kLocalizationFormAttachFileNoContentText               = @"formAttachF
 NSString *kLocalizationFormAttachFileItemsAttachedText           = @"formAttachFileItemsAttachedText";
 NSString *kLocalizationFormPeopleNoSelectedText                  = @"formPeopleNoSelectedText";
 NSString *kLocalizationFormDynamicTableRowsAvailableText         = @"formDynamicTableRowsAvailableText";
+NSString *kLocalizationFormDynamicTableRowHeaderText             = @"formDynamicTableRowHeaderText";
 
 
 #pragma mark -
