@@ -18,6 +18,7 @@
 
 #import "ASDKDynamicTableFormFieldDetailsViewController.h"
 #import "ASDKBootstrap.h"
+#import "ASDKNoContentView.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -43,11 +44,12 @@
 
 @interface ASDKDynamicTableFormFieldDetailsViewController ()
 
-@property (strong, nonatomic) ASDKModelFormField    *currentFormField;
-@property (assign, nonatomic) NSInteger             selectedRowIndex;
-@property (strong, nonatomic) NSArray               *visibleRowColumns;
-@property (strong, nonatomic) NSDictionary          *columnDefinitions;
-@property (weak, nonatomic)   IBOutlet UITableView  *rowsWithVisibleColumnsTableView;
+@property (strong, nonatomic) ASDKModelFormField        *currentFormField;
+@property (assign, nonatomic) NSInteger                 selectedRowIndex;
+@property (strong, nonatomic) NSArray                   *visibleRowColumns;
+@property (strong, nonatomic) NSDictionary              *columnDefinitions;
+@property (weak, nonatomic)   IBOutlet UITableView      *rowsWithVisibleColumnsTableView;
+@property (weak, nonatomic) IBOutlet ASDKNoContentView  *noRowsView;
 - (IBAction)addDynamicTableRow:(id)sender;
 - (void)deleteCurrentDynamicTableRow;
 
@@ -70,8 +72,6 @@
     // Configure table view
     self.rowsWithVisibleColumnsTableView.estimatedRowHeight = 44.0f;
     self.rowsWithVisibleColumnsTableView.rowHeight = UITableViewAutomaticDimension;
-    
-    [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -80,7 +80,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self.rowsWithVisibleColumnsTableView reloadData];
+    [self refreshContent];
 }
 /*
 #pragma mark - Navigation
@@ -91,6 +91,16 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)refreshContent {
+    [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+
+    // Display the no rows view if appropiate
+    self.noRowsView.hidden = (self.visibleRowColumns.count > 0) ? YES : NO;
+    self.noRowsView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
+    
+    [self.rowsWithVisibleColumnsTableView reloadData];
+}
 
 - (IBAction)addDynamicTableRow:(id)sender {
     ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) self.currentFormField;
@@ -108,7 +118,7 @@
     self.currentFormField.values = [[NSMutableArray alloc] initWithArray:newDynamicTableRows];
     [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
 
-    [self.rowsWithVisibleColumnsTableView reloadData];
+    [self refreshContent];
 }
 
 - (void)deleteCurrentDynamicTableRow {
