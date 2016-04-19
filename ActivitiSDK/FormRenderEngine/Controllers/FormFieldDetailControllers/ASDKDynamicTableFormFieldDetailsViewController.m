@@ -94,18 +94,29 @@
 
 - (IBAction)addDynamicTableRow:(id)sender {
     ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) self.currentFormField;
-    
     NSMutableArray *newDynamicTableRows = [NSMutableArray new];
     if (self.currentFormField.values) {
         [newDynamicTableRows addObjectsFromArray:dynamicTableFormField.values];
     }
-    if (dynamicTableFormField.columnDefinitions) {
-        [newDynamicTableRows addObject:dynamicTableFormField.columnDefinitions];
-    }
-    self.currentFormField.values = [newDynamicTableRows copy];
+    
+    // make deepcopy of column definitions
+    NSArray* dynamicTableDeepCopy = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:dynamicTableFormField.columnDefinitions]];
+
+    // and add them as a new table row
+    [newDynamicTableRows addObject:dynamicTableDeepCopy];
+
+    self.currentFormField.values = [[NSMutableArray alloc] initWithArray:newDynamicTableRows];
     [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
 
     [self.rowsWithVisibleColumnsTableView reloadData];
+}
+
+- (void)deleteCurrentDynamicTableRow {
+    NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:self.currentFormField.values];
+    [formFieldValues removeObjectAtIndex:self.selectedRowIndex];
+    self.currentFormField.values = [formFieldValues copy];
+    [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+    [self.navigationController popToViewController:self animated:YES];
 }
 
 - (void)determineVisibleRowColumnsWithFormFieldValues:(NSArray *)values {
@@ -339,14 +350,5 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
         }
             break;
     }
-}
-
-- (void)deleteCurrentDynamicTableRow {
-    // delete current row
-    NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:self.currentFormField.values];
-    [formFieldValues removeObjectAtIndex:self.selectedRowIndex];
-    self.currentFormField.values = [formFieldValues copy];
-    [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
-    [self.navigationController popToViewController:self animated:YES];
 }
 @end
