@@ -18,7 +18,10 @@
 
 #import "ASDKDynamicTableFormFieldDetailsViewController.h"
 #import "ASDKBootstrap.h"
+
+// Views
 #import "ASDKNoContentView.h"
+#import "ASDKActivityView.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -50,6 +53,8 @@
 @property (strong, nonatomic) NSDictionary              *columnDefinitions;
 @property (weak, nonatomic)   IBOutlet UITableView      *rowsWithVisibleColumnsTableView;
 @property (weak, nonatomic) IBOutlet ASDKNoContentView  *noRowsView;
+@property (weak, nonatomic) IBOutlet ASDKActivityView   *activityView;
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *blurEffectView;
 - (IBAction)addDynamicTableRow:(id)sender;
 - (void)deleteCurrentDynamicTableRow;
 
@@ -215,6 +220,10 @@ viewForHeaderInSection:(NSInteger)section {
     
     __weak typeof(self) weakSelf = self;
     
+    self.blurEffectView.hidden = NO;
+    self.activityView.hidden = NO;
+    self.activityView.animating = YES;
+    
     if (newFormRenderEngine.task) {
         [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
                                         dynamicTableFormFieldID:self.currentFormField.instanceID
@@ -247,6 +256,10 @@ viewForHeaderInSection:(NSInteger)section {
                                                    formController.navigationDelegate = self.navigationDelegate;
                                                    [self.navigationDelegate prepareToPresentDetailController:formController];
                                               }
+                                              
+                                              self.activityView.animating = NO;
+                                              self.activityView.hidden = YES;
+                                              self.blurEffectView.hidden = YES;
                                        } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
                                        }];
     } else {
@@ -260,6 +273,10 @@ viewForHeaderInSection:(NSInteger)section {
                                                    formController.navigationDelegate = self.navigationDelegate;
                                                    [self.navigationDelegate prepareToPresentDetailController:formController];
                                               }
+                                              
+                                              self.activityView.animating = NO;
+                                              self.activityView.hidden = YES;
+                                              self.blurEffectView.hidden = YES;
                                        } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
                                            __strong typeof(self) strongSelf = weakSelf;
                                            

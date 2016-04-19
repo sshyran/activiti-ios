@@ -912,16 +912,55 @@
                                     <outlet property="iconImageView" destination="BDf-Ar-jLz" id="XxG-b9-3HM"/>
                                 </connections>
                             </view>
+                            <visualEffectView hidden="YES" opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HXz-EA-FXb" userLabel="Blur Effect View">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="7mZ-Ys-mVb">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <blurEffect style="dark"/>
+                            </visualEffectView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vud-NR-JYU" customClass="ASDKActivityView">
+                                <rect key="frame" x="280" y="248" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="NBe-yS-KjJ"/>
+                                    <constraint firstAttribute="height" constant="40" id="kPU-15-cmx"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="innerCirclePadding">
+                                        <real key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="outerCircleLineWidth">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="outerCircleColor">
+                                        <color key="value" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="innerCircleColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="innerCircleLineWidht">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="x3w-g8-pXw" firstAttribute="leading" secondItem="dST-yT-Jio" secondAttribute="leading" id="3L6-Wb-cpJ"/>
                             <constraint firstAttribute="trailing" secondItem="dST-yT-Jio" secondAttribute="trailing" id="6w7-f4-x48"/>
+                            <constraint firstAttribute="trailing" secondItem="HXz-EA-FXb" secondAttribute="trailing" id="8vP-Hp-zRd"/>
+                            <constraint firstItem="vud-NR-JYU" firstAttribute="centerX" secondItem="qDR-Np-JZh" secondAttribute="centerX" id="D3k-4y-Skh"/>
                             <constraint firstItem="x3w-g8-pXw" firstAttribute="top" secondItem="dST-yT-Jio" secondAttribute="top" id="DiN-IT-gwh"/>
                             <constraint firstItem="x3w-g8-pXw" firstAttribute="trailing" secondItem="dST-yT-Jio" secondAttribute="trailing" id="Lh7-k2-KFx"/>
                             <constraint firstItem="x3w-g8-pXw" firstAttribute="bottom" secondItem="dST-yT-Jio" secondAttribute="bottom" id="MyM-FM-i7u"/>
                             <constraint firstItem="dST-yT-Jio" firstAttribute="top" secondItem="xnH-Ly-zB5" secondAttribute="bottom" id="Nlc-BL-9Dy"/>
+                            <constraint firstItem="HXz-EA-FXb" firstAttribute="leading" secondItem="qDR-Np-JZh" secondAttribute="leading" id="ax1-tv-Qd7"/>
+                            <constraint firstItem="yCH-p7-Rqb" firstAttribute="top" secondItem="HXz-EA-FXb" secondAttribute="bottom" id="hlq-Mq-4h4"/>
+                            <constraint firstItem="vud-NR-JYU" firstAttribute="centerY" secondItem="qDR-Np-JZh" secondAttribute="centerY" id="oi1-BN-Ny7"/>
                             <constraint firstItem="yCH-p7-Rqb" firstAttribute="top" secondItem="dST-yT-Jio" secondAttribute="bottom" id="pAT-Jt-nQ1"/>
+                            <constraint firstItem="HXz-EA-FXb" firstAttribute="top" secondItem="xnH-Ly-zB5" secondAttribute="bottom" id="vFX-27-azh"/>
                             <constraint firstItem="dST-yT-Jio" firstAttribute="leading" secondItem="qDR-Np-JZh" secondAttribute="leading" id="whu-5Z-zUS"/>
                         </constraints>
                     </view>
@@ -938,6 +977,8 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
                     <connections>
+                        <outlet property="activityView" destination="vud-NR-JYU" id="JwV-Xy-tRv"/>
+                        <outlet property="blurEffectView" destination="HXz-EA-FXb" id="1vI-lh-yxu"/>
                         <outlet property="noRowsView" destination="x3w-g8-pXw" id="cMo-N2-L9Y"/>
                         <outlet property="rowsWithVisibleColumnsTableView" destination="dST-yT-Jio" id="jyt-NA-2G1"/>
                     </connections>
