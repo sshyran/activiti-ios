@@ -29,6 +29,7 @@
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
+#import "UIViewController+ASDKAlertAddition.h"
 
 // Models
 #import "ASDKModelFormField.h"
@@ -127,11 +128,20 @@
 }
 
 - (void)deleteCurrentDynamicTableRow {
-    NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:self.currentFormField.values];
-    [formFieldValues removeObjectAtIndex:self.selectedRowIndex];
-    self.currentFormField.values = [formFieldValues copy];
-    [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
-    [self.navigationController popToViewController:self animated:YES];
+    __weak typeof(self) weakSelf = self;
+
+    [self showConfirmationAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableDeleteRowConfirmationText, ASDKLocalizationTable,@"Delete row confirmation question")
+             confirmationBlockAction:^{
+                 __strong typeof(self) strongSelf = weakSelf;
+                 
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                       NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                       [formFieldValues removeObjectAtIndex:strongSelf.selectedRowIndex];
+                       strongSelf.currentFormField.values = [formFieldValues copy];
+                       [strongSelf determineVisibleRowColumnsWithFormFieldValues:strongSelf.currentFormField.values];
+                       [strongSelf.navigationController popToViewController:strongSelf animated:YES];
+                 });
+             }];
 }
 
 - (void)determineVisibleRowColumnsWithFormFieldValues:(NSArray *)values {

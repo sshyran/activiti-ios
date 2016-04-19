@@ -38,7 +38,7 @@ NSString *kLocalizationFormAttachFileItemsAttachedText           = @"formAttachF
 NSString *kLocalizationFormPeopleNoSelectedText                  = @"formPeopleNoSelectedText";
 NSString *kLocalizationFormDynamicTableRowsAvailableText         = @"formDynamicTableRowsAvailableText";
 NSString *kLocalizationFormDynamicTableRowHeaderText             = @"formDynamicTableRowHeaderText";
-
+NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText = @"formDynamicTableDeleteRowConfirmationText";
 
 #pragma mark -
 #pragma mark Content picker component
