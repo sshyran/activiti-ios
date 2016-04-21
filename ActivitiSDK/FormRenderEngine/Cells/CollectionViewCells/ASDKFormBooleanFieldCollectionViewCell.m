@@ -79,6 +79,8 @@
     self.formField.metadataValue = [ASDKModelFormFieldValue new];
     self.formField.metadataValue.attachedValue = [checkboxSwitch isOn] ? kASDKFormFieldTrueStringValue : kASDKFormFieldFalseStringValue;
     
+    [self validateCellStateForSwitchState:self.booleanField.on];
+
     if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
         [self.delegate updatedMetadataValueForFormField:self.formField
                                                  inCell:self];
@@ -113,6 +115,5 @@
         }
     }
 }
-
 
 @end

@@ -85,10 +85,19 @@
         } else {
             self.selectedPeopleLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormPeopleNoSelectedText, ASDKLocalizationTable, @"No people selected");
         }
-        
-        [self validateCellStateForFormFieldValues:formField.values];
-
         self.disclosureIndicatorLabel.hidden = NO;
+
+        [self validateCellStateForFormFieldValues:formField.values];
+        
+        __weak typeof(self) weakSelf = self;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+                [self.delegate updatedMetadataValueForFormField:strongSelf.formField
+                                                         inCell:strongSelf];
+            }
+        });
     }
 }
 
