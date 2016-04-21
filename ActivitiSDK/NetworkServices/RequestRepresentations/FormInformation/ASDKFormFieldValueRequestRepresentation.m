@@ -92,28 +92,32 @@
         
         // If there's an option field available change the nesting structure
         if (formField.metadataValue.option) {
-            
             formFieldValue = @{kASDKAPIGenericIDParameter  : formField.instanceID,
                                kASDKAPIGenericNameParameter: formField.metadataValue.option.attachedValue};
-            
-            
-//            [formFieldMetadataValuesDict setObject:                                            forKey:formField.instanceID];
         } else if (formField.metadataValue.attachedValue) { // if there's a attached value
-            formFieldValue = formField.metadataValue.attachedValue;
-
-            
-//            [formFieldMetadataValuesDict setObject:                                            forKey:formField.instanceID];
+            // special date field handling
+            if (formField.representationType == ASDKModelFormFieldRepresentationTypeDate) {
+                // create date object from saved string
+                NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
+                [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
+                NSDate *storedDate = [displayDateFormatter dateFromString:formField.metadataValue.attachedValue];
+                
+                //format submit date (2016-02-23T23:00:000Z)
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+                
+                formFieldValue = [dateFormatter stringFromDate:storedDate];
+            } else {
+                formFieldValue = formField.metadataValue.attachedValue;
+            }
         } else if (formField.values) { // otherwise use the original value
             // special attach field handling
             if (formField.representationType == ASDKModelFormFieldRepresentationTypeAttach) {
-                
                 NSMutableArray *modelContentArray = [NSMutableArray new];
                 for (ASDKModelContent *modelContent in formField.values) {
                     [modelContentArray addObject:modelContent.instanceID];
                 }
-                
-//                [formFieldMetadataValuesDict setObject:[modelContentArray componentsJoinedByString:@","]
-//                                                forKey:formField.instanceID];
                 formFieldValue = [modelContentArray componentsJoinedByString:@","];
             }
             // special radio / dropdown field handling
@@ -138,42 +142,18 @@
             }
             // special people field handling
             else if (formField.representationType == ASDKModelFormFieldRepresentationTypePeople) {
-                
                 NSError *error = nil;
                 if (formField.values.count > 1) {
                     NSArray *JSONDictionaryArr = [MTLJSONAdapter JSONArrayFromModels:formField.values
                                                                                error:&error];
-                    
-//                    [formFieldMetadataValuesDict setObject:JSONDictionaryArr
-//                                                    forKey:formField.instanceID];
                     formFieldValue = JSONDictionaryArr;
                 } else if (formField.values.count == 1) {
                     
                     NSDictionary *JSONDictionary = [MTLJSONAdapter JSONDictionaryFromModel:formField.values.firstObject
                                                                                      error:&error];
-//                    [formFieldMetadataValuesDict setObject:JSONDictionary
-//                                                    forKey:formField.instanceID];
                     formFieldValue = JSONDictionary;
                 }
             }
-//            // special dynamic table field handling
-//            else if (formField.representationType == ASDKModelFormFieldRepresentationTypeDynamicTable) {
-//                
-//                NSError *error = nil;
-//                if (formField.values.count > 1) {
-//                    NSArray *JSONDictionaryArr = [MTLJSONAdapter JSONArrayFromModels:formField.values
-//                                                                               error:&error];
-//                    
-//                    [formFieldMetadataValuesDict setObject:JSONDictionaryArr
-//                                                    forKey:formField.instanceID];
-//                } else if (formField.values.count == 1) {
-//                    
-//                    NSDictionary *JSONDictionary = [MTLJSONAdapter JSONDictionaryFromModel:formField.values.firstObject
-//                                                                                     error:&error];
-//                    [formFieldMetadataValuesDict setObject:JSONDictionary
-//                                                    forKey:formField.instanceID];
-//                }
-//            }
             // special people field handling
             else if (formField.representationType == ASDKModelFormFieldRepresentationTypeBoolean) {
                 if (!formField.values.firstObject) {
@@ -181,8 +161,6 @@
                 }
             }
             else {
-//                [formFieldMetadataValuesDict setObject:formField.values.firstObject
-//                                                forKey:formField.instanceID];
                 formFieldValue = formField.values.firstObject;
             }
             
