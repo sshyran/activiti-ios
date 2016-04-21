@@ -22,10 +22,13 @@
 
 @interface ASDKDynamicTableRowHeaderTableViewCell : UITableViewCell
 
-@property (assign, nonatomic) id<ASDKDynamicTableRowHeaderNavigationProtocol> navigationDelegate;
-@property (assign, nonatomic) NSInteger selectedSection;
-@property (weak, nonatomic) IBOutlet UILabel *rowHeaderLabel;
-@property (weak, nonatomic) IBOutlet UIButton *rowEditButton;
+@property (assign, nonatomic) id<ASDKDynamicTableRowHeaderNavigationProtocol>   navigationDelegate;
+@property (assign, nonatomic) NSInteger                                         selectedSection;
+@property (weak, nonatomic) IBOutlet UILabel                                    *rowHeaderLabel;
+@property (weak, nonatomic) IBOutlet UIButton                                   *rowEditButton;
 - (IBAction)editRow:(id)sender;
-
+- (void)setupCellWithSelectionSection:(NSInteger)section
+                           headerText:(NSString *)headerText
+                            isReadOnly:(BOOL)isReadOnly
+                    navgationDelegate:(id<ASDKDynamicTableRowHeaderNavigationProtocol>)navigationDelegate;
 @end

@@ -287,7 +287,8 @@
     // completed forms; only attach fields have child view controller
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType
         && (ASDKModelFormFieldRepresentationTypeAttach == formField.formFieldParams.representationType
-            || ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType)) {
+            || ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType
+            || ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
         representationType = formField.formFieldParams.representationType;
     } else if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType) {
         representationType = formField.representationType;

@@ -94,7 +94,7 @@
         });
     }
     
-    self.disclosureIndicatorLabel.hidden = false;
+    self.disclosureIndicatorLabel.hidden = NO;
 }
 
 - (NSString *)formatDescriptionLabelTextWithFormFieldValues:(NSArray *)formfieldValues {

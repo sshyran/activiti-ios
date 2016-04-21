@@ -68,7 +68,7 @@
     // then regular or completed form fields and we should handle it accordingly
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
         
-        self.amountTextfield.text = formField.values.firstObject;
+        self.amountTextfield.text = [NSString stringWithFormat:@"%@", formField.values.firstObject];
         self.amountTextfield.enabled = NO;
         self.amountTextfield.textColor = [UIColor formViewCompletedValueColor];
     } else {

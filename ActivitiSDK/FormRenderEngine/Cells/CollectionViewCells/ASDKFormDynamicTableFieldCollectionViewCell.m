@@ -72,8 +72,6 @@
         self.isRequired = formField.isRequired;
         // If a previously selected option is available display it
         self.dynamicTableLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
-        self.disclosureIndicatorLabel.hidden = NO;
-        
         [self validateCellStateForFormfieldValues:formField.values];
         
         __weak typeof(self) weakSelf = self;
@@ -86,6 +84,8 @@
             }
         });
     }
+    
+    self.disclosureIndicatorLabel.hidden = NO;
 }
 
 - (NSString *)formatLabelTextWithFormFieldValues:(NSArray *)formfieldValues {
