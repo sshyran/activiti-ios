@@ -25,11 +25,29 @@
 @implementation ASDKDynamicTableRowHeaderTableViewCell
 
 - (void)awakeFromNib {
-    NSAttributedString *rowEditButtonTitle = [[NSAttributedString alloc] initWithString:[NSString iconStringForIconType:ASDKGlyphIconTypeEdit]
-                                                                             attributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:14],
-                                                                                          NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
-    
-    [self.rowEditButton setAttributedTitle:rowEditButtonTitle forState:UIControlStateNormal];
+}
+
+- (void)setupCellWithSelectionSection:(NSInteger)section
+                           headerText:(NSString *)headerText
+                           isReadOnly:(BOOL)isReadOnly
+                    navgationDelegate:(id<ASDKDynamicTableRowHeaderNavigationProtocol>)navigationDelegate {
+    self.selectedSection = section;
+    self.navigationDelegate = navigationDelegate;
+    self.rowHeaderLabel.text = headerText;
+
+    if (isReadOnly) {
+        NSAttributedString *rowEditButtonTitle = [[NSAttributedString alloc] initWithString:[NSString iconStringForIconType:ASDKGlyphIconTypeEyeOpen]
+                                                                                 attributes:@{NSFontAttributeName          : [UIFont glyphiconFontWithSize:14],
+                                                                                              NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+        
+        [self.rowEditButton setAttributedTitle:rowEditButtonTitle forState:UIControlStateNormal];
+    } else {
+        NSAttributedString *rowEditButtonTitle = [[NSAttributedString alloc] initWithString:[NSString iconStringForIconType:ASDKGlyphIconTypeEdit]
+                                                                                 attributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:14],
+                                                                                              NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+        
+        [self.rowEditButton setAttributedTitle:rowEditButtonTitle forState:UIControlStateNormal];
+    }
 }
 
 - (IBAction)editRow:(id)sender {

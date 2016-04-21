@@ -357,7 +357,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
     
     // completed forms; only attach fields have child view controller
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType && (ASDKModelFormFieldRepresentationTypeAttach == formField.formFieldParams.representationType || ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType)) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
+        (ASDKModelFormFieldRepresentationTypeAttach == formField.formFieldParams.representationType ||
+         ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType ||
+         ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
         representationType = formField.formFieldParams.representationType;
     } else if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType) {
         representationType = formField.representationType;

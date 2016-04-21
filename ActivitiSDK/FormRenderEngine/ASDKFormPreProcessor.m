@@ -216,24 +216,54 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                     }
                     
                     for (NSDictionary *rowValues in dynamicTableFormField.values) {
-                        // initialize array with empty objects
+                        // initialize array with 'column definition template'
                         // needed for placing objects at specified index later
                         NSMutableArray *newRowFormFieldValues = [[NSMutableArray alloc] initWithCapacity:dynamicTableFormField.columnDefinitions.count];
-                        for (NSInteger i = 0; i < dynamicTableFormField.columnDefinitions.count; i++) {
-                            [newRowFormFieldValues addObject:[NSNull null]];
+                        
+                        for (ASDKModelFormField *columnDefinitionTemplate in dynamicTableFormField.columnDefinitions) {
+                            ASDKModelFormField *newRowFormFieldValue = [columnDefinitionTemplate copy];
+                            if (ASDKModelFormFieldRepresentationTypeReadOnly == dynamicTableFormField.representationType) {
+                                ASDKModelFormField *formFieldParams = nil;
+                                if (ASDKModelFormFieldRepresentationTypeAmount == columnDefinitionTemplate.representationType) {
+                                    formFieldParams = [ASDKModelAmountFormField new];
+                                    formFieldParams.fieldName = newRowFormFieldValue.fieldName;
+                                } else {
+                                    formFieldParams = [ASDKModelFormField new];
+                                }
+                                formFieldParams.representationType = newRowFormFieldValue.representationType;
+                                formFieldParams.fieldName = newRowFormFieldValue.fieldName;
+                                newRowFormFieldValue.formFieldParams = formFieldParams;
+                                newRowFormFieldValue.representationType = ASDKModelFormFieldRepresentationTypeReadOnly;
+                            }
+                            [newRowFormFieldValues addObject:newRowFormFieldValue];
                         }
                         
+                        // create new values based on column definition 'template'
                         for (NSString *columnId in rowValues) {
                             NSArray *columnDefinitionValues = [NSArray arrayWithObject:rowValues[columnId]];
                             ASDKModelFormField *columnDefinitionWithValue = [[columnFormFieldDict valueForKey:columnId] copy];
+                            
+                            if (ASDKModelFormFieldRepresentationTypeReadOnly == dynamicTableFormField.representationType) {
+                                ASDKModelFormField *formFieldParams = nil;
+                                if (ASDKModelFormFieldRepresentationTypeAmount == columnDefinitionWithValue.representationType) {
+                                    formFieldParams = [ASDKModelAmountFormField new];
+                                    formFieldParams.fieldName = columnDefinitionWithValue.fieldName;
+                                } else {
+                                    formFieldParams = [ASDKModelFormField new];
+                                }
+                                formFieldParams.representationType = columnDefinitionWithValue.representationType;
+                                formFieldParams.fieldName = columnDefinitionWithValue.fieldName;
+                                columnDefinitionWithValue.formFieldParams = formFieldParams;
+                                columnDefinitionWithValue.representationType = ASDKModelFormFieldRepresentationTypeReadOnly;
+                            }
+                            
                             columnDefinitionWithValue.values = columnDefinitionValues;
                             
                             NSInteger newRowFormFieldValuesIndex = [self getIndexFromObjectProperty:columnId
-                                                                                             inArray:dynamicTableFormField.columnDefinitions];
+                                                                                            inArray:dynamicTableFormField.columnDefinitions];
                             [newRowFormFieldValues replaceObjectAtIndex:newRowFormFieldValuesIndex
                                                              withObject:columnDefinitionWithValue];
                         }
-                        
                         [newFormFieldValues addObject:newRowFormFieldValues];
                     }
                     

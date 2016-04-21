@@ -79,6 +79,11 @@
     // Configure table view
     self.rowsWithVisibleColumnsTableView.estimatedRowHeight = 44.0f;
     self.rowsWithVisibleColumnsTableView.rowHeight = UITableViewAutomaticDimension;
+    
+    // Remove add row button for completed forms
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -212,9 +217,11 @@ heightForHeaderInSection:(NSInteger)section {
 - (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
     ASDKDynamicTableRowHeaderTableViewCell *sectionHeaderView = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldDynamicTableHeaderRepresentation];
-    sectionHeaderView.rowHeaderLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
-    sectionHeaderView.selectedSection = section;
-    sectionHeaderView.navigationDelegate = self;
+    [sectionHeaderView setupCellWithSelectionSection:section
+                                          headerText:[NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1]
+                                          isReadOnly:(ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType)
+                                   navgationDelegate:self];
+    
     return sectionHeaderView;
 }
 
@@ -242,31 +249,34 @@ viewForHeaderInSection:(NSInteger)section {
                                                       taskModel:newFormRenderEngine.task
                                           renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                               if (formController && !error) {
-                                                   self.selectedRowIndex = section;
-                                                   
-                                                   UIBarButtonItem *deleteRowBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
-                                                                                                                              style:UIBarButtonItemStylePlain
-                                                                                                                             target:self
-                                                                                                                             action:@selector(deleteCurrentDynamicTableRow)];
-                                                   [deleteRowBarButtonItem setTitleTextAttributes:@{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
-                                                                                                    NSForegroundColorAttributeName : [UIColor whiteColor]}
-                                                                                         forState:UIControlStateNormal];
-                                                   
-                                                   formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
-                                                   
-                                                   UILabel *titleLabel = [[UILabel alloc] init];
-                                                   titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
-                                                   titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
+                                                  self.selectedRowIndex = section;
+                                                  
+                                                  if (ASDKModelFormFieldRepresentationTypeReadOnly != self.currentFormField.representationType) {
+                                                      UIBarButtonItem *deleteRowBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
+                                                                                                                                  style:UIBarButtonItemStylePlain
+                                                                                                                                 target:self
+                                                                                                                                 action:@selector(deleteCurrentDynamicTableRow)];
+                                                      
+                                                      [deleteRowBarButtonItem setTitleTextAttributes:@{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
+                                                                                                       NSForegroundColorAttributeName : [UIColor whiteColor]}
+                                                                                            forState:UIControlStateNormal];
+                                                       
+                                                      formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
+                                                  }
+                                                  
+                                                  UILabel *titleLabel = [[UILabel alloc] init];
+                                                  titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
+                                                  titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
                                                                                      size:17];
-                                                   titleLabel.textColor = [UIColor whiteColor];
-                                                   [titleLabel sizeToFit];
+                                                  titleLabel.textColor = [UIColor whiteColor];
+                                                  [titleLabel sizeToFit];
                                                    
-                                                   formController.navigationItem.titleView = titleLabel;
+                                                  formController.navigationItem.titleView = titleLabel;
                                                    
-                                                   // If there is controller assigned to the selected form field notify the delegate
-                                                   // that it can begin preparing for presentation
-                                                   formController.navigationDelegate = self.navigationDelegate;
-                                                   [self.navigationDelegate prepareToPresentDetailController:formController];
+                                                  // If there is controller assigned to the selected form field notify the delegate
+                                                  // that it can begin preparing for presentation
+                                                  formController.navigationDelegate = self.navigationDelegate;
+                                                  [self.navigationDelegate prepareToPresentDetailController:formController];
                                               }
                                               
                                               self.activityView.animating = NO;
@@ -316,6 +326,8 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
     // form field params model
     if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType) {
         representationType = columnDefinitionformField.formFieldParams.representationType;
+        // set 'disabled color' for complete forms
+        valueLabel.textColor = [UIColor formViewCompletedValueColor];
     } else {
         representationType = columnDefinitionformField.representationType;
     }
@@ -372,6 +384,7 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
             } else {
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
                 dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
                 
                 NSDate *storedDate = [dateFormatter dateFromString:columnDefinitionformField.values.firstObject];

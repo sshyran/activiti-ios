@@ -59,6 +59,8 @@
         self.selectedDate.text = self.currentFormField.metadataValue.attachedValue;
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         [dateFormatter setDateFormat:@"dd-MM-yyyy"];
         
         NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.metadataValue.attachedValue];
@@ -67,6 +69,7 @@
         //format date in saved form (2016-02-23T23:00:Z)
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z";
         
         NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
@@ -74,7 +77,6 @@
         // try other date formatter
         if (storedDate == nil) {
             //format date in saved form (2016-02-23T23:00:000Z)
-            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
             storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
         }

@@ -72,8 +72,7 @@
         self.isRequired = formField.isRequired;
         // If a previously selected option is available display it
         self.dynamicTableLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
-        self.disclosureIndicatorLabel.hidden = NO;
-        
+
         [self validateCellStateForFormfieldValues:formField.values];
         
         if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
@@ -81,6 +80,8 @@
                                                      inCell:self];
         }
     }
+    
+    self.disclosureIndicatorLabel.hidden = NO;
 }
 
 - (NSString *)formatLabelTextWithFormFieldValues:(NSArray *)formfieldValues {

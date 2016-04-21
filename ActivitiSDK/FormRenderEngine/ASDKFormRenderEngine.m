@@ -125,7 +125,6 @@
                                  withFormFields:formDescription.formFields
                         withDynamicTableFieldID:nil
                       preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                          
                           formDescription.formFields = processedFormFields;
                           
                           // Always dispath on the main queue results related to the form view
@@ -182,7 +181,6 @@
                                               withFormFields:formDescription.formFields
                                      withDynamicTableFieldID:nil
                                    preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                                       
                                        formDescription.formFields = processedFormFields;
                                        
                                        // Always dispath on the main queue results related to the form view
@@ -234,12 +232,10 @@
                             withFormFields:dynamicTableRowFormFields
                    withDynamicTableFieldID:dynamicTableFormFieldID
                  preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                     
                      // Always dispath on the main queue results related to the form views
                      dispatch_async(dispatch_get_main_queue(), ^{
                          
                          UICollectionViewController *formCollectionViewController = [self setupWithDynamicTableRowFormFields:processedFormFields];
-                         
                          // First check for integrity errors
                          if (!formCollectionViewController) {
                              NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Setup operation for form controller failed.",
@@ -284,7 +280,6 @@
                                          withFormFields:dynamicTableRowFormFields
                                 withDynamicTableFieldID:dynamicTableFormFieldID
                               preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                                  
                                   // Always dispath on the main queue results related to the form views
                                   dispatch_async(dispatch_get_main_queue(), ^{
                                       
