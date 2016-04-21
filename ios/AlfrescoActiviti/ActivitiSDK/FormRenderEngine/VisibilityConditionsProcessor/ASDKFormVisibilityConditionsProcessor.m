@@ -78,10 +78,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     if (self) {
         NSMutableArray *fieldsArr = [NSMutableArray array];
         
+        // When parsing the form field array, for ordinary container type form fields
+        // add the containing section as well as the contained form fields in the form
+        // field collection, but for dynamic table type just the section
         for (ASDKModelFormField *formField in formFieldArr) {
             if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
                 [fieldsArr addObject:formField];
                 [fieldsArr addObjectsFromArray:formField.formFields];
+            } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+                [fieldsArr addObject:formField];
             }
         }
         

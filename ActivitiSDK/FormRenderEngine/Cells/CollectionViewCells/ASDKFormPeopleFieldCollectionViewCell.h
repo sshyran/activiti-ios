@@ -21,6 +21,7 @@
 
 @interface ASDKFormPeopleFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
 
+@property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> delegate;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *disclosureIndicatorLabel;
 @property (weak, nonatomic) IBOutlet UILabel *selectedPeopleLabel;

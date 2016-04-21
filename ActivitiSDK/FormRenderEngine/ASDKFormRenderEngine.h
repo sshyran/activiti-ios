@@ -24,5 +24,7 @@
 @property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
 @property (strong, nonatomic) ASDKFormNetworkServices            *formNetworkServices;
 @property (strong, nonatomic) ASDKFormPreProcessor               *formPreProcessor;
+@property (strong, nonatomic) ASDKModelTask                      *task;
+@property (strong, nonatomic) ASDKModelProcessDefinition         *processDefinition;
 
 @end

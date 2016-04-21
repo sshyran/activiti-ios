@@ -85,10 +85,14 @@
         } else {
             self.selectedPeopleLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormPeopleNoSelectedText, ASDKLocalizationTable, @"No people selected");
         }
-        
-        [self validateCellStateForFormFieldValues:formField.values];
-
         self.disclosureIndicatorLabel.hidden = NO;
+
+        [self validateCellStateForFormFieldValues:formField.values];
+        
+        if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+            [self.delegate updatedMetadataValueForFormField:self.formField
+                                                     inCell:self];
+        }
     }
 }
 

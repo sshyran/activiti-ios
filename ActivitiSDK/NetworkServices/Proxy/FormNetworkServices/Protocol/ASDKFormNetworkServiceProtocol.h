@@ -123,6 +123,20 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                  completionBlock:(ASDKFormContentDownloadCompletionBlock)completionBlock;
 
 /**
+ *  Fetches option values for REST based columns in dynamic table form fields and returns them via the completion block.
+ *
+ *  @param taskID           The task ID
+ *  @param fieldID          The form field ID
+ *  @param columnID         The column ID
+ *  @param completionBlock  Completion block providing a NSArray containing the REST field values
+ *                          and an option error reason
+ */
+- (void)fetchRestFieldValuesForTaskWithID:(NSString *)taskID
+                              withFieldID:(NSString *)fieldID
+                             withColumnID:(NSString *)columnID
+                          completionBlock:(ASDKFormRestFieldValuesCompletionBlock)completionBlock;
+
+/**
  *  Fetches option values for REST based form fields and returns them via the completion block.
  *
  *  @param taskID           The task ID
@@ -134,6 +148,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                               withFieldID:(NSString *)fieldID
                           completionBlock:(ASDKFormRestFieldValuesCompletionBlock)completionBlock;
 
+
 /**
  *  Fetches option values for REST based form fields in start form and returns them via the completion block.
  *
@@ -144,6 +159,20 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
  */
 - (void)fetchRestFieldValuesForStartFormWithProcessDefinitionID:(NSString *)processDefinitionID
                                                     withFieldID:(NSString *)fieldID
+                                                completionBlock:(ASDKStartFormRestFieldValuesCompletionBlock)completionBlock;
+
+/**
+ *  Fetches option values for REST based columns in dynamic table form fields in start form and returns them via the completion block.
+ *
+ *  @param taskID           The task ID
+ *  @param fieldID          The form field ID
+ *  @param columnID         The column ID
+ *  @param completionBlock  Completion block providing a NSArray containing the REST field values
+ *                          and an option error reason
+ */
+- (void)fetchRestFieldValuesForStartFormWithProcessDefinitionID:(NSString *)processDefinitionID
+                                                    withFieldID:(NSString *)fieldID
+                                                   withColumnID:(NSString *)columnID
                                                 completionBlock:(ASDKStartFormRestFieldValuesCompletionBlock)completionBlock;
 
 /**

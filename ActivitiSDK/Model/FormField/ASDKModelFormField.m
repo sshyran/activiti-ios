@@ -27,6 +27,7 @@
 #import "ASDKModelHyperlinkFormField.h"
 #import "ASDKModelRestFormField.h"
 #import "ASDKModelPeopleFormField.h"
+#import "ASDKModelDynamicTableFormField.h"
 #import "ASDKModelFormVisibilityCondition.h"
 
 #if ! __has_feature(objc_arc)
@@ -52,8 +53,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"FormFieldRepresentation"]
                && [JSONDictionary[@"type"] isEqualToString:@"people"]) {
         return ASDKModelPeopleFormField.class;
+    } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"DynamicTableRepresentation"]) {
+        return ASDKModelDynamicTableFormField.class;
     }
-    
     // completed forms
     if ([JSONDictionary[@"type"] isEqualToString:@"readonly"]) {
         if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"people"]) {
@@ -116,7 +118,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
               @"RestFieldRepresentation"       : @(ASDKModelFormFieldTypeRestField),
               @"AmountFieldRepresentation"     : @(ASDKModelFormFieldTypeAmountField),
               @"AttachFileFieldRepresentation" : @(ASDKModelFormFieldTypeAttachField),
-              @"HyperlinkRepresentation"       : @(ASDKModelFormFieldTypeHyperlinkField)
+              @"HyperlinkRepresentation"       : @(ASDKModelFormFieldTypeHyperlinkField),
+              @"DynamicTableRepresentation"    : @(ASDKModelFormFieldTypeDynamicTableField)
             }];
 }
 
@@ -137,7 +140,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
               @"readonly-text"  : @(ASDKModelFormFieldRepresentationTypeReadonlyText),
               @"upload"         : @(ASDKModelFormFieldRepresentationTypeAttach),
               @"hyperlink"      : @(ASDKModelFormFieldRepresentationTypeHyperlink),
-              @"people"         : @(ASDKModelFormFieldRepresentationTypePeople)
+              @"people"         : @(ASDKModelFormFieldRepresentationTypePeople),
+              @"dynamic-table"  : @(ASDKModelFormFieldRepresentationTypeDynamicTable)
               }];
 }
 

@@ -82,6 +82,11 @@
         }
         
         [self validateCellStateForFormFieldValues:formField.values];
+        
+        if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+            [self.delegate updatedMetadataValueForFormField:self.formField
+                                                     inCell:self];
+        }
     }
     
     self.disclosureIndicatorLabel.hidden = false;

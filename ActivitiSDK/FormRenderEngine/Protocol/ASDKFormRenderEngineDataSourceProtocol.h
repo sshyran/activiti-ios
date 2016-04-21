@@ -75,30 +75,6 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
 
 /**
- *  Property meant to hold a reference to the data source's delegate which will
- *  be notified about visibility changes in sections or items.
- */
-@property (weak, nonatomic) id<ASDKFormRenderEngineDataSourceDelegate> delegate;
-
-/**
- *  Property meant to hold a reference to the visibility condition processor.
- *  It's purpose is to determine based on form field visibility conditions which
- *  fields are to be displayed or hidden. 
- */
-@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor *visibilityConditionsProcessor;
-
-/**
- *  Designated initializer method for the collection view controller datasource.
- *
- *  @param formDescription Description containing the form field objects to be
- *                         displayed
- *
- *  @return                Instance of the data source object
- */
-- (instancetype)initWithFormDescription:(ASDKModelFormDescription *)formDescription
-                         dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType;
-
-/**
  *  Returns the number of sections available for the current form description.
  *
  *  @return Integer value with number of sections

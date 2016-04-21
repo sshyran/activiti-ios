@@ -31,6 +31,7 @@
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelFormDescription.h"
 #import "ASDKModelFormOutcome.h"
+#import "ASDKModelDynamicTableFormField.h"
 
 // Managers
 #import "ASDKFormVisibilityConditionsProcessor.h"
@@ -84,8 +85,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.renderableFormFields];
         NSArray *renderableFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
         
-        self.visibleFormFields = self.renderableFormFields;
-        
         // Initialize the visibility condition processor with a plain array of form fields and form variables
         self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:renderableFormFieldsCopy
                                                                                                  formVariables:formDescription.formVariables];
@@ -136,6 +135,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Check if the controller requested the number of fields for the outcome section
     if (!sectionFormField) {
         fieldsCount = self.formOutcomes.count;
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+        fieldsCount = 1;
     } else {
         fieldsCount = sectionFormField.formFields.count;
     }
@@ -150,6 +151,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Check if the controller requested a cell identifier for the outcome section
     if (!sectionFormField) {
         cellIdentifier = kASDKCellIDFormFieldOutcomeRepresentation;
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+        cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
     } else {
         ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
         cellIdentifier = [self validCellIdentifierForFormField:formFieldAtIndexPath];
@@ -160,6 +163,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (ASDKModelBase *)modelForIndexPath:(NSIndexPath *)indexPath {
     ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
+    ASDKModelBase *formFieldModel = nil;
     
     if (!sectionFormField) {
         ASDKModelFormOutcome *formOutcome = self.formOutcomes[indexPath.row];
@@ -168,11 +172,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             [self.formOutcomesIndexPaths addObject:indexPath];
         }
         
-        return formOutcome;
+        formFieldModel = formOutcome;
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+        formFieldModel = sectionFormField;
     } else {// Set up the cell from the corresponding section
-        ASDKModelFormField *formFieldAtIndexPath = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
-        return formFieldAtIndexPath;
+        formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
     }
+    
+    return formFieldModel;
 }
 
 - (NSString *)sectionHeaderTitleForIndexPath:(NSIndexPath *)indexPath {
@@ -219,6 +226,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
             formField.formFields = [self filterSupportedFormFields:formField.formFields];
             [formFieldSections addObject:formField];
+        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+            [formFieldSections addObject:formField];
         }
     }
     
@@ -251,9 +260,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         [formFieldsInSection removeObjectsInArray:fieldsToBeRemoved];
         
-        // If a section has no more attached form fields remove it, otherwise set the
-        // modified form field collection
-        if (!formFieldsInSection.count) {
+        // If a section has no more attached form fields and it's not a dynamic table remove it,
+        // otherwise set the modified form field collection
+        if (!formFieldsInSection.count &&
+            ASDKModelFormFieldTypeDynamicTableField != containerFormField.fieldType) {
             [sectionsToBeRemoved addIndex:section];
         } else {
             containerFormField.formFields = formFieldsInSection;
@@ -329,6 +339,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
+        case ASDKModelFormFieldRepresentationTypeDynamicTable: {
+            cellIdentifier = kASDKCellIDFormFieldDynamicTableRepresentation;
+        }
+            break;
+            
+            
         default:
             break;
     }
@@ -374,6 +390,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
+        case ASDKModelFormFieldRepresentationTypeDynamicTable: {
+            controllerIdentifierString = kASDKStoryboardIDDynamicTableFormFieldDetailController;
+        }
+            break;
+            
         default:
             break;
     }
@@ -397,6 +418,23 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     // Check if mandatory form field values had been addressed
     for (ASDKModelFormField *sectionFormField in self.visibleFormFields) {
+        NSArray *associatedFormFields = nil;
+        
+        if ([sectionFormField isKindOfClass:ASDKModelDynamicTableFormField.class]) { // Extract formfields from dynamic table
+            NSMutableArray *dynamicTableFormFields = [NSMutableArray new];
+            
+            // Add the dynamic table itself
+            [dynamicTableFormFields addObject:sectionFormField];
+            
+            for (NSArray *dynamicTableRow in sectionFormField.values) {
+                [dynamicTableFormFields addObjectsFromArray:dynamicTableRow];
+            }
+            
+            associatedFormFields = [dynamicTableFormFields copy];
+        } else { // Extract the form fields for the correspondent container
+            associatedFormFields = sectionFormField.formFields;
+        }
+        
         // Enumerate through the associated form fields and check if they
         // have a value or attached metadata values 
         for (ASDKModelFormField *formField in sectionFormField.formFields) {
@@ -413,7 +451,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                         formFieldsAreValid = NO;
                         break;
                     }
-                } else if (!formField.values.count && !formField.metadataValue.attachedValue.length) {
+                } else if (!formField.values.count && !formField.metadataValue.attachedValue.length && !formField.metadataValue.option.attachedValue.length) {
                     formFieldsAreValid = NO;
                     break;
                 }

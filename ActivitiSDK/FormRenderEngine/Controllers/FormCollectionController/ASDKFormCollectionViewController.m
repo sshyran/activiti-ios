@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "ASDKFormCollectionViewController.h"
+#import "ASDKDynamicTableFormFieldDetailsViewController.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -230,6 +231,11 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
             UIViewController *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
             
+            if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
+                ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
+                dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
+            }
+            
             // If there is controller assigned to the selected form field notify the delegate
             // that it can begin preparing for presentation
             if (childController) {
@@ -259,5 +265,4 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                      enableFormOutcome:self.dataSource.isReadOnlyForm ? NO : [self.dataSource areFormFieldMetadataValuesValid]];
     }
 }
-
 @end

@@ -81,6 +81,11 @@
         self.disclosureIndicatorLabel.hidden = NO;
         
         [self validateCellStateForText:self.selectedDateLabel.text];
+        
+        if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+            [self.delegate updatedMetadataValueForFormField:self.formField
+                                                     inCell:self];
+        }
     }
 }
 
@@ -88,12 +93,20 @@
     NSString *labelText = nil;
     
     if (formfieldValues) {
-        //format date in saved form (2016-02-23T23:00:00Z)
+        //format date in saved form (2016-02-23T23:00:Z)
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z";
         
         NSDate *storedDate = [dateFormatter dateFromString:formfieldValues.firstObject];
+        
+        // try other date formatter
+        if (storedDate == nil) {
+            //format date in saved form (2016-02-23T23:00:000Z)
+            dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+            storedDate = [dateFormatter dateFromString:formfieldValues.firstObject];
+        }
         
         NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
         [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];

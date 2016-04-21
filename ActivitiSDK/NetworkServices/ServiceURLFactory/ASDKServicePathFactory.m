@@ -196,12 +196,21 @@ static NSString * const kASDkHTTPS = @"https";
     return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITaskFormsPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIFormValuesPath] stringByAppendingPathComponent:@"%@"];
 }
 
+- (NSString *)dynamicTableRestFieldValuesServicePathFormat {
+    return [[[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITaskFormsPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIFormValuesPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:@"%@"];
+}
+
+
 - (NSString *)startFormCompletionPath {
     return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessInstancesPath];
 }
 
 - (NSString *)startFormRestFieldValuesServicePathFormat {
     return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessDefinitionPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIStartFormValuesPath] stringByAppendingPathComponent:@"%@"];
+}
+
+- (NSString *)startFormDynamicTableRestFieldValuesServicePathFormat {
+    return [[[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessDefinitionPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIStartFormValuesPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:@"%@"];
 }
 
 

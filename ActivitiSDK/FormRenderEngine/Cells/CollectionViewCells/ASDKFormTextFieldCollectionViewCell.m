@@ -92,25 +92,14 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    __weak typeof(self) weakSelf = self;
+    ASDKModelFormFieldValue *metadataValue = [ASDKModelFormFieldValue new];
+    metadataValue.attachedValue = textField.text;
+    self.formField.metadataValue = metadataValue;
     
-    // Dispatch the metadata update in the next processing cycle
-    // to give room for all UITextfield delegate methods to get
-    // executed - the metadata update method triggers a collection
-    // view reload which causes certain delegate methods calls to
-    // be intrerupted
-    dispatch_async(dispatch_get_main_queue(), ^{
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        ASDKModelFormFieldValue *metadataValue = [ASDKModelFormFieldValue new];
-        metadataValue.attachedValue = textField.text;
-        strongSelf.formField.metadataValue = metadataValue;
-        
-        if ([strongSelf.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
-            [strongSelf.delegate updatedMetadataValueForFormField:strongSelf.formField
-                                                           inCell:strongSelf];
-        }
-    });
+    if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+        [self.delegate updatedMetadataValueForFormField:self.formField
+                                                 inCell:self];
+    }
 }
 
 - (IBAction)onTextFieldValueChange:(UITextField *)sender {

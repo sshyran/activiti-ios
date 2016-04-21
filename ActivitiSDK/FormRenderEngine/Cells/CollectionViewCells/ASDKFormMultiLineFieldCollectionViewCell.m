@@ -54,7 +54,6 @@
     }
 }
 
-
 #pragma mark -
 #pragma mark ASDKFormCellProtocol
 
@@ -80,6 +79,11 @@
         self.disclosureIndicatorLabel.hidden = NO;
         
         [self validateCellStateForText:self.multiLineTextLabel.text];
+        
+        if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+            [self.delegate updatedMetadataValueForFormField:self.formField
+                                                     inCell:self];
+        }
     }
 }
 

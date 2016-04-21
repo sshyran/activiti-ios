@@ -21,13 +21,14 @@
 
 #pragma mark -
 #pragma mark Storyboard
-NSString *kASDKFormStoryboardBundleName                         = @"ASDKFormStoryboard";
-NSString *kASDKStoryboardIDCollectionController                 = @"ASDKFormCollectionViewController";
-NSString *kASDKStoryboardIDRadioFormFieldDetailController       = @"ASDKFormRadioFormFieldDetailController";
-NSString *kASDKStoryboardIDDateFormFieldDetailController        = @"ASDKFormDateFormFieldDetailController";
-NSString *kASDKStoryboardIDAttachFormFieldDetailController      = @"ASDKFormAttachFormFieldDetailController";
-NSString *kASDKStoryboardIDMultilineFormFieldDetailController   = @"ASDKFormMultilineFormFieldDetailController";
-NSString *kASDKStoryboardIDPeopleFormFieldDetailController      = @"ASDKFormPeopleFormFieldDetailController";
+NSString *kASDKFormStoryboardBundleName                             = @"ASDKFormStoryboard";
+NSString *kASDKStoryboardIDCollectionController                     = @"ASDKFormCollectionViewController";
+NSString *kASDKStoryboardIDRadioFormFieldDetailController           = @"ASDKFormRadioFormFieldDetailController";
+NSString *kASDKStoryboardIDDateFormFieldDetailController            = @"ASDKFormDateFormFieldDetailController";
+NSString *kASDKStoryboardIDAttachFormFieldDetailController          = @"ASDKFormAttachFormFieldDetailController";
+NSString *kASDKStoryboardIDMultilineFormFieldDetailController       = @"ASDKFormMultilineFormFieldDetailController";
+NSString *kASDKStoryboardIDPeopleFormFieldDetailController          = @"ASDKFormPeopleFormFieldDetailController";
+NSString *kASDKStoryboardIDDynamicTableFormFieldDetailController    = @"ASDKFormDynamicTableFormFieldDetailController";
 
 
 #pragma mark -
@@ -59,6 +60,9 @@ NSString *kASDKCellIDFormFieldHyperlinkRepresentation               = @"FormFiel
 NSString *kASDKCellIDFormFieldAttachAddContent                      = @"FormFieldAttachAddContentCellID";
 NSString *kASDKCellIDFormFieldPeopleRepresentation                  = @"FormFieldPeopleRepresentationCellID";
 NSString *kASDKCellIDFormFieldPeopleAddPeople                       = @"FormFieldPeopleAddPeopleCellID";
+NSString *kASDKCellIDFormFieldDynamicTableRepresentation            = @"FormFieldDynamicTableRepresentationCellID";
+NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation      = @"FormFieldDynamicTableHeaderRepresentationCellID";
+NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation         = @"FormFieldDynamicTableRowRepresentationCellID";
 
 
 #pragma mark -
