@@ -112,11 +112,6 @@
              return;
          }
          
-         // Set up the data source for the form collection view controller
-         self.dataSource = [[ASDKFormRenderDataSource alloc] initWithFormDescription:formDescription
-                                                                      dataSourceType:ASDKFormRenderEngineDataSourceTypeTask];
-         self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
-         
          self.formPreProcessor = [ASDKFormPreProcessor new];
          self.formPreProcessor.formNetworkServices = self.formNetworkServices;
          
@@ -126,6 +121,11 @@
                       preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
               
                           formDescription.formFields = processedFormFields;
+                          
+                          // Set up the data source for the form collection view controller
+                          self.dataSource = [[ASDKFormRenderDataSource alloc] initWithFormDescription:formDescription
+                                                                                       dataSourceType:ASDKFormRenderEngineDataSourceTypeTask];
+                          self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
                           
                           // Always dispath on the main queue results related to the form view
                           dispatch_async(dispatch_get_main_queue(), ^{
@@ -169,11 +169,6 @@
              renderCompletionBlock(nil, error);
          }
          
-         // Set up the data source for the form collection view controller
-         self.dataSource = [[ASDKFormRenderDataSource alloc] initWithFormDescription:formDescription
-                                                                      dataSourceType:ASDKFormRenderEngineDataSourceTypeProcessDefinition];
-         self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
-         
          self.formPreProcessor = [ASDKFormPreProcessor new];
          self.formPreProcessor.formNetworkServices = self.formNetworkServices;
          
@@ -181,29 +176,34 @@
                                               withFormFields:formDescription.formFields
                                      withDynamicTableFieldID:nil
                                    preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-              
-                                      formDescription.formFields = processedFormFields;
-                                      
-                                      // Always dispath on the main queue results related to the form view
-                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                          UICollectionViewController *formCollectionViewController = [self setupWithFormDescription:formDescription];
-                                          
-                                          // First check for integrity errors
-                                          if (!formCollectionViewController) {
-                                              NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Setup operation for form controller failed.",
-                                                                         NSLocalizedFailureReasonErrorKey     : @"The operation could not be completed because the form render engine could not generate the form view.",
-                                                                         NSLocalizedRecoverySuggestionErrorKey: @"Please check your form description model and make sure it has all the information needed to render."
-                                                                         };
-                                              NSError *error = [NSError errorWithDomain:kASDKFormRenderEngineErrorDomain
-                                                                                   code:kASDKFormRenderEngineSetupErrorCode
-                                                                               userInfo:userInfo];
-                                              
-                                              renderCompletionBlock(nil, error);
-                                          } else {
-                                              renderCompletionBlock(formCollectionViewController, nil);
-                                          }
-                                      });
-          }];
+
+                                       formDescription.formFields = processedFormFields;
+                                       
+                                       // Set up the data source for the form collection view controller
+                                       self.dataSource = [[ASDKFormRenderDataSource alloc] initWithFormDescription:formDescription
+                                                                                                    dataSourceType:ASDKFormRenderEngineDataSourceTypeProcessDefinition];
+                                       self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
+                                       
+                                       // Always dispath on the main queue results related to the form view
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           UICollectionViewController *formCollectionViewController = [self setupWithFormDescription:formDescription];
+                                           
+                                           // First check for integrity errors
+                                           if (!formCollectionViewController) {
+                                               NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Setup operation for form controller failed.",
+                                                                          NSLocalizedFailureReasonErrorKey     : @"The operation could not be completed because the form render engine could not generate the form view.",
+                                                                          NSLocalizedRecoverySuggestionErrorKey: @"Please check your form description model and make sure it has all the information needed to render."
+                                                                          };
+                                               NSError *error = [NSError errorWithDomain:kASDKFormRenderEngineErrorDomain
+                                                                                    code:kASDKFormRenderEngineSetupErrorCode
+                                                                                userInfo:userInfo];
+                                               
+                                               renderCompletionBlock(nil, error);
+                                           } else {
+                                               renderCompletionBlock(formCollectionViewController, nil);
+                                           }
+                                       });
+                                   }];
      }];
 }
 
