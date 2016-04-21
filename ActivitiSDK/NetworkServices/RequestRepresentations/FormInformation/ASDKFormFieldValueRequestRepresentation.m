@@ -99,12 +99,15 @@
             if (formField.representationType == ASDKModelFormFieldRepresentationTypeDate) {
                 // create date object from saved string
                 NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
+                displayDateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                displayDateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
                 [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
                 NSDate *storedDate = [displayDateFormatter dateFromString:formField.metadataValue.attachedValue];
                 
                 //format submit date (2016-02-23T23:00:000Z)
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
                 dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
                 
                 formFieldValue = [dateFormatter stringFromDate:storedDate];

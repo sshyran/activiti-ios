@@ -370,6 +370,7 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
             } else {
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
                 dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
                 
                 NSDate *storedDate = [dateFormatter dateFromString:columnDefinitionformField.values.firstObject];
