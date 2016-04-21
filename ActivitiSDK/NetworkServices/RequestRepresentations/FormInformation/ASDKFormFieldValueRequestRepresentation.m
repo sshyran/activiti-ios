@@ -44,14 +44,12 @@
 #pragma mark Value transformations
 
 + (NSValueTransformer *)formFieldsJSONTransformer {
-    return [MTLValueTransformer transformerUsingReversibleBlock:^id(NSDictionary *formFields, BOOL *success, NSError *__autoreleasing *error) {
+    return [MTLValueTransformer transformerUsingReversibleBlock:^id(NSArray *formFields, BOOL *success, NSError *__autoreleasing *error) {
         NSMutableDictionary *formFieldMetadataValuesDict = [NSMutableDictionary dictionary];
         
-        for (NSNumber *sectionCount in formFields.allKeys) {
+        for (ASDKModelFormField *sectionFormField in formFields) {
             // Extract the form fields for the correspondent container
-            NSArray *associatedFormFields = [formFields[sectionCount] formFields];
-            
-            for (ASDKModelFormField *formField in associatedFormFields) {
+            for (ASDKModelFormField *formField in sectionFormField.formFields) {
                 
                 if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType
                     && ASDKModelFormFieldRepresentationTypeContainer != formField.representationType) {

@@ -43,30 +43,30 @@
 @interface ASDKFormRenderEngine ()
 
 /**
- *  Property meant to hold a refference to the form data source
+ *  Property meant to hold a reference to the form data source
  */
 @property (strong, nonatomic) ASDKFormRenderDataSource                  *dataSource;
 
 /**
- *  Property meant to hold a refference to the task model object used to
+ *  Property meant to hold a reference to the task model object used to
  *  populate the form.
  */
 @property (strong, nonatomic) ASDKModelTask                             *task;
 
 /**
- *  Property meant to hold a refference to the process definition object
+ *  Property meant to hold a reference to the process definition object
  *  used to populate the form.
  */
 @property (strong, nonatomic) ASDKModelProcessDefinition                *processDefinition;
 
 /**
- *  Property meant to hold a refference to the form completion block invoked
+ *  Property meant to hold a reference to the form completion block invoked
  *  when the user completes a form.
  */
 @property (strong, nonatomic) ASDKFormRenderEngineCompletionBlock       formCompletionBlock;
 
 /**
- *  Property meant to hold a refference to the start form completion block invoked
+ *  Property meant to hold a reference to the start form completion block invoked
  *  when the user completes the a process instance associated start form.
  */
 @property (strong, nonatomic) ASDKStartFormRenderEngineCompletionBlock  startFormCompletionBlock;
@@ -86,6 +86,7 @@
     UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
                                                              bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
     ASDKFormCollectionViewController *formCollectionViewController = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
+    self.dataSource.delegate = formCollectionViewController;
     formCollectionViewController.dataSource = self.dataSource;
     formCollectionViewController.renderDelegate = self;
     

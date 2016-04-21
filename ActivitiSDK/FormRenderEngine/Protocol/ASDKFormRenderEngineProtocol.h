@@ -34,7 +34,7 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 @protocol ASDKFormRenderEngineProtocol <NSObject>
 
 /**
- *  Holds a refference to the current form description begin used to create
+ *  Holds a reference to the current form description begin used to create
  *  the form view.
  *  NOTE: The property is declared as a readonly to force interaction with the
  *        form description to be made via protocol declared methods thus making
@@ -43,7 +43,7 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 @property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
 
 /**
- *  Holds a refference to the form network service used in conjucture with the 
+ *  Holds a reference to the form network service used in conjucture with the 
  *  convenience setup method. 
  *  NOTE: See the setupWithTaskModel:renderCompletionBlock:formCompletionBlock: 
  *  method for details

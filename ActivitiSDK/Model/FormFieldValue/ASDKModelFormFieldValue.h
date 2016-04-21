@@ -21,17 +21,17 @@
 @interface ASDKModelFormFieldValue : NSObject
 
 /**
- *  Property intended to hold a refference to the values of a form field
+ *  Property intended to hold a reference to the values of a form field
  */
 @property (strong, nonatomic) NSString                          *attachedValue;
 
 /**
- *  Property intended to hold a refference to nesting form field value object types
+ *  Property intended to hold a reference to nesting form field value object types
  */
 @property (strong, nonatomic) ASDKModelFormFieldValue           *option;
 
 /**
- *  Property intended to hold a refference to additional objects containing information
+ *  Property intended to hold a reference to additional objects containing information
  *  relevant to metadata values of a form field.
  */
 @property (strong, nonatomic) id                                userInfo;

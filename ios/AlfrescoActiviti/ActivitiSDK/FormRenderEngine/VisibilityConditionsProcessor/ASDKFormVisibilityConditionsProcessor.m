@@ -35,19 +35,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 @interface ASDKFormVisibilityConditionsProcessor ()
 
 /**
- *  Property meant to hold a refference to all the form fields the form engine 
+ *  Property meant to hold a reference to all the form fields the form engine 
  *  should render
  */
 @property (strong, nonatomic) NSArray *formFields;
 
 /**
- *  Property meant to hold a refference to all the form variables defined within
+ *  Property meant to hold a reference to all the form variables defined within
  *  the form description
  */
 @property (strong, nonatomic) NSArray *formVariables;
 
 /**
- *  Property meant to hold a refference to a dictionary structure where the key
+ *  Property meant to hold a reference to a dictionary structure where the key
  *  is represented by the affected field and the value is an array of fields 
  *  that affect it. This will be used to identify the affected field when another
  *  field changes and that operation could impact visibility.
@@ -56,9 +56,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 
 /**
- *  Property meant to hold a refference to the visible form fields which had
+ *  Property meant to hold a reference to the visible form fields which had
  *  been stored as a result of condition evaluation. The property is to serve
- *  as a refference point to future evaluations and provide information on 
+ *  as a reference point to future evaluations and provide information on 
  *  whether an element has been hidden or made visible.
  */
 @property (strong, nonatomic) NSArray *visibleFormFields;
@@ -76,9 +76,18 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     self = [super init];
     
     if (self) {
-        self.formFields = formFieldArr;
+        NSMutableArray *fieldsArr = [NSMutableArray array];
+        
+        for (ASDKModelFormField *formField in formFieldArr) {
+            if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+                [fieldsArr addObject:formField];
+                [fieldsArr addObjectsFromArray:formField.formFields];
+            }
+        }
+        
+        self.formFields = fieldsArr;
         self.formVariables = formVariables;
-        self.dependencyDict = [self createFormFieldDependencyDictionaryForList:formFieldArr];
+        self.dependencyDict = [self createFormFieldDependencyDictionaryForList:fieldsArr];
     }
     
     return self;
@@ -434,7 +443,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         // For this we check two properties: leftFormFieldID and leftRestResponseID
         if (visibilityCondition.leftFormFieldID.length) {
-            // Check if label refference is used
+            // Check if label reference is used
             BOOL searchForLabelParameter = YES;
             if (kASDKFormFieldLabelParameter.length > visibilityCondition.leftFormFieldID.length) {
                 searchForLabelParameter = NO;
@@ -462,7 +471,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         // For this we check three properties: rightFormFieldID, rightRestResponseID and rightValue
         if (visibilityCondition.rightFormFieldID.length) {
-            // Check if label refference is used
+            // Check if label reference is used
             BOOL searchForLabelParameter = YES;
             if (kASDKFormFieldLabelParameter.length > visibilityCondition.rightFormFieldID.length) {
                 searchForLabelParameter = NO;

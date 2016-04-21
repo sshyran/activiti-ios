@@ -21,10 +21,11 @@
 #import "ASDKFormRenderEngineProtocol.h"
 #import "ASDKFormControllerNavigationProtocol.h"
 
-@interface ASDKFormCollectionViewController : UICollectionViewController <ASDKFormControllerNavigationProtocol>
+@interface ASDKFormCollectionViewController : UICollectionViewController <ASDKFormControllerNavigationProtocol,
+                                                                          ASDKFormRenderEngineDataSourceDelegate>
 
-@property (weak, nonatomic)   id<ASDKFormControllerNavigationProtocol> navigationDelegate;
-@property (weak, nonatomic)   id<ASDKFormRenderEngineProtocol> renderDelegate;
-@property (strong, nonatomic) id<ASDKFormRenderEngineDataSourceProtocol>  dataSource;
+@property (weak, nonatomic)   id<ASDKFormControllerNavigationProtocol>  navigationDelegate;
+@property (weak, nonatomic)   id<ASDKFormRenderEngineProtocol>          renderDelegate;
+@property (strong, nonatomic) id<ASDKFormRenderEngineDataSourceProtocol>dataSource;
 
 @end

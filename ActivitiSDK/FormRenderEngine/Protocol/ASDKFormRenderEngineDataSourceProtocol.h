@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "ASDKFormRenderEngineDataSourceDelegate.h"
 
 @class ASDKModelFormDescription,
 ASDKModelBase,
@@ -39,25 +40,24 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
 
 
 /**
- *  Property meant to hold a refference to renderable but not necessarly visible
+ *  Property meant to hold a reference to renderable but not necessarly visible
  *  form fields, organized per section and stripped of container-like objects
  *  that don't have a visual representation. This property is intended to act
- *  as a refference point when visibility conditions affect a subset of
+ *  as a reference point when visibility conditions affect a subset of
  *  form fields and some get removed or inserted. We fallback to this property
  *  when we want to find out what was removed, from where, and what's should be
  *  inserted and where.
  */
-@property (strong, nonatomic) NSDictionary *renderableFormFields;
+@property (strong, nonatomic) NSArray *renderableFormFields;
 
 /**
- *  Property meant to hold a refference to visible form field objects
+ *  Property meant to hold a reference to visible form field objects
  *  organized per section and strip from the collection container-like
  *  objects that don't have a visual representation, or objects that
  *  after the visibility condition processing shouldn't be visible anymore
  *
- *  Convention: The index of the section represents the key
  */
-@property (strong, nonatomic) NSDictionary *visibleFormFields;
+@property (strong, nonatomic) NSArray *visibleFormFields;
 
 /**
  *  Property meant to indicate whether the form is read only or not. Setting
@@ -75,7 +75,13 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
 
 /**
- *  Property meant to hold a refference to the visibility condition processor.
+ *  Property meant to hold a reference to the data source's delegate which will
+ *  be notified about visibility changes in sections or items.
+ */
+@property (weak, nonatomic) id<ASDKFormRenderEngineDataSourceDelegate> delegate;
+
+/**
+ *  Property meant to hold a reference to the visibility condition processor.
  *  It's purpose is to determine based on form field visibility conditions which
  *  fields are to be displayed or hidden. 
  */

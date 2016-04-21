@@ -101,6 +101,27 @@
     }
 }
 
+
+#pragma mark -
+#pragma mark ASDKFormRenderEngineDataSource Delegate
+
+- (void)requestControllerUpdateWithBatchOfOperations:(NSDictionary *)operationsBatch {
+    [self.collectionView performBatchUpdates:^{
+        // Check for sections to insert
+        NSIndexSet *sectionInsertIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertSection)];
+        if (sectionInsertIndexSet.count) {
+            [self.collectionView insertSections:sectionInsertIndexSet];
+        }
+        
+        // Check for rows to insert
+        NSArray *rowsToInsert = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertRow)];
+        if (rowsToInsert.count) {
+            [self.collectionView insertItemsAtIndexPaths:rowsToInsert];
+        }
+    } completion:nil];
+}
+
+
 #pragma mark -
 #pragma mark UICollectionView DataSource
 
@@ -204,6 +225,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     // We first make sure we don't handle cell taps for the outcome section
+    // TODO: Adjust the the form outcome index paths after insertions or deletions
     if (![[self.dataSource indexPathsOfFormOutcomes] containsObject:indexPath]) {
         if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
             UIViewController *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];

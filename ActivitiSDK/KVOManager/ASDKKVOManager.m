@@ -32,16 +32,16 @@
 
 + (instancetype)managerWithObserver:(id)observer {
     return [[self alloc]initWithObserver:observer
-                    withStrongRefference:YES];
+                    withStrongReference:YES];
 }
 
 - (instancetype)initWithObserver:(id)observer
-            withStrongRefference:(BOOL)isStrongRefference {
+            withStrongReference:(BOOL)isStrongReference {
     self = [super init];
     
     if (self) {
         _observer = observer;
-        NSPointerFunctionsOptions keyOptions = isStrongRefference ? NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPointerPersonality : NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality;
+        NSPointerFunctionsOptions keyOptions = isStrongReference ? NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPointerPersonality : NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality;
         NSPointerFunctionsOptions valueOptions = NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality;
         _objInfoMap = [[NSMapTable alloc] initWithKeyOptions:keyOptions
                                                 valueOptions:valueOptions

@@ -492,7 +492,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 #pragma mark AFAFilterViewController Delegate
 
 - (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel {
-    // Store the filter refference for further reuse
+    // Store the filter reference for further reuse
     self.currentFilter = filterModel;
     
     [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];

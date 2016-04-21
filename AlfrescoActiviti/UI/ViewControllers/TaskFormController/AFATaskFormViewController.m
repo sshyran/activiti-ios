@@ -74,7 +74,7 @@
              __strong typeof(self) strongSelf = weakSelf;
              
              if (!error) {
-                 // Make sure we remove any refferences of old versions of the form controller
+                 // Make sure we remove any references of old versions of the form controller
                  for (id childController in strongSelf.childViewControllers) {
                      if ([childController isKindOfClass:[UICollectionViewController class]]) {
                          [((UICollectionViewController *)childController).view removeFromSuperview];

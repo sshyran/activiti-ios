@@ -57,7 +57,7 @@ typedef void  (^AFAProfileCompletionBlock) (ASDKModelProfile *profile, NSError *
 /**
  *  Performs a request for the detailed profile information
  *
- *  @param completionBlock Completion block providing a refference to the profile model object and an
+ *  @param completionBlock Completion block providing a reference to the profile model object and an
  *                         optional error reason.
  */
 - (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock;

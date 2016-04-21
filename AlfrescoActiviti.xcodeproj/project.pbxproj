@@ -10,6 +10,7 @@
 		130269691C57735800152F71 /* AFAFilterOptionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 130269681C57735800152F71 /* AFAFilterOptionTableViewCell.m */; };
 		13044FC91BFA178A008FF6E6 /* ASDKModelAmountFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 13044FC71BFA178A008FF6E6 /* ASDKModelAmountFormField.h */; };
 		13044FCA1BFA178A008FF6E6 /* ASDKModelAmountFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 13044FC81BFA178A008FF6E6 /* ASDKModelAmountFormField.m */; };
+		1306E9701CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1306E96F1CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h */; };
 		130761511BEA41970082EA2D /* ActivitiSDKLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 130761501BEA41970082EA2D /* ActivitiSDKLocalizable.strings */; };
 		130761541BEA42EC0082EA2D /* ASDKLocalizationConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 130761521BEA42EC0082EA2D /* ASDKLocalizationConstants.h */; };
 		130761551BEA42EC0082EA2D /* ASDKLocalizationConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */; };
@@ -457,6 +458,7 @@
 		130269681C57735800152F71 /* AFAFilterOptionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAFilterOptionTableViewCell.m; path = UI/Cells/FilterOptionCell/AFAFilterOptionTableViewCell.m; sourceTree = "<group>"; };
 		13044FC71BFA178A008FF6E6 /* ASDKModelAmountFormField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelAmountFormField.h; path = Model/AmountFormField/ASDKModelAmountFormField.h; sourceTree = "<group>"; };
 		13044FC81BFA178A008FF6E6 /* ASDKModelAmountFormField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelAmountFormField.m; path = Model/AmountFormField/ASDKModelAmountFormField.m; sourceTree = "<group>"; };
+		1306E96F1CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineDataSourceDelegate.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineDataSourceDelegate.h; sourceTree = "<group>"; };
 		130761501BEA41970082EA2D /* ActivitiSDKLocalizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ActivitiSDKLocalizable.strings; path = Localization/ActivitiSDKLocalizable.strings; sourceTree = "<group>"; };
 		130761521BEA42EC0082EA2D /* ASDKLocalizationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKLocalizationConstants.h; path = Localization/ASDKLocalizationConstants.h; sourceTree = "<group>"; };
 		130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLocalizationConstants.m; path = Localization/ASDKLocalizationConstants.m; sourceTree = "<group>"; };
@@ -2332,6 +2334,7 @@
 			children = (
 				13A0BCB71BD7CB8600599661 /* ASDKFormRenderEngineProtocol.h */,
 				1395CD9A1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h */,
+				1306E96F1CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h */,
 				137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */,
 				8D3B50EE1C8733C5005BEEEB /* ASDKFormPreProcessorProtocol.h */,
 			);
@@ -3825,6 +3828,7 @@
 				8DB399AA1C9C319B0089E0AB /* ASDKAvatarInitialsView.h in Headers */,
 				13F35D471BDE8CF200FC3F4E /* ASDKFormCellProtocol.h in Headers */,
 				8D3A51EC1C8089F200FF9A00 /* ASDKUserNetworkServices.h in Headers */,
+				1306E9701CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */,
 				138C48B51C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h in Headers */,
 				137B94601BD796B700134BF1 /* ASDKFormCollectionViewController.h in Headers */,
 				8D9D98861C9C37AE002C0F81 /* UIView+ASDKViewAnimations.h in Headers */,

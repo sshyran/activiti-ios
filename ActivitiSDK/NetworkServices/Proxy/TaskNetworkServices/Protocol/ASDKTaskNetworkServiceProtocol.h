@@ -248,7 +248,7 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
           completionBlock:(ASDKTaskClaimCompletionBlock)completionBlock;
 
 /**
- *  Assigns a task refferenced by it's ID to a user
+ *  Assigns a task referenced by it's ID to a user
  *
  *  @param taskID          ID of the task which will be assigned
  *  @param user            The user who will be assigned with the task

@@ -146,7 +146,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
-    // Get a hold of the refference for the embedded page view controller
+    // Get a hold of the reference for the embedded page view controller
     if ([kStoryboardIDEmbeddedCredentialsPageController isEqualToString:segue.identifier]) {
         self.credentialsPageViewController = segue.destinationViewController;
         self.credentialsPageViewController.loginModel = self.loginModel;
