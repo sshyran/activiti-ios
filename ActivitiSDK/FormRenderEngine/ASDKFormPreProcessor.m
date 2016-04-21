@@ -206,6 +206,14 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
             case ASDKModelFormFieldRepresentationTypeDynamicTable:
                 // populate column definition form fields with values
                 if (formField.values) {
+                    
+                    // display value
+                    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
+                        ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) formField;
+                        ASDKModelDynamicTableFormField *dynamicTableFormFieldParams =  (ASDKModelDynamicTableFormField *) formField.formFieldParams;
+                        dynamicTableFormField.columnDefinitions = dynamicTableFormFieldParams.columnDefinitions;
+                    }
+                    
                     NSMutableArray *newFormFieldValues = [[NSMutableArray alloc] init];
                     ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) formField;
 

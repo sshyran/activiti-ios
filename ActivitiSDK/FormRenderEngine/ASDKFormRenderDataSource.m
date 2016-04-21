@@ -99,7 +99,9 @@
     // Check if the controller requested the number of fields for the outcome section
     if (!sectionFormField) {
         fieldsCount = self.formOutcomes.count;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField
+               || (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType
+                   && ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
         fieldsCount = 1;
     } else {
         fieldsCount = sectionFormField.formFields.count;
@@ -115,7 +117,9 @@
     // Check if the controller requested a cell identifier for the outcome section
     if (!sectionFormField) {
         cellIdentifier = kASDKCellIDFormFieldOutcomeRepresentation;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField
+               || (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType
+                   && ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
         cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
     } else {
         ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
@@ -137,7 +141,9 @@
         }
         
         formFieldModel = formOutcome;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField
+               || (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType
+                   && ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
         formFieldModel = sectionFormField;
     } else {// Set up the cell from the corresponding section
         formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[@(indexPath.section)] formFields][indexPath.row];
@@ -193,7 +199,9 @@
             formField.formFields = [self filterSupportedFormFields:formField.formFields];
             [formFieldSections setObject:formField
                                   forKey:@(section)];
-        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType ||            // if dynamic table or display value dynamic table
+                   (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType
+                    && ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
             section++;
             [formFieldSections setObject:formField
                                   forKey:@(section)];
