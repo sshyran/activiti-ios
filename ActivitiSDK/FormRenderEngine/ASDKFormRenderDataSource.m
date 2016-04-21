@@ -30,6 +30,7 @@
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelFormDescription.h"
 #import "ASDKModelFormOutcome.h"
+#import "ASDKModelDynamicTableFormField.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -347,8 +348,22 @@
     
     // Check if mandatory form field values had been addressed
     for (NSNumber *sectionCount in self.visibleFormFields.allKeys) {
-        // Extract the form fields for the correspondent container
-        NSArray *associatedFormFields = [self.visibleFormFields[sectionCount] formFields];
+        NSArray *associatedFormFields = nil;
+        
+        if ([self.visibleFormFields[sectionCount] isKindOfClass:ASDKModelDynamicTableFormField.class]) { // Extract formfields from dynamic table
+            NSMutableArray *dynamicTableFormFields = [NSMutableArray new];
+            
+            // add the dynamic table it self
+            [dynamicTableFormFields addObject:self.visibleFormFields[sectionCount]];
+            
+            for (NSArray *dynamicTableRow in [self.visibleFormFields[sectionCount] values]) {
+                [dynamicTableFormFields addObjectsFromArray:dynamicTableRow];
+            }
+            
+            associatedFormFields = [dynamicTableFormFields copy];
+        } else { // Extract the form fields for the correspondent container
+            associatedFormFields = [self.visibleFormFields[sectionCount] formFields];
+        }
         
         // Enumerate through the associated form fields and check if they
         // have a value or attached metadata values 
@@ -366,7 +381,7 @@
                         formFieldsAreValid = NO;
                         break;
                     }
-                } else if (!formField.values.count && !formField.metadataValue.attachedValue.length) {
+                } else if (!formField.values.count && !formField.metadataValue.attachedValue.length && !formField.metadataValue.option.attachedValue.length) {
                     formFieldsAreValid = NO;
                     break;
                 }
