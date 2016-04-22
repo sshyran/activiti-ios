@@ -491,16 +491,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableDictionary *indexPathOperations = [NSMutableDictionary dictionary];
     NSMutableArray *visibleFormFields = [NSMutableArray arrayWithArray:self.visibleFormFields];
     
+    // Change data source then notify the delegate controller that it needs to update it's layout
+    
     // Check if fields should be added
     NSArray *fieldsToBeAdded = visibilityActionsDict[@(ASDKFormVisibilityConditionActionTypeShowElement)];
-    NSMutableIndexSet *sectionIndexSet = [NSMutableIndexSet indexSet];
-    NSMutableArray *insertionIndexPaths = [NSMutableArray array];
+    NSMutableIndexSet *insertSectionIndexSet = [NSMutableIndexSet indexSet];
+    NSMutableArray *insertIndexPaths = [NSMutableArray array];
     
     if (fieldsToBeAdded) {
-        // Change data source then notify the delegate controller that it needs to update it's layout
         for (ASDKModelFormField *formField in fieldsToBeAdded) {
             BOOL isSectionInsert = (ASDKModelFormFieldTypeContainer == formField.fieldType);
-            
+
             // To compute the insert index for the current form field we first look at it's position in the
             // renderable array (which holds all the form fields). We then take the previous item and check
             // if it's in the visible form fields collection and if so, that means the insert position is
@@ -514,7 +515,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                 [visibleFormFields insertObject:formField
                                         atIndex:insertIndex];
                 
-                [sectionIndexSet addIndex:insertIndex];
+                [insertSectionIndexSet addIndex:insertIndex];
             } else {
                 // Check where the field was inside the renderable fields collection
                 NSUInteger originalSectionIndex = [self sectionForFormField:formField
@@ -533,7 +534,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                         
                         [visibleFormFields insertObject:sectionToBecomeVisible
                                                 atIndex:insertIndex];
-                        [sectionIndexSet addIndex:insertIndex];
+                        [insertSectionIndexSet addIndex:insertIndex];
                     } else {
                         ASDKModelFormField *originalFormFieldSection = self.renderableFormFields[originalSectionIndex];
                         NSInteger originalFormFieldIndex = [self indexOfFormField:formField
@@ -558,8 +559,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                         [currentFormFields insertObject:formField
                                                 atIndex:insertIndex];
                         sectionFormField.formFields = currentFormFields;
-                        [insertionIndexPaths addObject:[NSIndexPath indexPathForRow:insertIndex
-                                                                          inSection:insertSection]];
+                        [insertIndexPaths addObject:[NSIndexPath indexPathForItem:insertIndex
+                                                                        inSection:insertSection]];
                     }
                 } else {
                     ASDKLogError(@"Cannot find form field that needs to become visibile in the renderable form field collection");
@@ -568,14 +569,66 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
     }
 
-    [indexPathOperations setObject:sectionIndexSet
+    [indexPathOperations setObject:insertSectionIndexSet
                             forKey:@(ASDKFormRenderEngineControllerOperationTypeInsertSection)];
     
-    [indexPathOperations setObject:insertionIndexPaths
+    [indexPathOperations setObject:insertIndexPaths
                             forKey:@(ASDKFormRenderEngineControllerOperationTypeInsertRow)];
+    
+    // Check if fields should be removed
+    NSArray *fieldsToBeRemoved = visibilityActionsDict[@(ASDKFormVisibilityConditionActionTypeHideElement)];
+    NSMutableIndexSet *deleteSectionIndexSet = [NSMutableIndexSet indexSet];
+    NSMutableArray *deleteIndexPaths = [NSMutableArray array];
+    
+    if (fieldsToBeRemoved) {
+        for (ASDKModelFormField *formField in fieldsToBeRemoved) {
+            BOOL isSectionRemoval = (ASDKModelFormFieldTypeContainer == formField.fieldType);
+            
+            NSUInteger sectionIndexToDelete = [self sectionForFormField:formField
+                                                           inCollection:visibleFormFields];
+            
+            // If the element to delete is present in the visible forms
+            if (NSNotFound != sectionIndexToDelete) {
+                if (isSectionRemoval) {
+                    [deleteSectionIndexSet addIndex:sectionIndexToDelete];
+                } else {
+                    ASDKModelFormField *sectionFieldToRemoveFrom = visibleFormFields[sectionIndexToDelete];
+                    NSMutableArray *sectionFormFieldsToRemoveFrom = [NSMutableArray arrayWithArray:sectionFieldToRemoveFrom.formFields];
+                    NSUInteger itemIndexToDelete = [self indexOfFormField:formField
+                                                             inCollection:sectionFormFieldsToRemoveFrom];
+                    
+                    // If there are no more form fields inside the section then remove the section altogether
+                    if (!(sectionFormFieldsToRemoveFrom.count - 1)) {
+                        [deleteSectionIndexSet addIndex:sectionIndexToDelete];
+                    } else {
+                        [deleteIndexPaths addObject:[NSIndexPath indexPathForItem:itemIndexToDelete
+                                                                        inSection:sectionIndexToDelete]];
+                    }
+                }
+            }
+        }
+    }
+    
+    // Items will be removed after the indexes are computed to avoid
+    // reporting of mutated indexes by multiple operations to the delegate
+    [visibleFormFields removeObjectsAtIndexes:deleteSectionIndexSet];
+    for (NSIndexPath *deleteIndexPath in deleteIndexPaths) {
+        ASDKModelFormField *sectionFieldToRemoveFrom = visibleFormFields[deleteIndexPath.section];
+        NSMutableArray *sectionFormFieldsToRemoveFrom = [NSMutableArray arrayWithArray:sectionFieldToRemoveFrom.formFields];
+        [sectionFormFieldsToRemoveFrom removeObjectAtIndex:deleteIndexPath.row];
+        sectionFieldToRemoveFrom.formFields = sectionFormFieldsToRemoveFrom;
+    }
+    
+    [indexPathOperations setObject:deleteSectionIndexSet
+                            forKey:@(ASDKFormRenderEngineControllerOperationTypeRemoveSection)];
+    [indexPathOperations setObject:deleteIndexPaths
+                            forKey:@(ASDKFormRenderEngineControllerOperationTypeRemoveRow)];
     
     // Persist the mutated visible form fields version
     self.visibleFormFields = visibleFormFields;
+    
+    // The form outcome indexes will have to be rebuilt
+    [self.formOutcomesIndexPaths removeAllObjects];
     
     // Report index update operations to delegate
     if ([self.delegate respondsToSelector:@selector(requestControllerUpdateWithBatchOfOperations:)]) {

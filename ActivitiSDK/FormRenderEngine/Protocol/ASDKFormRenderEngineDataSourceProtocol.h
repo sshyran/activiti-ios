@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ASDKFormRenderEngineDataSourceDelegate.h"
+#import "ASDKFormFieldDetailsControllerProtocol.h"
 
 @class ASDKModelFormDescription,
 ASDKModelBase,
@@ -150,6 +151,6 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  *
  *  @return UIViewController initialized instance to be presented
  */
-- (UIViewController *)childControllerForFormField:(ASDKModelFormField *)formField;
+- (UIViewController<ASDKFormFieldDetailsControllerProtocol> *)childControllerForFormField:(ASDKModelFormField *)formField;
 
 @end

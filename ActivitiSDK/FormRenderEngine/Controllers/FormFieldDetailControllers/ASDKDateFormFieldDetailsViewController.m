@@ -115,5 +115,11 @@
     formFieldValue.attachedValue = formatedDate;
     
     self.currentFormField.metadataValue = formFieldValue;
+    
+    // Notify the value transaction delegate there has been a change with the provided form field model
+    if ([self.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+        [self.valueTransactionDelegate updatedMetadataValueForFormField:self.currentFormField
+                                                                 inCell:nil];
+    }
 }
 @end

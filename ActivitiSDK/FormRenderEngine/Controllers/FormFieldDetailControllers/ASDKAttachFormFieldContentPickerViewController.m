@@ -394,7 +394,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                                   // if multiple files allowed -> add
                                                   // otherwise -> replace
                                                   
-                                                  ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *) self.currentFormField.formFieldParams;
+                                                  ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)self.currentFormField.formFieldParams;
                                                   NSMutableArray *currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
                                                   
                                                   if (formFieldParameters.allowMultipleFiles) {

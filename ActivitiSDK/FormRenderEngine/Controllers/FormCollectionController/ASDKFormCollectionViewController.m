@@ -114,11 +114,24 @@
             [self.collectionView insertSections:sectionInsertIndexSet];
         }
         
+        // Check for sections to delete
+        NSIndexSet *sectionDeleteIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveSection)];
+        if (sectionDeleteIndexSet.count) {
+            [self.collectionView deleteSections:sectionDeleteIndexSet];
+        }
+        
         // Check for rows to insert
         NSArray *rowsToInsert = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertRow)];
         if (rowsToInsert.count) {
             [self.collectionView insertItemsAtIndexPaths:rowsToInsert];
         }
+        
+        // Check for rows to delete
+        NSArray *rowsToDelete = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveRow)];
+        if (rowsToDelete.count) {
+            [self.collectionView deleteItemsAtIndexPaths:rowsToDelete];
+        }
+        
     } completion:nil];
 }
 
@@ -216,7 +229,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                      enableFormOutcome:self.dataSource.isReadOnlyForm ? NO : [self.dataSource areFormFieldMetadataValuesValid]];
     }
     
-    // Link the delegate
+    // Link the ASDKFormRenderEngineValueTransactionsProtocol delegate
     if ([cell respondsToSelector:@selector(setDelegate:)]) {
         cell.delegate = self;
     }
@@ -229,7 +242,9 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     // TODO: Adjust the the form outcome index paths after insertions or deletions
     if (![[self.dataSource indexPathsOfFormOutcomes] containsObject:indexPath]) {
         if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
-            UIViewController *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
+            UIViewController<ASDKFormFieldDetailsControllerProtocol> *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
+            // Child controllers will have to delegate changes on model updates using the ASDKFormRenderEngineValueTransactionsProtocol
+            childController.valueTransactionDelegate = self;
             
             if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
                 ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;

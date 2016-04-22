@@ -249,6 +249,12 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                                          NSMutableArray *tmpArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
                                          [tmpArray removeObjectAtIndex:indexPath.row];
                                          strongSelf.currentFormField.values = [tmpArray copy];
+                                         
+                                         // Notify the value transaction delegate there has been a change with the provided form field model
+                                         if ([strongSelf.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+                                             [strongSelf.valueTransactionDelegate updatedMetadataValueForFormField:strongSelf.currentFormField
+                                                                                                      inCell:nil];
+                                         }
                                         
                                          [tableView reloadData];
                                          [strongSelf refreshContent];
@@ -290,6 +296,12 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)pickedContentHasFinishedUploading {
     [self.attachedContentTableView reloadData];
     [self refreshContent];
+    
+    // Notify the value transaction delegate there has been a change with the provided form field model
+    if ([self.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+        [self.valueTransactionDelegate updatedMetadataValueForFormField:self.currentFormField
+                                                                 inCell:nil];
+    }
 }
 
 - (void)userPickedImageFromCamera {

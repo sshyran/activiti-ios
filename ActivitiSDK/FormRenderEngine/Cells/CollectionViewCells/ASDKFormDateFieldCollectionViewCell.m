@@ -81,11 +81,6 @@
         self.disclosureIndicatorLabel.hidden = NO;
         
         [self validateCellStateForText:self.selectedDateLabel.text];
-        
-        if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
-            [self.delegate updatedMetadataValueForFormField:self.formField
-                                                     inCell:self];
-        }
     }
 }
 

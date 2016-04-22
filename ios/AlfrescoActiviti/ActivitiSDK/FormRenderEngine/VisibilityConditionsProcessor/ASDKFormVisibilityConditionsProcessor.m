@@ -676,6 +676,25 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                 error:(NSError **)error {
     BOOL result;
     
+    // For the evaluation of the date we don't want to compare hours so we discard
+    // the hour component from the date
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *componentsForFirstDate = nil;
+    
+    if (firstDate) {
+        componentsForFirstDate = [calendar components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
+                                             fromDate:firstDate];
+    }
+    
+    NSDateComponents *componentsForSecondDate = nil;
+    if (secondDate) {
+        componentsForSecondDate = [calendar components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear
+                                              fromDate:secondDate];
+    }
+    
+    firstDate = componentsForFirstDate ? [calendar dateFromComponents:componentsForFirstDate] : nil;
+    secondDate = componentsForSecondDate ? [calendar dateFromComponents:componentsForSecondDate] : nil;
+    
     switch (operatorType) {
         case ASDKModelFormVisibilityConditionOperatorTypeEqual: {
             result = [firstDate isEqualToDate:secondDate];
@@ -868,11 +887,21 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (NSDate *)dateFromString:(NSString *)string {
+    NSDate *date = nil;
+    
+    // First try to match a date using the server date format
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     dateFormatter.dateFormat = kBaseModelDateFormat;
+    date = [dateFormatter dateFromString:string];
     
-    return [dateFormatter dateFromString:string];
+    // If this fails try to pick up the date using a more natural format
+    if (!date) {
+        [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+        date = [dateFormatter dateFromString:string];
+    }
+    
+    return date;
 }
 
 

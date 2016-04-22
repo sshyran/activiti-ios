@@ -21,6 +21,6 @@
 
 @interface ASDKDateFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol>
 
-
+@property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> valueTransactionDelegate;
 
 @end

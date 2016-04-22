@@ -74,11 +74,6 @@
         self.dynamicTableLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
 
         [self validateCellStateForFormfieldValues:formField.values];
-        
-        if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
-            [self.delegate updatedMetadataValueForFormField:self.formField
-                                                     inCell:self];
-        }
     }
     
     self.disclosureIndicatorLabel.hidden = NO;

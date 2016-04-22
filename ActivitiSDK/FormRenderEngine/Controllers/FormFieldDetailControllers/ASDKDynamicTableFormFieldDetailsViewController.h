@@ -23,6 +23,7 @@
 
 @interface ASDKDynamicTableFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol, ASDKFormControllerNavigationProtocol, ASDKDynamicTableRowHeaderNavigationProtocol>
 
-@property (weak, nonatomic)   id<ASDKFormControllerNavigationProtocol> navigationDelegate;
+@property (weak, nonatomic) id<ASDKFormControllerNavigationProtocol>          navigationDelegate;
+@property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> valueTransactionDelegate;
 
 @end

@@ -21,6 +21,7 @@
 
 @interface ASDKPeopleFormFieldPeoplePickerViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol>
 
-@property (strong, nonatomic) ASDKModelFormField                                          *currentFormField;
+@property (strong, nonatomic) ASDKModelFormField                               *currentFormField;
+@property (weak, nonatomic)  id<ASDKFormRenderEngineValueTransactionsProtocol> valueTransactionDelegate;
 
 @end

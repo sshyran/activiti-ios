@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, ASDKFormRenderEngineControllerOperationType) {
-    ASDKFormRenderEngineControllerOperationTypeInsertSection,
+    ASDKFormRenderEngineControllerOperationTypeInsertSection = 0,
     ASDKFormRenderEngineControllerOperationTypeRemoveSection,
     ASDKFormRenderEngineControllerOperationTypeInsertRow,
     ASDKFormRenderEngineControllerOperationTypeRemoveRow

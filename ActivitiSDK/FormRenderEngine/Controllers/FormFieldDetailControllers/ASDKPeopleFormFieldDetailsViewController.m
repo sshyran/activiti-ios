@@ -187,6 +187,12 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                                          [tmpArray removeObjectAtIndex:indexPath.row];
                                          strongSelf.currentFormField.values = [tmpArray copy];
                                          
+                                         // Notify the value transaction delegate there has been a change with the provided form field model
+                                         if ([strongSelf.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+                                             [strongSelf.valueTransactionDelegate updatedMetadataValueForFormField:strongSelf.currentFormField
+                                                                                                      inCell:nil];
+                                         }
+                                         
                                          [tableView reloadData];
                                          [strongSelf refreshContent];
                                      }];

@@ -80,11 +80,6 @@
         self.disclosureIndicatorLabel.hidden = NO;
         
         [self validateCellStateForText:self.selectedOptionLabel.text];
-        
-        if ([self.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
-            [self.delegate updatedMetadataValueForFormField:self.formField
-                                                     inCell:self];
-        }
     }
 }
 
