@@ -133,8 +133,9 @@
             }
         }
         
-        strongSelf.currentFormField.metadataValue = [ASDKModelFormFieldValue new];
-        strongSelf.currentFormField.metadataValue.attachedValue = textField.text;
+        ASDKModelFormFieldValue *formFieldValue = [ASDKModelFormFieldValue new];
+        formFieldValue.attachedValue = textField.text;
+        strongSelf.currentFormField.metadataValue = formFieldValue;
         
         if ([strongSelf.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
             [strongSelf.delegate updatedMetadataValueForFormField:strongSelf.currentFormField

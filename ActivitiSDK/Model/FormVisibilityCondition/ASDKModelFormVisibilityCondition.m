@@ -66,7 +66,7 @@
               @">"          : @(ASDKModelFormVisibilityConditionOperatorTypeGreaterThan),
               @">="         : @(ASDKModelFormVisibilityConditionOperatorTypeGreatOrEqualThan),
               @"empty"      : @(ASDKModelFormVisibilityConditionOperatorTypeEmpty),
-              @"not empty"  : @(ASDKModelFormVisibilityConditionOperatorTypeNotEmpty)
+              @"!empty"     : @(ASDKModelFormVisibilityConditionOperatorTypeNotEmpty)
              }];
 }
 

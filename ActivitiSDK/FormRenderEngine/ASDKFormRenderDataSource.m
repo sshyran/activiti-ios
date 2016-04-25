@@ -473,7 +473,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     for (ASDKModelFormField *influencialFormField in influencialFormFields) {
         __weak typeof(self) weakSelf = self;
         
-        // TODO: Check if more keypaths are required i.e. see how user-filled data is passed in all form fields
         [self.kvoManager observeObject:influencialFormField
                             forKeyPath:NSStringFromSelector(@selector(metadataValue))
                                options:NSKeyValueObservingOptionNew
@@ -551,6 +550,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                 ASDKModelFormField *visibleFormFieldSection = visibleFormFields[insertSection];
                                 insertIndex = [self indexOfFormField:currentFormField
                                                         inCollection:visibleFormFieldSection.formFields] + 1;
+                                break;
                             }
                         }
                         

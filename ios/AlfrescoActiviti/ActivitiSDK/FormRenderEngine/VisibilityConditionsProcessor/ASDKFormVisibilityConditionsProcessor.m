@@ -48,7 +48,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 /**
  *  Property meant to hold a reference to a dictionary structure where the key
- *  is represented by the affected field and the value is an array of fields 
+ *  is represented by the affected field ID and the value is an array of fields
  *  that affect it. This will be used to identify the affected field when another
  *  field changes and that operation could impact visibility.
  */
@@ -128,7 +128,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         [dependencyDict setObject:influentialFormFieldsForCurrentFormField
-                           forKey:formField];
+                           forKey:formField.instanceID];
     }
     
     return dependencyDict;
@@ -189,7 +189,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (NSArray *)parseVisibleFormFields {
     // Because at init time the dependency dict is created which holds information on the affected
     // form fields, we will use that to iterate over and evaluate conditions
-    NSArray *hiddenFields = [self parseHiddenFormFieldsFromCollection:self.dependencyDict.allKeys];
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID IN %@", self.dependencyDict.allKeys];
+    NSArray *affectedFormFields = [self.formFields filteredArrayUsingPredicate:searchPredicate];
+    NSArray *hiddenFields = [self parseHiddenFormFieldsFromCollection:affectedFormFields];
     
     // Make a difference between the set of all the form fields and the hidden form fields
     // to report back the visible ones
@@ -242,10 +244,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     // Given the current form field get the list of affected form fields by it
     NSMutableArray *affectedFormFieldsArr = [NSMutableArray array];
-    for (ASDKModelFormField *affectedField in self.dependencyDict.allKeys) {
-        NSArray *influencialFormFields = self.dependencyDict[affectedField];
+    for (NSString *affectedFieldID in self.dependencyDict.allKeys) {
+        NSArray *influencialFormFields = self.dependencyDict[affectedFieldID];
         if ([influencialFormFields containsObject:formField]) {
-            [affectedFormFieldsArr addObject:affectedField];
+            [affectedFormFieldsArr addObject:[self formFieldForID:affectedFieldID]];
         }
     }
     
@@ -300,8 +302,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         // Then check the right side of the condition
         ASDKFormFieldSupportedType rightSideType = [self supportedTypeForRightSideOfVisibilityCondition:visibilityCondition];
         
-        // Check if both sides have the same type to make the comparison
-        if (leftSideType != rightSideType) {
+        // Check if both sides have the same type to make the comparison but allow
+        // one side to be nil if there's a empty / not empty comparator present
+        if ((leftSideType != rightSideType) &&
+            (visibilityCondition.operationOperator != ASDKModelFormVisibilityConditionOperatorTypeEmpty) &&
+            (visibilityCondition.operationOperator != ASDKModelFormVisibilityConditionOperatorTypeNotEmpty)) {
             canEvaluateCondition = NO;
         }
     }
@@ -315,7 +320,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     switch (representationType) {
         case ASDKModelFormFieldRepresentationTypeDropdown:
         case ASDKModelFormFieldRepresentationTypeRadio:
-        case ASDKModelFormFieldRepresentationTypeMultiline: {
+        case ASDKModelFormFieldRepresentationTypeMultiline:
+        case ASDKModelFormFieldRepresentationTypeText: {
             return ASDKFormFieldSupportedTypeString;
         }
             break;
@@ -652,12 +658,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         case ASDKModelFormVisibilityConditionOperatorTypeEmpty: {
-            result = !secondNumber ? YES : NO;
+            result = !firstNumber ? YES : NO;
         }
             break;
             
         case ASDKModelFormVisibilityConditionOperatorTypeNotEmpty: {
-            result = secondNumber ? YES: NO;
+            result = firstNumber ? YES: NO;
         }
             break;
             
@@ -729,12 +735,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         case ASDKModelFormVisibilityConditionOperatorTypeEmpty: {
-            result = !secondDate ? YES : NO;
+            result = !firstDate ? YES : NO;
         }
             break;
             
         case ASDKModelFormVisibilityConditionOperatorTypeNotEmpty: {
-            result = secondDate ? YES: NO;
+            result = firstDate ? YES: NO;
         }
             break;
             

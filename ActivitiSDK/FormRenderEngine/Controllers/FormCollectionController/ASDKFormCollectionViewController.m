@@ -107,32 +107,40 @@
 #pragma mark ASDKFormRenderEngineDataSource Delegate
 
 - (void)requestControllerUpdateWithBatchOfOperations:(NSDictionary *)operationsBatch {
-    [self.collectionView performBatchUpdates:^{
-        // Check for sections to insert
-        NSIndexSet *sectionInsertIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertSection)];
-        if (sectionInsertIndexSet.count) {
-            [self.collectionView insertSections:sectionInsertIndexSet];
-        }
-        
-        // Check for sections to delete
-        NSIndexSet *sectionDeleteIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveSection)];
-        if (sectionDeleteIndexSet.count) {
-            [self.collectionView deleteSections:sectionDeleteIndexSet];
-        }
-        
-        // Check for rows to insert
-        NSArray *rowsToInsert = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertRow)];
-        if (rowsToInsert.count) {
-            [self.collectionView insertItemsAtIndexPaths:rowsToInsert];
-        }
-        
-        // Check for rows to delete
-        NSArray *rowsToDelete = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveRow)];
-        if (rowsToDelete.count) {
-            [self.collectionView deleteItemsAtIndexPaths:rowsToDelete];
-        }
-        
-    } completion:nil];
+    // First check if there are any updates to perform
+    NSIndexSet *sectionInsertIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertSection)];
+    NSIndexSet *sectionDeleteIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveSection)];
+    NSArray *rowsToInsert = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertRow)];
+    NSArray *rowsToDelete = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveRow)];
+    
+    if (sectionInsertIndexSet.count ||
+        sectionDeleteIndexSet.count ||
+        rowsToInsert.count ||
+        rowsToDelete.count) {
+        [self.collectionView performBatchUpdates:^{
+            // Check for sections to insert
+            if (sectionInsertIndexSet.count) {
+                [self.collectionView insertSections:sectionInsertIndexSet];
+            }
+            
+            // Check for sections to delete
+            if (sectionDeleteIndexSet.count) {
+                [self.collectionView deleteSections:sectionDeleteIndexSet];
+            }
+            
+            // Check for rows to insert
+            if (rowsToInsert.count) {
+                [self.collectionView insertItemsAtIndexPaths:rowsToInsert];
+            }
+            
+            // Check for rows to delete
+            if (rowsToDelete.count) {
+                [self.collectionView deleteItemsAtIndexPaths:rowsToDelete];
+            }
+        } completion:^(BOOL finished) {
+            [self.collectionViewLayout invalidateLayout];
+        }];
+    }
 }
 
 
@@ -239,7 +247,6 @@ referenceSizeForHeaderInSection:(NSInteger)section {
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     // We first make sure we don't handle cell taps for the outcome section
-    // TODO: Adjust the the form outcome index paths after insertions or deletions
     if (![[self.dataSource indexPathsOfFormOutcomes] containsObject:indexPath]) {
         if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
             UIViewController<ASDKFormFieldDetailsControllerProtocol> *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
