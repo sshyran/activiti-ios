@@ -2344,6 +2344,14 @@
                                     <constraint firstAttribute="height" constant="216" id="3Zz-vh-LCg"/>
                                 </constraints>
                             </view>
+                            <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3A5-15-7SV" userLabel="Overlay view">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="956"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Hp8-cL-mOe" appends="YES" id="khG-ht-vn2"/>
+                                </connections>
+                            </view>
                             <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B5D-mD-4EL" userLabel="Content Picker Container View">
                                 <rect key="frame" x="0.0" y="956" width="600" height="110"/>
                                 <constraints>
@@ -2377,14 +2385,6 @@
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                            </view>
-                            <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3A5-15-7SV" userLabel="Overlay view">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="956"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="Hp8-cL-mOe" appends="YES" id="khG-ht-vn2"/>
-                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -4941,8 +4941,8 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="OCj-p8-qSZ"/>
         <segue reference="RF7-69-ZNi"/>
         <segue reference="XZ3-C5-Oig"/>
-        <segue reference="KJK-Sb-lGO"/>
     </inferredMetricsTieBreakers>
 </document>

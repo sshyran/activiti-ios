@@ -336,9 +336,9 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
         case ASDKModelFormFieldRepresentationTypeBoolean: {
             BOOL formFieldValue;
             if (columnDefinitionformField.metadataValue) {
-                formFieldValue = columnDefinitionformField.metadataValue.attachedValue;
+                formFieldValue = columnDefinitionformField.metadataValue.attachedValue ? YES: NO;
             } else {
-                formFieldValue = columnDefinitionformField.values.firstObject;
+                formFieldValue = columnDefinitionformField.values.firstObject ? YES : NO;
             }
             valueLabel.text = formFieldValue ? @"Yes" : @"No";
         }
