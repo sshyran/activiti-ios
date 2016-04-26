@@ -69,6 +69,10 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.multilineTextView resignFirstResponder];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -79,12 +83,14 @@
     [super touchesBegan:touches withEvent:event];
 }
 
+
 #pragma mark -
 #pragma mark ASDKFormFieldDetailsControllerProtocol
 
 - (void)setupWithFormFieldModel:(ASDKModelFormField *)formFieldModel {
     self.currentFormField = formFieldModel;
 }
+
 
 #pragma mark -
 #pragma mark TextView Delegate methods
