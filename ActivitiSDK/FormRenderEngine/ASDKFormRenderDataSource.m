@@ -135,7 +135,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Check if the controller requested the number of fields for the outcome section
     if (!sectionFormField) {
         fieldsCount = self.formOutcomes.count;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
         fieldsCount = 1;
     } else {
         fieldsCount = sectionFormField.formFields.count;
@@ -151,7 +153,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Check if the controller requested a cell identifier for the outcome section
     if (!sectionFormField) {
         cellIdentifier = kASDKCellIDFormFieldOutcomeRepresentation;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
         cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
     } else {
         ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
@@ -173,7 +177,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         formFieldModel = formOutcome;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
         formFieldModel = sectionFormField;
     } else {// Set up the cell from the corresponding section
         formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
@@ -226,9 +232,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
             formField.formFields = [self filterSupportedFormFields:formField.formFields];
             [formFieldSections addObject:formField];
-        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
-            [formFieldSections addObject:formField];
-        }
+        } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType ||
+                   // if dynamic table or display value dynamic table
+                   (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
+                    ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
+                       [formFieldSections addObject:formField];
+                   }
     }
     
     return formFieldSections;
@@ -262,8 +271,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         // If a section has no more attached form fields and it's not a dynamic table remove it,
         // otherwise set the modified form field collection
+        
+        BOOL isReadOnlyDynamicTable = (ASDKModelFormFieldRepresentationTypeReadOnly == containerFormField.representationType &&
+                                       ASDKModelFormFieldRepresentationTypeDynamicTable == containerFormField.formFieldParams.representationType);
         if (!formFieldsInSection.count &&
-            ASDKModelFormFieldTypeDynamicTableField != containerFormField.fieldType) {
+            (ASDKModelFormFieldTypeDynamicTableField != containerFormField.fieldType &&
+             !isReadOnlyDynamicTable)) {
             [sectionsToBeRemoved addIndex:section];
         } else {
             containerFormField.formFields = formFieldsInSection;

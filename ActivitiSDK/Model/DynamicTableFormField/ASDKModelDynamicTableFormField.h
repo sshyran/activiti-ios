@@ -20,6 +20,6 @@
 
 @interface ASDKModelDynamicTableFormField : ASDKModelFormField
 
-@property (strong, nonatomic) NSArray                               *columnDefinitions;
+@property (strong, nonatomic) NSArray *columnDefinitions;
 
 @end

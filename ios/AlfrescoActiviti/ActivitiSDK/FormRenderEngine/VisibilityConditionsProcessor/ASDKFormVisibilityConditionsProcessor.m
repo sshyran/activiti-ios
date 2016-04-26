@@ -85,7 +85,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
                 [fieldsArr addObject:formField];
                 [fieldsArr addObjectsFromArray:formField.formFields];
-            } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType) {
+            } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType ||
+                       (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType
+                           && ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
                 [fieldsArr addObject:formField];
             }
         }

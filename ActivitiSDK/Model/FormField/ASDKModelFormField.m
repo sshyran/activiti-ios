@@ -73,6 +73,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"hyperlink"]) {
             return ASDKModelHyperlinkFormField.class;
         }
+        if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"dynamic-table"]) {
+            return ASDKModelDynamicTableFormField.class;
+        }
+
     }
 
     return self;
@@ -181,6 +185,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                error:&formFieldsParseError];
             } else if([value[kASDKAPIFormFieldParameter][@"type"] isEqualToString:@"hyperlink"]) {
                 parsedFormFieldParams = [MTLJSONAdapter modelOfClass:ASDKModelHyperlinkFormField.class
+                                                  fromJSONDictionary:value[kASDKAPIFormFieldParameter]
+                                                               error:&formFieldsParseError];
+            } else if([value[kASDKAPIFormFieldParameter][@"type"] isEqualToString:@"dynamic-table"]) {
+                parsedFormFieldParams = [MTLJSONAdapter modelOfClass:ASDKModelDynamicTableFormField.class
                                                   fromJSONDictionary:value[kASDKAPIFormFieldParameter]
                                                                error:&formFieldsParseError];
             } else {
