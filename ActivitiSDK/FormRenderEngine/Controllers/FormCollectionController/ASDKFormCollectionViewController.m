@@ -66,6 +66,8 @@
                                             animated:NO];
         [self refreshContentForCellAtIndexPath:indexPath];
     }
+    
+    [self.collectionViewLayout invalidateLayout];
 }
 
 - (void)didReceiveMemoryWarning {
