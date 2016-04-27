@@ -17,13 +17,19 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineDataSourceProtocol.h"
+#import "ASDKFormRenderEngineFormDescriptionDataSourceProtocol.h"
 
-@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineDataSourceProtocol>
+@interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineFormDescriptionDataSourceProtocol>
 
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
-@property (assign, nonatomic) BOOL          isReadOnlyForm;
-@property (strong, nonatomic) NSDictionary  *visibleFormFields;
-@property (assign, nonatomic) BOOL          formHasUserdefinedOutcomes;
+@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType        dataSourceType;
+@property (assign, nonatomic) BOOL                                      isReadOnlyForm;
+@property (strong, nonatomic) NSArray                                   *visibleFormFields;
+@property (strong, nonatomic) NSArray                                   *renderableFormFields;
+@property (assign, nonatomic) BOOL                                      formHasUserdefinedOutcomes;
+@property (weak, nonatomic)   id<ASDKFormRenderEngineDataSourceDelegate>delegate;
+@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor     *visibilityConditionsProcessor;
+
+- (NSString *)validCellIdentifierForFormField:(ASDKModelFormField *)formField;
+
 
 @end

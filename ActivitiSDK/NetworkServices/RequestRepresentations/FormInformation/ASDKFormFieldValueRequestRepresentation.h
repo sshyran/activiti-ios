@@ -20,7 +20,7 @@
 
 @interface ASDKFormFieldValueRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
-@property (strong, nonatomic) NSDictionary  *formFields;
-@property (strong, nonatomic) NSString      *outcome;
+@property (strong, nonatomic) NSArray   *formFields;
+@property (strong, nonatomic) NSString  *outcome;
 
 @end

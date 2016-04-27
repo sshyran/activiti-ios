@@ -16,12 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFAKVOManager.h"
+#import "ASDKKVOManager.h"
 #import <libkern/OSAtomic.h>
-#import "AFAKVOManagerInfo.h"
-#import "AFAKVOManagerSharedProxy.h"
+#import "ASDKKVOManagerInfo.h"
+#import "ASDKKVOManagerSharedProxy.h"
 
-@implementation AFAKVOManager {
+@implementation ASDKKVOManager {
     NSMapTable *_objInfoMap;
     OSSpinLock _spinLock;
 }
@@ -32,16 +32,16 @@
 
 + (instancetype)managerWithObserver:(id)observer {
     return [[self alloc]initWithObserver:observer
-                    withStrongRefference:YES];
+                    withStrongReference:YES];
 }
 
 - (instancetype)initWithObserver:(id)observer
-            withStrongRefference:(BOOL)isStrongRefference {
+            withStrongReference:(BOOL)isStrongReference {
     self = [super init];
     
     if (self) {
         _observer = observer;
-        NSPointerFunctionsOptions keyOptions = isStrongRefference ? NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPointerPersonality : NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality;
+        NSPointerFunctionsOptions keyOptions = isStrongReference ? NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPointerPersonality : NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality;
         NSPointerFunctionsOptions valueOptions = NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality;
         _objInfoMap = [[NSMapTable alloc] initWithKeyOptions:keyOptions
                                                 valueOptions:valueOptions
@@ -59,13 +59,13 @@
 - (void)observeObject:(id)object
            forKeyPath:(NSString *)keyPath
               options:(NSKeyValueObservingOptions)options
-                block:(AFAKVOManagerNotificationBlock)notificationBlock {
+                block:(ASDKKVOManagerNotificationBlock)notificationBlock {
     NSParameterAssert(object &&
                       keyPath &&
                       notificationBlock);
     
     // Create observation container
-    AFAKVOManagerInfo *managerInfo = [[AFAKVOManagerInfo alloc] initWithManager:self
+    ASDKKVOManagerInfo *managerInfo = [[ASDKKVOManagerInfo alloc] initWithManager:self
                                                                         keyPath:keyPath
                                                                         options:options
                                                                           block:notificationBlock];
@@ -79,7 +79,7 @@
                       keyPath);
     
     // Create observation container
-    AFAKVOManagerInfo *managerInfo= [[AFAKVOManagerInfo alloc] initWithManager:self
+    ASDKKVOManagerInfo *managerInfo= [[ASDKKVOManagerInfo alloc] initWithManager:self
                                                                        keyPath:keyPath];
     
     [self removeObserver:object
@@ -91,12 +91,12 @@
 #pragma mark Private interface
 
 - (void)observe:(id)object
-withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
+withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     OSSpinLockLock(&_spinLock);
     
     NSMutableSet *managerInfos = [_objInfoMap objectForKey:object];
     
-    AFAKVOManagerInfo *existingInfo = [managerInfos member:managerInfo];
+    ASDKKVOManagerInfo *existingInfo = [managerInfos member:managerInfo];
     if (existingInfo) {
         // Objects already exists in the map table
         OSSpinLockUnlock(&_spinLock);
@@ -113,17 +113,17 @@ withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
     
     OSSpinLockUnlock(&_spinLock);
     
-    [[AFAKVOManagerSharedProxy sharedInstance] observe:object
+    [[ASDKKVOManagerSharedProxy sharedInstance] observe:object
                                        withManagerInfo:managerInfo];
 }
 
 - (void)removeObserver:(id)object
-       withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
+       withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     OSSpinLockLock(&_spinLock);
     
     NSMutableSet *managerInfos = [_objInfoMap objectForKey:object];
 
-    AFAKVOManagerInfo *existingInfo = [managerInfos member:managerInfo];
+    ASDKKVOManagerInfo *existingInfo = [managerInfos member:managerInfo];
     if (existingInfo) {
         [managerInfos removeObject:existingInfo];
         
@@ -134,7 +134,7 @@ withManagerInfo:(AFAKVOManagerInfo *)managerInfo {
     
     OSSpinLockUnlock(&_spinLock);
     
-    [[AFAKVOManagerSharedProxy sharedInstance] removeObserver:object
+    [[ASDKKVOManagerSharedProxy sharedInstance] removeObserver:object
                                               withManagerInfo:existingInfo];
 }
 

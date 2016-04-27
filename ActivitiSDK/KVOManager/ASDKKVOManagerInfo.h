@@ -17,26 +17,26 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "AFAKVOManager.h"
+#import "ASDKKVOManager.h"
 
 /**
  *  The purpose of this class is to encapsulate data passed from the 
- *  AFAKVOManager to the AFAKVOManagerSharedProxy. It's basically a container class.
+ *  ASDKKVOManager to the ASDKKVOManagerSharedProxy. It's basically a container class.
  */
 
-@interface AFAKVOManagerInfo : NSObject
+@interface ASDKKVOManagerInfo : NSObject
 
-@property (weak, nonatomic)   AFAKVOManager                     *kvoManager;
+@property (weak, nonatomic)   ASDKKVOManager                     *kvoManager;
 @property (copy, nonatomic)   NSString                          *keyPath;
 @property (assign, nonatomic) NSKeyValueObservingOptions        options;
-@property (copy, nonatomic)   AFAKVOManagerNotificationBlock    notificationBlock;
+@property (copy, nonatomic)   ASDKKVOManagerNotificationBlock    notificationBlock;
 
-- (instancetype)initWithManager:(AFAKVOManager *)kvoManager
+- (instancetype)initWithManager:(ASDKKVOManager *)kvoManager
                         keyPath:(NSString *)keyPath
                         options:(NSKeyValueObservingOptions)options
-                          block:(AFAKVOManagerNotificationBlock)notificationBlock;
+                          block:(ASDKKVOManagerNotificationBlock)notificationBlock;
 
-- (instancetype)initWithManager:(AFAKVOManager *)kvoManager
+- (instancetype)initWithManager:(ASDKKVOManager *)kvoManager
                         keyPath:(NSString *)keyPath;
 
 @end

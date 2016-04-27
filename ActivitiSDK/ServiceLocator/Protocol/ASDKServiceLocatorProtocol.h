@@ -33,10 +33,10 @@
  *  Adds a service to the internal object pool the underlaying class need to implement.
  *
  *  IMPORTANT NOTE:
- *  The service's class first protocol will be used for later refferences so this rule
+ *  The service's class first protocol will be used for later references so this rule
  *  enforces single protocol usage for service classes to keep low coupling between classes
  *
- *  @param service The service needed to be later refferenced
+ *  @param service The service needed to be later referenced
  */
 - (void)addService:(id)service;
 
@@ -44,7 +44,7 @@
  *  Returns a boolean value specifying whether the mentioned service is registered with
  *  the internal object pool or not.
  *
- *  @param service Service instance refference to be checked
+ *  @param service Service instance reference to be checked
  *
  *  @return State of the registration
  */
@@ -64,7 +64,7 @@
  *  Returns back a service conforming to a specified protocol. Because the underlaying
  *  implementation of service classes can change or needs to be decoupled, services added
  *  to the internal object pool need to conform to a protocol and we use that protocol to 
- *  get back a refference to that service.
+ *  get back a reference to that service.
  *
  *  @param protocol Protocol for which we want to get back a service instance
  *

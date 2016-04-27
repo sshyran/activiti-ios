@@ -34,7 +34,7 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 @protocol ASDKFormRenderEngineProtocol <NSObject>
 
 /**
- *  Holds a refference to the current form description begin used to create
+ *  Holds a reference to the current form description begin used to create
  *  the form view.
  *  NOTE: The property is declared as a readonly to force interaction with the
  *        form description to be made via protocol declared methods thus making
@@ -43,7 +43,7 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 @property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
 
 /**
- *  Holds a refference to the form network service used in conjucture with the 
+ *  Holds a reference to the form network service used in conjucture with the 
  *  convenience setup method. 
  *  NOTE: See the setupWithTaskModel:renderCompletionBlock:formCompletionBlock: 
  *  method for details
@@ -61,6 +61,16 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
  *                         the rendered form view
  */
 - (UICollectionViewController *)setupWithFormDescription:(ASDKModelFormDescription *)formDescription;
+
+/**
+ *  Setup method for dynamic table rows
+ *
+ *  @param formDescription Description object containing form models that will be
+ *                         displayed in the form view
+ *  @return                A collection view controller instance containing the
+ *                         the rendered form view
+ */
+- (UICollectionViewController *)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields;
 
 /**
  *  Designated setup method for the form render engine class when it is used
@@ -103,6 +113,57 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
              renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
                formCompletionBlock:(ASDKStartFormRenderEngineCompletionBlock)formCompletionBlock;
 
+/**
+ *  Designated setup method for the form render engine class when it is used
+ *  to show the dynamic table row associated to a task. This method relies on the internal
+ *  workings of the form render engine to make the API network calls on your
+ *  behalf and you will be provided with an instance of a collection view controller
+ *  through a completion block.
+ *
+ *  @param dynamicTableRowFormFields    Array containing the columns (formfields) of a 
+ *                                      dynamic table row
+ *  @param dynamicTableFormFieldID      The ID of the dynamic table
+ *  @param task                         Task object containing the mandatory task ID
+ *                                      property.
+ *  @param renderCompletionBlock        Completion block providing a form controller
+ *                                      containing the visual representation of the
+ *                                      form view and additional error reason
+ *  @param formCompletionBlock          Completion block providing information on
+ *                                      whether the form has been successfully
+ *                                      completed  or not and an additional error reason
+ *
+ */
+- (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
+                   dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
+                                 taskModel:(ASDKModelTask *)task
+                     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
+                       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock;
+
+/**
+ *  Designated setup method for the form render engine class when it is used
+ *  to show the dynamic table row associated to a task. This method relies on the internal
+ *  workings of the form render engine to make the API network calls on your
+ *  behalf and you will be provided with an instance of a collection view controller
+ *  through a completion block.
+ *
+ *  @param dynamicTableRowFormFields    Array containing the columns (formfields) of a
+ *                                      dynamic table row
+ *  @param dynamicTableFormFieldID      The ID of the dynamic table
+ *  @param processDefinition            Process definition object containing the mandatory
+ *                                      process definition ID property
+ *  @param renderCompletionBlock        Completion block providing a form controller
+ *                                      containing the visual representation of the
+ *                                      form view and additional error reason
+ *  @param formCompletionBlock          Completion block providing information on
+ *                                      whether the form has been successfully
+ *                                      completed  or not and an additional error reason
+ *
+ */
+- (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
+                   dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
+                         processDefinition:(ASDKModelProcessDefinition *)processDefinition
+                     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
+                       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock;
 /**
  *  Performs a form completion request given a form field value request representation object.
  *  Discussion: The form field value request representation object is generated by the form's

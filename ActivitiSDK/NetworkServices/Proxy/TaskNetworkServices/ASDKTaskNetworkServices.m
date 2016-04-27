@@ -74,7 +74,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    [strongSelf handleSuccessfulTaskListResponseForOperation:operation
@@ -83,7 +83,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    [strongSelf handleFailedTaskListResponseForOperation:operation
@@ -91,7 +91,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                     withCompletionBlock:completionBlock];
                                }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -111,7 +111,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    [strongSelf handleSuccessfulTaskListResponseForOperation:operation
@@ -121,7 +121,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    [strongSelf handleFailedTaskListResponseForOperation:operation
@@ -129,7 +129,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                     withCompletionBlock:completionBlock];
                                }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -149,7 +149,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -181,7 +181,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to fetch task details for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -195,7 +195,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -215,7 +215,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -247,7 +247,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to fetch task content for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -261,7 +261,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -281,7 +281,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -313,7 +313,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to fetch task comments for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -327,7 +327,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -349,7 +349,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -380,7 +380,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to create task comment for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -394,7 +394,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -415,7 +415,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -441,7 +441,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to update task details for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -455,7 +455,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -475,7 +475,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -501,7 +501,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to mark task as completed for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -516,7 +516,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -548,7 +548,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
              } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                  __strong typeof(self) strongSelf = weakSelf;
                  
-                 // Remove operation refference
+                 // Remove operation reference
                  [strongSelf.networkOperations removeObject:operation];
                  
                  NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -579,7 +579,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                  __strong typeof(self) strongSelf = weakSelf;
                  
-                 // Remove operation refference
+                 // Remove operation reference
                  [strongSelf.networkOperations removeObject:operation];
                  
                  ASDKLogError(@"Failed to upload task content for request:%@ - %@.\nBody:%@.\nReason:%@",
@@ -604,7 +604,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }];
     }
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -638,7 +638,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
              } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                  __strong typeof(self) strongSelf = weakSelf;
                  
-                 // Remove operation refference
+                 // Remove operation reference
                  [strongSelf.networkOperations removeObject:operation];
                  
                  NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -670,7 +670,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                  __strong typeof(self) strongSelf = weakSelf;
                  
-                 // Remove operation refference
+                 // Remove operation reference
                  [strongSelf.networkOperations removeObject:operation];
                  
                  ASDKLogError(@"Failed to upload task content for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -697,7 +697,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }];
     }
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -717,7 +717,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                  success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                      __strong typeof(self) strongSelf = weakSelf;
                                      
-                                     // Remove operation refference
+                                     // Remove operation reference
                                      [strongSelf.networkOperations removeObject:operation];
                                      
                                      // Check status code
@@ -743,7 +743,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                      __strong typeof(self) strongSelf = weakSelf;
                                      
-                                     // Remove operation refference
+                                     // Remove operation reference
                                      [strongSelf.networkOperations removeObject:operation];
                                      
                                      ASDKLogError(@"Failed to delete content for task with request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -757,7 +757,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                      });
                                  }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -793,7 +793,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -820,7 +820,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to download content for task with request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -852,7 +852,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }];
     }
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -873,7 +873,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -899,7 +899,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to involve user for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -913,7 +913,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -932,7 +932,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -958,7 +958,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to remove involvement user for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -972,7 +972,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -993,7 +993,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
      success:^(AFHTTPRequestOperation *operation, id responseObject) {
          __strong typeof(self) strongSelf = weakSelf;
          
-         // Remove operation refference
+         // Remove operation reference
          [strongSelf.networkOperations removeObject:operation];
          
          NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -1025,7 +1025,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
      } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
          __strong typeof(self) strongSelf = weakSelf;
          
-         // Remove operation refference
+         // Remove operation reference
          [strongSelf.networkOperations removeObject:operation];
          
          ASDKLogError(@"Failed to create task for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -1039,7 +1039,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
          });
      }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -1056,7 +1056,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -1082,7 +1082,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to claim task with request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -1096,7 +1096,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -1113,7 +1113,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    // Check status code
@@ -1139,7 +1139,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    ASDKLogError(@"Failed to unclaim task with request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -1153,7 +1153,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    });
                                }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -1175,7 +1175,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -1207,7 +1207,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to assign task for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -1221,7 +1221,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 

@@ -36,7 +36,7 @@
         [inheretedPropertyKeys addEntriesFromDictionary:
          @{//Objc property            JSON property
            @"allowMultipleFiles"    : @"multiple",
-           @"isLinkRefference"      : @"link",
+           @"isLinkReference"       : @"link",
            @"fileSource"            : @"fileSource"
           }];
     }

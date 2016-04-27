@@ -105,7 +105,7 @@ typedef void  (^AFAProcessInstanceDeleteCompletionBlock)        (BOOL isProcessI
  *
  *  @param comment         Body of the comment
  *  @param taskID          ID of the process instance for which the comment is created
- *  @param completionBlock Completion block providing a refference to the created comment object and an
+ *  @param completionBlock Completion block providing a reference to the created comment object and an
  *                         optional error reason.
  */
 - (void)requestCreateComment:(NSString *)comment

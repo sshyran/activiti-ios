@@ -25,5 +25,6 @@
 @property (strong, nonatomic) NSString          *processDefinitionKey;
 @property (strong, nonatomic) NSArray           *formFields;
 @property (strong, nonatomic) NSArray           *formOutcomes;
+@property (strong, nonatomic) NSArray           *formVariables;
 
 @end

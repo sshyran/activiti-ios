@@ -27,6 +27,8 @@
 #import "ASDKModelHyperlinkFormField.h"
 #import "ASDKModelRestFormField.h"
 #import "ASDKModelPeopleFormField.h"
+#import "ASDKModelDynamicTableFormField.h"
+#import "ASDKModelFormVisibilityCondition.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -51,8 +53,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"FormFieldRepresentation"]
                && [JSONDictionary[@"type"] isEqualToString:@"people"]) {
         return ASDKModelPeopleFormField.class;
+    } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"DynamicTableRepresentation"]) {
+        return ASDKModelDynamicTableFormField.class;
     }
-    
     // completed forms
     if ([JSONDictionary[@"type"] isEqualToString:@"readonly"]) {
         if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"people"]) {
@@ -70,6 +73,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"hyperlink"]) {
             return ASDKModelHyperlinkFormField.class;
         }
+        if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"dynamic-table"]) {
+            return ASDKModelDynamicTableFormField.class;
+        }
+
     }
 
     return self;
@@ -95,7 +102,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
            @"sizeY"                : @"sizeY",
            @"formFields"           : @"fields",
            @"formFieldParams"      : @"params",
-           @"formFieldOptions"     : @"options"
+           @"formFieldOptions"     : @"options",
+           @"visibilityCondition"  : @"visibilityCondition"
            }];
     }
     
@@ -114,7 +122,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
               @"RestFieldRepresentation"       : @(ASDKModelFormFieldTypeRestField),
               @"AmountFieldRepresentation"     : @(ASDKModelFormFieldTypeAmountField),
               @"AttachFileFieldRepresentation" : @(ASDKModelFormFieldTypeAttachField),
-              @"HyperlinkRepresentation"       : @(ASDKModelFormFieldTypeHyperlinkField)
+              @"HyperlinkRepresentation"       : @(ASDKModelFormFieldTypeHyperlinkField),
+              @"DynamicTableRepresentation"    : @(ASDKModelFormFieldTypeDynamicTableField)
             }];
 }
 
@@ -135,7 +144,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
               @"readonly-text"  : @(ASDKModelFormFieldRepresentationTypeReadonlyText),
               @"upload"         : @(ASDKModelFormFieldRepresentationTypeAttach),
               @"hyperlink"      : @(ASDKModelFormFieldRepresentationTypeHyperlink),
-              @"people"         : @(ASDKModelFormFieldRepresentationTypePeople)
+              @"people"         : @(ASDKModelFormFieldRepresentationTypePeople),
+              @"dynamic-table"  : @(ASDKModelFormFieldRepresentationTypeDynamicTable)
               }];
 }
 
@@ -175,6 +185,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                error:&formFieldsParseError];
             } else if([value[kASDKAPIFormFieldParameter][@"type"] isEqualToString:@"hyperlink"]) {
                 parsedFormFieldParams = [MTLJSONAdapter modelOfClass:ASDKModelHyperlinkFormField.class
+                                                  fromJSONDictionary:value[kASDKAPIFormFieldParameter]
+                                                               error:&formFieldsParseError];
+            } else if([value[kASDKAPIFormFieldParameter][@"type"] isEqualToString:@"dynamic-table"]) {
+                parsedFormFieldParams = [MTLJSONAdapter modelOfClass:ASDKModelDynamicTableFormField.class
                                                   fromJSONDictionary:value[kASDKAPIFormFieldParameter]
                                                                error:&formFieldsParseError];
             } else {
@@ -239,6 +253,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         return nil;
     }];
+}
+
++ (NSValueTransformer *)visibilityConditionJSONTransformer {
+    return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelFormVisibilityCondition.class];
 }
 
 @end

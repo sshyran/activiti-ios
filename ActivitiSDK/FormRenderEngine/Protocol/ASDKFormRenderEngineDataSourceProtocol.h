@@ -17,10 +17,13 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "ASDKFormRenderEngineDataSourceDelegate.h"
+#import "ASDKFormFieldDetailsControllerProtocol.h"
 
 @class ASDKModelFormDescription,
 ASDKModelBase,
-ASDKModelFormField;
+ASDKModelFormField,
+ASDKFormVisibilityConditionsProcessor;
 
 typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
     ASDKFormRenderEngineDataSourceTypeTask = 0,
@@ -36,14 +39,26 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  */
 @property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
 
+
 /**
- *  Property meant to hold a refference to visible form field objects
- *  organized per section and strip from the collection container-like
- *  objects that don't have a visual representation.
- *
- *  Convention: The index of the section represents the key
+ *  Property meant to hold a reference to renderable but not necessarly visible
+ *  form fields, organized per section and stripped of container-like objects
+ *  that don't have a visual representation. This property is intended to act
+ *  as a reference point when visibility conditions affect a subset of
+ *  form fields and some get removed or inserted. We fallback to this property
+ *  when we want to find out what was removed, from where, and what's should be
+ *  inserted and where.
  */
-@property (strong, nonatomic) NSDictionary *visibleFormFields;
+@property (strong, nonatomic) NSArray *renderableFormFields;
+
+/**
+ *  Property meant to hold a reference to visible form field objects
+ *  organized per section and strip from the collection container-like
+ *  objects that don't have a visual representation, or objects that
+ *  after the visibility condition processing shouldn't be visible anymore
+ *
+ */
+@property (strong, nonatomic) NSArray *visibleFormFields;
 
 /**
  *  Property meant to indicate whether the form is read only or not. Setting
@@ -59,17 +74,6 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  *  end it.
  */
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
-
-/**
- *  Designated initializer method for the collection view controller datasource.
- *
- *  @param formDescription Description containing the form field objects to be
- *                         displayed
- *
- *  @return                Instance of the data source object
- */
-- (instancetype)initWithFormDescription:(ASDKModelFormDescription *)formDescription
-                         dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType;
 
 /**
  *  Returns the number of sections available for the current form description.
@@ -147,6 +151,6 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  *
  *  @return UIViewController initialized instance to be presented
  */
-- (UIViewController *)childControllerForFormField:(ASDKModelFormField *)formField;
+- (UIViewController<ASDKFormFieldDetailsControllerProtocol> *)childControllerForFormField:(ASDKModelFormField *)formField;
 
 @end

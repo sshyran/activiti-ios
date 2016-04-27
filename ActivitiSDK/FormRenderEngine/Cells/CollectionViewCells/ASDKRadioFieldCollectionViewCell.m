@@ -101,13 +101,18 @@
         } else {
             descriptionLabelText = @"";
         }
+    } else if (restFormField.values) {
+        // TODO: Should dynamic table fields be formatted conform regular drop down fields??
+        if ([restFormField.values.firstObject isKindOfClass:NSDictionary.class]) {
+            descriptionLabelText = restFormField.values.firstObject[@"name"];
+        } else {
+            descriptionLabelText = restFormField.values.firstObject;
+        }
     } else if (restFormField.representationType == ASDKModelFormFieldRepresentationTypeDropdown && restFormField.restURL) {
         // temporary handling initial value dislay for REST populated radio form fields
         // the JSON model contains an initial value which isn't correct and shouldn't be displayed
         
         descriptionLabelText = @"";
-    } else if (restFormField.values) {
-       descriptionLabelText = restFormField.values.firstObject;
     } else {
         descriptionLabelText = @"";
     }

@@ -23,7 +23,7 @@
 @interface ASDKModelFormFieldAttachParameter : ASDKModelBase
 
 @property (assign, nonatomic) BOOL                          allowMultipleFiles;
-@property (assign, nonatomic) BOOL                          isLinkRefference;
+@property (assign, nonatomic) BOOL                          isLinkReference;
 @property (strong, nonatomic) ASDKModelFormFieldFileSource  *fileSource;
 
 @end

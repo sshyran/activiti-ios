@@ -17,11 +17,24 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "ASDKFormRenderEngineValueTransactionsProtocol.h"
 
 @class ASDKModelFormField;
 
 @protocol ASDKFormFieldDetailsControllerProtocol <NSObject>
 
+/**
+ *  Property meant to hold a reference to the delegate object that would respond
+ *  to object changes that can occur inside the details view controller
+ */
+@property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> valueTransactionDelegate;
+
+/**
+ *  Designated set up method for every child view controller that is created
+ *  when interacting with a form field
+ *
+ *  @param formFieldModel Form field model used to initialize the child controller
+ */
 - (void)setupWithFormFieldModel:(ASDKModelFormField *)formFieldModel;
 
 @end

@@ -69,6 +69,10 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.multilineTextView resignFirstResponder];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -79,12 +83,14 @@
     [super touchesBegan:touches withEvent:event];
 }
 
+
 #pragma mark -
 #pragma mark ASDKFormFieldDetailsControllerProtocol
 
 - (void)setupWithFormFieldModel:(ASDKModelFormField *)formFieldModel {
     self.currentFormField = formFieldModel;
 }
+
 
 #pragma mark -
 #pragma mark TextView Delegate methods
@@ -94,6 +100,12 @@
     formFieldValue.attachedValue = textView.text;
 
     self.currentFormField.metadataValue = formFieldValue;
+    
+    // Notify the value transaction delegate there has been a change with the provided form field model
+    if ([self.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+        [self.valueTransactionDelegate updatedMetadataValueForFormField:self.currentFormField
+                                                                 inCell:nil];
+    }
 }
 
 @end

@@ -28,7 +28,6 @@
 #import "NSDate+AFAStringTransformation.h"
 
 // Managers
-#import "AFAKVOManager.h"
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
 #import "AFAFormServices.h"
@@ -70,7 +69,7 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
 @property (strong, nonatomic) AFAProcessDefinitionListCompletionBlock   processDefinitionCompletionBlock;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                             *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                             *kvoManager;
 
 @end
 
@@ -342,7 +341,7 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
 #pragma mark KVO bindings
 
 - (void)handleBindingsForStartProcessInstanceViewController {
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:self

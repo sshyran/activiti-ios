@@ -39,7 +39,6 @@
 #import "AFAServiceRepository.h"
 #import "AFAUserServices.h"
 #import "AFATaskServices.h"
-#import "AFAKVOManager.h"
 
 // Views
 #import "AFAActivityView.h"
@@ -73,7 +72,7 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 @property (assign, nonatomic) AFAPeoplePickerControllerState    controllerState;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                     *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                     *kvoManager;
 
 @end
 
@@ -409,7 +408,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark KVO bindings
 
 - (void)handleBindingsForPeoplePickerViewController {
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:self

@@ -70,7 +70,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   [strongSelf handleSuccessfulFormModelsResponseForOperation:operation
@@ -79,7 +79,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to start form for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -94,7 +94,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -115,7 +115,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -145,7 +145,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to complete form for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -160,7 +160,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -187,7 +187,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -219,7 +219,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
-                                   // Remove operation refference
+                                   // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    ASDKLogError(@"Failed to complete form for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -234,7 +234,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                    });
                                }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -254,7 +254,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   [strongSelf handleSuccessfulFormModelsResponseForOperation:operation
@@ -264,7 +264,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to fetch form for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -279,7 +279,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -313,7 +313,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
              } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                  __strong typeof(self) strongSelf = weakSelf;
                  
-                 // Remove operation refference
+                 // Remove operation reference
                  [strongSelf.networkOperations removeObject:operation];
                  
                  NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -365,7 +365,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                  __strong typeof(self) strongSelf = weakSelf;
                  
-                 // Remove operation refference
+                 // Remove operation reference
                  [strongSelf.networkOperations removeObject:operation];
                  
                  ASDKLogError(@"Failed to upload form field content for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -392,7 +392,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
         }];
     }
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -428,7 +428,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   // Check status code
@@ -455,7 +455,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to download content for form field with request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -487,7 +487,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
         }];
     }
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 
@@ -545,6 +545,80 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  ASDKLogError(@"Failed to fetch rest field values for request: %@ - %@.\nBody:%@.\nReason:%@",
+                                               operation.request.HTTPMethod,
+                                               operation.request.URL.absoluteString,
+                                               [[NSString alloc] initWithData:operation.request.HTTPBody
+                                                                     encoding:NSUTF8StringEncoding],
+                                               error.localizedDescription);
+                                  
+                                  dispatch_async(strongSelf.resultsQueue, ^{
+                                      completionBlock(nil, error);
+                                  });
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)fetchRestFieldValuesForTaskWithID:(NSString *)taskID
+                              withFieldID:(NSString *)fieldID
+                             withColumnID:(NSString *)columnID
+                          completionBlock:(ASDKFormRestFieldValuesCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(taskID);
+    NSParameterAssert(fieldID);
+    NSParameterAssert(columnID);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory dynamicTableRestFieldValuesServicePathFormat], taskID, fieldID, columnID]
+                           parameters:nil
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                                  
+                                  ASDKLogVerbose(@"Fetch rest field values with success for request: %@ - %@.\nBody:%@.\nResponse:%@",
+                                                 operation.request.HTTPMethod,
+                                                 operation.request.URL.absoluteString,
+                                                 [[NSString alloc] initWithData:operation.request.HTTPBody
+                                                                       encoding:NSUTF8StringEncoding],
+                                                 responseDictionary);
+                                  
+                                  // Parse response data
+                                  [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
+                                                                                     ofType:CREATE_STRING(ASDKTaskFormParserContentTypeRestFieldValues)
+                                                                        withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                                                            if (error) {
+                                                                                ASDKLogError(@"Error parsing rest field values content. Description:%@", error.localizedDescription);
+                                                                                
+                                                                                dispatch_async(weakSelf.resultsQueue, ^{
+                                                                                    completionBlock(nil, error);
+                                                                                });
+                                                                            } else {
+                                                                                ASDKLogVerbose(@"Successfully parsed rest field values content:%@", parsedObject);
+                                                                                
+                                                                                dispatch_async(weakSelf.resultsQueue, ^{
+                                                                                    completionBlock(parsedObject, nil);
+                                                                                });
+                                                                            }
+                                                                        }];
+                                  
+                                  
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
                                   // Remove operation refference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
@@ -578,6 +652,79 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory startFormRestFieldValuesServicePathFormat], processDefinitionID, fieldID]
+                           parameters:nil
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                                  
+                                  ASDKLogVerbose(@"Fetch rest field values with success for request: %@ - %@.\nBody:%@.\nResponse:%@",
+                                                 operation.request.HTTPMethod,
+                                                 operation.request.URL.absoluteString,
+                                                 [[NSString alloc] initWithData:operation.request.HTTPBody
+                                                                       encoding:NSUTF8StringEncoding],
+                                                 responseDictionary);
+                                  
+                                  // Parse response data
+                                  [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
+                                                                                     ofType:CREATE_STRING(ASDKTaskFormParserContentTypeRestFieldValues)
+                                                                        withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                                                            if (error) {
+                                                                                ASDKLogError(@"Error parsing rest field values content. Description:%@", error.localizedDescription);
+                                                                                
+                                                                                dispatch_async(weakSelf.resultsQueue, ^{
+                                                                                    completionBlock(nil, error);
+                                                                                });
+                                                                            } else {
+                                                                                ASDKLogVerbose(@"Successfully parsed rest field values content:%@", parsedObject);
+                                                                                
+                                                                                dispatch_async(weakSelf.resultsQueue, ^{
+                                                                                    completionBlock(parsedObject, nil);
+                                                                                });
+                                                                            }
+                                                                        }];
+                                  
+                                  
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  ASDKLogError(@"Failed to fetch rest field values for request: %@ - %@.\nBody:%@.\nReason:%@",
+                                               operation.request.HTTPMethod,
+                                               operation.request.URL.absoluteString,
+                                               [[NSString alloc] initWithData:operation.request.HTTPBody
+                                                                     encoding:NSUTF8StringEncoding],
+                                               error.localizedDescription);
+                                  
+                                  dispatch_async(strongSelf.resultsQueue, ^{
+                                      completionBlock(nil, error);
+                                  });
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)fetchRestFieldValuesForStartFormWithProcessDefinitionID:(NSString *)processDefinitionID
+                                                    withFieldID:(NSString *)fieldID
+                                                   withColumnID:(NSString *)columnID
+                                                completionBlock:(ASDKStartFormRestFieldValuesCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(processDefinitionID);
+    NSParameterAssert(fieldID);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory startFormDynamicTableRestFieldValuesServicePathFormat], processDefinitionID, fieldID, columnID]
                            parameters:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;

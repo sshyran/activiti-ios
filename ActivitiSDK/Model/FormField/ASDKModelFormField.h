@@ -25,7 +25,8 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldType) {
     ASDKModelFormFieldTypeRestField,
     ASDKModelFormFieldTypeAmountField,
     ASDKModelFormFieldTypeAttachField,
-    ASDKModelFormFieldTypeHyperlinkField
+    ASDKModelFormFieldTypeHyperlinkField,
+    ASDKModelFormFieldTypeDynamicTableField
 };
 
 typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
@@ -44,10 +45,11 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
     ASDKModelFormFieldRepresentationTypeReadonlyText,
     ASDKModelFormFieldRepresentationTypeAttach,
     ASDKModelFormFieldRepresentationTypeHyperlink,
-    ASDKModelFormFieldRepresentationTypePeople
+    ASDKModelFormFieldRepresentationTypePeople,
+    ASDKModelFormFieldRepresentationTypeDynamicTable
 };
 
-@class ASDKModelFormFieldValue;
+@class ASDKModelFormFieldValue, ASDKModelFormVisibilityCondition;
 
 @interface ASDKModelFormField : ASDKModelBase
 
@@ -64,5 +66,6 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
 @property (strong, nonatomic) NSArray                               *formFieldOptions;
 @property (strong, nonatomic) ASDKModelFormField                    *formFieldParams;
 @property (strong, nonatomic) ASDKModelFormFieldValue               *metadataValue;
+@property (strong, nonatomic) ASDKModelFormVisibilityCondition      *visibilityCondition;
 
 @end

@@ -16,18 +16,18 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFAKVOManagerInfo.h"
+#import "ASDKKVOManagerInfo.h"
 
-@implementation AFAKVOManagerInfo
+@implementation ASDKKVOManagerInfo
 
 
 #pragma mark -
 #pragma mark Life cycle
 
-- (instancetype)initWithManager:(AFAKVOManager *)kvoManager
+- (instancetype)initWithManager:(ASDKKVOManager *)kvoManager
                         keyPath:(NSString *)keyPath
                         options:(NSKeyValueObservingOptions)options
-                          block:(AFAKVOManagerNotificationBlock)notificationBlock {
+                          block:(ASDKKVOManagerNotificationBlock)notificationBlock {
     self = [super init];
     
     if (self) {
@@ -40,7 +40,7 @@
     return self;
 }
 
-- (instancetype)initWithManager:(AFAKVOManager *)kvoManager
+- (instancetype)initWithManager:(ASDKKVOManager *)kvoManager
                         keyPath:(NSString *)keyPath {
     return [self initWithManager:kvoManager
                          keyPath:keyPath
@@ -68,7 +68,7 @@
         return NO;
     }
     
-    return [((AFAKVOManagerInfo *)object).keyPath isEqualToString:self.keyPath];
+    return [((ASDKKVOManagerInfo *)object).keyPath isEqualToString:self.keyPath];
 }
 
 @end

@@ -25,9 +25,6 @@
 // Models
 #import "AFALoginModel.h"
 
-// Managers
-#import "AFAKVOManager.h"
-
 // Components
 #import "AFAFadingTableView.h"
 
@@ -43,7 +40,7 @@
 @property (assign, nonatomic) AFALoginCredentialEditing      credentialEditing;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                  *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                  *kvoManager;
 
 @end
 
@@ -56,7 +53,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

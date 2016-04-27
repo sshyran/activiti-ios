@@ -84,6 +84,9 @@
 #import <ActivitiSDK/ASDKFormRenderEngine.h>
 #import <ActivitiSDK/ASDKFormControllerNavigationProtocol.h>
 
+// KVO manager
+#import <ActivitiSDK/ASDKKVOManager.h>
+
 // Logger utilities
 #import <ActivitiSDK/ASDKLogConfiguration.h>
 #import <ActivitiSDK/ASDKLogFormatter.h>

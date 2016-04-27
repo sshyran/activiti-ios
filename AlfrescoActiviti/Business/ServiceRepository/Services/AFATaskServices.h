@@ -192,7 +192,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *
  *  @param comment         Body of the comment
  *  @param taskID          ID of the task for which the comment is created
- *  @param completionBlock Completion block providing a refference to the created comment object and an
+ *  @param completionBlock Completion block providing a reference to the created comment object and an
  *                         optional error reason.
  */
 - (void)requestCreateComment:(NSString *)comment
@@ -204,7 +204,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *  needed info.
  *
  *  @param taskRepresentation Model object describing all the required but not mandatory fields to create a task
- *  @param completionBlock    Completion block providing a refference to the created task object and an optional
+ *  @param completionBlock    Completion block providing a reference to the created task object and an optional
  *                            error reason.
  */
 - (void)requestCreateTaskWithRepresentation:(AFATaskCreateModel *)taskRepresentation

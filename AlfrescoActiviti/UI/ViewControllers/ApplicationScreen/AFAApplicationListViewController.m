@@ -37,7 +37,6 @@
 // Managers
 #import "AFAAppServices.h"
 #import "AFAServiceRepository.h"
-#import "AFAKVOManager.h"
 
 // Controllers
 #import "AFAListViewController.h"
@@ -63,7 +62,7 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
 @property (assign, nonatomic) BOOL                                          queueRefreshOperation;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                                 *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
 
 @end
 
@@ -246,7 +245,7 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
 #pragma mark KVO bindings
 
 - (void)handleBindingsForAppListViewController {
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:self

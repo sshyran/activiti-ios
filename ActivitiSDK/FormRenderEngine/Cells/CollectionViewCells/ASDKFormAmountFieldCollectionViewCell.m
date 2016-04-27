@@ -68,7 +68,7 @@
     // then regular or completed form fields and we should handle it accordingly
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
         
-        self.amountTextfield.text = formField.values.firstObject;
+        self.amountTextfield.text = [NSString stringWithFormat:@"%@", formField.values.firstObject];
         self.amountTextfield.enabled = NO;
         self.amountTextfield.textColor = [UIColor formViewCompletedValueColor];
     } else {
@@ -88,7 +88,7 @@
         if (self.currentFormField.metadataValue) {
             self.amountTextfield.text = formField.metadataValue.attachedValue;
         } else if (formField.values) {
-            self.amountTextfield.text = formField.values.firstObject;
+            self.amountTextfield.text = [NSString stringWithFormat:@"%@", formField.values.firstObject];
         }
 
         [self validateCellStateForText:self.amountTextfield.text];
@@ -133,8 +133,9 @@
             }
         }
         
-        strongSelf.currentFormField.metadataValue = [ASDKModelFormFieldValue new];
-        strongSelf.currentFormField.metadataValue.attachedValue = textField.text;
+        ASDKModelFormFieldValue *formFieldValue = [ASDKModelFormFieldValue new];
+        formFieldValue.attachedValue = textField.text;
+        strongSelf.currentFormField.metadataValue = formFieldValue;
         
         if ([strongSelf.delegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
             [strongSelf.delegate updatedMetadataValueForFormField:strongSelf.currentFormField

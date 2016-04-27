@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "ASDKFormCollectionViewController.h"
+#import "ASDKDynamicTableFormFieldDetailsViewController.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -65,6 +66,8 @@
                                             animated:NO];
         [self refreshContentForCellAtIndexPath:indexPath];
     }
+    
+    [self.collectionViewLayout invalidateLayout];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -100,6 +103,48 @@
         [self.renderDelegate completeFormWithFormFieldValueRequestRepresentation:formFieldValuesRequestRepresentation];
     }
 }
+
+
+#pragma mark -
+#pragma mark ASDKFormRenderEngineDataSource Delegate
+
+- (void)requestControllerUpdateWithBatchOfOperations:(NSDictionary *)operationsBatch {
+    // First check if there are any updates to perform
+    NSIndexSet *sectionInsertIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertSection)];
+    NSIndexSet *sectionDeleteIndexSet = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveSection)];
+    NSArray *rowsToInsert = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeInsertRow)];
+    NSArray *rowsToDelete = operationsBatch[@(ASDKFormRenderEngineControllerOperationTypeRemoveRow)];
+    
+    if (sectionInsertIndexSet.count ||
+        sectionDeleteIndexSet.count ||
+        rowsToInsert.count ||
+        rowsToDelete.count) {
+        [self.collectionView performBatchUpdates:^{
+            // Check for sections to insert
+            if (sectionInsertIndexSet.count) {
+                [self.collectionView insertSections:sectionInsertIndexSet];
+            }
+            
+            // Check for sections to delete
+            if (sectionDeleteIndexSet.count) {
+                [self.collectionView deleteSections:sectionDeleteIndexSet];
+            }
+            
+            // Check for rows to insert
+            if (rowsToInsert.count) {
+                [self.collectionView insertItemsAtIndexPaths:rowsToInsert];
+            }
+            
+            // Check for rows to delete
+            if (rowsToDelete.count) {
+                [self.collectionView deleteItemsAtIndexPaths:rowsToDelete];
+            }
+        } completion:^(BOOL finished) {
+            [self.collectionViewLayout invalidateLayout];
+        }];
+    }
+}
+
 
 #pragma mark -
 #pragma mark UICollectionView DataSource
@@ -194,7 +239,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                      enableFormOutcome:self.dataSource.isReadOnlyForm ? NO : [self.dataSource areFormFieldMetadataValuesValid]];
     }
     
-    // Link the delegate
+    // Link the ASDKFormRenderEngineValueTransactionsProtocol delegate
     if ([cell respondsToSelector:@selector(setDelegate:)]) {
         cell.delegate = self;
     }
@@ -206,7 +251,14 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     // We first make sure we don't handle cell taps for the outcome section
     if (![[self.dataSource indexPathsOfFormOutcomes] containsObject:indexPath]) {
         if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
-            UIViewController *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
+            UIViewController<ASDKFormFieldDetailsControllerProtocol> *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
+            // Child controllers will have to delegate changes on model updates using the ASDKFormRenderEngineValueTransactionsProtocol
+            childController.valueTransactionDelegate = self;
+            
+            if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
+                ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
+                dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
+            }
             
             // If there is controller assigned to the selected form field notify the delegate
             // that it can begin preparing for presentation
@@ -237,5 +289,4 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                      enableFormOutcome:self.dataSource.isReadOnlyForm ? NO : [self.dataSource areFormFieldMetadataValuesValid]];
     }
 }
-
 @end

@@ -40,7 +40,6 @@
 #import "AFATaskServices.h"
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
-#import "AFAKVOManager.h"
 @import ActivitiSDK;
 
 // Categories
@@ -105,7 +104,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 @property (assign, nonatomic) AFAListContentType                            listContentType;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                                 *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
 
 @end
 
@@ -493,7 +492,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 #pragma mark AFAFilterViewController Delegate
 
 - (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel {
-    // Store the filter refference for further reuse
+    // Store the filter reference for further reuse
     self.currentFilter = filterModel;
     
     [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
@@ -714,7 +713,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark KVO bindings
 
 - (void)handleBindingsForTaskListViewController {
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:self

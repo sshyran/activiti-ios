@@ -62,7 +62,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
@@ -94,7 +94,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to fetch runtime app definition list for request: %@ - %@.\nBody:%@.\nReason:%@",
@@ -109,7 +109,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
 }
 

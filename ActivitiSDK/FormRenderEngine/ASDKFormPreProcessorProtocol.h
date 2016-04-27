@@ -22,17 +22,20 @@
 ASDKModelFormDescription,
 ASDKFormNetworkServices;
 
-typedef void (^ASDKFormPreProcessCompletionBlock) (ASDKModelFormDescription *formDescription, NSError *error);
+typedef void (^ASDKFormPreProcessCompletionBlock) (NSArray *formFields, NSError *error);
 
 @protocol ASDKFormPreProcessorProtocol <NSObject>
 
 @property (strong, nonatomic) ASDKFormNetworkServices *formNetworkServices;
 
 - (void)setupWithTaskID:(NSString *)taskID
-withFormDescriptionModel:(ASDKModelFormDescription *)formDescription
+         withFormFields:(NSArray *)formFields
+withDynamicTableFieldID:(NSString *)dynamicTableFieldID
 preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock;
 
 - (void)setupWithProcessDefinitionID:(NSString *)processDefinitionID
-            withFormDescriptionModel:(ASDKModelFormDescription *)formDescription
+                      withFormFields:(NSArray *)formFields
+            withDynamicTableFieldID:(NSString *)dynamicTableFieldID
            preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock;
+
 @end

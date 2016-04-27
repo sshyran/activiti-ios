@@ -22,12 +22,12 @@
 #import "AFABusinessConstants.h"
 #import "AFACredentialsPageViewController.h"
 #import "AFALoginModel.h"
-#import "AFAKVOManager.h"
 #import "AFAActivityView.h"
 #import "AFAModalReplaceSegueUnwind.h"
 #import "AFAKeychainWrapper.h"
 #import "AFALogConfiguration.h"
 #import "AFAContainerViewController.h"
+@import ActivitiSDK;
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
@@ -61,7 +61,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (strong, nonatomic) AFALoginModel                     *loginModel;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                     *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                     *kvoManager;
 
 @end
 
@@ -146,7 +146,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
-    // Get a hold of the refference for the embedded page view controller
+    // Get a hold of the reference for the embedded page view controller
     if ([kStoryboardIDEmbeddedCredentialsPageController isEqualToString:segue.identifier]) {
         self.credentialsPageViewController = segue.destinationViewController;
         self.credentialsPageViewController.loginModel = self.loginModel;
@@ -334,7 +334,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark KVO bindings
 
 - (void)handleBindingsForLoginViewController {
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:self.loginModel

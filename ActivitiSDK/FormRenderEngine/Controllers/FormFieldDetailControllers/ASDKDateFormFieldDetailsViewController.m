@@ -20,6 +20,7 @@
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
+#import "ASDKLocalizationConstants.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
@@ -58,23 +59,42 @@
         self.selectedDate.text = self.currentFormField.metadataValue.attachedValue;
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         [dateFormatter setDateFormat:@"dd-MM-yyyy"];
         
         NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.metadataValue.attachedValue];
         [self.datePicker setDate:storedDate];
+    } else if (self.currentFormField.values){
+        //format date in saved form (2016-02-23T23:00:Z)
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+        dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z";
+        
+        NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
+        
+        // try other date formatter
+        if (storedDate == nil) {
+            //format date in saved form (2016-02-23T23:00:000Z)
+            dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+            storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
+        }
+        
+        NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
+        [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
+        
+        self.selectedDate.text = [displayDateFormatter stringFromDate:storedDate];
+        [self.datePicker setDate:storedDate];
     } else {
-        self.selectedDate.text = @"Please select date";
+        self.selectedDate.text = ASDKLocalizedStringFromTable(kLocalizationFormDateComponentPickDateLabelText, ASDKLocalizationTable, @"Pick a date");
     }
-
-
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
 
 #pragma mark -
 #pragma mark ASDKFormFieldDetailsControllerProtocol
@@ -83,14 +103,11 @@
     self.currentFormField = formFieldModel;
 }
 
-
 - (IBAction)datePickerAction:(id)sender {
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"dd-MM-yyyy"];
 
     NSString *formatedDate = [dateFormatter stringFromDate:self.datePicker.date];
-
     self.selectedDate.text = formatedDate;
     
     // Propagate the change after the state of the checkbox has changed
@@ -98,5 +115,11 @@
     formFieldValue.attachedValue = formatedDate;
     
     self.currentFormField.metadataValue = formFieldValue;
+    
+    // Notify the value transaction delegate there has been a change with the provided form field model
+    if ([self.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+        [self.valueTransactionDelegate updatedMetadataValueForFormField:self.currentFormField
+                                                                 inCell:nil];
+    }
 }
 @end

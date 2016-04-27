@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, AFAServiceObjectType) {
 - (instancetype)init __attribute__((unavailable("init not available with AFAServiceRepository, call sharedInstance instead")));
 
 /**
- *  Registers  service object that can be later refferenced via it's service object type
+ *  Registers  service object that can be later referenced via it's service object type
  *
  *  @param serviceObject     Object to be registered
  *  @param serviceObjectType Enum type describing the object purpose

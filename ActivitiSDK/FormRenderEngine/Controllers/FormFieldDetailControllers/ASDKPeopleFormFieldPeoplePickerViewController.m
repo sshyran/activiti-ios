@@ -335,7 +335,13 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         self.selectedUser = selectedUser;
         [self addUserToCurrentFormField:selectedUser];
     }
-//    [tableView reloadData];
+    
+    // Notify the value transaction delegate there has been a change with the provided form field model
+    if ([self.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
+        [self.valueTransactionDelegate updatedMetadataValueForFormField:self.currentFormField
+                                                                 inCell:nil];
+    }
+    
     [self performSegueWithIdentifier:kSegueIDFormFieldPeopleAddPeopleUnwind sender:self];
 
 }

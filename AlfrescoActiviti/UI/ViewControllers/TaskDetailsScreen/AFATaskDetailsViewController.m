@@ -34,7 +34,6 @@
 
 // Managers
 #import "AFAServiceRepository.h"
-#import "AFAKVOManager.h"
 #import "AFATableController.h"
 #import "AFATableControllerTaskDetailsCellFactory.h"
 #import "AFATableControllerTaskContributorsCellFactory.h"
@@ -112,7 +111,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (strong, nonatomic) ASDKModelProfile                              *currentUserProfile;
 
 // KVO
-@property (strong, nonatomic) AFAKVOManager                                 *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
 
 @end
 
@@ -879,7 +878,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 #pragma mark KVO bindings
 
 - (void)handleBindingsForTaskListViewController {
-    self.kvoManager = [AFAKVOManager managerWithObserver:self];
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:self
@@ -1156,8 +1155,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 }
 
 - (void)popFormDetailController {
-    [self.navigationController popToViewController:self
-                                          animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

@@ -26,6 +26,7 @@ extern NSString *ASDKLocalizationTable;
 // Form related
 extern NSString *kLocalizationDefaultFormOutcome;
 extern NSString *kLocalizationStartProcessFormOutcome;
+extern NSString *kLocalizationDeleteDynamicTableRowFormOutcome;
 extern NSString *kLocalizationFormDateComponentRemoveButtonText;
 extern NSString *kLocalizationFormDateComponentPickDateLabelText;
 extern NSString *kLocalizationFormDateComponentDoneButtonText;
@@ -35,6 +36,9 @@ extern NSString *kLocalizationFormAttachFilesComponentButtonText;
 extern NSString *kLocalizationFormAttachFileNoContentText;
 extern NSString *kLocalizationFormAttachFileItemsAttachedText;
 extern NSString *kLocalizationFormPeopleNoSelectedText;
+extern NSString *kLocalizationFormDynamicTableRowsAvailableText;
+extern NSString *kLocalizationFormDynamicTableRowHeaderText;
+extern NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText;
 
 // Content picker component
 extern NSString *kLocalizationFormContentPickerComponentLocalContentText;
