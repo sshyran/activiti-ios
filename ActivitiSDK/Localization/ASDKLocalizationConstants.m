@@ -49,6 +49,8 @@ NSString *kLocalizationFormContentPickerComponentCameraContentText              
 NSString *kLocalizationFormContentPickerComponentCameraNotAvailableErrorText        = @"formContentPickerComponentCameraNotAvailableErrorText";
 NSString *kLocalizationFormContentPickerComponentProgressPercentageFormat           = @"formContentPickerComponentProgressPercentFormat";
 NSString *kLocalizationFormContentPickerComponentUploadingText                      = @"formContentPickerComponentUploadingText";
+NSString *kLocalizationFormContentPickerComponentDownloadingText                    = @"formContentPickerComponentDownloadingText";
+NSString *kLocalizationFormContentPickerComponentDownloadProgressFormat             = @"formContentPickerComponentDownloadProgressFormat";
 NSString *kLocalizationFormContentPickerComponentSuccessText                        = @"formContentPickerComponentSuccessText";
 NSString *kLocalizationFormContentPickerComponentFailedText                         = @"formContentPickerComponentFailedText";
 NSString *kLocalizationFormContentPickerComponentLocalVersionAvailableText          = @"formContentPickerComponentLocalVersionAvailableText";

@@ -40,6 +40,8 @@
 "formContentPickerComponentCameraNotAvailableErrorText"         = "Seems the current device doesn't have a camera. You can still pick content from the device's photo gallery";
 "formContentPickerComponentProgressPercentFormat"               = "%d%% Complete";
 "formContentPickerComponentUploadingText"                       = "Uploading...";
+"formContentPickerComponentDownloadingText"                     = "Downloading...";
+"formContentPickerComponentDownloadProgressFormat"              = "Downloaded %@";
 "formContentPickerComponentSuccessText"                         = "Success";
 "formContentPickerComponentFailedText"                          = "Failed";
 "formContentPickerComponentLocalVersionAvailableText"           = "We found a local version of the content you're trying to download. Would you like to preview it, or get the latest version from the server?";

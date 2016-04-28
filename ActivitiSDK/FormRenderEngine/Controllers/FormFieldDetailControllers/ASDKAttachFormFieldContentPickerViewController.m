@@ -142,7 +142,7 @@ QLPreviewControllerDelegate>
                                       __strong typeof(self) strongSelf = weakSelf;
                                       
                                       if (!error) {
-                                          strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Download progress format"), formattedReceivedBytesString];
+                                          strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDownloadProgressFormat, ASDKLocalizationTable, @"Download progress format"), formattedReceivedBytesString];
                                       } else {
                                           [strongSelf.progressHUD dismiss];
                                           [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Content download error")];
@@ -186,7 +186,7 @@ QLPreviewControllerDelegate>
                                               strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
                                               
                                               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                  weakSelf.progressHUD.textLabel.text = @"Success text";
+                                                  weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
                                                   weakSelf.progressHUD.detailTextLabel.text = nil;
                                                   
                                                   weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
@@ -362,16 +362,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     fileContentModel.fileURL = self.currentSelectedUploadResourceURL;
     
     __weak typeof(self) weakSelf = self;
-    
     [formNetworkService uploadContentWithModel:fileContentModel
                                         contentData:self.currentSelectedResourceData
                                       progressBlock:^(NSUInteger progress, NSError *error) {
-                                          __strong typeof(self) strongSelf = weakSelf;
-                                          
-                                          [strongSelf.progressHUD setProgress:progress / 100.0f
-                                                                     animated:YES];
-                                          strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Percent format"), progress];
-                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              [weakSelf.progressHUD setProgress:progress / 100.0f
+                                                                         animated:YES];
+                                              weakSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Percent format"), progress];
+                                          });
                                       } completionBlock:^(ASDKModelContent *modelContent, NSError *error) {
                                           __strong typeof(self) strongSelf = weakSelf;
 
@@ -379,7 +377,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                           
                                           if (didContentUploadSucceeded) {
                                               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                  weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success title");
+                                                  weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
                                                   weakSelf.progressHUD.detailTextLabel.text = nil;
                                                   
                                                   weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
@@ -415,8 +413,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                                   }
                                               });
                                           } else {
-                                              [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
-                                              [strongSelf.progressHUD dismiss];
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
+                                                  [strongSelf.progressHUD dismiss];
+                                              });
                                           }
                                       }];
 }
@@ -432,7 +432,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 
 - (void)showDownloadProgressHUD {
-    self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentUploadingText, ASDKLocalizationTable, @"Downloading text");
+    self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDownloadingText, ASDKLocalizationTable, @"Downloading text");
     self.progressHUD.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
     [self.progressHUD showInView:self.navigationController.view];
 }

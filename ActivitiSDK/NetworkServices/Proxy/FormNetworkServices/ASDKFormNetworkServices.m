@@ -405,7 +405,6 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                                                                
                                                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                                                                    // Generate the file path
-                                                                   
                                                                    if (![self.diskServices doesFileAlreadyExistsForContent:parsedObject]) {
                                                                        
                                                                        NSString *downloadPathForContent = [self.diskServices downloadPathForContent:parsedObject];
