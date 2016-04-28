@@ -85,6 +85,7 @@
 - (NSString *)startFormCompletionPath;
 - (NSString *)startFormRestFieldValuesServicePathFormat;
 - (NSString *)startFormDynamicTableRestFieldValuesServicePathFormat;
+- (NSString *)saveFormServicePathFormat;
 
 // Process related
 - (NSString *)processDefinitionListServicePathFormat;

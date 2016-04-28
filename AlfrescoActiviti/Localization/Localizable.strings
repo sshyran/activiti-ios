@@ -79,6 +79,7 @@
 "taskDetailsScreenCompletedDateText"                     = "Completed date";
 "taskDetailsScreenDurationText"                          = "Duration";
 "taskDetailsScreenClaimButtonText"                       = "Claim";
+"taskDetailsScreenTaskFormClaimedText"                   = "Task form is saved";
 
 // Process instance details screen
 "processInstanceDetailsScreenTitleText"                  = "Process instance details";

@@ -25,6 +25,7 @@ extern NSString *ASDKLocalizationTable;
 
 // Form related
 extern NSString *kLocalizationDefaultFormOutcome;
+extern NSString *kLocalizationSaveFormOutcome;
 extern NSString *kLocalizationStartProcessFormOutcome;
 extern NSString *kLocalizationDeleteDynamicTableRowFormOutcome;
 extern NSString *kLocalizationFormDateComponentRemoveButtonText;

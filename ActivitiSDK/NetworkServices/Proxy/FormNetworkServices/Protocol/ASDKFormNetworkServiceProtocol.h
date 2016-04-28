@@ -26,6 +26,7 @@ ASDKModelProcessDefinition;
 
 typedef void  (^ASDKFormModelsCompletionBlock) (ASDKModelFormDescription *formDescription, NSError *error);
 typedef void  (^ASDKFormCompletionBlock) (BOOL isFormCompleted, NSError *error);
+typedef void  (^ASDKFormSaveBlock) (BOOL isFormSaved, NSError *error);
 typedef void  (^ASDKStarFormCompletionBlock) (ASDKModelProcessInstance *processInstance, NSError *error);
 typedef void  (^ASDKFormContentUploadCompletionBlock) (ASDKModelContent *contentModel, NSError *error);
 typedef void  (^ASDKFormContentProgressBlock) (NSUInteger progress, NSError *error);
@@ -76,6 +77,20 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
 - (void)completeFormForProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
 withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
                          completionBlock:(ASDKStarFormCompletionBlock)completionBlock;
+
+/**
+ *  Saves a task form associated with a given task ID, with an attached form field values representation 
+ *  containing input values from the user.
+ *
+ *  @param taskID                        The task ID for which the attached form should be saved
+ *  @param formFieldValuesRepresentation Form field values encapsulated in this representation containing
+ *                                       user input for the current form
+ *  @param completionBlock               Completion block providing whether the form has been successfully 
+ *                                       saved and an optional error reason
+ */
+- (void)saveFormForTaskID:(NSString *)taskID
+withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
+          completionBlock:(ASDKFormSaveBlock)completionBlock;
 
 /**
  *  Fetches and returns via the completion block the associated form descriptiom given

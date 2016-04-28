@@ -18,8 +18,14 @@
 
 #import "ASDKModelBase.h"
 
+typedef NS_ENUM(NSInteger, ASDKModelFormOutcomeType) {
+    ASDKModelFormOutcomeTypeComplete = 0,
+    ASDKModelFormOutcomeTypeSave
+};
+
 @interface ASDKModelFormOutcome : ASDKModelBase
 
-@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString                  *name;
+@property (assign, nonatomic) ASDKModelFormOutcomeType  formOutcomeType;
 
 @end

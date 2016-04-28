@@ -25,6 +25,7 @@ NSString *ASDKLocalizationTable                          = @"ActivitiSDKLocaliza
 #pragma mark Form related
 
 NSString *kLocalizationDefaultFormOutcome                        = @"defaultFormOutcome";
+NSString *kLocalizationSaveFormOutcome                           = @"saveFormOutcome";
 NSString *kLocalizationStartProcessFormOutcome                   = @"startProcessFormOutcome";
 NSString *kLocalizationDeleteDynamicTableRowFormOutcome          = @"deleteDynamicTableRowFormOutcome";
 NSString *kLocalizationFormDateComponentRemoveButtonText         = @"formDateComponentRemoveButtonText";

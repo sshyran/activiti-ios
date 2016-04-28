@@ -100,24 +100,43 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         // Handle form outcomes
         self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
         self.formOutcomesIndexPaths = [NSMutableArray array];
+
+        // Add the save form button. This will be filtered out if the isReadOnlyForm is
+        // marked as being true
+        ASDKModelFormOutcome *saveFormOutcome = [ASDKModelFormOutcome new];
+        saveFormOutcome.name =  ASDKLocalizedStringFromTable(kLocalizationSaveFormOutcome, ASDKLocalizationTable, @"Save outcome");
+        saveFormOutcome.formOutcomeType = ASDKModelFormOutcomeTypeSave;
         
         if (self.formHasUserdefinedOutcomes) {
-            self.formOutcomes = formDescription.formOutcomes;
+            self.formOutcomes = [formDescription.formOutcomes arrayByAddingObject:saveFormOutcome];
         } else {
             ASDKModelFormOutcome *formOutcome = [ASDKModelFormOutcome new];
             
             if (ASDKFormRenderEngineDataSourceTypeTask == dataSourceType) {
                 formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
+                self.formOutcomes = @[formOutcome, saveFormOutcome];
             } else {
                 formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
+                self.formOutcomes = @[formOutcome];
             }
             
             self.dataSourceType = dataSourceType;
-            self.formOutcomes = @[formOutcome];
         }
     }
     
     return self;
+}
+
+- (void)setIsReadOnlyForm:(BOOL)isReadOnlyForm {
+    if (isReadOnlyForm != _isReadOnlyForm) {
+        _isReadOnlyForm = isReadOnlyForm;
+        
+        // If we're dealing with a read-only form remove the save form outcome
+        if (_isReadOnlyForm) {
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"formOutcomeType == %d", ASDKModelFormOutcomeTypeComplete];
+            _formOutcomes = [_formOutcomes filteredArrayUsingPredicate:searchPredicate];
+        }
+    }
 }
 
 

@@ -60,6 +60,12 @@
  */
 @property (strong, nonatomic) ASDKStartFormRenderEngineCompletionBlock  startFormCompletionBlock;
 
+/**
+ *  Property meant to hold a reference to the save form completion block invoked
+ *  when the user saves a form.
+ */
+@property (strong, nonatomic) ASDKFormRenderEngineSaveBlock             saveFormCompletionBlock;
+
 @end
 
 @implementation ASDKFormRenderEngine
@@ -95,14 +101,17 @@
 
 - (void)setupWithTaskModel:(ASDKModelTask *)task
      renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock {
+       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock
+             formSaveBlock:(ASDKFormRenderEngineSaveBlock)formSaveBlock {
     // Check mandatory parameteres
     NSParameterAssert(task);
     NSParameterAssert(renderCompletionBlock);
     NSParameterAssert(formCompletionBlock);
+    NSParameterAssert(formSaveBlock);
     
     self.task = task;
     self.formCompletionBlock = formCompletionBlock;
+    self.saveFormCompletionBlock = formSaveBlock;
     
     [self.formNetworkServices
      fetchFormForTaskWithID:task.instanceID
@@ -342,6 +351,20 @@
                                                    }];
     }
     
+}
+
+- (void)saveFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
+    __weak typeof(self) weakSelf = self;
+    
+    [self.formNetworkServices saveFormForTaskID:self.task.instanceID
+       withFormFieldValuesRequestrepresentation:formFieldValueRequestRepresentation
+                                completionBlock:^(BOOL isFormSaved, NSError *error) {
+                                    __strong typeof(self) strongSelf = weakSelf;
+                                    
+                                    if (strongSelf.saveFormCompletionBlock) {
+                                        strongSelf.saveFormCompletionBlock(isFormSaved, error);
+                                    }
+    }];
 }
 
 - (void)performEngineCleanup {

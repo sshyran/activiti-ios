@@ -26,7 +26,8 @@ ASDKModelProcessDefinition,
 ASDKModelProcessInstance;
 
 typedef void  (^AFAFormServicesEngineSetupCompletionBlock) (UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error);
-typedef void  (^AFAFormServicesEngineCompletionBlock) (BOOL isFormCompleted, NSError *error);
+typedef void  (^AFAFormServicesEngineCompletionBlock)      (BOOL isFormCompleted, NSError *error);
+typedef void  (^AFAFormServicesEngineSaveBlock)            (BOOL isFormSaved, NSError *error);
 typedef void  (^AFAStartFormServicesEngineCompletionBlock) (ASDKModelProcessInstance *processInstance, NSError *error);
 
 @interface AFAFormServices : NSObject
@@ -54,10 +55,14 @@ typedef void  (^AFAStartFormServicesEngineCompletionBlock) (ASDKModelProcessInst
  *  @param formCompletionBlock      Completion block providing information on
  *                                  whether the form has been successfully
  *                                  completed  or not and an additional error reason
+ *  @param formSaveBlock            Save completion block providing information on
+ *                                  whether the form has been successfully saved or
+ *                                  not and an additional error reason
  */
 - (void)requestSetupWithTaskModel:(ASDKModelTask *)task
             renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock
-              formCompletionBlock:(AFAFormServicesEngineCompletionBlock)formCompletionBlock;
+              formCompletionBlock:(AFAFormServicesEngineCompletionBlock)formCompletionBlock
+                    formSaveBlock:(AFAFormServicesEngineSaveBlock)formSaveBlock;
 
 /**
  *  Performs a request to the form render engine to handle the creation of the form view

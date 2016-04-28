@@ -31,6 +31,9 @@
 @import ActivitiSDK;
 
 // Views
+#import <JGProgressHUD/JGProgressHUD.h>
+
+// Views
 #import "AFAActivityView.h"
 
 @interface AFATaskFormViewController() <ASDKFormControllerNavigationProtocol>
@@ -39,10 +42,21 @@
 @property (strong, nonatomic) ASDKModelTask                 *task;
 @property (strong, nonatomic) UICollectionViewController    *formViewController;
 @property (weak, nonatomic)   IBOutlet AFAActivityView      *activityView;
+@property (strong, nonatomic) JGProgressHUD                 *progressHUD;
 
 @end
 
 @implementation AFATaskFormViewController
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        self.progressHUD = [self configureProgressHUD];
+    }
+    
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -119,6 +133,25 @@
                      [strongSelf.delegate userDidCompleteForm];
                  }
              }
+         } formSaveBlock:^(BOOL isFormSaved, NSError *error) {
+             __strong typeof(self) strongSelf = weakSelf;
+             
+             [strongSelf showFormSaveIndicatorView];
+             if (!error && isFormSaved) {
+                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                     weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormSavedText, "Task form is saved text");
+                     weakSelf.progressHUD.detailTextLabel.text = nil;
+                     weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                     weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                 });
+                 
+                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                     [weakSelf.progressHUD dismiss];
+                 });
+             } else {
+                 [strongSelf.progressHUD dismiss];
+                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+             }
          }];
     }
 }
@@ -131,6 +164,29 @@
     if ([self.delegate respondsToSelector:@selector(presentFormDetailController:)]) {
         [self.delegate presentFormDetailController:controller];
     }
+}
+
+
+#pragma mark -
+#pragma mark - Progress hud setup
+
+- (JGProgressHUD *)configureProgressHUD {
+    JGProgressHUD *hud = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
+    hud.interactionType = JGProgressHUDInteractionTypeBlockAllTouches;
+    JGProgressHUDFadeZoomAnimation *zoomAnimation = [JGProgressHUDFadeZoomAnimation animation];
+    hud.animation = zoomAnimation;
+    hud.layoutChangeAnimationDuration = .0f;
+    hud.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
+    
+    return hud;
+}
+
+- (void)showFormSaveIndicatorView {
+    self.progressHUD.textLabel.text = nil;
+    JGProgressHUDIndeterminateIndicatorView *indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
+    [indicatorView setColor:[UIColor whiteColor]];
+    self.progressHUD.indicatorView = indicatorView;
+    [self.progressHUD showInView:self.navigationController.view];
 }
 
 /*
