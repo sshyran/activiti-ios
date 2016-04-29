@@ -35,6 +35,7 @@ extern NSString *kASDKAPIUserIdParameter;
 extern NSString *kASDKAPIProcessDefinitionIDParameter;
 extern NSString *kASDKAPIMessageParameter;
 extern NSString *kASDKAPIAssigneeParameter;
+extern NSString *kASDKAPITableEditableParameter;
 
 // Reachability constants
 extern NSString *kASDKAPINetworkServiceNoInternetConnection;

@@ -216,10 +216,12 @@ heightForHeaderInSection:(NSInteger)section {
 
 - (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
+    ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) self.currentFormField;
+
     ASDKDynamicTableRowHeaderTableViewCell *sectionHeaderView = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldDynamicTableHeaderRepresentation];
     [sectionHeaderView setupCellWithSelectionSection:section
                                           headerText:[NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1]
-                                          isReadOnly:(ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType)
+                                          isReadOnly:(ASDKModelFormFieldRepresentationTypeReadOnly == dynamicTableFormField.representationType && !dynamicTableFormField.isTableEditable)
                                    navgationDelegate:self];
     
     return sectionHeaderView;
@@ -322,12 +324,18 @@ withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
     NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
     nameLabel.text = columnDefinitionformField.fieldName;
 
+    ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) self.currentFormField;
+
     // If dealing with read-only forms extract the representation type from the attached
     // form field params model
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
+        !dynamicTableFormField.isTableEditable) {
         representationType = columnDefinitionformField.formFieldParams.representationType;
         // set 'disabled color' for complete forms
         valueLabel.textColor = [UIColor formViewCompletedValueColor];
+    } else if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
+               dynamicTableFormField.isTableEditable) {
+        representationType = columnDefinitionformField.formFieldParams.representationType;
     } else {
         representationType = columnDefinitionformField.representationType;
     }

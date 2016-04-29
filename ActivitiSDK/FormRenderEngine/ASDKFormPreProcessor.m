@@ -211,6 +211,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                     ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *)formField;
                     ASDKModelDynamicTableFormField *dynamicTableFormFieldParams = (ASDKModelDynamicTableFormField *)formField.formFieldParams;
                     dynamicTableFormField.columnDefinitions = dynamicTableFormFieldParams.columnDefinitions;
+                    dynamicTableFormField.isTableEditable = dynamicTableFormFieldParams.isTableEditable;
                 }
                 
                 NSMutableArray *newFormFieldValues = [[NSMutableArray alloc] init];
@@ -261,7 +262,10 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                             formFieldParams.representationType = columnDefinitionWithValue.representationType;
                             formFieldParams.fieldName = columnDefinitionWithValue.fieldName;
                             columnDefinitionWithValue.formFieldParams = formFieldParams;
-                            columnDefinitionWithValue.representationType = ASDKModelFormFieldRepresentationTypeReadOnly;
+                            
+                            if (!dynamicTableFormField.isTableEditable) {
+                                columnDefinitionWithValue.representationType = ASDKModelFormFieldRepresentationTypeReadOnly;
+                            }
                         }
                         
                         columnDefinitionWithValue.values = columnDefinitionValues;
