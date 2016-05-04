@@ -356,7 +356,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
-        case ASDKModelFormFieldRepresentationTypeMultiline: {
+        case ASDKModelFormFieldRepresentationTypeMultiline:
+        case ASDKModelFormFieldRepresentationTypeReadonlyText: {
             cellIdentifier = kASDKCellIDFormFieldMultilineRepresentation;
         }
             break;
@@ -388,7 +389,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSString *controllerIdentifierString = nil;
     NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
     
-    // completed forms; only attach fields have child view controller
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
         (ASDKModelFormFieldRepresentationTypeAttach == formField.formFieldParams.representationType ||
          ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType ||
@@ -410,7 +410,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
-        case ASDKModelFormFieldRepresentationTypeMultiline: {
+        case ASDKModelFormFieldRepresentationTypeMultiline:
+        case ASDKModelFormFieldRepresentationTypeReadonlyText: {
             controllerIdentifierString = kASDKStoryboardIDMultilineFormFieldDetailController;
         }
             break;

@@ -1057,7 +1057,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" contentMode="scaleToFill" keyboardDismissMode="interactive" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Twn-KU-k5j" userLabel="Multiline Text View">
-                                <rect key="frame" x="20" y="28" width="560" height="215"/>
+                                <rect key="frame" x="20" y="28" width="560" height="552"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1066,12 +1066,13 @@
                         <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="Twn-KU-k5j" secondAttribute="trailing" id="02R-vO-5FB"/>
-                            <constraint firstItem="UIy-jA-meH" firstAttribute="top" secondItem="Twn-KU-k5j" secondAttribute="bottom" constant="357" id="7BL-1k-1zj"/>
+                            <constraint firstItem="UIy-jA-meH" firstAttribute="top" secondItem="Twn-KU-k5j" secondAttribute="bottom" constant="20" id="7BL-1k-1zj"/>
                             <constraint firstAttribute="leadingMargin" secondItem="Twn-KU-k5j" secondAttribute="leading" id="gC0-Ov-uJ6"/>
                             <constraint firstItem="Twn-KU-k5j" firstAttribute="top" secondItem="Yjo-lV-SRf" secondAttribute="bottom" constant="8" id="vBD-Xn-qE3"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="multilineBottomConstraint" destination="7BL-1k-1zj" id="qvN-CQ-J8r"/>
                         <outlet property="multilineTextView" destination="Twn-KU-k5j" id="09h-RB-ccq"/>
                     </connections>
                 </viewController>
