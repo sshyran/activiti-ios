@@ -31,13 +31,34 @@
 
 @interface ASDKMultilineFormFieldDetailsViewController () <UITextViewDelegate>
 
-@property (strong, nonatomic) ASDKModelFormField    *currentFormField;
-@property (weak, nonatomic) IBOutlet UITextView     *multilineTextView;
+@property (strong, nonatomic) ASDKModelFormField        *currentFormField;
+@property (weak, nonatomic) IBOutlet UITextView         *multilineTextView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *multilineBottomConstraint;
 
 @end
 
 @implementation ASDKMultilineFormFieldDetailsViewController
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillShow:)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillHide:)
+                                                     name:UIKeyboardWillHideNotification
+                                                   object:nil];
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -60,16 +81,22 @@
         self.multilineTextView.text = self.currentFormField.values.firstObject;
     }
     
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType ||
+        ASDKModelFormFieldRepresentationTypeReadonlyText == self.currentFormField.representationType) {
         self.multilineTextView.editable = NO;
         self.multilineTextView.textColor = [UIColor formViewCompletedValueColor];
-    } else {
-        // Focus text area
-        [self.multilineTextView becomeFirstResponder];
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self.multilineTextView becomeFirstResponder];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
     [self.multilineTextView resignFirstResponder];
 }
 
@@ -106,6 +133,39 @@
         [self.valueTransactionDelegate updatedMetadataValueForFormField:self.currentFormField
                                                                  inCell:nil];
     }
+}
+
+
+#pragma mark -
+#pragma mark Keyboard handling
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *info = [notification userInfo];
+    NSValue *kbFrame = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
+    NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGRect keyboardFrame = [kbFrame CGRectValue];
+    CGRect finalKeyboardFrame = [self.view convertRect:keyboardFrame
+                                              fromView:self.view.window];
+    
+    int kbHeight = finalKeyboardFrame.size.height;
+    int height = kbHeight + self.multilineBottomConstraint.constant;
+    self.multilineBottomConstraint.constant = height;
+    
+    [UIView animateWithDuration:animationDuration
+                     animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary *info = [notification userInfo];
+    NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    self.multilineBottomConstraint.constant = 8;
+    
+    [UIView animateWithDuration:animationDuration
+                     animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 @end
