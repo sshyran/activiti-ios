@@ -761,8 +761,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    error:(NSError **)error {
     BOOL result;
     
-    BOOL firstBoolean = [firstBooleanString isEqualToString:kASDKFormFieldTrueStringValue] ? YES : NO;
-    BOOL secondBoolean = [secondBooleanString isEqualToString:kASDKFormFieldTrueStringValue] ? YES : NO;
+    BOOL firstBoolean = [firstBooleanString isEqualToString:kASDKFormFieldTrueStringValue] ||
+                        [firstBooleanString isEqualToString:@"1"] ? YES : NO;
+    BOOL secondBoolean = [secondBooleanString isEqualToString:kASDKFormFieldTrueStringValue] ||
+                         [secondBooleanString isEqualToString:@"1"]? YES : NO;
     
     switch (operatorType) {
         case ASDKModelFormVisibilityConditionOperatorTypeEqual: {

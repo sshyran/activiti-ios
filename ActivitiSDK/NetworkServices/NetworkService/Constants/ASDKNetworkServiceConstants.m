@@ -38,6 +38,8 @@ NSString *kASDKAPIUserIdParameter                               = @"userId";
 NSString *kASDKAPIProcessDefinitionIDParameter                  = @"processDefinitionId";
 NSString *kASDKAPIMessageParameter                              = @"message";
 NSString *kASDKAPIAssigneeParameter                             = @"assignee";
+NSString *kASDKAPITableEditableParameter                        = @"tableEditable";
+
 
 #pragma mark -
 #pragma mark Reachability constants

@@ -25,6 +25,7 @@ NSString *ASDKLocalizationTable                          = @"ActivitiSDKLocaliza
 #pragma mark Form related
 
 NSString *kLocalizationDefaultFormOutcome                        = @"defaultFormOutcome";
+NSString *kLocalizationSaveFormOutcome                           = @"saveFormOutcome";
 NSString *kLocalizationStartProcessFormOutcome                   = @"startProcessFormOutcome";
 NSString *kLocalizationDeleteDynamicTableRowFormOutcome          = @"deleteDynamicTableRowFormOutcome";
 NSString *kLocalizationFormDateComponentRemoveButtonText         = @"formDateComponentRemoveButtonText";
@@ -48,6 +49,8 @@ NSString *kLocalizationFormContentPickerComponentCameraContentText              
 NSString *kLocalizationFormContentPickerComponentCameraNotAvailableErrorText        = @"formContentPickerComponentCameraNotAvailableErrorText";
 NSString *kLocalizationFormContentPickerComponentProgressPercentageFormat           = @"formContentPickerComponentProgressPercentFormat";
 NSString *kLocalizationFormContentPickerComponentUploadingText                      = @"formContentPickerComponentUploadingText";
+NSString *kLocalizationFormContentPickerComponentDownloadingText                    = @"formContentPickerComponentDownloadingText";
+NSString *kLocalizationFormContentPickerComponentDownloadProgressFormat             = @"formContentPickerComponentDownloadProgressFormat";
 NSString *kLocalizationFormContentPickerComponentSuccessText                        = @"formContentPickerComponentSuccessText";
 NSString *kLocalizationFormContentPickerComponentFailedText                         = @"formContentPickerComponentFailedText";
 NSString *kLocalizationFormContentPickerComponentLocalVersionAvailableText          = @"formContentPickerComponentLocalVersionAvailableText";

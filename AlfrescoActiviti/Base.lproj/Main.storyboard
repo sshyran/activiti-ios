@@ -455,7 +455,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="512"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="cUZ-2k-IJp">
-                                    <rect key="frame" x="0.0" y="108" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="108" width="600" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
@@ -2870,7 +2870,7 @@
                                                     <rect key="frame" x="8" y="8" width="259" height="30"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits" keyboardAppearance="alert" returnKeyType="next"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="alert" returnKeyType="next"/>
                                                     <connections>
                                                         <action selector="onTextChangeEvent:" destination="lmJ-hC-4mj" eventType="editingChanged" id="6bc-6V-P9a"/>
                                                     </connections>

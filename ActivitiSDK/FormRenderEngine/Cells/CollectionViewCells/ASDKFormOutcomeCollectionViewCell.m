@@ -62,8 +62,23 @@
 #pragma mark Button actions
 
 - (IBAction)onFormOutcome:(UIButton *)sender {
-    if ([self.delegate respondsToSelector:@selector(completeFormWithOutcome:)]) {
-        [self.delegate completeFormWithOutcome:self.formOutcome];
+    switch (self.formOutcome.formOutcomeType) {
+        case ASDKModelFormOutcomeTypeComplete: {
+            if ([self.delegate respondsToSelector:@selector(completeFormWithOutcome:)]) {
+                [self.delegate completeFormWithOutcome:self.formOutcome];
+            }
+        }
+            break;
+            
+        case ASDKModelFormOutcomeTypeSave: {
+            if ([self.delegate respondsToSelector:@selector(saveFormWithOutcome:)]) {
+                [self.delegate saveFormWithOutcome:self.formOutcome];
+            }
+        }
+            break;
+            
+        default:
+            break;
     }
 }
 

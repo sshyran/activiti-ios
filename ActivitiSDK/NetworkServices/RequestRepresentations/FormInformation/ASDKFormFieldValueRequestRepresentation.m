@@ -83,17 +83,23 @@
     }];
 }
 
-+ (id) determineValueForFormField:(ASDKModelFormField *)formField {
-    
++ (id)determineValueForFormField:(ASDKModelFormField *)formField {
     id formFieldValue = nil;
     
-    if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType
-        && ASDKModelFormFieldRepresentationTypeContainer != formField.representationType) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType &&
+        ASDKModelFormFieldRepresentationTypeContainer != formField.representationType) {
         
         // If there's an option field available change the nesting structure
         if (formField.metadataValue.option) {
-            formFieldValue = @{kASDKAPIGenericIDParameter  : formField.instanceID,
-                               kASDKAPIGenericNameParameter: formField.metadataValue.option.attachedValue};
+            if (ASDKModelFormFieldTypeRestField == formField.fieldType) {
+                NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"name == %@", formField.metadataValue.option.attachedValue];
+                ASDKModelFormFieldOption *chosenOption = [formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject;
+                formFieldValue = @{kASDKAPIGenericIDParameter  : chosenOption.instanceID,
+                                   kASDKAPIGenericNameParameter: formField.metadataValue.option.attachedValue};
+            } else {
+                formFieldValue = @{kASDKAPIGenericIDParameter  : formField.instanceID,
+                                   kASDKAPIGenericNameParameter: formField.metadataValue.option.attachedValue};
+            }
         } else if (formField.metadataValue.attachedValue) { // if there's a attached value
             // special date field handling
             if (formField.representationType == ASDKModelFormFieldRepresentationTypeDate) {

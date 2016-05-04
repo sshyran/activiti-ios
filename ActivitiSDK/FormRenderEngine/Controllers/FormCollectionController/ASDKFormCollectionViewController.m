@@ -104,6 +104,16 @@
     }
 }
 
+- (void)saveFormWithOutcome:(ASDKModelFormOutcome *)formOutcomeModel {
+    ASDKFormFieldValueRequestRepresentation *formFieldValuesRequestRepresentation = [ASDKFormFieldValueRequestRepresentation new];
+    formFieldValuesRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    formFieldValuesRequestRepresentation.formFields = self.dataSource.visibleFormFields;
+    
+    if ([self.renderDelegate respondsToSelector:@selector(saveFormWithFormFieldValueRequestRepresentation:)]) {
+        [self.renderDelegate saveFormWithFormFieldValueRequestRepresentation:formFieldValuesRequestRepresentation];
+    }
+}
+
 
 #pragma mark -
 #pragma mark ASDKFormRenderEngineDataSource Delegate
@@ -235,8 +245,16 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     if ([modelObject isKindOfClass:[ASDKModelFormField class]]) {
         [cell setupCellWithFormField:(ASDKModelFormField *)modelObject];
     } else {
+        BOOL isFormOutcomeEnabled = YES;
+        
+        if (self.dataSource.isReadOnlyForm) {
+            isFormOutcomeEnabled = NO;
+        } else if(ASDKModelFormOutcomeTypeSave != ((ASDKModelFormOutcome *)modelObject).formOutcomeType) {
+            isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
+        }
+        
         [cell setupCellWithFormOutcome:(ASDKModelFormOutcome *)modelObject
-                     enableFormOutcome:self.dataSource.isReadOnlyForm ? NO : [self.dataSource areFormFieldMetadataValuesValid]];
+                     enableFormOutcome:isFormOutcomeEnabled];
     }
     
     // Link the ASDKFormRenderEngineValueTransactionsProtocol delegate
@@ -285,8 +303,16 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         if (modelObject )
         [cell setupCellWithFormField:(ASDKModelFormField *)modelObject];
     } else {
+        BOOL isFormOutcomeEnabled = YES;
+        
+        if (self.dataSource.isReadOnlyForm) {
+            isFormOutcomeEnabled = NO;
+        } else if(ASDKModelFormOutcomeTypeSave != ((ASDKModelFormOutcome *)modelObject).formOutcomeType) {
+            isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
+        }
+        
         [cell setupCellWithFormOutcome:(ASDKModelFormOutcome *)modelObject
-                     enableFormOutcome:self.dataSource.isReadOnlyForm ? NO : [self.dataSource areFormFieldMetadataValuesValid]];
+                     enableFormOutcome:isFormOutcomeEnabled];
     }
 }
 @end

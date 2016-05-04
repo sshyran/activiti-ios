@@ -46,7 +46,7 @@
     // and a lower priority on the vertical axis
     UICollectionViewLayoutAttributes *attributes = [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
     attributes.size = CGSizeMake(layoutAttributes.size.width, attributes.size.height);
-
+    
     return attributes;
 }
 
@@ -65,9 +65,9 @@
 - (void)setupCellWithFormField:(ASDKModelFormField *)formField {
     self.formField = formField;
     
-    ASDKModelRestFormField *restFormField = (ASDKModelRestFormField *) formField;
+    ASDKModelRestFormField *restFormField = (ASDKModelRestFormField *)formField;
     self.descriptionLabel.text = formField.fieldName;
-
+    
     if (ASDKModelFormFieldRepresentationTypeReadOnly == restFormField.representationType) {
         self.selectedOptionLabel.text = [self formatSelectedOptionLabelTextWithRestFormField:restFormField];
         self.selectedOptionLabel.textColor = [UIColor formViewCompletedValueColor];
@@ -75,7 +75,7 @@
         self.trailingToDisclosureConstraint.priority = UILayoutPriorityFittingSizeLevel;
     } else {
         self.isRequired = formField.isRequired;
-
+        
         self.selectedOptionLabel.text = [self formatSelectedOptionLabelTextWithRestFormField:restFormField];
         self.disclosureIndicatorLabel.hidden = NO;
         
@@ -85,21 +85,24 @@
 
 - (NSString *)formatSelectedOptionLabelTextWithRestFormField:(ASDKModelRestFormField *)restFormField {
     NSString *descriptionLabelText = nil;
-
+    
     // If a previously selected option is available display it
     if (restFormField.metadataValue) {
         descriptionLabelText = restFormField.metadataValue.option.attachedValue;
-    } else if (restFormField.representationType == ASDKModelFormFieldRepresentationTypeRadio && restFormField.restURL) {
-        // temporary handling initial value dislay for REST populated radio form fields
-        // the JSON model contains an initial value which isn't correct and shouldn't be displayed
-        // but the first occurence of the fetched options should be displayed
+    } else if (restFormField.representationType == ASDKModelFormFieldRepresentationTypeRadio &&
+               restFormField.restURL) {
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", (NSString *)restFormField.values.firstObject];
+        ASDKModelFormFieldOption *correspondingOption = [restFormField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject;
+        descriptionLabelText = correspondingOption.name;
         
-        if (restFormField.formFieldOptions) {
-            ASDKModelFormFieldOption *firstOption = restFormField.formFieldOptions.firstObject;
-            descriptionLabelText = firstOption.name;
-            restFormField.values = @[firstOption.name];
-        } else {
-            descriptionLabelText = @"";
+        if (!descriptionLabelText.length) {
+            if (restFormField.formFieldOptions) {
+                ASDKModelFormFieldOption *firstOption = restFormField.formFieldOptions.firstObject;
+                descriptionLabelText = firstOption.name;
+                restFormField.values = @[firstOption.name];
+            } else {
+                descriptionLabelText = @"";
+            }
         }
     } else if (restFormField.values) {
         // TODO: Should dynamic table fields be formatted conform regular drop down fields??
@@ -108,7 +111,8 @@
         } else {
             descriptionLabelText = restFormField.values.firstObject;
         }
-    } else if (restFormField.representationType == ASDKModelFormFieldRepresentationTypeDropdown && restFormField.restURL) {
+    } else if (restFormField.representationType == ASDKModelFormFieldRepresentationTypeDropdown &&
+               restFormField.restURL) {
         // temporary handling initial value dislay for REST populated radio form fields
         // the JSON model contains an initial value which isn't correct and shouldn't be displayed
         

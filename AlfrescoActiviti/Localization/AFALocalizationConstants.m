@@ -98,6 +98,7 @@ NSString *kLocalizationTaskDetailsScreenPartOfProcessText        = @"taskDetails
 NSString *kLocalizationTaskDetailsScreenCompletedDateText        = @"taskDetailsScreenCompletedDateText";
 NSString *kLocalizationTaskDetailsScreenDurationText             = @"taskDetailsScreenDurationText";
 NSString *kLocalizationTaskDetailsScreenClaimButtonText          = @"taskDetailsScreenClaimButtonText";
+NSString *kLocalizationTaskDetailsScreenTaskFormSavedText        = @"taskDetailsScreenTaskFormClaimedText";
 
 
 #pragma mark -
