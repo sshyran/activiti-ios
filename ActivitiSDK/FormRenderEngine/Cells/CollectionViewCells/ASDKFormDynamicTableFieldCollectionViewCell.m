@@ -24,6 +24,7 @@
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
+#import "ASDKModelDynamicTableFormField.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -63,9 +64,12 @@
     self.formField = formField;
     self.descriptionLabel.text = formField.fieldName;
     
+    ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) formField;
+    
     // If dealing with a read-only representation then disable the text field and copy the
     // user-filled value
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
+        !dynamicTableFormField.isTableEditable) {
         self.dynamicTableLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
         self.dynamicTableLabel.textColor = [UIColor formViewCompletedValueColor];
     } else {

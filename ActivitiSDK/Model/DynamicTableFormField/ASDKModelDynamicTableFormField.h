@@ -20,6 +20,7 @@
 
 @interface ASDKModelDynamicTableFormField : ASDKModelFormField
 
-@property (strong, nonatomic) NSArray *columnDefinitions;
+@property (strong, nonatomic) NSArray   *columnDefinitions;
+@property (assign, nonatomic) BOOL      isTableEditable;
 
 @end
