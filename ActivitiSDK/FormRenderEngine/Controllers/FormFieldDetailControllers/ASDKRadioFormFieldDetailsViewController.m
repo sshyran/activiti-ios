@@ -69,7 +69,11 @@
         if ([self.currentFormField.values.firstObject isKindOfClass:NSDictionary.class]) {
             optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject[@"name"]];
         } else {
-            optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject];
+            if (ASDKModelFormFieldTypeRestField == self.currentFormField.fieldType) {
+                optionPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", self.currentFormField.values.firstObject];
+            } else {
+                optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject];
+            }
         }
         ASDKModelFormFieldOption *formFieldOption = [self.currentFormField.formFieldOptions filteredArrayUsingPredicate:optionPredicate].firstObject;
         self.currentOptionSelection = [self.currentFormField.formFieldOptions indexOfObject:formFieldOption];
