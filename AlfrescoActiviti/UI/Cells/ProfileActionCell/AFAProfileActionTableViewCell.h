@@ -18,14 +18,15 @@
 
 #import <UIKit/UIKit.h>
 
-@class ASDKModelProfile, ASDKModelUser, ASDKAvatarInitialsView;
+@protocol AFAProfileActionTableViewCellDelegate <NSObject>
 
-@interface AFAContributorTableViewCell : UITableViewCell
+- (void)profileActionChosenForCell:(UITableViewCell *)cell;
 
-@property (weak, nonatomic) IBOutlet ASDKAvatarInitialsView *avararInitialsView;
-@property (weak, nonatomic) IBOutlet UILabel *contributorNameLabel;
+@end
 
-- (void)setUpCellWithProfile:(ASDKModelProfile *)profile;
-- (void)setUpCellWithUser:(ASDKModelUser *)user;
+@interface AFAProfileActionTableViewCell : UITableViewCell
+
+@property (weak, nonatomic) id<AFAProfileActionTableViewCellDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIButton *actionButton;
 
 @end

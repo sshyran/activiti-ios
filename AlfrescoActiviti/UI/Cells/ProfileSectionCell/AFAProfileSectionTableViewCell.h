@@ -18,14 +18,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class ASDKModelProfile, ASDKModelUser, ASDKAvatarInitialsView;
+@interface AFAProfileSectionTableViewCell : UITableViewCell
 
-@interface AFAContributorTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIImageView    *sectionIconImageView;
+@property (weak, nonatomic) IBOutlet UILabel        *sectionTitleLabel;
 
-@property (weak, nonatomic) IBOutlet ASDKAvatarInitialsView *avararInitialsView;
-@property (weak, nonatomic) IBOutlet UILabel *contributorNameLabel;
-
-- (void)setUpCellWithProfile:(ASDKModelProfile *)profile;
-- (void)setUpCellWithUser:(ASDKModelUser *)user;
 
 @end

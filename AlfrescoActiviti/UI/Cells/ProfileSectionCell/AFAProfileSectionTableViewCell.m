@@ -16,16 +16,19 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "AFAProfileSectionTableViewCell.h"
 
-@class ASDKModelProfile, ASDKModelUser, ASDKAvatarInitialsView;
+@implementation AFAProfileSectionTableViewCell
 
-@interface AFAContributorTableViewCell : UITableViewCell
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
 
-@property (weak, nonatomic) IBOutlet ASDKAvatarInitialsView *avararInitialsView;
-@property (weak, nonatomic) IBOutlet UILabel *contributorNameLabel;
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
 
-- (void)setUpCellWithProfile:(ASDKModelProfile *)profile;
-- (void)setUpCellWithUser:(ASDKModelUser *)user;
+    // Configure the view for the selected state
+}
 
 @end

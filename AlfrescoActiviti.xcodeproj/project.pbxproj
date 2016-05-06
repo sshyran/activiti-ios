@@ -175,7 +175,7 @@
 		139E54041C218F1100CE4674 /* ASDKAppParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54021C218F1100CE4674 /* ASDKAppParserOperationWorker.m */; };
 		139E54081C21935500CE4674 /* ASDKModelApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 139E54061C21935500CE4674 /* ASDKModelApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139E54091C21935500CE4674 /* ASDKModelApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54071C21935500CE4674 /* ASDKModelApp.m */; };
-		139FEC161B720FA600CE6B01 /* ASDKModelGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 139FEC141B720FA600CE6B01 /* ASDKModelGroup.h */; };
+		139FEC161B720FA600CE6B01 /* ASDKModelGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 139FEC141B720FA600CE6B01 /* ASDKModelGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139FEC171B720FA600CE6B01 /* ASDKModelGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FEC151B720FA600CE6B01 /* ASDKModelGroup.m */; };
 		13A0BCB31BD7BF8E00599661 /* ASDKFormCheckbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A0BCB11BD7BF8E00599661 /* ASDKFormCheckbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A0BCB41BD7BF8E00599661 /* ASDKFormCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A0BCB21BD7BF8E00599661 /* ASDKFormCheckbox.m */; };
@@ -191,6 +191,11 @@
 		13A8CABC1B8B49B400B7A25E /* AFAServiceRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CABB1B8B49B400B7A25E /* AFAServiceRepository.m */; };
 		13AAC7D81BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 13AAC7D61BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.h */; };
 		13AAC7D91BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAC7D71BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m */; };
+		13AAD3B51CDB489800818537 /* AFAProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3B41CDB489800818537 /* AFAProfileViewController.m */; };
+		13AAD3B91CDB81E100818537 /* AFAProfileSectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3B81CDB81E100818537 /* AFAProfileSectionTableViewCell.m */; };
+		13AAD3BF1CDB824800818537 /* AFAProfileDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3BE1CDB824800818537 /* AFAProfileDetailTableViewCell.m */; };
+		13AAD3C31CDB82A900818537 /* AFAProfileSimpleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3C21CDB82A900818537 /* AFAProfileSimpleTableViewCell.m */; };
+		13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */; };
 		13ACE37C1C9996B900693A29 /* AFAAddCommentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */; };
 		13AE35531C43B61700BEB477 /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
 		13AE35541C43B64B00BEB477 /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
@@ -244,7 +249,6 @@
 		13C9B57A1B9451B10009BD27 /* AFAFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C9B5791B9451B10009BD27 /* AFAFilterViewController.m */; };
 		13C9B57E1B9497B90009BD27 /* ASDKModelPaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C9B57C1B9497B90009BD27 /* ASDKModelPaging.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13C9B57F1B9497B90009BD27 /* ASDKModelPaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C9B57D1B9497B90009BD27 /* ASDKModelPaging.m */; };
-		13CDFDD31BB175050019919B /* AFAAvatarInitialsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CDFDD21BB175050019919B /* AFAAvatarInitialsView.m */; };
 		13CDFDD71BB191040019919B /* ASDKModelComment.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CDFDD51BB191040019919B /* ASDKModelComment.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13CDFDD81BB191040019919B /* ASDKModelComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CDFDD61BB191040019919B /* ASDKModelComment.m */; };
 		13CE5C641B997D5D002E5172 /* ASDKFilterNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CE5C631B997D5D002E5172 /* ASDKFilterNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -407,7 +411,7 @@
 		8DB399A31C9B07890089E0AB /* ASDKActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB399A11C9B07890089E0AB /* ASDKActivityView.m */; };
 		8DB399A61C9C31420089E0AB /* ASDKPeopleTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB399A41C9C31420089E0AB /* ASDKPeopleTableViewCell.h */; };
 		8DB399A71C9C31420089E0AB /* ASDKPeopleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB399A51C9C31420089E0AB /* ASDKPeopleTableViewCell.m */; };
-		8DB399AA1C9C319B0089E0AB /* ASDKAvatarInitialsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB399A81C9C319B0089E0AB /* ASDKAvatarInitialsView.h */; };
+		8DB399AA1C9C319B0089E0AB /* ASDKAvatarInitialsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB399A81C9C319B0089E0AB /* ASDKAvatarInitialsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8DB399AB1C9C319B0089E0AB /* ASDKAvatarInitialsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB399A91C9C319B0089E0AB /* ASDKAvatarInitialsView.m */; };
 		8DD3B76B1CA0197E00B5D561 /* ASDKPeopleFormFieldPeoplePickerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DD3B7691CA0197E00B5D561 /* ASDKPeopleFormFieldPeoplePickerViewController.h */; };
 		8DD3B76C1CA0197E00B5D561 /* ASDKPeopleFormFieldPeoplePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD3B76A1CA0197E00B5D561 /* ASDKPeopleFormFieldPeoplePickerViewController.m */; };
@@ -723,6 +727,16 @@
 		13A8CABB1B8B49B400B7A25E /* AFAServiceRepository.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAServiceRepository.m; path = Business/ServiceRepository/AFAServiceRepository.m; sourceTree = "<group>"; };
 		13AAC7D61BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKMantleJSONAdapterCustomPolicy.h; path = Configurations/Mantle/ASDKMantleJSONAdapterCustomPolicy.h; sourceTree = "<group>"; };
 		13AAC7D71BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKMantleJSONAdapterCustomPolicy.m; path = Configurations/Mantle/ASDKMantleJSONAdapterCustomPolicy.m; sourceTree = "<group>"; };
+		13AAD3B31CDB489800818537 /* AFAProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileViewController.h; path = UI/ViewControllers/ProfileScreen/AFAProfileViewController.h; sourceTree = "<group>"; };
+		13AAD3B41CDB489800818537 /* AFAProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileViewController.m; path = UI/ViewControllers/ProfileScreen/AFAProfileViewController.m; sourceTree = "<group>"; };
+		13AAD3B71CDB81E100818537 /* AFAProfileSectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileSectionTableViewCell.h; path = UI/Cells/ProfileSectionCell/AFAProfileSectionTableViewCell.h; sourceTree = "<group>"; };
+		13AAD3B81CDB81E100818537 /* AFAProfileSectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileSectionTableViewCell.m; path = UI/Cells/ProfileSectionCell/AFAProfileSectionTableViewCell.m; sourceTree = "<group>"; };
+		13AAD3BD1CDB824800818537 /* AFAProfileDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileDetailTableViewCell.h; path = UI/Cells/ProfileDetailCell/AFAProfileDetailTableViewCell.h; sourceTree = "<group>"; };
+		13AAD3BE1CDB824800818537 /* AFAProfileDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileDetailTableViewCell.m; path = UI/Cells/ProfileDetailCell/AFAProfileDetailTableViewCell.m; sourceTree = "<group>"; };
+		13AAD3C11CDB82A900818537 /* AFAProfileSimpleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileSimpleTableViewCell.h; path = UI/Cells/ProfileSimpleCell/AFAProfileSimpleTableViewCell.h; sourceTree = "<group>"; };
+		13AAD3C21CDB82A900818537 /* AFAProfileSimpleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileSimpleTableViewCell.m; path = UI/Cells/ProfileSimpleCell/AFAProfileSimpleTableViewCell.m; sourceTree = "<group>"; };
+		13AAD3C51CDB82F600818537 /* AFAProfileActionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileActionTableViewCell.h; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.h; sourceTree = "<group>"; };
+		13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileActionTableViewCell.m; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.m; sourceTree = "<group>"; };
 		13ACE37A1C9996B900693A29 /* AFAAddCommentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddCommentsViewController.h; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.h; sourceTree = "<group>"; };
 		13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddCommentsViewController.m; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.m; sourceTree = "<group>"; };
 		13AE35521C43B61700BEB477 /* glyphicons-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "glyphicons-regular.otf"; sourceTree = "<group>"; };
@@ -794,8 +808,6 @@
 		13C9B5791B9451B10009BD27 /* AFAFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFAFilterViewController.m; path = UI/ViewControllers/TaskFilterController/AFAFilterViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		13C9B57C1B9497B90009BD27 /* ASDKModelPaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelPaging.h; path = Model/Paging/ASDKModelPaging.h; sourceTree = "<group>"; };
 		13C9B57D1B9497B90009BD27 /* ASDKModelPaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelPaging.m; path = Model/Paging/ASDKModelPaging.m; sourceTree = "<group>"; };
-		13CDFDD11BB175050019919B /* AFAAvatarInitialsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAvatarInitialsView.h; path = UI/Components/AvatarInitialsView/AFAAvatarInitialsView.h; sourceTree = "<group>"; };
-		13CDFDD21BB175050019919B /* AFAAvatarInitialsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAvatarInitialsView.m; path = UI/Components/AvatarInitialsView/AFAAvatarInitialsView.m; sourceTree = "<group>"; };
 		13CDFDD51BB191040019919B /* ASDKModelComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelComment.h; path = Model/Comment/ASDKModelComment.h; sourceTree = "<group>"; };
 		13CDFDD61BB191040019919B /* ASDKModelComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelComment.m; path = Model/Comment/ASDKModelComment.m; sourceTree = "<group>"; };
 		13CE5C631B997D5D002E5172 /* ASDKFilterNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterNetworkServiceProtocol.h; path = NetworkServices/Proxy/FilterNetworkServices/Protocol/ASDKFilterNetworkServiceProtocol.h; sourceTree = "<group>"; };
@@ -1486,6 +1498,7 @@
 				8D7C1A7A1C8091690092EA81 /* StartProcessInstanceScreen */,
 				136D035C1C844F5100DC94B7 /* ProcessInstanceDetailsScreen */,
 				13ACE37D1C9996BE00693A29 /* AddCommentsScreen */,
+				13AAD3B61CDB489B00818537 /* ProfileScreen */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1532,7 +1545,6 @@
 				75E8683D1B81C56900862D51 /* SwitchButtonView */,
 				13E6E2881B7E0E84001F5737 /* FadingTableView */,
 				132167111B8AF37900B7406B /* AvatarView */,
-				13CDFDD41BB1750C0019919B /* AvatarInitialsView */,
 				135443E61B96DF7B0044157B /* SliderView */,
 				8D7C1A761C80910F0092EA81 /* NoContentView */,
 			);
@@ -2453,6 +2465,62 @@
 			name = ServiceRepository;
 			sourceTree = "<group>";
 		};
+		13AAD3B61CDB489B00818537 /* ProfileScreen */ = {
+			isa = PBXGroup;
+			children = (
+				13AAD3B31CDB489800818537 /* AFAProfileViewController.h */,
+				13AAD3B41CDB489800818537 /* AFAProfileViewController.m */,
+			);
+			name = ProfileScreen;
+			sourceTree = "<group>";
+		};
+		13AAD3BA1CDB81E600818537 /* ProfileSectionCell */ = {
+			isa = PBXGroup;
+			children = (
+				13AAD3B71CDB81E100818537 /* AFAProfileSectionTableViewCell.h */,
+				13AAD3B81CDB81E100818537 /* AFAProfileSectionTableViewCell.m */,
+			);
+			name = ProfileSectionCell;
+			sourceTree = "<group>";
+		};
+		13AAD3BC1CDB820F00818537 /* ProfileScreen */ = {
+			isa = PBXGroup;
+			children = (
+				13AAD3BA1CDB81E600818537 /* ProfileSectionCell */,
+				13AAD3C01CDB824D00818537 /* ProfileDetailCell */,
+				13AAD3C41CDB82AD00818537 /* ProfileSimpleCell */,
+				13AAD3C81CDB82F900818537 /* ProfileActionCell */,
+			);
+			name = ProfileScreen;
+			sourceTree = "<group>";
+		};
+		13AAD3C01CDB824D00818537 /* ProfileDetailCell */ = {
+			isa = PBXGroup;
+			children = (
+				13AAD3BD1CDB824800818537 /* AFAProfileDetailTableViewCell.h */,
+				13AAD3BE1CDB824800818537 /* AFAProfileDetailTableViewCell.m */,
+			);
+			name = ProfileDetailCell;
+			sourceTree = "<group>";
+		};
+		13AAD3C41CDB82AD00818537 /* ProfileSimpleCell */ = {
+			isa = PBXGroup;
+			children = (
+				13AAD3C11CDB82A900818537 /* AFAProfileSimpleTableViewCell.h */,
+				13AAD3C21CDB82A900818537 /* AFAProfileSimpleTableViewCell.m */,
+			);
+			name = ProfileSimpleCell;
+			sourceTree = "<group>";
+		};
+		13AAD3C81CDB82F900818537 /* ProfileActionCell */ = {
+			isa = PBXGroup;
+			children = (
+				13AAD3C51CDB82F600818537 /* AFAProfileActionTableViewCell.h */,
+				13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */,
+			);
+			name = ProfileActionCell;
+			sourceTree = "<group>";
+		};
 		13ACE37D1C9996BE00693A29 /* AddCommentsScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -2713,6 +2781,7 @@
 				13B811A81BBE4F6400E25CBE /* ModalContentPickerComponent */,
 				13AE35581C43BA9C00BEB477 /* ApplicationScreen */,
 				1302696A1C57735C00152F71 /* FilterScreen */,
+				13AAD3BC1CDB820F00818537 /* ProfileScreen */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -2847,15 +2916,6 @@
 				13C9B57D1B9497B90009BD27 /* ASDKModelPaging.m */,
 			);
 			name = Paging;
-			sourceTree = "<group>";
-		};
-		13CDFDD41BB1750C0019919B /* AvatarInitialsView */ = {
-			isa = PBXGroup;
-			children = (
-				13CDFDD11BB175050019919B /* AFAAvatarInitialsView.h */,
-				13CDFDD21BB175050019919B /* AFAAvatarInitialsView.m */,
-			);
-			name = AvatarInitialsView;
 			sourceTree = "<group>";
 		};
 		13CDFDD91BB191080019919B /* Comment */ = {
@@ -4250,16 +4310,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13AAD3BF1CDB824800818537 /* AFAProfileDetailTableViewCell.m in Sources */,
 				1323CFCB1B875FB900E66D6F /* AFAImageContainerModel.m in Sources */,
 				13667FF21C887CEA005E4AEA /* AFATableControllerProcessInstanceTasksCellFactory.m in Sources */,
 				132511F91BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m in Sources */,
 				13A1B2811B989B2700C4B6CE /* AFABaseModel.m in Sources */,
 				13E6E28B1B7E0EE1001F5737 /* AFAFadingTableView.m in Sources */,
+				13AAD3B51CDB489800818537 /* AFAProfileViewController.m in Sources */,
 				13CFF33F1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m in Sources */,
 				13CFF3461BBC2B6500D3DEB6 /* AFATaskUpdateModel.m in Sources */,
 				8D7C1A6A1C8090500092EA81 /* AFACompletedDateTableViewCell.m in Sources */,
 				139DF5BA1C5A40C10062D01D /* AFAAppServices.m in Sources */,
-				13CDFDD31BB175050019919B /* AFAAvatarInitialsView.m in Sources */,
 				137B8DDC1BB9979000F1A6DC /* AFATableControllerContentModel.m in Sources */,
 				137B8DD81BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m in Sources */,
 				1323CFC71B87481E00E66D6F /* AFAThumbnailManager.m in Sources */,
@@ -4273,6 +4334,7 @@
 				8D7C1A741C8090D10092EA81 /* AFAGenericFilterModel.m in Sources */,
 				75CFBC6D1B81CB900018DADE /* AFASecurityLayerTableViewCell.m in Sources */,
 				8D7C1A661C8090340092EA81 /* AFAProcessMembershipTableViewCell.m in Sources */,
+				13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */,
 				13BDA7431B7B733400A2CE40 /* AFALocalizationConstants.m in Sources */,
 				13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */,
 				13ACE37C1C9996B900693A29 /* AFAAddCommentsViewController.m in Sources */,
@@ -4341,6 +4403,7 @@
 				139DF5BE1C5A63740062D01D /* AFAProfileServices.m in Sources */,
 				1323CFD61B87719900E66D6F /* AFALogFormatter.m in Sources */,
 				8D7C1A521C808D470092EA81 /* AFAContributorTableViewCell.m in Sources */,
+				13AAD3C31CDB82A900818537 /* AFAProfileSimpleTableViewCell.m in Sources */,
 				1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */,
 				75E868071B7E75E500862D51 /* AFASwitchView.m in Sources */,
 				13CE8ED11B85B27B0022F17A /* AFADrawerMenuViewController.m in Sources */,
@@ -4358,6 +4421,7 @@
 				8D7C1A891C80925D0092EA81 /* AFAProcessDefinitionListStyleTableViewCell.m in Sources */,
 				13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */,
 				8D7C1A7D1C8091860092EA81 /* AFAStartProcessInstanceViewController.m in Sources */,
+				13AAD3B91CDB81E100818537 /* AFAProfileSectionTableViewCell.m in Sources */,
 				132511F51BA811F700C4CA64 /* AFAPushFadeSegue.m in Sources */,
 				8D7C1A3E1C808CD30092EA81 /* AFANameTableViewCell.m in Sources */,
 				8D7C1A5A1C808D7F0092EA81 /* AFACommentTableViewCell.m in Sources */,

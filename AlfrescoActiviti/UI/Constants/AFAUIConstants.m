@@ -39,6 +39,7 @@ NSString *kStoryboardIDContentPickerViewController              = @"ContentPicke
 NSString *kStoryboardIDAddTaskViewController                    = @"AddTaskViewControllerID";
 NSString *kStoryboardIDListViewController                       = @"ListViewControllerID";
 NSString *kStoryboardIDApplicationListViewController            = @"ApplicationListViewControllerID";
+NSString *kStoryboardIDProfileViewController                    = @"ProfileViewControllerID";
 
 
 #pragma mark -
@@ -77,6 +78,10 @@ NSString *kCellIDProcessInstanceDetailsStartedBy                = @"ProcessInsta
 NSString *kCellIDProcessInstanceDetailsCompletedDate            = @"ProcessInstanceDetailsCompletedDateCellID";
 NSString *kCellIDProcessInstanceDetailsTask                     = @"ProcessInstanceTaskCellID";
 NSString *kCellIDProcessInstanceDetailsTaskHeader               = @"ProcessInstanceTaskHeaderCellID";
+NSString *kCellIDProfileSectionTitle                            = @"ProfileSectionTitleCellID";
+NSString *kCellIDProfileCategory                                = @"ProfileCategoryCellID";
+NSString *kCellIDProfileOption                                  = @"ProfileOptionCellID";
+NSString *kCellIDProfileAction                                  = @"ProfileActionCellID";
 
 
 #pragma mark -
@@ -108,7 +113,12 @@ NSString *kSegueIDProcessInstanceTaskDetailsUnwind              = @"ProcessInsta
 NSString *kSegueIDProcessStartFormEmbedding                     = @"ProcessStartFormEmbeddingSegueID";
 NSString *kSegueIDProcessInstanceStartForm                      = @"ProcessInstanceStartFormSegueID";
 NSString *kSegueIDProcessInstanceStartFormUnwind                = @"ProcessInstanceStartFormUnwindSegueID";
-
 NSString *kSegueIDProcessInstanceDetailsAddComments             = @"ProcessInstanceDetailsAddCommentsSegueID";
 NSString *kSegueIDProcessInstanceDetailsAddCommentsUnwind       = @"ProcessInstanceDetailsAddCommentsUnwindSegueID";
+
+
+#pragma mark -
+#pragma mark Thumbnail manager
+
+NSString *kProfileImageThumbnailIdentifier                      = @"kProfileImageThumbnailIdentifier";
 

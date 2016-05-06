@@ -43,8 +43,6 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
     AFADrawerMenuCellTypeEnumCount
 };
 
-static NSString * const kProfileImageThumbnailIdentifier = @"kProfileImageThumbnailIdentifier";
-
 @interface AFADrawerMenuViewController () <AFAAvatarMenuTableViewCellDelegate, AFAMenuButtonTableViewCellDelegate>
 
 @property (weak, nonatomic)   IBOutlet UITableView  *menuTableView;
@@ -82,6 +80,9 @@ static NSString * const kProfileImageThumbnailIdentifier = @"kProfileImageThumbn
 #pragma mark AvatarMenuTableViewCell Delegate
 
 - (void)onAvatarFromCell:(UITableViewCell *)cell {
+    if ([self.delegate respondsToSelector:@selector(showUserProfile)]) {
+        [self.delegate showUserProfile];
+    }
 }
 
 

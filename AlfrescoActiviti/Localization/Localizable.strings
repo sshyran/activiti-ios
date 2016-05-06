@@ -174,3 +174,11 @@
 "addTaskScreenCreateButtonText"                          = "Create";
 "addTaskScreenCreatingTaskText"                          = "Creating task...";
 
+// Profile screen
+"profileScreenTitleText"                                 = "Profile";
+"profileScreenContactInformationText"                    = "Contact information";
+"profileScreenGroupsText"                                = "Groups";
+"profileScreenEmailText"                                 = "Email";
+"profileScreenCompanyText"                               = "Company";
+"profileScreenChangePasswordButtonText"                  = "Change password";
+"profileScreenRegisteredSinceFormat"                     = "Registered since: %@";

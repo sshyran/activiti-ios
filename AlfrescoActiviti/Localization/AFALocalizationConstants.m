@@ -213,9 +213,20 @@ NSString *kLocalizationAddCommentScreenPostInProgressText         = @"addComment
 #pragma mark -
 #pragma mark Add task screen
 
-NSString * kLocalizationAddTaskScreenTitleText                    = @"addTaskScreenTitleText";
-NSString * kLocalizationAddTaskScreenNameLabelText                = @"addTaskScreenNameLabelText";
-NSString * kLocalizationAddTaskScreenDescriptionLabelText         = @"addTaskScreenDescriptionLabelText";
-NSString * kLocalizationAddTaskScreenCreateButtonText             = @"addTaskScreenCreateButtonText";
-NSString * kLocalizationAddTaskScreenCreatingTaskText             = @"addTaskScreenCreatingTaskText";
+NSString *kLocalizationAddTaskScreenTitleText                    = @"addTaskScreenTitleText";
+NSString *kLocalizationAddTaskScreenNameLabelText                = @"addTaskScreenNameLabelText";
+NSString *kLocalizationAddTaskScreenDescriptionLabelText         = @"addTaskScreenDescriptionLabelText";
+NSString *kLocalizationAddTaskScreenCreateButtonText             = @"addTaskScreenCreateButtonText";
+NSString *kLocalizationAddTaskScreenCreatingTaskText             = @"addTaskScreenCreatingTaskText";
 
+
+#pragma mark -
+#pragma mark Profile screen
+
+NSString *kLocalizationProfileScreenTitleText                    = @"profileScreenTitleText";
+NSString *kLocalizationProfileScreenContactInformationText       = @"profileScreenContactInformationText";
+NSString *kLocalizationProfileScreenGroupsText                   = @"profileScreenGroupsText";
+NSString *kLocalizationProfileScreenEmailText                    = @"profileScreenEmailText";
+NSString *kLocalizationProfileScreenCompanyText                  = @"profileScreenCompanyText";
+NSString *kLocalizationProfileScreenPasswordButtonText           = @"profileScreenChangePasswordButtonText";
+NSString *kLocalizationProfileScreenRegisteredFormat             = @"profileScreenRegisteredSinceFormat";
