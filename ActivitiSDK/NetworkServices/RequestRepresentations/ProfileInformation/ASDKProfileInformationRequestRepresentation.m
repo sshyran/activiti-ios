@@ -30,6 +30,7 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{//Objc property      JSON property
+             @"userID"          : @"id",
              @"firstName"       : @"firstName",
              @"lastName"        : @"lastName",
              @"email"           : @"email",

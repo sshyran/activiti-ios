@@ -191,6 +191,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     // Populate a request representation with the needed information
     ASDKProfileInformationRequestRepresentation *profileInformationRequestRepresentation = [ASDKProfileInformationRequestRepresentation new];
+    profileInformationRequestRepresentation.userID = profileModel.instanceID;
     profileInformationRequestRepresentation.firstName = profileModel.firstName;
     profileInformationRequestRepresentation.lastName = profileModel.lastName;
     profileInformationRequestRepresentation.email = profileModel.email;
@@ -227,15 +228,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                  ASDKModelProfile *updatedProfile = (ASDKModelProfile *)parsedObject;
                                                                                  ASDKLogVerbose(@"Successfully parsed model object:%@", updatedProfile);
                                                                                  
-                                                                                 // Merge changes back to the original model.
-                                                                                 // Only deal with the specified request representation keys
-                                                                                 for(NSString *key in [[profileInformationRequestRepresentation jsonDictionary] allKeys]){
-                                                                                     [profileModel mergeValueForKey:key
-                                                                                                          fromModel:updatedProfile];
-                                                                                 }
-                                                                                 
                                                                                  dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                     completionBlock(profileModel, nil);
+                                                                                     completionBlock(updatedProfile, nil);
                                                                                  });
                                                                              }
                                                                          }];
@@ -407,6 +401,99 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                       completionBlock(NO, error);
                                   });
                               }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)uploadProfileImageWithModel:(ASDKModelFileContent *)file
+                        contentData:(NSData *)contentData
+                      progressBlock:(ASDKProfileContentProgressBlock)progressBlock
+                    completionBlock:(ASDKProfileImageContentUploadCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(file);
+    NSParameterAssert(contentData);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager POST:[self.servicePathFactory profilePictureUploadPath]
+                            parameters:nil
+             constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                 NSError *error = nil;
+                 
+                 [formData appendPartWithFileData:contentData
+                                             name:kASDKAPIContentUploadMultipartParameter
+                                         fileName:file.fileName
+                                         mimeType:file.mimeType];
+                 
+                 if (error) {
+                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.fileURL);
+                 }
+             } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                 __strong typeof(self) strongSelf = weakSelf;
+                 
+                 // Remove operation reference
+                 [strongSelf.networkOperations removeObject:operation];
+                 
+                 NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                 ASDKLogVerbose(@"Profile picture succesfully uploaded for request: %@ - %@.\nBody:%@.\nResponse:%@",
+                                operation.request.HTTPMethod,
+                                operation.request.URL.absoluteString,
+                                [[NSString alloc] initWithData:operation.request.HTTPBody
+                                                      encoding:NSUTF8StringEncoding],
+                                responseDictionary);
+                 
+                 // Parse response data
+                 [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
+                                                                    ofType:CREATE_STRING(ASDKProfileParserContentTypeContent)
+                                                       withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                                           if (error) {
+                                                               ASDKLogError(@"Error parsing profile image content. Description:%@", error.localizedDescription);
+                                                               
+                                                               dispatch_async(weakSelf.resultsQueue, ^{
+                                                                   completionBlock(parsedObject, error);
+                                                               });
+                                                           } else {
+                                                               ASDKLogVerbose(@"Successfully parsed model object:%@", parsedObject);
+                                                               
+                                                               dispatch_async(weakSelf.resultsQueue, ^{
+                                                                   completionBlock(parsedObject, nil);
+                                                               });
+                                                           }
+                                                       }];
+             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                 __strong typeof(self) strongSelf = weakSelf;
+                 
+                 // Remove operation reference
+                 [strongSelf.networkOperations removeObject:operation];
+                 
+                 ASDKLogError(@"Failed to upload profile picture for request: %@ - %@.\nBody:%@.\nReason:%@",
+                              operation.request.HTTPMethod,
+                              operation.request.URL.absoluteString,
+                              [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                              error.localizedDescription);
+                 
+                 dispatch_async(strongSelf.resultsQueue, ^{
+                     completionBlock(nil, error);
+                 });
+             }];
+    
+    // If a progress block is provided report transfer progress information
+    if (progressBlock) {
+        [operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            NSUInteger uploadProgress = (NSUInteger) (totalBytesWritten * 100 / totalBytesExpectedToWrite);
+            
+            dispatch_async(strongSelf.resultsQueue, ^{
+                progressBlock(uploadProgress, nil);
+            });
+        }];
+    }
     
     // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];

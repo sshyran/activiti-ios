@@ -36,6 +36,7 @@ extern NSString *kStoryboardIDContentPickerViewController;
 extern NSString *kStoryboardIDAddTaskViewController;
 extern NSString *kStoryboardIDListViewController;
 extern NSString *kStoryboardIDApplicationListViewController;
+extern NSString *kStoryboardIDProfileViewController;
 
 // Cell IDs
 
@@ -72,6 +73,10 @@ extern NSString *kCellIDProcessInstanceDetailsStartedBy;
 extern NSString *kCellIDProcessInstanceDetailsCompletedDate;
 extern NSString *kCellIDProcessInstanceDetailsTask;
 extern NSString *kCellIDProcessInstanceDetailsTaskHeader;
+extern NSString *kCellIDProfileSectionTitle;
+extern NSString *kCellIDProfileCategory;
+extern NSString *kCellIDProfileOption;
+extern NSString *kCellIDProfileAction;
 
 // Segue IDs
 
@@ -103,3 +108,7 @@ extern NSString *kSegueIDProcessInstanceStartForm;
 extern NSString *kSegueIDProcessInstanceStartFormUnwind;
 extern NSString *kSegueIDProcessInstanceDetailsAddComments;
 extern NSString *kSegueIDProcessInstanceDetailsAddCommentsUnwind;
+extern NSString *kSegueIDProfileContentPickerComponentEmbedding;
+
+// Thumbnail manager
+extern NSString *kProfileImageThumbnailIdentifier;

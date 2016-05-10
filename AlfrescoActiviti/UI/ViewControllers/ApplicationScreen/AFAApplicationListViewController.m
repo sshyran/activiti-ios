@@ -54,7 +54,7 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
 @property (weak, nonatomic) IBOutlet UILabel                                *noApplicationsLabel;
 @property (weak, nonatomic) IBOutlet UIView                                 *refreshView;
 @property (strong, nonatomic) UIRefreshControl                              *refreshControl;
-@property (weak, nonatomic) IBOutlet UIButton *refreshButton;
+@property (weak, nonatomic) IBOutlet UIButton                               *refreshButton;
 
 // Internal state properties
 @property (strong, nonatomic) NSArray                                       *applicationListArr;

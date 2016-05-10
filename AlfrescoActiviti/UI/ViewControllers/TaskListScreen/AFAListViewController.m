@@ -332,10 +332,13 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 #pragma mark Actions
 
 - (IBAction)onRefresh:(id)sender {
-    self.refreshView.hidden = YES;
-    self.noRecordsLabel.hidden = YES;
-    
-    [self searchWithTerm:self.searchTextField.text];
+    // Perform the refresh operation only when there is a filter available
+    if (self.currentFilter) {
+        self.refreshView.hidden = YES;
+        self.noRecordsLabel.hidden = YES;
+        
+        [self searchWithTerm:self.searchTextField.text];
+    }
 }
 
 - (IBAction)onAdvancedSearch:(id)sender {
@@ -492,10 +495,20 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 #pragma mark AFAFilterViewController Delegate
 
 - (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel {
-    // Store the filter reference for further reuse
-    self.currentFilter = filterModel;
-    
-    [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
+    // If no filter information is found don't continue with further requests
+    if (!filterModel) {
+        self.noRecordsLabel.hidden = NO;
+        self.listTableView.hidden = YES;
+        self.refreshView.hidden = NO;
+        self.controllerState = AFAListControllerStateIdle;
+        
+        [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+    } else {
+        // Store the filter reference for further reuse
+        self.currentFilter = filterModel;
+        
+        [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
+    }
 }
 
 - (void)searchWithFilterModel:(AFAGenericFilterModel *)filterModel {
@@ -522,7 +535,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 
 
 #pragma mark -
-#pragma mark AFAAddTaskViewController Delegate {
+#pragma mark AFAAddTaskViewController Delegate
 
 - (void)didCreateTask:(ASDKModelTask *)task {
     [self searchWithTerm:self.searchTextField.text];

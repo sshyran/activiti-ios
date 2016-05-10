@@ -18,6 +18,7 @@
 
 #import "ASDKProfileParserOperationWorker.h"
 #import "ASDKModelProfile.h"
+#import "ASDKModelContent.h"
 @import Mantle;
 
 #if ! __has_feature(objc_arc)
@@ -43,14 +44,25 @@
         ASDKModelProfile *modelProfile = [MTLJSONAdapter modelOfClass:ASDKModelProfile.class
                                                    fromJSONDictionary:contentDictionary
                                                                 error:&parserError];
-         dispatch_async(completionQueue, ^{
-             completionBlock(modelProfile, parserError, nil);
-         });
+        dispatch_async(completionQueue, ^{
+            completionBlock(modelProfile, parserError, nil);
+        });
+    }
+    
+    if ([CREATE_STRING(ASDKProfileParserContentTypeContent) isEqualToString:contentType]) {
+        NSError *parserError = nil;
+        ASDKModelContent *content = [MTLJSONAdapter modelOfClass:ASDKModelContent.class
+                                              fromJSONDictionary:contentDictionary
+                                                           error:&parserError];
+        dispatch_async(completionQueue, ^{
+            completionBlock(content, parserError, nil);
+        });
     }
 }
 
 - (NSArray *)availableServices {
-    return @[CREATE_STRING(ASDKProfileParserContentTypeProfile)];
+    return @[CREATE_STRING(ASDKProfileParserContentTypeProfile),
+             CREATE_STRING(ASDKProfileParserContentTypeContent)];
 }
 
 @end

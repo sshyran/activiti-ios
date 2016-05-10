@@ -105,9 +105,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesBegan:(NSSet *)touches
+           withEvent:(UIEvent *)event{
     [self.multilineTextView resignFirstResponder];
-    [super touchesBegan:touches withEvent:event];
+    [super touchesBegan:touches
+              withEvent:event];
 }
 
 

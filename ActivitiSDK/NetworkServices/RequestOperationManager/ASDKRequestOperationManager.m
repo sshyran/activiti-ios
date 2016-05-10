@@ -92,4 +92,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
     return _authenticationProvider;
 }
 
+- (void)replaceAuthenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider {
+    if (self.authenticationProvider != authenticationProvider) {
+        self.authenticationProvider = authenticationProvider;
+        self.requestSerializer = authenticationProvider;
+    }
+}
+
 @end

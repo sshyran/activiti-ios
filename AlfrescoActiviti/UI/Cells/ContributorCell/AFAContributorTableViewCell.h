@@ -17,13 +17,12 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "AFAAvatarInitialsView.h"
 
-@class ASDKModelProfile, ASDKModelUser;
+@class ASDKModelProfile, ASDKModelUser, ASDKAvatarInitialsView;
 
 @interface AFAContributorTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet AFAAvatarInitialsView *avararInitialsView;
+@property (weak, nonatomic) IBOutlet ASDKAvatarInitialsView *avararInitialsView;
 @property (weak, nonatomic) IBOutlet UILabel *contributorNameLabel;
 
 - (void)setUpCellWithProfile:(ASDKModelProfile *)profile;

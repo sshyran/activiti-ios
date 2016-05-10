@@ -22,6 +22,7 @@
 #import "AFADrawerMenuViewController.h"
 #import "AFANavigationController.h"
 #import "AFAListViewController.h"
+#import "AFAProfileViewController.h"
 
 // Constants
 #import "AFAUIConstants.h"
@@ -161,8 +162,8 @@
 #pragma mark AFAContainerViewController Delegate
 
 - (void)toggleDrawerMenu {
+    [self.drawerMenuViewController refreshDrawerMenu];
     self.isDrawerMenuOpen = !self.isDrawerMenuOpen;
-    
     self.isDrawerMenuOpen ? [self openQuickAccessDrawerMenu] : [self closeQuickAccessDrawerMenu];
 }
 
@@ -227,6 +228,24 @@
                        animated:YES
                      completion:nil];
 }
+
+- (void)showUserProfile {
+    [self toggleDrawerMenu];
+    
+    AFAProfileViewController *profileViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDProfileViewController];
+    profileViewController.delegate = self;
+
+    UIBarButtonItem *menuItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu-dots-icon"]
+                                                                 style:UIBarButtonItemStylePlain
+                                                                target:profileViewController
+                                                                action:@selector(toggleMenu:)];
+    menuItem.tintColor = [UIColor whiteColor];
+    profileViewController.navigationItem.leftBarButtonItem = menuItem;
+    
+    [self.detailsNavigationController setViewControllers:@[profileViewController]
+                                                animated:NO];
+}
+
 
 #pragma mark -
 #pragma mark Animations

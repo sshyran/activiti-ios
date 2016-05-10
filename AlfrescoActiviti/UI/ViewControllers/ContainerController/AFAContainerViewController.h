@@ -25,6 +25,7 @@
 - (void)logoutUser;
 - (void)showAdhocTasks;
 - (void)showApplications;
+- (void)showUserProfile;
 
 @end
 

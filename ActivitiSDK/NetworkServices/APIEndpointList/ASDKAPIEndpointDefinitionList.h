@@ -43,6 +43,7 @@ extern NSString * const kASDKAPIProfilePath;
 extern NSString * const kASDKAPIProfilePicturePath;
 extern NSString * const kASDKAPIProfilePasswordPath;
 extern NSString * const kASDKAPIProfileLogoutPath;
+extern NSString * const kASDKAPIProfileAdminPath;
 
 // Task related
 extern NSString * const kASDKAPITasksPath;

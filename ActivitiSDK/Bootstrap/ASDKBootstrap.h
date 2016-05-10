@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class ASDKServiceLocator, ASDKModelServerConfiguration;
+@class ASDKServiceLocator, ASDKModelServerConfiguration, AFHTTPRequestSerializer;
 
 @interface ASDKBootstrap : NSObject
 
@@ -30,8 +30,10 @@
 
 // Services interface
 - (void)setupServicesWithServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration;
+- (void)replaceAuthenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider;
 
 // Read-only properties
-@property (strong, nonatomic, readonly) ASDKServiceLocator *serviceLocator;
+@property (strong, nonatomic, readonly) ASDKServiceLocator              *serviceLocator;
+@property (strong, nonatomic, readonly) ASDKModelServerConfiguration    *serverConfiguration;
 
 @end

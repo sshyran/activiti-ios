@@ -174,3 +174,19 @@ extern NSString * kLocalizationAddTaskScreenNameLabelText;
 extern NSString * kLocalizationAddTaskScreenDescriptionLabelText;
 extern NSString * kLocalizationAddTaskScreenCreateButtonText;
 extern NSString * kLocalizationAddTaskScreenCreatingTaskText;
+
+// Profile screen
+extern NSString *kLocalizationProfileScreenTitleText;
+extern NSString *kLocalizationProfileScreenContactInformationText;
+extern NSString *kLocalizationProfileScreenGroupsText;
+extern NSString *kLocalizationProfileScreenEmailText;
+extern NSString *kLocalizationProfileScreenCompanyText;
+extern NSString *kLocalizationProfileScreenPasswordButtonText;
+extern NSString *kLocalizationProfileScreenRegisteredFormat;
+extern NSString *kLocalizationProfileScreenProfileInformationUpdatedText;
+extern NSString *kLocalizationProfileScreenOriginalPasswordText;
+extern NSString *kLocalizationProfileScreenNewPasswordText;
+extern NSString *kLocalizationProfileScreenRepeatPasswordText;
+extern NSString *kLocalizationProfileScreenPasswordUpdatedText;
+extern NSString *kLocalizationProfileScreenPasswordMismatchText;
+extern NSString *kLocalizationProfileScreenNoInformationAvailableText;

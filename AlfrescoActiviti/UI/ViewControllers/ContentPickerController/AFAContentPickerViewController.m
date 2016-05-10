@@ -29,6 +29,7 @@
 // Managers
 #import "AFAServiceRepository.h"
 #import "AFATaskServices.h"
+#import "AFAProfileServices.h"
 @import Photos;
 @import ActivitiSDK;
 @import QuickLook;
@@ -300,46 +301,70 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 #pragma mark Service integration
 
 - (void)uploadTaskContentForCurrentSelectedResource {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     
     __weak typeof(self) weakSelf = self;
-    [taskService requestContentUploadAtFileURL:self.currentSelectedUploadResourceURL
-                               withContentData:self.currentSelectedResourceData
-                                     forTaskID:self.taskID
-                             withProgressBlock:^(NSUInteger progress, NSError *error) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         if (!error) {
-             [strongSelf.progressHUD setProgress:progress / 100.0f
-                                        animated:YES];
-             strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentProgressPercentFormat, @"Percent format"), progress];
-         } else {
-             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentUploadErrorText, @"Content upload error")];
-         }
-     } completionBlock:^(BOOL isContentUploaded, NSError *error) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         if (isContentUploaded) {
-             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                 weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                 weakSelf.progressHUD.detailTextLabel.text = nil;
-                 
-                 weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                 weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-             });
-             
-             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                 [weakSelf.progressHUD dismiss];
-                 
-                 if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
-                     [weakSelf.delegate pickedContentHasFinishedUploading];
-                 }
-             });
-         } else {
-             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentUploadErrorText, @"Content upload error")];
-             [strongSelf.progressHUD dismiss];
-         }
-     }];
+    AFATaskServicesTaskContentUploadCompletionBlock uploadCompletionBlock = ^(BOOL isContentUploaded, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (isContentUploaded) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                weakSelf.progressHUD.detailTextLabel.text = nil;
+                
+                weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+            });
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf.progressHUD dismiss];
+                
+                if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
+                    [weakSelf.delegate pickedContentHasFinishedUploading];
+                }
+            });
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentUploadErrorText, @"Content upload error")];
+            [strongSelf.progressHUD dismiss];
+        }
+    };
+    
+    AFATaskServiceTaskContentProgressBlock progressBlock = ^(NSUInteger progress, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            [strongSelf.progressHUD setProgress:progress / 100.0f
+                                       animated:YES];
+            strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentProgressPercentFormat, @"Percent format"), progress];
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentUploadErrorText, @"Content upload error")];
+        }
+    };
+    
+    switch (self.pickerType) {
+        case AFAContentPickerViewControllerTypeTaskRelated: {
+            AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+            
+            [taskService requestContentUploadAtFileURL:self.currentSelectedUploadResourceURL
+                                       withContentData:self.currentSelectedResourceData
+                                             forTaskID:self.taskID
+                                     withProgressBlock:progressBlock
+                                       completionBlock:uploadCompletionBlock];
+        }
+            break;
+            
+        case AFAContentPickerViewControllerTypeProfileRelated: {
+            AFAProfileServices *profileService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
+            
+            [profileService requestUploadProfileImageAtFileURL:self.currentSelectedUploadResourceURL
+                                                   contentData:self.currentSelectedResourceData
+                                                 progressBlock:progressBlock
+                                               completionBlock:uploadCompletionBlock];
+        }
+            break;
+            
+        default:
+            break;
+    }
 }
 
 

@@ -50,6 +50,7 @@
 #import <ActivitiSDK/ASDKModelUser.h>
 #import <ActivitiSDK/ASDKModelProcessInstanceContent.h>
 #import <ActivitiSDK/ASDKModelProcessInstanceContentField.h>
+#import <ActivitiSDK/ASDKModelGroup.h>
 
 // Network services protocols
 #import <ActivitiSDK/ASDKAppNetworkServiceProtocol.h>
@@ -94,6 +95,7 @@
 // UI Components
 #import <ActivitiSDK/ASDKRoundedBorderView.h>
 #import <ActivitiSDK/ASDKFormCheckbox.h>
+#import <ActivitiSDK/ASDKAvatarInitialsView.h>
 
 // UI Categories
 #import <ActivitiSDK/NSString+ASDKFontGlyphicons.h>
@@ -101,6 +103,9 @@
 
 // Constants
 #import <ActivitiSDK/ASDKNetworkServiceConstants.h>
+
+// Authentication providers
+#import <ActivitiSDK/ASDKBasicAuthentificationProvider.h>
 
 //! Project version number for ActivitiSDK.
 FOUNDATION_EXPORT double ActivitiSDKVersionNumber;

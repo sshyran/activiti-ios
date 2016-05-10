@@ -65,7 +65,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 @interface ASDKBootstrap ()
 
-@property (strong, nonatomic) ASDKModelServerConfiguration *serverConfiguration;
+@property (strong, nonatomic) ASDKRequestOperationManager   *requestOperationManager;
 
 @end
 
@@ -88,7 +88,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (instancetype)initUniqueInstance {
     self = [super init];
     
-    if (self) {        
+    if (self) {
         ASDKLogVerbose(@"Logger component setup...OK");
         
         // Setup service locator component
@@ -105,7 +105,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Public interface
 
 - (void)setupServicesWithServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration {
-    self.serverConfiguration = serverConfiguration;
+    _serverConfiguration = serverConfiguration;
     
     // Register available services with the service locator repository
     ASDKLogVerbose(@"Registering services...");
@@ -117,8 +117,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Set up the request manager
     ASDKBasicAuthentificationProvider *basicAuthentificationProvider = [[ASDKBasicAuthentificationProvider alloc] initWithUserName:self.serverConfiguration.username
                                                                                                                           password:self.serverConfiguration.password];
-    ASDKRequestOperationManager *requestOperationManager = [[ASDKRequestOperationManager alloc] initWithBaseURL:servicePathFactory.baseURL
-                                                                                         authenticationProvider:basicAuthentificationProvider];
+    self.requestOperationManager = [[ASDKRequestOperationManager alloc] initWithBaseURL:servicePathFactory.baseURL
+                                                                 authenticationProvider:basicAuthentificationProvider];
     // Set up the parser manager and register workers for it
     ASDKParserOperationManager *parserOperationManager = [ASDKParserOperationManager new];
     ASDKProfileParserOperationWorker *profileParserWorker = [ASDKProfileParserOperationWorker new];
@@ -139,13 +139,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKProcessParserOperationWorker *processParserWorker = [ASDKProcessParserOperationWorker new];
     [parserOperationManager registerWorker:processParserWorker
                                forServices:[processParserWorker availableServices]];    // Link the processing queues between the request and parser managers
-    requestOperationManager.completionQueue = parserOperationManager.completionQueue;
+    self.requestOperationManager.completionQueue = parserOperationManager.completionQueue;
     
     // Set up the disk services
     ASDKDiskServices *diskService = [ASDKDiskServices new];
     
     // Set up the aplication newtork service
-    ASDKAppNetworkServices *applicationNetworkService = [[ASDKAppNetworkServices alloc] initWithRequestManager:requestOperationManager
+    ASDKAppNetworkServices *applicationNetworkService = [[ASDKAppNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                                  parserManager:parserOperationManager
                                                                                             servicePathFactory:servicePathFactory
                                                                                                   diskServices:diskService
@@ -160,11 +160,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKLogVerbose(@"App network services...%@", applicationNetworkService ? @"OK" : @"NOT_OK");
     
     // Set up the profile network service
-    ASDKProfileNetworkServices *profileNetworkService = [[ASDKProfileNetworkServices alloc] initWithRequestManager:requestOperationManager
-                                                                                              parserManager:parserOperationManager
-                                                                                         servicePathFactory:servicePathFactory
+    ASDKProfileNetworkServices *profileNetworkService = [[ASDKProfileNetworkServices alloc] initWithRequestManager:self.requestOperationManager
+                                                                                                     parserManager:parserOperationManager
+                                                                                                servicePathFactory:servicePathFactory
                                                                                                       diskServices:diskService
-                                                                                               resultsQueue:nil];
+                                                                                                      resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProfileNetworkServiceProtocol)]) {
         [_serviceLocator removeService:profileNetworkService];
@@ -174,7 +174,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKLogVerbose(@"Profile network services...%@", profileNetworkService ? @"OK" : @"NOT_OK");
     
     // Set up the task network service
-    ASDKTaskNetworkServices *taskNetworkService = [[ASDKTaskNetworkServices alloc] initWithRequestManager:requestOperationManager
+    ASDKTaskNetworkServices *taskNetworkService = [[ASDKTaskNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                             parserManager:parserOperationManager
                                                                                        servicePathFactory:servicePathFactory
                                                                                              diskServices:diskService
@@ -188,7 +188,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKLogVerbose(@"Task network services...%@", taskNetworkService ? @"OK" : @"NOT_OK");
     
     // Set up the filter network service
-    ASDKFilterNetworkServices *filterNetworkService = [[ASDKFilterNetworkServices alloc] initWithRequestManager:requestOperationManager
+    ASDKFilterNetworkServices *filterNetworkService = [[ASDKFilterNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                                   parserManager:parserOperationManager
                                                                                              servicePathFactory:servicePathFactory
                                                                                                    diskServices:diskService
@@ -204,11 +204,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Set up the process instance network service
     
     ASDKProcessInstanceNetworkServices *processInstanceNetworkService =
-    [[ASDKProcessInstanceNetworkServices alloc] initWithRequestManager:requestOperationManager
-                                                 parserManager:parserOperationManager
-                                            servicePathFactory:servicePathFactory
-                                                  diskServices:diskService
-                                                  resultsQueue:nil];
+    [[ASDKProcessInstanceNetworkServices alloc] initWithRequestManager:self.requestOperationManager
+                                                         parserManager:parserOperationManager
+                                                    servicePathFactory:servicePathFactory
+                                                          diskServices:diskService
+                                                          resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessInstanceNetworkServiceProtocol)]) {
         [_serviceLocator removeService:processInstanceNetworkService];
@@ -220,11 +220,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Set up the process definition network service
     
     ASDKProcessDefinitionNetworkServices *processDefinitionNetworkService =
-    [[ASDKProcessDefinitionNetworkServices alloc] initWithRequestManager:requestOperationManager
-                                                         parserManager:parserOperationManager
-                                                    servicePathFactory:servicePathFactory
-                                                          diskServices:diskService
-                                                          resultsQueue:nil];
+    [[ASDKProcessDefinitionNetworkServices alloc] initWithRequestManager:self.requestOperationManager
+                                                           parserManager:parserOperationManager
+                                                      servicePathFactory:servicePathFactory
+                                                            diskServices:diskService
+                                                            resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessDefinitionNetworkServiceProtocol)]) {
         [_serviceLocator removeService:processDefinitionNetworkService];
@@ -236,11 +236,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Set up the user network service
     
     ASDKUserNetworkServices *userNetworkService =
-    [[ASDKUserNetworkServices alloc] initWithRequestManager:requestOperationManager
-                                                           parserManager:parserOperationManager
-                                                      servicePathFactory:servicePathFactory
-                                                            diskServices:diskService
-                                                            resultsQueue:nil];
+    [[ASDKUserNetworkServices alloc] initWithRequestManager:self.requestOperationManager
+                                              parserManager:parserOperationManager
+                                         servicePathFactory:servicePathFactory
+                                               diskServices:diskService
+                                               resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKUserNetworkServiceProtocol)]) {
         [_serviceLocator removeService:userNetworkService];
@@ -250,7 +250,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKLogVerbose(@"User network services...%@", userNetworkService ? @"OK" : @"NOT_OK");
     
     // Set up the form network service
-    ASDKFormNetworkServices *formNetworkService = [[ASDKFormNetworkServices alloc] initWithRequestManager:requestOperationManager
+    ASDKFormNetworkServices *formNetworkService = [[ASDKFormNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                             parserManager:parserOperationManager
                                                                                        servicePathFactory:servicePathFactory
                                                                                              diskServices:diskService
@@ -264,7 +264,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKLogVerbose(@"Form network services...%@", formNetworkService ? @"OK" : @"NOT_OK");
     
     // Set up the query network service
-    ASDKQuerryNetworkServices *queryNetworkService = [[ASDKQuerryNetworkServices alloc] initWithRequestManager:requestOperationManager
+    ASDKQuerryNetworkServices *queryNetworkService = [[ASDKQuerryNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                                  parserManager:parserOperationManager
                                                                                             servicePathFactory:servicePathFactory
                                                                                                   diskServices:diskService resultsQueue:nil];
@@ -275,7 +275,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [_serviceLocator addService:queryNetworkService];
     
     ASDKLogVerbose(@"Query network services...%@", queryNetworkService ? @"OK" : @"NOT_OK");
-
+    
     // Set up the form render engine service
     ASDKFormRenderEngine *formRenderEngine = [ASDKFormRenderEngine new];
     formRenderEngine.formNetworkServices = formNetworkService;
@@ -285,6 +285,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [_serviceLocator addService:formRenderEngine];
     
     ASDKLogVerbose(@"Form render engine services...%@", formRenderEngine ? @"OK" : @"NOT_OK");
+}
+
+- (void)replaceAuthenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider {
+    [self.requestOperationManager replaceAuthenticationProvider:authenticationProvider];
 }
 
 @end

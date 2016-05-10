@@ -16,14 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "AFABaseSliderViewController.h"
 
-IB_DESIGNABLE
-@interface AFAAvatarInitialsView : UIView
-
-@property (strong, nonatomic) IBInspectable UIColor *fillColor;
-@property (strong, nonatomic) IBInspectable UIColor *initialsColor;
-
-- (void)updateInitialsForName:(NSString *)fullNameString;
+@interface AFAProfileViewController : AFABaseSliderViewController
 
 @end

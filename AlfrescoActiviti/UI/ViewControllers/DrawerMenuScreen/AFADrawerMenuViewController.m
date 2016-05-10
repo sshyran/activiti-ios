@@ -43,12 +43,11 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
     AFADrawerMenuCellTypeEnumCount
 };
 
-static NSString * const kProfileImageThumbnailIdentifier = @"kProfileImageThumbnailIdentifier";
-
 @interface AFADrawerMenuViewController () <AFAAvatarMenuTableViewCellDelegate, AFAMenuButtonTableViewCellDelegate>
 
 @property (weak, nonatomic)   IBOutlet UITableView  *menuTableView;
 @property (strong, nonatomic) UIImage               *profileImage;
+@property (assign, nonatomic) BOOL                  processedProfileImage;
 
 @end
 
@@ -67,6 +66,10 @@ static NSString * const kProfileImageThumbnailIdentifier = @"kProfileImageThumbn
     // Dispose of any resources that can be recreated.
 }
 
+- (void)refreshDrawerMenu {
+    [self.menuTableView reloadData];
+}
+
 /*
  #pragma mark - Navigation
  
@@ -82,6 +85,9 @@ static NSString * const kProfileImageThumbnailIdentifier = @"kProfileImageThumbn
 #pragma mark AvatarMenuTableViewCell Delegate
 
 - (void)onAvatarFromCell:(UITableViewCell *)cell {
+    if ([self.delegate respondsToSelector:@selector(showUserProfile)]) {
+        [self.delegate showUserProfile];
+    }
 }
 
 
@@ -158,16 +164,25 @@ static NSString * const kProfileImageThumbnailIdentifier = @"kProfileImageThumbn
             // If we don't have loaded a thumbnail image use a placeholder instead
             // otherwise look in the cache or compute the image and set it once
             // available
+            __weak typeof(self) weakSelf = self;
             AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
-            self.profileImage = [thumbnailManager thumbnailForImage:self.profileImage
-                                                     withIdentifier:kProfileImageThumbnailIdentifier
-                                                           withSize:CGRectGetHeight(avatarCell.avatarView.frame) * [UIScreen mainScreen].scale
-                                          processingCompletionBlock:^(UIImage *processedThumbnailImage) {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  AFAAvatarMenuTableViewCell *refetchedAvatarCell = (AFAAvatarMenuTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-                                                  refetchedAvatarCell.avatarView.profileImage = processedThumbnailImage;
-                                              });
-                                          }];
+            
+            if (self.processedProfileImage) {
+                self.profileImage = [thumbnailManager thumbnailImageForIdentifier:kProfileImageThumbnailIdentifier];
+            } else {
+                self.profileImage = [thumbnailManager thumbnailForImage:self.profileImage
+                                                         withIdentifier:kProfileImageThumbnailIdentifier
+                                                               withSize:CGRectGetHeight(avatarCell.avatarView.frame) * [UIScreen mainScreen].scale
+                                              processingCompletionBlock:^(UIImage *processedThumbnailImage) {
+                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                      __strong typeof(self) strongSelf = weakSelf;
+                                                      strongSelf.processedProfileImage = YES;
+                                                      
+                                                      AFAAvatarMenuTableViewCell *refetchedAvatarCell = (AFAAvatarMenuTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+                                                      refetchedAvatarCell.avatarView.profileImage = processedThumbnailImage;
+                                                  });
+                                              }];
+            }
             
             avatarCell.avatarView.profileImage = self.profileImage;
             avatarCell.delegate = self;
