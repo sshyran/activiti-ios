@@ -209,6 +209,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     if ([kSegueIDContentPickerComponentEmbedding isEqualToString:segue.identifier]) {
         self.contentPickerViewController = (AFAContentPickerViewController *)segue.destinationViewController;
         self.contentPickerViewController.delegate = self;
+        self.contentPickerViewController.pickerType = AFAContentPickerViewControllerTypeTaskRelated;
         self.contentPickerViewController.taskID = self.taskID;
     } else if ([kSegueIDFormComponent isEqualToString:segue.identifier]) {
         self.taskFormViewController = (AFATaskFormViewController *)segue.destinationViewController;

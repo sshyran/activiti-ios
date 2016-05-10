@@ -81,7 +81,7 @@ static NSString * const kASDkHTTPS = @"https";
 #pragma mark Profile
 
 - (NSString *)profileServicePath {
-    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProfilePath];
+    return [[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIProfileAdminPath] stringByAppendingPathComponent:kASDKAPIProfilePath];
 }
 
 - (NSString *)profilePicturePath {
@@ -94,6 +94,10 @@ static NSString * const kASDkHTTPS = @"https";
 
 - (NSString *)profileLogoutPath {
     return [kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIProfileLogoutPath];
+}
+
+- (NSString *)profilePictureUploadPath {
+    return [[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIProfileAdminPath] stringByAppendingPathComponent:kASDKAPIProfilePicturePath];
 }
 
 

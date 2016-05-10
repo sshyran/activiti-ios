@@ -182,3 +182,10 @@
 "profileScreenCompanyText"                               = "Company";
 "profileScreenChangePasswordButtonText"                  = "Change password";
 "profileScreenRegisteredSinceFormat"                     = "Registered since: %@";
+"profileScreenProfileInformationUpdatedText"             = "Profile information updated";
+"profileScreenOriginalPasswordText"                      = "Original password";
+"profileScreenNewPasswordText"                           = "New password";
+"profileScreenRepeatPasswordText"                        = "Repeat new password";
+"profileScreenPasswordUpdatedText"                       = "Password updated";
+"profileScreenPasswordMismatchText"                      = "It seems that the values you entered for the password fields are not valid or the passwords don't match";
+"profileScreenNoInformationAvailableText"                = "There's no information available at this time, wait a moment and then try again...";

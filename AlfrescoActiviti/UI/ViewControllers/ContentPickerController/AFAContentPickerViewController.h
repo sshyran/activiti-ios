@@ -17,8 +17,13 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-
 @class ASDKModelContent;
+
+typedef NS_ENUM(NSInteger, AFAContentPickerViewControllerType) {
+    AFAContentPickerViewControllerTypeUndefined         = -1,
+    AFAContentPickerViewControllerTypeTaskRelated       = 0,
+    AFAContentPickerViewControllerTypeProfileRelated
+};
 
 @protocol AFAContentPickerViewControllerDelegate <NSObject>
 
@@ -34,8 +39,10 @@
 
 @property (weak, nonatomic)   id<AFAContentPickerViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSString                                   *taskID;
+@property (assign, nonatomic) AFAContentPickerViewControllerType         pickerType;
 
 - (void)dowloadContent:(ASDKModelContent *)content
     allowCachedContent:(BOOL)allowCachedContent;
+
 
 @end

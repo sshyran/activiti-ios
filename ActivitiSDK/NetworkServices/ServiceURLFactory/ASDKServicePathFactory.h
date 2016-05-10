@@ -53,6 +53,7 @@
 - (NSString *)profilePicturePath;
 - (NSString *)profilePasswordPath;
 - (NSString *)profileLogoutPath;
+- (NSString *)profilePictureUploadPath;
 
 // Task related
 - (NSString *)taskListServicePath;

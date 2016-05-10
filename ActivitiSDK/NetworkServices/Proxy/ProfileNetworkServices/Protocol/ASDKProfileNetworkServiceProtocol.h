@@ -19,11 +19,17 @@
 #import <Foundation/Foundation.h>
 #import "ASDKModelProfile.h"
 
-typedef void  (^ASDKProfileCompletionBlock) (ASDKModelProfile *profile, NSError *error);
-typedef void  (^ASDKProfileImageCompletionBlock) (UIImage *profileImage, NSError *error);
-typedef void  (^ASDKProfilePasswordCompletionBlock) (BOOL isPasswordUpdated, NSError *error);
-typedef void  (^ASDKProfileLogoutCompletionBlock) (BOOL isLogoutPerformed, NSError *error);
-typedef void  (^ASDKProfileAutheticationCompletionBlock) (BOOL didAutheticate, NSError *error);
+@class ASDKModelFileContent,
+ASDKModelContent;
+
+typedef void  (^ASDKProfileCompletionBlock)             (ASDKModelProfile *profile, NSError *error);
+typedef void  (^ASDKProfileImageCompletionBlock)        (UIImage *profileImage, NSError *error);
+typedef void  (^ASDKProfilePasswordCompletionBlock)     (BOOL isPasswordUpdated, NSError *error);
+typedef void  (^ASDKProfileLogoutCompletionBlock)       (BOOL isLogoutPerformed, NSError *error);
+typedef void  (^ASDKProfileAutheticationCompletionBlock)(BOOL didAutheticate, NSError *error);
+typedef void  (^ASDKProfileContentProgressBlock)        (NSUInteger progress, NSError *error);
+typedef void  (^ASDKProfileImageContentUploadCompletionBlock)(ASDKModelContent *profilePictureContent, NSError *error);
+
 
 @protocol ASDKProfileNetworkServiceProtocol <NSObject>
 
@@ -51,7 +57,7 @@ typedef void  (^ASDKProfileAutheticationCompletionBlock) (BOOL didAutheticate, N
 - (void)fetchProfileWithCompletionBlock:(ASDKProfileCompletionBlock)completionBlock;
 
 /**
- *  Given a ASDKModelProfile model object it will update all of the provided fields. It via the 
+ *  Given a ASDKModelProfile model object it will update all of the provided fields and return via the
  *  completion block an updated profile model object and an optional error reason.
  *
  *  @param profileModel    Model object containing updated values
@@ -87,6 +93,21 @@ typedef void  (^ASDKProfileAutheticationCompletionBlock) (BOOL didAutheticate, N
  *  @param completionBlock Completion block called upon successful or failed attempt
  */
 - (void)logoutWithCompletionBlock:(ASDKProfileLogoutCompletionBlock)completionBlock;
+
+/**
+ *  Uploads provided profile image content and reports back via a completion and progress blocks
+ *  the status of the upload, whether the operation was successfull and optional errors that might occur.
+ *
+ *  @param file            Content model encapsulating file information needed for the upload
+ *  @param contentData     NSData object of the content to be uploaded
+ *  @param progressBlock   Block providing information on the upload progress and an optional error reason
+ *  @param completionBlock Completion block providing information on whether the upload finished successfully
+ *                         and an optional error reason.
+ */
+- (void)uploadProfileImageWithModel:(ASDKModelFileContent *)file
+                        contentData:(NSData *)contentData
+                      progressBlock:(ASDKProfileContentProgressBlock)progressBlock
+                    completionBlock:(ASDKProfileImageContentUploadCompletionBlock)completionBlock;
 
 /**
  *  Cancells all queued or running network operations

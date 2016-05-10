@@ -18,17 +18,39 @@
 
 #import "AFAProfileDetailTableViewCell.h"
 
+@interface AFAProfileDetailTableViewCell () <UITextFieldDelegate>
+
+@end
+
 @implementation AFAProfileDetailTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
+    
+    self.categoryDescriptionTextField.delegate = self;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
+#pragma mark -
+#pragma mark UITextField Delegate
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    if ([self.delegate respondsToSelector:@selector(updatedModelPropertyWithValue:forCell:)]) {
+        [self.delegate updatedModelPropertyWithValue:textField.text
+                                             forCell:self];
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    
+    return YES;
 }
 
 @end

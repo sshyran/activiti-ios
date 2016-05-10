@@ -270,7 +270,7 @@
 		13DBF35C1B7A3C66003E6938 /* AFACredentialsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13DBF35B1B7A3C66003E6938 /* AFACredentialsPageViewController.m */; };
 		13E6E2831B7E078A001F5737 /* AFASignInTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E6E2821B7E078A001F5737 /* AFASignInTableViewCell.m */; };
 		13E6E28B1B7E0EE1001F5737 /* AFAFadingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E6E28A1B7E0EE1001F5737 /* AFAFadingTableView.m */; };
-		13E8306A1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830681B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h */; };
+		13E8306A1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830681B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13E8306B1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830691B6A21DD0028901A /* ASDKBasicAuthentificationProvider.m */; };
 		13E830741B6A303B0028901A /* ASDKRequestOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830721B6A303B0028901A /* ASDKRequestOperationManager.h */; };
 		13E830751B6A303B0028901A /* ASDKRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830731B6A303B0028901A /* ASDKRequestOperationManager.m */; };

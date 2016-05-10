@@ -24,5 +24,6 @@
 @property (strong, nonatomic) id<AFAContainerViewControllerDelegate> delegate;
 
 - (void)updateProfileImage;
+- (void)refreshDrawerMenu;
 
 @end

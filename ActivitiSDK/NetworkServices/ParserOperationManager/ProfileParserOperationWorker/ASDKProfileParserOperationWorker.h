@@ -22,6 +22,7 @@
 typedef NS_ENUM(NSInteger, ASDKProfileParserContentType) {
     ASDKProfileParserContentTypeUndefined = -1,
     ASDKProfileParserContentTypeProfile = 1,                // Start enumeration from 1 to be able to assert (!=0)
+    ASDKProfileParserContentTypeContent
 };
 
 @interface ASDKProfileParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>

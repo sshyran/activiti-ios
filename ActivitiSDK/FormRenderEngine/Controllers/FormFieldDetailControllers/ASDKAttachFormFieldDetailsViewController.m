@@ -164,13 +164,11 @@
 - (IBAction)onFullscreenOverlayTap:(id)sender {
     [self toggleFullscreenOverlayView];
     [self toggleContentPickerComponent];
-    
 }
 
 - (IBAction)onAdd:(UIBarButtonItem *)sender {
     [self toggleFullscreenOverlayView];
     [self toggleContentPickerComponent];
-    
 }
 
 

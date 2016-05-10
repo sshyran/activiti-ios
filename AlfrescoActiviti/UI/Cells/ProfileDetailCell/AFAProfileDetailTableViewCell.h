@@ -18,9 +18,17 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol AFAProfileDetailTableViewCellDelegate <NSObject>
+
+- (void)updatedModelPropertyWithValue:(NSString *)value
+                              forCell:(UITableViewCell *)cell;
+
+@end
+
 @interface AFAProfileDetailTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel        *categoryTitleLabel;
-@property (weak, nonatomic) IBOutlet UITextField    *categoryDescriptionTextField;
+@property (weak, nonatomic) id<AFAProfileDetailTableViewCellDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UILabel                          *categoryTitleLabel;
+@property (weak, nonatomic) IBOutlet UITextField                      *categoryDescriptionTextField;
 
 @end

@@ -108,6 +108,7 @@ extern NSString *kSegueIDProcessInstanceStartForm;
 extern NSString *kSegueIDProcessInstanceStartFormUnwind;
 extern NSString *kSegueIDProcessInstanceDetailsAddComments;
 extern NSString *kSegueIDProcessInstanceDetailsAddCommentsUnwind;
+extern NSString *kSegueIDProfileContentPickerComponentEmbedding;
 
 // Thumbnail manager
 extern NSString *kProfileImageThumbnailIdentifier;

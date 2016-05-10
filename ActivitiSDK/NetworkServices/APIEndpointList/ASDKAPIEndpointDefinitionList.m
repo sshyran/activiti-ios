@@ -60,6 +60,7 @@ NSString * const kASDKAPIProfilePath                 = @"profile";
 NSString * const kASDKAPIProfilePicturePath          = @"profile-picture";
 NSString * const kASDKAPIProfilePasswordPath         = @"profile-password";
 NSString * const kASDKAPIProfileLogoutPath           = @"logout";
+NSString * const kASDKAPIProfileAdminPath            = @"admin";
 
 
 #pragma mark -

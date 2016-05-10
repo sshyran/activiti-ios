@@ -162,8 +162,8 @@
 #pragma mark AFAContainerViewController Delegate
 
 - (void)toggleDrawerMenu {
+    [self.drawerMenuViewController refreshDrawerMenu];
     self.isDrawerMenuOpen = !self.isDrawerMenuOpen;
-    
     self.isDrawerMenuOpen ? [self openQuickAccessDrawerMenu] : [self closeQuickAccessDrawerMenu];
 }
 

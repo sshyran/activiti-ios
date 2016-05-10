@@ -26,5 +26,6 @@
          authenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider;
 
 - (AFHTTPRequestSerializer *)authenticationProvider;
+- (void)replaceAuthenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider;
 
 @end

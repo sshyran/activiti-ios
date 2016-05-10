@@ -22,9 +22,12 @@
 @class ASDKModelServerConfiguration,
 ASDKModelProfile;
 
-typedef void  (^AFAProfileServicesLoginCompletionBlock) (BOOL isLoggedIn, NSError *error);
-typedef void  (^AFAProfileServicesProfileImageCompletionBlock) (UIImage *profileImage, NSError *error);
-typedef void  (^AFAProfileCompletionBlock) (ASDKModelProfile *profile, NSError *error);
+typedef void  (^AFAProfileServicesLoginCompletionBlock)         (BOOL isLoggedIn, NSError *error);
+typedef void  (^AFAProfileServicesProfileImageCompletionBlock)  (UIImage *profileImage, NSError *error);
+typedef void  (^AFAProfileCompletionBlock)                      (ASDKModelProfile *profile, NSError *error);
+typedef void  (^AFAProfilePasswordCompletionBlock)              (BOOL isPasswordUpdated, NSError *error);
+typedef void  (^AFAProfileContentProgressBlock)                 (NSUInteger progress, NSError *error);
+typedef void  (^AFAProfileContentUploadCompletionBlock)         (BOOL isContentUploaded, NSError *error);
 
 @interface AFAProfileServices : NSObject
 
@@ -61,6 +64,43 @@ typedef void  (^AFAProfileCompletionBlock) (ASDKModelProfile *profile, NSError *
  *                         optional error reason.
  */
 - (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock;
+
+/**
+ *  Given a ASDKModelProfile model object it will update all of the provided fields and return via the
+ *  completion block an updated profile model object and an optional error reason.
+ *
+ *  @param profileModel    Model object containing updated values
+ *  @param completionBlock Completion block called upon successful or failed attempt
+ */
+- (void)requestProfileUpdateWithModel:(ASDKModelProfile *)profileModel
+                      completionBlock:(AFAProfileCompletionBlock)completionBlock;
+
+/**
+ *  Requests a profile update given the old an new value and returns via a completion block whether
+ *  the password was changed and an optional error reason.
+ *
+ *  @param updatedPassword New password value
+ *  @param oldPassword     Old password value
+ *  @param completionBlock Completion block called upon successful or failed attempt
+ */
+- (void)requestProfilePasswordUpdatedWithNewPassword:(NSString *)updatedPassword
+                                         oldPassword:(NSString *)oldPassword
+                                     completionBlock:(AFAProfilePasswordCompletionBlock)completionBlock;
+
+/**
+ *  Performs a request to upload a profile picture from the specified URL
+ *
+ *  @param fileURL         URL from where data content will be uploaded
+ *  @param progressBlock   Block used to report progress updates for the upload operation and an optional error
+ *                         reason
+ *  @param completionBlock Completion block providing whether the content was successfully uploaded or not and
+ *                         an optional error reason
+ */
+
+- (void)requestUploadProfileImageAtFileURL:(NSURL *)fileURL
+                               contentData:(NSData *)contentData
+                             progressBlock:(AFAProfileContentProgressBlock)progressBlock
+                           completionBlock:(AFAProfileContentUploadCompletionBlock)completionBlock;
 
 /**
  *  Cancels all requests related to profile activity

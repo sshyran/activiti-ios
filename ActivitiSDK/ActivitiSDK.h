@@ -104,6 +104,9 @@
 // Constants
 #import <ActivitiSDK/ASDKNetworkServiceConstants.h>
 
+// Authentication providers
+#import <ActivitiSDK/ASDKBasicAuthentificationProvider.h>
+
 //! Project version number for ActivitiSDK.
 FOUNDATION_EXPORT double ActivitiSDKVersionNumber;
 
