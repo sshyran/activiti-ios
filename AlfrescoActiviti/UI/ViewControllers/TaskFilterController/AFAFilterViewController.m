@@ -119,6 +119,14 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             [strongSelf.filterTableView reloadData];
         } else {
             AFALogError(@"There are no selectable filter options available for the user to choose");
+            
+            // Notify the delegate about the missing filter data
+            if ([strongSelf.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:)]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.delegate filterModelsDidLoadWithDefaultFilter:nil];
+                });
+            }
+            
         }
     };
     
