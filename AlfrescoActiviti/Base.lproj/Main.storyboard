@@ -694,6 +694,11 @@
                                         <constraint firstItem="RT9-5b-MET" firstAttribute="top" secondItem="shs-Ox-xtA" secondAttribute="bottom" constant="8" id="sJA-hU-7z6"/>
                                     </constraints>
                                 </view>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="m9y-AL-csm">
+                                    <rect key="frame" x="0.0" y="378" width="600" height="0.0"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProfileSectionTitleCellID" rowHeight="30" id="Pt0-pT-U96" customClass="AFAProfileSectionTableViewCell">
                                         <rect key="frame" x="0.0" y="200" width="600" height="30"/>
