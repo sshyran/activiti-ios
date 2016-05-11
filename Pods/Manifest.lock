@@ -20,6 +20,8 @@ PODS:
   - AFNetworking/UIKit (2.6.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - AFOAuth2Manager (2.2.0):
+    - AFNetworking/NSURLConnection (~> 2.2)
   - CocoaLumberjack (2.2.0):
     - CocoaLumberjack/Default (= 2.2.0)
     - CocoaLumberjack/Extensions (= 2.2.0)
@@ -40,7 +42,8 @@ PODS:
   - PDKTZipArchive (0.3.5)
 
 DEPENDENCIES:
-  - AFNetworking
+  - AFNetworking (= 2.6.1)
+  - AFOAuth2Manager
   - CocoaLumberjack
   - HockeySDK
   - JGProgressHUD
@@ -49,6 +52,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
+  AFOAuth2Manager: 952eb62e8fd8022971e64c6e8fe28b9e999224af
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   HockeySDK: 464a9eb01c42718515629d8d1d406983e5f855dc
   JGProgressHUD: 153053a21d81208cb5f659691996bcefce6a9885
@@ -56,4 +60,6 @@ SPEC CHECKSUMS:
   Mantle: 1912395033f601de5adc8ee91e48f46e4c7051ad
   PDKTZipArchive: 81c4824eb5587131e422fc58b92c043c4aa96466
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: b9251fb37adb4464bcf77536baa0e03f3f7c3d05
+
+COCOAPODS: 1.0.0
