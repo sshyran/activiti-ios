@@ -31,6 +31,8 @@ typedef void  (^ASDKFormFieldContentDownloadCompletionBlock)(NSString *contentID
 - (void)userDidCancelImagePick;
 - (void)pickedContentHasFinishedUploading;
 - (void)pickedContentHasFinishedDownloadingAtURL:(NSURL *)downloadedFileURL;
+- (void)contentPickerHasBeenPresentedWithNumberOfOptions:(NSUInteger)contentOptionCount
+                                              cellHeight:(CGFloat)cellHeight;
 
 @end
 

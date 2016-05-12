@@ -117,3 +117,8 @@ NSString * const kASDKAPISaveFormPath               = @"save-form";
 NSString * const kASDKAPIUsersPath                  = @"users";
 NSString * const kASDKAPIUsersPicturePath           = @"picture";
 
+
+#pragma mark -
+#pragma mark Integration related
+
+NSString * const kASDKAPIIntegrationAccountsPath    = @"integration";

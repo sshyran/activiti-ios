@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,16 @@
 
 @class ASDKModelPaging;
 
-typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
+typedef void  (^AFAIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
 
-@protocol ASDKIntegrationNetworkServiceProtocol <NSObject>
+@interface AFAIntegrationServices : NSObject
 
 /**
- *  Fetches and returns via the completion block a list of external integration service accounts  
+ *  Performs a request for the list of external integration service accounts
  *
  *  @param completionBlock Completion block providing an integration account list, an optional
  *                         error reason and paging information
  */
-- (void)fetchIntegrationAccountsWithCompletionBlock:(ASDKIntegrationAccountListCompletionBlock)completionBlock;
+- (void)requestIntegrationAccountsWithCompletionBlock:(AFAIntegrationAccountListCompletionBlock)completionBlock;
 
 @end

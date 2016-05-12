@@ -95,6 +95,7 @@
 		1366800B1C89D296005E4AEA /* AFASimpleSectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800A1C89D296005E4AEA /* AFASimpleSectionHeaderCell.m */; };
 		1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800E1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m */; };
 		136D035B1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */; };
+		136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */; };
 		137194531B6922DE00D4E1F0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194521B6922DE00D4E1F0 /* main.m */; };
 		137194561B6922DE00D4E1F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194551B6922DE00D4E1F0 /* AppDelegate.m */; };
 		1371945F1B6922DE00D4E1F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1371945D1B6922DE00D4E1F0 /* Main.storyboard */; };
@@ -185,7 +186,13 @@
 		13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */; };
 		13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */; };
-		13A784231CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */; };
+		13A784231CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A784281CE4665900DBE648 /* ASDKIntegrationNetworkServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A784261CE4665900DBE648 /* ASDKIntegrationNetworkServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A784291CE4665900DBE648 /* ASDKIntegrationNetworkServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A784271CE4665900DBE648 /* ASDKIntegrationNetworkServices.m */; };
+		13A7842C1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A7842A1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h */; };
+		13A7842D1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */; };
+		13A784311CE46DB300DBE648 /* ASDKModelIntegrationAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */; };
+		13A784321CE46DB300DBE648 /* ASDKModelIntegrationAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */; };
 		13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */; };
 		13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */; };
 		13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CAB71B8B3FB100B7A25E /* AFAMenuButtonCell.m */; };
@@ -605,6 +612,8 @@
 		136737131B86122600364886 /* NSString+ASDKFontGlyphicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+ASDKFontGlyphicons.m"; path = "../ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKFontGlyphicons.m"; sourceTree = "<group>"; };
 		136D03591C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessInstanceDetailsViewController.h; path = UI/ViewControllers/ProcessInstanceDetailsScreen/AFAProcessInstanceDetailsViewController.h; sourceTree = "<group>"; };
 		136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessInstanceDetailsViewController.m; path = UI/ViewControllers/ProcessInstanceDetailsScreen/AFAProcessInstanceDetailsViewController.m; sourceTree = "<group>"; };
+		136E112F1CE4AE1400047E38 /* AFAIntegrationServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAIntegrationServices.h; path = Business/ServiceRepository/Services/AFAIntegrationServices.h; sourceTree = "<group>"; };
+		136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAIntegrationServices.m; path = Business/ServiceRepository/Services/AFAIntegrationServices.m; sourceTree = "<group>"; };
 		1371944D1B6922DE00D4E1F0 /* AlfrescoActiviti.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlfrescoActiviti.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		137194511B6922DE00D4E1F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		137194521B6922DE00D4E1F0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -721,6 +730,12 @@
 		13A5D6011CA046CF00EFA760 /* AFATaskCreateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskCreateModel.h; path = Model/TaskCreateModel/AFATaskCreateModel.h; sourceTree = "<group>"; };
 		13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskCreateModel.m; path = Model/TaskCreateModel/AFATaskCreateModel.m; sourceTree = "<group>"; };
 		13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNetworkServiceProtocol.h; path = NetworkServices/Proxy/IntegrationNetworkService/Protocol/ASDKIntegrationNetworkServiceProtocol.h; sourceTree = "<group>"; };
+		13A784261CE4665900DBE648 /* ASDKIntegrationNetworkServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNetworkServices.h; path = NetworkServices/Proxy/IntegrationNetworkService/ASDKIntegrationNetworkServices.h; sourceTree = "<group>"; };
+		13A784271CE4665900DBE648 /* ASDKIntegrationNetworkServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationNetworkServices.m; path = NetworkServices/Proxy/IntegrationNetworkService/ASDKIntegrationNetworkServices.m; sourceTree = "<group>"; };
+		13A7842A1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationParserOperationWorker.h; path = NetworkServices/ParserOperationManager/IntegrationParserOperationWorker/ASDKIntegrationParserOperationWorker.h; sourceTree = "<group>"; };
+		13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationParserOperationWorker.m; path = NetworkServices/ParserOperationManager/IntegrationParserOperationWorker/ASDKIntegrationParserOperationWorker.m; sourceTree = "<group>"; };
+		13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelIntegrationAccount.h; path = Model/IntegrationAccount/ASDKModelIntegrationAccount.h; sourceTree = "<group>"; };
+		13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelIntegrationAccount.m; path = Model/IntegrationAccount/ASDKModelIntegrationAccount.m; sourceTree = "<group>"; };
 		13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldOption.h; path = Model/FormFieldOption/ASDKModelFormFieldOption.h; sourceTree = "<group>"; };
 		13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldOption.m; path = Model/FormFieldOption/ASDKModelFormFieldOption.m; sourceTree = "<group>"; };
 		13A8CAB61B8B3FB100B7A25E /* AFAMenuButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAMenuButtonCell.h; path = UI/Cells/MenuButtonCell/AFAMenuButtonCell.h; sourceTree = "<group>"; };
@@ -1122,6 +1137,7 @@
 				133F05431BD4EFE800C22CFD /* TaskDetailsParserWorker */,
 				137B94471BD671BD00134BF1 /* TaskFormParserWorker */,
 				139E54051C218F1600CE4674 /* AppParserWorker */,
+				13A7842E1CE46ACB00DBE648 /* IntegrationParserWorker */,
 				1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */,
 				1313750C1B6F927C00D2268E /* ASDKParserOperationManager.m */,
 			);
@@ -1214,6 +1230,7 @@
 				132E60341C2314F5000A2CA5 /* ProcessInstance */,
 				13B22C501C931C050043D8A4 /* ProcessInstanceContent */,
 				13B22C551C931CF90043D8A4 /* ProcessInstanceContentField */,
+				13A784331CE46DB600DBE648 /* IntegrationAccount */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1855,6 +1872,15 @@
 			name = ProcessInstanceDetailsScreen;
 			sourceTree = "<group>";
 		};
+		136E11321CE4AE1800047E38 /* AFAIntegrationServices */ = {
+			isa = PBXGroup;
+			children = (
+				136E112F1CE4AE1400047E38 /* AFAIntegrationServices.h */,
+				136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */,
+			);
+			name = AFAIntegrationServices;
+			sourceTree = "<group>";
+		};
 		137194441B6922DE00D4E1F0 = {
 			isa = PBXGroup;
 			children = (
@@ -2300,6 +2326,7 @@
 				139DF5CB1C5F409B0062D01D /* FilterServices */,
 				139DF5CF1C5F4CE50062D01D /* FormServices */,
 				136680081C89AEFD005E4AEA /* QueryServices */,
+				136E11321CE4AE1800047E38 /* AFAIntegrationServices */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -2451,6 +2478,8 @@
 			isa = PBXGroup;
 			children = (
 				13A784251CE4621F00DBE648 /* Protocol */,
+				13A784261CE4665900DBE648 /* ASDKIntegrationNetworkServices.h */,
+				13A784271CE4665900DBE648 /* ASDKIntegrationNetworkServices.m */,
 			);
 			name = IntegrationNetworkServices;
 			sourceTree = "<group>";
@@ -2461,6 +2490,24 @@
 				13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */,
 			);
 			name = Protocol;
+			sourceTree = "<group>";
+		};
+		13A7842E1CE46ACB00DBE648 /* IntegrationParserWorker */ = {
+			isa = PBXGroup;
+			children = (
+				13A7842A1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h */,
+				13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */,
+			);
+			name = IntegrationParserWorker;
+			sourceTree = "<group>";
+		};
+		13A784331CE46DB600DBE648 /* IntegrationAccount */ = {
+			isa = PBXGroup;
+			children = (
+				13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */,
+				13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */,
+			);
+			name = IntegrationAccount;
 			sourceTree = "<group>";
 		};
 		13A82E421BF348E8005537A9 /* FormFieldOption */ = {
@@ -3881,6 +3928,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13A784311CE46DB300DBE648 /* ASDKModelIntegrationAccount.h in Headers */,
 				1395CD9B1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h in Headers */,
 				133F053C1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h in Headers */,
 				13667FFE1C8995C7005E4AEA /* ASDKTaskListQuerryRequestRepresentation.h in Headers */,
@@ -3914,6 +3962,7 @@
 				13B7E1FD1B749473002CBDF4 /* ASDKTaskNetworkServiceProtocol.h in Headers */,
 				13B7E2071B749A07002CBDF4 /* ASDKTaskNetworkServices.h in Headers */,
 				13F07EF71CBFC8C400002FEB /* ASDKKVOManager.h in Headers */,
+				13A7842C1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h in Headers */,
 				13BA5C051BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.h in Headers */,
 				8D6ABE6C1CBB9AF8008FACB4 /* ASDKFormDynamicTableFieldCollectionViewCell.h in Headers */,
 				8D3B50E81C86E258005BEEEB /* ASDKModelRestFormField.h in Headers */,
@@ -4010,6 +4059,7 @@
 				134594281BDA4B7C00A234BD /* ASDKFormTextFieldCollectionViewCell.h in Headers */,
 				8D3A51DA1C80855300FF9A00 /* ASDKStartProcessRequestRepresentation.h in Headers */,
 				13E830741B6A303B0028901A /* ASDKRequestOperationManager.h in Headers */,
+				13A784281CE4665900DBE648 /* ASDKIntegrationNetworkServices.h in Headers */,
 				133F05411BD4EFE400C22CFD /* ASDKTaskDetailsParserOperationWorker.h in Headers */,
 				13B843E51BC29866007BA3CC /* ASDKModelFileContent.h in Headers */,
 				8D3A51D01C8084B700FF9A00 /* ASDKProcessDefinitionNetworkServices.h in Headers */,
@@ -4535,6 +4585,7 @@
 				8D7C1A521C808D470092EA81 /* AFAContributorTableViewCell.m in Sources */,
 				13AAD3C31CDB82A900818537 /* AFAProfileSimpleTableViewCell.m in Sources */,
 				1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */,
+				136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */,
 				75E868071B7E75E500862D51 /* AFASwitchView.m in Sources */,
 				13CE8ED11B85B27B0022F17A /* AFADrawerMenuViewController.m in Sources */,
 				13C957FF1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m in Sources */,
@@ -4613,6 +4664,7 @@
 				13AAC7D91BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m in Sources */,
 				8DB399A71C9C31420089E0AB /* ASDKPeopleTableViewCell.m in Sources */,
 				13F07EFA1CBFC8C400002FEB /* ASDKKVOManagerInfo.m in Sources */,
+				13A7842D1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m in Sources */,
 				8D8F85F61C8D8E7000356A5B /* ASDKAttachFormFieldDetailsViewController.m in Sources */,
 				13B7E2111B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.m in Sources */,
 				136680041C89982D005E4AEA /* ASDKQuerryNetworkServices.m in Sources */,
@@ -4652,6 +4704,7 @@
 				13F240311B6B753600533B37 /* ASDKServiceLocator.m in Sources */,
 				13FB2E651BC53A7500549920 /* ASDKNetworkServiceConstants.m in Sources */,
 				8D6ABE751CBCE7CD008FACB4 /* ASDKDynamicTableColumnTableViewCell.m in Sources */,
+				13A784291CE4665900DBE648 /* ASDKIntegrationNetworkServices.m in Sources */,
 				135701981B70E09E00A384A7 /* ASDKModelProfile.m in Sources */,
 				131375271B6FB38500D2268E /* ASDKModelServerConfiguration.m in Sources */,
 				8DEA253D1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.m in Sources */,
@@ -4693,6 +4746,7 @@
 				13B7E2081B749A07002CBDF4 /* ASDKTaskNetworkServices.m in Sources */,
 				139DF5FC1C64D7240062D01D /* ASDKFormRenderDataSource.m in Sources */,
 				1317C34B1BCB9DBB00F0B03F /* ASDKDiskServices.m in Sources */,
+				13A784321CE46DB300DBE648 /* ASDKModelIntegrationAccount.m in Sources */,
 				138F0A3B1C6C835100DA9414 /* ASDKRadioOptionTableViewCell.m in Sources */,
 				13CFF3431BBBDEF900D3DEB6 /* ASDKTaskUpdateRequestRepresentation.m in Sources */,
 				8D9D98871C9C37AE002C0F81 /* UIView+ASDKViewAnimations.m in Sources */,

@@ -16,20 +16,13 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "ASDKModelBase.h"
 
-@class ASDKModelPaging;
+@interface ASDKModelIntegrationAccount : ASDKModelBase
 
-typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
-
-@protocol ASDKIntegrationNetworkServiceProtocol <NSObject>
-
-/**
- *  Fetches and returns via the completion block a list of external integration service accounts  
- *
- *  @param completionBlock Completion block providing an integration account list, an optional
- *                         error reason and paging information
- */
-- (void)fetchIntegrationAccountsWithCompletionBlock:(ASDKIntegrationAccountListCompletionBlock)completionBlock;
+@property (assign,  nonatomic) BOOL     authorized;
+@property (strong, nonatomic) NSString  *authorizationURL;
+@property (strong, nonatomic) NSString  *serviceID;
+@property (assign, nonatomic) BOOL      isMetadataAllowed;
 
 @end

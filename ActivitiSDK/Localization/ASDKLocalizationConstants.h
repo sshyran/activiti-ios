@@ -54,6 +54,9 @@ extern NSString *kLocalizationFormContentPickerComponentFailedText;
 extern NSString *kLocalizationFormContentPickerComponentLocalVersionAvailableText;
 extern NSString *kLocalizationFormContentPickerComponentPreviewLocalVersionText;
 extern NSString *kLocalizationFormContentPickerComponentGetLatestVersionText;
+extern NSString *kLocalizationFormContentPickerComponentAlfrescoContentText;
+extern NSString *kLocalizationFormContentPickerComponentBoxContentText;
+extern NSString *kLocalizationFormContentPickerComponentDriveText;
 
 // People picker component
 extern NSString *kLocalizationPeoplePickerControllerTitleText;

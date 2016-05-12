@@ -104,4 +104,7 @@
 // Query related
 - (NSString *)taskQueryServicePath;
 
+// Integration related
+- (NSString *)integrationAccountsServicePath;
+
 @end

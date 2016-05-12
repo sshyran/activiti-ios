@@ -17,19 +17,13 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "ASDKParserOperationWorkerProtocol.h"
 
-@class ASDKModelPaging;
+typedef NS_ENUM(NSInteger, ASDKIntegrationParserContentType) {
+    ASDKIntegrationParserContentTypeUndefined         = -1,
+    ASDKIntegrationParserContentTypeAccountList       = 1,              // Start enumeration from 1 to be able to assert (!=0)
+};
 
-typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
-
-@protocol ASDKIntegrationNetworkServiceProtocol <NSObject>
-
-/**
- *  Fetches and returns via the completion block a list of external integration service accounts  
- *
- *  @param completionBlock Completion block providing an integration account list, an optional
- *                         error reason and paging information
- */
-- (void)fetchIntegrationAccountsWithCompletionBlock:(ASDKIntegrationAccountListCompletionBlock)completionBlock;
+@interface ASDKIntegrationParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
 
 @end

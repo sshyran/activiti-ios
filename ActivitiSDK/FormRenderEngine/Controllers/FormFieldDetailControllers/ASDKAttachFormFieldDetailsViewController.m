@@ -47,6 +47,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                              *addBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UIView                                       *contentPickerContainer;
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                           *contentPickerContainerBottomConstraint;
+@property (weak, nonatomic)   IBOutlet NSLayoutConstraint                           *contentPickerContainerHeightConstraint;
 @property (weak, nonatomic)   IBOutlet UIView                                       *fullScreenOverlayView;
 @property (weak, nonatomic)   IBOutlet ASDKNoContentView                            *noContentView;
 
@@ -311,6 +312,11 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)pickedContentHasFinishedDownloadingAtURL:(NSURL *)downloadedFileURL {
     [self.attachedContentTableView reloadData];
     [self refreshContent];
+}
+
+- (void)contentPickerHasBeenPresentedWithNumberOfOptions:(NSUInteger)contentOptionCount
+                                              cellHeight:(CGFloat)cellHeight {
+    self.contentPickerContainerHeightConstraint.constant = contentOptionCount * cellHeight;
 }
 
 @end

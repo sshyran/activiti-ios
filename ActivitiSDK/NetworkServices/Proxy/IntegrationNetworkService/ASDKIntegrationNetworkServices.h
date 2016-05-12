@@ -16,20 +16,10 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "ASDKNetworkService.h"
+#import "ASDKIntegrationNetworkServiceProtocol.h"
 
-@class ASDKModelPaging;
-
-typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
-
-@protocol ASDKIntegrationNetworkServiceProtocol <NSObject>
-
-/**
- *  Fetches and returns via the completion block a list of external integration service accounts  
- *
- *  @param completionBlock Completion block providing an integration account list, an optional
- *                         error reason and paging information
- */
-- (void)fetchIntegrationAccountsWithCompletionBlock:(ASDKIntegrationAccountListCompletionBlock)completionBlock;
+@interface ASDKIntegrationNetworkServices : ASDKNetworkService <ASDKIntegrationNetworkServiceProtocol>
 
 @end

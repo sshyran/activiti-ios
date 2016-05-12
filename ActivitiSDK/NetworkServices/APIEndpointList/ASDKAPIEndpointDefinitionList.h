@@ -83,3 +83,5 @@ extern NSString * const kASDKAPISaveFormPath;
 extern NSString * const kASDKAPIUsersPath;
 extern NSString * const kASDKAPIUsersPicturePath;
 
+// Integration related
+extern NSString * const kASDKAPIIntegrationAccountsPath;

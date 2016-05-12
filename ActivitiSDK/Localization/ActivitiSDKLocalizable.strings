@@ -47,6 +47,9 @@
 "formContentPickerComponentLocalVersionAvailableText"           = "We found a local version of the content you're trying to download. Would you like to preview it, or get the latest version from the server?";
 "formContentPickerComponentPreviewLocalVersionText"             = "View local";
 "formContentPickerComponentGetLatestVersionText"                = "Get latest";
+"formContentPickerComponentAlfrescoContentText"                 = "Alfresco Cloud";
+"formContentPickerComponentBoxContentText"                      = "Box";
+"formContentPickerComponentDriveContentText"                    = "Google Drive";
 
 // Alert dialogs use
 "formAlertDialogOopsTitleText"                                  = "Oops...";

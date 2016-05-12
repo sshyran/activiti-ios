@@ -56,7 +56,9 @@ NSString *kLocalizationFormContentPickerComponentFailedText                     
 NSString *kLocalizationFormContentPickerComponentLocalVersionAvailableText          = @"formContentPickerComponentLocalVersionAvailableText";
 NSString *kLocalizationFormContentPickerComponentPreviewLocalVersionText            = @"formContentPickerComponentPreviewLocalVersionText";
 NSString *kLocalizationFormContentPickerComponentGetLatestVersionText               = @"formContentPickerComponentGetLatestVersionText";
-
+NSString *kLocalizationFormContentPickerComponentAlfrescoContentText                = @"formContentPickerComponentAlfrescoContentText";
+NSString *kLocalizationFormContentPickerComponentBoxContentText                     = @"formContentPickerComponentBoxContentText";
+NSString *kLocalizationFormContentPickerComponentDriveText                          = @"formContentPickerComponentDriveContentText";
 
 #pragma mark -
 #pragma mark People picker component

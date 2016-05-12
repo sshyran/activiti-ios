@@ -18,27 +18,37 @@
 
 #import "ASDKAttachFormFieldContentPickerViewController.h"
 
-#import "ASDKBootstrap.h"
-#import "ASDKModelContent.h"
-#import "ASDKFormNetworkServices.h"
-#import "ASDKServiceLocator.h"
-#import "ASDKAttachFormFieldDetailsViewController.h"
-#import "ASDKModelFileContent.h"
-#import "ASDKModelFormFieldAttachParameter.h"
-
+// Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLocalizationConstants.h"
+#import "ASDKLogConfiguration.h"
+#import "ASDKNetworkServiceConstants.h"
 
+// Categories
 #import "UIViewController+ASDKAlertAddition.h"
 
+// Models
+#import "ASDKModelContent.h"
+#import "ASDKModelFileContent.h"
+#import "ASDKModelFormFieldAttachParameter.h"
+#import "ASDKModelIntegrationAccount.h"
+
+// Cells
 #import "ASDKAddContentTableViewCell.h"
 
-#import "ASDKLogConfiguration.h"
+// Views
+#import <JGProgressHUD/JGProgressHUD.h>
 
+// View controllers
+#import "ASDKAttachFormFieldDetailsViewController.h"
+
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKIntegrationNetworkServices.h"
+#import "ASDKFormNetworkServices.h"
+#import "ASDKServiceLocator.h"
 @import Photos;
 @import QuickLook;
-
-#import <JGProgressHUD/JGProgressHUD.h>
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -53,9 +63,9 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 };
 
 @interface ASDKAttachFormFieldContentPickerViewController () <UINavigationControllerDelegate,
-UIImagePickerControllerDelegate,
-QLPreviewControllerDataSource,
-QLPreviewControllerDelegate>
+                                                              UIImagePickerControllerDelegate,
+                                                              QLPreviewControllerDataSource,
+                                                              QLPreviewControllerDelegate>
 
 @property (weak, nonatomic)   IBOutlet UITableView                          *actionsTableView;
 @property (strong, nonatomic) JGProgressHUD                                 *progressHUD;
@@ -66,6 +76,7 @@ QLPreviewControllerDelegate>
 @property (strong, nonatomic) NSURL                                         *currentSelectedUploadResourceURL;
 @property (strong, nonatomic) NSURL                                         *currentSelectedDownloadResourceURL;
 @property (strong, nonatomic) NSData                                        *currentSelectedResourceData;
+@property (strong, nonatomic) NSArray                                       *integrationAccounts;
 
 @end
 
@@ -87,13 +98,7 @@ QLPreviewControllerDelegate>
 }
 
 - (void)viewDidLoad {
-    [self.delegate self];
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"test"
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:nil];
-    
-    self.navigationItem.rightBarButtonItem = backButton;
+    [self fetchIntegrationAccounts];
 }
 
 
@@ -352,6 +357,34 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 #pragma mark -
 #pragma mark Service integration
 
+- (void)fetchIntegrationAccounts {
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKIntegrationNetworkServices *integrationNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)];
+    
+    
+    __weak typeof(self) weakSelf = self;
+    [integrationNetworkService fetchIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            ASDKLogVerbose(@"Successfully fetched the integration account list:%@.", accounts);
+            strongSelf.integrationAccounts = accounts;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.delegate respondsToSelector:@selector(contentPickerHasBeenPresentedWithNumberOfOptions:cellHeight:)]) {
+                    [self.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + accounts.count
+                                                                         cellHeight:self.actionsTableView.rowHeight];
+                }
+                
+                [weakSelf.actionsTableView reloadData];
+            });
+        } else {
+            ASDKLogError(@"An error occured while fetching the integration account list. Reason:%@", error.localizedDescription);
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
+        }
+    }];
+}
+
 - (void)uploadFormFieldContentForCurrentSelectedResource {
     
     // Acquire and set up the app network service
@@ -471,12 +504,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-    return ASDKAttachFormFieldDetailsCellTypeEnumCount;
+    return ASDKAttachFormFieldDetailsCellTypeEnumCount + self.integrationAccounts.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ASDKAddContentTableViewCell *taskCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldAttachAddContent];
+    ASDKAddContentTableViewCell *taskCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldAttachAddContent
+                                                                            forIndexPath:indexPath];
     
     switch (indexPath.row) {
         case ASDKAttachFormFieldDetailsCellTypeLocalContent: {
@@ -491,7 +525,27 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
             break;
             
-        default:
+        default: { // Handle the integration cells
+            ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
+            NSBundle *frameWorkBundle = [NSBundle bundleForClass:[self class]];
+            
+            if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.serviceID]) {
+                taskCell.iconImageView.image = [UIImage imageNamed:@"alfrescobw-icon"
+                                                          inBundle:frameWorkBundle
+                                     compatibleWithTraitCollection:nil];
+                taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentAlfrescoContentText, ASDKLocalizationTable, @"Alfresco cloud text");
+            } else if ([kASDKAPIServiceIDBox isEqualToString:account.serviceID]) {
+                taskCell.iconImageView.image = [UIImage imageNamed:@"box-icon"
+                                                          inBundle:frameWorkBundle
+                                     compatibleWithTraitCollection:nil];
+                taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentBoxContentText, ASDKLocalizationTable, @"Box text");
+            } else if ([kASDKAPIServiceIDGoogleDrive isEqualToString:account.serviceID]) {
+                taskCell.iconImageView.image = [UIImage imageNamed:@"drive-icon"
+                                                          inBundle:frameWorkBundle
+                                     compatibleWithTraitCollection:nil];
+                taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDriveText, ASDKLocalizationTable, @"Google drive text");
+            }
+        }
             break;
     }
     

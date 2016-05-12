@@ -62,6 +62,7 @@
 #import <ActivitiSDK/ASDKFormNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKUserNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKQuerryNetworkServiceProtocol.h>
+#import <ActivitiSDK/ASDKIntegrationNetworkServiceProtocol.h>
 
 // Other service protocols
 #import <ActivitiSDK/ASDKDiskServiceProtocol.h>
@@ -80,6 +81,7 @@
 #import <ActivitiSDK/ASDKUserNetworkServices.h>
 #import <ActivitiSDK/ASDKQuerryNetworkServices.h>
 #import <ActivitiSDK/ASDKDiskServices.h>
+#import <ActivitiSDK/ASDKIntegrationNetworkServices.h>
 
 // Form render engine
 #import <ActivitiSDK/ASDKFormRenderEngine.h>

@@ -1272,6 +1272,7 @@
                         <outlet property="attachedContentTableView" destination="dqi-rr-EDG" id="5Nm-ya-1gE"/>
                         <outlet property="contentPickerContainer" destination="ADc-fa-YOG" id="eCZ-ON-k8D"/>
                         <outlet property="contentPickerContainerBottomConstraint" destination="Uo5-wL-B5W" id="ggS-FN-F1F"/>
+                        <outlet property="contentPickerContainerHeightConstraint" destination="fQX-0o-0XG" id="sQP-cI-2e2"/>
                         <outlet property="fullScreenOverlayView" destination="11I-pe-qie" id="wta-Rw-zq4"/>
                         <outlet property="noContentView" destination="51a-2w-d5h" id="eGx-FS-v7G"/>
                     </connections>
@@ -1297,7 +1298,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="110"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="46" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZjS-oe-8ar">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="46" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZjS-oe-8ar">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="102"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FormFieldAttachAddContentCellID" rowHeight="46" id="lOR-NQ-PyL" customClass="ASDKAddContentTableViewCell">
@@ -1343,14 +1344,22 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="ZjS-oe-8ar" secondAttribute="trailing" id="B4Z-ev-H7S"/>
+                            <constraint firstItem="ZjS-oe-8ar" firstAttribute="top" secondItem="gNL-Ai-CI0" secondAttribute="bottom" id="dg3-6T-jpC"/>
+                            <constraint firstItem="ZjS-oe-8ar" firstAttribute="leading" secondItem="690-Gt-uwH" secondAttribute="leading" id="hJv-Xv-OQf"/>
+                            <constraint firstItem="MS1-g6-Ezh" firstAttribute="top" secondItem="ZjS-oe-8ar" secondAttribute="bottom" constant="8" id="jtB-Z6-aJP"/>
+                        </constraints>
                     </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="600" height="110"/>
                     <connections>
                         <outlet property="actionsTableView" destination="ZjS-oe-8ar" id="oqY-H6-nZd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dmu-oF-0eV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3231.5" y="1005"/>
+            <point key="canvasLocation" x="3232" y="997"/>
         </scene>
         <!--People Form Field People Picker View Controller-->
         <scene sceneID="wRP-y7-sHg">

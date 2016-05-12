@@ -37,6 +37,11 @@ extern NSString *kASDKAPIMessageParameter;
 extern NSString *kASDKAPIAssigneeParameter;
 extern NSString *kASDKAPITableEditableParameter;
 
+// Network API parameter values
+extern NSString *kASDKAPIServiceIDAlfrescoCloud;
+extern NSString *kASDKAPIServiceIDBox;
+extern NSString *kASDKAPIServiceIDGoogleDrive;
+
 // Reachability constants
 extern NSString *kASDKAPINetworkServiceNoInternetConnection;
 extern NSString *kASDKAPINetworkServiceInternetConnectionAvailable;
