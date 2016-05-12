@@ -185,6 +185,7 @@
 		13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */; };
 		13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */; };
+		13A784231CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */; };
 		13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */; };
 		13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */; };
 		13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CAB71B8B3FB100B7A25E /* AFAMenuButtonCell.m */; };
@@ -719,6 +720,7 @@
 		13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKTaskCreationRequestRepresentation.m; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.m; sourceTree = "<group>"; };
 		13A5D6011CA046CF00EFA760 /* AFATaskCreateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskCreateModel.h; path = Model/TaskCreateModel/AFATaskCreateModel.h; sourceTree = "<group>"; };
 		13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskCreateModel.m; path = Model/TaskCreateModel/AFATaskCreateModel.m; sourceTree = "<group>"; };
+		13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNetworkServiceProtocol.h; path = NetworkServices/Proxy/IntegrationNetworkService/Protocol/ASDKIntegrationNetworkServiceProtocol.h; sourceTree = "<group>"; };
 		13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldOption.h; path = Model/FormFieldOption/ASDKModelFormFieldOption.h; sourceTree = "<group>"; };
 		13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldOption.m; path = Model/FormFieldOption/ASDKModelFormFieldOption.m; sourceTree = "<group>"; };
 		13A8CAB61B8B3FB100B7A25E /* AFAMenuButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAMenuButtonCell.h; path = UI/Cells/MenuButtonCell/AFAMenuButtonCell.h; sourceTree = "<group>"; };
@@ -739,7 +741,7 @@
 		13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileActionTableViewCell.m; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.m; sourceTree = "<group>"; };
 		13ACE37A1C9996B900693A29 /* AFAAddCommentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddCommentsViewController.h; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.h; sourceTree = "<group>"; };
 		13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddCommentsViewController.m; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.m; sourceTree = "<group>"; };
-		13AE35521C43B61700BEB477 /* glyphicons-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "glyphicons-regular.otf"; sourceTree = "<group>"; };
+		13AE35521C43B61700BEB477 /* glyphicons-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "glyphicons-regular.otf"; path = "../ActivitiSDK/Resources/glyphicons-regular.otf"; sourceTree = "<group>"; };
 		13AE35551C43BA9700BEB477 /* AFAApplicationListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAApplicationListStyleCell.h; path = UI/Cells/ApplicationListStyleCell/AFAApplicationListStyleCell.h; sourceTree = "<group>"; };
 		13AE35561C43BA9700BEB477 /* AFAApplicationListStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAApplicationListStyleCell.m; path = UI/Cells/ApplicationListStyleCell/AFAApplicationListStyleCell.m; sourceTree = "<group>"; };
 		13AE35801C46860800BEB477 /* AFABaseSliderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABaseSliderViewController.h; path = UI/ViewControllers/BaseSliderViewController/AFABaseSliderViewController.h; sourceTree = "<group>"; };
@@ -894,7 +896,7 @@
 		75CFBC701B81E7850018DADE /* AFARememberCredentialsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFARememberCredentialsTableViewCell.m; path = UI/Cells/RememberCredentialsCell/AFARememberCredentialsTableViewCell.m; sourceTree = "<group>"; };
 		75E868051B7E75E500862D51 /* AFASwitchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFASwitchView.h; path = UI/Components/SwitchButtonView/AFASwitchView.h; sourceTree = "<group>"; };
 		75E868061B7E75E500862D51 /* AFASwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFASwitchView.m; path = UI/Components/SwitchButtonView/AFASwitchView.m; sourceTree = "<group>"; };
-		8D0FFDC41CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDKDynamicTableRowHeaderNavigationProtocol.h; sourceTree = "<group>"; };
+		8D0FFDC41CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDynamicTableRowHeaderNavigationProtocol.h; path = FormRenderEngine/Controllers/FormFieldDetailControllers/Protocol/ASDKDynamicTableRowHeaderNavigationProtocol.h; sourceTree = "<group>"; };
 		8D25F0511C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormBooleanFieldCollectionViewCell.h; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormBooleanFieldCollectionViewCell.h; sourceTree = "<group>"; };
 		8D25F0521C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormBooleanFieldCollectionViewCell.m; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormBooleanFieldCollectionViewCell.m; sourceTree = "<group>"; };
 		8D3A51CC1C8084B000FF9A00 /* ASDKProcessDefinitionNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProcessDefinitionNetworkServiceProtocol.h; path = NetworkServices/Proxy/ProcessDefinitionNetworkServices/Protocol/ASDKProcessDefinitionNetworkServiceProtocol.h; sourceTree = "<group>"; };
@@ -1139,6 +1141,7 @@
 				8D3A51CA1C80848800FF9A00 /* ProcessDefinitionNetworkServices */,
 				138C48B71C50DC3400B4F4FB /* ProcessInstanceNetworkServices */,
 				13667FFB1C899400005E4AEA /* QuerryNetworkServices */,
+				13A784241CE4621200DBE648 /* IntegrationNetworkServices */,
 			);
 			name = Proxies;
 			sourceTree = "<group>";
@@ -2442,6 +2445,22 @@
 				13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */,
 			);
 			name = TaskCreateModel;
+			sourceTree = "<group>";
+		};
+		13A784241CE4621200DBE648 /* IntegrationNetworkServices */ = {
+			isa = PBXGroup;
+			children = (
+				13A784251CE4621F00DBE648 /* Protocol */,
+			);
+			name = IntegrationNetworkServices;
+			sourceTree = "<group>";
+		};
+		13A784251CE4621F00DBE648 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */,
+			);
+			name = Protocol;
 			sourceTree = "<group>";
 		};
 		13A82E421BF348E8005537A9 /* FormFieldOption */ = {
@@ -3911,6 +3930,7 @@
 				8D3A51E91C8089EC00FF9A00 /* ASDKUserNetworkServiceProtocol.h in Headers */,
 				8D9E6AE41CBE4EDB001EA2CA /* ASDKFormRenderEngineFormFieldsDataSourceProtocol.h in Headers */,
 				13B22C531C931CF60043D8A4 /* ASDKModelProcessInstanceContentField.h in Headers */,
+				13A784231CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h in Headers */,
 				8D3A51CD1C8084B000FF9A00 /* ASDKProcessDefinitionNetworkServiceProtocol.h in Headers */,
 				13EEC5CE1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h in Headers */,
 				8DEA253C1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.h in Headers */,
