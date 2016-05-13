@@ -28,6 +28,7 @@ extern NSString *kLocalizationDefaultFormOutcome;
 extern NSString *kLocalizationSaveFormOutcome;
 extern NSString *kLocalizationStartProcessFormOutcome;
 extern NSString *kLocalizationDeleteDynamicTableRowFormOutcome;
+extern NSString *kLocalizationCancelButtonText;
 extern NSString *kLocalizationFormDateComponentRemoveButtonText;
 extern NSString *kLocalizationFormDateComponentPickDateLabelText;
 extern NSString *kLocalizationFormDateComponentDoneButtonText;

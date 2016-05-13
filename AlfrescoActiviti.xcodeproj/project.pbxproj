@@ -96,6 +96,8 @@
 		1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800E1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m */; };
 		136D035B1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */; };
 		136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */; };
+		136E11351CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */; };
+		136E11361CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */; };
 		137194531B6922DE00D4E1F0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194521B6922DE00D4E1F0 /* main.m */; };
 		137194561B6922DE00D4E1F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194551B6922DE00D4E1F0 /* AppDelegate.m */; };
 		1371945F1B6922DE00D4E1F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1371945D1B6922DE00D4E1F0 /* Main.storyboard */; };
@@ -614,6 +616,8 @@
 		136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessInstanceDetailsViewController.m; path = UI/ViewControllers/ProcessInstanceDetailsScreen/AFAProcessInstanceDetailsViewController.m; sourceTree = "<group>"; };
 		136E112F1CE4AE1400047E38 /* AFAIntegrationServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAIntegrationServices.h; path = Business/ServiceRepository/Services/AFAIntegrationServices.h; sourceTree = "<group>"; };
 		136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAIntegrationServices.m; path = Business/ServiceRepository/Services/AFAIntegrationServices.m; sourceTree = "<group>"; };
+		136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationLoginWebViewViewController.h; path = FormRenderEngine/Components/IntegrationLoginWebViewController/ASDKIntegrationLoginWebViewViewController.h; sourceTree = "<group>"; };
+		136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationLoginWebViewViewController.m; path = FormRenderEngine/Components/IntegrationLoginWebViewController/ASDKIntegrationLoginWebViewViewController.m; sourceTree = "<group>"; };
 		1371944D1B6922DE00D4E1F0 /* AlfrescoActiviti.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlfrescoActiviti.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		137194511B6922DE00D4E1F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		137194521B6922DE00D4E1F0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1881,6 +1885,15 @@
 			name = AFAIntegrationServices;
 			sourceTree = "<group>";
 		};
+		136E11371CE5BE0B00047E38 /* IntegrationLoginWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */,
+				136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */,
+			);
+			name = IntegrationLoginWebViewController;
+			sourceTree = "<group>";
+		};
 		137194441B6922DE00D4E1F0 = {
 			isa = PBXGroup;
 			children = (
@@ -2420,6 +2433,7 @@
 				8DB3998C1C9875FC0089E0AB /* NoContentView */,
 				133B7FE51B78FB3300C17D06 /* RoundedBorderView */,
 				13A0BCB61BD7BF9B00599661 /* CheckboxComponent */,
+				136E11371CE5BE0B00047E38 /* IntegrationLoginWebViewController */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -3953,6 +3967,7 @@
 				13EED8751C52804A00F17105 /* ASDKAuthenticateRequestRepresentation.h in Headers */,
 				133F05461BD52A9000C22CFD /* ASDKFormNetworkServices.h in Headers */,
 				8DB399A61C9C31420089E0AB /* ASDKPeopleTableViewCell.h in Headers */,
+				136E11351CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h in Headers */,
 				8DEA25311C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.h in Headers */,
 				13E8306A1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h in Headers */,
 				13CE5C6D1B998711002E5172 /* ASDKModelFilter.h in Headers */,
@@ -4721,6 +4736,7 @@
 				8DEA25411C7E044900BF376F /* ASDKMultilineFormFieldDetailsViewController.m in Sources */,
 				137B944B1BD67A8600134BF1 /* ASDKModelFormDescription.m in Sources */,
 				13667FFF1C8995C7005E4AEA /* ASDKTaskListQuerryRequestRepresentation.m in Sources */,
+				136E11361CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m in Sources */,
 				138F0A2B1C6B7E9000DA9414 /* ASDKRadioFormFieldDetailsViewController.m in Sources */,
 				13B843E61BC29866007BA3CC /* ASDKModelFileContent.m in Sources */,
 				13CF72011BCCDA3E0048C322 /* ASDKDiskServicesConstants.m in Sources */,

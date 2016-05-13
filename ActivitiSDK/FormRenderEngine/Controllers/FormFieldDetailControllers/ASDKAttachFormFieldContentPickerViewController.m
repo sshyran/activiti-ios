@@ -41,6 +41,7 @@
 
 // View controllers
 #import "ASDKAttachFormFieldDetailsViewController.h"
+#import "ASDKIntegrationLoginWebViewViewController.h"
 
 // Managers
 #import "ASDKBootstrap.h"
@@ -71,6 +72,7 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 @property (strong, nonatomic) JGProgressHUD                                 *progressHUD;
 @property (strong, nonatomic) UIImagePickerController                       *imagePickerController;
 @property (strong, nonatomic) QLPreviewController                           *previewController;
+@property (strong, nonatomic) ASDKIntegrationLoginWebViewViewController     *integrationLoginController;
 
 // Internal state properties
 @property (strong, nonatomic) NSURL                                         *currentSelectedUploadResourceURL;
@@ -268,6 +270,7 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
                                             animated:YES
                                           completion:nil];
 }
+
 
 #pragma mark -
 #pragma mark Image Picker Controller delegate methods
@@ -495,6 +498,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     return self.currentSelectedDownloadResourceURL;
 }
 
+
 #pragma mark -
 #pragma mark Tableview Delegate & Datasource
 
@@ -571,7 +575,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
             break;
             
-        default:
+        default: { // Handle integration services cell behaviour
+            ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
+            
+            if (!account.authorized) {
+                self.integrationLoginController =
+                [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURL
+                                                                            completionBlock:^(BOOL isAuthorized, NSString *code) {
+                }];
+                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationLoginController];
+                
+                [self presentViewController:navigationController
+                                   animated:YES
+                                 completion:nil];
+            }
+        }
             break;
     }
 }

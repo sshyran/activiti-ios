@@ -27,6 +27,7 @@ extern NSString *kASDKStoryboardIDAttachFormFieldDetailController;
 extern NSString *kASDKStoryboardIDMultilineFormFieldDetailController;
 extern NSString *kASDKStoryboardIDPeopleFormFieldDetailController;
 extern NSString *kASDKStoryboardIDDynamicTableFormFieldDetailController;
+extern NSString *kASDKStoryboardIDIntegrationLoginWebViewController;
 
 // Segue IDs
 extern NSString *kASDKSegueIDFormContentPicker;
@@ -81,3 +82,7 @@ extern NSTimeInterval kASDKSetSelectedAnimationTime;
 
 // Segues
 extern NSString *kSegueIDFormFieldPeopleAddPeopleUnwind;
+
+// Integration parameters
+extern NSString *kASDKIntegrationOauth2CodeParameter;
+extern NSString *kASDKIntegrationOauth2RedirectURIParameter;

@@ -21,6 +21,7 @@
 "saveFormOutcome"                                               = "Save";
 "startProcessFormOutcome"                                       = "Start process";
 "deleteDynamicTableRowFormOutcome"                              = "Delete row";
+"cancelButtonText"                                              = "Cancel";
 "formDateComponentRemoveButtonText"                             = "Remove";
 "formDateComponentPickDateLabelText"                            = "Pick a date";
 "formDateComponentDoneButtonText"                               = "Done";

@@ -28,6 +28,7 @@ NSString *kLocalizationDefaultFormOutcome                        = @"defaultForm
 NSString *kLocalizationSaveFormOutcome                           = @"saveFormOutcome";
 NSString *kLocalizationStartProcessFormOutcome                   = @"startProcessFormOutcome";
 NSString *kLocalizationDeleteDynamicTableRowFormOutcome          = @"deleteDynamicTableRowFormOutcome";
+NSString *kLocalizationCancelButtonText                          = @"cancelButtonText";
 NSString *kLocalizationFormDateComponentRemoveButtonText         = @"formDateComponentRemoveButtonText";
 NSString *kLocalizationFormDateComponentPickDateLabelText        = @"formDateComponentPickDateLabelText";
 NSString *kLocalizationFormDateComponentDoneButtonText           = @"formDateComponentDoneButtonText";
