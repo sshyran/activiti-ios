@@ -98,6 +98,10 @@
 		136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */; };
 		136E11351CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */; };
 		136E11361CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */; };
+		136E113A1CEA11A500047E38 /* ASDKModelNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11381CEA11A500047E38 /* ASDKModelNetwork.h */; };
+		136E113B1CEA11A500047E38 /* ASDKModelNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11391CEA11A500047E38 /* ASDKModelNetwork.m */; };
+		136E113F1CEA11E800047E38 /* ASDKModelSite.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E113D1CEA11E800047E38 /* ASDKModelSite.h */; };
+		136E11401CEA11E800047E38 /* ASDKModelSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E113E1CEA11E800047E38 /* ASDKModelSite.m */; };
 		137194531B6922DE00D4E1F0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194521B6922DE00D4E1F0 /* main.m */; };
 		137194561B6922DE00D4E1F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194551B6922DE00D4E1F0 /* AppDelegate.m */; };
 		1371945F1B6922DE00D4E1F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1371945D1B6922DE00D4E1F0 /* Main.storyboard */; };
@@ -618,6 +622,10 @@
 		136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAIntegrationServices.m; path = Business/ServiceRepository/Services/AFAIntegrationServices.m; sourceTree = "<group>"; };
 		136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationLoginWebViewViewController.h; path = FormRenderEngine/Components/IntegrationLoginWebViewController/ASDKIntegrationLoginWebViewViewController.h; sourceTree = "<group>"; };
 		136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationLoginWebViewViewController.m; path = FormRenderEngine/Components/IntegrationLoginWebViewController/ASDKIntegrationLoginWebViewViewController.m; sourceTree = "<group>"; };
+		136E11381CEA11A500047E38 /* ASDKModelNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelNetwork.h; path = Model/Network/ASDKModelNetwork.h; sourceTree = "<group>"; };
+		136E11391CEA11A500047E38 /* ASDKModelNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelNetwork.m; path = Model/Network/ASDKModelNetwork.m; sourceTree = "<group>"; };
+		136E113D1CEA11E800047E38 /* ASDKModelSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelSite.h; path = Model/Site/ASDKModelSite.h; sourceTree = "<group>"; };
+		136E113E1CEA11E800047E38 /* ASDKModelSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelSite.m; path = Model/Site/ASDKModelSite.m; sourceTree = "<group>"; };
 		1371944D1B6922DE00D4E1F0 /* AlfrescoActiviti.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlfrescoActiviti.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		137194511B6922DE00D4E1F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		137194521B6922DE00D4E1F0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1235,6 +1243,8 @@
 				13B22C501C931C050043D8A4 /* ProcessInstanceContent */,
 				13B22C551C931CF90043D8A4 /* ProcessInstanceContentField */,
 				13A784331CE46DB600DBE648 /* IntegrationAccount */,
+				136E113C1CEA11AB00047E38 /* Network */,
+				136E11411CEA11EA00047E38 /* Site */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1892,6 +1902,24 @@
 				136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */,
 			);
 			name = IntegrationLoginWebViewController;
+			sourceTree = "<group>";
+		};
+		136E113C1CEA11AB00047E38 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				136E11381CEA11A500047E38 /* ASDKModelNetwork.h */,
+				136E11391CEA11A500047E38 /* ASDKModelNetwork.m */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		136E11411CEA11EA00047E38 /* Site */ = {
+			isa = PBXGroup;
+			children = (
+				136E113D1CEA11E800047E38 /* ASDKModelSite.h */,
+				136E113E1CEA11E800047E38 /* ASDKModelSite.m */,
+			);
+			name = Site;
 			sourceTree = "<group>";
 		};
 		137194441B6922DE00D4E1F0 = {
@@ -3983,6 +4011,7 @@
 				8D3B50E81C86E258005BEEEB /* ASDKModelRestFormField.h in Headers */,
 				131375261B6FB38500D2268E /* ASDKModelServerConfiguration.h in Headers */,
 				137B944A1BD67A8600134BF1 /* ASDKModelFormDescription.h in Headers */,
+				136E113A1CEA11A500047E38 /* ASDKModelNetwork.h in Headers */,
 				13F9BA2A1B734F820068BB8C /* ASDKProfileInformationRequestRepresentation.h in Headers */,
 				8DB399941C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.h in Headers */,
 				13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */,
@@ -4039,6 +4068,7 @@
 				139564EB1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h in Headers */,
 				135DB32B1B6B616A009138FC /* ASDKLogConfiguration.h in Headers */,
 				13F240341B6B784A00533B37 /* ASDKServiceLocatorProtocol.h in Headers */,
+				136E113F1CEA11E800047E38 /* ASDKModelSite.h in Headers */,
 				139050E71CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.h in Headers */,
 				13667FF91C8993DF005E4AEA /* ASDKQuerryNetworkServiceProtocol.h in Headers */,
 				13EEC5E61C05CDFE00B95740 /* ASDKRoundedBorderView.h in Headers */,
@@ -4649,6 +4679,7 @@
 				8D6B2D7F1CB79D150011EC42 /* ASDKModelDynamicTableFormField.m in Sources */,
 				13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */,
 				8DB3999E1C9AEDFF0089E0AB /* ASDKPeopleFormFieldDetailsViewController.m in Sources */,
+				136E113B1CEA11A500047E38 /* ASDKModelNetwork.m in Sources */,
 				132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */,
 				8D3B50ED1C873108005BEEEB /* ASDKFormPreProcessor.m in Sources */,
 				13C855BB1C4D197600F84422 /* ASDKFilterListRequestRepresentation.m in Sources */,
@@ -4710,6 +4741,7 @@
 				8D3A51F71C808A4400FF9A00 /* ASDKUserParserOperationWorker.m in Sources */,
 				13C94BE51B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m in Sources */,
 				1357018E1B70D21700A384A7 /* ASDKModelBase.m in Sources */,
+				136E11401CEA11E800047E38 /* ASDKModelSite.m in Sources */,
 				13044FCA1BFA178A008FF6E6 /* ASDKModelAmountFormField.m in Sources */,
 				13F07EFC1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m in Sources */,
 				1313751D1B6FABCF00D2268E /* ASDKNetworkService.m in Sources */,

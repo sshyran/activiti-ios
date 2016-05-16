@@ -84,4 +84,6 @@ extern NSString * const kASDKAPIUsersPath;
 extern NSString * const kASDKAPIUsersPicturePath;
 
 // Integration related
-extern NSString * const kASDKAPIIntegrationAccountsPath;
+extern NSString * const kASDKAPIIntegrationPath;
+extern NSString * const kASDKAPIIntegrationAlfrescoCloudPath;
+extern NSString * const kASDKAPIIntegrationNetworksPath;

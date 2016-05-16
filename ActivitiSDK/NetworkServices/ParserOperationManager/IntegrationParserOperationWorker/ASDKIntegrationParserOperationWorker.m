@@ -19,6 +19,7 @@
 #import "ASDKIntegrationParserOperationWorker.h"
 #import "ASDKModelPaging.h"
 #import "ASDKModelIntegrationAccount.h"
+#import "ASDKModelNetwork.h"
 #import "ASDKAPIJSONKeyParams.h"
 @import Mantle;
 
@@ -52,10 +53,24 @@
             completionBlock(accountList, parserError, paging);
         });
     }
+    
+    if ([CREATE_STRING(ASDKIntegrationParserContentTypeNetworkList) isEqualToString:contentType]) {
+        NSError *parserError = nil;
+        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
+                                            fromJSONDictionary:contentDictionary
+                                                         error:&parserError];
+        NSArray *networkList = [MTLJSONAdapter modelsOfClass:ASDKModelNetwork.class
+                                               fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
+                                                       error:&parserError];
+        dispatch_async(completionQueue, ^{
+            completionBlock(networkList, parserError, paging);
+        });
+    }
 }
 
 - (NSArray *)availableServices {
-    return @[CREATE_STRING(ASDKIntegrationParserContentTypeAccountList)];
+    return @[CREATE_STRING(ASDKIntegrationParserContentTypeAccountList),
+             CREATE_STRING(ASDKIntegrationParserContentTypeNetworkList)];
 }
 
 @end

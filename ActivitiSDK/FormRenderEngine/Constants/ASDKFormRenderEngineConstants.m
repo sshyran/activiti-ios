@@ -105,4 +105,3 @@ NSTimeInterval kASDKSetSelectedAnimationTime                     = .25f;
 #pragma mark Integration parameters
 
 NSString *kASDKIntegrationOauth2CodeParameter                    = @"code";
-NSString *kASDKIntegrationOauth2RedirectURIParameter             = @"redirect_uri";

@@ -121,4 +121,6 @@ NSString * const kASDKAPIUsersPicturePath           = @"picture";
 #pragma mark -
 #pragma mark Integration related
 
-NSString * const kASDKAPIIntegrationAccountsPath    = @"integration";
+NSString * const kASDKAPIIntegrationPath                = @"integration";
+NSString * const kASDKAPIIntegrationAlfrescoCloudPath   = @"alfresco-cloud";
+NSString * const kASDKAPIIntegrationNetworksPath        = @"networks";

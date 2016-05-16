@@ -20,6 +20,7 @@
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLogConfiguration.h"
 #import "ASDKLocalizationConstants.h"
+#import "ASDKNetworkServiceConstants.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -32,7 +33,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 @property (weak, nonatomic)   IBOutlet UIWebView        *webViewContainer;
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem  *cancelBarButtonItem;
 @property (strong, nonatomic) NSString                  *loginURLString;
-@property (strong, nonatomic) NSString                  *redirectURLString;
+@property (assign, nonatomic) BOOL                      isAuthorizationComplete;
 @property (strong, nonatomic) ASDKIntegrationLoginWebViewViewControllerCompletionBlock completionBlock;
 
 @end
@@ -49,7 +50,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     self = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDIntegrationLoginWebViewController];
     if (self) {
         self.loginURLString = authorizationURLString;
-        self.redirectURLString = [self extractRedirectURIFromURLString:authorizationURLString];
         self.completionBlock = completionBlock;
     }
     
@@ -92,30 +92,26 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
     NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
     for (NSURLQueryItem *item in urlComponents.queryItems) {
         if ([item.name isEqualToString:kASDKIntegrationOauth2CodeParameter]) {
-            self.completionBlock(item.value != nil, item.value);
-            
-            return NO;
+            self.isAuthorizationComplete = YES;
         }
     }
     
     return YES;
 }
 
-
-#pragma mark -
-#pragma mark Utils
-
-- (NSString *)extractRedirectURIFromURLString:(NSString *)urlString {
-    NSString *redirectURIString = nil;
-    
-    NSURLComponents *urlComponents = [NSURLComponents componentsWithString:urlString];
-    for (NSURLQueryItem *item in urlComponents.queryItems) {
-        if ([item.name isEqualToString:kASDKIntegrationOauth2RedirectURIParameter]) {
-            redirectURIString = item.value;
-        }
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    if (_isAuthorizationComplete) {
+        self.completionBlock(YES);
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
     }
-    
-    return redirectURIString;
+}
+
+- (void)webView:(UIWebView *)webView
+didFailLoadWithError:(NSError *)error {
+    self.completionBlock(NO);
+    [self dismissViewControllerAnimated:YES
+                             completion:nil];
 }
 
 @end

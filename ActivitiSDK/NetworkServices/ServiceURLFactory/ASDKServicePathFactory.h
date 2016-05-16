@@ -106,5 +106,6 @@
 
 // Integration related
 - (NSString *)integrationAccountsServicePath;
+- (NSString *)integrationNetworksServicePath;
 
 @end

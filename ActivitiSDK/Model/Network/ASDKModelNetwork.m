@@ -16,15 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKParserOperationWorkerProtocol.h"
+#import "ASDKModelNetwork.h"
 
-typedef NS_ENUM(NSInteger, ASDKIntegrationParserContentType) {
-    ASDKIntegrationParserContentTypeUndefined         = -1,
-    ASDKIntegrationParserContentTypeAccountList       = 1,              // Start enumeration from 1 to be able to assert (!=0)
-    ASDKIntegrationParserContentTypeNetworkList,
-};
+#if ! __has_feature(objc_arc)
+#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
+#endif
 
-@interface ASDKIntegrationParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
+@implementation ASDKModelNetwork
 
 @end

@@ -16,15 +16,24 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKParserOperationWorkerProtocol.h"
+#import "ASDKModelSite.h"
 
-typedef NS_ENUM(NSInteger, ASDKIntegrationParserContentType) {
-    ASDKIntegrationParserContentTypeUndefined         = -1,
-    ASDKIntegrationParserContentTypeAccountList       = 1,              // Start enumeration from 1 to be able to assert (!=0)
-    ASDKIntegrationParserContentTypeNetworkList,
-};
+#if ! __has_feature(objc_arc)
+#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
+#endif
 
-@interface ASDKIntegrationParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
+@implementation ASDKModelSite
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+    NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
+    
+    if (inheretedPropertyKeys.allKeys.count) {
+        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
+                                                          @"title"              : @"title",
+                                                         }];
+    }
+    
+    return inheretedPropertyKeys;
+}
 
 @end

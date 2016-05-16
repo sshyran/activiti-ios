@@ -19,7 +19,8 @@
 #import <UIKit/UIKit.h>
 #import "ASDKModelFormField.h"
 
-@class ASDKModelContent;
+@class ASDKModelContent,
+ASDKModelIntegrationAccount;
 
 typedef void  (^ASDKFormFieldContentDownloadProgressBlock) (NSString *formattedReceivedBytesString, NSError *error);
 typedef void  (^ASDKFormFieldContentDownloadCompletionBlock)(NSString *contentID, NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error);
@@ -33,6 +34,7 @@ typedef void  (^ASDKFormFieldContentDownloadCompletionBlock)(NSString *contentID
 - (void)pickedContentHasFinishedDownloadingAtURL:(NSURL *)downloadedFileURL;
 - (void)contentPickerHasBeenPresentedWithNumberOfOptions:(NSUInteger)contentOptionCount
                                               cellHeight:(CGFloat)cellHeight;
+- (void)userPickerIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount;
 
 @end
 

@@ -81,3 +81,8 @@ NSString *kLocalizationFormAlertDialogNoButtonText                = @"formAlertD
 NSString *kLocalizationFormAlertDialogGenericNetworkErrorText     = @"formAlertDialogGenericNetworkErrorText";
 
 
+#pragma mark -
+#pragma mark Integration component
+
+NSString *kLocalizationIntegrationLoginErrorText                  = @"integrationLoginErrorText";
+NSString *kLocalizationIntegrationLoginSuccessfullText            = @"integrationLoginSuccessfullText";

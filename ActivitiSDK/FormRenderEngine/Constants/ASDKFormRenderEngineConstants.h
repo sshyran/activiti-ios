@@ -85,4 +85,3 @@ extern NSString *kSegueIDFormFieldPeopleAddPeopleUnwind;
 
 // Integration parameters
 extern NSString *kASDKIntegrationOauth2CodeParameter;
-extern NSString *kASDKIntegrationOauth2RedirectURIParameter;

@@ -18,6 +18,7 @@
 
 #import "ASDKIntegrationNetworkServices.h"
 #import "ASDKLogConfiguration.h"
+#import "ASDKNetworkServiceConstants.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -76,7 +77,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                ofType:CREATE_STRING(ASDKIntegrationParserContentTypeAccountList)
                                                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                                                       if (error) {
-                                                                          ASDKLogError(@"Error parsing process instance list. Description:%@", error.localizedDescription);
+                                                                          ASDKLogError(@"Error parsing integration account list. Description:%@", error.localizedDescription);
                                                                           
                                                                           dispatch_async(self.resultsQueue, ^{
                                                                               completionBlock(nil, error, nil);
@@ -97,6 +98,70 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   [strongSelf.networkOperations removeObject:operation];
                                   
                                   ASDKLogError(@"Failed to fetch integration accounts list for request: %@ - %@.\nBody:%@.\nReason:%@",
+                                               operation.request.HTTPMethod,
+                                               operation.request.URL.absoluteString,
+                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                                               error.localizedDescription);
+                                  
+                                  dispatch_async(self.resultsQueue, ^{
+                                      completionBlock(nil, error, nil);
+                                  });
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)fetchIntegrationNetworksWithCompletionBlock:(ASDKIntegrationNetworkListCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager GET:[self.servicePathFactory integrationNetworksServicePath]
+                           parameters:nil
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                                  ASDKLogVerbose(@"Integration network list fetched successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
+                                                 operation.request.HTTPMethod,
+                                                 operation.request.URL.absoluteString,
+                                                 [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                                                 responseDictionary);
+                                  
+                                  // Parse response data
+                                  [self.parserOperationManager parseContentDictionary:responseDictionary
+                                                                               ofType:CREATE_STRING(ASDKIntegrationParserContentTypeNetworkList)
+                                                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                                                      if (error) {
+                                                                          ASDKLogError(@"Error parsing integration network list. Description:%@", error.localizedDescription);
+                                                                          
+                                                                          dispatch_async(self.resultsQueue, ^{
+                                                                              completionBlock(nil, error, nil);
+                                                                          });
+                                                                      } else {
+                                                                          NSArray *integrationAccountsList = (NSArray *)parsedObject;
+                                                                          ASDKLogVerbose(@"Successfully parsed model object:%@", integrationAccountsList);
+                                                                          
+                                                                          dispatch_async(self.resultsQueue, ^{
+                                                                              completionBlock(integrationAccountsList, nil, paging);
+                                                                          });
+                                                                      }
+                                                                  }];
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  ASDKLogError(@"Failed to fetch integration network list for request: %@ - %@.\nBody:%@.\nReason:%@",
                                                operation.request.HTTPMethod,
                                                operation.request.URL.absoluteString,
                                                [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],

@@ -16,15 +16,10 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKParserOperationWorkerProtocol.h"
+#import "ASDKModelBase.h"
 
-typedef NS_ENUM(NSInteger, ASDKIntegrationParserContentType) {
-    ASDKIntegrationParserContentTypeUndefined         = -1,
-    ASDKIntegrationParserContentTypeAccountList       = 1,              // Start enumeration from 1 to be able to assert (!=0)
-    ASDKIntegrationParserContentTypeNetworkList,
-};
+@interface ASDKModelSite : ASDKModelBase
 
-@interface ASDKIntegrationParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
+@property (strong, nonatomic) NSString *title;
 
 @end

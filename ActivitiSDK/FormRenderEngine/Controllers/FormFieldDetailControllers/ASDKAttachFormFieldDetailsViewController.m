@@ -319,4 +319,8 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     self.contentPickerContainerHeightConstraint.constant = contentOptionCount * cellHeight;
 }
 
+- (void)userPickerIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount {
+    [self onFullscreenOverlayTap:nil];
+}
+
 @end

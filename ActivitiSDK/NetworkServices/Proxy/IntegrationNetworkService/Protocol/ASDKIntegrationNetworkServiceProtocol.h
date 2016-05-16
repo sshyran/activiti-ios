@@ -21,6 +21,7 @@
 @class ASDKModelPaging;
 
 typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKIntegrationNetworkListCompletionBlock) (NSArray *networks, NSError *error, ASDKModelPaging *paging);
 
 @protocol ASDKIntegrationNetworkServiceProtocol <NSObject>
 
@@ -31,5 +32,7 @@ typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, N
  *                         error reason and paging information
  */
 - (void)fetchIntegrationAccountsWithCompletionBlock:(ASDKIntegrationAccountListCompletionBlock)completionBlock;
+
+- (void)fetchIntegrationNetworksWithCompletionBlock:(ASDKIntegrationNetworkListCompletionBlock)completionBlock;
 
 @end

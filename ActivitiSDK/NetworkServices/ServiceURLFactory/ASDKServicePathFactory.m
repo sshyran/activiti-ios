@@ -273,7 +273,11 @@ static NSString * const kASDkHTTPS = @"https";
 #pragma mark Integration related
 
 - (NSString *)integrationAccountsServicePath {
-    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationAccountsPath];
+    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath];
+}
+
+- (NSString *)integrationNetworksServicePath {
+    return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath] stringByAppendingPathComponent:kASDKAPIIntegrationAlfrescoCloudPath] stringByAppendingPathComponent:kASDKAPIIntegrationNetworksPath];
 }
 
 @end

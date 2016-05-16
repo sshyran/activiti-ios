@@ -473,6 +473,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [self.progressHUD showInView:self.navigationController.view];
 }
 
+- (void)showIntegrationLoginHUD {
+    self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationIntegrationLoginSuccessfullText, ASDKLocalizationTable, @"Logged in successfully text");
+    self.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+    self.progressHUD.detailTextLabel.text = nil;
+    [self.progressHUD showInView:self.navigationController.view];
+}
+
 - (JGProgressHUD *)configureProgressHUD {
     JGProgressHUD *hud = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
     hud.interactionType = JGProgressHUDInteractionTypeBlockAllTouches;
@@ -579,15 +586,37 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
             
             if (!account.authorized) {
+                __weak typeof(self) weakSelf = self;
                 self.integrationLoginController =
                 [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURL
-                                                                            completionBlock:^(BOOL isAuthorized, NSString *code) {
+                                                                            completionBlock:^(BOOL isAuthorized) {
+                                                                                if (isAuthorized) {
+                                                                                    __strong typeof(self) strongSelf = weakSelf;
+                                                                                    [self fetchIntegrationAccounts];
+                                                                                    [strongSelf showIntegrationLoginHUD];
+                                                                                    
+                                                                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                                                        [weakSelf.progressHUD dismiss];
+                                                                                    });
+                                                                                    
+                                                                                    if ([strongSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                                                                                        [strongSelf.delegate userPickerIntegrationAccount:account];
+                                                                                    }
+                                                                                } else {
+                                                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                        [self showGenericErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationLoginErrorText, ASDKLocalizationTable,  @"Cannot author integration service")];
+                                                                                    });
+                                                                                }
                 }];
                 UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationLoginController];
                 
                 [self presentViewController:navigationController
                                    animated:YES
                                  completion:nil];
+            } else {
+                if ([self.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                    [self.delegate userPickerIntegrationAccount:account];
+                }
             }
         }
             break;

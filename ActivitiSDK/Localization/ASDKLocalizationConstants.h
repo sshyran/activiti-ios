@@ -72,3 +72,8 @@ extern NSString *kLocalizationFormAlertDialogDeleteContentQuestionFormat;
 extern NSString *kLocalizationFormAlertDialogYesButtonText;
 extern NSString *kLocalizationFormAlertDialogNoButtonText;
 extern NSString *kLocalizationFormAlertDialogGenericNetworkErrorText;
+
+// Integration component
+extern NSString *kLocalizationIntegrationLoginErrorText;
+extern NSString *kLocalizationIntegrationLoginSuccessfullText;
+

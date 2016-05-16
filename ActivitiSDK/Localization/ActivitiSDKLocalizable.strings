@@ -65,3 +65,7 @@
 "peoplePickerControllerInstructionText"                         = "You add contributors by searching them using the search bar above.";
 "peoplePickerControllerInvolvingUserFormat"                     = "%@ is now involved";
 "peoplePickerControllerRemovingUserFormat"                      = "%@ is no longer involved";
+
+// Integration component
+"integrationLoginErrorText"                                     = "There seems to be an issue with authoring access to the current service";
+"integrationLoginSuccessfullText"                               = "You've been logged in successfully";

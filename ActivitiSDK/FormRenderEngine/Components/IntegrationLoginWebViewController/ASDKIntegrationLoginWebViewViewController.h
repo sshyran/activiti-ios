@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^ASDKIntegrationLoginWebViewViewControllerCompletionBlock) (BOOL isAuthorized, NSString *code);
+typedef void (^ASDKIntegrationLoginWebViewViewControllerCompletionBlock) (BOOL isAuthorized);
 
 @interface ASDKIntegrationLoginWebViewViewController : UIViewController
 

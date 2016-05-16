@@ -13,7 +13,6 @@ def shared_pods
 	pod 'Mantle'
 	pod 'JGProgressHUD'
 	pod 'AFNetworking', '2.6.1'
-	pod 'AFOAuth2Manager'
 end
 
 abstract_target 'Shared' do
