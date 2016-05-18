@@ -69,3 +69,6 @@
 // Integration component
 "integrationLoginErrorText"                                     = "There seems to be an issue with authoring access to the current service";
 "integrationLoginSuccessfullText"                               = "You've been logged in successfully";
+"integrationBrowsingChooseNetworkText"                          = "Choose network";
+"integrationBrowsingChooseSiteText"                             = "Choose site";
+"integrationBrowsingNoContentAvailableText"                     = "There is no content available at this location.";

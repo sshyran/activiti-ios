@@ -20,6 +20,7 @@
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
+#import "ASDKNetworkServiceConstants.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
@@ -30,9 +31,14 @@
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelContent.h"
 #import "ASDKModelFormFieldAttachParameter.h"
+#import "ASDKModelIntegrationAccount.h"
+#import "ASDKIntegrationNetworksDataSource.h"
 
+// Controllers
 #import "ASDKAttachFormFieldContentPickerViewController.h"
+#import "ASDKIntegrationBrowsingViewController.h"
 
+// Views
 #import "ASDKNoContentView.h"
 
 // Cells
@@ -40,8 +46,6 @@
 
 @interface ASDKAttachFormFieldDetailsViewController () <ASDKAttachFormFieldContentPickerViewControllerDelegate>
 
-@property (strong, nonatomic) NSMutableSet                                          *uploadedContentIDs;
-@property (strong, nonatomic) ASDKModelFormField                                    *currentFormField;
 @property (strong, nonatomic) ASDKAttachFormFieldContentPickerViewController        *contentPickerViewController;
 @property (weak, nonatomic)   IBOutlet UITableView                                  *attachedContentTableView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                              *addBarButtonItem;
@@ -50,6 +54,11 @@
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                           *contentPickerContainerHeightConstraint;
 @property (weak, nonatomic)   IBOutlet UIView                                       *fullScreenOverlayView;
 @property (weak, nonatomic)   IBOutlet ASDKNoContentView                            *noContentView;
+
+// Internal state properties
+@property (strong, nonatomic) NSMutableSet                                          *uploadedContentIDs;
+@property (strong, nonatomic) ASDKModelFormField                                    *currentFormField;
+@property (strong, nonatomic) ASDKIntegrationBrowsingViewController                 *integrationBrowsingController;
 
 @end
 
@@ -321,6 +330,17 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)userPickerIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount {
     [self onFullscreenOverlayTap:nil];
+    
+    // Initialize the browsing controller at a top network level based on the selected integration account
+    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:kASDKAPIServiceIDAlfrescoCloud]) {
+        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:[ASDKIntegrationNetworksDataSource new]];
+    }
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationBrowsingController];
+    
+    [self presentViewController:navigationController
+                       animated:YES
+                     completion:nil];
 }
 
 @end

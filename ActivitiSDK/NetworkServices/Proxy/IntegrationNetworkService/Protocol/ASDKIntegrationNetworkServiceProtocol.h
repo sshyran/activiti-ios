@@ -22,6 +22,7 @@
 
 typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
 typedef void  (^ASDKIntegrationNetworkListCompletionBlock) (NSArray *networks, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKIntegrationSiteListCompletionBlock) (NSArray *sites, NSError *error, ASDKModelPaging *paging);
 
 @protocol ASDKIntegrationNetworkServiceProtocol <NSObject>
 
@@ -33,6 +34,24 @@ typedef void  (^ASDKIntegrationNetworkListCompletionBlock) (NSArray *networks, N
  */
 - (void)fetchIntegrationAccountsWithCompletionBlock:(ASDKIntegrationAccountListCompletionBlock)completionBlock;
 
+/**
+ *  Fetches and returns via the completion block a list of external integration networks
+ *
+ *  @param completionBlock Completion block providing a network list, an optional error reason and
+ *                         paging information
+ */
 - (void)fetchIntegrationNetworksWithCompletionBlock:(ASDKIntegrationNetworkListCompletionBlock)completionBlock;
+
+/**
+ *  Fetches and returns via the completion block a list of external integration sites that are
+ *  associated with a specified network ID.
+ * 
+ *  @param networkID       The network ID for which the site list is retrieved
+ *
+ *  @param completionBlock Completion block providing a site list, an optional error reason and 
+ *                         pagin information
+ */
+- (void)fetchIntegrationSitesForNetworkID:(NSString *)networkID
+                          completionBlock:(ASDKIntegrationSiteListCompletionBlock)completionBlock;
 
 @end

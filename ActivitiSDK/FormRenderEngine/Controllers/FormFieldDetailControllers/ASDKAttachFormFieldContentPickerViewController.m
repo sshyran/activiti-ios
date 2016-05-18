@@ -364,7 +364,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
     ASDKIntegrationNetworkServices *integrationNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)];
     
-    
     __weak typeof(self) weakSelf = self;
     [integrationNetworkService fetchIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;

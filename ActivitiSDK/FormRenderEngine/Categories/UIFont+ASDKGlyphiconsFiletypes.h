@@ -18,22 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIColor (ASDKFormViewColors)
+@interface UIFont (ASDKGlyphiconsFiletypes)
 
-+ (UIColor *)formViewInvalidValueColor;
-+ (UIColor *)formViewValidValueColor;
-+ (UIColor *)formViewOutcomeEnabledColor;
-+ (UIColor *)formViewOutcomeDisabledColor;
-+ (UIColor *)formViewDatePickerToolbarRemoveButtonColor;
-+ (UIColor *)formViewDatePickerToolbarDoneButtonColor;
-+ (UIColor *)formViewAmountFieldBorderColor;
-+ (UIColor *)formViewFieldPlaceholderColor;
-+ (UIColor *)formViewTextFieldDisabledColor;
-+ (UIColor *)generalTintColor;
-+ (UIColor *)formFieldCellHighlightColor;
-+ (UIColor *)formViewAmountFieldSymbolColor;
-+ (UIColor *)distructiveOperationBackgroundColor;
-+ (UIColor *)formViewCompletedValueColor;
-+ (UIColor *)integrationGreyTintColor;
++ (UIFont *)glyphiconFiletypesFontWithSize:(CGFloat)size;
 
 @end

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,28 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKParserOperationWorkerProtocol.h"
 
-typedef NS_ENUM(NSInteger, ASDKIntegrationParserContentType) {
-    ASDKIntegrationParserContentTypeUndefined         = -1,
-    ASDKIntegrationParserContentTypeAccountList       = 1,              // Start enumeration from 1 to be able to assert (!=0)
-    ASDKIntegrationParserContentTypeNetworkList,
-    ASDKIntegrationParserContentTypeSiteList
-};
+@protocol ASDKIntegrationDataSourceDelegate <NSObject>
 
-@interface ASDKIntegrationParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
+/**
+ *  Signals that the data source object is loading external content
+ */
+- (void)dataSourceIsFetchingContent;
+
+/**
+ *  Signals that the data source object has finished loading external content
+ *
+ *  @param isContentAvailable Informs whether or not there is content available
+ *                            to be displayed
+ */
+- (void)dataSourceFinishedFetchingContent:(BOOL)isContentAvailable;
+
+/**
+ *  Signals that the data source object has encountered an error while 
+ *  processing external content.
+ *
+ *  @param error Error describing what failed in the process of content loading
+ */
+- (void)dataSourceEncounteredAnErrorWhileLoadingContent:(NSError *)error;
 
 @end

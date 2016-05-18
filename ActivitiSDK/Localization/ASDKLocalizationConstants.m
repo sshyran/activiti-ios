@@ -86,3 +86,6 @@ NSString *kLocalizationFormAlertDialogGenericNetworkErrorText     = @"formAlertD
 
 NSString *kLocalizationIntegrationLoginErrorText                  = @"integrationLoginErrorText";
 NSString *kLocalizationIntegrationLoginSuccessfullText            = @"integrationLoginSuccessfullText";
+NSString *kLocalizationIntegrationBrowsingChooseNetworkText       = @"integrationBrowsingChooseNetworkText";
+NSString *kLocalizationIntegrationBrowsingChooseSiteText          = @"integrationBrowsingChooseSiteText";
+NSString *kLocalizationIntegrationBrowsingNoContentAvailableText  = @"integrationBrowsingNoContentAvailableText";

@@ -16,24 +16,21 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "UIFont+ASDKGlyphiconsFiletypes.h"
 
-@interface UIColor (ASDKFormViewColors)
+#if ! __has_feature(objc_arc)
+#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
+#endif
 
-+ (UIColor *)formViewInvalidValueColor;
-+ (UIColor *)formViewValidValueColor;
-+ (UIColor *)formViewOutcomeEnabledColor;
-+ (UIColor *)formViewOutcomeDisabledColor;
-+ (UIColor *)formViewDatePickerToolbarRemoveButtonColor;
-+ (UIColor *)formViewDatePickerToolbarDoneButtonColor;
-+ (UIColor *)formViewAmountFieldBorderColor;
-+ (UIColor *)formViewFieldPlaceholderColor;
-+ (UIColor *)formViewTextFieldDisabledColor;
-+ (UIColor *)generalTintColor;
-+ (UIColor *)formFieldCellHighlightColor;
-+ (UIColor *)formViewAmountFieldSymbolColor;
-+ (UIColor *)distructiveOperationBackgroundColor;
-+ (UIColor *)formViewCompletedValueColor;
-+ (UIColor *)integrationGreyTintColor;
+static NSString *const kFontGlyphiconsFamilyName = @"GLYPHICONS-Filetypes-Regular";
+
+@implementation UIFont (ASDKGlyphiconsFiletypes)
+
++ (UIFont *)glyphiconFiletypesFontWithSize:(CGFloat)size {
+    UIFont *font = [UIFont fontWithName:kFontGlyphiconsFamilyName
+                                   size:size];
+    NSAssert(font!=nil, @"Unable to load font: %@.",kFontGlyphiconsFamilyName);
+    return font;
+}
 
 @end

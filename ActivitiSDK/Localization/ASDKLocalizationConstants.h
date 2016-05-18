@@ -76,4 +76,6 @@ extern NSString *kLocalizationFormAlertDialogGenericNetworkErrorText;
 // Integration component
 extern NSString *kLocalizationIntegrationLoginErrorText;
 extern NSString *kLocalizationIntegrationLoginSuccessfullText;
-
+extern NSString *kLocalizationIntegrationBrowsingChooseNetworkText;
+extern NSString *kLocalizationIntegrationBrowsingChooseSiteText;
+extern NSString *kLocalizationIntegrationBrowsingNoContentAvailableText;

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,22 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "ASDKIntegrationBrowsingTableViewCell.h"
+#import "UIFont+ASDKGlyphicons.h"
+#import "NSString+ASDKFontGlyphicons.h"
 
-@interface UIColor (ASDKFormViewColors)
+@implementation ASDKIntegrationBrowsingTableViewCell
 
-+ (UIColor *)formViewInvalidValueColor;
-+ (UIColor *)formViewValidValueColor;
-+ (UIColor *)formViewOutcomeEnabledColor;
-+ (UIColor *)formViewOutcomeDisabledColor;
-+ (UIColor *)formViewDatePickerToolbarRemoveButtonColor;
-+ (UIColor *)formViewDatePickerToolbarDoneButtonColor;
-+ (UIColor *)formViewAmountFieldBorderColor;
-+ (UIColor *)formViewFieldPlaceholderColor;
-+ (UIColor *)formViewTextFieldDisabledColor;
-+ (UIColor *)generalTintColor;
-+ (UIColor *)formFieldCellHighlightColor;
-+ (UIColor *)formViewAmountFieldSymbolColor;
-+ (UIColor *)distructiveOperationBackgroundColor;
-+ (UIColor *)formViewCompletedValueColor;
-+ (UIColor *)integrationGreyTintColor;
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.disclosureLabel.font = [UIFont glyphiconFontWithSize:15];
+    self.disclosureLabel.text = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronRight];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
 
 @end

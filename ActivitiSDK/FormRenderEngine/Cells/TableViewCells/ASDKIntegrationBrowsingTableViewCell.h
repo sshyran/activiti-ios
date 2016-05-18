@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,22 +18,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIColor (ASDKFormViewColors)
+@interface ASDKIntegrationBrowsingTableViewCell : UITableViewCell
 
-+ (UIColor *)formViewInvalidValueColor;
-+ (UIColor *)formViewValidValueColor;
-+ (UIColor *)formViewOutcomeEnabledColor;
-+ (UIColor *)formViewOutcomeDisabledColor;
-+ (UIColor *)formViewDatePickerToolbarRemoveButtonColor;
-+ (UIColor *)formViewDatePickerToolbarDoneButtonColor;
-+ (UIColor *)formViewAmountFieldBorderColor;
-+ (UIColor *)formViewFieldPlaceholderColor;
-+ (UIColor *)formViewTextFieldDisabledColor;
-+ (UIColor *)generalTintColor;
-+ (UIColor *)formFieldCellHighlightColor;
-+ (UIColor *)formViewAmountFieldSymbolColor;
-+ (UIColor *)distructiveOperationBackgroundColor;
-+ (UIColor *)formViewCompletedValueColor;
-+ (UIColor *)integrationGreyTintColor;
+@property (weak, nonatomic) IBOutlet UILabel *sourceIconLabel;
+@property (weak, nonatomic) IBOutlet UILabel *sourceTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *disclosureLabel;
 
 @end

@@ -57,6 +57,7 @@ extern NSString *kASDKCellIDFormFieldPeopleAddPeople;
 extern NSString *kASDKCellIDFormFieldDynamicTableRepresentation;
 extern NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation;
 extern NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation;
+extern NSString *kASDKCellIDIntegrationBrowsing;
 
 // Form field key values
 extern NSString *kASDKFormFieldTrueStringValue;
@@ -85,3 +86,4 @@ extern NSString *kSegueIDFormFieldPeopleAddPeopleUnwind;
 
 // Integration parameters
 extern NSString *kASDKIntegrationOauth2CodeParameter;
+extern NSString *kASDKStoryboardIDIntegrationBrowsingViewController;

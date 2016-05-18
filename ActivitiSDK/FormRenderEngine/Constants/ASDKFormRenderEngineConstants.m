@@ -31,6 +31,7 @@ NSString *kASDKStoryboardIDMultilineFormFieldDetailController       = @"ASDKForm
 NSString *kASDKStoryboardIDPeopleFormFieldDetailController          = @"ASDKFormPeopleFormFieldDetailController";
 NSString *kASDKStoryboardIDDynamicTableFormFieldDetailController    = @"ASDKFormDynamicTableFormFieldDetailController";
 NSString *kASDKStoryboardIDIntegrationLoginWebViewController        = @"ASDKIntegrationLoginWebViewController";
+NSString *kASDKStoryboardIDIntegrationBrowsingViewController        = @"ASDKIntegrationBrowsingViewController";
 
 
 #pragma mark -
@@ -65,6 +66,7 @@ NSString *kASDKCellIDFormFieldPeopleAddPeople                       = @"FormFiel
 NSString *kASDKCellIDFormFieldDynamicTableRepresentation            = @"FormFieldDynamicTableRepresentationCellID";
 NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation      = @"FormFieldDynamicTableHeaderRepresentationCellID";
 NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation         = @"FormFieldDynamicTableRowRepresentationCellID";
+NSString *kASDKCellIDIntegrationBrowsing                            = @"ASDKIntegrationBrowsingCellID";
 
 
 #pragma mark -

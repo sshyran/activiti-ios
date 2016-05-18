@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,16 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "ASDKIntegrationDataSourceDelegate.h"
+#import "ASDKIntegrationDataSourceProtocol.h"
 
-@interface UIColor (ASDKFormViewColors)
+@class ASDKModelNetwork;
 
-+ (UIColor *)formViewInvalidValueColor;
-+ (UIColor *)formViewValidValueColor;
-+ (UIColor *)formViewOutcomeEnabledColor;
-+ (UIColor *)formViewOutcomeDisabledColor;
-+ (UIColor *)formViewDatePickerToolbarRemoveButtonColor;
-+ (UIColor *)formViewDatePickerToolbarDoneButtonColor;
-+ (UIColor *)formViewAmountFieldBorderColor;
-+ (UIColor *)formViewFieldPlaceholderColor;
-+ (UIColor *)formViewTextFieldDisabledColor;
-+ (UIColor *)generalTintColor;
-+ (UIColor *)formFieldCellHighlightColor;
-+ (UIColor *)formViewAmountFieldSymbolColor;
-+ (UIColor *)distructiveOperationBackgroundColor;
-+ (UIColor *)formViewCompletedValueColor;
-+ (UIColor *)integrationGreyTintColor;
+@interface ASDKIntegrationSitesDataSource : NSObject <ASDKIntegrationDataSourceProtocol>
+
+@property (weak, nonatomic) id<ASDKIntegrationDataSourceDelegate> delegate;
+
+- (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel;
 
 @end
