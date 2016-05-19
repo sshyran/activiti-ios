@@ -108,5 +108,8 @@
 - (NSString *)integrationAccountsServicePath;
 - (NSString *)integrationNetworksServicePath;
 - (NSString *)integrationSitesServicePathFormat;
+- (NSString *)integrationSiteContentServicePathFormat;
+- (NSString *)integrationFolderContentServicePathFormat;
+- (NSString *)integrationContentUploadServicePath;
 
 @end

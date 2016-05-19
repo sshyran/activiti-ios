@@ -32,7 +32,7 @@
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     
     if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property       JSON property
+        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
                                                           @"contentName"        : @"name",
                                                           @"owner"              : @"createdBy",
                                                           @"isContentAvailable" : @"contentAvailable",
@@ -40,8 +40,10 @@
                                                           @"mimeType"           : @"mimeType",
                                                           @"displayType"        : @"simpleType",
                                                           @"previewStatus"      : @"previewStatus",
-                                                          @"thumbnailStatus"    : @"thumbnailStatus"
-                                                          }];
+                                                          @"thumbnailStatus"    : @"thumbnailStatus",
+                                                          @"source"             : @"source",
+                                                          @"sourceID"           : @"sourceId"
+                                                         }];
     }
     
     return inheretedPropertyKeys;

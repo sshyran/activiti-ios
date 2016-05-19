@@ -23,7 +23,10 @@ typedef NS_ENUM(NSInteger, ASDKIntegrationParserContentType) {
     ASDKIntegrationParserContentTypeUndefined         = -1,
     ASDKIntegrationParserContentTypeAccountList       = 1,              // Start enumeration from 1 to be able to assert (!=0)
     ASDKIntegrationParserContentTypeNetworkList,
-    ASDKIntegrationParserContentTypeSiteList
+    ASDKIntegrationParserContentTypeSiteList,
+    ASDKIntegrationParserContentTypeSiteContentList,
+    ASDKIntegrationParserContentTypeFolderContentList,
+    ASDKIntegrationParserContentTypeUploadedContent
 };
 
 @interface ASDKIntegrationParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>

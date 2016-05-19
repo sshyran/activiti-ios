@@ -16,21 +16,14 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "UIFont+ASDKGlyphiconsFiletypes.h"
+#import <ActivitiSDK/ActivitiSDK.h>
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
+@interface ASDKIntegrationNodeContentRequestRepresentation : ASDKPagingRequestRepresentation
 
-static NSString *const kFontGlyphiconsFiletypesFamilyName = @"GLYPHICONSFiletypes-Regular";
-
-@implementation UIFont (ASDKGlyphiconsFiletypes)
-
-+ (UIFont *)glyphiconFiletypesFontWithSize:(CGFloat)size {
-    UIFont *font = [UIFont fontWithName:kFontGlyphiconsFiletypesFamilyName
-                                   size:size];
-    NSAssert(font!=nil, @"Unable to load font: %@.",kFontGlyphiconsFiletypesFamilyName);
-    return font;
-}
+@property (assign, nonatomic) BOOL          isLink;
+@property (strong, nonatomic) NSString      *name;
+@property (strong, nonatomic) NSString      *simpleType;
+@property (strong, nonatomic) NSString      *source;
+@property (strong, nonatomic) NSString      *sourceID;
 
 @end

@@ -284,4 +284,16 @@ static NSString * const kASDkHTTPS = @"https";
     return [[[self integrationNetworksServicePath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationSitesPath];
 }
 
+- (NSString *)integrationSiteContentServicePathFormat {
+    return [[[self integrationSitesServicePathFormat] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath];
+}
+
+- (NSString *)integrationFolderContentServicePathFormat {
+    return [[[[[self integrationNetworksServicePath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationFoldersPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath];
+}
+
+- (NSString *)integrationContentUploadServicePath {
+    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIContentPath];
+}
+
 @end

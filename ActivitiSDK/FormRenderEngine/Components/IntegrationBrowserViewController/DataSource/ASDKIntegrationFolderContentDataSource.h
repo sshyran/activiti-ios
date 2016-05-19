@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,20 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "UIFont+ASDKGlyphiconsFiletypes.h"
+#import <Foundation/Foundation.h>
+#import "ASDKIntegrationDataSourceDelegate.h"
+#import "ASDKIntegrationDataSourceProtocol.h"
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
+@class ASDKModelNetwork,
+ASDKModelIntegrationContent;
 
-static NSString *const kFontGlyphiconsFiletypesFamilyName = @"GLYPHICONSFiletypes-Regular";
+@interface ASDKIntegrationFolderContentDataSource : NSObject <ASDKIntegrationDataSourceProtocol>
 
-@implementation UIFont (ASDKGlyphiconsFiletypes)
+@property (weak, nonatomic) id<ASDKIntegrationDataSourceDelegate> delegate;
+@property (strong, nonatomic) ASDKModelNetwork                    *currentNetwork;
+@property (strong, nonatomic) ASDKModelIntegrationContent         *currentNode;
 
-+ (UIFont *)glyphiconFiletypesFontWithSize:(CGFloat)size {
-    UIFont *font = [UIFont fontWithName:kFontGlyphiconsFiletypesFamilyName
-                                   size:size];
-    NSAssert(font!=nil, @"Unable to load font: %@.",kFontGlyphiconsFiletypesFamilyName);
-    return font;
-}
+- (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel
+                         contentNode:(ASDKModelIntegrationContent *)contentNode;
 
 @end

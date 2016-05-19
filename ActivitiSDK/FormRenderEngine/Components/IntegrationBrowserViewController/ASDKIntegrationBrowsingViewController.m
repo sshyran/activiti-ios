@@ -31,6 +31,8 @@
 // Data sources
 #import "ASDKIntegrationNetworksDataSource.h"
 #import "ASDKIntegrationSitesDataSource.h"
+#import "ASDKIntegrationSiteContentDataSource.h"
+#import "ASDKIntegrationFolderContentDataSource.h"
 
 // Model
 #import "ASDKModelNetwork.h"
@@ -180,13 +182,35 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKIntegrationBrowsingViewController *childController = nil;
+    id<ASDKIntegrationDataSourceProtocol> dataSource = nil;
     
     // If the current data source is providing network information this means
     // we're looking at the Alfresco Cloud integration and the next data source should be
     // sites for that network
     if ([self.dataSource isKindOfClass:[ASDKIntegrationNetworksDataSource class]]) {
-        ASDKIntegrationSitesDataSource *sitesDataSource = [[ASDKIntegrationSitesDataSource alloc] initWithNetworkModel:[self.dataSource itemAtIndexPath:indexPath]];
-        childController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:sitesDataSource];
+        dataSource = [[ASDKIntegrationSitesDataSource alloc] initWithNetworkModel:[self.dataSource itemAtIndexPath:indexPath]];
+    } else if ([self.dataSource isKindOfClass:[ASDKIntegrationSitesDataSource class]]) {
+        dataSource =
+        [[ASDKIntegrationSiteContentDataSource alloc] initWithNetworkModel:((ASDKIntegrationSitesDataSource *)self.dataSource).currentNetwork
+                                                                 siteModel:[self.dataSource itemAtIndexPath:indexPath]];   
+    } else if ([self.dataSource isKindOfClass:[ASDKIntegrationSiteContentDataSource class]]) {
+        dataSource =
+        [[ASDKIntegrationFolderContentDataSource alloc] initWithNetworkModel:((ASDKIntegrationSiteContentDataSource *)self.dataSource).currentNetwork
+                                                                 contentNode:[self.dataSource itemAtIndexPath:indexPath]];
+    } else if ([self.dataSource isKindOfClass:[ASDKIntegrationFolderContentDataSource class]]) {
+        if ([self.dataSource isItemAtIndexPathAFolder:indexPath]) {
+            dataSource =
+            [[ASDKIntegrationFolderContentDataSource alloc] initWithNetworkModel:((ASDKIntegrationSiteContentDataSource *)self.dataSource).currentNetwork
+                                                                     contentNode:[self.dataSource itemAtIndexPath:indexPath]];
+        }
+    }
+    
+    // Only instantiate a child controller if it has a valid data source
+    if (dataSource) {
+        childController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:dataSource];
+        if ([self.dataSource respondsToSelector:@selector(nodeTitleForIndexPath:)]) {
+            childController.title =  [self.dataSource nodeTitleForIndexPath:indexPath];
+        }
     }
     
     if (childController) {

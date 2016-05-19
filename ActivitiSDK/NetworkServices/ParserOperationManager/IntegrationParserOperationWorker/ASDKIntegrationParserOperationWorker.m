@@ -21,6 +21,8 @@
 #import "ASDKModelIntegrationAccount.h"
 #import "ASDKModelNetwork.h"
 #import "ASDKModelSite.h"
+#import "ASDKModelIntegrationContent.h"
+#import "ASDKModelContent.h"
 #import "ASDKAPIJSONKeyParams.h"
 @import Mantle;
 
@@ -78,12 +80,37 @@
             completionBlock(siteList, parserError, paging);
         });
     }
+    if ([CREATE_STRING(ASDKIntegrationParserContentTypeSiteContentList) isEqualToString:contentType] ||
+        [CREATE_STRING(ASDKIntegrationParserContentTypeFolderContentList) isEqualToString:contentType]) {
+        NSError *parserError = nil;
+        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
+                                            fromJSONDictionary:contentDictionary
+                                                         error:&parserError];
+        NSArray *contentList = [MTLJSONAdapter modelsOfClass:ASDKModelIntegrationContent.class
+                                            fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
+                                                    error:&parserError];
+        dispatch_async(completionQueue, ^{
+            completionBlock(contentList, parserError, paging);
+        });
+    }
+    if ([CREATE_STRING(ASDKIntegrationParserContentTypeUploadedContent) isEqualToString:contentType]) {
+        NSError *parserError = nil;
+        ASDKModelContent *modelContent = [MTLJSONAdapter modelOfClass:ASDKModelContent.class
+                                                   fromJSONDictionary:contentDictionary
+                                                                error:&parserError];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionBlock(modelContent, parserError, nil);
+        });
+    }
 }
 
 - (NSArray *)availableServices {
     return @[CREATE_STRING(ASDKIntegrationParserContentTypeAccountList),
              CREATE_STRING(ASDKIntegrationParserContentTypeNetworkList),
-             CREATE_STRING(ASDKIntegrationParserContentTypeSiteList)];
+             CREATE_STRING(ASDKIntegrationParserContentTypeSiteList),
+             CREATE_STRING(ASDKIntegrationParserContentTypeSiteContentList),
+             CREATE_STRING(ASDKIntegrationParserContentTypeFolderContentList),
+             CREATE_STRING(ASDKIntegrationParserContentTypeUploadedContent)];
 }
 
 @end

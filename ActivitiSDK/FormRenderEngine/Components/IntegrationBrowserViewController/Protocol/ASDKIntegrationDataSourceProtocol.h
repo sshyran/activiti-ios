@@ -39,4 +39,8 @@
  */
 - (id)itemAtIndexPath:(NSIndexPath *)indexPath;
 
+@optional
+- (BOOL)isItemAtIndexPathAFolder:(NSIndexPath *)indexPath;
+- (NSString *)nodeTitleForIndexPath:(NSIndexPath *)indexPath;
+
 @end

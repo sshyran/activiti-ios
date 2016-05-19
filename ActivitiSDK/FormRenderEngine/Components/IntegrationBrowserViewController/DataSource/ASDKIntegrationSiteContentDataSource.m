@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKIntegrationSitesDataSource.h"
+#import "ASDKIntegrationSiteContentDataSource.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -24,6 +24,7 @@
 // Models
 #import "ASDKModelSite.h"
 #import "ASDKModelNetwork.h"
+#import "ASDKModelIntegrationContent.h"
 
 // Categories
 #import "NSString+ASDKFontGlyphicons.h"
@@ -37,18 +38,20 @@
 #import "ASDKServiceLocator.h"
 #import "ASDKIntegrationNetworkServices.h"
 
-@interface ASDKIntegrationSitesDataSource ()
+@interface ASDKIntegrationSiteContentDataSource ()
 
-@property (strong, nonatomic) NSArray           *sitesArr;
+@property (strong, nonatomic) NSArray           *siteContentList;
 
 @end
 
-@implementation ASDKIntegrationSitesDataSource
+@implementation ASDKIntegrationSiteContentDataSource
 
-- (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel {
+- (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel
+                           siteModel:(ASDKModelSite *)siteModel {
     self = [super init];
     if (self) {
         _currentNetwork = networkModel;
+        _currentSite = siteModel;
     }
     
     return self;
@@ -67,35 +70,37 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationSitesForNetworkID:self.currentNetwork.instanceID completionBlock:^(NSArray *sites, NSError *error, ASDKModelPaging *paging) {
-        __strong typeof(self) strongSelf = weakSelf;
-        if (!error) {
-            strongSelf.sitesArr = sites;
-            if ([strongSelf.delegate respondsToSelector:@selector(dataSourceFinishedFetchingContent:)]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [strongSelf.delegate dataSourceFinishedFetchingContent:sites.count ? YES : NO];
-                });
-            }
-        } else {
-            if ([strongSelf.delegate respondsToSelector:@selector(dataSourceEncounteredAnErrorWhileLoadingContent:)]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [strongSelf.delegate dataSourceEncounteredAnErrorWhileLoadingContent:error];
-                });
-            }
-        }
+    [integrationNetworkService fetchIntegrationContentForNetworkID:self.currentNetwork.instanceID
+                                                            siteID:self.currentSite.instanceID
+                                                   completionBlock:^(NSArray *contentList, NSError *error, ASDKModelPaging *paging) {
+                                                       __strong typeof(self) strongSelf = weakSelf;
+                                                       if (!error) {
+                                                           strongSelf.siteContentList = contentList;
+                                                           if ([strongSelf.delegate respondsToSelector:@selector(dataSourceFinishedFetchingContent:)]) {
+                                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                                   [strongSelf.delegate dataSourceFinishedFetchingContent:contentList.count ? YES : NO];
+                                                               });
+                                                           }
+                                                       } else {
+                                                           if ([strongSelf.delegate respondsToSelector:@selector(dataSourceEncounteredAnErrorWhileLoadingContent:)]) {
+                                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                                   [strongSelf.delegate dataSourceEncounteredAnErrorWhileLoadingContent:error];
+                                                               });
+                                                           }
+                                                       }
     }];
 }
 
 - (id)itemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row > self.sitesArr.count - 1) {
+    if (indexPath.row > self.siteContentList.count - 1) {
         return nil;
     }
     
-    return self.sitesArr[indexPath.row];
+    return self.siteContentList[indexPath.row];
 }
 
 - (NSString *)nodeTitleForIndexPath:(NSIndexPath *)indexPath {
-    return ((ASDKModelSite *)[self itemAtIndexPath:indexPath]).title;
+    return ((ASDKModelIntegrationContent *)[self itemAtIndexPath:indexPath]).title;
 }
 
 
@@ -108,15 +113,15 @@
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-    return self.sitesArr.count;
+    return self.siteContentList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKIntegrationBrowsingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDIntegrationBrowsing
                                                                                  forIndexPath:indexPath];
-    ASDKModelSite *site = self.sitesArr[indexPath.row];
-    cell.sourceTitleLabel.text = site.title;
+    ASDKModelIntegrationContent *content = self.siteContentList[indexPath.row];
+    cell.sourceTitleLabel.text = content.title;
     cell.sourceIconLabel.font = [UIFont glyphiconFontWithSize:24];
     cell.sourceIconLabel.text = [NSString iconStringForIconType:ASDKGlyphIconTypeFolderClosed];
     

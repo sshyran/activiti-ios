@@ -16,21 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "UIFont+ASDKGlyphiconsFiletypes.h"
+#import "ASDKModelBase.h"
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
+@interface ASDKModelIntegrationContent : ASDKModelBase
 
-static NSString *const kFontGlyphiconsFiletypesFamilyName = @"GLYPHICONSFiletypes-Regular";
-
-@implementation UIFont (ASDKGlyphiconsFiletypes)
-
-+ (UIFont *)glyphiconFiletypesFontWithSize:(CGFloat)size {
-    UIFont *font = [UIFont fontWithName:kFontGlyphiconsFiletypesFamilyName
-                                   size:size];
-    NSAssert(font!=nil, @"Unable to load font: %@.",kFontGlyphiconsFiletypesFamilyName);
-    return font;
-}
+@property (assign, nonatomic) BOOL      isFolder;
+@property (strong, nonatomic) NSString  *simpleType;
+@property (strong, nonatomic) NSString  *title;
 
 @end

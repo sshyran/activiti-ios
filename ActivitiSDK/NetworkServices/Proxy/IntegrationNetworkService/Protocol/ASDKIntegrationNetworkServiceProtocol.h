@@ -18,11 +18,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class ASDKModelPaging;
+@class ASDKModelPaging,
+ASDKIntegrationNodeContentRequestRepresentation;
 
-typedef void  (^ASDKIntegrationAccountListCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
-typedef void  (^ASDKIntegrationNetworkListCompletionBlock) (NSArray *networks, NSError *error, ASDKModelPaging *paging);
-typedef void  (^ASDKIntegrationSiteListCompletionBlock) (NSArray *sites, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKIntegrationAccountListCompletionBlock)  (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKIntegrationNetworkListCompletionBlock)  (NSArray *networks, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKIntegrationSiteListCompletionBlock)     (NSArray *sites, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKIntegrationContentListCompletionBlock)  (NSArray *contentList, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKIntegrationContentUploadCompletionBlock)(ASDKModelContent *contentModel, NSError *error);
 
 @protocol ASDKIntegrationNetworkServiceProtocol <NSObject>
 
@@ -49,9 +52,47 @@ typedef void  (^ASDKIntegrationSiteListCompletionBlock) (NSArray *sites, NSError
  *  @param networkID       The network ID for which the site list is retrieved
  *
  *  @param completionBlock Completion block providing a site list, an optional error reason and 
- *                         pagin information
+ *                         paging information
  */
 - (void)fetchIntegrationSitesForNetworkID:(NSString *)networkID
                           completionBlock:(ASDKIntegrationSiteListCompletionBlock)completionBlock;
+
+/**
+ *  Fetches and returns via the completion block a list of content elements that is associated
+ *  with a specified network and site ID.
+ *
+ *  @param networkID       The network ID for which the content list is retrieved
+ *  @param siteID          The site ID for which the content list is retrieved
+ *  @param completionBlock Completion block providing a content list, an optional error reason and
+ *                         paging information
+ */
+- (void)fetchIntegrationContentForNetworkID:(NSString *)networkID
+                                     siteID:(NSString *)siteID
+                            completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock;
+
+/**
+ *  Fetches and returns via the completion block a list of content elements that are associated with
+ *  a specified network and folder ID.
+ *
+ *  @param networkID       The network ID for which the content list is retrieved
+ *  @param folderID        The site ID for which the content list is retrieved
+ *  @param completionBlock Completion block providing a content list, an optional error reason and
+ *                         paging information
+ */
+- (void)fetchIntegrationFolderContentForNetworkID:(NSString *)networkID
+                                         folderID:(NSString *)folderID
+                                  completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock;
+
+/**
+ *  Uploads content from an external integration service that is described inside the provided request 
+ *  representation and reports back via a completion block the status of the upload.
+ *
+ *  @param uploadIntegrationContentWithRepresentation Request representation object describing the content to be 
+ *                                                    uploaded like the source and the sourceID
+ *  @param completionBlock Completion block providing a refference for the uploaded model and an optional error
+ *                         reason.
+ */
+- (void)uploadIntegrationContentWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)uploadIntegrationContentWithRepresentation
+                                   completionBlock:(ASDKIntegrationContentUploadCompletionBlock)completionBlock;
 
 @end

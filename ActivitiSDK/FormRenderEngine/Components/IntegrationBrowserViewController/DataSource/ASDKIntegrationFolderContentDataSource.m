@@ -16,16 +16,18 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKIntegrationSitesDataSource.h"
+#import "ASDKIntegrationFolderContentDataSource.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
 
 // Models
-#import "ASDKModelSite.h"
 #import "ASDKModelNetwork.h"
+#import "ASDKModelIntegrationContent.h"
 
 // Categories
+#import "NSString+ASDKFontGlyphiconsFiletypes.h"
+#import "UIFont+ASDKGlyphiconsFiletypes.h"
 #import "NSString+ASDKFontGlyphicons.h"
 #import "UIFont+ASDKGlyphicons.h"
 
@@ -37,18 +39,21 @@
 #import "ASDKServiceLocator.h"
 #import "ASDKIntegrationNetworkServices.h"
 
-@interface ASDKIntegrationSitesDataSource ()
+@interface ASDKIntegrationFolderContentDataSource ()
 
-@property (strong, nonatomic) NSArray           *sitesArr;
+@property (strong, nonatomic) NSArray *nodeContentList;
 
 @end
 
-@implementation ASDKIntegrationSitesDataSource
+@implementation ASDKIntegrationFolderContentDataSource
 
-- (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel {
+- (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel
+                         contentNode:(ASDKModelIntegrationContent *)contentNode {
     self = [super init];
+    
     if (self) {
         _currentNetwork = networkModel;
+        _currentNode = contentNode;
     }
     
     return self;
@@ -67,13 +72,13 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationSitesForNetworkID:self.currentNetwork.instanceID completionBlock:^(NSArray *sites, NSError *error, ASDKModelPaging *paging) {
+    [integrationNetworkService fetchIntegrationFolderContentForNetworkID:self.currentNetwork.instanceID folderID:self.currentNode.instanceID completionBlock:^(NSArray *contentList, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
-            strongSelf.sitesArr = sites;
+            strongSelf.nodeContentList = contentList;
             if ([strongSelf.delegate respondsToSelector:@selector(dataSourceFinishedFetchingContent:)]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [strongSelf.delegate dataSourceFinishedFetchingContent:sites.count ? YES : NO];
+                    [strongSelf.delegate dataSourceFinishedFetchingContent:contentList.count ? YES : NO];
                 });
             }
         } else {
@@ -87,15 +92,19 @@
 }
 
 - (id)itemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row > self.sitesArr.count - 1) {
+    if (indexPath.row > self.nodeContentList.count - 1) {
         return nil;
     }
     
-    return self.sitesArr[indexPath.row];
+    return self.nodeContentList[indexPath.row];
+}
+
+- (BOOL)isItemAtIndexPathAFolder:(NSIndexPath *)indexPath {    
+    return ((ASDKModelIntegrationContent *)[self itemAtIndexPath:indexPath]).isFolder;
 }
 
 - (NSString *)nodeTitleForIndexPath:(NSIndexPath *)indexPath {
-    return ((ASDKModelSite *)[self itemAtIndexPath:indexPath]).title;
+    return ((ASDKModelIntegrationContent *)[self itemAtIndexPath:indexPath]).title;
 }
 
 
@@ -108,17 +117,32 @@
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-    return self.sitesArr.count;
+    return self.nodeContentList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKIntegrationBrowsingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDIntegrationBrowsing
                                                                                  forIndexPath:indexPath];
-    ASDKModelSite *site = self.sitesArr[indexPath.row];
-    cell.sourceTitleLabel.text = site.title;
-    cell.sourceIconLabel.font = [UIFont glyphiconFontWithSize:24];
-    cell.sourceIconLabel.text = [NSString iconStringForIconType:ASDKGlyphIconTypeFolderClosed];
+    ASDKModelIntegrationContent *content = self.nodeContentList[indexPath.row];
+    cell.sourceTitleLabel.text = content.title;
+    
+    cell.sourceIconLabel.font = content.isFolder ? [UIFont glyphiconFontWithSize:24] : [UIFont glyphiconFiletypesFontWithSize:24];
+    cell.disclosureLabel.hidden = content.isFolder ? NO : YES;
+    if (!content.isFolder) {
+        ASDKGlyphIconFileType fileIconType = [NSString fileTypeIconForIcontDescription:content.title.pathExtension];
+        
+        if (ASDKGlyphIconFileTypeUndefined == fileIconType) {
+            cell.sourceIconLabel.font = [UIFont glyphiconFontWithSize:24];
+            cell.sourceIconLabel.text = [NSString iconStringForIconType:ASDKGlyphIconTypeFile];
+        } else {
+            cell.sourceIconLabel.font = [UIFont glyphiconFiletypesFontWithSize:24];
+            cell.sourceIconLabel.text = [NSString fileTypeIconStringForIconType:fileIconType];
+        }
+    } else {
+        cell.sourceIconLabel.font = [UIFont glyphiconFontWithSize:24];
+        cell.sourceIconLabel.text = [NSString iconStringForIconType:ASDKGlyphIconTypeFolderClosed];
+    }
     
     return cell;
 }

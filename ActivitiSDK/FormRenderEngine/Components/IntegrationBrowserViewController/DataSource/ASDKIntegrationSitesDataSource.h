@@ -24,7 +24,8 @@
 
 @interface ASDKIntegrationSitesDataSource : NSObject <ASDKIntegrationDataSourceProtocol>
 
-@property (weak, nonatomic) id<ASDKIntegrationDataSourceDelegate> delegate;
+@property (weak, nonatomic) id<ASDKIntegrationDataSourceDelegate>   delegate;
+@property (strong, nonatomic) ASDKModelNetwork                      *currentNetwork;
 
 - (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel;
 

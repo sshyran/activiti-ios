@@ -125,4 +125,5 @@ NSString * const kASDKAPIIntegrationPath                = @"integration";
 NSString * const kASDKAPIIntegrationAlfrescoCloudPath   = @"alfresco-cloud";
 NSString * const kASDKAPIIntegrationNetworksPath        = @"networks";
 NSString * const kASDKAPIIntegrationSitesPath           = @"sites";
+NSString * const kASDKAPIIntegrationFoldersPath         = @"folders";
 

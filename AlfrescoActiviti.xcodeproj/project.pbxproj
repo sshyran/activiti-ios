@@ -196,6 +196,15 @@
 		13A578541CEC677C0014B6FD /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
 		13A578581CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */; };
 		13A578591CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578571CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m */; };
+		13A5785C1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5785A1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h */; };
+		13A5785D1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5785B1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m */; };
+		13A578611CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5785F1CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h */; };
+		13A578621CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578601CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m */; };
+		13A578651CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578631CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h */; };
+		13A578661CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */; };
+		13A578671CEDDDB90014B6FD /* glyphicons-filetypes.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */; };
+		13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */; };
+		13A5786B1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */; };
 		13A5D5FB1C9C4C6B00EFA760 /* AFAAddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */; };
 		13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */; };
@@ -757,6 +766,14 @@
 		13A1B2801B989B2700C4B6CE /* AFABaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABaseModel.m; path = Model/BaseModel/AFABaseModel.m; sourceTree = "<group>"; };
 		13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationSitesDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSitesDataSource.h; sourceTree = "<group>"; };
 		13A578571CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationSitesDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSitesDataSource.m; sourceTree = "<group>"; };
+		13A5785A1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelIntegrationContent.h; path = Model/IntegrationContent/ASDKModelIntegrationContent.h; sourceTree = "<group>"; };
+		13A5785B1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelIntegrationContent.m; path = Model/IntegrationContent/ASDKModelIntegrationContent.m; sourceTree = "<group>"; };
+		13A5785F1CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationSiteContentDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSiteContentDataSource.h; sourceTree = "<group>"; };
+		13A578601CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationSiteContentDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSiteContentDataSource.m; sourceTree = "<group>"; };
+		13A578631CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationFolderContentDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationFolderContentDataSource.h; sourceTree = "<group>"; };
+		13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationFolderContentDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationFolderContentDataSource.m; sourceTree = "<group>"; };
+		13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNodeContentRequestRepresentation.h; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.h; sourceTree = "<group>"; };
+		13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationNodeContentRequestRepresentation.m; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.m; sourceTree = "<group>"; };
 		13A5D5F91C9C4C6B00EFA760 /* AFAAddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddTaskViewController.h; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.h; sourceTree = "<group>"; };
 		13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddTaskViewController.m; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.m; sourceTree = "<group>"; };
 		13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKTaskCreationRequestRepresentation.h; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.h; sourceTree = "<group>"; };
@@ -1275,6 +1292,7 @@
 				13A784331CE46DB600DBE648 /* IntegrationAccount */,
 				136E113C1CEA11AB00047E38 /* Network */,
 				136E11411CEA11EA00047E38 /* Site */,
+				13A5785E1CEDA58F0014B6FD /* IntegrationContent */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1975,6 +1993,10 @@
 				136E11481CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m */,
 				13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */,
 				13A578571CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m */,
+				13A5785F1CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h */,
+				13A578601CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m */,
+				13A578631CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h */,
+				13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */,
 			);
 			name = DataSource;
 			sourceTree = "<group>";
@@ -2565,6 +2587,24 @@
 				13A1B2801B989B2700C4B6CE /* AFABaseModel.m */,
 			);
 			name = BaseModel;
+			sourceTree = "<group>";
+		};
+		13A5785E1CEDA58F0014B6FD /* IntegrationContent */ = {
+			isa = PBXGroup;
+			children = (
+				13A5785A1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h */,
+				13A5785B1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m */,
+			);
+			name = IntegrationContent;
+			sourceTree = "<group>";
+		};
+		13A5786C1CEDF7FB0014B6FD /* IntregrationNodeContentInformation */ = {
+			isa = PBXGroup;
+			children = (
+				13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */,
+				13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */,
+			);
+			name = IntregrationNodeContentInformation;
 			sourceTree = "<group>";
 		};
 		13A5D5FC1C9C4C6E00EFA760 /* AddTaskController */ = {
@@ -3463,6 +3503,7 @@
 				13C855BC1C4D197900F84422 /* FilterListInformation */,
 				13BA5C0C1BE113B10091D6C9 /* FormInformation */,
 				136680001C8995CB005E4AEA /* QuerryInformation */,
+				13A5786C1CEDF7FB0014B6FD /* IntregrationNodeContentInformation */,
 			);
 			name = RequestRepresentations;
 			sourceTree = "<group>";
@@ -4090,6 +4131,7 @@
 				8DEA25401C7E044900BF376F /* ASDKMultilineFormFieldDetailsViewController.h in Headers */,
 				8DA7190F1C8F071A00907218 /* ASDKAttachFormFieldContentPickerViewController.h in Headers */,
 				139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */,
+				13A5785C1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h in Headers */,
 				8D3A51E91C8089EC00FF9A00 /* ASDKUserNetworkServiceProtocol.h in Headers */,
 				8D9E6AE41CBE4EDB001EA2CA /* ASDKFormRenderEngineFormFieldsDataSourceProtocol.h in Headers */,
 				13B22C531C931CF60043D8A4 /* ASDKModelProcessInstanceContentField.h in Headers */,
@@ -4116,6 +4158,7 @@
 				138F0A2E1C6B865700DA9414 /* ASDKFormControllerNavigationProtocol.h in Headers */,
 				138F0A461C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.h in Headers */,
 				131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */,
+				13A578611CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h in Headers */,
 				8D0FFDC51CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h in Headers */,
 				13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */,
 				1306E9721CC8BCF600BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */,
@@ -4182,6 +4225,7 @@
 				13B843E51BC29866007BA3CC /* ASDKModelFileContent.h in Headers */,
 				8D3A51D01C8084B700FF9A00 /* ASDKProcessDefinitionNetworkServices.h in Headers */,
 				13A578581CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h in Headers */,
+				13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */,
 				13207D0C1BE251C300116A98 /* UIColor+ASDKFormViewColors.h in Headers */,
 				1317C34E1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h in Headers */,
 				137194831B6924DE00D4E1F0 /* ActivitiSDK.h in Headers */,
@@ -4193,6 +4237,7 @@
 				8DB399AA1C9C319B0089E0AB /* ASDKAvatarInitialsView.h in Headers */,
 				136E114D1CEB122800047E38 /* ASDKIntegrationDataSourceDelegate.h in Headers */,
 				13F35D471BDE8CF200FC3F4E /* ASDKFormCellProtocol.h in Headers */,
+				13A578651CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h in Headers */,
 				8D3A51EC1C8089F200FF9A00 /* ASDKUserNetworkServices.h in Headers */,
 				1306E9701CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */,
 				138C48B51C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h in Headers */,
@@ -4362,6 +4407,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13A578671CEDDDB90014B6FD /* glyphicons-filetypes.otf in Resources */,
 				1371945F1B6922DE00D4E1F0 /* Main.storyboard in Resources */,
 				13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */,
 				13A578541CEC677C0014B6FD /* glyphicons-regular.otf in Resources */,
@@ -4816,11 +4862,13 @@
 				8DD3B7701CA0382F00B5D561 /* ASDKPushFadeSegue.m in Sources */,
 				133F05421BD4EFE400C22CFD /* ASDKTaskDetailsParserOperationWorker.m in Sources */,
 				8DEA25491C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.m in Sources */,
+				13A578661CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m in Sources */,
 				8DA719101C8F071A00907218 /* ASDKAttachFormFieldContentPickerViewController.m in Sources */,
 				139564E81C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m in Sources */,
 				13CDFDD81BB191040019919B /* ASDKModelComment.m in Sources */,
 				8D3A51F71C808A4400FF9A00 /* ASDKUserParserOperationWorker.m in Sources */,
 				13C94BE51B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m in Sources */,
+				13A5785D1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m in Sources */,
 				1357018E1B70D21700A384A7 /* ASDKModelBase.m in Sources */,
 				136E11401CEA11E800047E38 /* ASDKModelSite.m in Sources */,
 				13044FCA1BFA178A008FF6E6 /* ASDKModelAmountFormField.m in Sources */,
@@ -4854,6 +4902,7 @@
 				138F0A2B1C6B7E9000DA9414 /* ASDKRadioFormFieldDetailsViewController.m in Sources */,
 				13A578591CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m in Sources */,
 				13B843E61BC29866007BA3CC /* ASDKModelFileContent.m in Sources */,
+				13A5786B1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m in Sources */,
 				13CF72011BCCDA3E0048C322 /* ASDKDiskServicesConstants.m in Sources */,
 				135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */,
 				136E114A1CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m in Sources */,
@@ -4887,6 +4936,7 @@
 				139FEC171B720FA600CE6B01 /* ASDKModelGroup.m in Sources */,
 				13B22C4F1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.m in Sources */,
 				13B7E2161B74E9BE002CBDF4 /* ASDKModelTask.m in Sources */,
+				13A578621CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m in Sources */,
 				130761551BEA42EC0082EA2D /* ASDKLocalizationConstants.m in Sources */,
 				13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */,
 			);
