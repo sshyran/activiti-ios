@@ -40,33 +40,39 @@ typedef void  (^ASDKIntegrationContentUploadCompletionBlock)(ASDKModelContent *c
 /**
  *  Fetches and returns via the completion block a list of external integration networks
  *
+ *  @param sourceID        Source ID for which the network list is requested
  *  @param completionBlock Completion block providing a network list, an optional error reason and
  *                         paging information
  */
-- (void)fetchIntegrationNetworksWithCompletionBlock:(ASDKIntegrationNetworkListCompletionBlock)completionBlock;
+- (void)fetchIntegrationNetworksForSourceID:(NSString *)sourceID
+                            completionBlock:(ASDKIntegrationNetworkListCompletionBlock)completionBlock;
 
 /**
  *  Fetches and returns via the completion block a list of external integration sites that are
  *  associated with a specified network ID.
  * 
+ *  @param sourceID        Source ID for which the site list is requested
  *  @param networkID       The network ID for which the site list is retrieved
  *
  *  @param completionBlock Completion block providing a site list, an optional error reason and 
  *                         paging information
  */
-- (void)fetchIntegrationSitesForNetworkID:(NSString *)networkID
+- (void)fetchIntegrationSitesForSourceID:(NSString *)sourceID
+                               networkID:(NSString *)networkID
                           completionBlock:(ASDKIntegrationSiteListCompletionBlock)completionBlock;
 
 /**
  *  Fetches and returns via the completion block a list of content elements that is associated
  *  with a specified network and site ID.
  *
+ *  @param sourceID        Source ID for which the content list is requested
  *  @param networkID       The network ID for which the content list is retrieved
  *  @param siteID          The site ID for which the content list is retrieved
  *  @param completionBlock Completion block providing a content list, an optional error reason and
  *                         paging information
  */
-- (void)fetchIntegrationContentForNetworkID:(NSString *)networkID
+- (void)fetchIntegrationContentForSourceID:(NSString *)sourceID
+                                 networkID:(NSString *)networkID
                                      siteID:(NSString *)siteID
                             completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock;
 
@@ -74,12 +80,14 @@ typedef void  (^ASDKIntegrationContentUploadCompletionBlock)(ASDKModelContent *c
  *  Fetches and returns via the completion block a list of content elements that are associated with
  *  a specified network and folder ID.
  *
+ *  @param sourceID        Source ID for which the folder content list is requested
  *  @param networkID       The network ID for which the content list is retrieved
  *  @param folderID        The site ID for which the content list is retrieved
  *  @param completionBlock Completion block providing a content list, an optional error reason and
  *                         paging information
  */
-- (void)fetchIntegrationFolderContentForNetworkID:(NSString *)networkID
+- (void)fetchIntegrationFolderContentForSourceID:(NSString *)sourceID
+                                       networkID:(NSString *)networkID
                                          folderID:(NSString *)folderID
                                   completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock;
 

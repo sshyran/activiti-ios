@@ -20,8 +20,13 @@
 #import "ASDKIntegrationDataSourceDelegate.h"
 #import "ASDKIntegrationDataSourceProtocol.h"
 
+@class ASDKModelIntegrationAccount;
+
 @interface ASDKIntegrationNetworksDataSource : NSObject <ASDKIntegrationDataSourceProtocol>
 
-@property (weak, nonatomic) id<ASDKIntegrationDataSourceDelegate> delegate;
+@property (weak, nonatomic)   id<ASDKIntegrationDataSourceDelegate> delegate;
+@property (strong, nonatomic) ASDKModelIntegrationAccount           *integrationAccount;
+
+- (instancetype)initWithIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount;
 
 @end

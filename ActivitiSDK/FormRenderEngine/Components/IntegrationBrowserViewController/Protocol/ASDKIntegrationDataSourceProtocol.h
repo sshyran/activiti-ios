@@ -19,9 +19,13 @@
 @import UIKit;
 #import "ASDKIntegrationDataSourceDelegate.h"
 
+@class ASDKIntegrationNodeContentRequestRepresentation,
+ASDKModelIntegrationAccount;
+
 @protocol ASDKIntegrationDataSourceProtocol <UITableViewDataSource>
 
 @property (weak, nonatomic) id<ASDKIntegrationDataSourceDelegate> delegate;
+@property (strong, nonatomic) ASDKModelIntegrationAccount         *integrationAccount;
 
 /**
  *  Triggers an internal refresh operation on the data source object.
@@ -40,7 +44,33 @@
 - (id)itemAtIndexPath:(NSIndexPath *)indexPath;
 
 @optional
+
+/**
+ *  Checks whether the item at the provided index path is a folder or not
+ *
+ *  @param indexPath Index path for which the folder check is performed
+ *
+ *  @return YES if item is a folder and NO otherwise
+ */
 - (BOOL)isItemAtIndexPathAFolder:(NSIndexPath *)indexPath;
+
+/**
+ *  Returns a string with the title of the content node
+ *
+ *  @param indexPath Index path of the element for which the title is returned
+ *
+ *  @return String value of the title
+ */
 - (NSString *)nodeTitleForIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ *  Returns a node content request representation with the information available
+ *  inside the data source.
+ *
+ *  @param indexPath Index path of the element for which the representation is requested
+ *
+ *  @return Request representation object
+ */
+- (ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentationForIndexPath:(NSIndexPath *)indexPath;
 
 @end

@@ -19,7 +19,17 @@
 #import <UIKit/UIKit.h>
 #import "ASDKIntegrationDataSourceProtocol.h"
 
+@class ASDKIntegrationNodeContentRequestRepresentation;
+
+@protocol ASDKIntegrationBrowsingDelegate <NSObject>
+
+- (void)didPickContentNodeWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation;
+
+@end
+
 @interface ASDKIntegrationBrowsingViewController : UIViewController
+
+@property (weak, nonatomic) id<ASDKIntegrationBrowsingDelegate> delegate;
 
 - (instancetype)initWithDataSource:(id<ASDKIntegrationDataSourceProtocol>)dataSource;
 

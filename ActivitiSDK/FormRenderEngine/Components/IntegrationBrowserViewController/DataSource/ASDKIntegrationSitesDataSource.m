@@ -24,6 +24,7 @@
 // Models
 #import "ASDKModelSite.h"
 #import "ASDKModelNetwork.h"
+#import "ASDKModelIntegrationAccount.h"
 
 // Categories
 #import "NSString+ASDKFontGlyphicons.h"
@@ -67,7 +68,9 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationSitesForNetworkID:self.currentNetwork.instanceID completionBlock:^(NSArray *sites, NSError *error, ASDKModelPaging *paging) {
+    [integrationNetworkService fetchIntegrationSitesForSourceID:self.integrationAccount.serviceID
+                                                      networkID:self.currentNetwork.instanceID
+                                                completionBlock:^(NSArray *sites, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
             strongSelf.sitesArr = sites;

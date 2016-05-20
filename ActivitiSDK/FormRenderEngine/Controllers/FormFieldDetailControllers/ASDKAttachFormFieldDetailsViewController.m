@@ -21,9 +21,11 @@
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKNetworkServiceConstants.h"
+#import "ASDKLocalizationConstants.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
+#import "UIViewController+AFAAlertAddition.h"
 
 // Models
 #import "ASDKModelFormField.h"
@@ -33,6 +35,7 @@
 #import "ASDKModelFormFieldAttachParameter.h"
 #import "ASDKModelIntegrationAccount.h"
 #import "ASDKIntegrationNetworksDataSource.h"
+#import "ASDKIntegrationNodeContentRequestRepresentation.h"
 
 // Controllers
 #import "ASDKAttachFormFieldContentPickerViewController.h"
@@ -44,7 +47,8 @@
 // Cells
 #import "ASDKContentFileTableViewCell.h"
 
-@interface ASDKAttachFormFieldDetailsViewController () <ASDKAttachFormFieldContentPickerViewControllerDelegate>
+@interface ASDKAttachFormFieldDetailsViewController () <ASDKAttachFormFieldContentPickerViewControllerDelegate,
+                                                        ASDKIntegrationBrowsingDelegate>
 
 @property (strong, nonatomic) ASDKAttachFormFieldContentPickerViewController        *contentPickerViewController;
 @property (weak, nonatomic)   IBOutlet UITableView                                  *attachedContentTableView;
@@ -88,7 +92,7 @@
     
     [self setRightBarButton];
     [self refreshContent];
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -221,7 +225,7 @@
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         contentFileCell.fileNameLabel.textColor = [UIColor formViewCompletedValueColor];
     }
-
+    
     return contentFileCell;
 }
 
@@ -229,13 +233,18 @@
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKModelContent *selectedContent = (ASDKModelContent *)self.currentFormField.values[indexPath.row];
     
-    [self.contentPickerViewController dowloadContent:selectedContent
-                                        allowCachedContent:YES];
+    if (selectedContent.isContentAvailable) {
+        [self.contentPickerViewController dowloadContent:selectedContent
+                                      allowCachedContent:YES];
+    }
+    
+    [tableView deselectRowAtIndexPath:tableView.indexPathForSelectedRow
+                             animated:YES];
 }
 
 - (BOOL)tableView:(UITableView *)tableView
 canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
+    return (ASDKModelFormFieldRepresentationTypeReadOnly != self.currentFormField.representationType);
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -261,9 +270,9 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                                          // Notify the value transaction delegate there has been a change with the provided form field model
                                          if ([strongSelf.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
                                              [strongSelf.valueTransactionDelegate updatedMetadataValueForFormField:strongSelf.currentFormField
-                                                                                                      inCell:nil];
+                                                                                                            inCell:nil];
                                          }
-                                        
+                                         
                                          [tableView reloadData];
                                          [strongSelf refreshContent];
                                      }];
@@ -302,7 +311,6 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)pickedContentHasFinishedUploading {
-    [self.attachedContentTableView reloadData];
     [self refreshContent];
     
     // Notify the value transaction delegate there has been a change with the provided form field model
@@ -332,15 +340,61 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     [self onFullscreenOverlayTap:nil];
     
     // Initialize the browsing controller at a top network level based on the selected integration account
-    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:kASDKAPIServiceIDAlfrescoCloud]) {
-        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:[ASDKIntegrationNetworksDataSource new]];
+    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:integrationAccount.serviceID]) {
+        ASDKIntegrationNetworksDataSource *dataSource = [[ASDKIntegrationNetworksDataSource alloc] initWithIntegrationAccount:integrationAccount];
+        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:dataSource];
+        self.integrationBrowsingController.delegate = self;
+    } else {
+        self.integrationBrowsingController = nil;
     }
     
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationBrowsingController];
+    // If the controller has been successfully initiated present it
+    if (self.integrationBrowsingController) {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationBrowsingController];
+        
+        [self presentViewController:navigationController
+                           animated:YES
+                         completion:nil];
+    }
+}
+
+
+#pragma mark -
+#pragma mark ASDKIntegrationBrowsingDelegate
+
+- (void)didPickContentNodeWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation {
+    // Attach the isLink property to the content node request representation
+    nodeContentRepresentation.isLink = ((ASDKModelFormFieldAttachParameter *)self.currentFormField.formFieldParams).isLinkReference;
     
-    [self presentViewController:navigationController
-                       animated:YES
-                     completion:nil];
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKIntegrationNetworkServices *integrationNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)];
+    __weak typeof(self) weakSelf = self;
+    [integrationNetworkService uploadIntegrationContentWithRepresentation:nodeContentRepresentation
+                                                          completionBlock:^(ASDKModelContent *contentModel, NSError *error) {
+                                                              __strong typeof(self) strongSelf = weakSelf;
+                                                              
+                                                              if (!error) {
+                                                                  ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)strongSelf.currentFormField.formFieldParams;
+                                                                  NSMutableArray *currentValuesArray = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                                                  
+                                                                  if (formFieldParameters.allowMultipleFiles) {
+                                                                      currentValuesArray = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                                                  } else {
+                                                                      currentValuesArray = [NSMutableArray new];
+                                                                  }
+                                                                  
+                                                                  [currentValuesArray addObject:contentModel];
+                                                                  strongSelf.currentFormField.values = [currentValuesArray copy];
+                                                                  
+                                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                                      [weakSelf pickedContentHasFinishedUploading];
+                                                                  });
+                                                              } else {
+                                                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                                                      [weakSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
+                                                                  });
+                                                              }
+    }];
 }
 
 @end

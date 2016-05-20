@@ -439,7 +439,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                              self.currentFormField.values = [currentValuesArray copy];
                                              
                                              // store uploaded content id
-                                             // used for automatic selection local storage version in stead of remote version
+                                             // used for automatic selection local storage version instead of remote version
                                              [self.uploadedContentIDs addObject:modelContent.instanceID];
                                              
                                              if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
@@ -539,7 +539,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             NSBundle *frameWorkBundle = [NSBundle bundleForClass:[self class]];
             
             if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.serviceID]) {
-                taskCell.iconImageView.image = [UIImage imageNamed:@"alfrescobw-icon"
+                taskCell.iconImageView.image = [UIImage imageNamed:@"alfresco-icon"
                                                           inBundle:frameWorkBundle
                                      compatibleWithTraitCollection:nil];
                 taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentAlfrescoContentText, ASDKLocalizationTable, @"Alfresco cloud text");
@@ -595,11 +595,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                                                                     
                                                                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                                                                         [weakSelf.progressHUD dismiss];
+                                                                                        
+                                                                                        if ([strongSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                                                                                            [strongSelf.delegate userPickerIntegrationAccount:account];
+                                                                                        }
                                                                                     });
-                                                                                    
-                                                                                    if ([strongSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
-                                                                                        [strongSelf.delegate userPickerIntegrationAccount:account];
-                                                                                    }
                                                                                 } else {
                                                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                                                         [self showGenericErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationLoginErrorText, ASDKLocalizationTable,  @"Cannot author integration service")];

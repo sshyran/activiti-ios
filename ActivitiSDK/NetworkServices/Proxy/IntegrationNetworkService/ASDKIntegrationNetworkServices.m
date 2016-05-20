@@ -114,16 +114,18 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:operation];
 }
 
-- (void)fetchIntegrationNetworksWithCompletionBlock:(ASDKIntegrationNetworkListCompletionBlock)completionBlock {
+- (void)fetchIntegrationNetworksForSourceID:(NSString *)sourceID
+                            completionBlock:(ASDKIntegrationNetworkListCompletionBlock)completionBlock {
     // Check mandatory properties
     NSParameterAssert(completionBlock);
+    NSParameterAssert(sourceID);
     NSParameterAssert(self.resultsQueue);
     
     self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager GET:[self.servicePathFactory integrationNetworksServicePath]
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory integrationNetworksServicePathFormat], sourceID]
                            parameters:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
@@ -178,10 +180,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:operation];
 }
 
-- (void)fetchIntegrationSitesForNetworkID:(NSString *)networkID
-                          completionBlock:(ASDKIntegrationSiteListCompletionBlock)completionBlock {
+- (void)fetchIntegrationSitesForSourceID:(NSString *)sourceID
+                               networkID:(NSString *)networkID
+                         completionBlock:(ASDKIntegrationSiteListCompletionBlock)completionBlock {
     // Check mandatory properties
     NSParameterAssert(completionBlock);
+    NSParameterAssert(sourceID);
     NSParameterAssert(networkID);
     NSParameterAssert(self.resultsQueue);
     
@@ -189,7 +193,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory integrationSitesServicePathFormat], networkID]
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory integrationSitesServicePathFormat],sourceID, networkID]
                            parameters:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
@@ -244,11 +248,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:operation];
 }
 
-- (void)fetchIntegrationContentForNetworkID:(NSString *)networkID
-                                     siteID:(NSString *)siteID
-                            completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock {
+- (void)fetchIntegrationContentForSourceID:(NSString *)sourceID
+                                 networkID:(NSString *)networkID
+                                    siteID:(NSString *)siteID
+                           completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock {
     // Check mandatory properties
     NSParameterAssert(completionBlock);
+    NSParameterAssert(sourceID);
     NSParameterAssert(networkID);
     NSParameterAssert(siteID);
     NSParameterAssert(self.resultsQueue);
@@ -257,7 +263,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory integrationSiteContentServicePathFormat], networkID, siteID]
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory integrationSiteContentServicePathFormat], sourceID, networkID, siteID]
                            parameters:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
@@ -312,11 +318,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:operation];
 }
 
-- (void)fetchIntegrationFolderContentForNetworkID:(NSString *)networkID
-                                         folderID:(NSString *)folderID
-                                  completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock {
+- (void)fetchIntegrationFolderContentForSourceID:(NSString *)sourceID
+                                       networkID:(NSString *)networkID
+                                        folderID:(NSString *)folderID
+                                 completionBlock:(ASDKIntegrationContentListCompletionBlock)completionBlock {
     // Check mandatory properties
     NSParameterAssert(completionBlock);
+    NSParameterAssert(sourceID);
     NSParameterAssert(networkID);
     NSParameterAssert(folderID);
     NSParameterAssert(self.resultsQueue);
@@ -325,7 +333,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory integrationFolderContentServicePathFormat], networkID, folderID]
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory integrationFolderContentServicePathFormat], sourceID, networkID, folderID]
                            parameters:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
@@ -408,7 +416,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    
                                    // Parse response data
                                    [self.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                ofType:CREATE_STRING(ASDKIntegrationParserContentTypeFolderContentList)
+                                                                                ofType:CREATE_STRING(ASDKIntegrationParserContentTypeUploadedContent)
                                                                    withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                                                        if (error) {
                                                                            ASDKLogError(@"Error parsing integration content. Description:%@", error.localizedDescription);

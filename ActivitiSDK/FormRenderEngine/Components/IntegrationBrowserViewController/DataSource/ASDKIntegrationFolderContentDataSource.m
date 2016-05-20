@@ -20,10 +20,14 @@
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
+#import "ASDKAPIEndpointDefinitionList.h"
 
 // Models
 #import "ASDKModelNetwork.h"
 #import "ASDKModelIntegrationContent.h"
+#import "ASDKModelSite.h"
+#import "ASDKIntegrationNodeContentRequestRepresentation.h"
+#import "ASDKModelIntegrationAccount.h"
 
 // Categories
 #import "NSString+ASDKFontGlyphiconsFiletypes.h"
@@ -48,11 +52,13 @@
 @implementation ASDKIntegrationFolderContentDataSource
 
 - (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel
+                           siteModel:(ASDKModelSite *)siteModel
                          contentNode:(ASDKModelIntegrationContent *)contentNode {
     self = [super init];
     
     if (self) {
         _currentNetwork = networkModel;
+        _currentSite = siteModel;
         _currentNode = contentNode;
     }
     
@@ -72,7 +78,10 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationFolderContentForNetworkID:self.currentNetwork.instanceID folderID:self.currentNode.instanceID completionBlock:^(NSArray *contentList, NSError *error, ASDKModelPaging *paging) {
+    [integrationNetworkService fetchIntegrationFolderContentForSourceID:self.integrationAccount.serviceID
+                                                              networkID:self.currentNetwork.instanceID
+                                                               folderID:self.currentNode.instanceID
+                                                        completionBlock:^(NSArray *contentList, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
             strongSelf.nodeContentList = contentList;
@@ -105,6 +114,19 @@
 
 - (NSString *)nodeTitleForIndexPath:(NSIndexPath *)indexPath {
     return ((ASDKModelIntegrationContent *)[self itemAtIndexPath:indexPath]).title;
+}
+
+- (ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentationForIndexPath:(NSIndexPath *)indexPath {
+    ASDKModelIntegrationContent *selectedNodeContent = [self itemAtIndexPath:indexPath];
+    
+    ASDKIntegrationNodeContentRequestRepresentation *nodeContentRepresentation = [ASDKIntegrationNodeContentRequestRepresentation new];
+    nodeContentRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    nodeContentRepresentation.name  = selectedNodeContent.title;
+    nodeContentRepresentation.simpleType = selectedNodeContent.simpleType;
+    nodeContentRepresentation.source = kASDKAPIIntegrationAlfrescoCloudPath;
+    nodeContentRepresentation.sourceID = [NSString stringWithFormat:@"%@@%@@%@", selectedNodeContent.instanceID, self.currentSite.instanceID,self.currentNetwork.instanceID];
+    
+    return nodeContentRepresentation;
 }
 
 

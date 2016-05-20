@@ -23,6 +23,7 @@
 
 // Models
 #import "ASDKModelNetwork.h"
+#import "ASDKModelIntegrationAccount.h"
 
 // Categories
 #import "NSString+ASDKFontGlyphicons.h"
@@ -44,6 +45,16 @@
 
 @implementation ASDKIntegrationNetworksDataSource
 
+- (instancetype)initWithIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount {
+    self = [super init];
+    
+    if (self) {
+        _integrationAccount = integrationAccount;
+    }
+    
+    return self;
+}
+
 
 #pragma mark -
 #pragma mark ASDKIntegrationDataSourceProtocol
@@ -57,7 +68,8 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationNetworksWithCompletionBlock:^(NSArray *networks, NSError *error, ASDKModelPaging *paging) {
+    [integrationNetworkService fetchIntegrationNetworksForSourceID:self.integrationAccount.serviceID
+                                                   completionBlock:^(NSArray *networks, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
             strongSelf.networkArr = networks;

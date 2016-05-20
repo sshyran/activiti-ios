@@ -25,6 +25,7 @@
 #import "ASDKModelSite.h"
 #import "ASDKModelNetwork.h"
 #import "ASDKModelIntegrationContent.h"
+#import "ASDKModelIntegrationAccount.h"
 
 // Categories
 #import "NSString+ASDKFontGlyphicons.h"
@@ -70,25 +71,25 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationContentForNetworkID:self.currentNetwork.instanceID
-                                                            siteID:self.currentSite.instanceID
-                                                   completionBlock:^(NSArray *contentList, NSError *error, ASDKModelPaging *paging) {
-                                                       __strong typeof(self) strongSelf = weakSelf;
-                                                       if (!error) {
-                                                           strongSelf.siteContentList = contentList;
-                                                           if ([strongSelf.delegate respondsToSelector:@selector(dataSourceFinishedFetchingContent:)]) {
-                                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                                   [strongSelf.delegate dataSourceFinishedFetchingContent:contentList.count ? YES : NO];
-                                                               });
-                                                           }
-                                                       } else {
-                                                           if ([strongSelf.delegate respondsToSelector:@selector(dataSourceEncounteredAnErrorWhileLoadingContent:)]) {
-                                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                                   [strongSelf.delegate dataSourceEncounteredAnErrorWhileLoadingContent:error];
-                                                               });
-                                                           }
-                                                       }
-    }];
+    [integrationNetworkService fetchIntegrationContentForSourceID:self.integrationAccount.serviceID
+                                                        networkID:self.currentNetwork.instanceID
+                                                           siteID:self.currentSite.instanceID completionBlock:^(NSArray *contentList, NSError *error, ASDKModelPaging *paging) {
+                                                               __strong typeof(self) strongSelf = weakSelf;
+                                                               if (!error) {
+                                                                   strongSelf.siteContentList = contentList;
+                                                                   if ([strongSelf.delegate respondsToSelector:@selector(dataSourceFinishedFetchingContent:)]) {
+                                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                                           [strongSelf.delegate dataSourceFinishedFetchingContent:contentList.count ? YES : NO];
+                                                                       });
+                                                                   }
+                                                               } else {
+                                                                   if ([strongSelf.delegate respondsToSelector:@selector(dataSourceEncounteredAnErrorWhileLoadingContent:)]) {
+                                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                                           [strongSelf.delegate dataSourceEncounteredAnErrorWhileLoadingContent:error];
+                                                                       });
+                                                                   }
+                                                               }
+                                                           }];
 }
 
 - (id)itemAtIndexPath:(NSIndexPath *)indexPath {

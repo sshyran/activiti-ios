@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="0kq-yS-LTU">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="0kq-yS-LTU">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -1319,10 +1319,10 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U5v-Jh-Q6W" userLabel="File rounded container" customClass="ASDKRoundedBorderView">
-                                                    <rect key="frame" x="11" y="14" width="30" height="30"/>
+                                                    <rect key="frame" x="11" y="11.5" width="35" height="35"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ZIP" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f5r-gK-a7p">
-                                                            <rect key="frame" x="0.0" y="8" width="30" height="14"/>
+                                                            <rect key="frame" x="0.0" y="10.5" width="35" height="14"/>
                                                             <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="10"/>
                                                             <color key="textColor" red="0.56230964829999996" green="0.57965631849999999" blue="0.63169632909999995" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -1331,10 +1331,10 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="f5r-gK-a7p" secondAttribute="trailing" id="Vf1-cs-YfF"/>
-                                                        <constraint firstAttribute="height" constant="30" id="ZT1-5q-3Ak"/>
+                                                        <constraint firstAttribute="height" constant="35" id="ZT1-5q-3Ak"/>
                                                         <constraint firstItem="f5r-gK-a7p" firstAttribute="centerY" secondItem="U5v-Jh-Q6W" secondAttribute="centerY" id="l6n-e6-Qff"/>
                                                         <constraint firstItem="f5r-gK-a7p" firstAttribute="leading" secondItem="U5v-Jh-Q6W" secondAttribute="leading" id="lqR-HC-fY7"/>
-                                                        <constraint firstAttribute="width" constant="30" id="s4v-11-Ric"/>
+                                                        <constraint firstAttribute="width" constant="35" id="s4v-11-Ric"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
@@ -1346,14 +1346,14 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="78W-sK-sue" userLabel="Vertical separator">
-                                                    <rect key="frame" x="51" y="0.0" width="1" height="58"/>
+                                                    <rect key="frame" x="56" y="0.0" width="1" height="58"/>
                                                     <color key="backgroundColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="1" id="fEr-nL-1lP"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ga2-Jb-5PC" customClass="ASDKRoundedBorderView">
-                                                    <rect key="frame" x="47" y="25" width="8" height="8"/>
+                                                    <rect key="frame" x="52" y="25" width="8" height="8"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="8" id="kwj-ND-6MY"/>
@@ -1375,7 +1375,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File name" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfY-UE-f0n">
-                                                    <rect key="frame" x="62" y="14" width="530" height="30"/>
+                                                    <rect key="frame" x="67" y="14" width="525" height="30"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
                                                     <color key="textColor" red="0.058823529409999999" green="0.062745098040000002" blue="0.066666666669999999" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>

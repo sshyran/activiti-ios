@@ -36,6 +36,7 @@
 
 // Model
 #import "ASDKModelNetwork.h"
+#import "ASDKIntegrationNodeContentRequestRepresentation.h"
 
 // Views
 #import "ASDKActivityView.h"
@@ -73,6 +74,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 // Internal state properties
 @property (strong, nonatomic) id<ASDKIntegrationDataSourceProtocol>         dataSource;
 @property (assign, nonatomic) ASDKIntegrationBrowsingControllerState        controllerState;
+@property (assign, nonatomic) BOOL                                          isPullToRefresh;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
@@ -126,7 +128,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     self.dataSource.delegate = self;
     self.browsingTableView.dataSource = self.dataSource;
     
-    [self onRefresh:nil];
+    [self.dataSource refreshDataSourceInformation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -144,6 +146,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (IBAction)onRefresh:(id)sender {
+    self.isPullToRefresh = YES;
     [self.dataSource refreshDataSourceInformation];
 }
 
@@ -156,29 +159,40 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark ASDKIntegrationDataSourceProtocol
 
 - (void)dataSourceIsFetchingContent {
-    self.controllerState = ASDKIntegrationBrowsingControllerStateInProgress;
+    self.controllerState = self.isPullToRefresh ? ASDKIntegrationBrowsingControllerStateIdle : ASDKIntegrationBrowsingControllerStateInProgress;
 }
 
 - (void)dataSourceFinishedFetchingContent:(BOOL)isContentAvailable {
     self.controllerState = ASDKIntegrationBrowsingControllerStateIdle;
+    self.isPullToRefresh = NO;
+    
     self.noContentAvailableLabel.hidden = isContentAvailable;
     self.noContentAvailableLabel.text = ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingNoContentAvailableText, ASDKLocalizationTable, @"No content available");
     [self.browsingTableView reloadData];
+    
+    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+        [self.refreshControl endRefreshing];
+    }];
 }
 
 - (void)dataSourceEncounteredAnErrorWhileLoadingContent:(NSError *)error {
     self.controllerState = ASDKIntegrationBrowsingControllerStateIdle;
+    self.isPullToRefresh = NO;
     
     ASDKLogError(@"An error occured while fetching content for the integration data source. Reason:%@", error.localizedDescription);
     
     self.refreshView.hidden = NO;
     self.noContentAvailableLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormAlertDialogGenericNetworkErrorText, ASDKLocalizationTable, @"Network error text");
     self.noContentAvailableLabel.hidden = NO;
+    
+    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+        [self.refreshControl endRefreshing];
+    }];
 }
 
 
-#pragma mark - 
-#pragma mark UITableView Delegate 
+#pragma mark -
+#pragma mark UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKIntegrationBrowsingViewController *childController = nil;
@@ -192,24 +206,35 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     } else if ([self.dataSource isKindOfClass:[ASDKIntegrationSitesDataSource class]]) {
         dataSource =
         [[ASDKIntegrationSiteContentDataSource alloc] initWithNetworkModel:((ASDKIntegrationSitesDataSource *)self.dataSource).currentNetwork
-                                                                 siteModel:[self.dataSource itemAtIndexPath:indexPath]];   
+                                                                 siteModel:[self.dataSource itemAtIndexPath:indexPath]];
     } else if ([self.dataSource isKindOfClass:[ASDKIntegrationSiteContentDataSource class]]) {
         dataSource =
         [[ASDKIntegrationFolderContentDataSource alloc] initWithNetworkModel:((ASDKIntegrationSiteContentDataSource *)self.dataSource).currentNetwork
+                                                                   siteModel:((ASDKIntegrationSiteContentDataSource *)self.dataSource).currentSite
                                                                  contentNode:[self.dataSource itemAtIndexPath:indexPath]];
     } else if ([self.dataSource isKindOfClass:[ASDKIntegrationFolderContentDataSource class]]) {
         if ([self.dataSource isItemAtIndexPathAFolder:indexPath]) {
             dataSource =
-            [[ASDKIntegrationFolderContentDataSource alloc] initWithNetworkModel:((ASDKIntegrationSiteContentDataSource *)self.dataSource).currentNetwork
+            [[ASDKIntegrationFolderContentDataSource alloc] initWithNetworkModel:((ASDKIntegrationFolderContentDataSource *)self.dataSource).currentNetwork
+                                                                       siteModel:((ASDKIntegrationFolderContentDataSource *)self.dataSource).currentSite
                                                                      contentNode:[self.dataSource itemAtIndexPath:indexPath]];
+        } else { // Report to the delegate that a file has been chosen
+            [self dismissViewControllerAnimated:YES
+                                     completion:^{
+                                         if ([self.delegate respondsToSelector:@selector(didPickContentNodeWithRepresentation:)]) {
+                                             [self.delegate didPickContentNodeWithRepresentation:[self.dataSource nodeContentRepresentationForIndexPath:indexPath]];
+                                         }
+                                     }];
         }
     }
     
     // Only instantiate a child controller if it has a valid data source
     if (dataSource) {
+        [dataSource setIntegrationAccount:[self.dataSource integrationAccount]];
         childController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:dataSource];
+        childController.delegate = self.delegate;
         if ([self.dataSource respondsToSelector:@selector(nodeTitleForIndexPath:)]) {
-            childController.title =  [self.dataSource nodeTitleForIndexPath:indexPath];
+            childController.title = [self.dataSource nodeTitleForIndexPath:indexPath];
         }
     }
     

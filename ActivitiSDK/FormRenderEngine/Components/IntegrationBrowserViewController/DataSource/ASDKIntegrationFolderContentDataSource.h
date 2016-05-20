@@ -21,15 +21,19 @@
 #import "ASDKIntegrationDataSourceProtocol.h"
 
 @class ASDKModelNetwork,
-ASDKModelIntegrationContent;
+ASDKModelIntegrationContent,
+ASDKModelSite;
 
 @interface ASDKIntegrationFolderContentDataSource : NSObject <ASDKIntegrationDataSourceProtocol>
 
 @property (weak, nonatomic) id<ASDKIntegrationDataSourceDelegate> delegate;
+@property (strong, nonatomic) ASDKModelIntegrationAccount         *integrationAccount;
 @property (strong, nonatomic) ASDKModelNetwork                    *currentNetwork;
 @property (strong, nonatomic) ASDKModelIntegrationContent         *currentNode;
+@property (strong, nonatomic) ASDKModelSite                       *currentSite;
 
 - (instancetype)initWithNetworkModel:(ASDKModelNetwork *)networkModel
+                           siteModel:(ASDKModelSite *)siteModel
                          contentNode:(ASDKModelIntegrationContent *)contentNode;
 
 @end

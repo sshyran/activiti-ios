@@ -276,12 +276,12 @@ static NSString * const kASDkHTTPS = @"https";
     return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath];
 }
 
-- (NSString *)integrationNetworksServicePath {
-    return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath] stringByAppendingPathComponent:kASDKAPIIntegrationAlfrescoCloudPath] stringByAppendingPathComponent:kASDKAPIIntegrationNetworksPath];
+- (NSString *)integrationNetworksServicePathFormat {
+    return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationNetworksPath];
 }
 
 - (NSString *)integrationSitesServicePathFormat {
-    return [[[self integrationNetworksServicePath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationSitesPath];
+    return [[[self integrationNetworksServicePathFormat] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationSitesPath];
 }
 
 - (NSString *)integrationSiteContentServicePathFormat {
@@ -289,11 +289,11 @@ static NSString * const kASDkHTTPS = @"https";
 }
 
 - (NSString *)integrationFolderContentServicePathFormat {
-    return [[[[[self integrationNetworksServicePath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationFoldersPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath];
+    return [[[[[self integrationNetworksServicePathFormat] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationFoldersPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath];
 }
 
 - (NSString *)integrationContentUploadServicePath {
-    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIContentPath];
+    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIContentPath];
 }
 
 @end
