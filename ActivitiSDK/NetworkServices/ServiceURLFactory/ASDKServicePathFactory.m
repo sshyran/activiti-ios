@@ -18,6 +18,7 @@
 
 #import "ASDKServicePathFactory.h"
 #import "ASDKAPIEndpointDefinitionList.h"
+#import "ASDKNetworkServiceConstants.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -294,6 +295,10 @@ static NSString * const kASDkHTTPS = @"https";
 
 - (NSString *)integrationContentUploadServicePath {
     return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIContentPath];
+}
+
+- (NSString *)integrationContentUploadForTaskServicePathFormat {
+    return [[[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath] stringByAppendingString:[NSString stringWithFormat:@"?%@=%@", kASDKAPIParamIsRelatedContent, kASDKAPITrueParameter]];
 }
 
 @end

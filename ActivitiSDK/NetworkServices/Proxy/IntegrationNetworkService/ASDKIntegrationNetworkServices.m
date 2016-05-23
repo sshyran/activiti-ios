@@ -388,11 +388,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:operation];
 }
 
-- (void)uploadIntegrationContentWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)uploadIntegrationContentWithRepresentation
+- (void)uploadIntegrationContentWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
                                    completionBlock:(ASDKIntegrationContentUploadCompletionBlock)completionBlock {
     // Check mandatory properties
     NSParameterAssert(completionBlock);
-    NSParameterAssert(uploadIntegrationContentWithRepresentation);
+    NSParameterAssert(nodeContentRepresentation);
     NSParameterAssert(self.resultsQueue);
     
     self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
@@ -400,7 +400,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
     [self.requestOperationManager POST:[self.servicePathFactory integrationContentUploadServicePath]
-                            parameters:[uploadIntegrationContentWithRepresentation jsonDictionary]
+                            parameters:[nodeContentRepresentation jsonDictionary]
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
@@ -440,6 +440,74 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    [strongSelf.networkOperations removeObject:operation];
                                    
                                    ASDKLogError(@"Failed to upload integration content for request: %@ - %@.\nBody:%@.\nReason:%@",
+                                                operation.request.HTTPMethod,
+                                                operation.request.URL.absoluteString,
+                                                [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                                                error.localizedDescription);
+                                   
+                                   dispatch_async(self.resultsQueue, ^{
+                                       completionBlock(nil, error);
+                                   });
+                               }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)uploadIntegrationContentForTaskID:(NSString *)taskID
+                       withRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
+                          completionBlock:(ASDKIntegrationContentUploadCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(taskID);
+    NSParameterAssert(nodeContentRepresentation);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory integrationContentUploadForTaskServicePathFormat], taskID]
+                            parameters:[nodeContentRepresentation jsonDictionary]
+                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                   __strong typeof(self) strongSelf = weakSelf;
+                                   
+                                   // Remove operation reference
+                                   [strongSelf.networkOperations removeObject:operation];
+                                   
+                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                                   ASDKLogVerbose(@"Task integration content uploaded successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
+                                                  operation.request.HTTPMethod,
+                                                  operation.request.URL.absoluteString,
+                                                  [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                                                  responseDictionary);
+                                   
+                                   // Parse response data
+                                   [self.parserOperationManager parseContentDictionary:responseDictionary
+                                                                                ofType:CREATE_STRING(ASDKIntegrationParserContentTypeUploadedContent)
+                                                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                                                       if (error) {
+                                                                           ASDKLogError(@"Error parsing task integration content. Description:%@", error.localizedDescription);
+                                                                           
+                                                                           dispatch_async(self.resultsQueue, ^{
+                                                                               completionBlock(nil, error);
+                                                                           });
+                                                                       } else {
+                                                                           ASDKModelContent *content = (ASDKModelContent *)parsedObject;
+                                                                           ASDKLogVerbose(@"Successfully parsed model object:%@", content);
+                                                                           
+                                                                           dispatch_async(self.resultsQueue, ^{
+                                                                               completionBlock(content, nil);
+                                                                           });
+                                                                       }
+                                                                   }];
+                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                   __strong typeof(self) strongSelf = weakSelf;
+                                   
+                                   // Remove operation reference
+                                   [strongSelf.networkOperations removeObject:operation];
+                                   
+                                   ASDKLogError(@"Failed to upload task integration content for request: %@ - %@.\nBody:%@.\nReason:%@",
                                                 operation.request.HTTPMethod,
                                                 operation.request.URL.absoluteString,
                                                 [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],

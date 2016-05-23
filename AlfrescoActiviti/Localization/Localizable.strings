@@ -108,6 +108,12 @@
 "contentPickerComponentLocalVersionAvailableText"        = "We found a local version of the content you're trying to download. Would you like to preview it, or get the latest version from the server?";
 "contentPickerComponentPreviewLocalVersionText"          = "View local";
 "contentPickerComponentGetLatestVersionText"             = "Get latest";
+"contentPickerComponentIntegrationAccountAvailableText"  = "Unable to fetch external integration accounts.";
+"contentPickerComponentAlfrescoContentText"              = "Alfresco Cloud";
+"contentPickerComponentBoxContentText"                   = "Box";
+"contentPickerComponentDriveContentText"                 = "Google Drive";
+"contentPickerComponentIntegrationLoginErrorText"        = "There seems to be an issue with authoring access to the current service.";
+"contentPickerComponentIntegrationLoginSuccessfullText"  = "You've been logged in successfully";
 
 // People picker component
 "peoplePickerControllerTitleText"                        = "Add person";

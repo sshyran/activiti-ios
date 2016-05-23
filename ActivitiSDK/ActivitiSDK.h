@@ -33,6 +33,7 @@
 #import <ActivitiSDK/ASDKStartProcessRequestRepresentation.h>
 #import <ActivitiSDK/ASDKTaskListQuerryRequestRepresentation.h>
 #import <ActivitiSDK/ASDKTaskCreationRequestRepresentation.h>
+#import <ActivitiSDK/ASDKIntegrationNodeContentRequestRepresentation.h>
 
 #import <ActivitiSDK/ASDKModelApp.h>
 #import <ActivitiSDK/ASDKModelTask.h>
@@ -51,6 +52,12 @@
 #import <ActivitiSDK/ASDKModelProcessInstanceContent.h>
 #import <ActivitiSDK/ASDKModelProcessInstanceContentField.h>
 #import <ActivitiSDK/ASDKModelGroup.h>
+#import <ActivitiSDK/ASDKModelIntegrationAccount.h>
+
+#import <ActivitiSDK/ASDKIntegrationNetworksDataSource.h>
+#import <ActivitiSDK/ASDKIntegrationSitesDataSource.h>
+#import <ActivitiSDK/ASDKIntegrationSiteContentDataSource.h>
+#import <ActivitiSDK/ASDKIntegrationFolderContentDataSource.h>
 
 // Network services protocols
 #import <ActivitiSDK/ASDKAppNetworkServiceProtocol.h>
@@ -98,6 +105,8 @@
 #import <ActivitiSDK/ASDKRoundedBorderView.h>
 #import <ActivitiSDK/ASDKFormCheckbox.h>
 #import <ActivitiSDK/ASDKAvatarInitialsView.h>
+#import <ActivitiSDK/ASDKIntegrationLoginWebViewViewController.h>
+#import <ActivitiSDK/ASDKIntegrationBrowsingViewController.h>
 
 // UI Categories
 #import <ActivitiSDK/NSString+ASDKFontGlyphicons.h>

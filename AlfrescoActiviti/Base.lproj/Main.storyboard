@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2sj-96-gBg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2sj-96-gBg">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -2818,6 +2818,7 @@
                         <outlet property="backBarButtonItem" destination="KC5-1A-1ht" id="Z1K-64-61f"/>
                         <outlet property="contentPickerContainer" destination="B5D-mD-4EL" id="g0N-81-jCl"/>
                         <outlet property="contentPickerContainerBottomConstraint" destination="1J6-ye-fhQ" id="bGR-Ac-drb"/>
+                        <outlet property="contentPickerContainerHeightConstraint" destination="5Oh-yD-jTU" id="v7o-bN-Evw"/>
                         <outlet property="datePickerBottomConstraint" destination="qW9-bm-dOx" id="ISY-UH-wnX"/>
                         <outlet property="datePickerContainerView" destination="fsh-0u-U1X" id="wFm-or-XEL"/>
                         <outlet property="datePickerToolbar" destination="D00-yq-Hig" id="Bcl-Ai-Yeh"/>
@@ -4594,25 +4595,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="MBD-CZ-pFd">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="100"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="46" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="MBD-CZ-pFd">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="92"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddContentCellID" id="KgX-WV-ndE" customClass="AFAAddContentTableViewCell">
-                                        <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddContentCellID" rowHeight="46" id="KgX-WV-ndE" customClass="AFAAddContentTableViewCell">
+                                        <rect key="frame" x="0.0" y="28" width="600" height="46"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KgX-WV-ndE" id="fQD-H0-AzS">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DOS-Pz-542">
-                                                    <rect key="frame" x="8" y="7" width="30" height="30"/>
+                                                    <rect key="frame" x="8" y="8" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="K9P-hK-7f1"/>
                                                         <constraint firstAttribute="width" constant="30" id="dnX-Su-a1v"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="action description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dI3-Ll-1UA">
-                                                    <rect key="frame" x="48" y="8" width="544" height="28"/>
+                                                    <rect key="frame" x="48" y="8" width="544" height="30"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -4642,8 +4643,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="MBD-CZ-pFd" secondAttribute="trailing" id="SEf-lh-OK3"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="MBD-CZ-pFd" secondAttribute="bottom" id="YoK-y5-zaz"/>
-                            <constraint firstAttribute="topMargin" secondItem="MBD-CZ-pFd" secondAttribute="top" id="u3d-et-Xdc"/>
+                            <constraint firstAttribute="bottom" secondItem="MBD-CZ-pFd" secondAttribute="bottom" constant="8" id="YoK-y5-zaz"/>
+                            <constraint firstAttribute="top" secondItem="MBD-CZ-pFd" secondAttribute="top" id="u3d-et-Xdc"/>
                             <constraint firstItem="MBD-CZ-pFd" firstAttribute="leading" secondItem="AlE-qh-P3o" secondAttribute="leading" id="vcx-ZP-Q11"/>
                         </constraints>
                     </view>
@@ -5318,8 +5319,8 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Rct-bP-63w"/>
         <segue reference="RF7-69-ZNi"/>
+        <segue reference="Rct-bP-63w"/>
         <segue reference="XZ3-C5-Oig"/>
         <segue reference="Axm-Tn-V6n"/>
     </inferredMetricsTieBreakers>

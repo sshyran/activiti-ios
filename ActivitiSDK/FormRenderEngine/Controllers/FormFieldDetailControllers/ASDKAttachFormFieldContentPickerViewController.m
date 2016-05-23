@@ -370,19 +370,23 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         
         if (!error) {
             ASDKLogVerbose(@"Successfully fetched the integration account list:%@.", accounts);
-            strongSelf.integrationAccounts = accounts;
+            
+            // Filter out all but the Alfresco cloud services - development in progress
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"serviceID == %@", kASDKAPIServiceIDAlfrescoCloud];
+            NSArray *filtereAccountsdArr = [accounts filteredArrayUsingPredicate:searchPredicate];
+            strongSelf.integrationAccounts = filtereAccountsdArr;
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([self.delegate respondsToSelector:@selector(contentPickerHasBeenPresentedWithNumberOfOptions:cellHeight:)]) {
-                    [self.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + accounts.count
-                                                                         cellHeight:self.actionsTableView.rowHeight];
+                if ([weakSelf.delegate respondsToSelector:@selector(contentPickerHasBeenPresentedWithNumberOfOptions:cellHeight:)]) {
+                    [weakSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + filtereAccountsdArr.count
+                                                                             cellHeight:weakSelf.actionsTableView.rowHeight];
                 }
                 
                 [weakSelf.actionsTableView reloadData];
             });
         } else {
             ASDKLogError(@"An error occured while fetching the integration account list. Reason:%@", error.localizedDescription);
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingNoIntegrationAccountText, ASDKLocalizationTable, @"Failed title")];
         }
     }];
 }

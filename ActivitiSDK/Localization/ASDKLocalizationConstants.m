@@ -89,3 +89,5 @@ NSString *kLocalizationIntegrationLoginSuccessfullText            = @"integratio
 NSString *kLocalizationIntegrationBrowsingChooseNetworkText       = @"integrationBrowsingChooseNetworkText";
 NSString *kLocalizationIntegrationBrowsingChooseSiteText          = @"integrationBrowsingChooseSiteText";
 NSString *kLocalizationIntegrationBrowsingNoContentAvailableText  = @"integrationBrowsingNoContentAvailableText";
+NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText= @"integrationBrowsingNoIntegrationAccountAvailableText";
+

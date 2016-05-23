@@ -111,5 +111,6 @@
 - (NSString *)integrationSiteContentServicePathFormat;
 - (NSString *)integrationFolderContentServicePathFormat;
 - (NSString *)integrationContentUploadServicePath;
+- (NSString *)integrationContentUploadForTaskServicePathFormat;
 
 @end

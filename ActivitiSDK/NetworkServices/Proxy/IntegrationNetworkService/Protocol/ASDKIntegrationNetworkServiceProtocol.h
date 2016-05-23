@@ -100,7 +100,21 @@ typedef void  (^ASDKIntegrationContentUploadCompletionBlock)(ASDKModelContent *c
  *  @param completionBlock Completion block providing a refference for the uploaded model and an optional error
  *                         reason.
  */
-- (void)uploadIntegrationContentWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)uploadIntegrationContentWithRepresentation
+- (void)uploadIntegrationContentWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
                                    completionBlock:(ASDKIntegrationContentUploadCompletionBlock)completionBlock;
+
+/**
+ *  Uploads content for a specified task from an external integration service that is described inside the
+ *  provided request representation and reports back via a completion block the status of the upload.
+ *
+ *  @param taskID                                     ID of the task for which the content is uploaded
+ *  @param uploadIntegrationContentWithRepresentation Request representation object describing the content to be
+ *                                                    uploaded like the source and the sourceID
+ *  @param completionBlock                            Completion block providing a refference for the uploaded
+ *                                                    model and an optional error reason.
+ */
+- (void)uploadIntegrationContentForTaskID:(NSString *)taskID
+                       withRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
+                          completionBlock:(ASDKIntegrationContentUploadCompletionBlock)completionBlock;
 
 @end

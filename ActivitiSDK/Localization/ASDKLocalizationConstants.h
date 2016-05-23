@@ -79,3 +79,4 @@ extern NSString *kLocalizationIntegrationLoginSuccessfullText;
 extern NSString *kLocalizationIntegrationBrowsingChooseNetworkText;
 extern NSString *kLocalizationIntegrationBrowsingChooseSiteText;
 extern NSString *kLocalizationIntegrationBrowsingNoContentAvailableText;
+extern NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText;

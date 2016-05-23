@@ -76,5 +76,32 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     }];
 }
 
+- (void)requestUploadIntegrationContentForTaskID:(NSString *)taskID
+                              withRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
+                                  completionBloc:(AFAIntegrationContentUploadCompletionBlock)completionBlock {
+    NSParameterAssert(taskID);
+    NSParameterAssert(nodeContentRepresentation);
+    NSParameterAssert(completionBlock);
+    
+    nodeContentRepresentation.isLink = NO;
+    [self.integrationNetworkService uploadIntegrationContentForTaskID:taskID
+                                                   withRepresentation:nodeContentRepresentation
+                                                      completionBlock:^(ASDKModelContent *contentModel, NSError *error) {
+                                                          if (!error) {
+                                                              AFALogVerbose(@"Successfully uploaded integration content for task with ID:%@", taskID);
+                                                              
+                                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                                  completionBlock(contentModel, nil);
+                                                              });
+                                                          } else {
+                                                              AFALogError(@"An error occured while uploading integration content. Rason::%@", error.localizedDescription);
+                                                              
+                                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                                  completionBlock(nil, error);
+                                                              });
+                                                          }
+                                                      }];
+}
+
 
 @end
