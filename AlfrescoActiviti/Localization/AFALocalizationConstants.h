@@ -115,6 +115,7 @@ extern NSString *kLocalizationContentPickerComponentBoxContentText;
 extern NSString *kLocalizationContentPickerComponentDriveContentText;
 extern NSString *kLocalizationContentPickerComponentIntegrationLoginErrorText;
 extern NSString *kLocalizationContentPickerComponentIntegrationLoginSuccessfullText;
+extern NSString *kLocalizationContentPickerComponentContentNotAvailableErrorText;
 
 // People picker component
 extern NSString *kLocalizationPeoplePickerControllerTitleText;

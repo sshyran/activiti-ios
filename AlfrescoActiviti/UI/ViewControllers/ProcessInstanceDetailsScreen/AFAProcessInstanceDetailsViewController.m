@@ -684,15 +684,35 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     // Register process instance content cell factory
     AFATableControllerContentCellFactory *processInstanceContentCellFactory = [AFATableControllerContentCellFactory new];
     [processInstanceContentCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        // Cell content download action
+        // It is possible that at the time of the download request the content's availability status
+        // is changed. We perform an additional refresh once content is requested to be downloaded
+        // so it's status has the latest value
         __strong typeof(self) strongSelf = weakSelf;
         
-        NSIndexPath *contentToDownloadIndexPath = changeParameters[kCellFactoryCellParameterCellIndexpath];
-        AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [strongSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
-        ASDKModelContent *contentToDownload = ((ASDKModelProcessInstanceContent *)processInstanceContentModel.attachedContentArr[contentToDownloadIndexPath.section]).contentList[contentToDownloadIndexPath.row];
+        if (!(AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress & strongSelf.controllerState)) {
+            strongSelf.controllerState |= AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
+        }
         
-        [strongSelf.contentPickerViewController dowloadContent:contentToDownload
-                                            allowCachedContent:YES];
+        AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
+        [processServices requestProcessInstanceContentForProcessInstanceID:strongSelf.processInstanceID
+                                                           completionBlock:^(NSArray *contentList, NSError *error) {
+                                                               // Mark that the refresh operation has ended
+                                                               weakSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
+                                                               weakSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
+                                                               
+                                                               if (!error) {
+                                                                   AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [AFATableControllerProcessInstanceContentModel new];
+                                                                   processInstanceContentModel.attachedContentArr = contentList;
+                                                                   weakSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentModel;
+                                                               }
+                                                               
+                                                               NSIndexPath *contentToDownloadIndexPath = changeParameters[kCellFactoryCellParameterCellIndexpath];
+                                                               AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [weakSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
+                                                               ASDKModelContent *contentToDownload = ((ASDKModelProcessInstanceContent *)processInstanceContentModel.attachedContentArr[contentToDownloadIndexPath.section]).contentList[contentToDownloadIndexPath.row];
+                                                               
+                                                               [strongSelf.contentPickerViewController dowloadContent:contentToDownload
+                                                                                                   allowCachedContent:YES];
+                                                           }];
     } forCellType:[processInstanceContentCellFactory cellTypeForDownloadContent]];
     
     processInstanceContentCellFactory.appThemeColor = self.navigationBarThemeColor;

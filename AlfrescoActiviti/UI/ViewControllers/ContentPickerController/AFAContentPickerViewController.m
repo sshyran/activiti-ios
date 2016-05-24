@@ -50,7 +50,8 @@ typedef NS_ENUM(NSInteger, AFAContentPickerCellType) {
 @interface AFAContentPickerViewController () <UINavigationControllerDelegate,
 UIImagePickerControllerDelegate,
 QLPreviewControllerDataSource,
-QLPreviewControllerDelegate>
+QLPreviewControllerDelegate,
+UIDocumentInteractionControllerDelegate>
 
 @property (weak, nonatomic)   IBOutlet UITableView                          *actionsTableView;
 @property (strong, nonatomic) JGProgressHUD                                 *progressHUD;
@@ -133,76 +134,82 @@ QLPreviewControllerDelegate>
 
 - (void)dowloadContent:(ASDKModelContent *)content
     allowCachedContent:(BOOL)allowCachedContent {
-    [self showDownloadProgressHUD];
     
     AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     
     __weak typeof(self) weakSelf = self;
-    [taskServices requestTaskContentDownloadForContent:content
-                                    allowCachedResults:allowCachedContent
-                                     withProgressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                         __strong typeof(self) strongSelf = weakSelf;
-                                         
-                                         if (!error) {
-                                             strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentDownloadProgressFormat, @"Download progress format"), formattedReceivedBytesString];
-                                         } else {
-                                             [strongSelf.progressHUD dismiss];
-                                             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
-                                         }
-                                     } withCompletionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                         __strong typeof(self) strongSelf = weakSelf;
-                                         
-                                         if (!error) {
-                                             // If local content is available ask the user how he would like to preview it
-                                             if (isLocalContent) {
-                                                 [strongSelf.progressHUD dismiss];
-                                                 [strongSelf showMultipleChoiceAlertControllerWithTitle:nil
-                                                                                                message:NSLocalizedString(kLocalizationContentPickerComponentLocalVersionAvailableText, @"Local content available")
-                                                                            choiceButtonTitlesAndBlocks:NSLocalizedString(kLocalizationContentPickerComponentPreviewLocalVersionText, @"Preview local content"),
-                                                  // Preview local content option
-                                                  ^(UIAlertAction *action) {
-                                                      weakSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
-                                                      [weakSelf previewDownloadedContent];
-                                                  },
-                                                  NSLocalizedString(kLocalizationContentPickerComponentGetLatestVersionText, @"Get latest version"),
-                                                  // Get latest version from the server
-                                                  ^(UIAlertAction *action) {
-                                                      [weakSelf dowloadContent:content
-                                                            allowCachedContent:NO];
-                                                  }, nil];
-                                                 
-                                                 return;
-                                             }
+    // Check if the content that's about to be downloaded is available
+    if (content.isContentAvailable) {
+        [self showDownloadProgressHUD];
+        [taskServices requestTaskContentDownloadForContent:content
+                                        allowCachedResults:allowCachedContent
+                                         withProgressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                             __strong typeof(self) strongSelf = weakSelf;
                                              
-                                             if (downloadedContentURL &&
-                                                 content) {
-                                                 strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
+                                             if (!error) {
+                                                 strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentDownloadProgressFormat, @"Download progress format"), formattedReceivedBytesString];
+                                             } else {
+                                                 [strongSelf.progressHUD dismiss];
+                                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+                                             }
+                                         } withCompletionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             [strongSelf.progressHUD dismiss];
+                                             
+                                             if (!error) {
+                                                 // If local content is available ask the user how he would like to preview it
+                                                 if (isLocalContent) {
+                                                     [strongSelf showMultipleChoiceAlertControllerWithTitle:nil
+                                                                                                    message:NSLocalizedString(kLocalizationContentPickerComponentLocalVersionAvailableText, @"Local content available")
+                                                                                choiceButtonTitlesAndBlocks:NSLocalizedString(kLocalizationContentPickerComponentPreviewLocalVersionText, @"Preview local content"),
+                                                      // Preview local content option
+                                                      ^(UIAlertAction *action) {
+                                                          weakSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
+                                                          [weakSelf previewDownloadedContent];
+                                                      },
+                                                      NSLocalizedString(kLocalizationContentPickerComponentGetLatestVersionText, @"Get latest version"),
+                                                      // Get latest version from the server
+                                                      ^(UIAlertAction *action) {
+                                                          [weakSelf dowloadContent:content
+                                                                allowCachedContent:NO];
+                                                      }, nil];
+                                                     
+                                                     return;
+                                                 }
                                                  
-                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                     weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                                                     weakSelf.progressHUD.detailTextLabel.text = nil;
+                                                 if (downloadedContentURL &&
+                                                     content) {
+                                                     strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
                                                      
-                                                     weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                                     weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                                 });
-                                                 
-                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                     [weakSelf.progressHUD dismiss];
+                                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                         weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                                                         weakSelf.progressHUD.detailTextLabel.text = nil;
+                                                         
+                                                         weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                                         weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                                     });
                                                      
-                                                     if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedDownloadingAtURL:)]) {
-                                                         [weakSelf.delegate pickedContentHasFinishedDownloadingAtURL:downloadedContentURL];
-                                                     }
-                                                     
-                                                     // Present the quick look controller
-                                                     [weakSelf previewDownloadedContent];
-                                                 });
+                                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                         [weakSelf.progressHUD dismiss];
+                                                         
+                                                         if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedDownloadingAtURL:)]) {
+                                                             [weakSelf.delegate pickedContentHasFinishedDownloadingAtURL:downloadedContentURL];
+                                                         }
+                                                         
+                                                         // Present the quick look controller
+                                                         [weakSelf previewDownloadedContent];
+                                                     });
+                                                 } else {
+                                                     [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+                                                 }
                                              } else {
                                                  [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
                                              }
-                                         } else {
-                                             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
-                                         }
-                                     }];
+                                         }];
+    } else {
+        [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationContentPickerComponentContentNotAvailableErrorText, @"Content not available error")];
+    }
 }
 
 - (void)previewDownloadedContent {
@@ -438,6 +445,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 - (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
     return 1;
+}
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
+    return self.navigationController;
 }
 
 - (id<QLPreviewItem> _Nonnull)previewController:(QLPreviewController * _Nonnull)controller
