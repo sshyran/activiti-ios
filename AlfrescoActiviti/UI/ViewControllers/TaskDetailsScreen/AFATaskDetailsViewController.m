@@ -989,17 +989,37 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         
     } forCellType:[contentCellFactory cellTypeForDeleteContent]];
     
+    // Cell content download action
     [contentCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        // Cell content download action
+        // It is possible that at the time of the download request the content's availability status
+        // is changed. We perform an additional refresh once content is requested to be downloaded
+        // so it's status has the latest value
         __strong typeof(self) strongSelf = weakSelf;
         
-        NSInteger contentToDownloadIdx = ((NSIndexPath *)changeParameters[kCellFactoryCellParameterCellIndexpath]).row;
-        AFATableControllerContentModel *taskContentModel = [strongSelf reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
-        ASDKModelContent *contentToDownload = (ASDKModelContent *)taskContentModel.attachedContentArr[contentToDownloadIdx];
+        if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & strongSelf.controllerState)) {
+            strongSelf.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+        }
         
-        [strongSelf.contentPickerViewController dowloadContent:contentToDownload
-                                            allowCachedContent:YES];
-        
+        AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+        [taskServices requestTaskContentForID:strongSelf.taskID
+                          withCompletionBlock:^(NSArray *contentList, NSError *error) {
+                              // Mark that the refresh operation has ended
+                              strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                              strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+                              
+                              if (!error) {
+                                  AFATableControllerContentModel *taskContentModel = [AFATableControllerContentModel new];
+                                  taskContentModel.attachedContentArr = contentList;
+                                  strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeFilesContent)] = taskContentModel;
+                              }
+                              
+                              NSInteger contentToDownloadIdx = ((NSIndexPath *)changeParameters[kCellFactoryCellParameterCellIndexpath]).row;
+                              AFATableControllerContentModel *taskContentModel = [strongSelf reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
+                              ASDKModelContent *contentToDownload = (ASDKModelContent *)taskContentModel.attachedContentArr[contentToDownloadIdx];
+                              
+                              [strongSelf.contentPickerViewController dowloadContent:contentToDownload
+                                                                  allowCachedContent:YES];
+                          }];
     } forCellType:[contentCellFactory cellTypeForDownloadContent]];
     
     // Contributors cell factory

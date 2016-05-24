@@ -90,6 +90,10 @@
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
+    // Set up the content list table view to adjust it's size automatically
+    self.attachedContentTableView.estimatedRowHeight = 61.0f;
+    self.attachedContentTableView.rowHeight = UITableViewAutomaticDimension;
+    
     [self setRightBarButton];
     [self refreshContent];
     
@@ -219,8 +223,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKContentFileTableViewCell *contentFileCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldAttachFileRepresentation];
-    contentFileCell.fileTypeLabel.text = [(ASDKModelContent *)self.currentFormField.values[indexPath.row] displayType];
-    contentFileCell.fileNameLabel.text = [(ASDKModelContent *)self.currentFormField.values[indexPath.row] contentName];
+    ASDKModelContent *currentContent = (ASDKModelContent *)self.currentFormField.values[indexPath.row];
+    contentFileCell.fileTypeLabel.text = currentContent.contentName.pathExtension;
+    contentFileCell.fileNameLabel.text = [currentContent.contentName stringByDeletingPathExtension];
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         contentFileCell.fileNameLabel.textColor = [UIColor formViewCompletedValueColor];

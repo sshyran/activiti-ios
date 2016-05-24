@@ -35,8 +35,8 @@
 #pragma mark Public interface
 
 - (void)setUpCellWithContent:(ASDKModelContent *)content {
-    self.fileTypeLabel.text = content.displayType;
-    self.fileNameLabel.text = content.contentName;
+    self.fileTypeLabel.text = content.contentName.pathExtension;
+    self.fileNameLabel.text = [content.contentName stringByDeletingPathExtension];
 }
 
 @end
