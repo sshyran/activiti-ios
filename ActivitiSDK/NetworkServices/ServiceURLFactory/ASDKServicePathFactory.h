@@ -104,4 +104,13 @@
 // Query related
 - (NSString *)taskQueryServicePath;
 
+// Integration related
+- (NSString *)integrationAccountsServicePath;
+- (NSString *)integrationNetworksServicePathFormat;
+- (NSString *)integrationSitesServicePathFormat;
+- (NSString *)integrationSiteContentServicePathFormat;
+- (NSString *)integrationFolderContentServicePathFormat;
+- (NSString *)integrationContentUploadServicePath;
+- (NSString *)integrationContentUploadForTaskServicePathFormat;
+
 @end

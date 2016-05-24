@@ -27,13 +27,15 @@ typedef NS_ENUM(NSInteger, ASDKModelContentAvailabilityType) {
 
 @interface ASDKModelContent : ASDKModelBase
 
-@property (strong, nonatomic) NSString *contentName;
-@property (strong, nonatomic) ASDKModelProfile *owner;
-@property (assign, nonatomic) BOOL isContentAvailable;
-@property (assign, nonatomic) BOOL isLink;
-@property (strong, nonatomic) NSString *mimeType;
-@property (strong, nonatomic) NSString *displayType;
-@property (assign, nonatomic) ASDKModelContentAvailabilityType previewStatus;
-@property (assign, nonatomic) ASDKModelContentAvailabilityType thumbnailStatus;
+@property (strong, nonatomic) NSString                          *contentName;
+@property (strong, nonatomic) ASDKModelProfile                  *owner;
+@property (assign, nonatomic) BOOL                              isContentAvailable;
+@property (assign, nonatomic) BOOL                              isLink;
+@property (strong, nonatomic) NSString                          *mimeType;
+@property (strong, nonatomic) NSString                          *displayType;
+@property (assign, nonatomic) ASDKModelContentAvailabilityType  previewStatus;
+@property (assign, nonatomic) ASDKModelContentAvailabilityType  thumbnailStatus;
+@property (strong, nonatomic) NSString                          *source;
+@property (strong, nonatomic) NSString                          *sourceID;
 
 @end

@@ -34,5 +34,6 @@
 + (UIColor *)formViewAmountFieldSymbolColor;
 + (UIColor *)distructiveOperationBackgroundColor;
 + (UIColor *)formViewCompletedValueColor;
++ (UIColor *)integrationGreyTintColor;
 
 @end

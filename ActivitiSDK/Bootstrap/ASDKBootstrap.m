@@ -36,6 +36,7 @@
 #import "ASDKProcessDefinitionNetworkServices.h"
 #import "ASDKUserNetworkServices.h"
 #import "ASDKQuerryNetworkServices.h"
+#import "ASDKIntegrationNetworkServices.h"
 
 // Managers imports
 #import "ASDKRequestOperationManager.h"
@@ -47,6 +48,7 @@
 #import "ASDKAppParserOperationWorker.h"
 #import "ASDKProcessParserOperationWorker.h"
 #import "ASDKUserParserOperationWorker.h"
+#import "ASDKIntegrationParserOperationWorker.h"
 #import "ASDKDiskServices.h"
 #import "ASDKFormRenderEngine.h"
 #import "ASDKFormRenderEngineProtocol.h"
@@ -138,7 +140,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                forServices:[userParserWorker availableServices]];
     ASDKProcessParserOperationWorker *processParserWorker = [ASDKProcessParserOperationWorker new];
     [parserOperationManager registerWorker:processParserWorker
-                               forServices:[processParserWorker availableServices]];    // Link the processing queues between the request and parser managers
+                               forServices:[processParserWorker availableServices]];
+    ASDKIntegrationParserOperationWorker *integrationParserWorker = [ASDKIntegrationParserOperationWorker new];
+    [parserOperationManager registerWorker:integrationParserWorker
+                               forServices:[integrationParserWorker availableServices]];
+    
+    // Link the processing queues between the request and parser managers
     self.requestOperationManager.completionQueue = parserOperationManager.completionQueue;
     
     // Set up the disk services
@@ -267,7 +274,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKQuerryNetworkServices *queryNetworkService = [[ASDKQuerryNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                                  parserManager:parserOperationManager
                                                                                             servicePathFactory:servicePathFactory
-                                                                                                  diskServices:diskService resultsQueue:nil];
+                                                                                                  diskServices:diskService
+                                                                                                  resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKQuerryNetworkServiceProtocol)]) {
         [_serviceLocator removeService:queryNetworkService];
@@ -275,6 +283,20 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [_serviceLocator addService:queryNetworkService];
     
     ASDKLogVerbose(@"Query network services...%@", queryNetworkService ? @"OK" : @"NOT_OK");
+    
+    // Set up integration network service
+    ASDKIntegrationNetworkServices *integrationNetworkService =
+    [[ASDKIntegrationNetworkServices alloc] initWithRequestManager:self.requestOperationManager
+                                                     parserManager:parserOperationManager
+                                                servicePathFactory:servicePathFactory
+                                                      diskServices:diskService
+                                                      resultsQueue:nil];
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:integrationNetworkService];
+    }
+    [_serviceLocator addService:integrationNetworkService];
+    
+    ASDKLogVerbose(@"Integration network services...%@", integrationNetworkService ? @"OK" : @"NOT_OK");
     
     // Set up the form render engine service
     ASDKFormRenderEngine *formRenderEngine = [ASDKFormRenderEngine new];

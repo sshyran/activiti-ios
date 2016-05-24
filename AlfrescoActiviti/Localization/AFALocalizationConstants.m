@@ -133,6 +133,12 @@ NSString *kLocalizationContentPickerComponentDownloadingText             = @"con
 NSString *kLocalizationContentPickerComponentLocalVersionAvailableText   = @"contentPickerComponentLocalVersionAvailableText";
 NSString *kLocalizationContentPickerComponentPreviewLocalVersionText     = @"contentPickerComponentPreviewLocalVersionText";
 NSString *kLocalizationContentPickerComponentGetLatestVersionText        = @"contentPickerComponentGetLatestVersionText";
+NSString *kLocalizationContentPickerComponentIntegrationAccountNotAvailableText = @"contentPickerComponentIntegrationAccountAvailableText";
+NSString *kLocalizationContentPickerComponentAlfrescoContentText         = @"contentPickerComponentAlfrescoContentText";
+NSString *kLocalizationContentPickerComponentBoxContentText              = @"contentPickerComponentBoxContentText";
+NSString *kLocalizationContentPickerComponentDriveContentText            = @"contentPickerComponentDriveContentText";
+NSString *kLocalizationContentPickerComponentIntegrationLoginErrorText   = @"contentPickerComponentIntegrationLoginErrorText";
+NSString *kLocalizationContentPickerComponentIntegrationLoginSuccessfullText = @"contentPickerComponentIntegrationLoginSuccessfullText";
 
 
 #pragma mark -

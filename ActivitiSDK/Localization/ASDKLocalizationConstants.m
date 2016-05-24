@@ -28,6 +28,7 @@ NSString *kLocalizationDefaultFormOutcome                        = @"defaultForm
 NSString *kLocalizationSaveFormOutcome                           = @"saveFormOutcome";
 NSString *kLocalizationStartProcessFormOutcome                   = @"startProcessFormOutcome";
 NSString *kLocalizationDeleteDynamicTableRowFormOutcome          = @"deleteDynamicTableRowFormOutcome";
+NSString *kLocalizationCancelButtonText                          = @"cancelButtonText";
 NSString *kLocalizationFormDateComponentRemoveButtonText         = @"formDateComponentRemoveButtonText";
 NSString *kLocalizationFormDateComponentPickDateLabelText        = @"formDateComponentPickDateLabelText";
 NSString *kLocalizationFormDateComponentDoneButtonText           = @"formDateComponentDoneButtonText";
@@ -56,7 +57,9 @@ NSString *kLocalizationFormContentPickerComponentFailedText                     
 NSString *kLocalizationFormContentPickerComponentLocalVersionAvailableText          = @"formContentPickerComponentLocalVersionAvailableText";
 NSString *kLocalizationFormContentPickerComponentPreviewLocalVersionText            = @"formContentPickerComponentPreviewLocalVersionText";
 NSString *kLocalizationFormContentPickerComponentGetLatestVersionText               = @"formContentPickerComponentGetLatestVersionText";
-
+NSString *kLocalizationFormContentPickerComponentAlfrescoContentText                = @"formContentPickerComponentAlfrescoContentText";
+NSString *kLocalizationFormContentPickerComponentBoxContentText                     = @"formContentPickerComponentBoxContentText";
+NSString *kLocalizationFormContentPickerComponentDriveText                          = @"formContentPickerComponentDriveContentText";
 
 #pragma mark -
 #pragma mark People picker component
@@ -77,4 +80,14 @@ NSString *kLocalizationFormAlertDialogYesButtonText               = @"formAlertD
 NSString *kLocalizationFormAlertDialogNoButtonText                = @"formAlertDialogNoButtonText";
 NSString *kLocalizationFormAlertDialogGenericNetworkErrorText     = @"formAlertDialogGenericNetworkErrorText";
 
+
+#pragma mark -
+#pragma mark Integration component
+
+NSString *kLocalizationIntegrationLoginErrorText                  = @"integrationLoginErrorText";
+NSString *kLocalizationIntegrationLoginSuccessfullText            = @"integrationLoginSuccessfullText";
+NSString *kLocalizationIntegrationBrowsingChooseNetworkText       = @"integrationBrowsingChooseNetworkText";
+NSString *kLocalizationIntegrationBrowsingChooseSiteText          = @"integrationBrowsingChooseSiteText";
+NSString *kLocalizationIntegrationBrowsingNoContentAvailableText  = @"integrationBrowsingNoContentAvailableText";
+NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText= @"integrationBrowsingNoIntegrationAccountAvailableText";
 

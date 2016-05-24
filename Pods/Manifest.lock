@@ -40,7 +40,7 @@ PODS:
   - PDKTZipArchive (0.3.5)
 
 DEPENDENCIES:
-  - AFNetworking
+  - AFNetworking (= 2.6.1)
   - CocoaLumberjack
   - HockeySDK
   - JGProgressHUD
@@ -56,4 +56,6 @@ SPEC CHECKSUMS:
   Mantle: 1912395033f601de5adc8ee91e48f46e4c7051ad
   PDKTZipArchive: 81c4824eb5587131e422fc58b92c043c4aa96466
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: c8b1c048946f0f0196b0f841947c667c5ca117d2
+
+COCOAPODS: 1.0.0

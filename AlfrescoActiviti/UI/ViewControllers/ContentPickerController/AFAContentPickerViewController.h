@@ -17,7 +17,8 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-@class ASDKModelContent;
+@class ASDKModelContent,
+ASDKModelIntegrationAccount;
 
 typedef NS_ENUM(NSInteger, AFAContentPickerViewControllerType) {
     AFAContentPickerViewControllerTypeUndefined         = -1,
@@ -32,6 +33,11 @@ typedef NS_ENUM(NSInteger, AFAContentPickerViewControllerType) {
 - (void)userDidCancelImagePick;
 - (void)pickedContentHasFinishedUploading;
 - (void)pickedContentHasFinishedDownloadingAtURL:(NSURL *)downloadedFileURL;
+
+@optional
+- (void)contentPickerHasBeenPresentedWithNumberOfOptions:(NSUInteger)contentOptionCount
+                                              cellHeight:(CGFloat)cellHeight;
+- (void)userPickerIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount;
 
 @end
 

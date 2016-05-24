@@ -18,27 +18,38 @@
 
 #import "ASDKAttachFormFieldContentPickerViewController.h"
 
-#import "ASDKBootstrap.h"
-#import "ASDKModelContent.h"
-#import "ASDKFormNetworkServices.h"
-#import "ASDKServiceLocator.h"
-#import "ASDKAttachFormFieldDetailsViewController.h"
-#import "ASDKModelFileContent.h"
-#import "ASDKModelFormFieldAttachParameter.h"
-
+// Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLocalizationConstants.h"
+#import "ASDKLogConfiguration.h"
+#import "ASDKNetworkServiceConstants.h"
 
+// Categories
 #import "UIViewController+ASDKAlertAddition.h"
 
+// Models
+#import "ASDKModelContent.h"
+#import "ASDKModelFileContent.h"
+#import "ASDKModelFormFieldAttachParameter.h"
+#import "ASDKModelIntegrationAccount.h"
+
+// Cells
 #import "ASDKAddContentTableViewCell.h"
 
-#import "ASDKLogConfiguration.h"
+// Views
+#import <JGProgressHUD/JGProgressHUD.h>
 
+// View controllers
+#import "ASDKAttachFormFieldDetailsViewController.h"
+#import "ASDKIntegrationLoginWebViewViewController.h"
+
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKIntegrationNetworkServices.h"
+#import "ASDKFormNetworkServices.h"
+#import "ASDKServiceLocator.h"
 @import Photos;
 @import QuickLook;
-
-#import <JGProgressHUD/JGProgressHUD.h>
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -61,11 +72,13 @@ QLPreviewControllerDelegate>
 @property (strong, nonatomic) JGProgressHUD                                 *progressHUD;
 @property (strong, nonatomic) UIImagePickerController                       *imagePickerController;
 @property (strong, nonatomic) QLPreviewController                           *previewController;
+@property (strong, nonatomic) ASDKIntegrationLoginWebViewViewController     *integrationLoginController;
 
 // Internal state properties
 @property (strong, nonatomic) NSURL                                         *currentSelectedUploadResourceURL;
 @property (strong, nonatomic) NSURL                                         *currentSelectedDownloadResourceURL;
 @property (strong, nonatomic) NSData                                        *currentSelectedResourceData;
+@property (strong, nonatomic) NSArray                                       *integrationAccounts;
 
 @end
 
@@ -87,13 +100,7 @@ QLPreviewControllerDelegate>
 }
 
 - (void)viewDidLoad {
-    [self.delegate self];
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"test"
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:nil];
-    
-    self.navigationItem.rightBarButtonItem = backButton;
+    [self fetchIntegrationAccounts];
 }
 
 
@@ -156,7 +163,7 @@ QLPreviewControllerDelegate>
                                           if (isLocalContent) {
                                               
                                               [strongSelf.progressHUD dismiss];
-
+                                              
                                               // if local content is uploaded then do not show modal
                                               if ([strongSelf.uploadedContentIDs containsObject:contentID]) {
                                                   weakSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
@@ -215,10 +222,10 @@ QLPreviewControllerDelegate>
 }
 
 - (void)requestFormFieldContentDownloadForContent:(ASDKModelContent *)content
-                          allowCachedResults:(BOOL)allowCachedResults
-                           withProgressBlock:(ASDKFormFieldContentDownloadProgressBlock)progressBlock
-                         withCompletionBlock:(ASDKFormFieldContentDownloadCompletionBlock)completionBlock {
-   
+                               allowCachedResults:(BOOL)allowCachedResults
+                                withProgressBlock:(ASDKFormFieldContentDownloadProgressBlock)progressBlock
+                              withCompletionBlock:(ASDKFormFieldContentDownloadCompletionBlock)completionBlock {
+    
     NSParameterAssert(content);
     NSParameterAssert(completionBlock);
     
@@ -263,6 +270,7 @@ QLPreviewControllerDelegate>
                                             animated:YES
                                           completion:nil];
 }
+
 
 #pragma mark -
 #pragma mark Image Picker Controller delegate methods
@@ -352,8 +360,38 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 #pragma mark -
 #pragma mark Service integration
 
-- (void)uploadFormFieldContentForCurrentSelectedResource {
+- (void)fetchIntegrationAccounts {
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKIntegrationNetworkServices *integrationNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)];
     
+    __weak typeof(self) weakSelf = self;
+    [integrationNetworkService fetchIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            ASDKLogVerbose(@"Successfully fetched the integration account list:%@.", accounts);
+            
+            // Filter out all but the Alfresco cloud services - development in progress
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"serviceID == %@", kASDKAPIServiceIDAlfrescoCloud];
+            NSArray *filtereAccountsdArr = [accounts filteredArrayUsingPredicate:searchPredicate];
+            strongSelf.integrationAccounts = filtereAccountsdArr;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(contentPickerHasBeenPresentedWithNumberOfOptions:cellHeight:)]) {
+                    [weakSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + filtereAccountsdArr.count
+                                                                             cellHeight:weakSelf.actionsTableView.rowHeight];
+                }
+                
+                [weakSelf.actionsTableView reloadData];
+            });
+        } else {
+            ASDKLogError(@"An error occured while fetching the integration account list. Reason:%@", error.localizedDescription);
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingNoIntegrationAccountText, ASDKLocalizationTable, @"Failed title")];
+        }
+    }];
+}
+
+- (void)uploadFormFieldContentForCurrentSelectedResource {
     // Acquire and set up the app network service
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
     ASDKFormNetworkServices *formNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
@@ -363,62 +401,62 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
     __weak typeof(self) weakSelf = self;
     [formNetworkService uploadContentWithModel:fileContentModel
-                                        contentData:self.currentSelectedResourceData
-                                      progressBlock:^(NSUInteger progress, NSError *error) {
-                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                              [weakSelf.progressHUD setProgress:progress / 100.0f
-                                                                         animated:YES];
-                                              weakSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Percent format"), progress];
-                                          });
-                                      } completionBlock:^(ASDKModelContent *modelContent, NSError *error) {
-                                          __strong typeof(self) strongSelf = weakSelf;
-
-                                          BOOL didContentUploadSucceeded = modelContent.isContentAvailable && !error;
-                                          
-                                          if (didContentUploadSucceeded) {
-                                              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                  weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
-                                                  weakSelf.progressHUD.detailTextLabel.text = nil;
-                                                  
-                                                  weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                                  weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                              });
-                                              
-                                              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                  [weakSelf.progressHUD dismiss];
-                                                  
-                                                  // add content to attach field
-                                                  //
-                                                  // if multiple files allowed -> add
-                                                  // otherwise -> replace
-                                                  
-                                                  ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)self.currentFormField.formFieldParams;
-                                                  NSMutableArray *currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
-                                                  
-                                                  if (formFieldParameters.allowMultipleFiles) {
-                                                      currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
-                                                  } else {
-                                                      currentValuesArray = [[NSMutableArray alloc] init];
-                                                  }
-                                                  
-                                                  [currentValuesArray addObject:modelContent];
-                                                  self.currentFormField.values = [currentValuesArray copy];
-                                                  
-                                                  // store uploaded content id
-                                                  // used for automatic selection local storage version in stead of remote version
-                                                  [self.uploadedContentIDs addObject:modelContent.instanceID];
-                                                  
-                                                  if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
-                                                      [weakSelf.delegate pickedContentHasFinishedUploading];
-                                                  }
-                                              });
-                                          } else {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
-                                                  [strongSelf.progressHUD dismiss];
-                                              });
-                                          }
-                                      }];
+                                   contentData:self.currentSelectedResourceData
+                                 progressBlock:^(NSUInteger progress, NSError *error) {
+                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                         [weakSelf.progressHUD setProgress:progress / 100.0f
+                                                                  animated:YES];
+                                         weakSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Percent format"), progress];
+                                     });
+                                 } completionBlock:^(ASDKModelContent *modelContent, NSError *error) {
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     
+                                     BOOL didContentUploadSucceeded = modelContent.isContentAvailable && !error;
+                                     
+                                     if (didContentUploadSucceeded) {
+                                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                             weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
+                                             weakSelf.progressHUD.detailTextLabel.text = nil;
+                                             
+                                             weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                             weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                         });
+                                         
+                                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                             [weakSelf.progressHUD dismiss];
+                                             
+                                             // add content to attach field
+                                             //
+                                             // if multiple files allowed -> add
+                                             // otherwise -> replace
+                                             
+                                             ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)self.currentFormField.formFieldParams;
+                                             NSMutableArray *currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
+                                             
+                                             if (formFieldParameters.allowMultipleFiles) {
+                                                 currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
+                                             } else {
+                                                 currentValuesArray = [[NSMutableArray alloc] init];
+                                             }
+                                             
+                                             [currentValuesArray addObject:modelContent];
+                                             self.currentFormField.values = [currentValuesArray copy];
+                                             
+                                             // store uploaded content id
+                                             // used for automatic selection local storage version instead of remote version
+                                             [self.uploadedContentIDs addObject:modelContent.instanceID];
+                                             
+                                             if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
+                                                 [weakSelf.delegate pickedContentHasFinishedUploading];
+                                             }
+                                         });
+                                     } else {
+                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
+                                             [strongSelf.progressHUD dismiss];
+                                         });
+                                     }
+                                 }];
 }
 
 
@@ -434,6 +472,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 - (void)showDownloadProgressHUD {
     self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDownloadingText, ASDKLocalizationTable, @"Downloading text");
     self.progressHUD.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
+    [self.progressHUD showInView:self.navigationController.view];
+}
+
+- (void)showIntegrationLoginHUD {
+    self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationIntegrationLoginSuccessfullText, ASDKLocalizationTable, @"Logged in successfully text");
+    self.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+    self.progressHUD.detailTextLabel.text = nil;
     [self.progressHUD showInView:self.navigationController.view];
 }
 
@@ -462,6 +507,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     return self.currentSelectedDownloadResourceURL;
 }
 
+
 #pragma mark -
 #pragma mark Tableview Delegate & Datasource
 
@@ -471,12 +517,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-    return ASDKAttachFormFieldDetailsCellTypeEnumCount;
+    return ASDKAttachFormFieldDetailsCellTypeEnumCount + self.integrationAccounts.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ASDKAddContentTableViewCell *taskCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldAttachAddContent];
+    ASDKAddContentTableViewCell *taskCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldAttachAddContent
+                                                                            forIndexPath:indexPath];
     
     switch (indexPath.row) {
         case ASDKAttachFormFieldDetailsCellTypeLocalContent: {
@@ -491,7 +538,27 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
             break;
             
-        default:
+        default: { // Handle the integration cells
+            ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
+            NSBundle *frameWorkBundle = [NSBundle bundleForClass:[self class]];
+            
+            if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.serviceID]) {
+                taskCell.iconImageView.image = [UIImage imageNamed:@"alfresco-icon"
+                                                          inBundle:frameWorkBundle
+                                     compatibleWithTraitCollection:nil];
+                taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentAlfrescoContentText, ASDKLocalizationTable, @"Alfresco cloud text");
+            } else if ([kASDKAPIServiceIDBox isEqualToString:account.serviceID]) {
+                taskCell.iconImageView.image = [UIImage imageNamed:@"box-icon"
+                                                          inBundle:frameWorkBundle
+                                     compatibleWithTraitCollection:nil];
+                taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentBoxContentText, ASDKLocalizationTable, @"Box text");
+            } else if ([kASDKAPIServiceIDGoogleDrive isEqualToString:account.serviceID]) {
+                taskCell.iconImageView.image = [UIImage imageNamed:@"drive-icon"
+                                                          inBundle:frameWorkBundle
+                                     compatibleWithTraitCollection:nil];
+                taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDriveText, ASDKLocalizationTable, @"Google drive text");
+            }
+        }
             break;
     }
     
@@ -517,7 +584,43 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
             break;
             
-        default:
+        default: { // Handle integration services cell behaviour
+            ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
+            
+            if (!account.authorized) {
+                __weak typeof(self) weakSelf = self;
+                self.integrationLoginController =
+                [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURL
+                                                                            completionBlock:^(BOOL isAuthorized) {
+                                                                                if (isAuthorized) {
+                                                                                    __strong typeof(self) strongSelf = weakSelf;
+                                                                                    [self fetchIntegrationAccounts];
+                                                                                    [strongSelf showIntegrationLoginHUD];
+                                                                                    
+                                                                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                                                        [weakSelf.progressHUD dismiss];
+                                                                                        
+                                                                                        if ([strongSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                                                                                            [strongSelf.delegate userPickerIntegrationAccount:account];
+                                                                                        }
+                                                                                    });
+                                                                                } else {
+                                                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                        [self showGenericErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationLoginErrorText, ASDKLocalizationTable,  @"Cannot author integration service")];
+                                                                                    });
+                                                                                }
+                                                                            }];
+                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationLoginController];
+                
+                [self presentViewController:navigationController
+                                   animated:YES
+                                 completion:nil];
+            } else {
+                if ([self.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                    [self.delegate userPickerIntegrationAccount:account];
+                }
+            }
+        }
             break;
     }
 }

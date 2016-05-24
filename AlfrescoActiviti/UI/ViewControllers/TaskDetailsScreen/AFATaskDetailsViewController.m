@@ -42,6 +42,7 @@
 #import "AFATaskServices.h"
 #import "AFAFormServices.h"
 #import "AFAProfileServices.h"
+#import "AFAIntegrationServices.h"
 @import ActivitiSDK;
 
 // Models
@@ -77,7 +78,9 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     AFATaskDetailsLoadingStateGeneralRefreshInProgress      = 1<<2
 };
 
-@interface AFATaskDetailsViewController () <AFAContentPickerViewControllerDelegate, AFATaskFormViewControllerDelegate>
+@interface AFATaskDetailsViewController () <AFAContentPickerViewControllerDelegate,
+                                            AFATaskFormViewControllerDelegate,
+                                            ASDKIntegrationBrowsingDelegate>
 
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *backBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UITableView                          *taskDetailsTableView;
@@ -93,6 +96,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (weak, nonatomic)   IBOutlet UIView                               *fullScreenOverlayView;
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *datePickerBottomConstraint;
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *contentPickerContainerBottomConstraint;
+@property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *contentPickerContainerHeightConstraint;
 @property (weak, nonatomic)   IBOutlet UIView                               *datePickerContainerView;
 @property (strong, nonatomic) UIDatePicker                                  *datePicker;
 @property (strong, nonatomic) AFAContentPickerViewController                *contentPickerViewController;
@@ -101,6 +105,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *taskDetailsTableViewTopConstraint;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                      *addBarButtonItem;
 @property (weak, nonatomic)   IBOutlet AFANoContentView                     *noContentView;
+@property (strong, nonatomic) ASDKIntegrationBrowsingViewController         *integrationBrowsingController;
 
 // Internal state properties
 @property (assign, nonatomic) AFATaskDetailsLoadingState                    controllerState;
@@ -1132,6 +1137,33 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 - (void)pickedContentHasFinishedDownloadingAtURL:(NSURL *)downloadedFileURL {
 }
 
+- (void)contentPickerHasBeenPresentedWithNumberOfOptions:(NSUInteger)contentOptionCount
+                                              cellHeight:(CGFloat)cellHeight {
+    self.contentPickerContainerHeightConstraint.constant = contentOptionCount * cellHeight;
+}
+
+- (void)userPickerIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount {
+    [self onFullscreenOverlayTap:nil];
+    
+    // Initialize the browsing controller at a top network level based on the selected integration account
+    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:integrationAccount.serviceID]) {
+        ASDKIntegrationNetworksDataSource *dataSource = [[ASDKIntegrationNetworksDataSource alloc] initWithIntegrationAccount:integrationAccount];
+        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:dataSource];
+        self.integrationBrowsingController.delegate = self;
+    } else {
+        self.integrationBrowsingController = nil;
+    }
+    
+    // If the controller has been successfully initiated present it
+    if (self.integrationBrowsingController) {
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationBrowsingController];
+        
+        [self presentViewController:navigationController
+                           animated:YES
+                         completion:nil];
+    }
+}
+
 
 #pragma mark -
 #pragma mark AFATaskformViewControllerDelegate
@@ -1157,6 +1189,27 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 
 - (void)popFormDetailController {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma mark -
+#pragma mark ASDKIntegrationBrowsingDelegate
+
+- (void)didPickContentNodeWithRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation {
+    AFAIntegrationServices *integrationService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeIntegrationServices];
+    
+    __weak typeof(self) weakSelf = self;
+    [integrationService requestUploadIntegrationContentForTaskID:self.taskID
+                                              withRepresentation:nodeContentRepresentation
+                                                  completionBloc:^(ASDKModelContent *contentModel, NSError *error) {
+                                                      __strong typeof(self) strongSelf = weakSelf;
+                                                      
+                                                      if (!error) {
+                                                          [strongSelf pickedContentHasFinishedUploading];
+                                                      } else {
+                                                          [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentUploadErrorText, @"Content upload error")];
+                                                      }
+    }];
 }
 
 @end

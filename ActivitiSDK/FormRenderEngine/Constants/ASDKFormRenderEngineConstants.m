@@ -21,6 +21,7 @@
 
 #pragma mark -
 #pragma mark Storyboard
+
 NSString *kASDKFormStoryboardBundleName                             = @"ASDKFormStoryboard";
 NSString *kASDKStoryboardIDCollectionController                     = @"ASDKFormCollectionViewController";
 NSString *kASDKStoryboardIDRadioFormFieldDetailController           = @"ASDKFormRadioFormFieldDetailController";
@@ -29,6 +30,8 @@ NSString *kASDKStoryboardIDAttachFormFieldDetailController          = @"ASDKForm
 NSString *kASDKStoryboardIDMultilineFormFieldDetailController       = @"ASDKFormMultilineFormFieldDetailController";
 NSString *kASDKStoryboardIDPeopleFormFieldDetailController          = @"ASDKFormPeopleFormFieldDetailController";
 NSString *kASDKStoryboardIDDynamicTableFormFieldDetailController    = @"ASDKFormDynamicTableFormFieldDetailController";
+NSString *kASDKStoryboardIDIntegrationLoginWebViewController        = @"ASDKIntegrationLoginWebViewController";
+NSString *kASDKStoryboardIDIntegrationBrowsingViewController        = @"ASDKIntegrationBrowsingViewController";
 
 
 #pragma mark -
@@ -63,6 +66,7 @@ NSString *kASDKCellIDFormFieldPeopleAddPeople                       = @"FormFiel
 NSString *kASDKCellIDFormFieldDynamicTableRepresentation            = @"FormFieldDynamicTableRepresentationCellID";
 NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation      = @"FormFieldDynamicTableHeaderRepresentationCellID";
 NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation         = @"FormFieldDynamicTableRowRepresentationCellID";
+NSString *kASDKCellIDIntegrationBrowsing                            = @"ASDKIntegrationBrowsingCellID";
 
 
 #pragma mark -
@@ -98,3 +102,8 @@ NSTimeInterval kModalReplaceAnimationTime                        = .55f;
 NSTimeInterval kOverlayAlphaChangeTime                           = .25f;
 NSTimeInterval kASDKSetSelectedAnimationTime                     = .25f;
 
+
+#pragma mark -
+#pragma mark Integration parameters
+
+NSString *kASDKIntegrationOauth2CodeParameter                    = @"code";

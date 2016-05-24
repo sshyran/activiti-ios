@@ -21,6 +21,7 @@
 "saveFormOutcome"                                               = "Save";
 "startProcessFormOutcome"                                       = "Start process";
 "deleteDynamicTableRowFormOutcome"                              = "Delete row";
+"cancelButtonText"                                              = "Cancel";
 "formDateComponentRemoveButtonText"                             = "Remove";
 "formDateComponentPickDateLabelText"                            = "Pick a date";
 "formDateComponentDoneButtonText"                               = "Done";
@@ -43,10 +44,13 @@
 "formContentPickerComponentDownloadingText"                     = "Downloading...";
 "formContentPickerComponentDownloadProgressFormat"              = "Downloaded %@";
 "formContentPickerComponentSuccessText"                         = "Success";
-"formContentPickerComponentFailedText"                          = "Failed";
+"formContentPickerComponentFailedText"                          = "The current action failed because of a network error.";
 "formContentPickerComponentLocalVersionAvailableText"           = "We found a local version of the content you're trying to download. Would you like to preview it, or get the latest version from the server?";
 "formContentPickerComponentPreviewLocalVersionText"             = "View local";
 "formContentPickerComponentGetLatestVersionText"                = "Get latest";
+"formContentPickerComponentAlfrescoContentText"                 = "Alfresco Cloud";
+"formContentPickerComponentBoxContentText"                      = "Box";
+"formContentPickerComponentDriveContentText"                    = "Google Drive";
 
 // Alert dialogs use
 "formAlertDialogOopsTitleText"                                  = "Oops...";
@@ -61,3 +65,12 @@
 "peoplePickerControllerInstructionText"                         = "You add contributors by searching them using the search bar above.";
 "peoplePickerControllerInvolvingUserFormat"                     = "%@ is now involved";
 "peoplePickerControllerRemovingUserFormat"                      = "%@ is no longer involved";
+
+// Integration component
+"integrationLoginErrorText"                                     = "There seems to be an issue with authoring access to the current service.";
+"integrationLoginSuccessfullText"                               = "You've been logged in successfully";
+"integrationBrowsingChooseNetworkText"                          = "Choose network";
+"integrationBrowsingChooseSiteText"                             = "Choose site";
+"integrationBrowsingNoContentAvailableText"                     = "There is no content available at this location.";
+"integrationBrowsingNoIntegrationAccountAvailableText"          = "Unable to fetch external integration accounts.";
+

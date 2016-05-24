@@ -28,6 +28,7 @@ extern NSString *kLocalizationDefaultFormOutcome;
 extern NSString *kLocalizationSaveFormOutcome;
 extern NSString *kLocalizationStartProcessFormOutcome;
 extern NSString *kLocalizationDeleteDynamicTableRowFormOutcome;
+extern NSString *kLocalizationCancelButtonText;
 extern NSString *kLocalizationFormDateComponentRemoveButtonText;
 extern NSString *kLocalizationFormDateComponentPickDateLabelText;
 extern NSString *kLocalizationFormDateComponentDoneButtonText;
@@ -54,6 +55,9 @@ extern NSString *kLocalizationFormContentPickerComponentFailedText;
 extern NSString *kLocalizationFormContentPickerComponentLocalVersionAvailableText;
 extern NSString *kLocalizationFormContentPickerComponentPreviewLocalVersionText;
 extern NSString *kLocalizationFormContentPickerComponentGetLatestVersionText;
+extern NSString *kLocalizationFormContentPickerComponentAlfrescoContentText;
+extern NSString *kLocalizationFormContentPickerComponentBoxContentText;
+extern NSString *kLocalizationFormContentPickerComponentDriveText;
 
 // People picker component
 extern NSString *kLocalizationPeoplePickerControllerTitleText;
@@ -68,3 +72,11 @@ extern NSString *kLocalizationFormAlertDialogDeleteContentQuestionFormat;
 extern NSString *kLocalizationFormAlertDialogYesButtonText;
 extern NSString *kLocalizationFormAlertDialogNoButtonText;
 extern NSString *kLocalizationFormAlertDialogGenericNetworkErrorText;
+
+// Integration component
+extern NSString *kLocalizationIntegrationLoginErrorText;
+extern NSString *kLocalizationIntegrationLoginSuccessfullText;
+extern NSString *kLocalizationIntegrationBrowsingChooseNetworkText;
+extern NSString *kLocalizationIntegrationBrowsingChooseSiteText;
+extern NSString *kLocalizationIntegrationBrowsingNoContentAvailableText;
+extern NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText;

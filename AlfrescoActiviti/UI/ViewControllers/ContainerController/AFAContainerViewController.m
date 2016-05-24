@@ -38,6 +38,7 @@
 #import "AFAFormServices.h"
 #import "AFAUserServices.h"
 #import "AFAQueryServices.h"
+#import "AFAIntegrationServices.h"
 
 // Models
 #import "AFALoginModel.h"
@@ -104,6 +105,10 @@
         AFAQueryServices *queryService = [AFAQueryServices new];
         [serviceRepository registerServiceObject:queryService
                                       forPurpose:AFAServiceObjectTypeQueryServices];
+        
+        AFAIntegrationServices *integrationService = [AFAIntegrationServices new];
+        [serviceRepository registerServiceObject:integrationService
+                                      forPurpose:AFAServiceObjectTypeIntegrationServices];
         
         // Register the thumbnail manager with the service repository
         AFAThumbnailManager *thumbnailManager = [AFAThumbnailManager new];

@@ -83,3 +83,9 @@ extern NSString * const kASDKAPISaveFormPath;
 extern NSString * const kASDKAPIUsersPath;
 extern NSString * const kASDKAPIUsersPicturePath;
 
+// Integration related
+extern NSString * const kASDKAPIIntegrationPath;
+extern NSString * const kASDKAPIIntegrationAlfrescoCloudPath;
+extern NSString * const kASDKAPIIntegrationNetworksPath;
+extern NSString * const kASDKAPIIntegrationSitesPath;
+extern NSString * const kASDKAPIIntegrationFoldersPath;

@@ -95,6 +95,18 @@
 		1366800B1C89D296005E4AEA /* AFASimpleSectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800A1C89D296005E4AEA /* AFASimpleSectionHeaderCell.m */; };
 		1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800E1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m */; };
 		136D035B1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */; };
+		136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */; };
+		136E11351CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		136E11361CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */; };
+		136E113A1CEA11A500047E38 /* ASDKModelNetwork.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11381CEA11A500047E38 /* ASDKModelNetwork.h */; };
+		136E113B1CEA11A500047E38 /* ASDKModelNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11391CEA11A500047E38 /* ASDKModelNetwork.m */; };
+		136E113F1CEA11E800047E38 /* ASDKModelSite.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E113D1CEA11E800047E38 /* ASDKModelSite.h */; };
+		136E11401CEA11E800047E38 /* ASDKModelSite.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E113E1CEA11E800047E38 /* ASDKModelSite.m */; };
+		136E11441CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11421CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		136E11451CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11431CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.m */; };
+		136E11491CEB113800047E38 /* ASDKIntegrationNetworksDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11471CEB113800047E38 /* ASDKIntegrationNetworksDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		136E114A1CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11481CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m */; };
+		136E114D1CEB122800047E38 /* ASDKIntegrationDataSourceDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E114C1CEB122800047E38 /* ASDKIntegrationDataSourceDelegate.h */; };
 		137194531B6922DE00D4E1F0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194521B6922DE00D4E1F0 /* main.m */; };
 		137194561B6922DE00D4E1F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194551B6922DE00D4E1F0 /* AppDelegate.m */; };
 		1371945F1B6922DE00D4E1F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1371945D1B6922DE00D4E1F0 /* Main.storyboard */; };
@@ -181,10 +193,29 @@
 		13A0BCB41BD7BF8E00599661 /* ASDKFormCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A0BCB21BD7BF8E00599661 /* ASDKFormCheckbox.m */; };
 		13A0BCB81BD7CB8600599661 /* ASDKFormRenderEngineProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A0BCB71BD7CB8600599661 /* ASDKFormRenderEngineProtocol.h */; };
 		13A1B2811B989B2700C4B6CE /* AFABaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A1B2801B989B2700C4B6CE /* AFABaseModel.m */; };
+		13A578541CEC677C0014B6FD /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
+		13A578581CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A578591CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578571CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m */; };
+		13A5785C1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5785A1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h */; };
+		13A5785D1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5785B1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m */; };
+		13A578611CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5785F1CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A578621CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578601CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m */; };
+		13A578651CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578631CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A578661CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */; };
+		13A578671CEDDDB90014B6FD /* glyphicons-filetypes.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */; };
+		13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A5786B1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */; };
 		13A5D5FB1C9C4C6B00EFA760 /* AFAAddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */; };
 		13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */; };
 		13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */; };
+		13A784231CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A784281CE4665900DBE648 /* ASDKIntegrationNetworkServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A784261CE4665900DBE648 /* ASDKIntegrationNetworkServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A784291CE4665900DBE648 /* ASDKIntegrationNetworkServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A784271CE4665900DBE648 /* ASDKIntegrationNetworkServices.m */; };
+		13A7842C1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A7842A1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h */; };
+		13A7842D1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */; };
+		13A784311CE46DB300DBE648 /* ASDKModelIntegrationAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13A784321CE46DB300DBE648 /* ASDKModelIntegrationAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */; };
 		13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */; };
 		13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */; };
 		13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CAB71B8B3FB100B7A25E /* AFAMenuButtonCell.m */; };
@@ -198,7 +229,6 @@
 		13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */; };
 		13ACE37C1C9996B900693A29 /* AFAAddCommentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */; };
 		13AE35531C43B61700BEB477 /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
-		13AE35541C43B64B00BEB477 /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
 		13AE35571C43BA9700BEB477 /* AFAApplicationListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AE35561C43BA9700BEB477 /* AFAApplicationListStyleCell.m */; };
 		13AE35821C46860800BEB477 /* AFABaseSliderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AE35811C46860800BEB477 /* AFABaseSliderViewController.m */; };
 		13AE35861C47D69300BEB477 /* AFABaseThemedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AE35851C47D69300BEB477 /* AFABaseThemedViewController.m */; };
@@ -306,8 +336,16 @@
 		13F9BA351B739D290068BB8C /* ASDKBaseRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9BA331B739D290068BB8C /* ASDKBaseRequestRepresentation.m */; };
 		13FB2E641BC53A7500549920 /* ASDKNetworkServiceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FB2E621BC53A7500549920 /* ASDKNetworkServiceConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13FB2E651BC53A7500549920 /* ASDKNetworkServiceConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FB2E631BC53A7500549920 /* ASDKNetworkServiceConstants.m */; };
+		13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF67971CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h */; };
+		13FF679A1CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FF67981CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m */; };
+		13FF679C1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF679B1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h */; };
+		13FF679E1CEC4DC300A8C95F /* glyphicons-filetypes.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */; };
+		13FF67A11CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF679F1CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h */; };
+		13FF67A21CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FF67A01CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m */; };
+		13FF67A51CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF67A31CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h */; };
+		13FF67A61CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FF67A41CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.m */; };
 		13FFF4101C43A6E600550747 /* AFAApplicationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFF40F1C43A6E600550747 /* AFAApplicationListViewController.m */; };
-		55FE0A993F3523B836B5986E /* Pods_ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D1075265EF64AF6150F50B /* Pods_ActivitiSDK.framework */; };
+		4934FD4AFB6057B7D78C1F06 /* Pods_Shared_AlfrescoActiviti.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B3E20A3E70D86D0A041EC8A /* Pods_Shared_AlfrescoActiviti.framework */; };
 		7597AEE91B821E9500F8B5DE /* AFAActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7597AEE81B821E9500F8B5DE /* AFAActivityView.m */; };
 		7597AEED1B82425E00F8B5DE /* AFACredentialModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7597AEEC1B82425E00F8B5DE /* AFACredentialModel.m */; };
 		75CFBC6D1B81CB900018DADE /* AFASecurityLayerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 75CFBC6C1B81CB900018DADE /* AFASecurityLayerTableViewCell.m */; };
@@ -429,8 +467,9 @@
 		8DEA25451C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEA25431C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.m */; };
 		8DEA25481C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEA25461C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.h */; };
 		8DEA25491C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEA25471C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.m */; };
-		A105FCC229AC5421EF753117 /* Pods_ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D1075265EF64AF6150F50B /* Pods_ActivitiSDK.framework */; };
-		C01E6FCFA9CFBBAF2EC029EB /* Pods_AlfrescoActiviti.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47782013ABCD50E4776B69B9 /* Pods_AlfrescoActiviti.framework */; };
+		B07851ED451FD91A3059C6D5 /* Pods_Shared_ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10331654767B56DCCA9DCAF /* Pods_Shared_ActivitiSDK.framework */; };
+		C4E537FA5018B1EA3424F757 /* Pods_ActivitiSDKTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43830D778594FE658501F747 /* Pods_ActivitiSDKTests.framework */; };
+		D1F6777B85027C988DD05032 /* Pods_AlfrescoActivitiTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2906F80B9C09C2F5BFFC9191 /* Pods_AlfrescoActivitiTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -479,7 +518,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		129CBFD1704F6FE2038FDFD2 /* Pods-ActivitiSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ActivitiSDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-ActivitiSDK/Pods-ActivitiSDK.release.xcconfig"; sourceTree = "<group>"; };
+		005DF383148C17706DBC40C9 /* Pods-Shared-AlfrescoActiviti.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-AlfrescoActiviti.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.debug.xcconfig"; sourceTree = "<group>"; };
+		12DF594F694C6D6620E26176 /* Pods-AlfrescoActivitiTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlfrescoActivitiTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests.release.xcconfig"; sourceTree = "<group>"; };
 		130269671C57735800152F71 /* AFAFilterOptionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAFilterOptionTableViewCell.h; path = UI/Cells/FilterOptionCell/AFAFilterOptionTableViewCell.h; sourceTree = "<group>"; };
 		130269681C57735800152F71 /* AFAFilterOptionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAFilterOptionTableViewCell.m; path = UI/Cells/FilterOptionCell/AFAFilterOptionTableViewCell.m; sourceTree = "<group>"; };
 		13044FC71BFA178A008FF6E6 /* ASDKModelAmountFormField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelAmountFormField.h; path = Model/AmountFormField/ASDKModelAmountFormField.h; sourceTree = "<group>"; };
@@ -505,8 +545,6 @@
 		1317C3481BCB9DBB00F0B03F /* ASDKDiskServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDiskServices.h; path = DiskServices/ASDKDiskServices.h; sourceTree = "<group>"; };
 		1317C3491BCB9DBB00F0B03F /* ASDKDiskServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKDiskServices.m; path = DiskServices/ASDKDiskServices.m; sourceTree = "<group>"; };
 		1317C34D1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDiskServiceProtocol.h; path = DiskServices/Protocol/ASDKDiskServiceProtocol.h; sourceTree = "<group>"; };
-		131E27921BA2B082009586C1 /* Pods-AlfrescoActiviti.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-AlfrescoActiviti.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AlfrescoActiviti/Pods-AlfrescoActiviti.debug.xcconfig"; sourceTree = "<group>"; };
-		131E27941BA2B099009586C1 /* Pods-AlfrescoActiviti.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-AlfrescoActiviti.release.xcconfig"; path = "Pods/Target Support Files/Pods-AlfrescoActiviti/Pods-AlfrescoActiviti.release.xcconfig"; sourceTree = "<group>"; };
 		13207D0A1BE251C300116A98 /* UIColor+ASDKFormViewColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+ASDKFormViewColors.h"; path = "FormRenderEngine/Categories/UIColor+ASDKFormViewColors.h"; sourceTree = "<group>"; };
 		13207D0B1BE251C300116A98 /* UIColor+ASDKFormViewColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ASDKFormViewColors.m"; path = "FormRenderEngine/Categories/UIColor+ASDKFormViewColors.m"; sourceTree = "<group>"; };
 		1321670E1B8AF37500B7406B /* AFAAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAvatarView.h; path = UI/Components/AvatarView/AFAAvatarView.h; sourceTree = "<group>"; };
@@ -604,6 +642,19 @@
 		136737131B86122600364886 /* NSString+ASDKFontGlyphicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+ASDKFontGlyphicons.m"; path = "../ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKFontGlyphicons.m"; sourceTree = "<group>"; };
 		136D03591C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessInstanceDetailsViewController.h; path = UI/ViewControllers/ProcessInstanceDetailsScreen/AFAProcessInstanceDetailsViewController.h; sourceTree = "<group>"; };
 		136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessInstanceDetailsViewController.m; path = UI/ViewControllers/ProcessInstanceDetailsScreen/AFAProcessInstanceDetailsViewController.m; sourceTree = "<group>"; };
+		136E112F1CE4AE1400047E38 /* AFAIntegrationServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAIntegrationServices.h; path = Business/ServiceRepository/Services/AFAIntegrationServices.h; sourceTree = "<group>"; };
+		136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAIntegrationServices.m; path = Business/ServiceRepository/Services/AFAIntegrationServices.m; sourceTree = "<group>"; };
+		136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationLoginWebViewViewController.h; path = FormRenderEngine/Components/IntegrationLoginWebViewController/ASDKIntegrationLoginWebViewViewController.h; sourceTree = "<group>"; };
+		136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationLoginWebViewViewController.m; path = FormRenderEngine/Components/IntegrationLoginWebViewController/ASDKIntegrationLoginWebViewViewController.m; sourceTree = "<group>"; };
+		136E11381CEA11A500047E38 /* ASDKModelNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelNetwork.h; path = Model/Network/ASDKModelNetwork.h; sourceTree = "<group>"; };
+		136E11391CEA11A500047E38 /* ASDKModelNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelNetwork.m; path = Model/Network/ASDKModelNetwork.m; sourceTree = "<group>"; };
+		136E113D1CEA11E800047E38 /* ASDKModelSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelSite.h; path = Model/Site/ASDKModelSite.h; sourceTree = "<group>"; };
+		136E113E1CEA11E800047E38 /* ASDKModelSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelSite.m; path = Model/Site/ASDKModelSite.m; sourceTree = "<group>"; };
+		136E11421CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationBrowsingViewController.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/ASDKIntegrationBrowsingViewController.h; sourceTree = "<group>"; };
+		136E11431CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationBrowsingViewController.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/ASDKIntegrationBrowsingViewController.m; sourceTree = "<group>"; };
+		136E11471CEB113800047E38 /* ASDKIntegrationNetworksDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNetworksDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationNetworksDataSource.h; sourceTree = "<group>"; };
+		136E11481CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationNetworksDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationNetworksDataSource.m; sourceTree = "<group>"; };
+		136E114C1CEB122800047E38 /* ASDKIntegrationDataSourceDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationDataSourceDelegate.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/Protocol/ASDKIntegrationDataSourceDelegate.h; sourceTree = "<group>"; };
 		1371944D1B6922DE00D4E1F0 /* AlfrescoActiviti.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlfrescoActiviti.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		137194511B6922DE00D4E1F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		137194521B6922DE00D4E1F0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -713,12 +764,29 @@
 		13A0BCB71BD7CB8600599661 /* ASDKFormRenderEngineProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineProtocol.h; sourceTree = "<group>"; };
 		13A1B27F1B989B2700C4B6CE /* AFABaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABaseModel.h; path = Model/BaseModel/AFABaseModel.h; sourceTree = "<group>"; };
 		13A1B2801B989B2700C4B6CE /* AFABaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABaseModel.m; path = Model/BaseModel/AFABaseModel.m; sourceTree = "<group>"; };
+		13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationSitesDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSitesDataSource.h; sourceTree = "<group>"; };
+		13A578571CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationSitesDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSitesDataSource.m; sourceTree = "<group>"; };
+		13A5785A1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelIntegrationContent.h; path = Model/IntegrationContent/ASDKModelIntegrationContent.h; sourceTree = "<group>"; };
+		13A5785B1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelIntegrationContent.m; path = Model/IntegrationContent/ASDKModelIntegrationContent.m; sourceTree = "<group>"; };
+		13A5785F1CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationSiteContentDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSiteContentDataSource.h; sourceTree = "<group>"; };
+		13A578601CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationSiteContentDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSiteContentDataSource.m; sourceTree = "<group>"; };
+		13A578631CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationFolderContentDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationFolderContentDataSource.h; sourceTree = "<group>"; };
+		13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationFolderContentDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationFolderContentDataSource.m; sourceTree = "<group>"; };
+		13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNodeContentRequestRepresentation.h; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.h; sourceTree = "<group>"; };
+		13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationNodeContentRequestRepresentation.m; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.m; sourceTree = "<group>"; };
 		13A5D5F91C9C4C6B00EFA760 /* AFAAddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddTaskViewController.h; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.h; sourceTree = "<group>"; };
 		13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddTaskViewController.m; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.m; sourceTree = "<group>"; };
 		13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKTaskCreationRequestRepresentation.h; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.h; sourceTree = "<group>"; };
 		13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKTaskCreationRequestRepresentation.m; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.m; sourceTree = "<group>"; };
 		13A5D6011CA046CF00EFA760 /* AFATaskCreateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskCreateModel.h; path = Model/TaskCreateModel/AFATaskCreateModel.h; sourceTree = "<group>"; };
 		13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskCreateModel.m; path = Model/TaskCreateModel/AFATaskCreateModel.m; sourceTree = "<group>"; };
+		13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNetworkServiceProtocol.h; path = NetworkServices/Proxy/IntegrationNetworkService/Protocol/ASDKIntegrationNetworkServiceProtocol.h; sourceTree = "<group>"; };
+		13A784261CE4665900DBE648 /* ASDKIntegrationNetworkServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNetworkServices.h; path = NetworkServices/Proxy/IntegrationNetworkService/ASDKIntegrationNetworkServices.h; sourceTree = "<group>"; };
+		13A784271CE4665900DBE648 /* ASDKIntegrationNetworkServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationNetworkServices.m; path = NetworkServices/Proxy/IntegrationNetworkService/ASDKIntegrationNetworkServices.m; sourceTree = "<group>"; };
+		13A7842A1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationParserOperationWorker.h; path = NetworkServices/ParserOperationManager/IntegrationParserOperationWorker/ASDKIntegrationParserOperationWorker.h; sourceTree = "<group>"; };
+		13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationParserOperationWorker.m; path = NetworkServices/ParserOperationManager/IntegrationParserOperationWorker/ASDKIntegrationParserOperationWorker.m; sourceTree = "<group>"; };
+		13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelIntegrationAccount.h; path = Model/IntegrationAccount/ASDKModelIntegrationAccount.h; sourceTree = "<group>"; };
+		13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelIntegrationAccount.m; path = Model/IntegrationAccount/ASDKModelIntegrationAccount.m; sourceTree = "<group>"; };
 		13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldOption.h; path = Model/FormFieldOption/ASDKModelFormFieldOption.h; sourceTree = "<group>"; };
 		13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldOption.m; path = Model/FormFieldOption/ASDKModelFormFieldOption.m; sourceTree = "<group>"; };
 		13A8CAB61B8B3FB100B7A25E /* AFAMenuButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAMenuButtonCell.h; path = UI/Cells/MenuButtonCell/AFAMenuButtonCell.h; sourceTree = "<group>"; };
@@ -739,7 +807,7 @@
 		13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileActionTableViewCell.m; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.m; sourceTree = "<group>"; };
 		13ACE37A1C9996B900693A29 /* AFAAddCommentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddCommentsViewController.h; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.h; sourceTree = "<group>"; };
 		13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddCommentsViewController.m; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.m; sourceTree = "<group>"; };
-		13AE35521C43B61700BEB477 /* glyphicons-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "glyphicons-regular.otf"; sourceTree = "<group>"; };
+		13AE35521C43B61700BEB477 /* glyphicons-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "glyphicons-regular.otf"; path = "../ActivitiSDK/Resources/glyphicons-regular.otf"; sourceTree = "<group>"; };
 		13AE35551C43BA9700BEB477 /* AFAApplicationListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAApplicationListStyleCell.h; path = UI/Cells/ApplicationListStyleCell/AFAApplicationListStyleCell.h; sourceTree = "<group>"; };
 		13AE35561C43BA9700BEB477 /* AFAApplicationListStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAApplicationListStyleCell.m; path = UI/Cells/ApplicationListStyleCell/AFAApplicationListStyleCell.m; sourceTree = "<group>"; };
 		13AE35801C46860800BEB477 /* AFABaseSliderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABaseSliderViewController.h; path = UI/ViewControllers/BaseSliderViewController/AFABaseSliderViewController.h; sourceTree = "<group>"; };
@@ -877,9 +945,21 @@
 		13F9BA371B73A8200068BB8C /* ASDKHTTPCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKHTTPCodes.h; path = NetworkServices/HTTPCodes/ASDKHTTPCodes.h; sourceTree = "<group>"; };
 		13FB2E621BC53A7500549920 /* ASDKNetworkServiceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKNetworkServiceConstants.h; path = NetworkServices/NetworkService/Constants/ASDKNetworkServiceConstants.h; sourceTree = "<group>"; };
 		13FB2E631BC53A7500549920 /* ASDKNetworkServiceConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKNetworkServiceConstants.m; path = NetworkServices/NetworkService/Constants/ASDKNetworkServiceConstants.m; sourceTree = "<group>"; };
+		13FF67971CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationBrowsingTableViewCell.h; path = FormRenderEngine/Cells/TableViewCells/ASDKIntegrationBrowsingTableViewCell.h; sourceTree = "<group>"; };
+		13FF67981CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationBrowsingTableViewCell.m; path = FormRenderEngine/Cells/TableViewCells/ASDKIntegrationBrowsingTableViewCell.m; sourceTree = "<group>"; };
+		13FF679B1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationDataSourceProtocol.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/Protocol/ASDKIntegrationDataSourceProtocol.h; sourceTree = "<group>"; };
+		13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "glyphicons-filetypes.otf"; path = "../ActivitiSDK/Resources/glyphicons-filetypes.otf"; sourceTree = "<group>"; };
+		13FF679F1CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIFont+ASDKGlyphiconsFiletypes.h"; path = "ActivitiSDK/FormRenderEngine/Categories/UIFont+ASDKGlyphiconsFiletypes.h"; sourceTree = SOURCE_ROOT; };
+		13FF67A01CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIFont+ASDKGlyphiconsFiletypes.m"; path = "ActivitiSDK/FormRenderEngine/Categories/UIFont+ASDKGlyphiconsFiletypes.m"; sourceTree = SOURCE_ROOT; };
+		13FF67A31CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+ASDKFontGlyphiconsFiletypes.h"; path = "ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKFontGlyphiconsFiletypes.h"; sourceTree = SOURCE_ROOT; };
+		13FF67A41CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+ASDKFontGlyphiconsFiletypes.m"; path = "ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKFontGlyphiconsFiletypes.m"; sourceTree = SOURCE_ROOT; };
 		13FFF40E1C43A6E600550747 /* AFAApplicationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAApplicationListViewController.h; path = UI/ViewControllers/ApplicationScreen/AFAApplicationListViewController.h; sourceTree = "<group>"; };
 		13FFF40F1C43A6E600550747 /* AFAApplicationListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAApplicationListViewController.m; path = UI/ViewControllers/ApplicationScreen/AFAApplicationListViewController.m; sourceTree = "<group>"; };
-		47782013ABCD50E4776B69B9 /* Pods_AlfrescoActiviti.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AlfrescoActiviti.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B3E20A3E70D86D0A041EC8A /* Pods_Shared_AlfrescoActiviti.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_AlfrescoActiviti.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C7E752A64E6EF9D22042B1D /* Pods-ActivitiSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ActivitiSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ActivitiSDKTests/Pods-ActivitiSDKTests.release.xcconfig"; sourceTree = "<group>"; };
+		2906F80B9C09C2F5BFFC9191 /* Pods_AlfrescoActivitiTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AlfrescoActivitiTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		410958C8FA815DD4ECEC4FC7 /* Pods-AlfrescoActivitiTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlfrescoActivitiTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests.debug.xcconfig"; sourceTree = "<group>"; };
+		43830D778594FE658501F747 /* Pods_ActivitiSDKTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ActivitiSDKTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7597AEE71B821E9500F8B5DE /* AFAActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAActivityView.h; path = UI/Components/ActivitiView/AFAActivityView.h; sourceTree = "<group>"; };
 		7597AEE81B821E9500F8B5DE /* AFAActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAActivityView.m; path = UI/Components/ActivitiView/AFAActivityView.m; sourceTree = "<group>"; };
 		7597AEEB1B82425E00F8B5DE /* AFACredentialModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFACredentialModel.h; path = Model/CredentialModel/AFACredentialModel.h; sourceTree = "<group>"; };
@@ -890,7 +970,7 @@
 		75CFBC701B81E7850018DADE /* AFARememberCredentialsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFARememberCredentialsTableViewCell.m; path = UI/Cells/RememberCredentialsCell/AFARememberCredentialsTableViewCell.m; sourceTree = "<group>"; };
 		75E868051B7E75E500862D51 /* AFASwitchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFASwitchView.h; path = UI/Components/SwitchButtonView/AFASwitchView.h; sourceTree = "<group>"; };
 		75E868061B7E75E500862D51 /* AFASwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFASwitchView.m; path = UI/Components/SwitchButtonView/AFASwitchView.m; sourceTree = "<group>"; };
-		8D0FFDC41CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDKDynamicTableRowHeaderNavigationProtocol.h; sourceTree = "<group>"; };
+		8D0FFDC41CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDynamicTableRowHeaderNavigationProtocol.h; path = FormRenderEngine/Controllers/FormFieldDetailControllers/Protocol/ASDKDynamicTableRowHeaderNavigationProtocol.h; sourceTree = "<group>"; };
 		8D25F0511C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormBooleanFieldCollectionViewCell.h; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormBooleanFieldCollectionViewCell.h; sourceTree = "<group>"; };
 		8D25F0521C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormBooleanFieldCollectionViewCell.m; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormBooleanFieldCollectionViewCell.m; sourceTree = "<group>"; };
 		8D3A51CC1C8084B000FF9A00 /* ASDKProcessDefinitionNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProcessDefinitionNetworkServiceProtocol.h; path = NetworkServices/Proxy/ProcessDefinitionNetworkServices/Protocol/ASDKProcessDefinitionNetworkServiceProtocol.h; sourceTree = "<group>"; };
@@ -1026,8 +1106,11 @@
 		8DEA25431C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKDateFormFieldDetailsViewController.m; path = FormRenderEngine/Controllers/FormFieldDetailControllers/ASDKDateFormFieldDetailsViewController.m; sourceTree = "<group>"; };
 		8DEA25461C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormDateFieldCollectionViewCell.h; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormDateFieldCollectionViewCell.h; sourceTree = "<group>"; };
 		8DEA25471C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormDateFieldCollectionViewCell.m; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormDateFieldCollectionViewCell.m; sourceTree = "<group>"; };
-		91D1075265EF64AF6150F50B /* Pods_ActivitiSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ActivitiSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9C11E98DB68D28117FB756FA /* Pods-ActivitiSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ActivitiSDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ActivitiSDK/Pods-ActivitiSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		A8116C6AA8C2812C26F400F9 /* Pods-Shared-AlfrescoActiviti.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-AlfrescoActiviti.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.release.xcconfig"; sourceTree = "<group>"; };
+		AAA4DC332CB4E934BFB7DBF5 /* Pods-Shared-ActivitiSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-ActivitiSDK.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.release.xcconfig"; sourceTree = "<group>"; };
+		B9B08C4416C90E2F9EDB15C2 /* Pods-ActivitiSDKTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ActivitiSDKTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ActivitiSDKTests/Pods-ActivitiSDKTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C10331654767B56DCCA9DCAF /* Pods_Shared_ActivitiSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_ActivitiSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC312161980F1E807A9C95B2 /* Pods-Shared-ActivitiSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-ActivitiSDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1036,8 +1119,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				137194951B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */,
-				55FE0A993F3523B836B5986E /* Pods_ActivitiSDK.framework in Frameworks */,
-				C01E6FCFA9CFBBAF2EC029EB /* Pods_AlfrescoActiviti.framework in Frameworks */,
+				4934FD4AFB6057B7D78C1F06 /* Pods_Shared_AlfrescoActiviti.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1045,6 +1127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1F6777B85027C988DD05032 /* Pods_AlfrescoActivitiTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1052,7 +1135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A105FCC229AC5421EF753117 /* Pods_ActivitiSDK.framework in Frameworks */,
+				B07851ED451FD91A3059C6D5 /* Pods_Shared_ActivitiSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1061,6 +1144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				137194891B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */,
+				C4E537FA5018B1EA3424F757 /* Pods_ActivitiSDKTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1112,6 +1196,7 @@
 				133F05431BD4EFE800C22CFD /* TaskDetailsParserWorker */,
 				137B94471BD671BD00134BF1 /* TaskFormParserWorker */,
 				139E54051C218F1600CE4674 /* AppParserWorker */,
+				13A7842E1CE46ACB00DBE648 /* IntegrationParserWorker */,
 				1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */,
 				1313750C1B6F927C00D2268E /* ASDKParserOperationManager.m */,
 			);
@@ -1131,6 +1216,7 @@
 				8D3A51CA1C80848800FF9A00 /* ProcessDefinitionNetworkServices */,
 				138C48B71C50DC3400B4F4FB /* ProcessInstanceNetworkServices */,
 				13667FFB1C899400005E4AEA /* QuerryNetworkServices */,
+				13A784241CE4621200DBE648 /* IntegrationNetworkServices */,
 			);
 			name = Proxies;
 			sourceTree = "<group>";
@@ -1203,6 +1289,10 @@
 				132E60341C2314F5000A2CA5 /* ProcessInstance */,
 				13B22C501C931C050043D8A4 /* ProcessInstanceContent */,
 				13B22C551C931CF90043D8A4 /* ProcessInstanceContentField */,
+				13A784331CE46DB600DBE648 /* IntegrationAccount */,
+				136E113C1CEA11AB00047E38 /* Network */,
+				136E11411CEA11EA00047E38 /* Site */,
+				13A5785E1CEDA58F0014B6FD /* IntegrationContent */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1346,6 +1436,8 @@
 			children = (
 				136737121B86122600364886 /* NSString+ASDKFontGlyphicons.h */,
 				136737131B86122600364886 /* NSString+ASDKFontGlyphicons.m */,
+				13FF67A31CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h */,
+				13FF67A41CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.m */,
 			);
 			name = NSString;
 			path = ../AlfrescoActiviti;
@@ -1821,6 +1913,8 @@
 			children = (
 				1367370E1B860FF900364886 /* UIFont+ASDKGlyphicons.h */,
 				1367370F1B860FF900364886 /* UIFont+ASDKGlyphicons.m */,
+				13FF679F1CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h */,
+				13FF67A01CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m */,
 			);
 			name = UIFont;
 			path = ../AlfrescoActiviti;
@@ -1829,6 +1923,7 @@
 		136737191B861AF700364886 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */,
 				13AE35521C43B61700BEB477 /* glyphicons-regular.otf */,
 			);
 			name = Fonts;
@@ -1844,6 +1939,77 @@
 			name = ProcessInstanceDetailsScreen;
 			sourceTree = "<group>";
 		};
+		136E11321CE4AE1800047E38 /* AFAIntegrationServices */ = {
+			isa = PBXGroup;
+			children = (
+				136E112F1CE4AE1400047E38 /* AFAIntegrationServices.h */,
+				136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */,
+			);
+			name = AFAIntegrationServices;
+			sourceTree = "<group>";
+		};
+		136E11371CE5BE0B00047E38 /* IntegrationLoginWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */,
+				136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */,
+			);
+			name = IntegrationLoginWebViewController;
+			sourceTree = "<group>";
+		};
+		136E113C1CEA11AB00047E38 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				136E11381CEA11A500047E38 /* ASDKModelNetwork.h */,
+				136E11391CEA11A500047E38 /* ASDKModelNetwork.m */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+		136E11411CEA11EA00047E38 /* Site */ = {
+			isa = PBXGroup;
+			children = (
+				136E113D1CEA11E800047E38 /* ASDKModelSite.h */,
+				136E113E1CEA11E800047E38 /* ASDKModelSite.m */,
+			);
+			name = Site;
+			sourceTree = "<group>";
+		};
+		136E11461CEAFC6200047E38 /* IntegrationBrowsingViewController */ = {
+			isa = PBXGroup;
+			children = (
+				136E114B1CEB113D00047E38 /* DataSource */,
+				136E11421CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.h */,
+				136E11431CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.m */,
+			);
+			name = IntegrationBrowsingViewController;
+			sourceTree = "<group>";
+		};
+		136E114B1CEB113D00047E38 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				136E114E1CEB123400047E38 /* Protocol */,
+				136E11471CEB113800047E38 /* ASDKIntegrationNetworksDataSource.h */,
+				136E11481CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m */,
+				13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */,
+				13A578571CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m */,
+				13A5785F1CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h */,
+				13A578601CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m */,
+				13A578631CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h */,
+				13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */,
+			);
+			name = DataSource;
+			sourceTree = "<group>";
+		};
+		136E114E1CEB123400047E38 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				136E114C1CEB122800047E38 /* ASDKIntegrationDataSourceDelegate.h */,
+				13FF679B1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
 		137194441B6922DE00D4E1F0 = {
 			isa = PBXGroup;
 			children = (
@@ -1851,8 +2017,8 @@
 				1371947F1B6924DE00D4E1F0 /* ActivitiSDK */,
 				13E830661B6A0BD40028901A /* UnitTests */,
 				1371944E1B6922DE00D4E1F0 /* Products */,
-				EFFA4B5BA013E9207035A777 /* Pods */,
-				8FEE6DDD70A4BCFF59CE5AFE /* Frameworks */,
+				177C913B08C211EC66C0256F /* Pods */,
+				318B5A1183698EF8116993DD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2167,6 +2333,8 @@
 				8D6ABE6F1CBCDF03008FACB4 /* ASDKDynamicTableRowHeaderTableViewCell.m */,
 				8D6ABE721CBCE7CD008FACB4 /* ASDKDynamicTableColumnTableViewCell.h */,
 				8D6ABE731CBCE7CD008FACB4 /* ASDKDynamicTableColumnTableViewCell.m */,
+				13FF67971CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h */,
+				13FF67981CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m */,
 			);
 			name = TableViewCells;
 			sourceTree = "<group>";
@@ -2289,6 +2457,7 @@
 				139DF5CB1C5F409B0062D01D /* FilterServices */,
 				139DF5CF1C5F4CE50062D01D /* FormServices */,
 				136680081C89AEFD005E4AEA /* QueryServices */,
+				136E11321CE4AE1800047E38 /* AFAIntegrationServices */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -2382,6 +2551,8 @@
 				8DB3998C1C9875FC0089E0AB /* NoContentView */,
 				133B7FE51B78FB3300C17D06 /* RoundedBorderView */,
 				13A0BCB61BD7BF9B00599661 /* CheckboxComponent */,
+				136E11371CE5BE0B00047E38 /* IntegrationLoginWebViewController */,
+				136E11461CEAFC6200047E38 /* IntegrationBrowsingViewController */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -2418,6 +2589,24 @@
 			name = BaseModel;
 			sourceTree = "<group>";
 		};
+		13A5785E1CEDA58F0014B6FD /* IntegrationContent */ = {
+			isa = PBXGroup;
+			children = (
+				13A5785A1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h */,
+				13A5785B1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m */,
+			);
+			name = IntegrationContent;
+			sourceTree = "<group>";
+		};
+		13A5786C1CEDF7FB0014B6FD /* IntregrationNodeContentInformation */ = {
+			isa = PBXGroup;
+			children = (
+				13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */,
+				13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */,
+			);
+			name = IntregrationNodeContentInformation;
+			sourceTree = "<group>";
+		};
 		13A5D5FC1C9C4C6E00EFA760 /* AddTaskController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2434,6 +2623,42 @@
 				13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */,
 			);
 			name = TaskCreateModel;
+			sourceTree = "<group>";
+		};
+		13A784241CE4621200DBE648 /* IntegrationNetworkServices */ = {
+			isa = PBXGroup;
+			children = (
+				13A784251CE4621F00DBE648 /* Protocol */,
+				13A784261CE4665900DBE648 /* ASDKIntegrationNetworkServices.h */,
+				13A784271CE4665900DBE648 /* ASDKIntegrationNetworkServices.m */,
+			);
+			name = IntegrationNetworkServices;
+			sourceTree = "<group>";
+		};
+		13A784251CE4621F00DBE648 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13A784221CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
+		13A7842E1CE46ACB00DBE648 /* IntegrationParserWorker */ = {
+			isa = PBXGroup;
+			children = (
+				13A7842A1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h */,
+				13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */,
+			);
+			name = IntegrationParserWorker;
+			sourceTree = "<group>";
+		};
+		13A784331CE46DB600DBE648 /* IntegrationAccount */ = {
+			isa = PBXGroup;
+			children = (
+				13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */,
+				13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */,
+			);
+			name = IntegrationAccount;
 			sourceTree = "<group>";
 		};
 		13A82E421BF348E8005537A9 /* FormFieldOption */ = {
@@ -3278,6 +3503,7 @@
 				13C855BC1C4D197900F84422 /* FilterListInformation */,
 				13BA5C0C1BE113B10091D6C9 /* FormInformation */,
 				136680001C8995CB005E4AEA /* QuerryInformation */,
+				13A5786C1CEDF7FB0014B6FD /* IntregrationNodeContentInformation */,
 			);
 			name = RequestRepresentations;
 			sourceTree = "<group>";
@@ -3318,6 +3544,32 @@
 				13FFF40F1C43A6E600550747 /* AFAApplicationListViewController.m */,
 			);
 			name = ApplicationScreen;
+			sourceTree = "<group>";
+		};
+		177C913B08C211EC66C0256F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B9B08C4416C90E2F9EDB15C2 /* Pods-ActivitiSDKTests.debug.xcconfig */,
+				1C7E752A64E6EF9D22042B1D /* Pods-ActivitiSDKTests.release.xcconfig */,
+				410958C8FA815DD4ECEC4FC7 /* Pods-AlfrescoActivitiTests.debug.xcconfig */,
+				12DF594F694C6D6620E26176 /* Pods-AlfrescoActivitiTests.release.xcconfig */,
+				EC312161980F1E807A9C95B2 /* Pods-Shared-ActivitiSDK.debug.xcconfig */,
+				AAA4DC332CB4E934BFB7DBF5 /* Pods-Shared-ActivitiSDK.release.xcconfig */,
+				005DF383148C17706DBC40C9 /* Pods-Shared-AlfrescoActiviti.debug.xcconfig */,
+				A8116C6AA8C2812C26F400F9 /* Pods-Shared-AlfrescoActiviti.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		318B5A1183698EF8116993DD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				43830D778594FE658501F747 /* Pods_ActivitiSDKTests.framework */,
+				2906F80B9C09C2F5BFFC9191 /* Pods_AlfrescoActivitiTests.framework */,
+				C10331654767B56DCCA9DCAF /* Pods_Shared_ActivitiSDK.framework */,
+				1B3E20A3E70D86D0A041EC8A /* Pods_Shared_AlfrescoActiviti.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		7597AEEA1B821E9900F8B5DE /* ActivitiView */ = {
@@ -3821,26 +4073,6 @@
 			name = FormMultiLineTextFieldCell;
 			sourceTree = "<group>";
 		};
-		8FEE6DDD70A4BCFF59CE5AFE /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				91D1075265EF64AF6150F50B /* Pods_ActivitiSDK.framework */,
-				47782013ABCD50E4776B69B9 /* Pods_AlfrescoActiviti.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		EFFA4B5BA013E9207035A777 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				131E27941BA2B099009586C1 /* Pods-AlfrescoActiviti.release.xcconfig */,
-				131E27921BA2B082009586C1 /* Pods-AlfrescoActiviti.debug.xcconfig */,
-				9C11E98DB68D28117FB756FA /* Pods-ActivitiSDK.debug.xcconfig */,
-				129CBFD1704F6FE2038FDFD2 /* Pods-ActivitiSDK.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -3848,6 +4080,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				136E11491CEB113800047E38 /* ASDKIntegrationNetworksDataSource.h in Headers */,
+				13A784311CE46DB300DBE648 /* ASDKModelIntegrationAccount.h in Headers */,
 				1395CD9B1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h in Headers */,
 				133F053C1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h in Headers */,
 				13667FFE1C8995C7005E4AEA /* ASDKTaskListQuerryRequestRepresentation.h in Headers */,
@@ -3872,6 +4106,7 @@
 				13EED8751C52804A00F17105 /* ASDKAuthenticateRequestRepresentation.h in Headers */,
 				133F05461BD52A9000C22CFD /* ASDKFormNetworkServices.h in Headers */,
 				8DB399A61C9C31420089E0AB /* ASDKPeopleTableViewCell.h in Headers */,
+				136E11351CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h in Headers */,
 				8DEA25311C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.h in Headers */,
 				13E8306A1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h in Headers */,
 				13CE5C6D1B998711002E5172 /* ASDKModelFilter.h in Headers */,
@@ -3881,11 +4116,13 @@
 				13B7E1FD1B749473002CBDF4 /* ASDKTaskNetworkServiceProtocol.h in Headers */,
 				13B7E2071B749A07002CBDF4 /* ASDKTaskNetworkServices.h in Headers */,
 				13F07EF71CBFC8C400002FEB /* ASDKKVOManager.h in Headers */,
+				13A7842C1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h in Headers */,
 				13BA5C051BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.h in Headers */,
 				8D6ABE6C1CBB9AF8008FACB4 /* ASDKFormDynamicTableFieldCollectionViewCell.h in Headers */,
 				8D3B50E81C86E258005BEEEB /* ASDKModelRestFormField.h in Headers */,
 				131375261B6FB38500D2268E /* ASDKModelServerConfiguration.h in Headers */,
 				137B944A1BD67A8600134BF1 /* ASDKModelFormDescription.h in Headers */,
+				136E113A1CEA11A500047E38 /* ASDKModelNetwork.h in Headers */,
 				13F9BA2A1B734F820068BB8C /* ASDKProfileInformationRequestRepresentation.h in Headers */,
 				8DB399941C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.h in Headers */,
 				13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */,
@@ -3894,9 +4131,11 @@
 				8DEA25401C7E044900BF376F /* ASDKMultilineFormFieldDetailsViewController.h in Headers */,
 				8DA7190F1C8F071A00907218 /* ASDKAttachFormFieldContentPickerViewController.h in Headers */,
 				139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */,
+				13A5785C1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h in Headers */,
 				8D3A51E91C8089EC00FF9A00 /* ASDKUserNetworkServiceProtocol.h in Headers */,
 				8D9E6AE41CBE4EDB001EA2CA /* ASDKFormRenderEngineFormFieldsDataSourceProtocol.h in Headers */,
 				13B22C531C931CF60043D8A4 /* ASDKModelProcessInstanceContentField.h in Headers */,
+				13A784231CE4620E00DBE648 /* ASDKIntegrationNetworkServiceProtocol.h in Headers */,
 				8D3A51CD1C8084B000FF9A00 /* ASDKProcessDefinitionNetworkServiceProtocol.h in Headers */,
 				13EEC5CE1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h in Headers */,
 				8DEA253C1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.h in Headers */,
@@ -3919,6 +4158,7 @@
 				138F0A2E1C6B865700DA9414 /* ASDKFormControllerNavigationProtocol.h in Headers */,
 				138F0A461C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.h in Headers */,
 				131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */,
+				13A578611CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h in Headers */,
 				8D0FFDC51CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h in Headers */,
 				13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */,
 				1306E9721CC8BCF600BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */,
@@ -3926,12 +4166,14 @@
 				8DEA25441C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.h in Headers */,
 				13CE5C641B997D5D002E5172 /* ASDKFilterNetworkServiceProtocol.h in Headers */,
 				134B92E51BAFEF35000E641F /* ASDKModelContent.h in Headers */,
+				13FF67A51CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h in Headers */,
 				138F0A361C6B9D3100DA9414 /* ASDKRadioFieldCollectionViewCell.h in Headers */,
 				131375211B6FAE5C00D2268E /* ASDKProfileNetworkServiceProtocol.h in Headers */,
 				8D9E6ADF1CBE4009001EA2CA /* ASDKDynamicTableRenderDataSource.h in Headers */,
 				13044FC91BFA178A008FF6E6 /* ASDKModelAmountFormField.h in Headers */,
 				13F9BA301B739C290068BB8C /* ASDKProfilePasswordRequestRepresentation.h in Headers */,
 				1313750D1B6F927C00D2268E /* ASDKParserOperationManager.h in Headers */,
+				13FF679C1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h in Headers */,
 				135701971B70E09E00A384A7 /* ASDKModelProfile.h in Headers */,
 				137B94541BD692E500134BF1 /* ASDKModelFormOutcome.h in Headers */,
 				8DEA25371C7DDBD200BF376F /* ASDKModelHyperlinkFormField.h in Headers */,
@@ -3941,6 +4183,7 @@
 				139564EB1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h in Headers */,
 				135DB32B1B6B616A009138FC /* ASDKLogConfiguration.h in Headers */,
 				13F240341B6B784A00533B37 /* ASDKServiceLocatorProtocol.h in Headers */,
+				136E113F1CEA11E800047E38 /* ASDKModelSite.h in Headers */,
 				139050E71CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.h in Headers */,
 				13667FF91C8993DF005E4AEA /* ASDKQuerryNetworkServiceProtocol.h in Headers */,
 				13EEC5E61C05CDFE00B95740 /* ASDKRoundedBorderView.h in Headers */,
@@ -3976,9 +4219,13 @@
 				134594281BDA4B7C00A234BD /* ASDKFormTextFieldCollectionViewCell.h in Headers */,
 				8D3A51DA1C80855300FF9A00 /* ASDKStartProcessRequestRepresentation.h in Headers */,
 				13E830741B6A303B0028901A /* ASDKRequestOperationManager.h in Headers */,
+				13FF67A11CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h in Headers */,
+				13A784281CE4665900DBE648 /* ASDKIntegrationNetworkServices.h in Headers */,
 				133F05411BD4EFE400C22CFD /* ASDKTaskDetailsParserOperationWorker.h in Headers */,
 				13B843E51BC29866007BA3CC /* ASDKModelFileContent.h in Headers */,
 				8D3A51D01C8084B700FF9A00 /* ASDKProcessDefinitionNetworkServices.h in Headers */,
+				13A578581CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h in Headers */,
+				13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */,
 				13207D0C1BE251C300116A98 /* UIColor+ASDKFormViewColors.h in Headers */,
 				1317C34E1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h in Headers */,
 				137194831B6924DE00D4E1F0 /* ActivitiSDK.h in Headers */,
@@ -3988,7 +4235,9 @@
 				8D6E969B1C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.h in Headers */,
 				8D6ABE841CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.h in Headers */,
 				8DB399AA1C9C319B0089E0AB /* ASDKAvatarInitialsView.h in Headers */,
+				136E114D1CEB122800047E38 /* ASDKIntegrationDataSourceDelegate.h in Headers */,
 				13F35D471BDE8CF200FC3F4E /* ASDKFormCellProtocol.h in Headers */,
+				13A578651CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h in Headers */,
 				8D3A51EC1C8089F200FF9A00 /* ASDKUserNetworkServices.h in Headers */,
 				1306E9701CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */,
 				138C48B51C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h in Headers */,
@@ -3998,6 +4247,8 @@
 				8D3E354E1C9C50F1009F7766 /* ASDKPushFadeSegueUnwind.h in Headers */,
 				13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */,
 				13C9B57E1B9497B90009BD27 /* ASDKModelPaging.h in Headers */,
+				13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */,
+				136E11441CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.h in Headers */,
 				8DD3B76F1CA0382F00B5D561 /* ASDKPushFadeSegue.h in Headers */,
 				130761541BEA42EC0082EA2D /* ASDKLocalizationConstants.h in Headers */,
 				8DA719131C8F0D5200907218 /* ASDKContentFileTableViewCell.h in Headers */,
@@ -4017,15 +4268,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 137194731B6922DE00D4E1F0 /* Build configuration list for PBXNativeTarget "AlfrescoActiviti" */;
 			buildPhases = (
-				FD7754E1BE8369E668A83DC4 /* Check Pods Manifest.lock */,
+				F8B8A090E6DEE659522134EF /* 📦 Check Pods Manifest.lock */,
 				137194491B6922DE00D4E1F0 /* Sources */,
 				1371944A1B6922DE00D4E1F0 /* Frameworks */,
 				1371944B1B6922DE00D4E1F0 /* Resources */,
 				1371949A1B6924DF00D4E1F0 /* Embed Frameworks */,
-				D7E1F88360F0DB56A3E195F5 /* Embed Pods Frameworks */,
-				E0A98E637330B8783B19CC2A /* Copy Pods Resources */,
 				131E278C1BA2AE70009586C1 /* HockeyApp Integration */,
 				131E27961BA2BF91009586C1 /* Version increment script */,
+				2B0FCEE644C5D6819A7ADB7E /* 📦 Embed Pods Frameworks */,
+				6BD16CE0BCB1F3E226198B90 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4041,9 +4292,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 137194761B6922DE00D4E1F0 /* Build configuration list for PBXNativeTarget "AlfrescoActivitiTests" */;
 			buildPhases = (
+				5CE28D3042B888D091891AF7 /* 📦 Check Pods Manifest.lock */,
 				137194651B6922DE00D4E1F0 /* Sources */,
 				137194661B6922DE00D4E1F0 /* Frameworks */,
 				137194671B6922DE00D4E1F0 /* Resources */,
+				141CBF048E5C3F0BFEBBAE04 /* 📦 Embed Pods Frameworks */,
+				696FCC121309BA3F4E1E0E94 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4059,13 +4313,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 137194971B6924DF00D4E1F0 /* Build configuration list for PBXNativeTarget "ActivitiSDK" */;
 			buildPhases = (
-				0904622ECCA22B35E1F962FA /* Check Pods Manifest.lock */,
+				8070C399F97168FC84A3011C /* 📦 Check Pods Manifest.lock */,
 				137194791B6924DE00D4E1F0 /* Sources */,
 				1371947A1B6924DE00D4E1F0 /* Frameworks */,
 				1371947B1B6924DE00D4E1F0 /* Headers */,
 				1371947C1B6924DE00D4E1F0 /* Resources */,
-				86F67616461DED8412A1EADD /* Copy Pods Resources */,
 				7597AEF01B82580800F8B5DE /* Embed Pods Framework */,
+				DD045FB387EF4B9E1902205D /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4080,9 +4334,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1371949B1B6924DF00D4E1F0 /* Build configuration list for PBXNativeTarget "ActivitiSDKTests" */;
 			buildPhases = (
+				B6C219D10BC87270A12414B5 /* 📦 Check Pods Manifest.lock */,
 				137194841B6924DF00D4E1F0 /* Sources */,
 				137194851B6924DF00D4E1F0 /* Frameworks */,
 				137194861B6924DF00D4E1F0 /* Resources */,
+				A3BB4420BE1B0DA86FEDAFEB /* 📦 Embed Pods Frameworks */,
+				7649CFA1CFBD1DB6FD468635 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4150,9 +4407,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13AE35541C43B64B00BEB477 /* glyphicons-regular.otf in Resources */,
+				13A578671CEDDDB90014B6FD /* glyphicons-filetypes.otf in Resources */,
 				1371945F1B6922DE00D4E1F0 /* Main.storyboard in Resources */,
 				13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */,
+				13A578541CEC677C0014B6FD /* glyphicons-regular.otf in Resources */,
 				137194641B6922DE00D4E1F0 /* LaunchScreen.xib in Resources */,
 				137194611B6922DE00D4E1F0 /* Images.xcassets in Resources */,
 			);
@@ -4170,6 +4428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13AE35531C43B61700BEB477 /* glyphicons-regular.otf in Resources */,
+				13FF679E1CEC4DC300A8C95F /* glyphicons-filetypes.otf in Resources */,
 				138F0A3E1C6C9EAD00DA9414 /* Images.xcassets in Resources */,
 				137B945D1BD795E100134BF1 /* ASDKFormStoryboard.storyboard in Resources */,
 				130761511BEA41970082EA2D /* ActivitiSDKLocalizable.strings in Resources */,
@@ -4186,21 +4445,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0904622ECCA22B35E1F962FA /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		131E278C1BA2AE70009586C1 /* HockeyApp Integration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4229,6 +4473,81 @@
 			shellPath = /bin/sh;
 			shellScript = "VERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM | awk -F \".\" '{print $3}'`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\nNEWVERSIONSTRING=`echo $VERSIONNUM | awk -F \".\" '{print $1 \".\" $2 \".'$NEWSUBVERSION'\" }'`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString $NEWVERSIONSTRING\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
 		};
+		141CBF048E5C3F0BFEBBAE04 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2B0FCEE644C5D6819A7ADB7E /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5CE28D3042B888D091891AF7 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		696FCC121309BA3F4E1E0E94 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6BD16CE0BCB1F3E226198B90 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		7597AEF01B82580800F8B5DE /* Embed Pods Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -4241,61 +4560,91 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ActivitiSDK/Pods-ActivitiSDK-frameworks.sh\"";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK-frameworks.sh\"";
 		};
-		86F67616461DED8412A1EADD /* Copy Pods Resources */ = {
+		7649CFA1CFBD1DB6FD468635 /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ActivitiSDK/Pods-ActivitiSDK-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ActivitiSDKTests/Pods-ActivitiSDKTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D7E1F88360F0DB56A3E195F5 /* Embed Pods Frameworks */ = {
+		8070C399F97168FC84A3011C /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AlfrescoActiviti/Pods-AlfrescoActiviti-frameworks.sh\"\n\"${SRCROOT}/Pods/Target Support Files/Pods-ActivitiSDK/Pods-ActivitiSDK-frameworks.sh\"";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		E0A98E637330B8783B19CC2A /* Copy Pods Resources */ = {
+		A3BB4420BE1B0DA86FEDAFEB /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AlfrescoActiviti/Pods-AlfrescoActiviti-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ActivitiSDKTests/Pods-ActivitiSDKTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FD7754E1BE8369E668A83DC4 /* Check Pods Manifest.lock */ = {
+		B6C219D10BC87270A12414B5 /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		DD045FB387EF4B9E1902205D /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F8B8A090E6DEE659522134EF /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4405,6 +4754,7 @@
 				8D7C1A521C808D470092EA81 /* AFAContributorTableViewCell.m in Sources */,
 				13AAD3C31CDB82A900818537 /* AFAProfileSimpleTableViewCell.m in Sources */,
 				1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */,
+				136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */,
 				75E868071B7E75E500862D51 /* AFASwitchView.m in Sources */,
 				13CE8ED11B85B27B0022F17A /* AFADrawerMenuViewController.m in Sources */,
 				13C957FF1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m in Sources */,
@@ -4453,8 +4803,10 @@
 				8D6B2D7F1CB79D150011EC42 /* ASDKModelDynamicTableFormField.m in Sources */,
 				13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */,
 				8DB3999E1C9AEDFF0089E0AB /* ASDKPeopleFormFieldDetailsViewController.m in Sources */,
+				136E113B1CEA11A500047E38 /* ASDKModelNetwork.m in Sources */,
 				132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */,
 				8D3B50ED1C873108005BEEEB /* ASDKFormPreProcessor.m in Sources */,
+				13FF679A1CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m in Sources */,
 				13C855BB1C4D197600F84422 /* ASDKFilterListRequestRepresentation.m in Sources */,
 				13F9BA351B739D290068BB8C /* ASDKBaseRequestRepresentation.m in Sources */,
 				13E830751B6A303B0028901A /* ASDKRequestOperationManager.m in Sources */,
@@ -4474,6 +4826,7 @@
 				131375131B6F963A00D2268E /* ASDKProfileNetworkServices.m in Sources */,
 				138AC9CD1B9DD3F4006C9DD4 /* ASDKAPIJSONKeyParams.m in Sources */,
 				138F0A471C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.m in Sources */,
+				13FF67A21CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m in Sources */,
 				8D3A51E01C80868500FF9A00 /* ASDKModelProcessDefinition.m in Sources */,
 				138F0A371C6B9D3100DA9414 /* ASDKRadioFieldCollectionViewCell.m in Sources */,
 				13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */,
@@ -4483,6 +4836,7 @@
 				13AAC7D91BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m in Sources */,
 				8DB399A71C9C31420089E0AB /* ASDKPeopleTableViewCell.m in Sources */,
 				13F07EFA1CBFC8C400002FEB /* ASDKKVOManagerInfo.m in Sources */,
+				13A7842D1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m in Sources */,
 				8D8F85F61C8D8E7000356A5B /* ASDKAttachFormFieldDetailsViewController.m in Sources */,
 				13B7E2111B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.m in Sources */,
 				136680041C89982D005E4AEA /* ASDKQuerryNetworkServices.m in Sources */,
@@ -4497,6 +4851,7 @@
 				13EEC5E51C05CD0700B95740 /* ASDKRoundedBorderView.m in Sources */,
 				13CE5C6A1B99817C002E5172 /* ASDKFilterNetworkServices.m in Sources */,
 				137B945A1BD794FB00134BF1 /* ASDKFormRenderEngine.m in Sources */,
+				13FF67A61CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.m in Sources */,
 				8D6ABE6D1CBB9AF8008FACB4 /* ASDKFormDynamicTableFieldCollectionViewCell.m in Sources */,
 				139E54091C21935500CE4674 /* ASDKModelApp.m in Sources */,
 				13BA5C0B1BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.m in Sources */,
@@ -4507,12 +4862,15 @@
 				8DD3B7701CA0382F00B5D561 /* ASDKPushFadeSegue.m in Sources */,
 				133F05421BD4EFE400C22CFD /* ASDKTaskDetailsParserOperationWorker.m in Sources */,
 				8DEA25491C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.m in Sources */,
+				13A578661CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m in Sources */,
 				8DA719101C8F071A00907218 /* ASDKAttachFormFieldContentPickerViewController.m in Sources */,
 				139564E81C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m in Sources */,
 				13CDFDD81BB191040019919B /* ASDKModelComment.m in Sources */,
 				8D3A51F71C808A4400FF9A00 /* ASDKUserParserOperationWorker.m in Sources */,
 				13C94BE51B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m in Sources */,
+				13A5785D1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m in Sources */,
 				1357018E1B70D21700A384A7 /* ASDKModelBase.m in Sources */,
+				136E11401CEA11E800047E38 /* ASDKModelSite.m in Sources */,
 				13044FCA1BFA178A008FF6E6 /* ASDKModelAmountFormField.m in Sources */,
 				13F07EFC1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m in Sources */,
 				1313751D1B6FABCF00D2268E /* ASDKNetworkService.m in Sources */,
@@ -4522,6 +4880,7 @@
 				13F240311B6B753600533B37 /* ASDKServiceLocator.m in Sources */,
 				13FB2E651BC53A7500549920 /* ASDKNetworkServiceConstants.m in Sources */,
 				8D6ABE751CBCE7CD008FACB4 /* ASDKDynamicTableColumnTableViewCell.m in Sources */,
+				13A784291CE4665900DBE648 /* ASDKIntegrationNetworkServices.m in Sources */,
 				135701981B70E09E00A384A7 /* ASDKModelProfile.m in Sources */,
 				131375271B6FB38500D2268E /* ASDKModelServerConfiguration.m in Sources */,
 				8DEA253D1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.m in Sources */,
@@ -4531,6 +4890,7 @@
 				13A0BCB41BD7BF8E00599661 /* ASDKFormCheckbox.m in Sources */,
 				13BA5C101BE11C250091D6C9 /* ASDKModelFormFieldValue.m in Sources */,
 				8DB3999A1C9AAC4D0089E0AB /* ASDKModelPeopleFormField.m in Sources */,
+				136E11451CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.m in Sources */,
 				13B7E2031B7495F4002CBDF4 /* ASDKPagingRequestRepresentation.m in Sources */,
 				8D3A51E51C8089A300FF9A00 /* ASDKModelUser.m in Sources */,
 				8DEA25381C7DDBD200BF376F /* ASDKModelHyperlinkFormField.m in Sources */,
@@ -4538,10 +4898,14 @@
 				8DEA25411C7E044900BF376F /* ASDKMultilineFormFieldDetailsViewController.m in Sources */,
 				137B944B1BD67A8600134BF1 /* ASDKModelFormDescription.m in Sources */,
 				13667FFF1C8995C7005E4AEA /* ASDKTaskListQuerryRequestRepresentation.m in Sources */,
+				136E11361CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m in Sources */,
 				138F0A2B1C6B7E9000DA9414 /* ASDKRadioFormFieldDetailsViewController.m in Sources */,
+				13A578591CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.m in Sources */,
 				13B843E61BC29866007BA3CC /* ASDKModelFileContent.m in Sources */,
+				13A5786B1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m in Sources */,
 				13CF72011BCCDA3E0048C322 /* ASDKDiskServicesConstants.m in Sources */,
 				135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */,
+				136E114A1CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m in Sources */,
 				139050E81CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.m in Sources */,
 				13207D0D1BE251C300116A98 /* UIColor+ASDKFormViewColors.m in Sources */,
 				8D3A51D11C8084B700FF9A00 /* ASDKProcessDefinitionNetworkServices.m in Sources */,
@@ -4563,6 +4927,7 @@
 				13B7E2081B749A07002CBDF4 /* ASDKTaskNetworkServices.m in Sources */,
 				139DF5FC1C64D7240062D01D /* ASDKFormRenderDataSource.m in Sources */,
 				1317C34B1BCB9DBB00F0B03F /* ASDKDiskServices.m in Sources */,
+				13A784321CE46DB300DBE648 /* ASDKModelIntegrationAccount.m in Sources */,
 				138F0A3B1C6C835100DA9414 /* ASDKRadioOptionTableViewCell.m in Sources */,
 				13CFF3431BBBDEF900D3DEB6 /* ASDKTaskUpdateRequestRepresentation.m in Sources */,
 				8D9D98871C9C37AE002C0F81 /* UIView+ASDKViewAnimations.m in Sources */,
@@ -4571,6 +4936,7 @@
 				139FEC171B720FA600CE6B01 /* ASDKModelGroup.m in Sources */,
 				13B22C4F1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.m in Sources */,
 				13B7E2161B74E9BE002CBDF4 /* ASDKModelTask.m in Sources */,
+				13A578621CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.m in Sources */,
 				130761551BEA42EC0082EA2D /* ASDKLocalizationConstants.m in Sources */,
 				13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */,
 			);
@@ -4722,7 +5088,7 @@
 		};
 		137194741B6922DE00D4E1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 131E27921BA2B082009586C1 /* Pods-AlfrescoActiviti.debug.xcconfig */;
+			baseConfigurationReference = 005DF383148C17706DBC40C9 /* Pods-Shared-AlfrescoActiviti.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4737,7 +5103,7 @@
 		};
 		137194751B6922DE00D4E1F0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 131E27941BA2B099009586C1 /* Pods-AlfrescoActiviti.release.xcconfig */;
+			baseConfigurationReference = A8116C6AA8C2812C26F400F9 /* Pods-Shared-AlfrescoActiviti.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4752,6 +5118,7 @@
 		};
 		137194771B6922DE00D4E1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 410958C8FA815DD4ECEC4FC7 /* Pods-AlfrescoActivitiTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4771,6 +5138,7 @@
 		};
 		137194781B6922DE00D4E1F0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 12DF594F694C6D6620E26176 /* Pods-AlfrescoActivitiTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4786,7 +5154,7 @@
 		};
 		137194981B6924DF00D4E1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9C11E98DB68D28117FB756FA /* Pods-ActivitiSDK.debug.xcconfig */;
+			baseConfigurationReference = EC312161980F1E807A9C95B2 /* Pods-Shared-ActivitiSDK.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -4813,7 +5181,7 @@
 		};
 		137194991B6924DF00D4E1F0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 129CBFD1704F6FE2038FDFD2 /* Pods-ActivitiSDK.release.xcconfig */;
+			baseConfigurationReference = AAA4DC332CB4E934BFB7DBF5 /* Pods-Shared-ActivitiSDK.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -4836,6 +5204,7 @@
 		};
 		1371949C1B6924DF00D4E1F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B9B08C4416C90E2F9EDB15C2 /* Pods-ActivitiSDKTests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -4854,6 +5223,7 @@
 		};
 		1371949D1B6924DF00D4E1F0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C7E752A64E6EF9D22042B1D /* Pods-ActivitiSDKTests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

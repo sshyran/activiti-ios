@@ -42,6 +42,14 @@ NSString *kASDKAPITableEditableParameter                        = @"tableEditabl
 
 
 #pragma mark -
+#pragma mark Network API parameter values
+
+NSString *kASDKAPIServiceIDAlfrescoCloud                        = @"alfresco-cloud";
+NSString *kASDKAPIServiceIDBox                                  = @"box";
+NSString *kASDKAPIServiceIDGoogleDrive                          = @"google-drive";
+
+
+#pragma mark -
 #pragma mark Reachability constants
 
 NSString *kASDKAPINetworkServiceNoInternetConnection            = @"NetworkServiceNoInternetConnection";

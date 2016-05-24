@@ -215,7 +215,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                  } else {
                                                      AFALogError(@"An error occured while updating profile password for the current user. Reason:%@", error.localizedDescription);
                                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock(nil, error);
+                                                         completionBlock(NO, error);
                                                      });
                                                  }
     }];

@@ -80,4 +80,8 @@
     return [UIColor grayColor];
 }
 
++ (UIColor *)integrationGreyTintColor {
+    return [UIColor colorWithRed:75 / 255.0f green:71 / 255.0f blue:73 / 255.0f alpha:1.0f];
+}
+
 @end
