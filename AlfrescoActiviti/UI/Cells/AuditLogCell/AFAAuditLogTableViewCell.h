@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,19 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-// Path constants
-extern NSString *kActivitiSDKNamePath;
-extern NSString *kActivitiSDKDownloadedContentPath;
-extern NSString *kASDKFilenameGeneratorLastValueUsed;
-extern NSString *kASDKFilenameGeneratorFormat;
-extern NSString *kASDKAuditLogFilenameFormat;
+@protocol AFAAuditLogTableViewCellDelegate <NSObject>
+
+- (void)onViewAuditLog;
+
+@end
+
+@interface AFAAuditLogTableViewCell : UITableViewCell
+
+@property (weak, nonatomic) id<AFAAuditLogTableViewCellDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIImageView    *iconImageView;
+@property (weak, nonatomic) IBOutlet UIButton       *auditLogButton;
+
+
+@end

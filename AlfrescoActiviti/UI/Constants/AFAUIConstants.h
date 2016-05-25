@@ -77,6 +77,7 @@ extern NSString *kCellIDProfileSectionTitle;
 extern NSString *kCellIDProfileCategory;
 extern NSString *kCellIDProfileOption;
 extern NSString *kCellIDProfileAction;
+extern NSString *kCellIDAuditLog;
 
 // Segue IDs
 

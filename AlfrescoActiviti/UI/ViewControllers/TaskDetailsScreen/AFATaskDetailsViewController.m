@@ -116,7 +116,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (strong, nonatomic) ASDKModelProfile                              *currentUserProfile;
 
 // KVO
-@property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
 
 @end
 
@@ -970,6 +970,12 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         
         [strongSelf unclaimTask];
     } forCellType:[detailsCellFactory cellTypeForRequeueCell]];
+    
+    [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+#warning Continue implementation 
+    } forCellType:[detailsCellFactory cellTypeForAuditLogCell]];
     
     // Content cell factory
     AFATableControllerContentCellFactory *contentCellFactory = [AFATableControllerContentCellFactory new];

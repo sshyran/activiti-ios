@@ -68,6 +68,7 @@ extern NSString * const kASDKAPIContentPath;
 extern NSString * const kASDKAPITaskContentUploadPath;
 extern NSString * const kASDKAPIContentRawPath;
 extern NSString * const kASDKAPIProcessContentPath;
+extern NSString * const kASDKAPIAuditPath;
 
 // Comment related
 extern NSString * const kASDKAPICommentPath;

@@ -70,6 +70,7 @@
 - (NSString *)taskClaimServicePathFormat;
 - (NSString *)taskUnclaimServicePathFormat;
 - (NSString *)taskAssignServicePathFormat;
+- (NSString *)taskAuditLogServicePathFormat;
 
 // Filter related
 - (NSString *)taskFilterListServicePath;

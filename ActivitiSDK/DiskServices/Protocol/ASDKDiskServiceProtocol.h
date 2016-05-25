@@ -38,6 +38,17 @@
 - (NSString *)downloadPathForContent:(ASDKModelContent *)content;
 
 /**
+ *  Returns a generic download path for a resouce given it's identifier.
+ *
+ *  @param resourceID   Resource identifier meant to uniquely differentiate a resource
+ *  @param filename     Name of the file to be downloaded
+ *
+ *  @return             Full download path string for the provided resource ID
+ */
+- (NSString *)downloadPathForResourceWithIdentifier:(NSString *)resourceID
+                                           filename:(NSString *)filename;
+
+/**
  *  Returns whether content is present at the download path of the mentioned 
  *  content object.
  *
@@ -46,6 +57,18 @@
  *  @return         Whether there is a file at the download path or not
  */
 - (BOOL)doesFileAlreadyExistsForContent:(ASDKModelContent *)content;
+
+/**
+ *  Returns whether content is present at the download path for the mentioned 
+ *  resource and filename.
+ *
+ *  @param resourceID Resource identifier meant to uniquely differentiate a resource
+ *  @param filename   Name of the file to be downloaded
+ *
+ *  @return           Whether there is a file at the download path or not
+ */
+- (BOOL)doesFileAlreadyExistsForResouceWithIdentifier:(NSString *)resourceID
+                                             filename:(NSString *)filename;
 
 /**
  *  Returns the size of a file at the provided file path.

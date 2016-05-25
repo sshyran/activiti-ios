@@ -127,6 +127,7 @@
 "generalUseLastUpdateTextFormat"                         = "Last update: %@";
 "generalUseNoneText"                                     = "None";
 "successText"                                            = "Success";
+"auditLogText"                                           = "Audit log";
 
 // Alert dialogs use
 "alertDialogOopsTitleText"                               = "Oops...";

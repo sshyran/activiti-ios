@@ -47,6 +47,7 @@ typedef NS_ENUM(NSInteger, AFACompletedTaskDetailsCellType) {
     AFACompletedTaskDetailsCellTypeDuration,
     AFACompletedTaskDetailsCellTypeProcess,
     AFACompletedTaskDetailsCellTypeDescription,
+    AFACompletedTaskDetailsCellTypeAuditLog,
     AFACompletedTaskDetailsCellTypeEnumCount
 };
 
@@ -70,5 +71,6 @@ typedef NS_ENUM(NSInteger, AFAInvolvedTaskDetailsCellType) {
 - (NSInteger)cellTypeForClaimCell;
 - (NSInteger)cellTypeForRequeueCell;
 - (NSInteger)cellTypeForReAssignCell;
+- (NSInteger)cellTypeForAuditLogCell;
 
 @end

@@ -178,8 +178,8 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
       completionBlock:(ASDKTaskContentDeletionCompletionBlock)completionBlock;
 
 /**
- *  Downloads content for the mentioned content object and reports back via a completion and progress blocks whether the
- *  status of the download, whether the operation was successfull and optional errors that ight occur.
+ *  Downloads content for the mentioned content object and reports back via a completion and progress blocks the
+ *  status of the download, whether the operation was successfull and optional errors that might have occured.
  *
  *  @param content              SDK content object containing download information
  *  @param allowCachedResults   Boolean value specifying if results can be provided if already present on the disk
@@ -257,6 +257,21 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
 - (void)assignTaskWithID:(NSString *)taskID
                   toUser:(ASDKModelUser *)user
          completionBlock:(ASDKTaskDetailsCompletionBlock)completionBlock;
+
+/**
+ *  Downloads the audit log for the mentioned task and reports back via a completion and progress blocks the
+ *  status of the download, whether the operation was successfull and optional errors that might have occured
+ *
+ *  @param taskID               ID of the task for which the audit log is requested
+ *  @param allowCachedResults   Boolean value specifying if results can be provided if already present on the disk
+ *  @param progressBlock        Block providing information on the download progress and an optional error reason
+ *  @param completionBlock      Completion block providing an URL to the downloaded resource, whether the content is
+ *                              provided from the local source and an optional error reason.
+ */
+- (void)downloadAuditLogForTaskWithID:(NSString *)taskID
+                   allowCachedResults:(BOOL)allowCachedResults
+                        progressBlock:(ASDKTaskContentDownloadProgressBlock)progressBlock
+                      completionBlock:(ASDKTaskContentDownloadCompletionBlock)completionBlock;
 
 /**
  *  Cancells all queued or running network operations

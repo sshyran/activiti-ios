@@ -128,6 +128,7 @@ extern NSString *kLocalizationPeoplePickerControllerRemovingUserFormat;
 extern NSString *kLocalizationGeneralUseLastUpdateTextFormat;
 extern NSString *kLocalizationGeneralUseNoneText;
 extern NSString *kLocalizationSuccessText;
+extern NSString *kLocalizationAuditLogText;
 
 // Alert dialogs use
 extern NSString *kLocalizationAlertDialogOopsTitleText;

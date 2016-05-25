@@ -1403,7 +1403,7 @@
                                 <color key="separatorColor" red="0.92156862745098034" green="0.92549019607843142" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="bS6-Xq-eLD">
-                                    <rect key="frame" x="0.0" y="853" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="914" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FUv-LV-5NB">
@@ -2458,6 +2458,85 @@
                                             <outlet property="commentDateLabel" destination="kII-Nd-4Zr" id="Rak-AM-ZNy"/>
                                             <outlet property="commentDescriptionLabel" destination="VNC-Yu-QcZ" id="MLs-7w-mSb"/>
                                             <outlet property="contributorNameLabel" destination="RMA-VE-Chl" id="USu-Jw-8N7"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskDetailsAuditLogCellID" id="QLN-SR-Tdz" customClass="AFAAuditLogTableViewCell">
+                                        <rect key="frame" x="0.0" y="853" width="600" height="61"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QLN-SR-Tdz" id="U5T-5S-XeU">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="60.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sBF-4w-NQg" userLabel="Vertical separator">
+                                                    <rect key="frame" x="46" y="0.0" width="1" height="60.5"/>
+                                                    <color key="backgroundColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="1" id="nkL-Wt-agw"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eHX-xm-NR8" customClass="ASDKRoundedBorderView">
+                                                    <rect key="frame" x="43" y="27" width="8" height="8"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="8" id="Gra-3P-Jdj"/>
+                                                        <constraint firstAttribute="width" constant="8" id="yyc-wq-CFy"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                            <color key="value" red="0.29411764709999999" green="0.2784313725" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                            <integer key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                            <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="auditlog-icon" translatesAutoresizingMaskIntoConstraints="NO" id="mTm-Pp-zeZ">
+                                                    <rect key="frame" x="11" y="18" width="25" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="0mX-wf-Pat"/>
+                                                        <constraint firstAttribute="width" constant="25" id="Sgr-PH-Vyj"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u3C-WZ-GfM">
+                                                    <rect key="frame" x="57" y="8" width="535" height="44.5"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                                    <state key="normal" title="Audit log">
+                                                        <color key="titleColor" red="0.15686274510000001" green="0.58823529409999997" blue="0.72549019609999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <state key="disabled">
+                                                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <state key="highlighted">
+                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="onAuditLog:" destination="QLN-SR-Tdz" eventType="touchUpInside" id="YnL-T8-UAd"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="eHX-xm-NR8" firstAttribute="centerY" secondItem="mTm-Pp-zeZ" secondAttribute="centerY" id="3IA-GK-a6m"/>
+                                                <constraint firstItem="u3C-WZ-GfM" firstAttribute="top" secondItem="U5T-5S-XeU" secondAttribute="top" constant="8" id="6VQ-G9-xfw"/>
+                                                <constraint firstItem="sBF-4w-NQg" firstAttribute="leading" secondItem="mTm-Pp-zeZ" secondAttribute="trailing" constant="10" id="Fc2-N4-LPv"/>
+                                                <constraint firstItem="mTm-Pp-zeZ" firstAttribute="centerY" secondItem="U5T-5S-XeU" secondAttribute="centerY" id="Hud-Rt-yGM"/>
+                                                <constraint firstItem="sBF-4w-NQg" firstAttribute="top" secondItem="U5T-5S-XeU" secondAttribute="top" id="IBt-2y-eLu"/>
+                                                <constraint firstItem="u3C-WZ-GfM" firstAttribute="leading" secondItem="sBF-4w-NQg" secondAttribute="trailing" constant="10" id="L1O-S6-ReC"/>
+                                                <constraint firstItem="mTm-Pp-zeZ" firstAttribute="leading" secondItem="U5T-5S-XeU" secondAttribute="leading" constant="11" id="Yb2-6J-ZNi"/>
+                                                <constraint firstItem="eHX-xm-NR8" firstAttribute="centerX" secondItem="sBF-4w-NQg" secondAttribute="centerX" id="gWw-fV-4li"/>
+                                                <constraint firstAttribute="bottom" secondItem="sBF-4w-NQg" secondAttribute="bottom" id="pSA-gb-yAQ"/>
+                                                <constraint firstAttribute="bottom" secondItem="u3C-WZ-GfM" secondAttribute="bottom" constant="8" id="xwY-xl-e6T"/>
+                                                <constraint firstAttribute="trailing" secondItem="u3C-WZ-GfM" secondAttribute="trailing" constant="8" id="y1x-Ab-cbs"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="auditLogButton" destination="u3C-WZ-GfM" id="rt8-ib-gEr"/>
+                                            <outlet property="iconImageView" destination="mTm-Pp-zeZ" id="61d-jg-5JJ"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -5294,6 +5373,7 @@
         <image name="active-task-icon" width="25" height="25"/>
         <image name="activiti-logo" width="80" height="80"/>
         <image name="add-icon" width="25" height="25"/>
+        <image name="auditlog-icon" width="25" height="25"/>
         <image name="clear-icon" width="15" height="15"/>
         <image name="clock-icon" width="25" height="25"/>
         <image name="comment-icon" width="25" height="25"/>
@@ -5319,9 +5399,9 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="fpJ-UB-l4s"/>
         <segue reference="RF7-69-ZNi"/>
-        <segue reference="Rct-bP-63w"/>
         <segue reference="XZ3-C5-Oig"/>
-        <segue reference="Axm-Tn-V6n"/>
+        <segue reference="Rct-bP-63w"/>
     </inferredMetricsTieBreakers>
 </document>

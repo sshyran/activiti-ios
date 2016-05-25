@@ -29,6 +29,7 @@
 #import "AFACompletedDateTableViewCell.h"
 #import "AFADurationTableViewCell.h"
 #import "AFAClaimTableViewCell.h"
+#import "AFAAuditLogTableViewCell.h"
 
 // Constants
 #import "AFAUIConstants.h"
@@ -37,14 +38,15 @@
                                                         AFACompleteTableViewCellDelegate,
                                                         AFAProcessMembershipTableViewCellDelegate,
                                                         AFAClaimTableViewCellDelegate,
-                                                        AFAAssigneeTableViewCellDelegate>
+                                                        AFAAssigneeTableViewCellDelegate,
+                                                        AFAAuditLogTableViewCellDelegate>
 
 @end
 
 @implementation AFATableControllerTaskDetailsCellFactory
 
 #pragma mark -
-#pragma mark AFATableViewCellFactory Delegate
+#pragma mark AFATableViewCellFactoryDelegate
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
               cellForIndexPath:(NSIndexPath *)indexPath
@@ -223,6 +225,13 @@
             }
                 break;
                 
+            case AFACompletedTaskDetailsCellTypeAuditLog: {
+                cell = [self dequeueAuditLogCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+            }
+                break;
+                
             case AFACompletedTaskDetailsCellTypeDescription: {
                 cell = [self dequeuedDescriptionCellAtIndexPath:indexPath
                                                   fromTableView:tableView
@@ -254,7 +263,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 #pragma mark -
-#pragma mark AFAAssigneeTableViewCell Delegate
+#pragma mark AFAAssigneeTableViewCellDelegate
 
 - (void)onChangeAssignee {
     AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeReAssign];
@@ -265,7 +274,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 #pragma mark -
-#pragma mark AFADueTableViewCell Delegate
+#pragma mark AFADueTableViewCellDelegate
 
 - (void)onAddDueDateTap {
     AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeDue];
@@ -276,7 +285,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 #pragma mark -
-#pragma mark AFACompleteTableViewCell Delegate
+#pragma mark AFACompleteTableViewCellDelegate
 
 - (void)onCompleteTask {
     AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeComplete];
@@ -294,7 +303,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 #pragma mark -
-#pragma mark AFAProcessMembershipTableViewCell Delegate
+#pragma mark AFAProcessMembershipTableViewCellDelegate
 
 - (void)onViewProcessTap {
     AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeProcess];
@@ -305,10 +314,21 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 #pragma mark -
-#pragma mark AFAClaimTableViewCell Delegate
+#pragma mark AFAClaimTableViewCellDelegate
 
 - (void)onClaimTask {
     AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeClaim];
+    if (actionBlock) {
+        actionBlock(nil);
+    }
+}
+
+
+#pragma mark -
+#pragma mark AFAAuditLogTableViewCellDelegate
+
+- (void)onViewAuditLog {
+    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFACompletedTaskDetailsCellTypeAuditLog];
     if (actionBlock) {
         actionBlock(nil);
     }
@@ -340,6 +360,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (NSInteger)cellTypeForReAssignCell {
     return AFATaskDetailsCellTypeReAssign;
+}
+
+- (NSInteger)cellTypeForAuditLogCell {
+    return AFACompletedTaskDetailsCellTypeAuditLog;
 }
 
 
@@ -452,6 +476,14 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [durationCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
     
     return durationCell;
+}
+
+- (UITableViewCell *)dequeueAuditLogCellAtIndexPath:(NSIndexPath *)indexPath
+                                      fromTableView:(UITableView *)tableView
+                                          withModel:(id<AFATableViewModelDelegate>)model {
+    AFAAuditLogTableViewCell *auditCell = [tableView dequeueReusableCellWithIdentifier:kCellIDAuditLog
+                                                                          forIndexPath:indexPath];
+    return auditCell;
 }
 
 @end

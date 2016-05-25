@@ -158,6 +158,7 @@ NSString *kLocalizationPeoplePickerControllerRemovingUserFormat   = @"peoplePick
 NSString *kLocalizationGeneralUseLastUpdateTextFormat            = @"generalUseLastUpdateTextFormat";
 NSString *kLocalizationGeneralUseNoneText                        = @"generalUseNoneText";
 NSString *kLocalizationSuccessText                               = @"successText";
+NSString *kLocalizationAuditLogText                              = @"auditLogText";
 
 
 #pragma mark -
