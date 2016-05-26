@@ -309,6 +309,9 @@
 		13E830801B6A4A9B0028901A /* ASDKServicePathFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E8307E1B6A4A9B0028901A /* ASDKServicePathFactory.h */; };
 		13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8307F1B6A4A9B0028901A /* ASDKServicePathFactory.m */; };
 		13EBEC971CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBEC961CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m */; };
+		13EBEC9B1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBEC991CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13EBEC9C1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBEC9A1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m */; };
+		13EBEC9F1CF73D5100EC8F96 /* ASDKFormColorSchemeManagerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBEC9E1CF73D5100EC8F96 /* ASDKFormColorSchemeManagerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13EEC5CE1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5CC1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h */; };
 		13EEC5CF1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EEC5CD1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m */; };
 		13EEC5D41C04D0E100B95740 /* ASDKModelFormFieldFileSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */; };
@@ -919,6 +922,9 @@
 		13E8307F1B6A4A9B0028901A /* ASDKServicePathFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKServicePathFactory.m; path = NetworkServices/ServiceURLFactory/ASDKServicePathFactory.m; sourceTree = "<group>"; };
 		13EBEC951CF5A74200EC8F96 /* AFAAuditLogTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAuditLogTableViewCell.h; path = UI/Cells/AuditLogCell/AFAAuditLogTableViewCell.h; sourceTree = "<group>"; };
 		13EBEC961CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAuditLogTableViewCell.m; path = UI/Cells/AuditLogCell/AFAAuditLogTableViewCell.m; sourceTree = "<group>"; };
+		13EBEC991CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormColorSchemeManager.h; path = FormRenderEngine/FormColorSchemeManager/ASDKFormColorSchemeManager.h; sourceTree = "<group>"; };
+		13EBEC9A1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormColorSchemeManager.m; path = FormRenderEngine/FormColorSchemeManager/ASDKFormColorSchemeManager.m; sourceTree = "<group>"; };
+		13EBEC9E1CF73D5100EC8F96 /* ASDKFormColorSchemeManagerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormColorSchemeManagerProtocol.h; path = FormRenderEngine/FormColorSchemeManager/Protocol/ASDKFormColorSchemeManagerProtocol.h; sourceTree = "<group>"; };
 		13EEC5CC1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldAttachParameter.h; path = Model/AttachFormFieldOption/ASDKModelFormFieldAttachParameter.h; sourceTree = "<group>"; };
 		13EEC5CD1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldAttachParameter.m; path = Model/AttachFormFieldOption/ASDKModelFormFieldAttachParameter.m; sourceTree = "<group>"; };
 		13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldFileSource.h; path = Model/FormFieldFileSource/ASDKModelFormFieldFileSource.h; sourceTree = "<group>"; };
@@ -2231,6 +2237,7 @@
 				13207D0E1BE251C900116A98 /* Categories */,
 				8D3E354B1C9C50B4009F7766 /* Segues */,
 				139050E91CB3FE37004FEA89 /* VisibilityConditionsProcessor */,
+				13EBEC9D1CF73CD700EC8F96 /* FormColorSchemeManager */,
 			);
 			name = FormRenderEngine;
 			sourceTree = "<group>";
@@ -3385,6 +3392,24 @@
 			name = AuditLogCell;
 			sourceTree = "<group>";
 		};
+		13EBEC9D1CF73CD700EC8F96 /* FormColorSchemeManager */ = {
+			isa = PBXGroup;
+			children = (
+				13EBECA01CF73D5900EC8F96 /* Protocol */,
+				13EBEC991CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h */,
+				13EBEC9A1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m */,
+			);
+			name = FormColorSchemeManager;
+			sourceTree = "<group>";
+		};
+		13EBECA01CF73D5900EC8F96 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13EBEC9E1CF73D5100EC8F96 /* ASDKFormColorSchemeManagerProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
 		13EEC5D01C04B5BC00B95740 /* AttachFormFieldOption */ = {
 			isa = PBXGroup;
 			children = (
@@ -4141,6 +4166,7 @@
 				13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */,
 				8D8F85FF1C8DEE3A00356A5B /* ASDKAddContentTableViewCell.h in Headers */,
 				1315B8021BD126FE00C2EC6F /* ASDKParserOperationWorkerProtocol.h in Headers */,
+				13EBEC9F1CF73D5100EC8F96 /* ASDKFormColorSchemeManagerProtocol.h in Headers */,
 				8DEA25401C7E044900BF376F /* ASDKMultilineFormFieldDetailsViewController.h in Headers */,
 				8DA7190F1C8F071A00907218 /* ASDKAttachFormFieldContentPickerViewController.h in Headers */,
 				139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */,
@@ -4214,6 +4240,7 @@
 				1313751C1B6FABCF00D2268E /* ASDKNetworkService.h in Headers */,
 				8DD3B76B1CA0197E00B5D561 /* ASDKPeopleFormFieldPeoplePickerViewController.h in Headers */,
 				13B8E6351BD7BC01005E95B6 /* ASDKFormRenderEngineConstants.h in Headers */,
+				13EBEC9B1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h in Headers */,
 				8D9E6AE21CBE4B5F001EA2CA /* ASDKFormRenderEngineFormDescriptionDataSourceProtocol.h in Headers */,
 				8D3A51D51C80851B00FF9A00 /* ASDKUserRequestRepresentation.h in Headers */,
 				8D6ABE7C1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.h in Headers */,
@@ -4947,6 +4974,7 @@
 				8D9D98871C9C37AE002C0F81 /* UIView+ASDKViewAnimations.m in Sources */,
 				13E8306B1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.m in Sources */,
 				13F9BA2B1B734F820068BB8C /* ASDKProfileInformationRequestRepresentation.m in Sources */,
+				13EBEC9C1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m in Sources */,
 				139FEC171B720FA600CE6B01 /* ASDKModelGroup.m in Sources */,
 				13B22C4F1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.m in Sources */,
 				13B7E2161B74E9BE002CBDF4 /* ASDKModelTask.m in Sources */,

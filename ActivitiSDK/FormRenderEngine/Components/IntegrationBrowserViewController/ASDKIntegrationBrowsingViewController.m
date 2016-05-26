@@ -43,6 +43,7 @@
 
 // Managers
 #import "ASDKKVOManager.h"
+#import "ASDKFormColorSchemeManager.h"
 
 typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
     AFAApplicationListControllerStateIdle,
@@ -99,7 +100,16 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+    
+    [self.navigationController.navigationBar setBarTintColor:colorSchemeManager.navigationBarThemeColor];
+    [self.navigationController.navigationBar setTranslucent:NO];
+    // Force the status bar to be displayed as light content
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
     self.cancelBarButtonItem.title = ASDKLocalizedStringFromTable(kLocalizationCancelButtonText, ASDKLocalizationTable, @"Cancel");
+    self.cancelBarButtonItem.tintColor = colorSchemeManager.navigationBarTitleAndControlsColor;
     
     // Set up the browsing table view to adjust it's size automatically
     self.browsingTableView.estimatedRowHeight = 64.0f;
@@ -124,6 +134,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     } else if ([self.dataSource isKindOfClass:[ASDKIntegrationSitesDataSource class]]) {
         self.title = ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingChooseSiteText, ASDKLocalizationTable, @"Choose site");
     }
+    
+    // Update navigation bar title
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = self.title;
+    titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
+                                      size:17];
+    titleLabel.textColor = colorSchemeManager.navigationBarTitleAndControlsColor;
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
     
     self.dataSource.delegate = self;
     self.browsingTableView.dataSource = self.dataSource;
