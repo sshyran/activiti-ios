@@ -52,6 +52,8 @@
 #import "ASDKDiskServices.h"
 #import "ASDKFormRenderEngine.h"
 #import "ASDKFormRenderEngineProtocol.h"
+#import "ASDKFormColorSchemeManager.h"
+#import "ASDKFormColorSchemeManagerProtocol.h"
 
 // Configurations imports
 #import "ASDKBasicAuthentificationProvider.h"
@@ -307,6 +309,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [_serviceLocator addService:formRenderEngine];
     
     ASDKLogVerbose(@"Form render engine services...%@", formRenderEngine ? @"OK" : @"NOT_OK");
+    
+    // Set up the form color scheme manager
+    ASDKFormColorSchemeManager *colorSchemeManager = [ASDKFormColorSchemeManager new];
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)]) {
+        [_serviceLocator removeService:colorSchemeManager];
+    }
+    [_serviceLocator addService:colorSchemeManager];
+    
+    ASDKLogVerbose(@"Form color scheme manager...%@", colorSchemeManager ? @"OK" : @"NOT_OK");
 }
 
 - (void)replaceAuthenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider {

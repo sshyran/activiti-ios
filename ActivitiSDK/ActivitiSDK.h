@@ -73,6 +73,7 @@
 
 // Other service protocols
 #import <ActivitiSDK/ASDKDiskServiceProtocol.h>
+#import <ActivitiSDK/ASDKFormColorSchemeManagerProtocol.h>
 
 // Service locator imports
 #import <ActivitiSDK/ASDKServiceLocator.h>
@@ -93,6 +94,7 @@
 // Form render engine
 #import <ActivitiSDK/ASDKFormRenderEngine.h>
 #import <ActivitiSDK/ASDKFormControllerNavigationProtocol.h>
+#import <ActivitiSDK/ASDKFormColorSchemeManager.h>
 
 // KVO manager
 #import <ActivitiSDK/ASDKKVOManager.h>

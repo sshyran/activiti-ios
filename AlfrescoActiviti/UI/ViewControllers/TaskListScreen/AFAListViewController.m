@@ -219,6 +219,12 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     } else {
         self.navigationBarTitle = self.currentApp.name;
         self.navigationBarThemeColor = [UIColor applicationColorForTheme:self.currentApp.theme];
+        
+        // Register the application color with the SDK color scheme
+        ASDKBootstrap *sdkBootStrap = [ASDKBootstrap sharedInstance];
+        ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootStrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+        colorSchemeManager.navigationBarThemeColor = self.navigationBarThemeColor;
+        colorSchemeManager.navigationBarTitleAndControlsColor = [UIColor whiteColor];
     }
     
     // Set up the refresh control
