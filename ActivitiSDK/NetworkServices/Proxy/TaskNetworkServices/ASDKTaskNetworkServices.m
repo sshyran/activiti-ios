@@ -25,6 +25,7 @@
 #import "ASDKModelPaging.h"
 #import "ASDKModelFileContent.h"
 #import "ASDKNetworkServiceConstants.h"
+#import "ASDKDiskServicesConstants.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -1220,6 +1221,103 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                       completionBlock(nil, error);
                                   });
                               }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)downloadAuditLogForTaskWithID:(NSString *)taskID
+                   allowCachedResults:(BOOL)allowCachedResults
+                        progressBlock:(ASDKTaskContentDownloadProgressBlock)progressBlock
+                      completionBlock:(ASDKTaskContentDownloadCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    // If content already exists return the URL to it to the caller and the caller
+    // explicitly mentioned cached results are expected return the existing data
+    NSString *auditLogFileName = [NSString stringWithFormat:kASDKAuditLogFilenameFormat, taskID];
+    NSString *downloadPathForContent = [self.diskServices downloadPathForResourceWithIdentifier:taskID
+                                                                                       filename:auditLogFileName];
+    if (allowCachedResults && [self.diskServices doesFileAlreadyExistsForResouceWithIdentifier:taskID
+                                                                                      filename:auditLogFileName]) {
+        ASDKLogVerbose(@"Didn't performed content request. Providing cached result for audit log content of task with ID: %@", taskID);
+        dispatch_async(self.resultsQueue, ^{
+            NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];
+            completionBlock(downloadURL, YES, nil);
+        });
+        
+        return;
+    }
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeHTTP];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskAuditLogServicePathFormat], taskID]
+                           parameters:nil
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  // Check status code
+                                  if (ASDKHTTPCode200OK == operation.response.statusCode) {
+                                      ASDKLogVerbose(@"The audit log content was successfully downloaded with request: %@ - %@.\nResponse:%@",
+                                                     operation.request.HTTPMethod,
+                                                     operation.request.URL.absoluteString,
+                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];
+                                          completionBlock(downloadURL, NO, nil);
+                                      });
+                                  } else {
+                                      ASDKLogVerbose(@"The audit log content failed to download with request: %@ - %@.\nResponse:%@",
+                                                     operation.request.HTTPMethod,
+                                                     operation.request.URL.absoluteString,
+                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          completionBlock(nil, NO, nil);
+                                      });
+                                  }
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  ASDKLogError(@"Failed to download audit log content with request: %@ - %@.\nBody:%@.\nReason:%@",
+                                               operation.request.HTTPMethod,
+                                               operation.request.URL.absoluteString,
+                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                                               error.localizedDescription);
+                                  
+                                  dispatch_async(strongSelf.resultsQueue, ^{
+                                      completionBlock(nil, NO, error);
+                                  });
+                              }];
+    
+    // Set the output file stream
+    // NOTE: output stream size checks are taken care of by AFNetworking which will call the failure block of the
+    // request operation
+    operation.outputStream = [NSOutputStream outputStreamWithURL:[NSURL fileURLWithPath:downloadPathForContent]
+                                                          append:NO];
+    [operation.outputStream open];
+    
+    // If a progress block is provided report transfer progress information
+    if (progressBlock) {
+        [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            dispatch_async(strongSelf.resultsQueue, ^{
+                progressBlock([weakSelf.diskServices sizeStringForByteCount:totalBytesRead] , nil);
+            });
+        }];
+    }
     
     // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];

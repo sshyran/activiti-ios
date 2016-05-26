@@ -85,19 +85,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     [self.taskNetworkService fetchTaskListWithFilterRepresentation:filterRequestRepresentation
                                                    completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-       if (!error) {
-           AFALogVerbose(@"Fetched %lu task entries", (unsigned long)taskList.count);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock (taskList, nil, paging);
-           });
-       } else {
-           AFALogError(@"An error occured while fetching the task list with filter:%@. Reason:%@", taskFilter.description, error.localizedDescription);
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(nil, error, nil);
-           });
-       }
-   }];
+                                                       if (!error) {
+                                                           AFALogVerbose(@"Fetched %lu task entries", (unsigned long)taskList.count);
+                                                           
+                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                               completionBlock (taskList, nil, paging);
+                                                           });
+                                                       } else {
+                                                           AFALogError(@"An error occured while fetching the task list with filter:%@. Reason:%@", taskFilter.description, error.localizedDescription);
+                                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                                               completionBlock(nil, error, nil);
+                                                           });
+                                                       }
+                                                   }];
 }
 
 - (void)requestTaskDetailsForID:(NSString *)taskID
@@ -107,20 +107,20 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     [self.taskNetworkService fetchTaskDetailsForTaskID:taskID
                                        completionBlock:^(ASDKModelTask *task, NSError *error) {
-       if (!error) {
-           AFALogVerbose(@"Fetched details for task name %@", task.name);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock (task, nil);
-           });
-       } else {
-           AFALogError(@"An error occured while fetching details for task: %@. Reason:%@", task.name, error.localizedDescription);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(nil, error);
-           });
-       }
-   }];
+                                           if (!error) {
+                                               AFALogVerbose(@"Fetched details for task name %@", task.name);
+                                               
+                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                   completionBlock (task, nil);
+                                               });
+                                           } else {
+                                               AFALogError(@"An error occured while fetching details for task: %@. Reason:%@", task.name, error.localizedDescription);
+                                               
+                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                   completionBlock(nil, error);
+                                               });
+                                           }
+                                       }];
 }
 
 - (void)requestTaskContentForID:(NSString *)taskID
@@ -130,20 +130,20 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     [self.taskNetworkService fetchTaskContentForTaskID:taskID
                                        completionBlock:^(NSArray *contentList, NSError *error) {
-       if (!error) {
-           AFALogVerbose(@"Fetched content collection for task with ID:%@", taskID);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock (contentList, nil);
-           });
-       } else {
-           AFALogError(@"An error occured while fetching the content collection for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(nil, error);
-           });
-       }
-   }];
+                                           if (!error) {
+                                               AFALogVerbose(@"Fetched content collection for task with ID:%@", taskID);
+                                               
+                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                   completionBlock (contentList, nil);
+                                               });
+                                           } else {
+                                               AFALogError(@"An error occured while fetching the content collection for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                               
+                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                   completionBlock(nil, error);
+                                               });
+                                           }
+                                       }];
 }
 
 - (void)requestTaskCommentsForID:(NSString *)taskID
@@ -153,20 +153,20 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     [self.taskNetworkService fetchTaskCommentsForTaskID:taskID
                                         completionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
-        if (!error) {
-            AFALogVerbose(@"Fetched comment list for task with ID:%@", taskID);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock (commentList, nil, paging);
-            });
-        } else {
-            AFALogError(@"An error occured while fetching the comment list for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error, nil);
-            });
-        }
-    }];
+                                            if (!error) {
+                                                AFALogVerbose(@"Fetched comment list for task with ID:%@", taskID);
+                                                
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    completionBlock (commentList, nil, paging);
+                                                });
+                                            } else {
+                                                AFALogError(@"An error occured while fetching the comment list for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                                
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    completionBlock(nil, error, nil);
+                                                });
+                                            }
+                                        }];
 }
 
 - (void)requestTaskUpdateWithRepresentation:(AFATaskUpdateModel *)update
@@ -200,20 +200,20 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.taskNetworkService updateTaskForTaskID:taskID
                           withTaskRepresentation:taskUpdateRequestRepresentation
                                  completionBlock:^(BOOL isTaskUpdated, NSError *error) {
-         if (!error && isTaskUpdated) {
-             AFALogVerbose(@"Task with ID:%@ was updated successfully", taskID);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock(isTaskUpdated, nil);
-             });
-         } else {
-             AFALogError(@"An error occured updating task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock(NO, error);
-             });
-         }
-     }];
+                                     if (!error && isTaskUpdated) {
+                                         AFALogVerbose(@"Task with ID:%@ was updated successfully", taskID);
+                                         
+                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                             completionBlock(isTaskUpdated, nil);
+                                         });
+                                     } else {
+                                         AFALogError(@"An error occured updating task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                         
+                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                             completionBlock(NO, error);
+                                         });
+                                     }
+                                 }];
 }
 
 - (void)requestTaskCompletionForID:(NSString *)taskID
@@ -223,20 +223,20 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     [self.taskNetworkService completeTaskForTaskID:taskID
                                    completionBlock:^(BOOL isTaskCompleted, NSError *error) {
-       if (!error && isTaskCompleted) {
-           AFALogVerbose(@"Task with ID:%@ was marked as completed", taskID);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(isTaskCompleted, nil);
-           });
-       } else {
-           AFALogError(@"An error occured while marking as completed task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(NO, error);
-           });
-       }
-   }];
+                                       if (!error && isTaskCompleted) {
+                                           AFALogVerbose(@"Task with ID:%@ was marked as completed", taskID);
+                                           
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               completionBlock(isTaskCompleted, nil);
+                                           });
+                                       } else {
+                                           AFALogError(@"An error occured while marking as completed task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                           
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               completionBlock(NO, error);
+                                           });
+                                       }
+                                   }];
 }
 
 - (void)requestContentUploadAtFileURL:(NSURL *)fileURL
@@ -253,26 +253,26 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.taskNetworkService uploadContentWithModel:fileContentModel
                                           forTaskID:taskID
                                       progressBlock:^(NSUInteger progress, NSError *error) {
-      AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
-      
-      dispatch_async(dispatch_get_main_queue(), ^{
-          progressBlock (progress, error);
-      });
+                                          AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
+                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              progressBlock (progress, error);
+                                          });
                                       } completionBlock:^(BOOL isContentUploaded, NSError *error) {
-      if (!error && isContentUploaded) {
-          AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
-          
-          dispatch_async(dispatch_get_main_queue(), ^{
-              completionBlock (isContentUploaded, nil);
-          });
-      } else {
-          AFALogError(@"An error occured while uploading content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-          
-          dispatch_async(dispatch_get_main_queue(), ^{
-              completionBlock (NO, error);
-          });
-      }
-    }];
+                                          if (!error && isContentUploaded) {
+                                              AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
+                                              
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  completionBlock (isContentUploaded, nil);
+                                              });
+                                          } else {
+                                              AFALogError(@"An error occured while uploading content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                              
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  completionBlock (NO, error);
+                                              });
+                                          }
+                                      }];
 }
 
 - (void)requestContentUploadAtFileURL:(NSURL *)fileURL
@@ -292,26 +292,26 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                         contentData:contentData
                                           forTaskID:taskID
                                       progressBlock:^(NSUInteger progress, NSError *error) {
-      AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
-      
-      dispatch_async(dispatch_get_main_queue(), ^{
-          progressBlock (progress, error);
-      });
+                                          AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
+                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              progressBlock (progress, error);
+                                          });
                                       } completionBlock:^(BOOL isContentUploaded, NSError *error) {
-      if (!error && isContentUploaded) {
-          AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
-          
-          dispatch_async(dispatch_get_main_queue(), ^{
-              completionBlock (isContentUploaded, nil);
-          });
-      } else {
-          AFALogError(@"An error occured while uploading content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-          
-          dispatch_async(dispatch_get_main_queue(), ^{
-              completionBlock (NO, error);
-          });
-      }
-    }];
+                                          if (!error && isContentUploaded) {
+                                              AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
+                                              
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  completionBlock (isContentUploaded, nil);
+                                              });
+                                          } else {
+                                              AFALogError(@"An error occured while uploading content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                              
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  completionBlock (NO, error);
+                                              });
+                                          }
+                                      }];
 }
 
 - (void)requestTaskContentDeleteForContent:(ASDKModelContent *)content
@@ -321,20 +321,20 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     [self.taskNetworkService deleteContent:content
                            completionBlock:^(BOOL isContentDeleted, NSError *error) {
-       if (!error && isContentDeleted) {
-           AFALogVerbose(@"Content with ID:%@ was deleted successfully.", content.instanceID);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(isContentDeleted, nil);
-           });
-       } else {
-           AFALogError(@"An error occured while deleting content with ID:%@. Reason:%@", content.instanceID, error.localizedDescription);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(NO, error);
-           });
-       }
-   }];
+                               if (!error && isContentDeleted) {
+                                   AFALogVerbose(@"Content with ID:%@ was deleted successfully.", content.instanceID);
+                                   
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       completionBlock(isContentDeleted, nil);
+                                   });
+                               } else {
+                                   AFALogError(@"An error occured while deleting content with ID:%@. Reason:%@", content.instanceID, error.localizedDescription);
+                                   
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       completionBlock(NO, error);
+                                   });
+                               }
+                           }];
 }
 
 - (void)requestTaskContentDownloadForContent:(ASDKModelContent *)content
@@ -356,7 +356,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                        AFALogVerbose(@"Content with ID:%@ was downloaded successfully.", content.instanceID);
                                        
                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                          completionBlock(downloadedContentURL, isLocalContent,nil);
+                                           completionBlock(downloadedContentURL, isLocalContent,nil);
                                        });
                                    } else {
                                        AFALogError(@"An error occured while downloading content with ID:%@. Reason:%@", content.instanceID, error.localizedDescription);
@@ -391,7 +391,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                      completionBlock(NO, error);
                                  });
                              }
-    }];
+                         }];
 }
 
 - (void)requestToRemoveTaskUserInvolvement:(ASDKModelUser *)user
@@ -417,7 +417,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                             completionBlock(NO, error);
                                         });
                                     }
-    }];
+                                }];
 }
 
 - (void)requestCreateComment:(NSString *)comment
@@ -443,7 +443,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                        completionBlock(nil, error);
                                    });
                                }
-    }];
+                           }];
 }
 
 - (void)requestCreateTaskWithRepresentation:(AFATaskCreateModel *)taskRepresentation
@@ -496,7 +496,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                          completionBlock(NO, error);
                                      });
                                  }
-    }];
+                             }];
 }
 
 - (void)requestTaskUnclaimForTaskID:(NSString *)taskID
@@ -505,21 +505,21 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     NSParameterAssert(completionBlock);
     
     [self.taskNetworkService unclaimTaskWithID:taskID
-                             completionBlock:^(BOOL isTaskClaimed, NSError *error) {
-                                 if (!error && !isTaskClaimed) {
-                                     AFALogVerbose(@"Unclaimed task with ID:%@", taskID);
-                                     
-                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                         completionBlock (NO, nil);
-                                     });
-                                 } else {
-                                     AFALogError(@"An error occured while unclaiming task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                     
-                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                         completionBlock(YES, error);
-                                     });
-                                 }
-                             }];
+                               completionBlock:^(BOOL isTaskClaimed, NSError *error) {
+                                   if (!error && !isTaskClaimed) {
+                                       AFALogVerbose(@"Unclaimed task with ID:%@", taskID);
+                                       
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           completionBlock (NO, nil);
+                                       });
+                                   } else {
+                                       AFALogError(@"An error occured while unclaiming task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                       
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           completionBlock(YES, error);
+                                       });
+                                   }
+                               }];
 }
 
 - (void)requestTaskAssignForTaskWithID:(NSString *)taskID
@@ -546,6 +546,37 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                       });
                                   }
                               }];
+}
+
+- (void)requestDownloadAuditLogForTaskWithID:(NSString *)taskID
+                          allowCachedResults:(BOOL)allowCachedResults
+                               progressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
+                             completionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock {
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    
+    [self.taskNetworkService downloadAuditLogForTaskWithID:taskID
+                                        allowCachedResults:allowCachedResults
+                                             progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                                 AFALogVerbose(@"Downloaded %@ of content for the audit log of task with ID:%@ ", formattedReceivedBytesString, taskID);
+                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                     progressBlock (formattedReceivedBytesString, error);
+                                                 });
+                                             } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                                 if (!error && downloadedContentURL) {
+                                                     AFALogVerbose(@"Audit log content for task with ID:%@ was downloaded successfully.", taskID);
+                                                     
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         completionBlock(downloadedContentURL, isLocalContent,nil);
+                                                     });
+                                                 } else {
+                                                     AFALogError(@"An error occured while downloading audit log content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                                     
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         completionBlock(nil, NO, error);
+                                                     });
+                                                 }
+                                             }];
 }
 
 @end

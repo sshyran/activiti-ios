@@ -50,5 +50,11 @@ typedef NS_ENUM(NSInteger, AFAContentPickerViewControllerType) {
 - (void)dowloadContent:(ASDKModelContent *)content
     allowCachedContent:(BOOL)allowCachedContent;
 
+- (void)downloadAuditLogForTaskWithID:(NSString *)taskID
+                   allowCachedResults:(BOOL)allowCachedResults;
+
+- (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
+                             allowCachedResults:(BOOL)allowCachedResults;
+
 
 @end

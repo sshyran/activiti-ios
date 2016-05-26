@@ -70,6 +70,7 @@
 - (NSString *)taskClaimServicePathFormat;
 - (NSString *)taskUnclaimServicePathFormat;
 - (NSString *)taskAssignServicePathFormat;
+- (NSString *)taskAuditLogServicePathFormat;
 
 // Filter related
 - (NSString *)taskFilterListServicePath;
@@ -96,6 +97,7 @@
 - (NSString *)processInstanceDetailsServicePathFormat;
 - (NSString *)processInstanceContentServicePathFormat;
 - (NSString *)processInstanceCommentServicePathFormat;
+- (NSString *)processInstanceAuditLogServicePathFormat;
 
 // User related
 - (NSString *)userListServicePath;

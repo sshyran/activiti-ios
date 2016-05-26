@@ -38,6 +38,7 @@ typedef NS_ENUM(NSInteger, AFACompletedProcessInstanceDetailsCellType) {
     AFACompletedProcessInstanceDetailsCellTypeStartedBy,
     AFACompletedProcessInstanceDetailsCellTypeStartDate,
     AFACompletedProcessInstanceDetailsCellTypeEndDate,
+    AFACompletedProcessInstanceDetailsCellTypeAuditLog,
     AFACompletedProcessInstanceDetailsCellTypeEnumCount
 };
 
@@ -47,5 +48,6 @@ typedef NS_ENUM(NSInteger, AFACompletedProcessInstanceDetailsCellType) {
 @property (strong, nonatomic) UIColor *appThemeColor;
 
 - (NSInteger)cellTypeForProcessControlCell;
+- (NSInteger)cellTypeForAuditLogCell;
 
 @end

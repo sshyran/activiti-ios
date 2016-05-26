@@ -46,6 +46,18 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return contentPath;
 }
 
+- (NSString *)downloadPathForResourceWithIdentifier:(NSString *)resourceID
+                                           filename:(NSString *)filename {
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = documentsPaths.firstObject;
+    NSString *contentPath = [[[[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
+                               stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath]
+                              stringByAppendingPathComponent:resourceID]
+                             stringByAppendingPathComponent:filename];
+    
+    return contentPath;
+}
+
 - (BOOL)doesFileAlreadyExistsForContent:(ASDKModelContent *)content {
     NSString *downloadPathForContent = [self downloadPathForContent:content];
     BOOL doesFileExist = [[NSFileManager defaultManager] fileExistsAtPath:downloadPathForContent];
@@ -57,6 +69,24 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                    attributes:nil
                                                         error:&error]) {
         ASDKLogError(@"Encountered an error while generating the folder structure for content with path :%@.", downloadPathForContent);
+    }
+    
+    return doesFileExist;
+}
+
+- (BOOL)doesFileAlreadyExistsForResouceWithIdentifier:(NSString *)resourceID
+                                             filename:(NSString *)filename {
+    NSString *downloadPathForContent = [self downloadPathForResourceWithIdentifier:resourceID
+                                                                          filename:filename];
+    BOOL doesFileExist = [[NSFileManager defaultManager] fileExistsAtPath:downloadPathForContent];
+    
+    NSError *error = nil;
+    // Make sure we create the directory structure needed for the download
+    if (![[NSFileManager defaultManager] createDirectoryAtPath:[downloadPathForContent stringByDeletingLastPathComponent]
+                                   withIntermediateDirectories:YES
+                                                    attributes:nil
+                                                         error:&error]) {
+        ASDKLogError(@"Encountered an error while generating the folder structure for resource with path :%@.", downloadPathForContent);
     }
     
     return doesFileExist;

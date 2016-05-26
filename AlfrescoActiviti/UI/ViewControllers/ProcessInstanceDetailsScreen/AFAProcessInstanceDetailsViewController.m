@@ -665,6 +665,14 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                                  }];
     } forCellType:[processInstanceDetailsCellFactory cellTypeForProcessControlCell]];
     
+    [processInstanceDetailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.contentPickerViewController downloadAuditLogForProcessInstanceWithID:strongSelf.processInstanceID
+                                                                      allowCachedResults:YES];
+        
+    } forCellType:[processInstanceDetailsCellFactory cellTypeForAuditLogCell]];
+    
     // Register process instance task status cell factory
     AFATableControllerProcessInstanceTasksCellFactory *processInstanceTasksCellFactory = [AFATableControllerProcessInstanceTasksCellFactory new];
     processInstanceTasksCellFactory.appThemeColor = self.navigationBarThemeColor;

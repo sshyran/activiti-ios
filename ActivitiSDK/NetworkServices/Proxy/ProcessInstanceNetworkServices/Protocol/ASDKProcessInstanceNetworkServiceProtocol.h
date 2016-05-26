@@ -30,6 +30,8 @@ typedef void  (^ASDKProcessInstanceContentCompletionBlock)       (NSArray *conte
 typedef void  (^ASDKProcessInstanceCreateCommentCompletionBlock) (ASDKModelComment *comment, NSError *error);
 typedef void  (^ASDKProcessInstanceCommentsCompletionBlock)      (NSArray *commentList, NSError *error, ASDKModelPaging *paging);
 typedef void  (^ASDKProcessInstanceDeleteCompletionBlock)        (BOOL isProcessInstanceDeleted, NSError *error);
+typedef void  (^ASDKProcessInstanceContentDownloadProgressBlock) (NSString *formattedReceivedBytesString, NSError *error);
+typedef void  (^ASDKProcessInstanceContentDownloadCompletionBlock)(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error);
 
 @protocol ASDKProcessInstanceNetworkServiceProtocol <NSObject>
 
@@ -104,6 +106,21 @@ typedef void  (^ASDKProcessInstanceDeleteCompletionBlock)        (BOOL isProcess
  */
 - (void)deleteProcessInstanceWithID:(NSString *)processInstanceID
                     completionBlock:(ASDKProcessInstanceDeleteCompletionBlock)completionBlock;
+
+/**
+ *  Downloads the audit log for the mentioned process instance and reports back via completion and progress blocks the
+ *  status of the download, whether the operation was successfull and optional errors that might have occured
+ *
+ *  @param processInstanceID    ID of the process instance for which the audit log is requested
+ *  @param allowCachedResults   Boolean value specifying if results can be provided if already present on the disk
+ *  @param progressBlock        Block providing information on the download progress and an optional error reason
+ *  @param completionBlock      Completion block providing an URL to the downloaded resource, whether the content is
+ *                              provided from the local source and an optional error reason.
+ */
+- (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
+                              allowCachedResults:(BOOL)allowCachedResults
+                                   progressBlock:(ASDKProcessInstanceContentDownloadProgressBlock)progressBlock
+                                 completionBlock:(ASDKProcessInstanceContentDownloadCompletionBlock)completionBlock;
 
 /**
  *  Cancells all queued or running network operations

@@ -31,6 +31,8 @@ typedef void  (^AFAProcessInstanceContentCompletionBlock)       (NSArray *conten
 typedef void  (^AFAProcessInstanceCreateCommentCompletionBlock) (ASDKModelComment *comment, NSError *error);
 typedef void  (^AFAProcessInstanceCommentsCompletionBlock)      (NSArray *commentList, NSError *error, ASDKModelPaging *paging);
 typedef void  (^AFAProcessInstanceDeleteCompletionBlock)        (BOOL isProcessInstanceDeleted, NSError *error);
+typedef void  (^AFAProcessInstanceContentDownloadProgressBlock) (NSString *formattedReceivedBytesString, NSError *error);
+typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error);
 
 @interface AFAProcessServices : NSObject
 
@@ -121,5 +123,21 @@ typedef void  (^AFAProcessInstanceDeleteCompletionBlock)        (BOOL isProcessI
  */
 - (void)requestDeleteProcessInstanceWithID:(NSString *)processInstanceID
                            completionBlock:(AFAProcessInstanceDeleteCompletionBlock)completionBlock;
+
+/**
+ *  Performs a request to download the audit log for the mentioned process instance and reports back via completion 
+ *  and progress blocks the status of the download.
+ *
+ *  @param processInstanceID    Process instance ID for which the audit log is requested
+ *  @param allowCachedResults   Boolean value specifying if results can be provided if already present on the disk
+ *  @param progressBlock        Block used to report progress updates for the download operation and an optional error
+ *                              reason
+ *  @param completionBlock      Completion block providing the URL location of the downloaded content, whether is a local refference
+ *                              and an optional error reason
+ */
+- (void)requestDownloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
+                                     allowCachedResults:(BOOL)allowCachedResults
+                                          progressBlock:(AFAProcessInstanceContentDownloadProgressBlock)progressBlock
+                                        completionBlock:(AFAProcessInstanceContentDownloadCompletionBlock)completionBlock;
 
 @end

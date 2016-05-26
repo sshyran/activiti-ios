@@ -24,11 +24,13 @@
 #import "AFACreatedDateTableViewCell.h"
 #import "AFAAssigneeTableViewCell.h"
 #import "AFACompletedDateTableViewCell.h"
+#import "AFAAuditLogTableViewCell.h"
 
 // Constants
 #import "AFAUIConstants.h"
 
-@interface AFATableControllerProcessInstanceDetailsCellFactory () <AFAShowDiagramTableViewCellDelegate>
+@interface AFATableControllerProcessInstanceDetailsCellFactory () <AFAShowDiagramTableViewCellDelegate,
+                                                                   AFAAuditLogTableViewCellDelegate>
 
 @end
 
@@ -120,6 +122,13 @@
             }
                 break;
                 
+            case AFACompletedProcessInstanceDetailsCellTypeAuditLog: {
+                cell = [self dequeuedAuditLogCellAtIndexPath:indexPath
+                                               fromTableView:tableView
+                                                   withModel:model];
+            }
+                break;
+                
             default:
                 break;
         }
@@ -161,10 +170,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 #pragma mark -
+#pragma mark AFAAuditLogTableViewCellDelegate
+
+- (void)onViewAuditLog {
+    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFACompletedProcessInstanceDetailsCellTypeAuditLog];
+    if (actionBlock) {
+        actionBlock(nil);
+    }
+}
+
+
+#pragma mark -
 #pragma mark Public interface
 
 - (NSInteger)cellTypeForProcessControlCell {
     return AFAProcessInstanceDetailsCellTypeProcessControl;
+}
+
+- (NSInteger)cellTypeForAuditLogCell {
+    return AFACompletedProcessInstanceDetailsCellTypeAuditLog;
 }
 
 
@@ -220,6 +244,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [completedDateCell setupCellWithProcessInstance:[model itemAtIndexPath:indexPath]];
     
     return completedDateCell;
+}
+
+- (UITableViewCell *)dequeuedAuditLogCellAtIndexPath:(NSIndexPath *)indexPath
+                                       fromTableView:(UITableView *)tableView
+                                           withModel:(id<AFATableViewModelDelegate>)model {
+    AFAAuditLogTableViewCell *auditLogCell = [tableView dequeueReusableCellWithIdentifier:kCellIDAuditLog
+                                                                             forIndexPath:indexPath];
+    auditLogCell.delegate = self;
+    
+    return auditLogCell;
 }
 
 @end

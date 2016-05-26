@@ -31,6 +31,7 @@
 #import "AFATaskServices.h"
 #import "AFAProfileServices.h"
 #import "AFAIntegrationServices.h"
+#import "AFAProcessServices.h"
 @import Photos;
 @import ActivitiSDK;
 @import QuickLook;
@@ -47,11 +48,15 @@ typedef NS_ENUM(NSInteger, AFAContentPickerCellType) {
     AFAContentPickerCellTypeEnumCount
 };
 
+typedef NS_ENUM(NSInteger, AFAContentPickerResourceType) {
+    AFAContentPickerResourceTypeTaskAuditLog,
+    AFAContentPickerResourceTypeProcessInstanceAuditLog
+};
+
 @interface AFAContentPickerViewController () <UINavigationControllerDelegate,
 UIImagePickerControllerDelegate,
 QLPreviewControllerDataSource,
-QLPreviewControllerDelegate,
-UIDocumentInteractionControllerDelegate>
+QLPreviewControllerDelegate>
 
 @property (weak, nonatomic)   IBOutlet UITableView                          *actionsTableView;
 @property (strong, nonatomic) JGProgressHUD                                 *progressHUD;
@@ -85,7 +90,9 @@ UIDocumentInteractionControllerDelegate>
 }
 
 - (void)viewDidLoad {
-    [self fetchIntegrationAccounts];
+    if (AFAContentPickerViewControllerTypeProfileRelated != self.pickerType) {
+        [self fetchIntegrationAccounts];
+    }
 }
 
 /*
@@ -212,6 +219,93 @@ UIDocumentInteractionControllerDelegate>
     }
 }
 
+- (void)downloadAuditLogForTaskWithID:(NSString *)taskID
+                   allowCachedResults:(BOOL)allowCachedResults {
+    [self downloadResourceType:AFAContentPickerResourceTypeTaskAuditLog
+                    resourceID:taskID
+            allowCachedResults:allowCachedResults];
+}
+
+- (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
+                              allowCachedResults:(BOOL)allowCachedResults {
+    [self downloadResourceType:AFAContentPickerResourceTypeProcessInstanceAuditLog
+                    resourceID:processInstanceID 
+            allowCachedResults:allowCachedResults];
+}
+
+- (void)downloadResourceType:(AFAContentPickerResourceType)resourceType
+                  resourceID:(NSString *)resourceID
+          allowCachedResults:(BOOL)allowCachedResults {
+    [self showDownloadProgressHUD];
+    
+    __weak typeof(self) weakSelf = self;
+    AFATaskServiceTaskContentDownloadProgressBlock progressBlock = ^(NSString *formattedReceivedBytesString, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentDownloadProgressFormat, @"Download progress format"), formattedReceivedBytesString];
+        } else {
+            [strongSelf.progressHUD dismiss];
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+        }
+    };
+    
+    AFATaskServiceTaskContentDownloadCompletionBlock completionBlock = ^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.progressHUD dismiss];
+        
+        if (!error) {
+            if (downloadedContentURL) {
+                strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                    weakSelf.progressHUD.detailTextLabel.text = nil;
+                    
+                    weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                    weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                });
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [weakSelf.progressHUD dismiss];
+                    
+                    // Present the quick look controller
+                    [weakSelf previewDownloadedContent];
+                });
+            } else {
+                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+            }
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+        }
+    };
+    
+    switch (resourceType) {
+        case AFAContentPickerResourceTypeTaskAuditLog: {
+            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+            [taskServices requestDownloadAuditLogForTaskWithID:resourceID
+                                            allowCachedResults:allowCachedResults
+                                                 progressBlock:progressBlock
+                                               completionBlock:completionBlock];
+        }
+            break;
+            
+        case AFAContentPickerResourceTypeProcessInstanceAuditLog: {
+            AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
+            [processServices requestDownloadAuditLogForProcessInstanceWithID:resourceID
+                                                          allowCachedResults:allowCachedResults
+                                                               progressBlock:progressBlock 
+                                                             completionBlock:completionBlock];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
 - (void)previewDownloadedContent {
     if (!self.previewController) {
         self.previewController =  [QLPreviewController new];
@@ -221,9 +315,9 @@ UIDocumentInteractionControllerDelegate>
         [self.previewController refreshCurrentPreviewItem];
     }
     
-    [self.navigationController presentViewController:self.previewController
-                                            animated:YES
-                                          completion:nil];
+    [self presentViewController:self.previewController
+                       animated:YES
+                     completion:nil];
 }
 
 #pragma mark -
@@ -445,10 +539,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 - (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller {
     return 1;
-}
-
-- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
-    return self.navigationController;
 }
 
 - (id<QLPreviewItem> _Nonnull)previewController:(QLPreviewController * _Nonnull)controller
