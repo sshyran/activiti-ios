@@ -26,4 +26,4 @@ NSString *kActivitiSDKNamePath                         = @"ActivitiSDK";
 NSString *kActivitiSDKDownloadedContentPath            = @"DownloadedContent";
 NSString *kASDKFilenameGeneratorLastValueUsed          = @"kASDKFilenameGeneratorLastValueUsed";
 NSString *kASDKFilenameGeneratorFormat                 = @"File_%03ld";
-NSString *kASDKAuditLogFilenameFormat                  = @"AuditLog_%@";
+NSString *kASDKAuditLogFilenameFormat                  = @"AuditLog_%@.pdf";

@@ -82,7 +82,7 @@ NSString *kCellIDProfileSectionTitle                            = @"ProfileSecti
 NSString *kCellIDProfileCategory                                = @"ProfileCategoryCellID";
 NSString *kCellIDProfileOption                                  = @"ProfileOptionCellID";
 NSString *kCellIDProfileAction                                  = @"ProfileActionCellID";
-NSString *kCellIDAuditLog                                       = @"TaskDetailsAuditLogCellID";
+NSString *kCellIDAuditLog                                       = @"AuditLogCellID";
 
 
 #pragma mark -

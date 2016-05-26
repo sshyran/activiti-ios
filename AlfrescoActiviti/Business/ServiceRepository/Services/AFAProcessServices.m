@@ -297,4 +297,35 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     }];
 }
 
+- (void)requestDownloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
+                                     allowCachedResults:(BOOL)allowCachedResults
+                                          progressBlock:(AFAProcessInstanceContentDownloadProgressBlock)progressBlock
+                                        completionBlock:(AFAProcessInstanceContentDownloadCompletionBlock)completionBlock {
+    NSParameterAssert(processInstanceID);
+    NSParameterAssert(completionBlock);
+    
+    [self.processInstanceNetworkService downloadAuditLogForProcessInstanceWithID:processInstanceID
+                                        allowCachedResults:allowCachedResults
+                                             progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                                 AFALogVerbose(@"Downloaded %@ of content for the audit log of task with ID:%@ ", formattedReceivedBytesString, processInstanceID);
+                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                     progressBlock (formattedReceivedBytesString, error);
+                                                 });
+                                             } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                                 if (!error && downloadedContentURL) {
+                                                     AFALogVerbose(@"Audit log content for task with ID:%@ was downloaded successfully.", processInstanceID);
+                                                     
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         completionBlock(downloadedContentURL, isLocalContent,nil);
+                                                     });
+                                                 } else {
+                                                     AFALogError(@"An error occured while downloading audit log content for task with ID:%@. Reason:%@", processInstanceID, error.localizedDescription);
+                                                     
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         completionBlock(nil, NO, error);
+                                                     });
+                                                 }
+                                             }];
+}
+
 @end

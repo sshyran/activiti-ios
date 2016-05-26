@@ -974,7 +974,9 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         __strong typeof(self) strongSelf = weakSelf;
         
-#warning Continue implementation 
+        [strongSelf.contentPickerViewController downloadAuditLogForTaskWithID:strongSelf.taskID
+                                                           allowCachedResults:YES];
+        
     } forCellType:[detailsCellFactory cellTypeForAuditLogCell]];
     
     // Content cell factory

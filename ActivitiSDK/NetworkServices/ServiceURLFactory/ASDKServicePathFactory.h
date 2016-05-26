@@ -97,6 +97,7 @@
 - (NSString *)processInstanceDetailsServicePathFormat;
 - (NSString *)processInstanceContentServicePathFormat;
 - (NSString *)processInstanceCommentServicePathFormat;
+- (NSString *)processInstanceAuditLogServicePathFormat;
 
 // User related
 - (NSString *)userListServicePath;

@@ -259,7 +259,7 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
          completionBlock:(ASDKTaskDetailsCompletionBlock)completionBlock;
 
 /**
- *  Downloads the audit log for the mentioned task and reports back via a completion and progress blocks the
+ *  Downloads the audit log for the mentioned task and reports back via completion and progress blocks the
  *  status of the download, whether the operation was successfull and optional errors that might have occured
  *
  *  @param taskID               ID of the task for which the audit log is requested

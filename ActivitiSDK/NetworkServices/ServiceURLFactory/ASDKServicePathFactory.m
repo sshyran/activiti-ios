@@ -253,6 +253,10 @@ static NSString * const kASDkHTTPS = @"https";
     return [[self processInstanceDetailsServicePathFormat] stringByAppendingPathComponent:kASDKAPICommentPath];
 }
 
+- (NSString *)processInstanceAuditLogServicePathFormat {
+    return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIProcessInstancesPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIAuditPath];
+}
+
 
 #pragma mark -
 #pragma mark User related

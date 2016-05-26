@@ -1240,7 +1240,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSString *auditLogFileName = [NSString stringWithFormat:kASDKAuditLogFilenameFormat, taskID];
     NSString *downloadPathForContent = [self.diskServices downloadPathForResourceWithIdentifier:taskID
                                                                                        filename:auditLogFileName];
-    if (allowCachedResults && [self.diskServices doesFileAlreadyExistsForResouceWithIdentifier:taskID filename:auditLogFileName]) {
+    if (allowCachedResults && [self.diskServices doesFileAlreadyExistsForResouceWithIdentifier:taskID
+                                                                                      filename:auditLogFileName]) {
         ASDKLogVerbose(@"Didn't performed content request. Providing cached result for audit log content of task with ID: %@", taskID);
         dispatch_async(self.resultsQueue, ^{
             NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];

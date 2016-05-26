@@ -2460,7 +2460,7 @@
                                             <outlet property="contributorNameLabel" destination="RMA-VE-Chl" id="USu-Jw-8N7"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskDetailsAuditLogCellID" id="QLN-SR-Tdz" customClass="AFAAuditLogTableViewCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AuditLogCellID" id="QLN-SR-Tdz" customClass="AFAAuditLogTableViewCell">
                                         <rect key="frame" x="0.0" y="853" width="600" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QLN-SR-Tdz" id="U5T-5S-XeU">
@@ -3578,7 +3578,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="NfO-80-xdz">
-                                    <rect key="frame" x="0.0" y="636" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="697" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mv2-Pc-7Qw">
@@ -4252,6 +4252,85 @@
                                             <outlet property="contributorNameLabel" destination="cxR-Ub-uQU" id="z5R-ft-Umo"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AuditLogCellID" id="OsS-ug-AlH" customClass="AFAAuditLogTableViewCell">
+                                        <rect key="frame" x="0.0" y="636" width="600" height="61"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OsS-ug-AlH" id="p8r-oe-ORX">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="60.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4k4-Yj-1cz" userLabel="Vertical separator">
+                                                    <rect key="frame" x="46" y="0.0" width="1" height="60.5"/>
+                                                    <color key="backgroundColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="1" id="LpM-bW-A1o"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2LI-dq-1Rz" customClass="ASDKRoundedBorderView">
+                                                    <rect key="frame" x="43" y="27" width="8" height="8"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="8" id="QvN-Dm-Lp0"/>
+                                                        <constraint firstAttribute="width" constant="8" id="e5Z-dj-vPi"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                            <color key="value" red="0.29411764709999999" green="0.2784313725" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                            <integer key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                            <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="auditlog-icon" translatesAutoresizingMaskIntoConstraints="NO" id="0pI-hP-LDj">
+                                                    <rect key="frame" x="11" y="18" width="25" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="gWR-9x-I6i"/>
+                                                        <constraint firstAttribute="width" constant="25" id="gZR-ok-Fr2"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RJa-7g-Y1t">
+                                                    <rect key="frame" x="57" y="8" width="535" height="44.5"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                                    <state key="normal" title="Audit log">
+                                                        <color key="titleColor" red="0.15686274510000001" green="0.58823529409999997" blue="0.72549019609999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <state key="disabled">
+                                                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <state key="highlighted">
+                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="onAuditLog:" destination="OsS-ug-AlH" eventType="touchUpInside" id="aEa-Lj-hN8"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="2LI-dq-1Rz" firstAttribute="centerY" secondItem="0pI-hP-LDj" secondAttribute="centerY" id="85w-RX-sS6"/>
+                                                <constraint firstItem="4k4-Yj-1cz" firstAttribute="leading" secondItem="0pI-hP-LDj" secondAttribute="trailing" constant="10" id="Fu1-vQ-yZu"/>
+                                                <constraint firstItem="RJa-7g-Y1t" firstAttribute="top" secondItem="p8r-oe-ORX" secondAttribute="top" constant="8" id="FxN-w5-AAc"/>
+                                                <constraint firstAttribute="trailing" secondItem="RJa-7g-Y1t" secondAttribute="trailing" constant="8" id="Llh-1l-qVc"/>
+                                                <constraint firstAttribute="bottom" secondItem="RJa-7g-Y1t" secondAttribute="bottom" constant="8" id="QP1-8P-iuT"/>
+                                                <constraint firstItem="2LI-dq-1Rz" firstAttribute="centerX" secondItem="4k4-Yj-1cz" secondAttribute="centerX" id="Rqi-wi-ruv"/>
+                                                <constraint firstItem="RJa-7g-Y1t" firstAttribute="leading" secondItem="4k4-Yj-1cz" secondAttribute="trailing" constant="10" id="YjA-n6-n6w"/>
+                                                <constraint firstItem="0pI-hP-LDj" firstAttribute="centerY" secondItem="p8r-oe-ORX" secondAttribute="centerY" id="az1-69-Sv4"/>
+                                                <constraint firstAttribute="bottom" secondItem="4k4-Yj-1cz" secondAttribute="bottom" id="jZc-eN-pHG"/>
+                                                <constraint firstItem="0pI-hP-LDj" firstAttribute="leading" secondItem="p8r-oe-ORX" secondAttribute="leading" constant="11" id="kNt-9o-Ll8"/>
+                                                <constraint firstItem="4k4-Yj-1cz" firstAttribute="top" secondItem="p8r-oe-ORX" secondAttribute="top" id="t7j-t9-Y04"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="auditLogButton" destination="RJa-7g-Y1t" id="DOK-zY-OnZ"/>
+                                            <outlet property="iconImageView" destination="0pI-hP-LDj" id="i0j-pg-RCk"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HtY-U5-ifu" customClass="AFAActivityView">
@@ -4911,7 +4990,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Fx7-t4-U7e"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Rli-zA-tH6">
-                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ooh-CE-8eb" userLabel="Search view" customClass="ASDKRoundedBorderView">
@@ -4959,7 +5038,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="61" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3XV-4g-yt4">
-                                <rect key="frame" x="0.0" y="40" width="600" height="516"/>
+                                <rect key="frame" x="0.0" y="40" width="600" height="496"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="mCa-sj-J9r">
                                     <rect key="frame" x="0.0" y="89" width="600" height="44"/>
@@ -5067,7 +5146,7 @@
                                 </connections>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6UB-j7-O4e" customClass="AFAActivityView">
-                                <rect key="frame" x="280" y="258" width="40" height="40"/>
+                                <rect key="frame" x="280" y="248" width="40" height="40"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="9fm-UY-OX7"/>
@@ -5092,13 +5171,13 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No contributors available" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0QU-5H-h3I" userLabel="No Records Label">
-                                <rect key="frame" x="205" y="268" width="190.5" height="20.5"/>
+                                <rect key="frame" x="205" y="258" width="190.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qeT-5x-UvP" userLabel="Instructions view">
-                                <rect key="frame" x="150" y="228" width="300" height="100"/>
+                                <rect key="frame" x="150" y="218" width="300" height="100"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="information-icon" translatesAutoresizingMaskIntoConstraints="NO" id="yVm-ml-8bt">
                                         <rect key="frame" x="130" y="8" width="40" height="40"/>
@@ -5126,7 +5205,7 @@
                                 </constraints>
                             </view>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cV-Vx-8aH" userLabel="Overlay view">
-                                <rect key="frame" x="0.0" y="40" width="600" height="516"/>
+                                <rect key="frame" x="0.0" y="40" width="600" height="496"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -5400,8 +5479,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="fpJ-UB-l4s"/>
-        <segue reference="RF7-69-ZNi"/>
-        <segue reference="XZ3-C5-Oig"/>
+        <segue reference="dAG-4I-soh"/>
         <segue reference="Rct-bP-63w"/>
+        <segue reference="8xE-qE-G6q"/>
     </inferredMetricsTieBreakers>
 </document>

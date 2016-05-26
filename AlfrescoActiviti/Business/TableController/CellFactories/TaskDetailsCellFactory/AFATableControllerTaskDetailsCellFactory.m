@@ -483,6 +483,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                           withModel:(id<AFATableViewModelDelegate>)model {
     AFAAuditLogTableViewCell *auditCell = [tableView dequeueReusableCellWithIdentifier:kCellIDAuditLog
                                                                           forIndexPath:indexPath];
+    auditCell.delegate = self;
+
     return auditCell;
 }
 
