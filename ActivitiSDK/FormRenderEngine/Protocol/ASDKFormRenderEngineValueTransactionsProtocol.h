@@ -46,12 +46,4 @@ ASDKModelFormOutcome;
  */
 - (void)completeFormWithOutcome:(ASDKModelFormOutcome *)formOutcomeModel;
 
-/**
- *  This method signals that the user has tapped on a save form outcome type
- *  and provides context so that the network call can occur.
- *
- *  @param formOutcomeModel Model object describing the outcome of a form
- */
-- (void)saveFormWithOutcome:(ASDKModelFormOutcome *)formOutcomeModel;
-
 @end

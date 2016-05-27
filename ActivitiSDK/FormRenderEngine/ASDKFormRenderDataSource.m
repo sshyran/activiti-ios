@@ -25,6 +25,7 @@
 
 // Protocols
 #import "ASDKFormFieldDetailsControllerProtocol.h"
+#import "ASDKFormEngineDataSourceActionHandlerDelegate.h"
 
 // Models
 #import "ASDKModelFormField.h"
@@ -43,7 +44,7 @@
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
-@interface ASDKFormRenderDataSource()
+@interface ASDKFormRenderDataSource() <ASDKFormEngineDataSourceActionHandlerDelegate>
 
 /**
  *  Property meant to hold reference to form outcomes models.
@@ -54,6 +55,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
  *  objects.
  */
 @property (strong, nonatomic) NSMutableArray *formOutcomesIndexPaths;
+
+/**
+ *  Property meant to indicate whether the save action is available for the current
+ *  data source context or not.
+ */
+@property (assign, nonatomic) BOOL isSaveActionAvailable;
 
 /**
  *  Property meant to hold a reference to a KVO manager that will be monitoring 
@@ -100,21 +107,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         // Handle form outcomes
         self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
         self.formOutcomesIndexPaths = [NSMutableArray array];
-
-        // Add the save form button. This will be filtered out if the isReadOnlyForm is
-        // marked as being true
-        ASDKModelFormOutcome *saveFormOutcome = [ASDKModelFormOutcome new];
-        saveFormOutcome.name =  ASDKLocalizedStringFromTable(kLocalizationSaveFormOutcome, ASDKLocalizationTable, @"Save outcome");
-        saveFormOutcome.formOutcomeType = ASDKModelFormOutcomeTypeSave;
         
         if (self.formHasUserdefinedOutcomes) {
-            self.formOutcomes = [formDescription.formOutcomes arrayByAddingObject:saveFormOutcome];
+            self.isSaveActionAvailable = YES;
+            self.formOutcomes = formDescription.formOutcomes;
         } else {
             ASDKModelFormOutcome *formOutcome = [ASDKModelFormOutcome new];
             
             if (ASDKFormRenderEngineDataSourceTypeTask == dataSourceType) {
                 formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
-                self.formOutcomes = @[formOutcome, saveFormOutcome];
+                self.formOutcomes = @[formOutcome];
+                self.isSaveActionAvailable = YES;
             } else {
                 formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
                 self.formOutcomes = @[formOutcome];
@@ -125,18 +128,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     return self;
-}
-
-- (void)setIsReadOnlyForm:(BOOL)isReadOnlyForm {
-    if (isReadOnlyForm != _isReadOnlyForm) {
-        _isReadOnlyForm = isReadOnlyForm;
-        
-        // If we're dealing with a read-only form remove the save form outcome
-        if (_isReadOnlyForm) {
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"formOutcomeType == %d", ASDKModelFormOutcomeTypeComplete];
-            _formOutcomes = [_formOutcomes filteredArrayUsingPredicate:searchPredicate];
-        }
-    }
 }
 
 
@@ -737,6 +728,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     return insertIndex;
+}
+
+
+#pragma mark -
+#pragma mark ASDKFormEngineDataSourceActionHandlerDelegate
+
+- (BOOL)isSaveFormAvailable {
+    return self.isSaveActionAvailable;
 }
 
 @end

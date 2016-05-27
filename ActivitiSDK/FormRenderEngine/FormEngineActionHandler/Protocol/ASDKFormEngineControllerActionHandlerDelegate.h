@@ -17,15 +17,9 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineProtocol.h"
 
-@interface ASDKFormRenderEngine : NSObject <ASDKFormRenderEngineProtocol>
+@protocol ASDKFormEngineControllerActionHandlerDelegate <NSObject>
 
-@property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
-@property (strong, nonatomic) ASDKFormNetworkServices            *formNetworkServices;
-@property (strong, nonatomic) ASDKFormPreProcessor               *formPreProcessor;
-@property (strong, nonatomic) ASDKModelTask                      *task;
-@property (strong, nonatomic) ASDKModelProcessDefinition         *processDefinition;
-@property (strong, nonatomic) ASDKFormEngineActionHandler        *actionHandler;
+- (void)saveForm;
 
 @end

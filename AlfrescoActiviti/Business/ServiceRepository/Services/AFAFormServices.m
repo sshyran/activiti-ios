@@ -62,9 +62,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark -
 #pragma mark Public interface
 
-#pragma mark -
-#pragma mark Form requests
-
 - (UICollectionViewController *)requestSetupWithFormDescription:(ASDKModelFormDescription *)formDescription {
     NSParameterAssert(formDescription);
     
@@ -158,6 +155,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                         });
                                     }
                                 }];
+}
+
+- (ASDKFormEngineActionHandler *)formEngineActionHandler {
+    return self.formRenderEngine.actionHandler;
 }
 
 - (void)requestEngineCleanup {

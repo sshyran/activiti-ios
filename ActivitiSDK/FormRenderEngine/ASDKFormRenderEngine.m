@@ -34,6 +34,7 @@
 // Managers
 #import "ASDKFormRenderDataSource.h"
 #import "ASDKDynamicTableRenderDataSource.h"
+#import "ASDKFormEngineActionHandler.h"
 
 #import "ASDKFormPreProcessor.h"
 
@@ -84,6 +85,11 @@
     self.dataSource.delegate = formCollectionViewController;
     formCollectionViewController.dataSource = self.dataSource;
     formCollectionViewController.renderDelegate = self;
+    
+    // Set up the form engine action handler
+    self.actionHandler = [ASDKFormEngineActionHandler new];
+    self.actionHandler.dataSourceActionDelegate = (ASDKFormRenderDataSource <ASDKFormEngineDataSourceActionHandlerDelegate> *)self.dataSource;
+    self.actionHandler.formControllerActionDelegate = (ASDKFormCollectionViewController <ASDKFormEngineControllerActionHandlerDelegate> *) formCollectionViewController;
     
     return formCollectionViewController;
 }

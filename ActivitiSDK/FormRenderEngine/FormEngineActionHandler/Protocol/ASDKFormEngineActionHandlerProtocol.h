@@ -17,15 +17,32 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineProtocol.h"
 
-@interface ASDKFormRenderEngine : NSObject <ASDKFormRenderEngineProtocol>
+/**
+ *  The purpose of this interface is to provide the means of communication for actions
+ *  triggered by the app which implements the ActivitiSDK and that have impact on the
+ *  state of the rendered forms, or actions that signal a change of state inside the
+ *  SDK and should be handled by the host application.
+ */
 
-@property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
-@property (strong, nonatomic) ASDKFormNetworkServices            *formNetworkServices;
-@property (strong, nonatomic) ASDKFormPreProcessor               *formPreProcessor;
-@property (strong, nonatomic) ASDKModelTask                      *task;
-@property (strong, nonatomic) ASDKModelProcessDefinition         *processDefinition;
-@property (strong, nonatomic) ASDKFormEngineActionHandler        *actionHandler;
+@protocol ASDKFormEngineActionHandlerProtocol <NSObject>
+
+@optional
+
+// Save form actions
+
+/**
+ *  Saves the current state of the form and submits the form field values to the 
+ *  REST endpoint.
+ */
+- (void)saveForm;
+
+/**
+ *  Check whether the save form action is available in the current context the form
+ *  state is.
+ *
+ *  @return YES or NO boolean values
+ */
+- (BOOL)isSaveFormActionAvailable;
 
 @end

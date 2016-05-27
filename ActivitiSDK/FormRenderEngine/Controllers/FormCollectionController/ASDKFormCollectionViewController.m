@@ -25,6 +25,7 @@
 // Protocols
 #import "ASDKFormRenderEngineValueTransactionsProtocol.h"
 #import "ASDKFormCellProtocol.h"
+#import "ASDKFormEngineControllerActionHandlerDelegate.h"
 
 // Models
 #import "ASDKModelBase.h"
@@ -40,7 +41,8 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface ASDKFormCollectionViewController () <ASDKFormRenderEngineValueTransactionsProtocol>
+@interface ASDKFormCollectionViewController () <ASDKFormRenderEngineValueTransactionsProtocol,
+                                                ASDKFormEngineControllerActionHandlerDelegate>
 
 @end
 
@@ -104,16 +106,6 @@
     }
 }
 
-- (void)saveFormWithOutcome:(ASDKModelFormOutcome *)formOutcomeModel {
-    ASDKFormFieldValueRequestRepresentation *formFieldValuesRequestRepresentation = [ASDKFormFieldValueRequestRepresentation new];
-    formFieldValuesRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    formFieldValuesRequestRepresentation.formFields = self.dataSource.visibleFormFields;
-    
-    if ([self.renderDelegate respondsToSelector:@selector(saveFormWithFormFieldValueRequestRepresentation:)]) {
-        [self.renderDelegate saveFormWithFormFieldValueRequestRepresentation:formFieldValuesRequestRepresentation];
-    }
-}
-
 
 #pragma mark -
 #pragma mark ASDKFormRenderEngineDataSource Delegate
@@ -152,6 +144,20 @@
         } completion:^(BOOL finished) {
             [self.collectionViewLayout invalidateLayout];
         }];
+    }
+}
+
+
+#pragma mark -
+#pragma mark ASDKFormEngineControllerActionHandlerDelegate 
+
+- (void)saveForm {
+    ASDKFormFieldValueRequestRepresentation *formFieldValuesRequestRepresentation = [ASDKFormFieldValueRequestRepresentation new];
+    formFieldValuesRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    formFieldValuesRequestRepresentation.formFields = self.dataSource.visibleFormFields;
+    
+    if ([self.renderDelegate respondsToSelector:@selector(saveFormWithFormFieldValueRequestRepresentation:)]) {
+        [self.renderDelegate saveFormWithFormFieldValueRequestRepresentation:formFieldValuesRequestRepresentation];
     }
 }
 
@@ -249,7 +255,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         
         if (self.dataSource.isReadOnlyForm) {
             isFormOutcomeEnabled = NO;
-        } else if(ASDKModelFormOutcomeTypeSave != ((ASDKModelFormOutcome *)modelObject).formOutcomeType) {
+        } else {
             isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
         }
         
@@ -307,7 +313,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         
         if (self.dataSource.isReadOnlyForm) {
             isFormOutcomeEnabled = NO;
-        } else if(ASDKModelFormOutcomeTypeSave != ((ASDKModelFormOutcome *)modelObject).formOutcomeType) {
+        } else {
             isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
         }
         
