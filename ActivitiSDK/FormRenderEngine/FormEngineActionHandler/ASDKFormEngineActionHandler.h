@@ -17,15 +17,13 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineProtocol.h"
+#import "ASDKFormEngineActionHandlerProtocol.h"
+#import "ASDKFormEngineDataSourceActionHandlerDelegate.h"
+#import "ASDKFormEngineControllerActionHandlerDelegate.h"
 
-@interface ASDKFormRenderEngine : NSObject <ASDKFormRenderEngineProtocol>
+@interface ASDKFormEngineActionHandler : NSObject <ASDKFormEngineActionHandlerProtocol>
 
-@property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
-@property (strong, nonatomic) ASDKFormNetworkServices            *formNetworkServices;
-@property (strong, nonatomic) ASDKFormPreProcessor               *formPreProcessor;
-@property (strong, nonatomic) ASDKModelTask                      *task;
-@property (strong, nonatomic) ASDKModelProcessDefinition         *processDefinition;
-@property (strong, nonatomic) ASDKFormEngineActionHandler        *actionHandler;
+@property (weak, nonatomic) id<ASDKFormEngineDataSourceActionHandlerDelegate> dataSourceActionDelegate;
+@property (weak, nonatomic) id<ASDKFormEngineControllerActionHandlerDelegate> formControllerActionDelegate;
 
 @end

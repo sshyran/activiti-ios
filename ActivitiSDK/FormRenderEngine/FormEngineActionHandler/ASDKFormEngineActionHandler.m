@@ -16,16 +16,30 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineProtocol.h"
+#import "ASDKFormEngineActionHandler.h"
 
-@interface ASDKFormRenderEngine : NSObject <ASDKFormRenderEngineProtocol>
+@implementation ASDKFormEngineActionHandler
 
-@property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
-@property (strong, nonatomic) ASDKFormNetworkServices            *formNetworkServices;
-@property (strong, nonatomic) ASDKFormPreProcessor               *formPreProcessor;
-@property (strong, nonatomic) ASDKModelTask                      *task;
-@property (strong, nonatomic) ASDKModelProcessDefinition         *processDefinition;
-@property (strong, nonatomic) ASDKFormEngineActionHandler        *actionHandler;
+
+#pragma mark -
+#pragma mark Public interface
+
+- (void)saveForm {
+    if ([self.dataSourceActionDelegate respondsToSelector:@selector(isSaveFormAvailable)]) {
+        if ([self.dataSourceActionDelegate isSaveFormAvailable]) {
+            if ([self.formControllerActionDelegate respondsToSelector:@selector(saveForm)]) {
+                [self.formControllerActionDelegate saveForm];
+            }
+        }
+    }
+}
+
+- (BOOL)isSaveFormActionAvailable {
+    if ([self.dataSourceActionDelegate respondsToSelector:@selector(isSaveFormAvailable)]) {
+        return [self.dataSourceActionDelegate isSaveFormAvailable];
+    }
+    
+    return NO;
+}
 
 @end

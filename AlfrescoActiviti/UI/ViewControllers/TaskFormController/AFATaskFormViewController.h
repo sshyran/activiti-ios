@@ -22,6 +22,7 @@
 
 @protocol AFATaskFormViewControllerDelegate <NSObject>
 
+- (void)formDidLoad;
 - (void)userDidCompleteForm;
 - (void)presentFormDetailController:(UIViewController *)controller;
 

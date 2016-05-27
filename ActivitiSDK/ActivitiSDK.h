@@ -95,6 +95,7 @@
 #import <ActivitiSDK/ASDKFormRenderEngine.h>
 #import <ActivitiSDK/ASDKFormControllerNavigationProtocol.h>
 #import <ActivitiSDK/ASDKFormColorSchemeManager.h>
+#import <ActivitiSDK/ASDKFormEngineActionHandler.h>
 
 // KVO manager
 #import <ActivitiSDK/ASDKKVOManager.h>

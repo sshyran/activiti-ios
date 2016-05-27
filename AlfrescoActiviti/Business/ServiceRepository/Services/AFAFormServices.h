@@ -23,7 +23,8 @@
 @class ASDKModelFormDescription,
 ASDKModelTask,
 ASDKModelProcessDefinition,
-ASDKModelProcessInstance;
+ASDKModelProcessInstance,
+ASDKFormEngineActionHandler;
 
 typedef void  (^AFAFormServicesEngineSetupCompletionBlock) (UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error);
 typedef void  (^AFAFormServicesEngineCompletionBlock)      (BOOL isFormCompleted, NSError *error);
@@ -81,6 +82,13 @@ typedef void  (^AFAStartFormServicesEngineCompletionBlock) (ASDKModelProcessInst
 - (void)requestSetupWithProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
                     renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock
                       formCompletionBlock:(AFAStartFormServicesEngineCompletionBlock)formCompletionBlock;
+
+/**
+ *  Requests the form engine action handler object. See the SDK description for more details.
+ *
+ *  @return Form engine action handler object
+ */
+- (ASDKFormEngineActionHandler *)formEngineActionHandler;
 
 /**
  *  Performs a request to the form render engine to cleanup itself and prepare for reuse

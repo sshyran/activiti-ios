@@ -25,7 +25,8 @@ ASDKModelTask,
 ASDKModelProcessDefinition,
 ASDKModelProcessInstance,
 ASDKFormFieldValueRequestRepresentation,
-ASDKFormPreProcessor;
+ASDKFormPreProcessor,
+ASDKFormEngineActionHandler;
 
 typedef void  (^ASDKFormRenderEngineSetupCompletionBlock) (UICollectionViewController *formController, NSError *error);
 typedef void  (^ASDKFormRenderEngineCompletionBlock)      (BOOL isFormCompleted, NSError *error);
@@ -50,6 +51,13 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 @property (strong, nonatomic) ASDKFormNetworkServices *formNetworkServices;
 
 @property (strong, nonatomic) ASDKFormPreProcessor *formPreProcessor;
+
+/**
+ *  Holds a reference to the form action handler object which acts as a proxy for
+ *  handling actions coming from the host application and reporting form state
+ *  changes inside
+ */
+@property (strong, nonatomic) ASDKFormEngineActionHandler *actionHandler;
 
 /**
  *  Designated setup method for the form render engine class.

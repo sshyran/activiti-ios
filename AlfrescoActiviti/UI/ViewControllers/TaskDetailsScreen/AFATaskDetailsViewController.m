@@ -371,6 +371,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             displayTaskFormContainerView = YES;
             AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
             [self.taskFormViewController startTaskFormForTaskObject:taskDetailsModel.currentTask];
+            [self formDidLoad];
         }
             break;
             
@@ -879,6 +880,12 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     }];
 }
 
+- (void)onFormSave {
+    AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
+    ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
+    [formEngineActionHandler saveForm];
+}
+
 
 #pragma mark -
 #pragma mark KVO bindings
@@ -1195,6 +1202,20 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 
 #pragma mark -
 #pragma mark AFATaskformViewControllerDelegate
+
+- (void)formDidLoad {
+    AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
+    ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
+    
+    if ([formEngineActionHandler isSaveFormActionAvailable]) {
+        UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"save-icon"]
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(onFormSave)];
+        saveBarButtonItem.tintColor = [UIColor whiteColor];
+        self.navigationItem.rightBarButtonItem = saveBarButtonItem;
+    }
+}
 
 - (void)userDidCompleteForm {
     [self onBack:nil];
