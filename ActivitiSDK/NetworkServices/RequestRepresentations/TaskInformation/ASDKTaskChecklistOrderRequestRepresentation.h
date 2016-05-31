@@ -16,32 +16,10 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKTaskUpdateRequestRepresentation.h"
+#import <ActivitiSDK/ActivitiSDK.h>
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
+@interface ASDKTaskChecklistOrderRequestRepresentation : ASDKBaseRequestRepresentation
 
-@implementation ASDKTaskUpdateRequestRepresentation
-
-
-#pragma mark -
-#pragma mark MTLJSONSerializing Delegate
-
-+ (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return @{//Objc property         JSON property
-             @"name"                : @"name",
-             @"taskDescription"     : @"description",
-             @"dueDate"             : @"dueDate"
-             };
-}
-
-
-#pragma mark -
-#pragma mark Value transformations
-
-+ (NSValueTransformer *)dueDateJSONTransformer {
-    return self.valueTransformerForDate;
-}
+@property (strong, nonatomic) NSArray *checklistOrder;
 
 @end

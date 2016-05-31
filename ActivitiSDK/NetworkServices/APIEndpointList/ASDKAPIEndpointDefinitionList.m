@@ -73,6 +73,7 @@ NSString * const kASDKAPITaskRemoveInvolvedPath      = @"remove-involved";
 NSString * const kASDKAPITaskClaimPath               = @"claim";
 NSString * const kASDKAPITaskUnclaimPath             = @"unclaim";
 NSString * const kASDKAPITaskAssignPath              = @"assign";
+NSString * const kASDKAPITaskChecklistPath           = @"checklist";
 
 #pragma mark -
 #pragma mark Filter related

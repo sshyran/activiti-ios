@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKTaskUpdateRequestRepresentation.h"
+#import "AFABaseModel.h"
+#import "AFATableController.h"
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
-
-@implementation ASDKTaskUpdateRequestRepresentation
-
-
-#pragma mark -
-#pragma mark MTLJSONSerializing Delegate
-
-+ (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return @{//Objc property         JSON property
-             @"name"                : @"name",
-             @"taskDescription"     : @"description",
-             @"dueDate"             : @"dueDate"
-             };
-}
-
-
-#pragma mark -
-#pragma mark Value transformations
-
-+ (NSValueTransformer *)dueDateJSONTransformer {
-    return self.valueTransformerForDate;
-}
+@interface AFATableControllerChecklistModel : AFABaseModel <AFATableViewModelDelegate>
 
 @end

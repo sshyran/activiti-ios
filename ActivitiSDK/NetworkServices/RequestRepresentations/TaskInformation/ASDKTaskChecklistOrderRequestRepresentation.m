@@ -16,31 +16,22 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKTaskCreationRequestRepresentation.h"
+#import "ASDKTaskChecklistOrderRequestRepresentation.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@implementation ASDKTaskCreationRequestRepresentation
+@implementation ASDKTaskChecklistOrderRequestRepresentation
 
 
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return @{//Objc property         JSON property
-             @"taskName"            : @"name",
-             @"taskDescription"     : @"description",
-             @"appDefinitionID"     : @"category",
-             @"assigneeID"          : @"assignee"
-             };
-}
-
-+ (NSValueTransformer *)assigneeIDJSONTransformer {
-    return [MTLValueTransformer transformerUsingReversibleBlock:^id(NSString *value, BOOL *success, NSError *__autoreleasing *error) {
-        return @{kASDKAPIGenericIDParameter: value};
-    }];
+    return @{//Objc property          JSON property
+             @"checklistOrder"      : @"order"
+            };
 }
 
 @end

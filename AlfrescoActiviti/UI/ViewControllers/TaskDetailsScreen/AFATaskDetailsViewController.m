@@ -66,6 +66,7 @@
 typedef NS_ENUM(NSInteger, AFATaskDetailsSectionType) {
     AFATaskDetailsSectionTypeTaskDetails = 0,
     AFATaskDetailsSectionTypeForm,
+    AFATaskDetailsSectionTypeChecklist,
     AFATaskDetailsSectionTypeContributors,
     AFATaskDetailsSectionTypeFilesContent,
     AFATaskDetailsSectionTypeComments,
@@ -87,6 +88,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (weak, nonatomic)   IBOutlet AFAActivityView                      *loadingActivityView;
 @property (strong, nonatomic) UIRefreshControl                              *refreshControl;
 @property (weak, nonatomic)   IBOutlet UIButton                             *taskDetailsButton;
+@property (weak, nonatomic)   IBOutlet UIButton                             *taskChecklistButton;
 @property (weak, nonatomic)   IBOutlet UIButton                             *taskFormButton;
 @property (weak, nonatomic)   IBOutlet UIButton                             *taskContentButton;
 @property (weak, nonatomic)   IBOutlet UIButton                             *taskContributorsButton;
@@ -1090,6 +1092,11 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             
         case AFATaskDetailsSectionTypeForm: {
             return self.taskFormButton;
+        }
+            break;
+            
+        case AFATaskDetailsSectionTypeChecklist: {
+            return self.taskChecklistButton;
         }
             break;
             
