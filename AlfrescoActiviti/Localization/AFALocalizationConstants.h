@@ -81,6 +81,8 @@ extern NSString *kLocalizationTaskDetailsScreenCompletedDateText;
 extern NSString *kLocalizationTaskDetailsScreenDurationText;
 extern NSString *kLocalizationTaskDetailsScreenClaimButtonText;
 extern NSString *kLocalizationTaskDetailsScreenTaskFormSavedText;
+extern NSString *kLocalizationTaskDetailsScreenChecklistNameText;
+extern NSString *kLocalizationTaskDetailsScreenChecklistTitleText;
 
 // Process details screen
 extern NSString *kLocalizationProcessInstanceDetailsScreenTitleText;
@@ -170,6 +172,8 @@ extern NSString *kLocalizationNoContentScreenCommentsText;
 extern NSString *kLocalizationNoContentScreenCommentsNotEditableText;
 extern NSString *kLocalizationNoContentScreenFilesNotEditableText;
 extern NSString *kLocalizationNoContentScreenContributorsNotEditableText;
+extern NSString *kLocalizationNoContentScreenChecklistEditableText;
+extern NSString *kLocalizationNoContentScreenChecklistNotEditableText;
 
 // Add comments screen
 extern NSString *kLocalizationAddCommentsScreenTitleText;

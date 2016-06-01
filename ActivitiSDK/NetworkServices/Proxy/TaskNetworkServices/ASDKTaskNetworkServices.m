@@ -22,6 +22,7 @@
 #import "ASDKFilterRequestRepresentation.h"
 #import "ASDKTaskUpdateRequestRepresentation.h"
 #import "ASDKTaskCreationRequestRepresentation.h"
+#import "ASDKTaskChecklistOrderRequestRepresentation.h"
 #import "ASDKModelPaging.h"
 #import "ASDKModelFileContent.h"
 #import "ASDKNetworkServiceConstants.h"
@@ -1304,27 +1305,27 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory taskCheckListServicePathFormat], taskID]
-                            parameters:nil
-                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                   __strong typeof(self) strongSelf = weakSelf;
-                                   
-                                   // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
-                                   
-                                   [strongSelf handleSuccessfulTaskListResponseForOperation:operation
-                                                                             responseObject:responseObject
-                                                                        withCompletionBlock:completionBlock];
-                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                   __strong typeof(self) strongSelf = weakSelf;
-                                   
-                                   // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
-                                   
-                                   [strongSelf handleFailedTaskListResponseForOperation:operation
-                                                                                  error:error
-                                                                    withCompletionBlock:completionBlock];
-                               }];
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskCheckListServicePathFormat], taskID]
+                           parameters:nil
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  [strongSelf handleSuccessfulTaskListResponseForOperation:operation
+                                                                            responseObject:responseObject
+                                                                       withCompletionBlock:completionBlock];
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  [strongSelf handleFailedTaskListResponseForOperation:operation
+                                                                                 error:error
+                                                                   withCompletionBlock:completionBlock];
+                              }];
     
     // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
@@ -1370,7 +1371,61 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)updateChecklistOrderWithRepresentation:(ASDKTaskChecklistOrderRequestRepresentation *)orderRepresentation
                                         taskID:(NSString *)taskID
                                completionBlock:(ASDKTaskUpdateCompletionBlock)completionBlock {
+    NSParameterAssert(orderRepresentation);
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
     
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskCheckListServicePathFormat], taskID]
+                           parameters:[orderRepresentation jsonDictionary]
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  // Check status code
+                                  if (ASDKHTTPCode200OK == operation.response.statusCode) {
+                                      ASDKLogVerbose(@"The checklist order was updated successfully for request: %@ - %@.\nResponse:%@",
+                                                     operation.request.HTTPMethod,
+                                                     operation.request.URL.absoluteString,
+                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          completionBlock(YES, nil);
+                                      });
+                                  } else {
+                                      ASDKLogVerbose(@"The checklist order failed to update for request: %@ - %@.\nResponse:%@",
+                                                     operation.request.HTTPMethod,
+                                                     operation.request.URL.absoluteString,
+                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          completionBlock(NO, nil);
+                                      });
+                                  }
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  ASDKLogError(@"Failed to update checklist order for request: %@ - %@.\nBody:%@.\nReason:%@",
+                                               operation.request.HTTPMethod,
+                                               operation.request.URL.absoluteString,
+                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                                               error.localizedDescription);
+                                  
+                                  dispatch_async(strongSelf.resultsQueue, ^{
+                                      completionBlock(NO, error);
+                                  });
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
 }
 
 - (void)cancelAllTaskNetworkOperations {

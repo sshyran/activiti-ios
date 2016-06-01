@@ -318,8 +318,10 @@
 		13EBECAA1CF8728900EC8F96 /* ASDKFormEngineDataSourceActionHandlerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBECA91CF8728900EC8F96 /* ASDKFormEngineDataSourceActionHandlerDelegate.h */; };
 		13EBECAC1CF8736E00EC8F96 /* ASDKFormEngineControllerActionHandlerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBECAB1CF8736E00EC8F96 /* ASDKFormEngineControllerActionHandlerDelegate.h */; };
 		13EBECAF1CFC59ED00EC8F96 /* AFATableControllerChecklistModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBECAE1CFC59ED00EC8F96 /* AFATableControllerChecklistModel.m */; };
-		13EBECB31CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBECB11CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.h */; };
+		13EBECB31CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBECB11CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13EBECB41CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBECB21CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.m */; };
+		13EBECB71CFD902700EC8F96 /* AFATaskChecklistCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBECB61CFD902700EC8F96 /* AFATaskChecklistCellFactory.m */; };
+		13EBECBB1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBECBA1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m */; };
 		13EEC5CE1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5CC1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h */; };
 		13EEC5CF1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EEC5CD1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m */; };
 		13EEC5D41C04D0E100B95740 /* ASDKModelFormFieldFileSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */; };
@@ -942,6 +944,10 @@
 		13EBECAE1CFC59ED00EC8F96 /* AFATableControllerChecklistModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerChecklistModel.m; path = Model/TableControllerCheckListModel/AFATableControllerChecklistModel.m; sourceTree = "<group>"; };
 		13EBECB11CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKTaskChecklistOrderRequestRepresentation.h; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskChecklistOrderRequestRepresentation.h; sourceTree = "<group>"; };
 		13EBECB21CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKTaskChecklistOrderRequestRepresentation.m; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskChecklistOrderRequestRepresentation.m; sourceTree = "<group>"; };
+		13EBECB51CFD902700EC8F96 /* AFATaskChecklistCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskChecklistCellFactory.h; path = Business/TableController/CellFactories/TaskChecklistCellFactory/AFATaskChecklistCellFactory.h; sourceTree = "<group>"; };
+		13EBECB61CFD902700EC8F96 /* AFATaskChecklistCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskChecklistCellFactory.m; path = Business/TableController/CellFactories/TaskChecklistCellFactory/AFATaskChecklistCellFactory.m; sourceTree = "<group>"; };
+		13EBECB91CFDBEB000EC8F96 /* AFAChecklistTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAChecklistTableViewCell.h; path = UI/Cells/ChecklistCell/AFAChecklistTableViewCell.h; sourceTree = "<group>"; };
+		13EBECBA1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAChecklistTableViewCell.m; path = UI/Cells/ChecklistCell/AFAChecklistTableViewCell.m; sourceTree = "<group>"; };
 		13EEC5CC1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldAttachParameter.h; path = Model/AttachFormFieldOption/ASDKModelFormFieldAttachParameter.h; sourceTree = "<group>"; };
 		13EEC5CD1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldAttachParameter.m; path = Model/AttachFormFieldOption/ASDKModelFormFieldAttachParameter.m; sourceTree = "<group>"; };
 		13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldFileSource.h; path = Model/FormFieldFileSource/ASDKModelFormFieldFileSource.h; sourceTree = "<group>"; };
@@ -1535,6 +1541,7 @@
 				137B8DD91BB983F800F1A6DC /* TaskContributorsCellFactory */,
 				137B8DE11BB99B1600F1A6DC /* TaskContentCellFactory */,
 				13C444181BBA744700868904 /* TaskCommentCellFactory */,
+				13EBECB81CFD902B00EC8F96 /* TaskChecklistCellFactory */,
 				13667FE21C871C8F005E4AEA /* ProcessInstanceDetailsCellFactory */,
 				13667FF31C887CEE005E4AEA /* ProcessInstanceTasksCellFactory */,
 			);
@@ -1600,6 +1607,7 @@
 				8D7C1A3B1C808CC20092EA81 /* NameCell */,
 				13F562C81CA2A3D600F0C7B5 /* ClaimCell */,
 				13EBEC981CF5A74600EC8F96 /* AuditLogCell */,
+				13EBECBC1CFDBEB500EC8F96 /* ChecklistCell */,
 			);
 			name = ListDetailsScreen;
 			sourceTree = "<group>";
@@ -3460,6 +3468,24 @@
 			name = TableControllerChecklistModel;
 			sourceTree = "<group>";
 		};
+		13EBECB81CFD902B00EC8F96 /* TaskChecklistCellFactory */ = {
+			isa = PBXGroup;
+			children = (
+				13EBECB51CFD902700EC8F96 /* AFATaskChecklistCellFactory.h */,
+				13EBECB61CFD902700EC8F96 /* AFATaskChecklistCellFactory.m */,
+			);
+			name = TaskChecklistCellFactory;
+			sourceTree = "<group>";
+		};
+		13EBECBC1CFDBEB500EC8F96 /* ChecklistCell */ = {
+			isa = PBXGroup;
+			children = (
+				13EBECB91CFDBEB000EC8F96 /* AFAChecklistTableViewCell.h */,
+				13EBECBA1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m */,
+			);
+			name = ChecklistCell;
+			sourceTree = "<group>";
+		};
 		13EEC5D01C04B5BC00B95740 /* AttachFormFieldOption */ = {
 			isa = PBXGroup;
 			children = (
@@ -4793,6 +4819,7 @@
 				132167141B8B027000B7406B /* AFAAvatarMenuTableViewCell.m in Sources */,
 				8D7C1A421C808CE70092EA81 /* AFACompleteTableViewCell.m in Sources */,
 				137194531B6922DE00D4E1F0 /* main.m in Sources */,
+				13EBECB71CFD902700EC8F96 /* AFATaskChecklistCellFactory.m in Sources */,
 				1323CFCF1B87630800E66D6F /* UIImage+AFAThumbnailCreation.m in Sources */,
 				130269691C57735800152F71 /* AFAFilterOptionTableViewCell.m in Sources */,
 				13667FE11C871C8A005E4AEA /* AFATableControllerProcessInstanceDetailsCellFactory.m in Sources */,
@@ -4800,6 +4827,7 @@
 				137B94421BD656E700134BF1 /* AFATaskFormViewController.m in Sources */,
 				1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */,
 				136680071C89AEF9005E4AEA /* AFAQueryServices.m in Sources */,
+				13EBECBB1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m in Sources */,
 				13EED87A1C56721500F17105 /* AFAConnectivityViewController.m in Sources */,
 				13667FEA1C87355E005E4AEA /* AFAShowDiagramTableViewCell.m in Sources */,
 				137B8DE01BB99B1200F1A6DC /* AFATableControllerContentCellFactory.m in Sources */,

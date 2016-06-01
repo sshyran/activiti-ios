@@ -80,6 +80,8 @@
 "taskDetailsScreenDurationText"                          = "Duration";
 "taskDetailsScreenClaimButtonText"                       = "Claim";
 "taskDetailsScreenTaskFormClaimedText"                   = "Task form is saved";
+"taskDetailsScreenChecklistNameText"                     = "Checklist name";
+"taskDetailsScreenChecklistTitleText"                    = "Task checklist";
 
 // Process instance details screen
 "processInstanceDetailsScreenTitleText"                  = "Process instance details";
@@ -169,6 +171,8 @@
 "noContentScreenContributorsNotEditableText"             = "There aren't any involved people.";
 "noContentScreenCommentsText"                            = "There aren't any comments but you can add some by using the + button.";
 "noContentScreenCommentsNotEditableText"                 = "There aren't any comments.";
+"noContentScreenChecklistEditableText"                   = "The checklist is empty but you can add items by using the + button.";
+"noContentScreenChecklistNotEditableText"                = "The checklist is empty.";
 
 // Add comments screen
 "addCommentScreenTitle"                                  = "Add a comment";

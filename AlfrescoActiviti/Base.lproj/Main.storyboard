@@ -14,6 +14,7 @@
             <string>GLYPHICONS-Regular</string>
             <string>GLYPHICONS-Regular</string>
             <string>GLYPHICONS-Regular</string>
+            <string>GLYPHICONS-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -1403,7 +1404,7 @@
                                 <color key="separatorColor" red="0.92156862745098034" green="0.92549019607843142" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="bS6-Xq-eLD">
-                                    <rect key="frame" x="0.0" y="914" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="975" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FUv-LV-5NB">
@@ -2539,6 +2540,102 @@
                                             <outlet property="iconImageView" destination="mTm-Pp-zeZ" id="61d-jg-5JJ"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskChecklistCellID" id="0VF-Rk-0M3" customClass="AFAChecklistTableViewCell">
+                                        <rect key="frame" x="0.0" y="914" width="600" height="61"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0VF-Rk-0M3" id="AuL-do-4ct">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="60.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check-icon" translatesAutoresizingMaskIntoConstraints="NO" id="lqq-s4-rPg">
+                                                    <rect key="frame" x="10" y="18" width="25" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="Kjz-1B-Otk"/>
+                                                        <constraint firstAttribute="width" constant="25" id="jil-0X-rD2"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GwM-0L-Hfi" userLabel="Vertical separator">
+                                                    <rect key="frame" x="45" y="0.0" width="1" height="60.5"/>
+                                                    <color key="backgroundColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="1" id="2y2-jf-lhU"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YRn-Oe-JkW" customClass="ASDKRoundedBorderView">
+                                                    <rect key="frame" x="42" y="27" width="8" height="8"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="8" id="Va8-Vq-Sz0"/>
+                                                        <constraint firstAttribute="height" constant="8" id="jNF-RP-K9h"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                            <color key="value" red="0.29411764709999999" green="0.2784313725" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                            <integer key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                            <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checklist name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EGs-LE-VuL">
+                                                    <rect key="frame" x="56" y="8" width="536" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="1Q2-Ls-W5A"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                                                    <color key="textColor" red="0.72323139479999998" green="0.72323139479999998" blue="0.72323139479999998" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="1Q2-Ls-W5A"/>
+                                                        </mask>
+                                                    </variation>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mil-2d-eDP">
+                                                    <rect key="frame" x="56" y="30" width="536" height="23.5"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FHD-Hk-fqV">
+                                                    <rect key="frame" x="580" y="23.5" width="12" height="14.5"/>
+                                                    <fontDescription key="fontDescription" name="GLYPHICONS-Regular" family="GLYPHICONS" pointSize="12"/>
+                                                    <color key="textColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="Mil-2d-eDP" secondAttribute="bottom" constant="7" id="1Ya-BR-ay4"/>
+                                                <constraint firstAttribute="bottom" secondItem="GwM-0L-Hfi" secondAttribute="bottom" id="3za-v2-btI"/>
+                                                <constraint firstAttribute="trailing" secondItem="EGs-LE-VuL" secondAttribute="trailing" constant="8" id="CKi-br-p08"/>
+                                                <constraint firstItem="lqq-s4-rPg" firstAttribute="centerY" secondItem="AuL-do-4ct" secondAttribute="centerY" id="DIt-Ry-ZZY"/>
+                                                <constraint firstItem="EGs-LE-VuL" firstAttribute="top" secondItem="AuL-do-4ct" secondAttribute="top" constant="8" id="JJI-NO-ssK"/>
+                                                <constraint firstAttribute="trailing" secondItem="FHD-Hk-fqV" secondAttribute="trailing" constant="8" id="L88-ty-8Ml"/>
+                                                <constraint firstAttribute="trailing" secondItem="Mil-2d-eDP" secondAttribute="trailing" constant="8" id="My5-YT-cIr"/>
+                                                <constraint firstItem="GwM-0L-Hfi" firstAttribute="top" secondItem="AuL-do-4ct" secondAttribute="top" id="RPG-6y-DhC"/>
+                                                <constraint firstItem="Mil-2d-eDP" firstAttribute="top" secondItem="EGs-LE-VuL" secondAttribute="bottom" constant="1" id="Yle-Te-53F"/>
+                                                <constraint firstItem="lqq-s4-rPg" firstAttribute="leading" secondItem="AuL-do-4ct" secondAttribute="leading" constant="10" id="aBr-8a-OxX"/>
+                                                <constraint firstItem="EGs-LE-VuL" firstAttribute="leading" secondItem="GwM-0L-Hfi" secondAttribute="trailing" constant="10" id="aFN-b2-duT"/>
+                                                <constraint firstItem="FHD-Hk-fqV" firstAttribute="centerY" secondItem="AuL-do-4ct" secondAttribute="centerY" id="dO2-VU-cyf"/>
+                                                <constraint firstItem="GwM-0L-Hfi" firstAttribute="leading" secondItem="lqq-s4-rPg" secondAttribute="trailing" constant="10" id="jCe-pu-lcD"/>
+                                                <constraint firstItem="YRn-Oe-JkW" firstAttribute="centerY" secondItem="lqq-s4-rPg" secondAttribute="centerY" id="pZB-5F-cEh"/>
+                                                <constraint firstItem="YRn-Oe-JkW" firstAttribute="centerX" secondItem="GwM-0L-Hfi" secondAttribute="centerX" id="rJC-3m-PQh"/>
+                                                <constraint firstItem="Mil-2d-eDP" firstAttribute="leading" secondItem="GwM-0L-Hfi" secondAttribute="trailing" constant="10" id="uB4-dE-mCY"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="checklistNameLabel" destination="Mil-2d-eDP" id="dzz-n7-puk"/>
+                                            <outlet property="descriptionLabel" destination="EGs-LE-VuL" id="INz-0a-oDm"/>
+                                            <outlet property="iconImageView" destination="lqq-s4-rPg" id="VVi-mz-mMK"/>
+                                            <segue destination="tSI-Hz-Spk" kind="custom" identifier="TaskDetailsChecklistSegueID" customClass="ASDKPushFadeSegue" id="6u8-Ev-j8r"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mgc-St-oF6" userLabel="No content view" customClass="AFANoContentView">
@@ -2949,6 +3046,7 @@
                         <segue destination="WYK-fN-cfm" kind="unwind" identifier="ProcessInstanceTaskDetailsUnwindSegueID" unwindAction="unwindFromTaskDetailsController:" id="7dN-y4-Cif"/>
                         <segue destination="alz-iV-uqZ" kind="custom" identifier="TaskDetailsViewProcessSegueID" customClass="AFAPushFadeSegue" id="Rct-bP-63w"/>
                         <segue destination="K1K-0q-yJ3" kind="custom" identifier="TaskDetailsAddCommentsSegueID" customClass="AFAPushFadeSegue" id="XZ3-C5-Oig"/>
+                        <segue destination="WYK-fN-cfm" kind="unwind" identifier="TaskDetailsChecklistUnwindSegueID" unwindAction="unwindTaskChecklistController:" id="M9Q-5V-81d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="57m-6C-43c" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5485,6 +5583,7 @@
         <image name="activiti-logo" width="80" height="80"/>
         <image name="add-icon" width="25" height="25"/>
         <image name="auditlog-icon" width="25" height="25"/>
+        <image name="check-icon" width="25" height="25"/>
         <image name="checklist-icon" width="25" height="25"/>
         <image name="clear-icon" width="15" height="15"/>
         <image name="clock-icon" width="25" height="25"/>
@@ -5511,9 +5610,9 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="fpJ-UB-l4s"/>
         <segue reference="dAG-4I-soh"/>
         <segue reference="Rct-bP-63w"/>
-        <segue reference="fpJ-UB-l4s"/>
         <segue reference="XZ3-C5-Oig"/>
     </inferredMetricsTieBreakers>
 </document>

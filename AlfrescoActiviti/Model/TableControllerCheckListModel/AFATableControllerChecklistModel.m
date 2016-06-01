@@ -24,4 +24,16 @@
 #pragma mark -
 #pragma mark AFATableViewModel Delegate
 
+- (NSInteger)numberOfSections {
+    return 1;
+}
+
+- (NSInteger)numberOfRowsInSection:(NSInteger)section {
+    return self.checklistArr.count;
+}
+
+- (id)itemAtIndexPath:(NSIndexPath *)indexPath {
+    return self.checklistArr[indexPath.row];
+}
+
 @end

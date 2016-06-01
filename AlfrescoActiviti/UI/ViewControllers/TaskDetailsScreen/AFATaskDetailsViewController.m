@@ -36,6 +36,7 @@
 #import "AFAServiceRepository.h"
 #import "AFATableController.h"
 #import "AFATableControllerTaskDetailsCellFactory.h"
+#import "AFATaskChecklistCellFactory.h"
 #import "AFATableControllerTaskContributorsCellFactory.h"
 #import "AFATableControllerContentCellFactory.h"
 #import "AFATableControllerCommentCellFactory.h"
@@ -51,6 +52,7 @@
 #import "AFATableControllerContentModel.h"
 #import "AFATableControllerCommentModel.h"
 #import "AFATaskUpdateModel.h"
+#import "AFATableControllerChecklistModel.h"
 
 // Views
 #import "AFAActivityView.h"
@@ -168,6 +170,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     
     // Set up section buttons
     self.taskDetailsButton.tag = AFATaskDetailsSectionTypeTaskDetails;
+    self.taskChecklistButton.tag = AFATaskDetailsSectionTypeChecklist;
     self.taskFormButton.tag = AFATaskDetailsSectionTypeForm;
     self.taskContentButton.tag = AFATaskDetailsSectionTypeFilesContent;
     self.taskContributorsButton.tag = AFATaskDetailsSectionTypeContributors;
@@ -241,6 +244,11 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     } else if ([kSegueIDTaskDetailsAddComments isEqualToString:segue.identifier]) {
         AFAAddCommentsViewController *addCommentsViewController = (AFAAddCommentsViewController *)segue.destinationViewController;
         addCommentsViewController.taskID = self.taskID;
+    } else if([kSegueIDTaskDetailsChecklist isEqualToString:segue.identifier]) {
+        AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
+        taskDetailsViewController.navigationBarThemeColor = self.navigationBarThemeColor;
+        taskDetailsViewController.taskID = ((ASDKModelTask *)[self.tableController.model itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]).instanceID;
+        taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
     }
 }
 
@@ -259,7 +267,8 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         return unwindSegue;
     }
     
-    if ([kSegueIDProcessInstanceTaskDetailsUnwind isEqualToString:identifier]) {
+    if ([kSegueIDProcessInstanceTaskDetailsUnwind isEqualToString:identifier] ||
+        [kSegueIDTaskDetailsChecklistUnwind isEqualToString:identifier]) {
         AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
                                                                                    source:fromViewController
                                                                               destination:toViewController
@@ -281,6 +290,9 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 - (IBAction)unwindAddCommentsController:(UIStoryboardSegue *)segue {
 }
 
+- (IBAction)unwindTaskChecklistController:(UIStoryboardSegue *)sender {
+}
+
 
 #pragma mark -
 #pragma mark Actions
@@ -295,6 +307,12 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             
         case AFATaskDetailsUnwindActionTypeProcessInstanceDetails: {
             [self performSegueWithIdentifier:kSegueIDProcessInstanceTaskDetailsUnwind
+                                      sender:sender];
+        }
+            break;
+            
+        case AFATaskDetailsUnwindActionTypeChecklist: {
+            [self performSegueWithIdentifier:kSegueIDTaskDetailsChecklistUnwind
                                       sender:sender];
         }
             break;
@@ -365,6 +383,19 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         case AFATaskDetailsSectionTypeTaskDetails: {
             self.navigationBarTitle = NSLocalizedString(kLocalizationTaskDetailsScreenTaskDetailsTitleText, @"Task details title");
             [self refreshTaskDetails];
+        }
+            break;
+            
+        case AFATaskDetailsSectionTypeChecklist: {
+            self.navigationBarTitle = NSLocalizedString(kLocalizationTaskDetailsScreenChecklistTitleText, @"Task checklist title");
+            
+            AFATableControllerChecklistModel *checklistModel = self.sectionContentDict[@(AFATaskDetailsSectionTypeChecklist)];
+            self.tableController.model = checklistModel;
+            [self refreshTaskChecklist];
+            
+            if (!isTaskCompleted) {
+                self.navigationItem.rightBarButtonItem = self.addBarButtonItem;
+            }
         }
             break;
             
@@ -888,6 +919,54 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     [formEngineActionHandler saveForm];
 }
 
+- (void)refreshTaskChecklist {
+    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
+        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    }
+    
+    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    
+    __weak typeof(self) weakSelf = self;
+    [taskServices requestChecklistForTaskWithID:self.taskID
+                                completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            AFATableControllerChecklistModel *taskChecklistModel = [AFATableControllerChecklistModel new];
+            taskChecklistModel.checklistArr = taskList;
+            strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeChecklist)] = taskChecklistModel;
+            
+            // Change the model and cell factory
+            strongSelf.tableController.model = taskChecklistModel;
+            strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeChecklist];
+            [strongSelf.taskDetailsTableView reloadData];
+            
+            AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+            BOOL isTaskCompleted = (taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
+            
+            // Display the no content view if appropiate
+            strongSelf.noContentView.hidden = !taskList.count ? NO : YES;
+            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"checklist-large-icon"];
+            strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenChecklistNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenChecklistEditableText, @"No comments available text") ;
+            
+            // Display the last update date
+            if (strongSelf.refreshControl) {
+                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+            }
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+        
+        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+            [weakSelf.refreshControl endRefreshing];
+        }];
+        
+        // Mark that the refresh operation has ended
+        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+        strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+    }];
+}
+
 
 #pragma mark -
 #pragma mark KVO bindings
@@ -985,8 +1064,11 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         
         [strongSelf.contentPickerViewController downloadAuditLogForTaskWithID:strongSelf.taskID
                                                            allowCachedResults:YES];
-        
     } forCellType:[detailsCellFactory cellTypeForAuditLogCell]];
+    
+    // Checklist cell factory
+    AFATaskChecklistCellFactory *checklistCellFactory = [AFATaskChecklistCellFactory new];
+    checklistCellFactory.appThemeColor = self.navigationBarThemeColor;
     
     // Content cell factory
     AFATableControllerContentCellFactory *contentCellFactory = [AFATableControllerContentCellFactory new];
@@ -1063,6 +1145,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     AFATableControllerCommentCellFactory *commentCellFactory = [AFATableControllerCommentCellFactory new];
     
     self.cellFactoryDict[@(AFATaskDetailsSectionTypeTaskDetails)] = detailsCellFactory;
+    self.cellFactoryDict[@(AFATaskDetailsSectionTypeChecklist)] = checklistCellFactory;
     self.cellFactoryDict[@(AFATaskDetailsSectionTypeContributors)] = contributorsCellFactory;
     self.cellFactoryDict[@(AFATaskDetailsSectionTypeFilesContent)] = contentCellFactory;
     self.cellFactoryDict[@(AFATaskDetailsSectionTypeComments)] = commentCellFactory;

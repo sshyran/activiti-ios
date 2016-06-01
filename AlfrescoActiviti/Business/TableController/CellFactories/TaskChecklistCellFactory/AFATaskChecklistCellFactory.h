@@ -16,11 +16,11 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
+#import "AFATableControllerCellFactory.h"
 #import "AFATableController.h"
 
-@interface AFATableControllerChecklistModel : AFABaseModel <AFATableViewModelDelegate>
+@interface AFATaskChecklistCellFactory : AFATableControllerCellFactory <AFATableViewCellFactory>
 
-@property (strong, nonatomic) NSArray       *checklistArr;
+@property (strong, nonatomic) UIColor *appThemeColor;
 
 @end

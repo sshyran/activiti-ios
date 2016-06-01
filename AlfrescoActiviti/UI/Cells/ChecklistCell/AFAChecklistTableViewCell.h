@@ -16,11 +16,17 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
+#import <UIKit/UIKit.h>
 
-@interface AFATableControllerChecklistModel : AFABaseModel <AFATableViewModelDelegate>
+@class ASDKModelTask;
 
-@property (strong, nonatomic) NSArray       *checklistArr;
+@interface AFAChecklistTableViewCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView    *iconImageView;
+@property (weak, nonatomic) IBOutlet UILabel        *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UILabel        *checklistNameLabel;
+@property (strong, nonatomic) UIColor               *applicationThemeColor;
+
+- (void)setUpCellWithTask:(ASDKModelTask *)task;
 
 @end

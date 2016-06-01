@@ -21,7 +21,8 @@
 
 typedef NS_ENUM(NSInteger, AFATaskDetailsUnwindActionType) {
     AFATaskDetailsUnwindActionTypeTaskList,
-    AFATaskDetailsUnwindActionTypeProcessInstanceDetails
+    AFATaskDetailsUnwindActionTypeProcessInstanceDetails,
+    AFATaskDetailsUnwindActionTypeChecklist,
 };
 
 @interface AFATaskDetailsViewController : AFABaseThemedViewController

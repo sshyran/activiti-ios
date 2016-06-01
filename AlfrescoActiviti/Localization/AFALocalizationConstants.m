@@ -99,6 +99,8 @@ NSString *kLocalizationTaskDetailsScreenCompletedDateText        = @"taskDetails
 NSString *kLocalizationTaskDetailsScreenDurationText             = @"taskDetailsScreenDurationText";
 NSString *kLocalizationTaskDetailsScreenClaimButtonText          = @"taskDetailsScreenClaimButtonText";
 NSString *kLocalizationTaskDetailsScreenTaskFormSavedText        = @"taskDetailsScreenTaskFormClaimedText";
+NSString *kLocalizationTaskDetailsScreenChecklistNameText        = @"taskDetailsScreenChecklistNameText";
+NSString *kLocalizationTaskDetailsScreenChecklistTitleText       = @"taskDetailsScreenChecklistTitleText";
 
 
 #pragma mark -
@@ -208,6 +210,8 @@ NSString *kLocalizationNoContentScreenCommentsText               = @"noContentSc
 NSString *kLocalizationNoContentScreenCommentsNotEditableText    = @"noContentScreenCommentsNotEditableText";
 NSString *kLocalizationNoContentScreenFilesNotEditableText       = @"noContentScreenFilesNotEditableText";
 NSString *kLocalizationNoContentScreenContributorsNotEditableText= @"noContentScreenContributorsNotEditableText";
+NSString *kLocalizationNoContentScreenChecklistEditableText      = @"noContentScreenChecklistEditableText";
+NSString *kLocalizationNoContentScreenChecklistNotEditableText   = @"noContentScreenChecklistNotEditableText";
 
 
 #pragma mark -

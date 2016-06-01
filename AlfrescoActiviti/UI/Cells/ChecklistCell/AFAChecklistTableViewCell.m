@@ -16,16 +16,18 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFATaskDetailsStyleTableViewCell.h"
+#import "AFAChecklistTableViewCell.h"
 #import "AFALocalizationConstants.h"
 #import "UIColor+AFATheme.h"
 @import ActivitiSDK;
 
-@implementation AFATaskDetailsStyleTableViewCell
+@implementation AFAChecklistTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.iconImageView.tintColor = [UIColor disabledControlColor];
-    self.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenTaskNameText, @"Task name text");
+    self.descriptionLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenChecklistNameText, @"Checklist name text");
 }
 
 
@@ -53,7 +55,7 @@
 #pragma mark Public interface
 
 - (void)setUpCellWithTask:(ASDKModelTask *)task {
-    self.nameLabel.text = task.name;
+    self.checklistNameLabel.text = task.name;
 }
 
 @end

@@ -34,6 +34,7 @@
 #import <ActivitiSDK/ASDKTaskListQuerryRequestRepresentation.h>
 #import <ActivitiSDK/ASDKTaskCreationRequestRepresentation.h>
 #import <ActivitiSDK/ASDKIntegrationNodeContentRequestRepresentation.h>
+#import <ActivitiSDK/ASDKTaskChecklistOrderRequestRepresentation.h>
 
 #import <ActivitiSDK/ASDKModelApp.h>
 #import <ActivitiSDK/ASDKModelTask.h>

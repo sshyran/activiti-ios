@@ -83,6 +83,7 @@ NSString *kCellIDProfileCategory                                = @"ProfileCateg
 NSString *kCellIDProfileOption                                  = @"ProfileOptionCellID";
 NSString *kCellIDProfileAction                                  = @"ProfileActionCellID";
 NSString *kCellIDAuditLog                                       = @"AuditLogCellID";
+NSString *kCellIDTaskChecklist                                  = @"TaskChecklistCellID";
 
 
 #pragma mark -
@@ -103,6 +104,8 @@ NSString *kSegueIDTaskDetailsViewProcess                        = @"TaskDetailsV
 NSString *kSegueIDTaskDetailsViewProcessUnwind                  = @"TaskDetailsViewProcessUnwindSegueID";
 NSString *kSegueIDTaskDetailsAddComments                        = @"TaskDetailsAddCommentsSegueID";
 NSString *kSegueIDTaskDetailsAddCommentsUnwind                  = @"TaskDetailsAddCommentsUnwindSegueID";
+NSString *kSegueIDTaskDetailsChecklist                          = @"TaskDetailsChecklistSegueID";
+NSString *kSegueIDTaskDetailsChecklistUnwind                    = @"TaskDetailsChecklistUnwindSegueID";
 NSString *kSegueIDContentPickerComponentEmbedding               = @"ContentPickerComponentEmbeddingSegueID";
 NSString *kSegueIDFormComponent                                 = @"FormComponentEmbeddingSegueID";
 NSString *kSegueIDStartProcessInstance                          = @"StartProcessInstanceSegueID";
