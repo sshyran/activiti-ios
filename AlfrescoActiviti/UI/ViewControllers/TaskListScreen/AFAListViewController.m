@@ -392,6 +392,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
         addTaskController.applicationID = self.currentApp.instanceID;
         addTaskController.appThemeColor = self.navigationBarThemeColor;
         addTaskController.delegate = self;
+        addTaskController.controllerType = AFAAddTaskControllerTypePlainTask;
         
         addTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         addTaskController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

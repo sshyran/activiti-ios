@@ -65,6 +65,7 @@
 #import "AFAPeoplePickerViewController.h"
 #import "AFAProcessInstanceDetailsViewController.h"
 #import "AFAAddCommentsViewController.h"
+#import "AFAAddTaskViewController.h"
 
 typedef NS_ENUM(NSInteger, AFATaskDetailsSectionType) {
     AFATaskDetailsSectionTypeTaskDetails = 0,
@@ -85,7 +86,8 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @interface AFATaskDetailsViewController () <AFAContentPickerViewControllerDelegate,
                                             AFATaskFormViewControllerDelegate,
                                             ASDKIntegrationBrowsingDelegate,
-                                            AFAConfirmationViewDelegate>
+                                            AFAConfirmationViewDelegate,
+                                            AFAAddTaskViewControllerDelegate>
 
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *backBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UITableView                          *taskDetailsTableView;
@@ -442,6 +444,19 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     if (AFATaskDetailsSectionTypeFilesContent == self.currentSelectedSection) {
         [self toggleFullscreenOverlayView];
         [self toggleContentPickerComponent];
+    } else if (AFATaskDetailsSectionTypeChecklist == self.currentSelectedSection) {
+        AFAAddTaskViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDAddTaskViewController];
+        addTaskController.parentTaskID = self.taskID;
+        addTaskController.appThemeColor = self.navigationBarThemeColor;
+        addTaskController.delegate = self;
+        addTaskController.controllerType = AFAAddTaskControllerTypeChecklist;
+        
+        addTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+        addTaskController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        
+        [self presentViewController:addTaskController
+                           animated:YES
+                         completion:nil];
     } else if (AFATaskDetailsSectionTypeContributors == self.currentSelectedSection) {
         [self performSegueWithIdentifier:kSegueIDTaskDetailsAddContributor
                                   sender:sender];
@@ -1426,6 +1441,14 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     [self toggleConfirmationOverlayView];
     [self updateChecklistOrder];
     self.longPressGestureRecognizer.enabled = YES;
+}
+
+
+#pragma mark -
+#pragma mark AFAAddTaskViewController Delegate
+
+- (void)didCreateTask:(ASDKModelTask *)task {
+    [self refreshTaskChecklist];
 }
 
 @end

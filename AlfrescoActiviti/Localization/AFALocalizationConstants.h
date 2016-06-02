@@ -181,11 +181,13 @@ extern NSString *kLocalizationAddCommentScreenEmptyCommentErrorText;
 extern NSString *kLocalizationAddCommentScreenPostInProgressText;
 
 // Add task screen
-extern NSString * kLocalizationAddTaskScreenTitleText;
-extern NSString * kLocalizationAddTaskScreenNameLabelText;
-extern NSString * kLocalizationAddTaskScreenDescriptionLabelText;
-extern NSString * kLocalizationAddTaskScreenCreateButtonText;
-extern NSString * kLocalizationAddTaskScreenCreatingTaskText;
+extern NSString *kLocalizationAddTaskScreenTitleText;
+extern NSString *kLocalizationAddTaskScreenChecklistTitleText;
+extern NSString *kLocalizationAddTaskScreenNameLabelText;
+extern NSString *kLocalizationAddTaskScreenDescriptionLabelText;
+extern NSString *kLocalizationAddTaskScreenCreateButtonText;
+extern NSString *kLocalizationAddTaskScreenCreatingTaskText;
+extern NSString *kLocalizationAddTaskScreenCreatingChecklistText;
 
 // Profile screen
 extern NSString *kLocalizationProfileScreenTitleText;

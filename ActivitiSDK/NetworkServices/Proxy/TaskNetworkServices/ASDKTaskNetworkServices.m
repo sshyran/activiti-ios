@@ -1342,7 +1342,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation = [self.requestOperationManager
-                                         POST:[NSString stringWithFormat:@"%@", [self.servicePathFactory taskCheckListServicePathFormat]]
+                                         POST:[NSString stringWithFormat:[self.servicePathFactory taskCheckListServicePathFormat], taskID]
                                          parameters:[checklistRepresentation jsonDictionary]
                                          success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                              __strong typeof(self) strongSelf = weakSelf;

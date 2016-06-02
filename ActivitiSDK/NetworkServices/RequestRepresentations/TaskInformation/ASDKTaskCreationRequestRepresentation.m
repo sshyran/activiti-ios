@@ -33,8 +33,9 @@
              @"taskName"            : @"name",
              @"taskDescription"     : @"description",
              @"appDefinitionID"     : @"category",
-             @"assigneeID"          : @"assignee"
-             };
+             @"assigneeID"          : @"assignee",
+             @"parentTaskID"        : @"parentTaskId"
+            };
 }
 
 + (NSValueTransformer *)assigneeIDJSONTransformer {

@@ -226,10 +226,12 @@ NSString *kLocalizationAddCommentScreenPostInProgressText         = @"addComment
 #pragma mark Add task screen
 
 NSString *kLocalizationAddTaskScreenTitleText                    = @"addTaskScreenTitleText";
+NSString *kLocalizationAddTaskScreenChecklistTitleText           = @"addTaskScreenChecklistTitleText";
 NSString *kLocalizationAddTaskScreenNameLabelText                = @"addTaskScreenNameLabelText";
 NSString *kLocalizationAddTaskScreenDescriptionLabelText         = @"addTaskScreenDescriptionLabelText";
 NSString *kLocalizationAddTaskScreenCreateButtonText             = @"addTaskScreenCreateButtonText";
 NSString *kLocalizationAddTaskScreenCreatingTaskText             = @"addTaskScreenCreatingTaskText";
+NSString *kLocalizationAddTaskScreenCreatingChecklistText        = @"addTaskScreenCreatingChecklistText";
 
 
 #pragma mark -

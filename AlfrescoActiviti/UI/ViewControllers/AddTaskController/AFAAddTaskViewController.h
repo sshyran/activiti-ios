@@ -21,6 +21,11 @@
 
 @class ASDKModelTask;
 
+typedef NS_ENUM(NSInteger, AFAAddTaskControllerType) {
+    AFAAddTaskControllerTypePlainTask,
+    AFAAddTaskControllerTypeChecklist
+};
+
 @protocol AFAAddTaskViewControllerDelegate <NSObject>
 
 - (void)didCreateTask:(ASDKModelTask *)task;
@@ -30,7 +35,9 @@
 @interface AFAAddTaskViewController : UIViewController
 
 @property (weak, nonatomic)   id<AFAAddTaskViewControllerDelegate> delegate;
-@property (strong, nonatomic) NSString *applicationID;
-@property (strong, nonatomic) UIColor  *appThemeColor;
+@property (strong, nonatomic) NSString                 *applicationID;
+@property (strong, nonatomic) NSString                 *parentTaskID;
+@property (strong, nonatomic) UIColor                  *appThemeColor;
+@property (assign, nonatomic) AFAAddTaskControllerType controllerType;
 
 @end

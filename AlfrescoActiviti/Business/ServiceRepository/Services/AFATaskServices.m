@@ -612,8 +612,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     ASDKTaskCreationRequestRepresentation *checklistCreationRequestRepresentation = [ASDKTaskCreationRequestRepresentation new];
     checklistCreationRequestRepresentation.taskName = taskRepresentation.taskName;
     checklistCreationRequestRepresentation.taskDescription = taskRepresentation.taskDescription;
-    checklistCreationRequestRepresentation.appDefinitionID = taskRepresentation.applicationID;
     checklistCreationRequestRepresentation.assigneeID = taskRepresentation.assigneeID;
+    checklistCreationRequestRepresentation.parentTaskID = taskID;
     checklistCreationRequestRepresentation.jsonAdapterType = ASDKModelJSONAdapterTypeExcludeNilValues;
     
     [self.taskNetworkService createChecklistWithRepresentation:checklistCreationRequestRepresentation

@@ -181,10 +181,12 @@
 
 // Add task screen
 "addTaskScreenTitleText"                                 = "New task";
+"addTaskScreenChecklistTitleText"                        = "New checklist item";
 "addTaskScreenNameLabelText"                             = "Name";
 "addTaskScreenDescriptionLabelText"                      = "Description";
 "addTaskScreenCreateButtonText"                          = "Create";
 "addTaskScreenCreatingTaskText"                          = "Creating task...";
+"addTaskScreenCreatingChecklistText"                     = "Creating checklist item...";
 
 // Profile screen
 "profileScreenTitleText"                                 = "Profile";

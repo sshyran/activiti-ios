@@ -24,5 +24,6 @@
 @property (strong, nonatomic) NSString          *taskDescription;
 @property (strong, nonatomic) NSString          *appDefinitionID;
 @property (strong, nonatomic) NSString          *assigneeID;
+@property (strong, nonatomic) NSString          *parentTaskID;
 
 @end
