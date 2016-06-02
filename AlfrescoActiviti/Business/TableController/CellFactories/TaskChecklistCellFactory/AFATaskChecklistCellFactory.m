@@ -24,6 +24,10 @@
 // Cells
 #import "AFAChecklistTableViewCell.h"
 
+@interface AFATaskChecklistCellFactory () <AFATableControllerChecklistModelDelegate>
+
+@end
+
 @implementation AFATaskChecklistCellFactory
 
 
@@ -63,6 +67,35 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 - (BOOL)tableView:(UITableView *)tableView
 shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
+}
+
+- (BOOL)tableView:(UITableView *)tableView
+canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleNone;
+}
+
+
+#pragma mark -
+#pragma mark AFATableControllerChecklistModelDelegate
+
+- (void)didUpdateChecklistOrder {
+    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFAChecklistCellTypeReorder];
+    if (actionBlock) {
+        actionBlock(nil);
+    }
+}
+
+
+#pragma mark -
+#pragma mark Public interface
+
+- (NSInteger)cellTypeForReorder {
+    return AFAChecklistCellTypeReorder;
 }
 
 @end

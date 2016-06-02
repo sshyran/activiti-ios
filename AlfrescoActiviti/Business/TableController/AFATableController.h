@@ -37,6 +37,11 @@
 - (BOOL)isMemberOfCandidateGroup;
 - (ASDKModelProfile *)assignee;
 - (ASDKModelProfile *)currentUserProfile;
+- (BOOL)tableView:(UITableView *)tableView
+canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)tableView:(UITableView *)tableView
+moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
+      toIndexPath:(NSIndexPath *)toIndexPath;
 
 @end
 
@@ -75,6 +80,9 @@ viewForHeaderInSection:(NSInteger)section
 - (CGFloat)tableView:(UITableView *)tableView
 heightForHeaderInSection:(NSInteger)section
             forModel:(id<AFATableViewModelDelegate>)model;
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 

@@ -18,9 +18,18 @@
 
 #import "AFATableControllerCellFactory.h"
 #import "AFATableController.h"
+#import "AFATableControllerChecklistModel.h"
 
-@interface AFATaskChecklistCellFactory : AFATableControllerCellFactory <AFATableViewCellFactory>
+typedef NS_ENUM(NSInteger, AFAChecklistCellType) {
+    AFAChecklistCellTypeReorder = 0,
+    AFAChecklistCellTypeEnumCount
+};
+
+@interface AFATaskChecklistCellFactory : AFATableControllerCellFactory <AFATableViewCellFactory,
+                                                                        AFATableControllerChecklistModelDelegate>
 
 @property (strong, nonatomic) UIColor *appThemeColor;
+
+- (NSInteger)cellTypeForReorder;
 
 @end

@@ -57,6 +57,7 @@
 // Views
 #import "AFAActivityView.h"
 #import "AFANoContentView.h"
+#import "AFAConfirmationView.h"
 
 // Controllers
 #import "AFAContentPickerViewController.h"
@@ -83,7 +84,8 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 
 @interface AFATaskDetailsViewController () <AFAContentPickerViewControllerDelegate,
                                             AFATaskFormViewControllerDelegate,
-                                            ASDKIntegrationBrowsingDelegate>
+                                            ASDKIntegrationBrowsingDelegate,
+                                            AFAConfirmationViewDelegate>
 
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *backBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UITableView                          *taskDetailsTableView;
@@ -110,6 +112,9 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                      *addBarButtonItem;
 @property (weak, nonatomic)   IBOutlet AFANoContentView                     *noContentView;
 @property (strong, nonatomic) ASDKIntegrationBrowsingViewController         *integrationBrowsingController;
+@property (weak, nonatomic)   IBOutlet AFAConfirmationView                  *confirmationView;
+@property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer         *longPressGestureRecognizer;
+
 
 // Internal state properties
 @property (assign, nonatomic) AFATaskDetailsLoadingState                    controllerState;
@@ -197,6 +202,9 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     // Make sure the add button is not pressent on certain categories.
     // It will be enabled based on the current section selection
     self.navigationItem.rightBarButtonItem = nil;
+    
+    // Set the confirmation view delegate
+    self.confirmationView.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -366,6 +374,199 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     // Dismiss the date picker
     [self toggleDatePickerComponent];
     [self.taskDetailsTableView reloadData];
+}
+
+- (void)onPullToRefresh {
+    self.controllerState |= AFATaskDetailsLoadingStatePullToRefreshInProgress;
+    
+    [self refreshContentForCurrentSection];
+}
+
+- (void)onContentDeleteForTaskAtIndex:(NSInteger)taskIdx {
+    // Mark that a task content refresh is in progress
+    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    
+    AFATableControllerContentModel *taskContentModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
+    ASDKModelContent *selectedContentModel = taskContentModel.attachedContentArr[taskIdx];
+    
+    __weak typeof(self) weakSelf = self;
+    [taskServices requestTaskContentDeleteForContent:selectedContentModel
+                                 withCompletionBlock:^(BOOL isContentDeleted, NSError *error) {
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     
+                                     // Mark that the refresh operation has ended
+                                     strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                                     
+                                     if (!isContentDeleted) {
+                                         [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDeleteErrorText, @"Task delete error")];
+                                     } else {
+                                         // Trigger a task content refresh
+                                         [strongSelf refreshTaskContent];
+                                     }
+                                 }];
+}
+
+- (void)onRemoveInvolvedUserForCurrentTask:(ASDKModelUser *)user {
+    // Mark that a task contributor list refresh is in progress
+    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    
+    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    
+    __weak typeof(self) weakSelf = self;
+    [taskService requestToRemoveTaskUserInvolvement:user
+                                          forTaskID:self.taskID
+                                    completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                        __strong typeof(self) strongSelf = weakSelf;
+                                        // Mark that the refresh operation has ended
+                                        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                                        
+                                        if (!error && !isUserInvolved) {
+                                            // Trigger a task details refresh
+                                            [strongSelf refreshTaskDetails];
+                                        } else {
+                                            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDeleteErrorText, @"Task delete error")];
+                                        }
+                                    }];
+}
+
+- (IBAction)onFullscreenOverlayTap:(id)sender {
+    [self toggleFullscreenOverlayView];
+    
+    if (AFATaskDetailsSectionTypeFilesContent == self.currentSelectedSection) {
+        [self toggleContentPickerComponent];
+    }
+}
+
+- (IBAction)onAdd:(UIBarButtonItem *)sender {
+    if (AFATaskDetailsSectionTypeFilesContent == self.currentSelectedSection) {
+        [self toggleFullscreenOverlayView];
+        [self toggleContentPickerComponent];
+    } else if (AFATaskDetailsSectionTypeContributors == self.currentSelectedSection) {
+        [self performSegueWithIdentifier:kSegueIDTaskDetailsAddContributor
+                                  sender:sender];
+    } else if (AFATaskDetailsSectionTypeComments == self.currentSelectedSection) {
+        [self performSegueWithIdentifier:kSegueIDTaskDetailsAddComments
+                                  sender:sender];
+    }
+}
+
+- (void)onFormSave {
+    AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
+    ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
+    [formEngineActionHandler saveForm];
+}
+
+- (IBAction)onTableLongPress:(UILongPressGestureRecognizer *)sender {
+    if (AFATaskDetailsSectionTypeChecklist == self.currentSelectedSection) {
+        if (!self.taskDetailsTableView.editing) {
+            [self.taskDetailsTableView setEditing:YES
+                                         animated:YES];
+        }
+    }
+}
+
+- (void)toggleDatePickerComponent {
+    // Check whether the date picker component is initialized
+    if (!self.datePicker) {
+        self.datePicker = [UIDatePicker new];
+        self.datePicker.datePickerMode = UIDatePickerModeDate;
+        [self.datePickerContainerView addSubview:self.datePicker];
+        
+        NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.datePicker
+                                                                         attribute:NSLayoutAttributeTop
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self.datePickerContainerView
+                                                                         attribute:NSLayoutAttributeTop
+                                                                        multiplier:1
+                                                                          constant:0];
+        NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.datePicker
+                                                                             attribute:NSLayoutAttributeLeading
+                                                                             relatedBy:NSLayoutRelationEqual
+                                                                                toItem:self.datePickerContainerView
+                                                                             attribute:NSLayoutAttributeLeading
+                                                                            multiplier:1
+                                                                              constant:0];
+        
+        [NSLayoutConstraint activateConstraints:@[leadingConstraint, topConstraint]];
+    }
+    
+    NSInteger datePickerConstant = 0;
+    NSInteger taskDetailsTableViewTopConstant = 0;
+    if (!self.datePickerBottomConstraint.constant) {
+        datePickerConstant = -(CGRectGetHeight(self.datePicker.frame) + CGRectGetHeight(self.datePickerToolbar.frame) + 10);
+    } else {
+        taskDetailsTableViewTopConstant = -CGRectGetHeight(self.datePicker.frame) / 2;
+    }
+    
+    [self.view layoutIfNeeded];
+    [UIView animateWithDuration:kDefaultAnimationTime
+                          delay:0
+         usingSpringWithDamping:.9f
+          initialSpringVelocity:20.0f
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         self.datePickerBottomConstraint.constant = datePickerConstant;
+                         self.taskDetailsTableViewTopConstraint.constant = taskDetailsTableViewTopConstant;
+                         [self.view layoutIfNeeded];
+                     } completion:nil];
+}
+
+- (void)toggleContentPickerComponent {
+    NSInteger contentPickerConstant = 0;
+    if (!self.contentPickerContainerBottomConstraint.constant) {
+        contentPickerConstant = -(CGRectGetHeight(self.contentPickerContainer.frame));
+    }
+    
+    // Show the content picker container
+    if (!contentPickerConstant) {
+        self.contentPickerContainer.hidden = NO;
+    }
+    
+    [self.view layoutIfNeeded];
+    [UIView animateWithDuration:kDefaultAnimationTime
+                          delay:0
+         usingSpringWithDamping:.95f
+          initialSpringVelocity:20.0f
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         self.contentPickerContainerBottomConstraint.constant = contentPickerConstant;
+                         [self.view layoutIfNeeded];
+                     } completion:^(BOOL finished) {
+                         if (contentPickerConstant) {
+                             self.contentPickerContainer.hidden = YES;
+                         }
+                     }];
+}
+
+- (void)toggleFullscreenOverlayView {
+    CGFloat alphaValue = !self.fullScreenOverlayView.alpha ? .4f : .0f;
+    if (alphaValue) {
+        self.fullScreenOverlayView.hidden = NO;
+    }
+    
+    [UIView animateWithDuration:kDefaultAnimationTime animations:^{
+        self.fullScreenOverlayView.alpha = alphaValue;
+    } completion:^(BOOL finished) {
+        if (!alphaValue) {
+            self.fullScreenOverlayView.hidden = YES;
+        }
+    }];
+}
+
+- (void)toggleConfirmationOverlayView {
+    CGFloat alphaValue = !self.confirmationView.alpha ? 1.0f : .0f;
+    if (alphaValue) {
+        self.confirmationView.hidden = NO;
+    }
+    
+    [UIView animateWithDuration:kDefaultAnimationTime animations:^{
+        self.confirmationView.alpha = alphaValue;
+    } completion:^(BOOL finished) {
+        if (!alphaValue) {
+            self.confirmationView.hidden = YES;
+        }
+    }];
 }
 
 - (void)refreshContentForCurrentSection {
@@ -664,10 +865,54 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     }];
 }
 
-- (void)onPullToRefresh {
-    self.controllerState |= AFATaskDetailsLoadingStatePullToRefreshInProgress;
+- (void)refreshTaskChecklist {
+    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
+        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    }
     
-    [self refreshContentForCurrentSection];
+    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    
+    __weak typeof(self) weakSelf = self;
+    [taskServices requestChecklistForTaskWithID:self.taskID
+                                completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                    __strong typeof(self) strongSelf = weakSelf;
+                                    
+                                    if (!error) {
+                                        AFATableControllerChecklistModel *taskChecklistModel = [AFATableControllerChecklistModel new];
+                                        taskChecklistModel.checklistArr = taskList;
+                                        strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeChecklist)] = taskChecklistModel;
+                                        
+                                        // Change the model and cell factory
+                                        AFATaskChecklistCellFactory *checklistCellFactory = (AFATaskChecklistCellFactory *)[strongSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeChecklist];
+                                        taskChecklistModel.delegate = checklistCellFactory;
+                                        strongSelf.tableController.model = taskChecklistModel;
+                                        strongSelf.tableController.cellFactory = checklistCellFactory;
+                                        AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+                                        strongSelf.tableController.isEditable = !(taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
+                                        [strongSelf.taskDetailsTableView reloadData];
+                                        
+                                        // Display the no content view if appropiate
+                                        BOOL isTaskCompleted = (taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
+                                        strongSelf.noContentView.hidden = !taskList.count ? NO : YES;
+                                        strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"checklist-large-icon"];
+                                        strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenChecklistNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenChecklistEditableText, @"No comments available text") ;
+                                        
+                                        // Display the last update date
+                                        if (strongSelf.refreshControl) {
+                                            strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+                                        }
+                                    } else {
+                                        [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                    }
+                                    
+                                    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+                                        [weakSelf.refreshControl endRefreshing];
+                                    }];
+                                    
+                                    // Mark that the refresh operation has ended
+                                    strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                                    strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+                                }];
 }
 
 - (void)updateTaskDetails {
@@ -708,163 +953,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
              [strongSelf onBack:nil];
          }
     }];
-}
-
-- (void)onContentDeleteForTaskAtIndex:(NSInteger)taskIdx {
-    // Mark that a task content refresh is in progress
-    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    
-    AFATableControllerContentModel *taskContentModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
-    ASDKModelContent *selectedContentModel = taskContentModel.attachedContentArr[taskIdx];
-    
-    __weak typeof(self) weakSelf = self;
-    [taskServices requestTaskContentDeleteForContent:selectedContentModel
-                                 withCompletionBlock:^(BOOL isContentDeleted, NSError *error) {
-                                     __strong typeof(self) strongSelf = weakSelf;
-                                     
-                                     // Mark that the refresh operation has ended
-                                     strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-                                     
-                                     if (!isContentDeleted) {
-                                         [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDeleteErrorText, @"Task delete error")];
-                                     } else {
-                                         // Trigger a task content refresh
-                                         [strongSelf refreshTaskContent];
-                                     }
-    }];
-}
-
-- (void)onRemoveInvolvedUserForCurrentTask:(ASDKModelUser *)user {
-    // Mark that a task contributor list refresh is in progress
-    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    
-    __weak typeof(self) weakSelf = self;
-    [taskService requestToRemoveTaskUserInvolvement:user
-                                          forTaskID:self.taskID
-                                    completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                                        __strong typeof(self) strongSelf = weakSelf;
-                                        // Mark that the refresh operation has ended
-                                        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-                                        
-                                        if (!error && !isUserInvolved) {
-                                            // Trigger a task details refresh
-                                            [strongSelf refreshTaskDetails];
-                                        } else {
-                                            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDeleteErrorText, @"Task delete error")];
-                                        }
-                                    }];
-}
-
-- (void)toggleDatePickerComponent {
-    // Check whether the date picker component is initialized
-    if (!self.datePicker) {
-        self.datePicker = [UIDatePicker new];
-        self.datePicker.datePickerMode = UIDatePickerModeDate;
-        [self.datePickerContainerView addSubview:self.datePicker];
-        
-        NSLayoutConstraint *topConstraint = [NSLayoutConstraint constraintWithItem:self.datePicker
-                                                                         attribute:NSLayoutAttributeTop
-                                                                         relatedBy:NSLayoutRelationEqual
-                                                                            toItem:self.datePickerContainerView
-                                                                         attribute:NSLayoutAttributeTop
-                                                                        multiplier:1
-                                                                          constant:0];
-        NSLayoutConstraint *leadingConstraint = [NSLayoutConstraint constraintWithItem:self.datePicker
-                                                                             attribute:NSLayoutAttributeLeading
-                                                                             relatedBy:NSLayoutRelationEqual
-                                                                                toItem:self.datePickerContainerView
-                                                                             attribute:NSLayoutAttributeLeading
-                                                                            multiplier:1
-                                                                              constant:0];
-        
-        [NSLayoutConstraint activateConstraints:@[leadingConstraint, topConstraint]];
-    }
-    
-    NSInteger datePickerConstant = 0;
-    NSInteger taskDetailsTableViewTopConstant = 0;
-    if (!self.datePickerBottomConstraint.constant) {
-        datePickerConstant = -(CGRectGetHeight(self.datePicker.frame) + CGRectGetHeight(self.datePickerToolbar.frame) + 10);
-    } else {
-        taskDetailsTableViewTopConstant = -CGRectGetHeight(self.datePicker.frame) / 2;
-    }
-    
-    [self.view layoutIfNeeded];
-    [UIView animateWithDuration:kDefaultAnimationTime
-                          delay:0
-         usingSpringWithDamping:.9f
-          initialSpringVelocity:20.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         self.datePickerBottomConstraint.constant = datePickerConstant;
-                         self.taskDetailsTableViewTopConstraint.constant = taskDetailsTableViewTopConstant;
-                         [self.view layoutIfNeeded];
-                     } completion:nil];
-}
-
-- (void)toggleContentPickerComponent {
-    NSInteger contentPickerConstant = 0;
-    if (!self.contentPickerContainerBottomConstraint.constant) {
-        contentPickerConstant = -(CGRectGetHeight(self.contentPickerContainer.frame));
-    }
-    
-    // Show the content picker container
-    if (!contentPickerConstant) {
-        self.contentPickerContainer.hidden = NO;
-    }
-    
-    [self.view layoutIfNeeded];
-    [UIView animateWithDuration:kDefaultAnimationTime
-                          delay:0
-         usingSpringWithDamping:.95f
-          initialSpringVelocity:20.0f
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         self.contentPickerContainerBottomConstraint.constant = contentPickerConstant;
-                         [self.view layoutIfNeeded];
-                     } completion:^(BOOL finished) {
-                         if (contentPickerConstant) {
-                             self.contentPickerContainer.hidden = YES;
-                         }
-                     }];
-}
-
-- (void)toggleFullscreenOverlayView {
-    CGFloat alphaValue = !self.fullScreenOverlayView.alpha ? .4f : .0f;
-    if (alphaValue) {
-        self.fullScreenOverlayView.hidden = NO;
-    }
-    
-    [UIView animateWithDuration:kDefaultAnimationTime animations:^{
-        self.fullScreenOverlayView.alpha = alphaValue;
-    } completion:^(BOOL finished) {
-        if (!alphaValue) {
-            self.fullScreenOverlayView.hidden = YES;
-        }
-    }];
-}
-
-- (IBAction)onFullscreenOverlayTap:(id)sender {
-    [self toggleFullscreenOverlayView];
-    
-    if (AFATaskDetailsSectionTypeFilesContent == self.currentSelectedSection) {
-        [self toggleContentPickerComponent];
-    }
-}
-
-- (IBAction)onAdd:(UIBarButtonItem *)sender {
-    if (AFATaskDetailsSectionTypeFilesContent == self.currentSelectedSection) {
-        [self toggleFullscreenOverlayView];
-        [self toggleContentPickerComponent];
-    } else if (AFATaskDetailsSectionTypeContributors == self.currentSelectedSection) {
-        [self performSegueWithIdentifier:kSegueIDTaskDetailsAddContributor
-                                  sender:sender];
-    } else if (AFATaskDetailsSectionTypeComments == self.currentSelectedSection) {
-        [self performSegueWithIdentifier:kSegueIDTaskDetailsAddComments
-                                  sender:sender];
-    }
 }
 
 - (void)claimTask {
@@ -913,57 +1001,25 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     }];
 }
 
-- (void)onFormSave {
-    AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-    ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
-    [formEngineActionHandler saveForm];
-}
-
-- (void)refreshTaskChecklist {
-    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    }
+- (void)updateChecklistOrder {
+    // Mark that a general refresh operation is in progress
+    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
     
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    AFATableControllerChecklistModel *taskChecklistModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeChecklist];
     
     __weak typeof(self) weakSelf = self;
-    [taskServices requestChecklistForTaskWithID:self.taskID
-                                completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            AFATableControllerChecklistModel *taskChecklistModel = [AFATableControllerChecklistModel new];
-            taskChecklistModel.checklistArr = taskList;
-            strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeChecklist)] = taskChecklistModel;
-            
-            // Change the model and cell factory
-            strongSelf.tableController.model = taskChecklistModel;
-            strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeChecklist];
-            [strongSelf.taskDetailsTableView reloadData];
-            
-            AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            BOOL isTaskCompleted = (taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
-            
-            // Display the no content view if appropiate
-            strongSelf.noContentView.hidden = !taskList.count ? NO : YES;
-            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"checklist-large-icon"];
-            strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenChecklistNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenChecklistEditableText, @"No comments available text") ;
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        // Mark that the refresh operation has ended
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+    [taskService requestChecklistOrderUpdateWithOrderArrat:[taskChecklistModel checkListIDs]
+                                                    taskID:self.taskID
+                                           completionBlock:^(BOOL isTaskUpdated, NSError *error) {
+                                               __strong typeof(self) strongSelf = weakSelf;
+                                               
+                                               if (error) {
+                                                   [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                               }
+                                               
+                                               // Mark that the refresh operation has ended
+                                               strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
     }];
 }
 
@@ -1069,6 +1125,15 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     // Checklist cell factory
     AFATaskChecklistCellFactory *checklistCellFactory = [AFATaskChecklistCellFactory new];
     checklistCellFactory.appThemeColor = self.navigationBarThemeColor;
+    [checklistCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        // Make the confirm overlay visible
+        if (strongSelf.confirmationView.hidden) {
+            [strongSelf toggleConfirmationOverlayView];
+            strongSelf.longPressGestureRecognizer.enabled = NO;
+        }
+    } forCellType:[checklistCellFactory cellTypeForReorder]];
     
     // Content cell factory
     AFATableControllerContentCellFactory *contentCellFactory = [AFATableControllerContentCellFactory new];
@@ -1349,6 +1414,18 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                                                           [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentUploadErrorText, @"Content upload error")];
                                                       }
     }];
+}
+
+
+#pragma mark -
+#pragma mark AFAConfirmationViewDelegate
+
+- (void)didConfirmAction {
+    [self.taskDetailsTableView setEditing:NO
+                                 animated:YES];
+    [self toggleConfirmationOverlayView];
+    [self updateChecklistOrder];
+    self.longPressGestureRecognizer.enabled = YES;
 }
 
 @end

@@ -1401,10 +1401,11 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="BsI-kP-8mr" userLabel="Details Table View">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="936"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <color key="separatorColor" red="0.92156862745098034" green="0.92549019607843142" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="bS6-Xq-eLD">
-                                    <rect key="frame" x="0.0" y="975" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="975" width="600" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FUv-LV-5NB">
@@ -2632,11 +2633,15 @@
                                         <connections>
                                             <outlet property="checklistNameLabel" destination="Mil-2d-eDP" id="dzz-n7-puk"/>
                                             <outlet property="descriptionLabel" destination="EGs-LE-VuL" id="INz-0a-oDm"/>
+                                            <outlet property="disclosureIndicatorLabel" destination="FHD-Hk-fqV" id="xSm-MY-kCq"/>
                                             <outlet property="iconImageView" destination="lqq-s4-rPg" id="VVi-mz-mMK"/>
                                             <segue destination="tSI-Hz-Spk" kind="custom" identifier="TaskDetailsChecklistSegueID" customClass="ASDKPushFadeSegue" id="6u8-Ev-j8r"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="cSB-3P-Muo" appends="YES" id="Wu4-xy-HxT"/>
+                                </connections>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mgc-St-oF6" userLabel="No content view" customClass="AFANoContentView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="936"/>
@@ -2682,7 +2687,7 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="hru-nE-Wwe"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="10" id="jjg-ww-x4m"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="5" id="jjg-ww-x4m"/>
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WAG-h5-RIW">
@@ -2935,6 +2940,39 @@
                                     <outletCollection property="gestureRecognizers" destination="Hp8-cL-mOe" appends="YES" id="khG-ht-vn2"/>
                                 </connections>
                             </view>
+                            <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VGO-qB-wps" customClass="AFAConfirmationView">
+                                <rect key="frame" x="0.0" y="836" width="600" height="100"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="confirmation-icon" translatesAutoresizingMaskIntoConstraints="NO" id="mYi-Mt-Kmv">
+                                        <rect key="frame" x="244.5" y="20" width="30" height="30"/>
+                                        <color key="tintColor" red="0.29411764709999999" green="0.2784313725" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="Ghk-d5-0kD"/>
+                                            <constraint firstAttribute="height" constant="30" id="sfl-OV-D2d"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FOQ-PF-7o8">
+                                        <rect key="frame" x="282.5" y="20" width="55" height="30"/>
+                                        <state key="normal" title="Confirm">
+                                            <color key="titleColor" red="0.29411764709999999" green="0.2784313725" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onConfirm:" destination="VGO-qB-wps" eventType="touchUpInside" id="6LH-ge-t32"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="FOQ-PF-7o8" firstAttribute="centerY" secondItem="VGO-qB-wps" secondAttribute="centerY" constant="-15" id="ByB-ik-FXD"/>
+                                    <constraint firstItem="FOQ-PF-7o8" firstAttribute="centerX" secondItem="VGO-qB-wps" secondAttribute="centerX" constant="10" id="DEu-2l-4Tr"/>
+                                    <constraint firstItem="mYi-Mt-Kmv" firstAttribute="centerY" secondItem="FOQ-PF-7o8" secondAttribute="centerY" id="Uvo-AR-fiz"/>
+                                    <constraint firstItem="FOQ-PF-7o8" firstAttribute="leading" secondItem="mYi-Mt-Kmv" secondAttribute="trailing" constant="8" id="wHh-aJ-ZAX"/>
+                                    <constraint firstAttribute="height" constant="100" id="xYJ-5k-F7W"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="confirmButton" destination="FOQ-PF-7o8" id="55D-ke-Hay"/>
+                                </connections>
+                            </view>
                             <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B5D-mD-4EL" userLabel="Content Picker Container View">
                                 <rect key="frame" x="0.0" y="936" width="600" height="110"/>
                                 <constraints>
@@ -2975,9 +3013,11 @@
                             <constraint firstItem="XDY-tu-5PU" firstAttribute="top" secondItem="uNM-Kl-4ZF" secondAttribute="bottom" id="0km-j3-0rO"/>
                             <constraint firstItem="XDY-tu-5PU" firstAttribute="top" secondItem="B5D-mD-4EL" secondAttribute="bottom" constant="-110" id="1J6-ye-fhQ"/>
                             <constraint firstItem="uNM-Kl-4ZF" firstAttribute="top" secondItem="UPw-ZH-m1m" secondAttribute="bottom" id="2sI-y3-jIn"/>
+                            <constraint firstItem="VGO-qB-wps" firstAttribute="leading" secondItem="p7N-wk-o9e" secondAttribute="leading" id="3xa-Eh-2z1"/>
                             <constraint firstAttribute="trailing" secondItem="uNM-Kl-4ZF" secondAttribute="trailing" id="5jz-aH-c2Y"/>
                             <constraint firstAttribute="centerX" secondItem="mTn-HO-lON" secondAttribute="centerX" id="6vY-wo-g8R"/>
                             <constraint firstItem="euF-YY-HcW" firstAttribute="leading" secondItem="p7N-wk-o9e" secondAttribute="leading" constant="-1" id="Gj6-8S-Lfe"/>
+                            <constraint firstAttribute="trailing" secondItem="VGO-qB-wps" secondAttribute="trailing" id="IuJ-cF-Njk"/>
                             <constraint firstItem="XDY-tu-5PU" firstAttribute="top" secondItem="BsI-kP-8mr" secondAttribute="bottom" id="JiJ-iv-Kzt"/>
                             <constraint firstItem="fsh-0u-U1X" firstAttribute="leading" secondItem="p7N-wk-o9e" secondAttribute="leading" id="NgT-C4-50D"/>
                             <constraint firstItem="fsh-0u-U1X" firstAttribute="top" secondItem="D00-yq-Hig" secondAttribute="bottom" id="Ogl-CS-NO2"/>
@@ -2995,6 +3035,7 @@
                             <constraint firstAttribute="trailing" secondItem="euF-YY-HcW" secondAttribute="trailing" constant="-1" id="hJj-ky-ejG"/>
                             <constraint firstItem="Mgc-St-oF6" firstAttribute="centerX" secondItem="p7N-wk-o9e" secondAttribute="centerX" id="jhG-1q-Feg"/>
                             <constraint firstAttribute="centerY" secondItem="mTn-HO-lON" secondAttribute="centerY" id="mMR-ia-6HU"/>
+                            <constraint firstItem="XDY-tu-5PU" firstAttribute="top" secondItem="VGO-qB-wps" secondAttribute="bottom" id="mcM-SD-PAH"/>
                             <constraint firstItem="XDY-tu-5PU" firstAttribute="top" secondItem="fsh-0u-U1X" secondAttribute="bottom" constant="-270" id="qW9-bm-dOx"/>
                             <constraint firstAttribute="trailing" secondItem="D00-yq-Hig" secondAttribute="trailing" id="qjS-yQ-Qgx"/>
                             <constraint firstItem="3A5-15-7SV" firstAttribute="top" secondItem="UPw-ZH-m1m" secondAttribute="bottom" id="rBw-9m-iD5"/>
@@ -3023,6 +3064,7 @@
                     <connections>
                         <outlet property="addBarButtonItem" destination="rsa-0e-McW" id="9x2-BS-T4C"/>
                         <outlet property="backBarButtonItem" destination="KC5-1A-1ht" id="Z1K-64-61f"/>
+                        <outlet property="confirmationView" destination="VGO-qB-wps" id="ifn-mE-owm"/>
                         <outlet property="contentPickerContainer" destination="B5D-mD-4EL" id="g0N-81-jCl"/>
                         <outlet property="contentPickerContainerBottomConstraint" destination="1J6-ye-fhQ" id="bGR-Ac-drb"/>
                         <outlet property="contentPickerContainerHeightConstraint" destination="5Oh-yD-jTU" id="v7o-bN-Evw"/>
@@ -3032,6 +3074,7 @@
                         <outlet property="formViewContainer" destination="uNM-Kl-4ZF" id="asp-hl-tZs"/>
                         <outlet property="fullScreenOverlayView" destination="3A5-15-7SV" id="whA-Pe-uLV"/>
                         <outlet property="loadingActivityView" destination="mTn-HO-lON" id="sQe-5P-fsO"/>
+                        <outlet property="longPressGestureRecognizer" destination="cSB-3P-Muo" id="plb-d3-X2G"/>
                         <outlet property="noContentView" destination="Mgc-St-oF6" id="yFN-fs-kbH"/>
                         <outlet property="taskChecklistButton" destination="J6V-nE-PTy" id="TJu-le-65l"/>
                         <outlet property="taskCommentsButton" destination="zJC-Nz-N2E" id="hVm-vR-ATR"/>
@@ -3056,6 +3099,11 @@
                         <action selector="onFullscreenOverlayTap:" destination="tSI-Hz-Spk" id="zba-FJ-jq2"/>
                     </connections>
                 </tapGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="cSB-3P-Muo">
+                    <connections>
+                        <action selector="onTableLongPress:" destination="tSI-Hz-Spk" id="Zxy-TI-jAE"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3314" y="1212"/>
         </scene>
@@ -5588,6 +5636,7 @@
         <image name="clear-icon" width="15" height="15"/>
         <image name="clock-icon" width="25" height="25"/>
         <image name="comment-icon" width="25" height="25"/>
+        <image name="confirmation-icon" width="30" height="30"/>
         <image name="connectivity-icon" width="128" height="128"/>
         <image name="contact-icon" width="20" height="20"/>
         <image name="content-icon" width="25" height="25"/>

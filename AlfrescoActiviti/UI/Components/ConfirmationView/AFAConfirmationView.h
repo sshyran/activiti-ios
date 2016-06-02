@@ -16,20 +16,17 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
+#import <UIKit/UIKit.h>
 
-@protocol AFATableControllerChecklistModelDelegate <NSObject>
+@protocol AFAConfirmationViewDelegate <NSObject>
 
-- (void)didUpdateChecklistOrder;
+- (void)didConfirmAction;
 
 @end
 
-@interface AFATableControllerChecklistModel : AFABaseModel <AFATableViewModelDelegate>
+@interface AFAConfirmationView : UIView
 
-@property (weak, nonatomic) id<AFATableControllerChecklistModelDelegate> delegate;
-@property (strong, nonatomic) NSArray *checklistArr;
-
-- (NSArray *)checkListIDs;
+@property (weak, nonatomic) id<AFAConfirmationViewDelegate> delegate;
+@property (strong, nonatomic) IBOutlet UIButton *confirmButton;
 
 @end

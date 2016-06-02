@@ -16,20 +16,22 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
+#import "AFAConfirmationView.h"
 
-@protocol AFATableControllerChecklistModelDelegate <NSObject>
+@implementation AFAConfirmationView
 
-- (void)didUpdateChecklistOrder;
+- (void)layoutSubviews {
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = self.bounds;
+    gradient.colors = @[(id)[[UIColor whiteColor] CGColor], (id)[[[UIColor lightGrayColor] colorWithAlphaComponent:.4f] CGColor]];
+    [self.layer insertSublayer:gradient
+                       atIndex:0];
+}
 
-@end
-
-@interface AFATableControllerChecklistModel : AFABaseModel <AFATableViewModelDelegate>
-
-@property (weak, nonatomic) id<AFATableControllerChecklistModelDelegate> delegate;
-@property (strong, nonatomic) NSArray *checklistArr;
-
-- (NSArray *)checkListIDs;
+- (IBAction)onConfirm:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(didConfirmAction)]) {
+        [self.delegate didConfirmAction];
+    }
+}
 
 @end

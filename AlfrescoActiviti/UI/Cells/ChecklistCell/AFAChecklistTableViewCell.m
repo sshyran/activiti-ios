@@ -50,6 +50,14 @@
     // Configure the view for the selected state
 }
 
+- (void)setEditing:(BOOL)editing
+          animated:(BOOL)animated{
+    [super setEditing:editing
+             animated:animated];
+    
+    self.disclosureIndicatorLabel.hidden = editing;
+}
+
 
 #pragma mark -
 #pragma mark Public interface

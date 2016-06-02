@@ -36,4 +36,32 @@
     return self.checklistArr[indexPath.row];
 }
 
+- (BOOL)tableView:(UITableView *)tableView
+canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView
+moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
+      toIndexPath:(NSIndexPath *)toIndexPath {
+    ASDKModelTask *taskToMove = self.checklistArr[fromIndexPath.row];
+    NSMutableArray *mutableChecklistArr = [NSMutableArray arrayWithArray:self.checklistArr];
+    [mutableChecklistArr removeObjectAtIndex:fromIndexPath.row];
+    [mutableChecklistArr insertObject:taskToMove
+                              atIndex:toIndexPath.row];
+    self.checklistArr = mutableChecklistArr;
+    
+    if ([self.delegate respondsToSelector:@selector(didUpdateChecklistOrder)]) {
+        [self.delegate didUpdateChecklistOrder];
+    }
+}
+
+
+#pragma mark -
+#pragma mark Public interface
+
+- (NSArray *)checkListIDs {
+    return [self.checklistArr valueForKeyPath:@"@unionOfObjects.instanceID"];
+}
+
 @end

@@ -26,6 +26,8 @@
 @property (weak, nonatomic) IBOutlet UILabel        *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel        *checklistNameLabel;
 @property (strong, nonatomic) UIColor               *applicationThemeColor;
+@property (weak, nonatomic) IBOutlet UILabel        *disclosureIndicatorLabel;
+
 
 - (void)setUpCellWithTask:(ASDKModelTask *)task;
 

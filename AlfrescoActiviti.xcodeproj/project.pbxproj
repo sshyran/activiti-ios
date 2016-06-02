@@ -140,6 +140,7 @@
 		137C58AB1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C58AA1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m */; };
 		137C58AE1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C58AD1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m */; };
 		137FC4311C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */; };
+		13891CAA1D00258800A61015 /* AFAConfirmationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13891CA91D00258800A61015 /* AFAConfirmationView.m */; };
 		138AC9CC1B9DD3F4006C9DD4 /* ASDKAPIJSONKeyParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 138AC9CA1B9DD3F4006C9DD4 /* ASDKAPIJSONKeyParams.h */; };
 		138AC9CD1B9DD3F4006C9DD4 /* ASDKAPIJSONKeyParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 138AC9CB1B9DD3F4006C9DD4 /* ASDKAPIJSONKeyParams.m */; };
 		138C48B51C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 138C48B41C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -716,6 +717,8 @@
 		137C58AC1BF9C6BC00DF41B3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageEffects.h"; path = "UI/Categories/UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		137C58AD1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageEffects.m"; path = "UI/Categories/UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineValueTransactionsProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineValueTransactionsProtocol.h; sourceTree = "<group>"; };
+		13891CA81D00258800A61015 /* AFAConfirmationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAConfirmationView.h; path = UI/Components/ConfirmationView/AFAConfirmationView.h; sourceTree = "<group>"; };
+		13891CA91D00258800A61015 /* AFAConfirmationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAConfirmationView.m; path = UI/Components/ConfirmationView/AFAConfirmationView.m; sourceTree = "<group>"; };
 		138AC9CA1B9DD3F4006C9DD4 /* ASDKAPIJSONKeyParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKAPIJSONKeyParams.h; path = NetworkServices/APIJSONKeyParams/ASDKAPIJSONKeyParams.h; sourceTree = "<group>"; };
 		138AC9CB1B9DD3F4006C9DD4 /* ASDKAPIJSONKeyParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKAPIJSONKeyParams.m; path = NetworkServices/APIJSONKeyParams/ASDKAPIJSONKeyParams.m; sourceTree = "<group>"; };
 		138C48B41C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceNetworkServiceProtocol.h; path = NetworkServices/Proxy/ProcessInstanceNetworkServices/Protocol/ASDKProcessInstanceNetworkServiceProtocol.h; sourceTree = "<group>"; };
@@ -1675,6 +1678,7 @@
 				132167111B8AF37900B7406B /* AvatarView */,
 				135443E61B96DF7B0044157B /* SliderView */,
 				8D7C1A761C80910F0092EA81 /* NoContentView */,
+				13891CAB1D00258D00A61015 /* ConfirmationView */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -2276,6 +2280,15 @@
 				137B945F1BD796B700134BF1 /* ASDKFormCollectionViewController.m */,
 			);
 			name = FormCollectionController;
+			sourceTree = "<group>";
+		};
+		13891CAB1D00258D00A61015 /* ConfirmationView */ = {
+			isa = PBXGroup;
+			children = (
+				13891CA81D00258800A61015 /* AFAConfirmationView.h */,
+				13891CA91D00258800A61015 /* AFAConfirmationView.m */,
+			);
+			name = ConfirmationView;
 			sourceTree = "<group>";
 		};
 		138AC9CE1B9DD3FB006C9DD4 /* APIJSONKeyParams */ = {
@@ -4790,6 +4803,7 @@
 				13CFF33F1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m in Sources */,
 				13CFF3461BBC2B6500D3DEB6 /* AFATaskUpdateModel.m in Sources */,
 				8D7C1A6A1C8090500092EA81 /* AFACompletedDateTableViewCell.m in Sources */,
+				13891CAA1D00258800A61015 /* AFAConfirmationView.m in Sources */,
 				139DF5BA1C5A40C10062D01D /* AFAAppServices.m in Sources */,
 				137B8DDC1BB9979000F1A6DC /* AFATableControllerContentModel.m in Sources */,
 				137B8DD81BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m in Sources */,
