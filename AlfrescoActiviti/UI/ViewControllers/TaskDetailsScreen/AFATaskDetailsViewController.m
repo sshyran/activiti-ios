@@ -727,6 +727,10 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                       strongSelf.tableController.isEditable = !(task.endDate && task.duration);
                   }
                   
+                  // Cell actions for all the cell factories are registered after the initial task details
+                  // are loaded
+                  [strongSelf registerCellActions];
+                  
                   // Because we're switching betweeen task details and contributors views
                   // we're reloading the table view even if there is esentially the same
                   // content
@@ -1067,9 +1071,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 #pragma mark Cell factories and cell actions
 
 - (void)setUpCellFactories {
-    AFATableControllerTaskDetailsModel *taskDetailsModel = self.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
-    BOOL isTaskCompleted = (taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
-    
     // Details cell factory
     AFATableControllerTaskDetailsCellFactory *detailsCellFactory = [AFATableControllerTaskDetailsCellFactory new];
     detailsCellFactory.appThemeColor = self.navigationBarThemeColor;
@@ -1087,10 +1088,24 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     // Comment cell factory
     AFATableControllerCommentCellFactory *commentCellFactory = [AFATableControllerCommentCellFactory new];
     
+    self.cellFactoryDict[@(AFATaskDetailsSectionTypeTaskDetails)] = detailsCellFactory;
+    self.cellFactoryDict[@(AFATaskDetailsSectionTypeChecklist)] = checklistCellFactory;
+    self.cellFactoryDict[@(AFATaskDetailsSectionTypeContributors)] = contributorsCellFactory;
+    self.cellFactoryDict[@(AFATaskDetailsSectionTypeFilesContent)] = contentCellFactory;
+    self.cellFactoryDict[@(AFATaskDetailsSectionTypeComments)] = commentCellFactory;
+}
+
+- (void)registerCellActions {
+    AFATableControllerTaskDetailsCellFactory *detailsCellFactory = self.cellFactoryDict[@(AFATaskDetailsSectionTypeTaskDetails)];
+    AFATaskChecklistCellFactory *checklistCellFactory = self.cellFactoryDict[@(AFATaskDetailsSectionTypeChecklist)];
+    AFATableControllerContentCellFactory *contentCellFactory = self.cellFactoryDict[@(AFATaskDetailsSectionTypeFilesContent)];
+    AFATableControllerTaskContributorsCellFactory *contributorsCellFactory = self.cellFactoryDict[@(AFATaskDetailsSectionTypeContributors)];
+    
     // Certain actions are performed for completed or ongoing tasks so there is no reason to
     // register all of them at all times
     __weak typeof(self) weakSelf = self;
-    if (isTaskCompleted) {
+    AFATableControllerTaskDetailsModel *taskDetailsModel = self.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
+    if ([taskDetailsModel isCompletedTask]) {
         [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
             __strong typeof(self) strongSelf = weakSelf;
             
@@ -1230,12 +1245,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                                                                   allowCachedContent:YES];
                           }];
     } forCellType:[contentCellFactory cellTypeForDownloadContent]];
-    
-    self.cellFactoryDict[@(AFATaskDetailsSectionTypeTaskDetails)] = detailsCellFactory;
-    self.cellFactoryDict[@(AFATaskDetailsSectionTypeChecklist)] = checklistCellFactory;
-    self.cellFactoryDict[@(AFATaskDetailsSectionTypeContributors)] = contributorsCellFactory;
-    self.cellFactoryDict[@(AFATaskDetailsSectionTypeFilesContent)] = contentCellFactory;
-    self.cellFactoryDict[@(AFATaskDetailsSectionTypeComments)] = commentCellFactory;
 }
 
 - (id)dequeueCellFactoryForSectionType:(AFATaskDetailsSectionType)sectionType {
