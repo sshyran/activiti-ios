@@ -29,6 +29,9 @@
 // Constants
 #import "AFAUIConstants.h"
 
+// Model
+#import "AFATableControllerProcessInstanceDetailsModel.h"
+
 @interface AFATableControllerProcessInstanceDetailsCellFactory () <AFAShowDiagramTableViewCellDelegate,
                                                                    AFAAuditLogTableViewCellDelegate>
 
@@ -43,11 +46,10 @@
               cellForIndexPath:(NSIndexPath *)indexPath
                       forModel:(id<AFATableViewModelDelegate>)model {
     UITableViewCell *cell = nil;
-    BOOL isCompletedTask = NO;
     
-    if ([model respondsToSelector:@selector(hasEndDate)]) {
-        isCompletedTask = [model hasEndDate];
-    }
+    AFATableControllerProcessInstanceDetailsModel *currentModel = (AFATableControllerProcessInstanceDetailsModel *)model;
+    BOOL isCompletedTask = [currentModel hasEndDate];
+
     
     if (!isCompletedTask) {
         // Handle process instance details cell section rows
@@ -55,21 +57,21 @@
             case AFAProcessInstanceDetailsCellTypeProcessName: {
                 cell = [self dequeuedNameCellAtIndexPath:indexPath
                                            fromTableView:tableView
-                                               withModel:model];
+                                               withModel:currentModel];
             }
                 break;
                 
             case AFAProcessInstanceDetailsCellTypeShowDiagram: {
                 cell = [self dequeuedShowDiagramCellAtIndexPath:indexPath
                                                 fromTableView:tableView
-                                                    withModel:model];
+                                                    withModel:currentModel];
             }
                 break;
                 
             case AFAProcessInstanceDetailsCellTypeStartedBy: {
                 cell = [self dequeuedStartedByCellAtIndexPath:indexPath
                                                 fromTableView:tableView
-                                                    withModel:model];
+                                                    withModel:currentModel];
                 
             }
                 break;
@@ -77,7 +79,7 @@
             case AFAProcessInstanceDetailsCellTypeStartDate: {
                 cell = [self dequeuedStartedCellAtIndexPath:indexPath
                                               fromTableView:tableView
-                                                  withModel:model];
+                                                  withModel:currentModel];
             }
                 break;
                 
@@ -90,42 +92,42 @@
             case AFACompletedProcessInstanceDetailsCellTypeProcessName: {
                 cell = [self dequeuedNameCellAtIndexPath:indexPath
                                            fromTableView:tableView
-                                               withModel:model];
+                                               withModel:currentModel];
             }
                 break;
                 
             case AFACompletedProcessInstanceDetailsCellTypeShowDiagram: {
                 cell = [self dequeuedShowDiagramCellAtIndexPath:indexPath
                                                   fromTableView:tableView
-                                                      withModel:model];
+                                                      withModel:currentModel];
             }
                 break;
                 
             case AFACompletedProcessInstanceDetailsCellTypeStartedBy: {
                 cell = [self dequeuedStartedByCellAtIndexPath:indexPath
                                                 fromTableView:tableView
-                                                    withModel:model];
+                                                    withModel:currentModel];
             }
                 break;
                 
             case AFACompletedProcessInstanceDetailsCellTypeStartDate: {
                 cell = [self dequeuedStartedCellAtIndexPath:indexPath
                                               fromTableView:tableView
-                                                  withModel:model];
+                                                  withModel:currentModel];
             }
                 break;
                 
             case AFACompletedProcessInstanceDetailsCellTypeEndDate: {
                 cell = [self dequedCompletedDateCellAtIndexPath:indexPath
                                                   fromTableView:tableView
-                                                      withModel:model];
+                                                      withModel:currentModel];
             }
                 break;
                 
             case AFACompletedProcessInstanceDetailsCellTypeAuditLog: {
                 cell = [self dequeuedAuditLogCellAtIndexPath:indexPath
                                                fromTableView:tableView
-                                                   withModel:model];
+                                                   withModel:currentModel];
             }
                 break;
                 

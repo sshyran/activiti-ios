@@ -26,7 +26,6 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    self.iconImageView.tintColor = [UIColor disabledControlColor];
     self.descriptionLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenChecklistNameText, @"Checklist name text");
 }
 
@@ -64,6 +63,7 @@
 
 - (void)setUpCellWithTask:(ASDKModelTask *)task {
     self.checklistNameLabel.text = task.name;
+    self.iconImageView.tintColor = (task.endDate && task.duration) ? [UIColor checkmarkedActionColor] : [UIColor disabledControlColor];
 }
 
 @end

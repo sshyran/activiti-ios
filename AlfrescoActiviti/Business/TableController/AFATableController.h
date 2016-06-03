@@ -29,14 +29,6 @@
 
 @optional
 - (NSString *)titleForHeaderInSection:(NSInteger)section;
-- (BOOL)hasContentAvailable;
-- (BOOL)isRefreshInProgress;
-- (BOOL)hasEndDate;
-- (BOOL)hasTaskListAvailable;
-- (BOOL)isMemberOfCandidateUsers;
-- (BOOL)isMemberOfCandidateGroup;
-- (ASDKModelProfile *)assignee;
-- (ASDKModelProfile *)currentUserProfile;
 - (BOOL)tableView:(UITableView *)tableView
 canMoveRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)tableView:(UITableView *)tableView

@@ -32,7 +32,7 @@
 - (NSInteger)numberOfRowsInSection:(NSInteger)section {
     // If we're dealing with a completed task display additional field
     // for end date and duration
-    if ([self hasEndDate]) {
+    if ([self isCompletedTask]) {
         return AFACompletedTaskDetailsCellTypeEnumCount;
     } else if (![self.currentTask.assignee.instanceID isEqualToString:self.userProfile.instanceID]) {
         // If the assignee does not match the current user profile this means that the current user
@@ -47,24 +47,16 @@
     return self.currentTask;
 }
 
-- (BOOL)hasEndDate {
+- (BOOL)isCompletedTask {
     return self.currentTask.endDate ? YES : NO;
 }
 
-- (BOOL)isMemberOfCandidateUsers {
-    return self.currentTask.isMemberOfCandidateUsers;
+- (BOOL)canBeRequeued {
+    return [self.currentTask.involvedPeople containsObject:self.currentTask.assignee];
 }
 
-- (BOOL)isMemberOfCandidateGroup {
-    return self.currentTask.isMemberOfCandidateGroup;
-}
-
-- (ASDKModelProfile *)assignee {
-    return self.currentTask.assignee;
-}
-
-- (ASDKModelProfile *)currentUserProfile {
-    return self.userProfile;
+- (BOOL)isAssignedTask {
+   return [self.currentTask.assignee.instanceID isEqualToString:self.userProfile.instanceID];
 }
 
 @end

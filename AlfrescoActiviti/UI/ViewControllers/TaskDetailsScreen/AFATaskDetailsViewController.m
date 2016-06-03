@@ -169,7 +169,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     self.taskDetailsTableView.delegate = self.tableController;
     
     // Set up the details table view to adjust it's size automatically
-    self.taskDetailsTableView.estimatedRowHeight = 55.0f;
+    self.taskDetailsTableView.estimatedRowHeight = 60.0f;
     self.taskDetailsTableView.rowHeight = UITableViewAutomaticDimension;
     
     // Update UI for current localization
@@ -691,20 +691,17 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
               // can be dequeued
               dispatch_group_t taskDetailsGroup = dispatch_group_create();
               
-              if ((task.isMemberOfCandidateUsers || task.isMemberOfCandidateGroup) &&
-                  task.assignee) {
-                  // Fetch profile information
-                  dispatch_group_enter(taskDetailsGroup);
-                  AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-                  [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
-                      if (!error) {
-                          weakSelf.currentUserProfile = profile;
-                          dispatch_group_leave(taskDetailsGroup);
-                      } else {
-                          [weakSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                      }
-                  }];
-              }
+              // Fetch profile information
+              dispatch_group_enter(taskDetailsGroup);
+              AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
+              [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+                  if (!error) {
+                      weakSelf.currentUserProfile = profile;
+                      dispatch_group_leave(taskDetailsGroup);
+                  } else {
+                      [weakSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                  }
+              }];
               
               dispatch_group_notify(taskDetailsGroup, dispatch_get_main_queue(), ^{
                   if (AFATaskDetailsSectionTypeTaskDetails == strongSelf.currentSelectedSection) {
@@ -1070,40 +1067,129 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 #pragma mark Cell factories and cell actions
 
 - (void)setUpCellFactories {
+    AFATableControllerTaskDetailsModel *taskDetailsModel = self.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
+    BOOL isTaskCompleted = (taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
+    
     // Details cell factory
     AFATableControllerTaskDetailsCellFactory *detailsCellFactory = [AFATableControllerTaskDetailsCellFactory new];
     detailsCellFactory.appThemeColor = self.navigationBarThemeColor;
     
-    // Register details cell factory actions
-    __weak typeof(self) weakSelf = self;
-    [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        [strongSelf performSegueWithIdentifier:kSegueIDTaskDetailsAddContributor
-                                        sender:nil];
-    } forCellType:[detailsCellFactory cellTypeForReAssignCell]];
+    // Checklist cell factory
+    AFATaskChecklistCellFactory *checklistCellFactory = [AFATaskChecklistCellFactory new];
+    checklistCellFactory.appThemeColor = self.navigationBarThemeColor;
     
-    [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        // Pick date cell action
-        __strong typeof(self) strongSelf = weakSelf;
-        NSDate *dueDate = nil;
+    // Content cell factory
+    AFATableControllerContentCellFactory *contentCellFactory = [AFATableControllerContentCellFactory new];
+    
+    // Contributors cell factory
+    AFATableControllerTaskContributorsCellFactory *contributorsCellFactory = [AFATableControllerTaskContributorsCellFactory new];
+    
+    // Comment cell factory
+    AFATableControllerCommentCellFactory *commentCellFactory = [AFATableControllerCommentCellFactory new];
+    
+    // Certain actions are performed for completed or ongoing tasks so there is no reason to
+    // register all of them at all times
+    __weak typeof(self) weakSelf = self;
+    if (isTaskCompleted) {
+        [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf.contentPickerViewController downloadAuditLogForTaskWithID:strongSelf.taskID
+                                                               allowCachedResults:YES];
+        } forCellType:[detailsCellFactory cellTypeForAuditLogCell]];
         
-        // Display the date picker
-        [strongSelf toggleDatePickerComponent];
         
-        AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    } else {
+        [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf performSegueWithIdentifier:kSegueIDTaskDetailsAddContributor
+                                            sender:nil];
+        } forCellType:[detailsCellFactory cellTypeForReAssignCell]];
         
-        // If there is a previously registered due date, use that one for the date picker
-        // If not, pick the current date
-        dueDate = taskDetailsModel.currentTask.dueDate ? taskDetailsModel.currentTask.dueDate : [[NSDate date] endOfToday];
+        [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            // Pick date cell action
+            __strong typeof(self) strongSelf = weakSelf;
+            NSDate *dueDate = nil;
+            
+            // Display the date picker
+            [strongSelf toggleDatePickerComponent];
+            
+            AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+            
+            // If there is a previously registered due date, use that one for the date picker
+            // If not, pick the current date
+            dueDate = taskDetailsModel.currentTask.dueDate ? taskDetailsModel.currentTask.dueDate : [[NSDate date] endOfToday];
+            
+            //Change model's date according to the default pick
+            taskDetailsModel.currentTask.dueDate = dueDate;
+            
+            [strongSelf.datePicker setDate:dueDate
+                                  animated:YES];
+            [strongSelf.taskDetailsTableView reloadData];
+        } forCellType:[detailsCellFactory cellTypeForDueDateCell]];
         
-        //Change model's date according to the default pick
-        taskDetailsModel.currentTask.dueDate = dueDate;
+        [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf completeTask];
+        } forCellType:[detailsCellFactory cellTypeForCompleteCell]];
         
-        [strongSelf.datePicker setDate:dueDate
-                              animated:YES];
-        [strongSelf.taskDetailsTableView reloadData];
-    } forCellType:[detailsCellFactory cellTypeForDueDateCell]];
+        [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf claimTask];
+        } forCellType:[detailsCellFactory cellTypeForClaimCell]];
+        
+        [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf unclaimTask];
+        } forCellType:[detailsCellFactory cellTypeForRequeueCell]];
+        
+        [contributorsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            NSInteger contributorToDeleteIdx = [changeParameters[kCellFactoryCellParameterCellIdx] integerValue];
+            AFATableControllerTaskContributorsModel *taskContributorsModel = [strongSelf reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeContributors];
+            ASDKModelProfile *contributor = (ASDKModelProfile *)taskContributorsModel.involvedPeople[contributorToDeleteIdx];
+            NSString *contributorName = [contributor normalisedName];
+            
+            [strongSelf showConfirmationAlertControllerWithMessage:[NSString stringWithFormat:NSLocalizedString(kLocalizationAlertDialogDeleteContributorQuestionFormat, @"Delete contributor confirmation question"), contributorName]
+                                           confirmationBlockAction:^{
+                                               ASDKModelUser *userModel = [ASDKModelUser new];
+                                               userModel.userID = contributor.instanceID;
+                                               [weakSelf onRemoveInvolvedUserForCurrentTask:userModel];
+                                           }];
+            
+        } forCellType:[contributorsCellFactory cellTypeForDeleteContributor]];
+        
+        [checklistCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            // Make the confirm overlay visible
+            if (strongSelf.confirmationView.hidden) {
+                [strongSelf toggleConfirmationOverlayView];
+                strongSelf.longPressGestureRecognizer.enabled = NO;
+            }
+        } forCellType:[checklistCellFactory cellTypeForReorder]];
+        
+        [contentCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            // Cell content delete action
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            NSInteger contentToDeleteIdx = [changeParameters[kCellFactoryCellParameterCellIdx] integerValue];
+            AFATableControllerContentModel *taskContentModel = [strongSelf reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
+            NSString *contentName = ((ASDKModelContent *)taskContentModel.attachedContentArr[contentToDeleteIdx]).contentName;
+            
+            [strongSelf showConfirmationAlertControllerWithMessage:[NSString stringWithFormat:NSLocalizedString(kLocalizationAlertDialogDeleteContentQuestionFormat, @"Delete confirmation question"), contentName]
+                                           confirmationBlockAction:^{
+                                               [weakSelf onContentDeleteForTaskAtIndex:contentToDeleteIdx];
+                                           }];
+            
+        } forCellType:[contentCellFactory cellTypeForDeleteContent]];
+    }
+    
     
     [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         __strong typeof(self) strongSelf = weakSelf;
@@ -1111,62 +1197,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         [strongSelf performSegueWithIdentifier:kSegueIDTaskDetailsViewProcess
                                         sender:nil];
     } forCellType:[detailsCellFactory cellTypeForProcessCell]];
-    
-    [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        [strongSelf completeTask];
-    } forCellType:[detailsCellFactory cellTypeForCompleteCell]];
-    
-    [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        [strongSelf claimTask];
-    } forCellType:[detailsCellFactory cellTypeForClaimCell]];
-    
-    [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        [strongSelf unclaimTask];
-    } forCellType:[detailsCellFactory cellTypeForRequeueCell]];
-    
-    [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        [strongSelf.contentPickerViewController downloadAuditLogForTaskWithID:strongSelf.taskID
-                                                           allowCachedResults:YES];
-    } forCellType:[detailsCellFactory cellTypeForAuditLogCell]];
-    
-    // Checklist cell factory
-    AFATaskChecklistCellFactory *checklistCellFactory = [AFATaskChecklistCellFactory new];
-    checklistCellFactory.appThemeColor = self.navigationBarThemeColor;
-    [checklistCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        // Make the confirm overlay visible
-        if (strongSelf.confirmationView.hidden) {
-            [strongSelf toggleConfirmationOverlayView];
-            strongSelf.longPressGestureRecognizer.enabled = NO;
-        }
-    } forCellType:[checklistCellFactory cellTypeForReorder]];
-    
-    // Content cell factory
-    AFATableControllerContentCellFactory *contentCellFactory = [AFATableControllerContentCellFactory new];
-    
-    [contentCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        // Cell content delete action
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        NSInteger contentToDeleteIdx = [changeParameters[kCellFactoryCellParameterCellIdx] integerValue];
-        AFATableControllerContentModel *taskContentModel = [strongSelf reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
-        NSString *contentName = ((ASDKModelContent *)taskContentModel.attachedContentArr[contentToDeleteIdx]).contentName;
-        
-        [strongSelf showConfirmationAlertControllerWithMessage:[NSString stringWithFormat:NSLocalizedString(kLocalizationAlertDialogDeleteContentQuestionFormat, @"Delete confirmation question"), contentName]
-                                       confirmationBlockAction:^{
-                                           [weakSelf onContentDeleteForTaskAtIndex:contentToDeleteIdx];
-                                       }];
-        
-    } forCellType:[contentCellFactory cellTypeForDeleteContent]];
     
     // Cell content download action
     [contentCellFactory registerCellAction:^(NSDictionary *changeParameters) {
@@ -1200,29 +1230,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                                                                   allowCachedContent:YES];
                           }];
     } forCellType:[contentCellFactory cellTypeForDownloadContent]];
-    
-    // Contributors cell factory
-    AFATableControllerTaskContributorsCellFactory *contributorsCellFactory = [AFATableControllerTaskContributorsCellFactory new];
-    
-    [contributorsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        NSInteger contributorToDeleteIdx = [changeParameters[kCellFactoryCellParameterCellIdx] integerValue];
-        AFATableControllerTaskContributorsModel *taskContributorsModel = [strongSelf reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeContributors];
-        ASDKModelProfile *contributor = (ASDKModelProfile *)taskContributorsModel.involvedPeople[contributorToDeleteIdx];
-        NSString *contributorName = [contributor normalisedName];
-        
-        [strongSelf showConfirmationAlertControllerWithMessage:[NSString stringWithFormat:NSLocalizedString(kLocalizationAlertDialogDeleteContributorQuestionFormat, @"Delete contributor confirmation question"), contributorName]
-                                       confirmationBlockAction:^{
-                                           ASDKModelUser *userModel = [ASDKModelUser new];
-                                           userModel.userID = contributor.instanceID;
-                                           [weakSelf onRemoveInvolvedUserForCurrentTask:userModel];
-        }];
-        
-    } forCellType:[contributorsCellFactory cellTypeForDeleteContributor]];
-    
-    // Comment cell factory
-    AFATableControllerCommentCellFactory *commentCellFactory = [AFATableControllerCommentCellFactory new];
     
     self.cellFactoryDict[@(AFATaskDetailsSectionTypeTaskDetails)] = detailsCellFactory;
     self.cellFactoryDict[@(AFATaskDetailsSectionTypeChecklist)] = checklistCellFactory;

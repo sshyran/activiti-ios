@@ -57,14 +57,10 @@
     // If we're dealing with a completed task just display the value
     // or that there's no value - don't show the add button
     if (task.endDate) {
-        if (!taskHasDueDate) {
-            self.dueDateLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenNoDueDateText, @"No due date text");
-            self.dueDateLabel.hidden = NO;
-            self.addDueDateButton.hidden = YES;
-        } else {
-            self.addDueDateButton.hidden = YES;
-            self.dueDateLabel.text = [task.dueDate dueDateFormattedString];
-        }
+        self.dueDateLabel.hidden = NO;
+        self.addDueDateButton.hidden = YES;
+        
+        self.dueDateLabel.text = taskHasDueDate ? [task.dueDate dueDateFormattedString] : NSLocalizedString(kLocalizationTaskDetailsScreenNoDueDateText, @"No due date text");
     } else {
         // If there is no due date set
         if (!taskHasDueDate) {

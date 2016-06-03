@@ -34,6 +34,9 @@
 // Constants
 #import "AFAUIConstants.h"
 
+// Model
+#import "AFATableControllerTaskDetailsModel.h"
+
 @interface AFATableControllerTaskDetailsCellFactory () <AFADueTableViewCellDelegate,
                                                         AFACompleteTableViewCellDelegate,
                                                         AFAProcessMembershipTableViewCellDelegate,
@@ -52,15 +55,13 @@
               cellForIndexPath:(NSIndexPath *)indexPath
                       forModel:(id<AFATableViewModelDelegate>)model {
     UITableViewCell *cell = nil;
-    BOOL isCompletedTask = NO;
-    BOOL isAssignedTask = [[[model assignee] instanceID] isEqualToString:[[model currentUserProfile] instanceID]];
+
+    AFATableControllerTaskDetailsModel *currentModel = (AFATableControllerTaskDetailsModel *)model;
     
-    if ([model respondsToSelector:@selector(hasEndDate)]) {
-        isCompletedTask = [model hasEndDate];
-    }
-    
-    if (!isCompletedTask) {
-        if (isAssignedTask) {
+    if (![currentModel isCompletedTask]) {
+        if ([currentModel isAssignedTask] ||
+            currentModel.currentTask.isMemberOfCandidateUsers ||
+            currentModel.currentTask.isMemberOfCandidateGroup) {
             // Handle task details cell section rows
             switch (indexPath.row) {
                 case AFATaskDetailsCellTypeTaskName: {
@@ -74,9 +75,9 @@
                     // There are cases when the user needs to be displayed on the same
                     // position as the complete cell with choices regarding claiming
                     // and / or completing the task
-                    if (([model isMemberOfCandidateGroup] ||
-                         [model isMemberOfCandidateUsers]) &&
-                        ![model assignee]) {
+                    if ((currentModel.currentTask.isMemberOfCandidateGroup ||
+                         currentModel.currentTask.isMemberOfCandidateUsers) &&
+                        !currentModel.currentTask.assignee) {
                         cell = [self dequeuedClaimCellAtIndexPath:indexPath
                                                     fromTableView:tableView];
                     } else {
@@ -389,7 +390,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [completeCell setUpWithThemeColor:self.appThemeColor];
     
     // Enable the requeue button if it's the case
-    BOOL displayRequeueButton = [[[model assignee] instanceID] isEqualToString:[[model currentUserProfile] instanceID]];
+    BOOL displayRequeueButton = [(AFATableControllerTaskDetailsModel *)model canBeRequeued];
     completeCell.requeueRoundedBorderView.hidden = !displayRequeueButton;
     completeCell.requeueTaskButton.hidden = !displayRequeueButton;
     

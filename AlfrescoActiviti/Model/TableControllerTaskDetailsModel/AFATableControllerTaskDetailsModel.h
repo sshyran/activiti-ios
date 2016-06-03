@@ -25,4 +25,8 @@
 @property (strong, nonatomic) ASDKModelTask     *currentTask;
 @property (strong, nonatomic) ASDKModelProfile  *userProfile;
 
+- (BOOL)canBeRequeued;
+- (BOOL)isCompletedTask;
+- (BOOL)isAssignedTask;
+
 @end

@@ -146,6 +146,9 @@ static const CGFloat profileControllerSectionHeight = 30.0f;
     self.firstNameTextField.delegate = self;
     self.lastNameTextField.delegate = self;
     
+    // Set a provisory profile image placeholder
+    self.avatarView.profileImage = [AFAThumbnailManager placeholderThumbnailImage];
+    
     // Request the user profile
     self.controllerState = AFAProfileControllerStateRefreshInProgress;
     [self onRefresh:nil];
