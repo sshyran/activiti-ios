@@ -53,6 +53,7 @@ extern NSString * const kASDKAPITaskRemoveInvolvedPath;
 extern NSString * const kASDKAPITaskClaimPath;
 extern NSString * const kASDKAPITaskUnclaimPath;
 extern NSString * const kASDKAPITaskAssignPath;
+extern NSString * const kASDKAPITaskChecklistPath;
 
 // Filter related
 extern NSString * const kASDKAPIFilterListPath;

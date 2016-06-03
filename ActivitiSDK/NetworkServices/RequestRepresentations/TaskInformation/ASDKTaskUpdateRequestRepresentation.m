@@ -24,6 +24,7 @@
 
 @implementation ASDKTaskUpdateRequestRepresentation
 
+
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
 

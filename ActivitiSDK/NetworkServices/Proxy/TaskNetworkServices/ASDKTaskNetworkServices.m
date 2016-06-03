@@ -22,6 +22,7 @@
 #import "ASDKFilterRequestRepresentation.h"
 #import "ASDKTaskUpdateRequestRepresentation.h"
 #import "ASDKTaskCreationRequestRepresentation.h"
+#import "ASDKTaskChecklistOrderRequestRepresentation.h"
 #import "ASDKModelPaging.h"
 #import "ASDKModelFileContent.h"
 #import "ASDKNetworkServiceConstants.h"
@@ -987,58 +988,28 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
     
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
-    [self.requestOperationManager
-     POST:[self.servicePathFactory taskCreationServicePath]
-     parameters:[taskRepresentation jsonDictionary]
-     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         // Remove operation reference
-         [strongSelf.networkOperations removeObject:operation];
-         
-         NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-         ASDKLogVerbose(@"Task created successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                        operation.request.HTTPMethod,
-                        operation.request.URL.absoluteString,
-                        [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                        responseDictionary);
-         
-         // Parse response data
-         [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
-                                                            ofType:CREATE_STRING(ASDKTaskDetailsParserContentTypeTaskDetails)
-                                               withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                   if (error) {
-                                                       ASDKLogError(@"Error parsing task details. Description:%@", error.localizedDescription);
-                                                       
-                                                       dispatch_async(weakSelf.resultsQueue, ^{
-                                                           completionBlock(nil, error);
-                                                       });
-                                                   } else {
-                                                       ASDKModelTask *task = (ASDKModelTask *)parsedObject;
-                                                       ASDKLogVerbose(@"Successfully parsed model object:%@", task);
-                                                       
-                                                       dispatch_async(weakSelf.resultsQueue, ^{
-                                                           completionBlock(task, nil);
-                                                       });
-                                                   }
-                                               }];
-     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         // Remove operation reference
-         [strongSelf.networkOperations removeObject:operation];
-         
-         ASDKLogError(@"Failed to create task for request: %@ - %@.\nBody:%@.\nReason:%@",
-                      operation.request.HTTPMethod,
-                      operation.request.URL.absoluteString,
-                      [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                      error.localizedDescription);
-         
-         dispatch_async(strongSelf.resultsQueue, ^{
-             completionBlock(nil, error);
-         });
-     }];
+    AFHTTPRequestOperation *operation = [self.requestOperationManager
+                                         POST:[self.servicePathFactory taskCreationServicePath]
+                                         parameters:[taskRepresentation jsonDictionary]
+                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             // Remove operation reference
+                                             [strongSelf.networkOperations removeObject:operation];
+                                             
+                                             [self handleSuccessfulTaskCreationResponseForOperation:operation
+                                                                                     responseObject:responseObject
+                                                                                    completionBlock:completionBlock];
+                                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             // Remove operation reference
+                                             [strongSelf.networkOperations removeObject:operation];
+                                             
+                                             [strongSelf handleFailedTaskCreationResponseForOperation:operation
+                                                                                                error:error
+                                                                                      completionBlock:completionBlock];
+                                         }];
     
     // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:operation];
@@ -1323,6 +1294,140 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:operation];
 }
 
+- (void)fetchChecklistForTaskWithID:(NSString *)taskID
+                    completionBlock:(ASDKTaskListCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskCheckListServicePathFormat], taskID]
+                           parameters:nil
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  [strongSelf handleSuccessfulTaskListResponseForOperation:operation
+                                                                            responseObject:responseObject
+                                                                       withCompletionBlock:completionBlock];
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  [strongSelf handleFailedTaskListResponseForOperation:operation
+                                                                                 error:error
+                                                                   withCompletionBlock:completionBlock];
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)createChecklistWithRepresentation:(ASDKTaskCreationRequestRepresentation *)checklistRepresentation
+                                   taskID:(NSString *)taskID
+                          completionBlock:(ASDKTaskDetailsCompletionBlock)completionBlock; {
+    NSParameterAssert(checklistRepresentation);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation = [self.requestOperationManager
+                                         POST:[NSString stringWithFormat:[self.servicePathFactory taskCheckListServicePathFormat], taskID]
+                                         parameters:[checklistRepresentation jsonDictionary]
+                                         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             // Remove operation reference
+                                             [strongSelf.networkOperations removeObject:operation];
+                                             
+                                             [self handleSuccessfulTaskCreationResponseForOperation:operation
+                                                                                     responseObject:responseObject
+                                                                                    completionBlock:completionBlock];
+                                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             // Remove operation reference
+                                             [strongSelf.networkOperations removeObject:operation];
+                                             
+                                             [strongSelf handleFailedTaskCreationResponseForOperation:operation
+                                                                                                error:error
+                                                                                      completionBlock:completionBlock];
+                                         }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
+- (void)updateChecklistOrderWithRepresentation:(ASDKTaskChecklistOrderRequestRepresentation *)orderRepresentation
+                                        taskID:(NSString *)taskID
+                               completionBlock:(ASDKTaskUpdateCompletionBlock)completionBlock {
+    NSParameterAssert(orderRepresentation);
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    
+    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskCheckListServicePathFormat], taskID]
+                           parameters:[orderRepresentation jsonDictionary]
+                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  // Check status code
+                                  if (ASDKHTTPCode200OK == operation.response.statusCode) {
+                                      ASDKLogVerbose(@"The checklist order was updated successfully for request: %@ - %@.\nResponse:%@",
+                                                     operation.request.HTTPMethod,
+                                                     operation.request.URL.absoluteString,
+                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          completionBlock(YES, nil);
+                                      });
+                                  } else {
+                                      ASDKLogVerbose(@"The checklist order failed to update for request: %@ - %@.\nResponse:%@",
+                                                     operation.request.HTTPMethod,
+                                                     operation.request.URL.absoluteString,
+                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          completionBlock(NO, nil);
+                                      });
+                                  }
+                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:operation];
+                                  
+                                  ASDKLogError(@"Failed to update checklist order for request: %@ - %@.\nBody:%@.\nReason:%@",
+                                               operation.request.HTTPMethod,
+                                               operation.request.URL.absoluteString,
+                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                                               error.localizedDescription);
+                                  
+                                  dispatch_async(strongSelf.resultsQueue, ^{
+                                      completionBlock(NO, error);
+                                  });
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
+
 - (void)cancelAllTaskNetworkOperations {
     [self.networkOperations makeObjectsPerformSelector:@selector(cancel)];
     [self.networkOperations removeAllObjects];
@@ -1343,30 +1448,68 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                    responseDictionary);
     
     // Parse response data
+    __weak typeof(self) weakSelf = self;
     [self.parserOperationManager parseContentDictionary:responseDictionary
                                                  ofType:CREATE_STRING(ASDKTaskDetailsParserContentTypeTaskList)
                                     withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                        __strong typeof(self) strongSelf = weakSelf;
+                                        
                                         if (error) {
                                             ASDKLogError(@"Error parsing task list. Description:%@", error.localizedDescription);
                                             
-                                            dispatch_async(self.resultsQueue, ^{
+                                            dispatch_async(strongSelf.resultsQueue, ^{
                                                 completionBlock(nil, error, nil);
                                             });
                                         } else {
                                             NSArray *taskList = (NSArray *)parsedObject;
                                             ASDKLogVerbose(@"Successfully parsed model object:%@", taskList);
                                             
-                                            dispatch_async(self.resultsQueue, ^{
+                                            dispatch_async(strongSelf.resultsQueue, ^{
                                                 completionBlock(taskList, nil, paging);
                                             });
                                         }
                                     }];
 }
 
+- (void)handleSuccessfulTaskCreationResponseForOperation:(AFHTTPRequestOperation *)operation
+                                          responseObject:(id)responseObject
+                                         completionBlock:(ASDKTaskDetailsCompletionBlock)completionBlock {
+    NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+    ASDKLogVerbose(@"Task created successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
+                   operation.request.HTTPMethod,
+                   operation.request.URL.absoluteString,
+                   [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                   responseDictionary);
+    
+    
+    // Parse response data
+    __weak typeof(self) weakSelf = self;
+    [self.parserOperationManager parseContentDictionary:responseDictionary
+                                                       ofType:CREATE_STRING(ASDKTaskDetailsParserContentTypeTaskDetails)
+                                          withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
+                                              if (error) {
+                                                  ASDKLogError(@"Error parsing task details. Description:%@", error.localizedDescription);
+                                                  
+                                                  dispatch_async(strongSelf.resultsQueue, ^{
+                                                      completionBlock(nil, error);
+                                                  });
+                                              } else {
+                                                  ASDKModelTask *task = (ASDKModelTask *)parsedObject;
+                                                  ASDKLogVerbose(@"Successfully parsed model object:%@", task);
+                                                  
+                                                  dispatch_async(strongSelf.resultsQueue, ^{
+                                                      completionBlock(task, nil);
+                                                  });
+                                              }
+                                          }];
+}
+
 - (void)handleFailedTaskListResponseForOperation:(AFHTTPRequestOperation *)operation
                                            error:(NSError *)error
                              withCompletionBlock:(ASDKTaskListCompletionBlock)completionBlock {
-    ASDKLogError(@"Failed to fetch task list for request: %@ - %@.\nBody:%@.\nReason:%@",
+    ASDKLogError(@"Operation failed for request: %@ - %@.\nBody:%@.\nReason:%@",
                  operation.request.HTTPMethod,
                  operation.request.URL.absoluteString,
                  [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
@@ -1377,5 +1520,18 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     });
 }
 
+- (void)handleFailedTaskCreationResponseForOperation:(AFHTTPRequestOperation *)operation
+                                               error:(NSError *)error
+                                     completionBlock:(ASDKTaskDetailsCompletionBlock)completionBlock {
+    ASDKLogError(@"Failed to create task for request: %@ - %@.\nBody:%@.\nReason:%@",
+                 operation.request.HTTPMethod,
+                 operation.request.URL.absoluteString,
+                 [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
+                 error.localizedDescription);
+    
+    dispatch_async(self.resultsQueue, ^{
+        completionBlock(nil, error);
+    });
+}
 
 @end

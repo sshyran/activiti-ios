@@ -28,11 +28,6 @@
     self.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenTaskNameText, @"Task name text");
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 
 #pragma mark -
 #pragma mark Setters
@@ -45,6 +40,12 @@
         backgroundColorView.backgroundColor = [_applicationThemeColor colorWithAlphaComponent:.2f];
         [self setSelectedBackgroundView:backgroundColorView];
     }
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
 }
 
 

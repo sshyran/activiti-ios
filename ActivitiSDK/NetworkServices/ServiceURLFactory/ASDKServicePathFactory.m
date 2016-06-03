@@ -165,6 +165,10 @@ static NSString * const kASDkHTTPS = @"https";
     return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIAuditPath];
 }
 
+- (NSString *)taskCheckListServicePathFormat {
+    return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPITaskChecklistPath];
+}
+
 
 #pragma mark -
 #pragma mark Filter related

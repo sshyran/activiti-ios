@@ -215,6 +215,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 - (IBAction)unwindAddProcessInstanceCommentsController:(UIStoryboardSegue *)segue {
 }
 
+
 #pragma mark -
 #pragma mark Actions
 
@@ -421,7 +422,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
         
-        strongSelf.noContentView.hidden = [strongSelf.tableController.model hasTaskListAvailable];
+        strongSelf.noContentView.hidden = [(AFATableControllerProcessInstanceTasksModel *)strongSelf.tableController.model hasTaskListAvailable];
         strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"tasks-large-icon"];
         strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenNoTasksAvailableText, @"No tasks available text");
     });

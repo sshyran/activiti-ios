@@ -27,7 +27,8 @@ ASDKModelContent,
 ASDKModelFileContent,
 ASDKModelUser,
 ASDKModelComment,
-ASDKTaskCreationRequestRepresentation;
+ASDKTaskCreationRequestRepresentation,
+ASDKTaskChecklistOrderRequestRepresentation;
 
 typedef void  (^ASDKTaskListCompletionBlock) (NSArray *taskList, NSError *error, ASDKModelPaging *paging);
 typedef void  (^ASDKTaskDetailsCompletionBlock) (ASDKModelTask *task, NSError *error);
@@ -272,6 +273,41 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
                    allowCachedResults:(BOOL)allowCachedResults
                         progressBlock:(ASDKTaskContentDownloadProgressBlock)progressBlock
                       completionBlock:(ASDKTaskContentDownloadCompletionBlock)completionBlock;
+
+/**
+ *  Fetches an returns via the provided completion block a list of ASDKModelTask objects
+ *  that represents the checklist element collection for a given task.
+ *
+ *  @param taskID          ID of the task for which the checklist is being requested
+ *  @param completionBlock Completion block providing the checklist collection, an optional error reason and
+ *                         pagination information
+ */
+- (void)fetchChecklistForTaskWithID:(NSString *)taskID
+                    completionBlock:(ASDKTaskListCompletionBlock)completionBlock;
+
+/**
+ *  Creates a checklist based on the passed representation.
+ *
+ *  @param checklistRepresentation Object encapsulating the information that needs to used for creating the checklist
+ *  @param taskID                  ID of the task for which the checklist is being created
+ *  @param completionBlock         Completion block providing the newly created task object details and an optional
+ *                                 error reason.
+ */
+- (void)createChecklistWithRepresentation:(ASDKTaskCreationRequestRepresentation *)checklistRepresentation
+                                   taskID:(NSString *)taskID
+                          completionBlock:(ASDKTaskDetailsCompletionBlock)completionBlock;
+
+/**
+ *  Adjusts the checklist element order as described in the attached representation object
+ *
+ *  @param orderRepresentation Object encapsulating the order of the checklist elements based on their IDs
+ *  @param taskID              ID of the task for which the checklist is to be adjusted
+ *  @param completionBlock     Completion block providing whether the order of the elements has been adjusted and an
+ *                             optional error reason.
+ */
+- (void)updateChecklistOrderWithRepresentation:(ASDKTaskChecklistOrderRequestRepresentation *)orderRepresentation
+                                        taskID:(NSString *)taskID
+                               completionBlock:(ASDKTaskUpdateCompletionBlock)completionBlock;
 
 /**
  *  Cancells all queued or running network operations

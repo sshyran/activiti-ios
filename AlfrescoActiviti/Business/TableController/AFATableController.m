@@ -119,6 +119,45 @@ canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return canEditRow && self.isEditable;
 }
 
+- (BOOL)tableView:(UITableView *)tableView
+canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    BOOL canMoveRow = NO;
+    
+    if ([self.model respondsToSelector:@selector(tableView:canMoveRowAtIndexPath:)]) {
+        canMoveRow = [self.model tableView:tableView
+                           canMoveRowAtIndexPath:indexPath];
+    }
+    
+    return canMoveRow;
+}
+
+- (void)tableView:(UITableView *)tableView
+moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
+      toIndexPath:(NSIndexPath *)toIndexPath {
+    if ([self.model respondsToSelector:@selector(tableView:moveRowAtIndexPath:toIndexPath:)]) {
+        [self.model tableView:tableView
+                 moveRowAtIndexPath:fromIndexPath
+                        toIndexPath:toIndexPath];
+    }
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
+           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCellEditingStyle editingStyle = UITableViewCellEditingStyleNone;
+    
+    if ([self.cellFactory respondsToSelector:@selector(tableView:editingStyleForRowAtIndexPath:)]) {
+        editingStyle = [self.cellFactory tableView:tableView
+                     editingStyleForRowAtIndexPath:indexPath];
+    }
+    
+    return editingStyle;
+}
+
+- (BOOL)tableView:(UITableView *)tableview
+shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
 - (void)tableView:(UITableView *)tableView
 commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {

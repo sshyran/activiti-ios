@@ -24,4 +24,6 @@
 
 @property (strong, nonatomic) ASDKModelProcessInstance *currentProcessInstance;
 
+- (BOOL)hasEndDate;
+
 @end

@@ -159,4 +159,8 @@
     return [UIColor colorWithRed:250 / 255.0f green:128 / 255.0f blue:114 / 255.0f alpha:1.0f];
 }
 
++ (UIColor *)checkmarkedActionColor {
+    return [UIColor colorWithRed:92 / 255.0f green:184 / 255.0f blue:92 / 255.0f alpha:1.0f];
+}
+
 @end

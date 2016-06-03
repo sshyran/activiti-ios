@@ -78,6 +78,7 @@ extern NSString *kCellIDProfileCategory;
 extern NSString *kCellIDProfileOption;
 extern NSString *kCellIDProfileAction;
 extern NSString *kCellIDAuditLog;
+extern NSString *kCellIDTaskChecklist;
 
 // Segue IDs
 
@@ -96,6 +97,8 @@ extern NSString *kSegueIDTaskDetailsViewProcess;
 extern NSString *kSegueIDTaskDetailsViewProcessUnwind;
 extern NSString *kSegueIDTaskDetailsAddComments;
 extern NSString *kSegueIDTaskDetailsAddCommentsUnwind;
+extern NSString *kSegueIDTaskDetailsChecklist;
+extern NSString *kSegueIDTaskDetailsChecklistUnwind;
 extern NSString *kSegueIDContentPickerComponentEmbedding;
 extern NSString *kSegueIDFormComponent;
 extern NSString *kSegueIDStartProcessInstance;

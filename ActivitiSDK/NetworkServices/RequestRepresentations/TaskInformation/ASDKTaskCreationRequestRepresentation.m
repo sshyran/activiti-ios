@@ -24,6 +24,7 @@
 
 @implementation ASDKTaskCreationRequestRepresentation
 
+
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
 
@@ -32,8 +33,9 @@
              @"taskName"            : @"name",
              @"taskDescription"     : @"description",
              @"appDefinitionID"     : @"category",
-             @"assigneeID"          : @"assignee"
-             };
+             @"assigneeID"          : @"assignee",
+             @"parentTaskID"        : @"parentTaskId"
+            };
 }
 
 + (NSValueTransformer *)assigneeIDJSONTransformer {

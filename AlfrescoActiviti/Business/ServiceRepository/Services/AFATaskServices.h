@@ -257,4 +257,39 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
                                progressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
                              completionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock;
 
+/**
+ *  Performs a request for the checklist of a defined taskID
+ *
+ *  @param taskID          ID of the task for which the checklist is requested
+ *  @param completionBlock Completion block providing the list of checklist elements, an optional error reason and pagination
+ *                         information
+ */
+- (void)requestChecklistForTaskWithID:(NSString *)taskID
+                      completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock;
+
+/**
+ *  Creates a checklist based on the passed representation
+ *
+ *  @param taskRepresentation Object encapsulating the information that needs to used for creating the checklist
+ *  @param taskID             ID of the task for which the checklist is being created
+ *  @param completionBlock    Completion block providing the newly created task object details and an optional
+ *                            error reason
+ */
+- (void)requestChecklistCreateWithRepresentation:(AFATaskCreateModel *)taskRepresentation
+                                          taskID:(NSString *)taskID
+                                 completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock;
+
+/**
+ *  Adjusts the checklist element order as described in the attached order array
+ *
+ *  @param orderArray      An array object containing checklist ID elements in which the order of the elements
+ *                         dictates the order of checklist elements to be adjusted
+ *  @param taskID          ID of the task for which the checklist order is being adjusted
+ *  @param completionBlock Completion block providing whether the order of the elements has been adjusted and an
+ *                         optional error reason.
+ */
+- (void)requestChecklistOrderUpdateWithOrderArrat:(NSArray *)orderArray
+                                           taskID:(NSString *)taskID
+                                  completionBlock:(AFATaskServicesTaskUpdateCompletionBlock)completionBlock;
+
 @end

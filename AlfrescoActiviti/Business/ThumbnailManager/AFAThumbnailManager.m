@@ -122,8 +122,6 @@
                         }
                     }
                 });
-            } else {
-                cachedImage = nil;
             }
         } else {
             cachedImage = [AFAThumbnailManager placeholderThumbnailImage];

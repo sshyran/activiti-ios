@@ -61,8 +61,6 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.progressHUD = [self configureProgressHUD];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(keyboardWillChange:)
                                                      name:UIKeyboardWillChangeFrameNotification
@@ -86,7 +84,7 @@
     self.alertContainerView.transform = CGAffineTransformMakeScale(1.3f, 1.3f);
     
     // Set up localization
-    self.alertTitleLabel.text = NSLocalizedString(kLocalizationAddTaskScreenTitleText, @"Alert title");
+    self.alertTitleLabel.text = (AFAAddTaskControllerTypePlainTask == self.controllerType) ? NSLocalizedString(kLocalizationAddTaskScreenTitleText, @"New task title") : NSLocalizedString(kLocalizationAddTaskScreenChecklistTitleText, @"New checklist title");
     self.nameLabel.text = NSLocalizedString(kLocalizationAddTaskScreenNameLabelText, @"Name label");
     self.descriptionLabel.text = NSLocalizedString(kLocalizationAddTaskScreenDescriptionLabelText, @"Description label");
     [self.cancelButton setTitle:NSLocalizedString(kLocalizationAlertDialogCancelButtonText, @"Cancel button")
@@ -95,6 +93,8 @@
     [self.confirmButton setTitle:NSLocalizedString(kLocalizationAddTaskScreenCreateButtonText, @"Confirm button")
                         forState:UIControlStateNormal];
     [self validateTaskNameFieldForString:self.nameTextField.text];
+    
+    self.progressHUD = [self configureProgressHUD];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -148,42 +148,51 @@
     
     // First fetch information about the user creating the task
     __weak typeof(self) weakSelf = self;
+    AFATaskServicesTaskDetailsCompletionBlock taskDetailsCompletionBlock = ^(ASDKModelTask *task, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                weakSelf.progressHUD.detailTextLabel.text = nil;
+                
+                weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+            });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(didCreateTask:)]) {
+                    [weakSelf.delegate didCreateTask:task];
+                }
+                
+                [weakSelf.progressHUD dismiss];
+                [weakSelf dismissViewControllerAnimated:YES
+                                             completion:nil];
+            });
+        } else {
+            [strongSelf.progressHUD dismiss];
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    };
+    
     AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
     [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
-             AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
             AFATaskCreateModel *taskCreateModel = [AFATaskCreateModel new];
             taskCreateModel.taskName = self.nameTextField.text;
             taskCreateModel.taskDescription = self.descriptionTextView.text;
             taskCreateModel.applicationID = self.applicationID;
             taskCreateModel.assigneeID = profile.instanceID;
             
-            [taskServices
-             requestCreateTaskWithRepresentation:taskCreateModel
-             completionBlock:^(ASDKModelTask *task, NSError *error) {
-                 if (!error) {
-                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                         weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                         weakSelf.progressHUD.detailTextLabel.text = nil;
-                         
-                         weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                         weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                     });
-                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                         if ([weakSelf.delegate respondsToSelector:@selector(didCreateTask:)]) {
-                             [weakSelf.delegate didCreateTask:task];
-                         }
-                         
-                         [weakSelf.progressHUD dismiss];
-                         [weakSelf dismissViewControllerAnimated:YES
-                                                      completion:nil];
-                     });
-                 } else {
-                     [weakSelf.progressHUD dismiss];
-                     [weakSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                 }
-             }];
+            if (AFAAddTaskControllerTypeChecklist == self.controllerType) {
+                [taskServices requestChecklistCreateWithRepresentation:taskCreateModel
+                                                                taskID:strongSelf.parentTaskID
+                                                       completionBlock:taskDetailsCompletionBlock];
+            } else {
+                [taskServices requestCreateTaskWithRepresentation:taskCreateModel
+                                                  completionBlock:taskDetailsCompletionBlock];
+            }
         } else {
             [strongSelf.progressHUD dismiss];
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
@@ -209,7 +218,7 @@
     JGProgressHUDFadeZoomAnimation *zoomAnimation = [JGProgressHUDFadeZoomAnimation animation];
     hud.animation = zoomAnimation;
     hud.layoutChangeAnimationDuration = .0f;
-    hud.textLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationAddTaskScreenCreatingTaskText, @"Creating task text")];
+    hud.textLabel.text = (AFAAddTaskControllerTypePlainTask == self.controllerType) ? NSLocalizedString(kLocalizationAddTaskScreenCreatingTaskText, @"Creating task text") : NSLocalizedString(kLocalizationAddTaskScreenCreatingChecklistText, @"Creating checklist text");
     hud.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
     
     return hud;

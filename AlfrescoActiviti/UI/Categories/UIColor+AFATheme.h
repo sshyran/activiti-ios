@@ -42,5 +42,6 @@
 + (UIColor *)enabledControlColor;
 + (UIColor *)darkGreyTextColor;
 + (UIColor *)distructiveOperationBackgroundColor;
++ (UIColor *)checkmarkedActionColor;
 
 @end

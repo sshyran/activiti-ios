@@ -579,4 +579,85 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                              }];
 }
 
+- (void)requestChecklistForTaskWithID:(NSString *)taskID
+                      completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock {
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    
+    [self.taskNetworkService fetchChecklistForTaskWithID:taskID
+                                         completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                             if (!error) {
+                                                 AFALogVerbose(@"Fetched checklist for task with ID:%@", taskID);
+                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                     completionBlock(taskList, nil, paging);
+                                                 });
+                                             } else {
+                                                 AFALogError(@"An error occured while fetching the checklist for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                                 
+                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                     completionBlock(nil, error, nil);
+                                                 });
+                                             }
+    }];
+    
+}
+
+- (void)requestChecklistCreateWithRepresentation:(AFATaskCreateModel *)taskRepresentation
+                                          taskID:(NSString *)taskID
+                                 completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
+    NSParameterAssert(taskRepresentation);
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    
+    ASDKTaskCreationRequestRepresentation *checklistCreationRequestRepresentation = [ASDKTaskCreationRequestRepresentation new];
+    checklistCreationRequestRepresentation.taskName = taskRepresentation.taskName;
+    checklistCreationRequestRepresentation.taskDescription = taskRepresentation.taskDescription;
+    checklistCreationRequestRepresentation.assigneeID = taskRepresentation.assigneeID;
+    checklistCreationRequestRepresentation.parentTaskID = taskID;
+    checklistCreationRequestRepresentation.jsonAdapterType = ASDKModelJSONAdapterTypeExcludeNilValues;
+    
+    [self.taskNetworkService createChecklistWithRepresentation:checklistCreationRequestRepresentation
+                                                        taskID:taskID
+                                               completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                                   if (!error) {
+                                                       AFALogVerbose(@"Created checklist item %@", task.name);
+                                                       
+                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                           completionBlock (task, nil);
+                                                       });
+                                                   } else {
+                                                       AFALogError(@"An error occured while creating checklist item: %@. Reason:%@", task.name, error.localizedDescription);
+                                                       
+                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                           completionBlock(nil, error);
+                                                       });
+                                                   }
+    }];
+}
+
+- (void)requestChecklistOrderUpdateWithOrderArrat:(NSArray *)orderArray
+                                           taskID:(NSString *)taskID
+                                  completionBlock:(AFATaskServicesTaskUpdateCompletionBlock)completionBlock {
+    NSParameterAssert(orderArray);
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    
+    ASDKTaskChecklistOrderRequestRepresentation *checklistOrderRequestRepresentation = [ASDKTaskChecklistOrderRequestRepresentation new];
+    checklistOrderRequestRepresentation.checklistOrder = orderArray;
+    
+    [self.taskNetworkService updateChecklistOrderWithRepresentation:checklistOrderRequestRepresentation
+                                                             taskID:taskID
+                                                    completionBlock:^(BOOL isTaskUpdated, NSError *error) {
+                                                        if (!error && isTaskUpdated) {
+                                                            AFALogVerbose(@"Updated checklist order for task with ID:%@", taskID);
+                                                            
+                                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                                completionBlock(YES, nil);
+                                                            });
+                                                        } else {
+                                                            AFALogError(@"An error occured while updating the checklist order for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
+                                                        }
+    }];
+}
+
 @end

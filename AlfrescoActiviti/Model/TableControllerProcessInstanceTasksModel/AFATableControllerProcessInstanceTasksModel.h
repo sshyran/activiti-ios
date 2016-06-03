@@ -30,4 +30,6 @@ typedef NS_ENUM(NSInteger, AFATableControllerProcessInstanceTasksSectionType) {
 @property (strong, nonatomic) NSArray *activeTasks;
 @property (strong, nonatomic) NSArray *completedTasks;
 
+- (BOOL)hasTaskListAvailable;
+
 @end
