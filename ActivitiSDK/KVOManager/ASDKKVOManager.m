@@ -31,12 +31,12 @@
 #pragma mark Life cycle
 
 + (instancetype)managerWithObserver:(id)observer {
-    return [[self alloc]initWithObserver:observer
-                    withStrongReference:YES];
+    return [[self alloc] initWithObserver:observer
+                      withStrongReference:YES];
 }
 
 - (instancetype)initWithObserver:(id)observer
-            withStrongReference:(BOOL)isStrongReference {
+             withStrongReference:(BOOL)isStrongReference {
     self = [super init];
     
     if (self) {
@@ -66,9 +66,9 @@
     
     // Create observation container
     ASDKKVOManagerInfo *managerInfo = [[ASDKKVOManagerInfo alloc] initWithManager:self
-                                                                        keyPath:keyPath
-                                                                        options:options
-                                                                          block:notificationBlock];
+                                                                          keyPath:keyPath
+                                                                          options:options
+                                                                            block:notificationBlock];
     [self observe:object
   withManagerInfo:managerInfo];
 }
@@ -80,7 +80,7 @@
     
     // Create observation container
     ASDKKVOManagerInfo *managerInfo= [[ASDKKVOManagerInfo alloc] initWithManager:self
-                                                                       keyPath:keyPath];
+                                                                         keyPath:keyPath];
     
     [self removeObserver:object
          withManagerInfo:managerInfo];
@@ -114,7 +114,7 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     OSSpinLockUnlock(&_spinLock);
     
     [[ASDKKVOManagerSharedProxy sharedInstance] observe:object
-                                       withManagerInfo:managerInfo];
+                                        withManagerInfo:managerInfo];
 }
 
 - (void)removeObserver:(id)object
@@ -122,7 +122,7 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     OSSpinLockLock(&_spinLock);
     
     NSMutableSet *managerInfos = [_objInfoMap objectForKey:object];
-
+    
     ASDKKVOManagerInfo *existingInfo = [managerInfos member:managerInfo];
     if (existingInfo) {
         [managerInfos removeObject:existingInfo];
@@ -135,7 +135,7 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     OSSpinLockUnlock(&_spinLock);
     
     [[ASDKKVOManagerSharedProxy sharedInstance] removeObserver:object
-                                              withManagerInfo:existingInfo];
+                                               withManagerInfo:existingInfo];
 }
 
 @end
