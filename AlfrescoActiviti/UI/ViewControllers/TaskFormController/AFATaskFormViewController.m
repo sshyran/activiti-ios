@@ -74,7 +74,7 @@
 - (void)startTaskFormForTaskObject:(ASDKModelTask *)task {
     NSParameterAssert(task);
     
-    if (task != self.task) {
+    if (![task.instanceID isEqualToString:self.task.instanceID]) {
         self.task = task;
         
         self.activityView.hidden = NO;

@@ -130,6 +130,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return self;
 }
 
+- (void)dealloc {
+    [self unregisterVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
+}
+
 
 #pragma mark -
 #pragma mark ASDKFormRenderEngine Protocol
@@ -504,6 +508,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                      __strong typeof(self) strongSelf = weakSelf;
                                      [strongSelf handleVisibilityChangeForFormField:(ASDKModelFormField *)object];
                                  }];
+    }
+}
+
+- (void)unregisterVisibilityHandlersForInfluencialFormFields:(NSSet *)influencialFormFields {
+    for (ASDKModelFormField *influencialFormField in influencialFormFields) {
+        [self.kvoManager removeObserver:influencialFormField
+                             forKeyPath:NSStringFromSelector(@selector(metadataValue))];
     }
 }
 

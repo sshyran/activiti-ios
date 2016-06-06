@@ -27,8 +27,8 @@
 @interface ASDKKVOManagerInfo : NSObject
 
 @property (weak, nonatomic)   ASDKKVOManager                     *kvoManager;
-@property (copy, nonatomic)   NSString                          *keyPath;
-@property (assign, nonatomic) NSKeyValueObservingOptions        options;
+@property (copy, nonatomic)   NSString                           *keyPath;
+@property (assign, nonatomic) NSKeyValueObservingOptions         options;
 @property (copy, nonatomic)   ASDKKVOManagerNotificationBlock    notificationBlock;
 
 - (instancetype)initWithManager:(ASDKKVOManager *)kvoManager
