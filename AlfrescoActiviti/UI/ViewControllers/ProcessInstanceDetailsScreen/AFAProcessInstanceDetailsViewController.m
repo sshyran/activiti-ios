@@ -149,7 +149,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     self.processInstanceActiveTasksButton.tag = AFAProcessInstanceDetailsSectionTypeTaskStatus;
     self.processInstanceContentButton.tag = AFAProcessInstanceDetailsSectionTypeContent;
     self.processInstanceCommentsButton.tag = AFAProcessInstanceDetailsSectionTypeComments;
-    self.processInstanceDetailsButton.tintColor = self.navigationBarThemeColor;
+    self.processInstanceDetailsButton.tintColor = [self.navigationBarThemeColor colorWithAlphaComponent:.7f];
     
     // Set up the refresh control
     UITableViewController *tableViewController = [[UITableViewController alloc] init];
@@ -261,7 +261,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         // Highlight the current selection
         self.currentSelectedSection = sectionButton.tag;
         UIButton *currentSectionButton = [self buttonForSection:self.currentSelectedSection];
-        currentSectionButton.tintColor = self.navigationBarThemeColor;
+        currentSectionButton.tintColor = [self.navigationBarThemeColor colorWithAlphaComponent:.7f];
         
         [self refreshContentForCurrentSection];
         [self.processTableView reloadData];
