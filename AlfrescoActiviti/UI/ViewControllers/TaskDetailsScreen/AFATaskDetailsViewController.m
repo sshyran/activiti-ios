@@ -183,7 +183,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     self.taskContributorsButton.tag = AFATaskDetailsSectionTypeContributors;
     self.taskCommentsButton.tag = AFATaskDetailsSectionTypeComments;
     self.currentSelectedSection = AFATaskDetailsSectionTypeTaskDetails;
-    self.taskDetailsButton.tintColor = self.navigationBarThemeColor;
+    self.taskDetailsButton.tintColor = [self.navigationBarThemeColor colorWithAlphaComponent:.7f];
     
     // Set up the refresh control
     UITableViewController *tableViewController = [[UITableViewController alloc] init];
@@ -344,7 +344,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         // Highlight the current selection
         self.currentSelectedSection = sectionButton.tag;
         UIButton *currentSectionButton = [self buttonForSection:self.currentSelectedSection];
-        currentSectionButton.tintColor = self.navigationBarThemeColor;
+        currentSectionButton.tintColor = [self.navigationBarThemeColor colorWithAlphaComponent:.7f];
         
         [self refreshContentForCurrentSection];
         [self.taskDetailsTableView reloadData];
