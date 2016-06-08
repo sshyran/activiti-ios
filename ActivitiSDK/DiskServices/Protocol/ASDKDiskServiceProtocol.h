@@ -109,4 +109,23 @@
  */
 + (NSString *)mimeTypeByGuessingFromData:(NSData *)data;
 
+/**
+ *  Deletes all downloaded data
+ */
++ (void)deleteLocalData;
+
+/**
+ *  Computes and returns the available disk space on the device
+ *
+ *  @return String containing a formatted value of the available space
+ */
++ (NSString *)remainingDiskSpaceOnThisDevice;
+
+/**
+ *  Computes and returns the used space on the disk for Activiti downloads
+ *
+ *  @return String containing a formatted value of the used space
+ */
++ (NSString *)usedDiskSpaceForDownloads;
+
 @end

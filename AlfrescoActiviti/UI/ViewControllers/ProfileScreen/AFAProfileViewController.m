@@ -25,12 +25,14 @@
 // Categories
 #import "NSDate+AFAStringTransformation.h"
 #import "UIViewController+AFAAlertAddition.h"
+#import "UIColor+AFATheme.h"
 
 // Cells
 #import "AFAProfileSectionTableViewCell.h"
 #import "AFAProfileDetailTableViewCell.h"
 #import "AFAProfileSimpleTableViewCell.h"
 #import "AFAProfileActionTableViewCell.h"
+#import "AFAProfileUsageTableViewCell.h"
 
 // Views
 #import "AFAAvatarView.h"
@@ -55,6 +57,8 @@ typedef NS_ENUM(NSInteger, AFAProfileControllerSectionType) {
     AFAProfileControllerSectionTypeContactInformation = 0,
     AFAProfileControllerSectionTypeGroups,
     AFAProfileControllerSectionTypeChangePassord,
+    AFAProfileControllerSectionTypeStorage,
+    AFAProfileControllerSectionTypeCleanCache,
     AFAProfileControllerSectionTypeEnumCount
 };
 
@@ -64,7 +68,13 @@ typedef NS_ENUM(NSInteger, AFAProfileControllerContactInformationType) {
     AFAProfileControllerContactInformationTypeEnumCount
 };
 
-static const CGFloat profileControllerSectionHeight = 30.0f;
+typedef NS_ENUM(NSInteger, AFAProfileControllerStorageType) {
+    AFAProfileControllerStorageTypeAvailable = 0,
+    AFAProfileControllerStorageTypeActivitiData,
+    AFAProfileControllerStorageTypeEnumCount
+};
+
+static const CGFloat kProfileControllerSectionHeight = 40.0f;
 
 @interface AFAProfileViewController () <AFAProfileActionTableViewCellDelegate,
                                         AFAProfileDetailTableViewCellDelegate,
@@ -141,6 +151,7 @@ static const CGFloat profileControllerSectionHeight = 30.0f;
     // Set up the task list table view to adjust it's size automatically
     self.profileTableView.estimatedRowHeight = 40.0f;
     self.profileTableView.rowHeight = UITableViewAutomaticDimension;
+    self.profileTableView.contentInset = UIEdgeInsetsMake(.0f, .0f, 20.0f, .0f);
     
     // Set name fields delegate
     self.firstNameTextField.delegate = self;
@@ -446,6 +457,30 @@ static const CGFloat profileControllerSectionHeight = 30.0f;
         [self presentViewController:changePasswordAlertController
                            animated:YES
                          completion:nil];
+    } else if (AFAProfileControllerSectionTypeCleanCache == indexPath.section) {
+        UIAlertController *cleanCacheAlertController = [UIAlertController alertControllerWithTitle:nil
+                                                                                           message:NSLocalizedString(kLocalizationProfileScreenCleanCacheAlertText, @"Clean cache alert text")
+                                                                                    preferredStyle:UIAlertControllerStyleAlert];
+        
+        __weak typeof(self) weakSelf = self;
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogConfirmText, @"Confirm")
+                                                                style:UIAlertActionStyleDestructive
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+                                                                  __strong typeof(self) strongSelf = weakSelf;
+                                                                  
+                                                                  [strongSelf.profileTableView reloadData];
+                                                                  [ASDKDiskServices deleteLocalData];
+        }];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogCancelButtonText, @"Cancel")
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+        [cleanCacheAlertController addAction:confirmAction];
+        [cleanCacheAlertController addAction:cancelAction];
+        
+        [self presentViewController:cleanCacheAlertController
+                           animated:YES
+                         completion:nil];
     }
 }
 
@@ -598,7 +633,13 @@ static const CGFloat profileControllerSectionHeight = 30.0f;
         }
             break;
             
-        case AFAProfileControllerSectionTypeChangePassord: {
+        case AFAProfileControllerSectionTypeStorage: {
+            rowCount = AFAProfileControllerStorageTypeEnumCount;
+        }
+            break;
+            
+        case AFAProfileControllerSectionTypeChangePassord:
+        case AFAProfileControllerSectionTypeCleanCache:{
             rowCount = 1;
         }
             break;
@@ -615,16 +656,22 @@ viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = nil;
     
     if (AFAProfileControllerSectionTypeContactInformation == section ||
-        AFAProfileControllerSectionTypeGroups == section) {
+        AFAProfileControllerSectionTypeGroups == section ||
+        AFAProfileControllerSectionTypeStorage == section) {
         AFAProfileSectionTableViewCell *sectionHeaderCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProfileSectionTitle];
         
         if (AFAProfileControllerSectionTypeContactInformation == section) {
             sectionHeaderCell.sectionIconImageView.image = [UIImage imageNamed:@"contact-icon"];
             sectionHeaderCell.sectionTitleLabel.text = NSLocalizedString(kLocalizationProfileScreenContactInformationText, @"Contact information text");
-        } else {
+        } else if (AFAProfileControllerSectionTypeGroups == section) {
             sectionHeaderCell.sectionIconImageView.image = [UIImage imageNamed:@"group-icon"];
             sectionHeaderCell.sectionTitleLabel.text = NSLocalizedString(kLocalizationProfileScreenGroupsText, @"Groups text");
+        } else if (AFAProfileControllerSectionTypeStorage == section) {
+            sectionHeaderCell.sectionIconImageView.image = [UIImage imageNamed:@"storage-icon"];
+            sectionHeaderCell.sectionTitleLabel.text = NSLocalizedString(kLocalizationProfileScreenDiskUsageText, @"Disk usage text");
         }
+        
+        sectionHeaderCell.sectionIconImageView.tintColor = [UIColor darkGreyTextColor];
         
         headerView = sectionHeaderCell;
     }
@@ -638,8 +685,9 @@ heightForHeaderInSection:(NSInteger)section {
     
     switch (section) {
         case AFAProfileControllerSectionTypeContactInformation:
-        case AFAProfileControllerSectionTypeGroups: {
-            headerHeight = profileControllerSectionHeight;
+        case AFAProfileControllerSectionTypeGroups:
+        case AFAProfileControllerSectionTypeStorage: {
+            headerHeight = kProfileControllerSectionHeight;
         }
             break;
             
@@ -650,6 +698,10 @@ heightForHeaderInSection:(NSInteger)section {
     return headerHeight;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView
+heightForFooterInSection:(NSInteger)section {
+    return 1.0f;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -688,6 +740,32 @@ heightForHeaderInSection:(NSInteger)section {
                                              forState:UIControlStateNormal];
             
             cell = changePasswordCell;
+        }
+            break;
+            
+        case AFAProfileControllerSectionTypeCleanCache: {
+            AFAProfileActionTableViewCell *cleanCacheCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProfileAction
+                                                                                            forIndexPath:indexPath];
+            cleanCacheCell.delegate = self;
+            [cleanCacheCell.actionButton setTitle:NSLocalizedString(kLocalizationProfileScreenCleanCacheButtonText, @"Clean cache button")
+                                         forState:UIControlStateNormal];
+
+            cell = cleanCacheCell;
+        }
+            break;
+            
+        case AFAProfileControllerSectionTypeStorage: {
+            AFAProfileUsageTableViewCell *profileUsageCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProfileUsage
+                                                                                             forIndexPath:indexPath];
+            if (AFAProfileControllerStorageTypeActivitiData == indexPath.row) {
+                profileUsageCell.descriptionLabel.text = NSLocalizedString(kLocalizationProfileScreenDiskUsageAvailableText, @"Disk usage text");
+                profileUsageCell.usageLabel.text = [ASDKDiskServices remainingDiskSpaceOnThisDevice];
+            } else {
+                profileUsageCell.descriptionLabel.text = NSLocalizedString(kLocalizationProfileScreenActivitiDataText, @"Activiti data text");
+                profileUsageCell.usageLabel.text = [ASDKDiskServices usedDiskSpaceForDownloads];
+            }
+            
+            cell = profileUsageCell;
         }
             break;
             

@@ -170,6 +170,70 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
 }
 
++ (void)deleteLocalData {
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = documentsPaths.firstObject;
+    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
+                             stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager isDeletableFileAtPath:contentPath]) {
+        NSError *error = nil;
+        [fileManager removeItemAtPath:contentPath
+                                error:&error];
+        if (error) {
+            ASDKLogError(@"Cannot delete local cached data. Reason:%@", error.localizedDescription);
+        }
+    } else {
+        ASDKLogWarn(@"There is no content to be deleted or cannot delete local cached data due to privilege issues.");
+    }
+}
+
++ (NSString *)remainingDiskSpaceOnThisDevice {
+    NSString *remainingSpace = nil;
+    NSError *error = nil;
+    NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory()
+                                                                                       error:&error];
+    if (error) {
+        ASDKLogWarn(@"Unable to retrieve attributes of root file path for computing the available disk space. Reason:%@", error.localizedDescription);
+    }
+    
+    if (attributes) {
+        long long freeSpaceSize = [attributes[NSFileSystemFreeSize] longLongValue];
+        remainingSpace = [NSByteCountFormatter stringFromByteCount:freeSpaceSize
+                                                        countStyle:NSByteCountFormatterCountStyleFile];
+    }
+    return remainingSpace;
+}
+
++ (NSString *)usedDiskSpaceForDownloads {
+    NSString *usedSpace = nil;
+    NSError *error = nil;
+    
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = documentsPaths.firstObject;
+    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
+                             stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath];
+    
+    NSArray *folderContents = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:contentPath
+                                                                                  error:&error];
+    __block unsigned long long int folderSize = 0;
+    
+    [folderContents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[contentPath stringByAppendingPathComponent:obj]
+                                                                                        error:nil];
+        folderSize += [[fileAttributes objectForKey:NSFileSize] intValue];
+    }];
+
+    if (error) {
+        ASDKLogWarn(@"Unable to retrieve attributes for downloads file path for computing the used disk space. Reason:%@", error.localizedDescription);
+    }
+
+    usedSpace = [NSByteCountFormatter stringFromByteCount:folderSize
+                                               countStyle:NSByteCountFormatterCountStyleFile];
+    
+    return usedSpace;
+}
+
 
 #pragma mark -
 #pragma mark Private interface
