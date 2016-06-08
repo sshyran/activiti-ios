@@ -79,6 +79,7 @@ extern NSString *kCellIDProfileOption;
 extern NSString *kCellIDProfileAction;
 extern NSString *kCellIDAuditLog;
 extern NSString *kCellIDTaskChecklist;
+extern NSString *kCellIDProfileUsage;
 
 // Segue IDs
 

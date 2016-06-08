@@ -204,3 +204,8 @@ extern NSString *kLocalizationProfileScreenRepeatPasswordText;
 extern NSString *kLocalizationProfileScreenPasswordUpdatedText;
 extern NSString *kLocalizationProfileScreenPasswordMismatchText;
 extern NSString *kLocalizationProfileScreenNoInformationAvailableText;
+extern NSString *kLocalizationProfileScreenCleanCacheButtonText;
+extern NSString *kLocalizationProfileScreenCleanCacheAlertText;
+extern NSString *kLocalizationProfileScreenDiskUsageText;
+extern NSString *kLocalizationProfileScreenDiskUsageAvailableText;
+extern NSString *kLocalizationProfileScreenActivitiDataText;

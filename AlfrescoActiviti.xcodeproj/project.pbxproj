@@ -233,6 +233,7 @@
 		13AE35571C43BA9700BEB477 /* AFAApplicationListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AE35561C43BA9700BEB477 /* AFAApplicationListStyleCell.m */; };
 		13AE35821C46860800BEB477 /* AFABaseSliderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AE35811C46860800BEB477 /* AFABaseSliderViewController.m */; };
 		13AE35861C47D69300BEB477 /* AFABaseThemedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AE35851C47D69300BEB477 /* AFABaseThemedViewController.m */; };
+		13AED0411D0854C50076B5A2 /* AFAProfileUsageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AED0401D0854C50076B5A2 /* AFAProfileUsageTableViewCell.m */; };
 		13AEE2BC1C96B79500E9EB44 /* AFATableControllerProcessInstanceContentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AEE2BB1C96B79500E9EB44 /* AFATableControllerProcessInstanceContentModel.m */; };
 		13B22C4E1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B22C4C1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B22C4F1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B22C4D1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.m */; };
@@ -831,6 +832,8 @@
 		13AE35811C46860800BEB477 /* AFABaseSliderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABaseSliderViewController.m; path = UI/ViewControllers/BaseSliderViewController/AFABaseSliderViewController.m; sourceTree = "<group>"; };
 		13AE35841C47D69300BEB477 /* AFABaseThemedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABaseThemedViewController.h; path = UI/ViewControllers/BaseThemedViewController/AFABaseThemedViewController.h; sourceTree = "<group>"; };
 		13AE35851C47D69300BEB477 /* AFABaseThemedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABaseThemedViewController.m; path = UI/ViewControllers/BaseThemedViewController/AFABaseThemedViewController.m; sourceTree = "<group>"; };
+		13AED03F1D0854C50076B5A2 /* AFAProfileUsageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileUsageTableViewCell.h; path = UI/Cells/ProfileUsageCell/AFAProfileUsageTableViewCell.h; sourceTree = "<group>"; };
+		13AED0401D0854C50076B5A2 /* AFAProfileUsageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileUsageTableViewCell.m; path = UI/Cells/ProfileUsageCell/AFAProfileUsageTableViewCell.m; sourceTree = "<group>"; };
 		13AEE2BA1C96B79500E9EB44 /* AFATableControllerProcessInstanceContentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerProcessInstanceContentModel.h; path = Model/TableControllerProcessInstanceContentModel/AFATableControllerProcessInstanceContentModel.h; sourceTree = "<group>"; };
 		13AEE2BB1C96B79500E9EB44 /* AFATableControllerProcessInstanceContentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerProcessInstanceContentModel.m; path = Model/TableControllerProcessInstanceContentModel/AFATableControllerProcessInstanceContentModel.m; sourceTree = "<group>"; };
 		13B22C4C1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProcessInstanceContent.h; path = Model/ProcessInstanceContent/ASDKModelProcessInstanceContent.h; sourceTree = "<group>"; };
@@ -2766,6 +2769,7 @@
 				13AAD3C01CDB824D00818537 /* ProfileDetailCell */,
 				13AAD3C41CDB82AD00818537 /* ProfileSimpleCell */,
 				13AAD3C81CDB82F900818537 /* ProfileActionCell */,
+				13AED0421D0854C90076B5A2 /* ProfileUsagecell */,
 			);
 			name = ProfileScreen;
 			sourceTree = "<group>";
@@ -2839,6 +2843,15 @@
 				13AE35851C47D69300BEB477 /* AFABaseThemedViewController.m */,
 			);
 			name = BaseThemedViewController;
+			sourceTree = "<group>";
+		};
+		13AED0421D0854C90076B5A2 /* ProfileUsagecell */ = {
+			isa = PBXGroup;
+			children = (
+				13AED03F1D0854C50076B5A2 /* AFAProfileUsageTableViewCell.h */,
+				13AED0401D0854C50076B5A2 /* AFAProfileUsageTableViewCell.m */,
+			);
+			name = ProfileUsagecell;
 			sourceTree = "<group>";
 		};
 		13AEE2BD1C96B79900E9EB44 /* TableControllerProcessInstanceContentModel */ = {
@@ -4831,6 +4844,7 @@
 				137194561B6922DE00D4E1F0 /* AppDelegate.m in Sources */,
 				135443E91B96E1000044157B /* AFASliderTrackView.m in Sources */,
 				132167141B8B027000B7406B /* AFAAvatarMenuTableViewCell.m in Sources */,
+				13AED0411D0854C50076B5A2 /* AFAProfileUsageTableViewCell.m in Sources */,
 				8D7C1A421C808CE70092EA81 /* AFACompleteTableViewCell.m in Sources */,
 				137194531B6922DE00D4E1F0 /* main.m in Sources */,
 				13EBECB71CFD902700EC8F96 /* AFATaskChecklistCellFactory.m in Sources */,
