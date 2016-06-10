@@ -20,6 +20,11 @@
 #import "AFABaseModel.h"
 #import "AFAProfileServices.h"
 
+typedef NS_ENUM(NSUInteger, AFALoginViewModelAuthentificationType) {
+    AFALoginViewModelAuthentificationTypeCloud,
+    AFALoginViewModelAuthentificationTypePremise
+};
+
 typedef NS_ENUM(NSUInteger, AFALoginViewModelAuthentificationState) {
     AFALoginViewModelAuthentificationStatePreparing,
     AFALoginViewModelAuthentificationStateInProgress,
@@ -34,12 +39,24 @@ typedef NS_ENUM(NSUInteger, AFALoginViewModelAuthentificationState) {
 @property (strong, nonatomic) NSAttributedString *usernameAttributedPlaceholderText;
 @property (strong, nonatomic) NSAttributedString *passwordAttributedPlaceholderText;
 @property (strong, nonatomic) NSAttributedString *hostnameAttributedPlaceholderText;
+@property (strong, nonatomic) NSAttributedString *portAttributedPlaceholderText;
+@property (strong, nonatomic) NSAttributedString *serviceDocumentAttributedPlaceholderText;
 @property (assign, nonatomic) BOOL isCredentialInputInProgress;
 @property (assign, nonatomic) AFALoginViewModelAuthentificationState authState;
+@property (strong, nonatomic, readonly) NSString *hostName;
+@property (strong, nonatomic, readonly) NSString *username;
+@property (strong, nonatomic, readonly) NSString *password;
+@property (strong, nonatomic, readonly) NSString *port;
+@property (strong, nonatomic, readonly) NSString *serviceDocument;
+@property (assign, nonatomic, readonly) BOOL isSecureLayer;
+@property (assign, nonatomic, readonly) BOOL rememberCredentials;
+@property (assign, nonatomic) AFALoginViewModelAuthentificationType authentificationType;
 
 - (void)updateHostNameEntry:(NSString *)hostname;
 - (void)updateUserNameEntry:(NSString *)username;
 - (void)updatePasswordEntry:(NSString *)password;
+- (void)updatePortEntry:(NSString *)port;
+- (void)updateServiceDocument:(NSString *)serviceDocument;
 - (void)updateRememberCredentials:(BOOL)rememberCredentials;
 - (void)updateCommunicationOverSecureLayer:(BOOL)secureLayer;
 

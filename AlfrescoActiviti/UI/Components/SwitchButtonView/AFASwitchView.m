@@ -30,12 +30,6 @@
 
 @implementation AFASwitchView
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    self.isOff = NO;
-}
-
 - (void)drawRect:(CGRect)rect {
     // Setup background view
     UIView *backgroundView = [[UIView alloc] initWithFrame:self.bounds];
@@ -111,6 +105,20 @@
         descriptionLabel.clipsToBounds = YES;
         [self addSubview:descriptionLabel];
     }
+    
+    // Perform a refresh for the initial state of the switch
+    [self switchFromCurrentState:_isOn];
+}
+
+
+#pragma mark -
+#pragma mark Setters
+
+- (void)setIsOn:(BOOL)isOn {
+    if (isOn != _isOn) {
+        _isOn = isOn;
+        [self switchFromCurrentState:_isOn];
+    }
 }
 
 
@@ -118,7 +126,7 @@
 #pragma mark Actions
 
 - (void)onToggle:(UIButton *)sender {
-    [self switchFromCurrentState:!self.isOff];
+    self.isOn = !self.isOn;
 }
 
 
@@ -126,11 +134,6 @@
 #pragma mark Animations
 
 - (void)switchFromCurrentState:(BOOL)on {
-    if (on == self.isOff) {
-        return;
-    }
-    self.isOff = on;
-    
     [UIView animateWithDuration:.4f
                           delay:.0f
          usingSpringWithDamping:.8f
@@ -138,7 +141,7 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          CGRect adjustedButtonViewFrame = self.buttonView.frame;
-                         adjustedButtonViewFrame.origin.x += self.frame.size.width / 2.0f * (on ? 1 : -1);
+                         adjustedButtonViewFrame.origin.x += self.frame.size.width / 2.0f * (on ? -1 : 1);
                          self.buttonView.frame = adjustedButtonViewFrame;
                      } completion:nil];
     

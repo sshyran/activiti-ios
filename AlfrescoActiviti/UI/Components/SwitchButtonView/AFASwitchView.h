@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, AFASwitchViewOnOffLabelPosition) {
 IB_DESIGNABLE
 @interface AFASwitchView : UIView
 
-@property (assign, nonatomic) BOOL    isOff;
+@property (assign, nonatomic) BOOL isOn;
 @property (assign, nonatomic) AFASwitchViewOnOffLabelPosition onOffLabelPosition;
 
 @property (strong, nonatomic) IBInspectable UIColor *backgroundViewColor;

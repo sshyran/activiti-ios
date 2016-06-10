@@ -28,7 +28,10 @@ NSString *kLocalizationLoginHostnameSwitchONText                 = @"loginScreen
 NSString *kLocalizationLoginHostnameSwitchOFFText                = @"loginScreenHostnameSwitchButtonOFFText";
 NSString *kLocalizationLoginHostnameSwitchHTTPSText              = @"loginScreenHostnameSwitchHTTPSText";
 NSString *kLocalizationLoginHostnamePlaceholderText              = @"loginScreenHostnameInputTextFieldPlaceholderText";
+NSString *kLocalizationLoginPortPlaceholderText                  = @"loginScreenPortInputTextFieldPlaceholderText";
+NSString *kLocalizationLoginServiceDocumentPlaceholderText       = @"loginScreenServiceDocumentInputTextFieldPlaceholderText";
 NSString *kLocalizationLoginRememberCredentialsText              = @"loginScreenRememberCredentialsLabelText";
+NSString *kLocalizationLoginAdvancedSectionHeaderText            = @"loginScreenAdvancedSectionHeaderText";
 
 
 #pragma mark -

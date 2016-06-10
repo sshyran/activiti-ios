@@ -25,7 +25,10 @@ extern NSString *kLocalizationLoginHostnameSwitchONText;
 extern NSString *kLocalizationLoginHostnameSwitchOFFText;
 extern NSString *kLocalizationLoginHostnameSwitchHTTPSText;
 extern NSString *kLocalizationLoginHostnamePlaceholderText;
+extern NSString *kLocalizationLoginPortPlaceholderText;
+extern NSString *kLocalizationLoginServiceDocumentPlaceholderText;
 extern NSString *kLocalizationLoginRememberCredentialsText;
+extern NSString *kLocalizationLoginAdvancedSectionHeaderText;
 
 // Applications screen
 extern NSString *kLocalizationAppScreenTitleText;

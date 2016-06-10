@@ -21,6 +21,7 @@
 // Constants
 #import "AFAUIConstants.h"
 #import "AFABusinessConstants.h"
+#import "AFALocalizationConstants.h"
 
 // Models
 #import "AFALoginModel.h"
@@ -33,6 +34,7 @@
 #import "AFASignInTableViewCell.h"
 #import "AFARememberCredentialsTableViewCell.h"
 #import "AFASecurityLayerTableViewCell.h"
+#import "AFACredentialSectionTableViewCell.h"
 
 @interface AFALoginCredentialsViewController () <AFACredentialTextFieldTableViewCellDelegate, AFASignInButtonDelegate>
 
@@ -40,7 +42,7 @@
 @property (assign, nonatomic) AFALoginCredentialEditing      credentialEditing;
 
 // KVO
-@property (strong, nonatomic) ASDKKVOManager                  *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                 *kvoManager;
 
 @end
 
@@ -77,11 +79,21 @@
     
     // Reset the auth state
     self.loginModel.authState = AFALoginViewModelAuthentificationStatePreparing;
+    self.loginModel.authentificationType =
+    (AFALoginCredentialsTypeCloud == self.loginType) ? AFALoginViewModelAuthentificationTypeCloud : AFALoginViewModelAuthentificationTypePremise;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark -
+#pragma mark Actions
+
+- (IBAction)onDismissTap:(UITapGestureRecognizer *)sender {
+    [self.view endEditing:YES];
 }
 
 
@@ -132,6 +144,7 @@
     if (AFALoginCredentialsTypeCloud == self.loginType) {
         [self.loginModel updateHostNameEntry:kActivitiCloudHostName];
         [self.loginModel updateCommunicationOverSecureLayer:YES];
+        [self.loginModel updatePortEntry:nil];
     }
     
     // Do all mandatory fields have informations needed in order to login
@@ -168,11 +181,59 @@
 #pragma mark Tableview Delegate & Datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    // For the cloud login we just have 2 sections, a simple username / password pair of fields
+    // and the sign in section
+    return (AFALoginCredentialsTypePremise == self.loginType) ? AFAPremiseLoginSectionTypeEnumCount : 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return AFALoginCredentialsTypePremise == self.loginType ? AFAPremiseLoginCredentialsCellTypeEnumCount : AFACloudLoginCredentialsCellTypeEnumCount;
+    NSInteger rowCount = 0;
+    
+    switch (self.loginType) {
+        case AFALoginCredentialsTypeCloud: {
+            if (AFACloudLoginSectionTypeAccountDetails == section) {
+                rowCount = AFACloudLoginCredentialsCellTypeEnumCount;
+            } else {
+                rowCount = AFASignInSectionCellTypeEnumCount;
+            }
+        }
+            break;
+            
+        case AFALoginCredentialsTypePremise: {
+            if (AFAPremiseLoginSectionTypeAccountDetails == section) {
+                rowCount = AFAPremiseLoginCredentialsCellTypeEnumCount;
+            } else if (AFAPremiseLoginSectionTypeAdvanced == section) {
+                rowCount = AFAPremiseLoginAdvancedCredentialsCellTypeEnumCount;
+            } else {
+                rowCount = AFASignInSectionCellTypeEnumCount;
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    return rowCount;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView
+heightForHeaderInSection:(NSInteger)section {
+    CGFloat sectionHeight = 0;
+    if (AFALoginCredentialsTypePremise == self.loginType) {
+        if (AFAPremiseLoginSectionTypeAdvanced == section) {
+            sectionHeight = 60.0f;
+        }
+    }
+    
+    return sectionHeight;
+}
+
+-(UIView *)tableView:(UITableView *)tableView
+viewForHeaderInSection:(NSInteger)section {
+    AFACredentialSectionTableViewCell *sectionHeaderViewCell = [tableView dequeueReusableCellWithIdentifier:kCellIDLoginSection];
+    sectionHeaderViewCell.sectionTitleLabel.text = [NSLocalizedString(kLocalizationLoginAdvancedSectionHeaderText, @"Advanced section text") uppercaseString];
+    return sectionHeaderViewCell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -181,64 +242,96 @@
     
     // Check if we're presenting a premise or cloud screen
     if (AFALoginCredentialsTypePremise == self.loginType) {
-        switch (indexPath.row) {
-            case AFAPremiseLoginCredentialsCellTypeSecurityLayer: {
-                cell = [self dequeueSecurityLayerCellForTableView:tableView];
+        
+        // Handle the dequeuing of each section that make up the premise login
+        if (AFAPremiseLoginSectionTypeAccountDetails == indexPath.section) {
+            switch (indexPath.row) {
+                case AFAPremiseLoginCredentialsCellTypeSecurityLayer: {
+                    cell = [self dequeueSecurityLayerCellForTableView:tableView];
+                }
+                    break;
+                    
+                case AFAPremiseLoginCredentialsCellTypeHostname: {
+                    cell = [self dequeueHostNameCellForTableView:tableView];
+                }
+                    break;
+                    
+                case AFAPremiseLoginCredentialsCellTypeEmail: {
+                    cell = [self dequeueEmailCellForTableView:tableView];
+                }
+                    break;
+                    
+                case AFAPremiseLoginCredentialsCellTypePassword: {
+                    cell = [self dequeuePasswordCellForTableView:tableView];
+                }
+                    break;
+                    
+                default:
+                    break;
             }
-                break;
-                
-            case AFAPremiseLoginCredentialsCellTypeHostname: {
-                cell = [self dequeueHostNameCellForTableView:tableView];
+        } else if (AFAPremiseLoginSectionTypeAdvanced == indexPath.section) {
+            switch (indexPath.row) {
+                case AFAPremiseLoginAdvancedCredentialsCellTypePort: {
+                    cell = [self dequeuePortCellForTableView:tableView];
+                }
+                    break;
+                    
+                case AFAPremiseLoginAdvancedCredentialsCellTypeServiceDocument: {
+                    cell = [self dequeueServiceDocumentCellForTableView:tableView];
+                }
+                    break;
+                    
+                default:
+                    break;
             }
-                break;
-                
-            case AFAPremiseLoginCredentialsCellTypeEmail: {
-                cell = [self dequeueEmailCellForTableView:tableView];
+        } else {
+            switch (indexPath.row) {
+                case AFASignInSectionCellTypeRememberCredentials: {
+                    cell = [self dequeueRememberCredentialsCellForTableView:tableView];
+                }
+                    break;
+                    
+                case AFASignInSectionCellTypeSignIn: {
+                    cell = [self dequeueSignInCellForTableView:tableView];
+                }
+                    break;
+                    
+                default:
+                    break;
             }
-                break;
-                
-            case AFAPremiseLoginCredentialsCellTypePassword: {
-                cell = [self dequeuePasswordCellForTableView:tableView];
-            }
-                break;
-                
-            case AFAPremiseLoginCredentialsCellTypeRememberCredentials: {
-                cell = [self dequeueRememberCredentialsCellForTableView:tableView];
-            }
-                break;
-                
-            case AFAPremiseLoginCredentialsCellTypeSignIn: {
-                cell = [self dequeueSignInCellForTableView:tableView];
-            }
-                break;
-                
-            default:
-                break;
         }
     } else {
-        switch (indexPath.row) {
-            case AFACloudLoginCredentialsCellTypeEmail: {
-                cell = [self dequeueEmailCellForTableView:tableView];
+        // Handle the dequeuing of each section that make up the cloud login
+        if (AFACloudLoginSectionTypeAccountDetails == indexPath.section) {
+            switch (indexPath.row) {
+                case AFACloudLoginCredentialsCellTypeEmail: {
+                    cell = [self dequeueEmailCellForTableView:tableView];
+                }
+                    break;
+                    
+                case AFACloudLoginCredentialsCellTypePassword: {
+                    cell = [self dequeuePasswordCellForTableView:tableView];
+                }
+                    break;
+                    
+                default:
+                    break;
             }
-                break;
-                
-            case AFACloudLoginCredentialsCellTypePassword: {
-                cell = [self dequeuePasswordCellForTableView:tableView];
+        } else {
+            switch (indexPath.row) {
+                case AFASignInSectionCellTypeRememberCredentials: {
+                    cell = [self dequeueRememberCredentialsCellForTableView:tableView];
+                }
+                    break;
+                    
+                case AFASignInSectionCellTypeSignIn: {
+                    cell = [self dequeueSignInCellForTableView:tableView];
+                }
+                    break;
+                    
+                default:
+                    break;
             }
-                break;
-                
-            case AFACloudLoginCredentialsCellTypeRememberCredentials: {
-                cell = [self dequeueRememberCredentialsCellForTableView:tableView];
-            }
-                break;
-                
-            case AFACloudLoginCredentialsCellTypeSignIn: {
-                cell = [self dequeueSignInCellForTableView:tableView];
-            }
-                break;
-                
-            default:
-                break;
         }
     }
     
@@ -252,19 +345,20 @@
 #pragma mark Cell builders
 
 - (AFASecurityLayerTableViewCell *)dequeueSecurityLayerCellForTableView:(UITableView *)tableView {
-    AFASecurityLayerTableViewCell *hostnameCell = [tableView dequeueReusableCellWithIdentifier:kCellIDSecurityLayer];
+    AFASecurityLayerTableViewCell *securityLayerCell = [tableView dequeueReusableCellWithIdentifier:kCellIDSecurityLayer];
+    securityLayerCell.switchViewButton.isOn = self.loginModel.isSecureLayer;
     
     __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:hostnameCell.switchViewButton
-                        forKeyPath:NSStringFromSelector(@selector(isOff))
+    [self.kvoManager observeObject:securityLayerCell.switchViewButton
+                        forKeyPath:NSStringFromSelector(@selector(isOn))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
                                  __strong typeof(self) strongSelf = weakSelf;
                                  
-                                 [strongSelf.loginModel updateCommunicationOverSecureLayer:![change[NSKeyValueChangeNewKey] boolValue]];
+                                 [strongSelf.loginModel updateCommunicationOverSecureLayer:[change[NSKeyValueChangeNewKey] boolValue]];
                              }];
     
-    return hostnameCell;
+    return securityLayerCell;
 }
 
 - (AFACredentialTextFieldTableViewCell *)dequeueHostNameCellForTableView:(UITableView *)tableView {
@@ -272,7 +366,8 @@
     hostnameCell.delegate = self;
     
     hostnameCell.inputTextField.attributedPlaceholder = self.loginModel.hostnameAttributedPlaceholderText;
-    hostnameCell.inputTextField.text = @"";
+    hostnameCell.inputTextField.text = self.loginModel.hostName;
+    hostnameCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
     hostnameCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
     
     __weak typeof(self) weakSelf = self;
@@ -292,7 +387,8 @@
     credentialCell.delegate = self;
     
     credentialCell.inputTextField.attributedPlaceholder = self.loginModel.usernameAttributedPlaceholderText;
-    credentialCell.inputTextField.text = @"";
+    credentialCell.inputTextField.text = self.loginModel.username;
+    credentialCell.inputTextField.keyboardType = UIKeyboardTypeEmailAddress;
     credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
     
     __weak typeof(self) weakSelf = self;
@@ -312,8 +408,9 @@
     credentialCell.delegate = self;
     
     credentialCell.inputTextField.attributedPlaceholder = self.loginModel.passwordAttributedPlaceholderText;
-    credentialCell.inputTextField.text = @"";
+    credentialCell.inputTextField.text = self.loginModel.password;
     credentialCell.inputTextField.secureTextEntry = YES;
+    credentialCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
     credentialCell.cellType = AFACredentialTextFieldCellTypeSecured;
     
     __weak typeof(self) weakSelf = self;
@@ -328,9 +425,51 @@
     return credentialCell;
 }
 
+- (AFACredentialTextFieldTableViewCell *)dequeuePortCellForTableView:(UITableView *)tableView {
+    AFACredentialTextFieldTableViewCell *credentialCell = [tableView dequeueReusableCellWithIdentifier:kCellIDCredentialTextField];
+    credentialCell.delegate = self;
+    
+    credentialCell.inputTextField.attributedPlaceholder = self.loginModel.portAttributedPlaceholderText;
+    credentialCell.inputTextField.text = self.loginModel.port;
+    credentialCell.inputTextField.keyboardType = UIKeyboardTypeNumberPad;
+    credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:credentialCell
+                        forKeyPath:NSStringFromSelector(@selector(inputText))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 [strongSelf.loginModel updatePortEntry:change[NSKeyValueChangeNewKey]];
+                             }];
+    
+    return credentialCell;
+}
+
+- (AFACredentialTextFieldTableViewCell *)dequeueServiceDocumentCellForTableView:(UITableView *)tableView {
+    AFACredentialTextFieldTableViewCell *credentialCell = [tableView dequeueReusableCellWithIdentifier:kCellIDCredentialTextField];
+    credentialCell.delegate = self;
+    
+    credentialCell.inputTextField.attributedPlaceholder = self.loginModel.serviceDocumentAttributedPlaceholderText;
+    credentialCell.inputTextField.text = self.loginModel.serviceDocument;
+    credentialCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
+    credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:credentialCell
+                        forKeyPath:NSStringFromSelector(@selector(inputText))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 [strongSelf.loginModel updateServiceDocument:change[NSKeyValueChangeNewKey]];
+                             }];
+    
+    return credentialCell;
+}
+
 - (AFARememberCredentialsTableViewCell *)dequeueRememberCredentialsCellForTableView:(UITableView *)tableView {
     AFARememberCredentialsTableViewCell *rememberCredentialsCell = [tableView dequeueReusableCellWithIdentifier:kCellIDRememberCredentials];
-    rememberCredentialsCell.checkBox.selected = NO;
+    rememberCredentialsCell.checkBox.selected = self.loginModel.rememberCredentials;
     
     __weak typeof(self) weakSelf = self;
     [self.kvoManager observeObject:rememberCredentialsCell.checkBox

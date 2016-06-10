@@ -37,12 +37,19 @@ extern NSInteger  kDefaultTaskListFetchSize;
 extern NSUInteger kTaskPreloadCellThreshold;
 
 // Credential related
+extern NSString *kCloudAuthetificationCredentialIdentifier;
+extern NSString *kPremiseAuthentificationCredentialIdentifier;
 extern NSString *kUsernameCredentialIdentifier;
 extern NSString *kPasswordCredentialIdentifier;
-extern NSString *kHostNameCredentialIdentifier;
-extern NSString *kSecureLayerCredentialIdentifier;
+extern NSString *kCloudHostNameCredentialIdentifier;
+extern NSString *kPremiseHostNameCredentialIdentifier;
+extern NSString *kCloudSecureLayerCredentialIdentifier;
+extern NSString *kPremiseSecureLayerCredentialIdentifier;
+extern NSString *kPremisePortCredentialIdentifier;
+extern NSString *kPremiseServiceDocumentCredentialIdentifier;
 extern NSString *kBooleanTrueCredentialIdentifier;
 extern NSString *kBooleanFalseCredentialIdentifier;
+extern NSString *kAuthentificationTypeCredentialIdentifier;
 
 // Request parameters constants
 extern NSString *kRequestParameterID;

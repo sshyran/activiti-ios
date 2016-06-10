@@ -269,6 +269,7 @@
 		13C444131BBA6CDB00868904 /* AFATableControllerCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */; };
 		13C444171BBA744400868904 /* AFATableControllerCommentCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */; };
 		13C4441B1BBAD8C100868904 /* AFATableControllerCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C4441A1BBAD8C100868904 /* AFATableControllerCellFactory.m */; };
+		13C711EB1D0996F700E8550D /* AFACredentialSectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C711EA1D0996F700E8550D /* AFACredentialSectionTableViewCell.m */; };
 		13C855BA1C4D197600F84422 /* ASDKFilterListRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C855B81C4D197600F84422 /* ASDKFilterListRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13C855BB1C4D197600F84422 /* ASDKFilterListRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C855B91C4D197600F84422 /* ASDKFilterListRequestRepresentation.m */; };
 		13C94BE41B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C94BE21B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -306,7 +307,7 @@
 		13E8306B1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830691B6A21DD0028901A /* ASDKBasicAuthentificationProvider.m */; };
 		13E830741B6A303B0028901A /* ASDKRequestOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830721B6A303B0028901A /* ASDKRequestOperationManager.h */; };
 		13E830751B6A303B0028901A /* ASDKRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830731B6A303B0028901A /* ASDKRequestOperationManager.m */; };
-		13E8307A1B6A45640028901A /* ASDKAPIEndpointDefinitionList.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830781B6A45640028901A /* ASDKAPIEndpointDefinitionList.h */; };
+		13E8307A1B6A45640028901A /* ASDKAPIEndpointDefinitionList.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830781B6A45640028901A /* ASDKAPIEndpointDefinitionList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13E8307B1B6A45640028901A /* ASDKAPIEndpointDefinitionList.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830791B6A45640028901A /* ASDKAPIEndpointDefinitionList.m */; };
 		13E830801B6A4A9B0028901A /* ASDKServicePathFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E8307E1B6A4A9B0028901A /* ASDKServicePathFactory.h */; };
 		13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8307F1B6A4A9B0028901A /* ASDKServicePathFactory.m */; };
@@ -878,6 +879,8 @@
 		13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCommentCellFactory.m; path = Business/TableController/CellFactories/TaskCommentCellFactory/AFATableControllerCommentCellFactory.m; sourceTree = "<group>"; };
 		13C444191BBAD8C100868904 /* AFATableControllerCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCellFactory.h; path = Business/TableController/CellFactories/BaseCellFactory/AFATableControllerCellFactory.h; sourceTree = "<group>"; };
 		13C4441A1BBAD8C100868904 /* AFATableControllerCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCellFactory.m; path = Business/TableController/CellFactories/BaseCellFactory/AFATableControllerCellFactory.m; sourceTree = "<group>"; };
+		13C711E91D0996F700E8550D /* AFACredentialSectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFACredentialSectionTableViewCell.h; path = UI/Cells/CredentialSectionCell/AFACredentialSectionTableViewCell.h; sourceTree = "<group>"; };
+		13C711EA1D0996F700E8550D /* AFACredentialSectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFACredentialSectionTableViewCell.m; path = UI/Cells/CredentialSectionCell/AFACredentialSectionTableViewCell.m; sourceTree = "<group>"; };
 		13C855B81C4D197600F84422 /* ASDKFilterListRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterListRequestRepresentation.h; path = NetworkServices/RequestRepresentations/FilterListInformation/ASDKFilterListRequestRepresentation.h; sourceTree = "<group>"; };
 		13C855B91C4D197600F84422 /* ASDKFilterListRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterListRequestRepresentation.m; path = NetworkServices/RequestRepresentations/FilterListInformation/ASDKFilterListRequestRepresentation.m; sourceTree = "<group>"; };
 		13C94BE21B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterRequestRepresentation.h; path = NetworkServices/RequestRepresentations/FilterInformation/ASDKFilterRequestRepresentation.h; sourceTree = "<group>"; };
@@ -2888,6 +2891,7 @@
 				13E6E2841B7E078E001F5737 /* SignInCell */,
 				75CFBC6E1B81CB930018DADE /* HostnameCell */,
 				75CFBC721B81E7890018DADE /* RememberCredentialsCell */,
+				13C711EC1D0997A100E8550D /* CredentialSectionCell */,
 			);
 			name = LoginScreen;
 			sourceTree = "<group>";
@@ -3112,6 +3116,15 @@
 				13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */,
 			);
 			name = TaskCommentCellFactory;
+			sourceTree = "<group>";
+		};
+		13C711EC1D0997A100E8550D /* CredentialSectionCell */ = {
+			isa = PBXGroup;
+			children = (
+				13C711E91D0996F700E8550D /* AFACredentialSectionTableViewCell.h */,
+				13C711EA1D0996F700E8550D /* AFACredentialSectionTableViewCell.m */,
+			);
+			name = CredentialSectionCell;
 			sourceTree = "<group>";
 		};
 		13C855BC1C4D197900F84422 /* FilterListInformation */ = {
@@ -4833,6 +4846,7 @@
 				8D7C1A741C8090D10092EA81 /* AFAGenericFilterModel.m in Sources */,
 				75CFBC6D1B81CB900018DADE /* AFASecurityLayerTableViewCell.m in Sources */,
 				8D7C1A661C8090340092EA81 /* AFAProcessMembershipTableViewCell.m in Sources */,
+				13C711EB1D0996F700E8550D /* AFACredentialSectionTableViewCell.m in Sources */,
 				13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */,
 				13BDA7431B7B733400A2CE40 /* AFALocalizationConstants.m in Sources */,
 				13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */,
