@@ -26,22 +26,43 @@ typedef NS_ENUM(NSInteger, AFALoginCredentialsType) {
     AFALoginCredentialsTypePremise
 };
 
+typedef NS_ENUM(NSInteger, AFACloudLoginSectionType) {
+    AFACloudLoginSectionTypeAccountDetails,
+    AFACloudLoginSectionTypeSignIn,
+    AFACloudLoginSectionTypeEnumCount
+};
+
+typedef NS_ENUM(NSInteger, AFAPremiseLoginSectionType) {
+    AFAPremiseLoginSectionTypeAccountDetails = 0,
+    AFAPremiseLoginSectionTypeAdvanced,
+    AFAPremiseLoginSectionTypeSignIn,
+    AFAPremiseLoginSectionTypeEnumCount
+};
+
 typedef NS_ENUM(NSInteger, AFACloudLoginCredentialsCellType) {
     AFACloudLoginCredentialsCellTypeEmail = 0,
     AFACloudLoginCredentialsCellTypePassword,
-    AFACloudLoginCredentialsCellTypeRememberCredentials,
-    AFACloudLoginCredentialsCellTypeSignIn,
     AFACloudLoginCredentialsCellTypeEnumCount
 };
 
 typedef NS_ENUM(NSInteger, AFAPremiseLoginCredentialsCellType) {
     AFAPremiseLoginCredentialsCellTypeSecurityLayer = 0,
-    AFAPremiseLoginCredentialsCellTypeHostname,
     AFAPremiseLoginCredentialsCellTypeEmail,
     AFAPremiseLoginCredentialsCellTypePassword,
-    AFAPremiseLoginCredentialsCellTypeRememberCredentials,
-    AFAPremiseLoginCredentialsCellTypeSignIn,
+    AFAPremiseLoginCredentialsCellTypeHostname,
     AFAPremiseLoginCredentialsCellTypeEnumCount
+};
+
+typedef NS_ENUM(NSInteger, AFAPremiseLoginAdvancedCredentialsCellType) {
+    AFAPremiseLoginAdvancedCredentialsCellTypePort,
+    AFAPremiseLoginAdvancedCredentialsCellTypeServiceDocument,
+    AFAPremiseLoginAdvancedCredentialsCellTypeEnumCount
+};
+
+typedef NS_ENUM(NSInteger, AFASignInSectionCellType) {
+    AFASignInSectionCellTypeRememberCredentials = 0,
+    AFASignInSectionCellTypeSignIn,
+    AFASignInSectionCellTypeEnumCount
 };
 
 typedef NS_OPTIONS(NSUInteger, AFALoginCredentialEditing) {

@@ -50,17 +50,57 @@
     self = [super init];
     
     if (self) {
+        NSDictionary *placeholderAttributes = @{NSForegroundColorAttributeName : [UIColor placeholderColorForCredentialTextField]};
+        
         self.usernameAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginUsernamePlaceholderText, @"Username placeholder text")
-                                                                                 attributes:@{NSForegroundColorAttributeName : [UIColor placeholderColorForCredentialTextField]}];
+                                                                                 attributes:placeholderAttributes];
         self.passwordAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginPasswordPlaceholderText, @"Password placeholder text")
-                                                                                 attributes:@{NSForegroundColorAttributeName : [UIColor placeholderColorForCredentialTextField]}];
+                                                                                 attributes:placeholderAttributes];
         self.hostnameAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginHostnamePlaceholderText, @"Hostname placeholder text")
-                                                                                 attributes:@{NSForegroundColorAttributeName : [UIColor placeholderColorForCredentialTextField]}];
+                                                                                 attributes:placeholderAttributes];
+        self.portAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginPortPlaceholderText, @"Port placeholder text")
+                                                                             attributes:placeholderAttributes];
+        self.serviceDocumentAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginServiceDocumentPlaceholderText, @"Document placeholder text")
+                                                                                        attributes:placeholderAttributes];
         self.credentialModel = [AFACredentialModel new];
+        self.credentialModel.serviceDocument = kASDKAPIApplicationPath;
     }
     
     return self;
 }
+
+
+#pragma mark -
+#pragma mark Getters
+
+- (NSString *)hostName {
+    return self.credentialModel.hostname;
+}
+
+- (NSString *)username {
+    return self.credentialModel.username;
+}
+
+- (NSString *)password {
+    return self.credentialModel.password;
+}
+
+- (NSString *)port {
+    return self.credentialModel.port;
+}
+
+- (NSString *)serviceDocument {
+    return self.credentialModel.serviceDocument;
+}
+
+- (BOOL)isSecureLayer {
+    return self.credentialModel.isCommunicationOverSecureLayer;
+}
+
+- (BOOL)rememberCredentials {
+    return self.credentialModel.rememberCredentials;
+}
+
 
 #pragma mark -
 #pragma mark Public interface
@@ -81,6 +121,14 @@
     self.credentialModel.rememberCredentials = rememberCredentials;
 }
 
+- (void)updatePortEntry:(NSString *)port {
+    self.credentialModel.port = port;
+}
+
+- (void)updateServiceDocument:(NSString *)serviceDocument {
+    self.credentialModel.serviceDocument = serviceDocument;
+}
+
 - (void)updateCommunicationOverSecureLayer:(BOOL)secureLayer {
     self.credentialModel.isCommunicationOverSecureLayer = secureLayer;
 }
@@ -88,7 +136,8 @@
 - (BOOL)canUserSignIn {
     return self.credentialModel.hostname.length &&
     self.credentialModel.username.length &&
-    self.credentialModel.password.length;
+    self.credentialModel.password.length &&
+    self.credentialModel.serviceDocument.length;
 }
 
 - (void)requestLoginWithCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock {
@@ -100,6 +149,8 @@
     serverConfiguration.hostAddress = self.credentialModel.hostname;
     serverConfiguration.username = self.credentialModel.username;
     serverConfiguration.password = self.credentialModel.password;
+    serverConfiguration.port = self.credentialModel.port;
+    serverConfiguration.serviceDocument = self.credentialModel.serviceDocument;
     serverConfiguration.isCommunicationOverSecureLayer = self.credentialModel.isCommunicationOverSecureLayer;
     
     // Initiate the Activiti SDK bootstrap with the given server configuration
@@ -128,8 +179,20 @@
                 // Login is successfull - Check whether the user has choosen to remember credentials
                 // and store them in the keychain
                 if (self.credentialModel.rememberCredentials) {
-                    // Former credentials are registered, will update them
                     
+                    // Store in the keychain which type of login is to be performed in the future
+                    NSString *authetificationIdentifier = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kAuthentificationTypeCredentialIdentifier];
+                    NSString *currentAuthentificationIdentifier = (strongSelf.authentificationType == AFALoginViewModelAuthentificationTypeCloud) ? kCloudAuthetificationCredentialIdentifier : kPremiseAuthentificationCredentialIdentifier;
+                    
+                    if (authetificationIdentifier) {
+                        [AFAKeychainWrapper updateKeychainValue:currentAuthentificationIdentifier
+                                                  forIdentifier:kAuthentificationTypeCredentialIdentifier];
+                    } else {
+                        [AFAKeychainWrapper createKeychainValue:currentAuthentificationIdentifier
+                                                  forIdentifier:kAuthentificationTypeCredentialIdentifier];
+                    }
+                    
+                    // Former credentials are registered, will update them
                     NSString *isCommunicationOverSecureLayerString = serverConfiguration.isCommunicationOverSecureLayer ? kBooleanTrueCredentialIdentifier : kBooleanFalseCredentialIdentifier;
                     
                     if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier] &&
@@ -138,19 +201,47 @@
                                                   forIdentifier:kUsernameCredentialIdentifier];
                         [AFAKeychainWrapper updateKeychainValue:serverConfiguration.password
                                                   forIdentifier:kPasswordCredentialIdentifier];
-                        [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddress
-                                                  forIdentifier:kHostNameCredentialIdentifier];
-                        [AFAKeychainWrapper updateKeychainValue:isCommunicationOverSecureLayerString
-                                                  forIdentifier:kSecureLayerCredentialIdentifier];
+                        
+                        if (AFALoginViewModelAuthentificationTypeCloud == self.authentificationType) {
+                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddress
+                                                      forIdentifier:kCloudHostNameCredentialIdentifier];
+                            [AFAKeychainWrapper updateKeychainValue:isCommunicationOverSecureLayerString
+                                                      forIdentifier:kCloudSecureLayerCredentialIdentifier];
+                        } else {
+                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddress
+                                                      forIdentifier:kPremiseHostNameCredentialIdentifier];
+                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.serviceDocument
+                                                      forIdentifier:kPremiseServiceDocumentCredentialIdentifier];
+                            [AFAKeychainWrapper updateKeychainValue:isCommunicationOverSecureLayerString
+                                                      forIdentifier:kPremiseSecureLayerCredentialIdentifier];
+                            if (serverConfiguration.port.length) {
+                                [AFAKeychainWrapper updateKeychainValue:serverConfiguration.port
+                                                          forIdentifier:kPremisePortCredentialIdentifier];
+                            }
+                        }
+                        
                     } else { // Insert new values in the keychain
                         [AFAKeychainWrapper createKeychainValue:serverConfiguration.username
                                                   forIdentifier:kUsernameCredentialIdentifier];
                         [AFAKeychainWrapper createKeychainValue:serverConfiguration.password
                                                   forIdentifier:kPasswordCredentialIdentifier];
-                        [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddress
-                                                  forIdentifier:kHostNameCredentialIdentifier];
-                        [AFAKeychainWrapper createKeychainValue:isCommunicationOverSecureLayerString
-                                                  forIdentifier:kSecureLayerCredentialIdentifier];
+                        if (AFALoginViewModelAuthentificationTypeCloud == self.authentificationType) {
+                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddress
+                                                      forIdentifier:kCloudHostNameCredentialIdentifier];
+                            [AFAKeychainWrapper createKeychainValue:isCommunicationOverSecureLayerString
+                                                      forIdentifier:kCloudSecureLayerCredentialIdentifier];
+                        } else {
+                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddress
+                                                      forIdentifier:kPremiseHostNameCredentialIdentifier];
+                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.serviceDocument
+                                                      forIdentifier:kPremiseServiceDocumentCredentialIdentifier];
+                            [AFAKeychainWrapper createKeychainValue:isCommunicationOverSecureLayerString
+                                                      forIdentifier:kPremiseSecureLayerCredentialIdentifier];
+                            if (serverConfiguration.port.length) {
+                                [AFAKeychainWrapper createKeychainValue:serverConfiguration.port
+                                                          forIdentifier:kPremisePortCredentialIdentifier];
+                            }
+                        }
                     }
                 }
                 
@@ -162,8 +253,6 @@
                 
                 [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
                 [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
-                [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kHostNameCredentialIdentifier];
-                [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kSecureLayerCredentialIdentifier];
                 
                 completionBlock(NO, error);
             }
@@ -183,8 +272,6 @@
             // Logout is successful - remove also any remembered credentials from the keychain
             [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
             [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
-            [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kHostNameCredentialIdentifier];
-            [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kSecureLayerCredentialIdentifier];
             
             strongSelf.authState = AFALoginViewModelAuthentificationStateLoggedOut;
             

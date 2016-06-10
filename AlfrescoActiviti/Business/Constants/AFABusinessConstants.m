@@ -37,12 +37,19 @@ NSInteger  kDefaultTaskListFetchSize                = 25;
 #pragma mark -
 #pragma mark Credential related
 
-NSString *kUsernameCredentialIdentifier             = @"kUsernameCredentialIdentifier";
-NSString *kPasswordCredentialIdentifier             = @"kPasswordCredentialIdentifier";
-NSString *kHostNameCredentialIdentifier             = @"kHostNameCredentialIdentifier";
-NSString *kSecureLayerCredentialIdentifier          = @"kSecureLayerCredentialIdentifier";
-NSString *kBooleanTrueCredentialIdentifier          = @"YES";
-NSString *kBooleanFalseCredentialIdentifier         = @"NO";
+NSString *kCloudAuthetificationCredentialIdentifier     = @"kCloudAuthetificationCredentialIdentifier";
+NSString *kPremiseAuthentificationCredentialIdentifier  = @"kPremiseAuthentificationCredentialIdentifier";
+NSString *kUsernameCredentialIdentifier                 = @"kUsernameCredentialIdentifier";
+NSString *kPasswordCredentialIdentifier                 = @"kPasswordCredentialIdentifier";
+NSString *kCloudHostNameCredentialIdentifier            = @"kCloudHostNameCredentialIdentifier";
+NSString *kPremiseHostNameCredentialIdentifier          = @"kPremiseHostNameCredentialIdentifier";
+NSString *kCloudSecureLayerCredentialIdentifier         = @"kCloudSecureLayerCredentialIdentifier";
+NSString *kPremiseSecureLayerCredentialIdentifier       = @"kPremiseSecureLayerCredentialIdentifier";
+NSString *kPremisePortCredentialIdentifier              = @"kPremisePortCredentialIdentifier";
+NSString *kPremiseServiceDocumentCredentialIdentifier   = @"kPremiseServiceDocumentCredentialIdentifier";
+NSString *kBooleanTrueCredentialIdentifier              = @"YES";
+NSString *kBooleanFalseCredentialIdentifier             = @"NO";
+NSString *kAuthentificationTypeCredentialIdentifier     = @"kAuthentificationTypeCredentialIdentifier";
 
 
 #pragma mark -

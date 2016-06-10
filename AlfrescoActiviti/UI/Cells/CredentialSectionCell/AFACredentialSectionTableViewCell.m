@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,19 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "AFACredentialSectionTableViewCell.h"
 
-@interface ASDKModelServerConfiguration : NSObject
+@implementation AFACredentialSectionTableViewCell
 
-@property (strong, nonatomic) NSString  *hostAddress;
-@property (assign, nonatomic) BOOL      isCommunicationOverSecureLayer;
-@property (strong, nonatomic) NSString  *username;
-@property (strong, nonatomic) NSString  *password;
-@property (strong, nonatomic) NSString  *port;
-@property (strong, nonatomic) NSString  *serviceDocument;
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
 
 @end

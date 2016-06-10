@@ -30,12 +30,16 @@
  *  Designated initializer for this class. Upon completion it generates the baseURL 
  *  path that future requests will use.
  *
- *  @param hostAddress   The host adress in name.domain format (eg activiti.alfresco.com)
- *  @param isSecureLayer Specifies whether the communication is made via a secured layer
+ *  @param hostAddress          The host adress in name.domain format (eg activiti.alfresco.com)
+ *  @param serviceDocumentPath  Path to the activiti installation 
+ *  @param port                 Port number on which the connection will be made
+ *  @param isSecureLayer        Specifies whether the communication is made via a secured layer
  *
  *  @return Class intance of ASDKServicePathFactory
  */
 - (instancetype)initWithHostAddress:(NSString *)hostAddress
+                serviceDocumentPath:(NSString *)serviceDocumentPath
+                               port:(NSString *)port
                     overSecureLayer:(BOOL)isSecureLayer;
 
 

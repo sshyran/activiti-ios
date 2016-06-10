@@ -24,6 +24,8 @@
 @property (strong, nonatomic) NSString *hostname;
 @property (strong, nonatomic) NSString *username;
 @property (strong, nonatomic) NSString *password;
+@property (strong, nonatomic) NSString *port;
+@property (strong, nonatomic) NSString *serviceDocument;
 @property (assign, nonatomic) BOOL     rememberCredentials;
 @property (assign, nonatomic) BOOL     isCommunicationOverSecureLayer;
 

@@ -31,12 +31,20 @@ static NSString * const kASDkHTTPS = @"https";
 @implementation ASDKServicePathFactory
 
 - (instancetype)initWithHostAddress:(NSString *)hostAddress
+                serviceDocumentPath:(NSString *)serviceDocumentPath
+                               port:(NSString *)port
                     overSecureLayer:(BOOL)isSecureLayer {
     self = [super init];
     
     if (self) {
         // Check parameter sanity
         NSParameterAssert(hostAddress.length);
+        NSParameterAssert(serviceDocumentPath.length);
+        
+        // Attach the port component to the host address if defined
+        if (port.length) {
+            hostAddress = [hostAddress stringByAppendingFormat:@":%@", port];
+        }
         
         // Check whether the protocol declaration must prefix the host address or not
         NSString *hostAddressFormat = @"%@://%@";
@@ -50,7 +58,7 @@ static NSString * const kASDkHTTPS = @"https";
             }
         }
         
-        _baseURL = [NSURL URLWithString:kASDKAPIApplicationPath
+        _baseURL = [NSURL URLWithString:serviceDocumentPath
                           relativeToURL:[NSURL URLWithString:[hostAddress stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
     }
     

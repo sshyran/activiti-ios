@@ -85,6 +85,7 @@ NSString *kCellIDProfileAction                                  = @"ProfileActio
 NSString *kCellIDProfileUsage                                   = @"ProfileUsageCellID";
 NSString *kCellIDAuditLog                                       = @"AuditLogCellID";
 NSString *kCellIDTaskChecklist                                  = @"TaskChecklistCellID";
+NSString *kCellIDLoginSection                                   = @"LoginSectionCellID";
 
 
 #pragma mark -

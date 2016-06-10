@@ -24,7 +24,10 @@
 "loginScreenHostnameSwitchButtonOFFText"                 = "OFF";
 "loginScreenHostnameSwitchHTTPSText"                     = "HTTPS";
 "loginScreenHostnameInputTextFieldPlaceholderText"       = "hostname";
+"loginScreenPortInputTextFieldPlaceholderText"           = "port";
+"loginScreenServiceDocumentInputTextFieldPlaceholderText"= "service document";
 "loginScreenRememberCredentialsLabelText"                = "Remember credentials";
+"loginScreenAdvancedSectionHeaderText"                   = "Advanced";
 
 // Applications screen
 "appScreenTitleText"                                     = "Applications";

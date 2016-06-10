@@ -93,12 +93,33 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self.activitiLogoCenterConstraint.active = NO;
     self.activitiLogoCenterPaddedConstraint.active = YES;
     
+    NSString *authetificationIdentifier = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kAuthentificationTypeCredentialIdentifier];
+    AFALoginViewModelAuthentificationType lastAuthetificationType = [authetificationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginViewModelAuthentificationTypeCloud : AFALoginViewModelAuthentificationTypePremise;
+    
     // Check if we have registered credentials and if so login the user
     // without showing the menu
     [self.loginModel updateUserNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]];
     [self.loginModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]];
-    [self.loginModel updateHostNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kHostNameCredentialIdentifier]];
-    [self.loginModel updateCommunicationOverSecureLayer:[[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kSecureLayerCredentialIdentifier] isEqualToString:kBooleanTrueCredentialIdentifier] ? YES : NO];
+    
+    BOOL areCredentialsAvailableFromKeychain = self.loginModel.username.length && self.loginModel.password.length;
+    
+    // If login credentials are not available in the keychain for cloud login,
+    // load the on-premise credentials as a fallback
+    if (AFALoginViewModelAuthentificationTypeCloud == lastAuthetificationType &&
+        areCredentialsAvailableFromKeychain) {
+        [self.loginModel updateHostNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kCloudHostNameCredentialIdentifier]];
+        [self.loginModel updateCommunicationOverSecureLayer:[[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kCloudSecureLayerCredentialIdentifier] isEqualToString:kBooleanTrueCredentialIdentifier] ? YES : NO];
+    } else {
+        [self.loginModel updateHostNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseHostNameCredentialIdentifier]];
+        [self.loginModel updateCommunicationOverSecureLayer:[[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseSecureLayerCredentialIdentifier] isEqualToString:kBooleanTrueCredentialIdentifier] ? YES : NO];
+        [self.loginModel updatePortEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremisePortCredentialIdentifier]];
+        // If there is no stored value for the service document key, then fallback to the one provided inside the login model
+        // at initialization time
+        NSString *serviceDocumentValue = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseServiceDocumentCredentialIdentifier];
+        if (serviceDocumentValue.length) {
+            [self.loginModel updateServiceDocument:serviceDocumentValue];
+        }
+    }
     
     if ([self.loginModel canUserSignIn]) {
         [self.loginModel requestLoginWithCompletionBlock:^(BOOL isLoggedIn, NSError *error) {
@@ -274,48 +295,22 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)performActivityAnimationInReverse:(BOOL)isReverseAnimation {
     self.activityView.animating = !self.activityView.animating;
     
+    NSTimeInterval activityViewDelay = isReverseAnimation ? 0 : kDefaultAnimationTime / 3.0f;
+    NSTimeInterval activitiLogoDelay = isReverseAnimation ? kDefaultAnimationTime / 3.0f : 0;
+    
     [UIView animateWithDuration:kDefaultAnimationTime
-                          delay:.0f
+                          delay:activitiLogoDelay
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         if (!isReverseAnimation) {
-                             // Flip logo image view
-                             self.activitiLogoImageView.layer.transform = CATransform3DMakeRotation(M_PI_2,0.0,1.0,0.0);
-                         } else {
-                             self.activityView.layer.transform = self.activityView.layer.transform = CATransform3DMakeRotation(-M_PI_2, 0.0f, 1.0f, 0.0f);
-                         }
-                     } completion:^(BOOL finished) {
-                         // Pre-flip activity view to continue from there
-                         CATransform3D preFlipTransform = CATransform3DMakeRotation(-M_PI_2, 0.0f, 1.0f, 0.0f);
-                         
-                         if (self.activityView.animating) {
-                             self.activityView.hidden = NO;
-                         } else {
-                             self.activityView.hidden = YES;
-                         }
-                         
-                         if (!isReverseAnimation) {
-                             self.activityView.layer.transform = preFlipTransform;
-                         } else {
-                             self.activitiLogoImageView.layer.transform = preFlipTransform;
-                         }
-                         
-                         [UIView animateWithDuration:kDefaultAnimationTime
-                                               delay:.0f
-                                             options:UIViewAnimationOptionCurveEaseInOut
-                                          animations:^{
-                                              // Flip from pre-flipped position
-                                              CATransform3D transform = CATransform3DIdentity;
-                                              transform = CATransform3DMakeRotation(0, 0.0f, 1.0f, 0.0f);
-                                              transform.m34 = 0.0015;
-                                              
-                                              if (isReverseAnimation ) {
-                                                  self.activitiLogoImageView.layer.transform = transform;
-                                              } else {
-                                                  self.activityView.layer.transform = transform;
-                                              }
-                                          } completion:nil];
-                     }];
+                         self.activitiLogoImageView.alpha = isReverseAnimation ? 1.0f : .0f;
+                     } completion:nil];
+    
+    [UIView animateWithDuration:kDefaultAnimationTime
+                          delay:activityViewDelay
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.activityView.alpha = isReverseAnimation ? .0f : 1.0f;
+                     } completion:nil];
 }
 
 - (void)showEnvironmentPageAnimation {
