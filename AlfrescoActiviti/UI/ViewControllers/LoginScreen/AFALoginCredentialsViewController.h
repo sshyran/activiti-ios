@@ -46,14 +46,14 @@ typedef NS_ENUM(NSInteger, AFACloudLoginCredentialsCellType) {
 };
 
 typedef NS_ENUM(NSInteger, AFAPremiseLoginCredentialsCellType) {
-    AFAPremiseLoginCredentialsCellTypeSecurityLayer = 0,
-    AFAPremiseLoginCredentialsCellTypeEmail,
+    AFAPremiseLoginCredentialsCellTypeEmail = 0,
     AFAPremiseLoginCredentialsCellTypePassword,
     AFAPremiseLoginCredentialsCellTypeHostname,
     AFAPremiseLoginCredentialsCellTypeEnumCount
 };
 
 typedef NS_ENUM(NSInteger, AFAPremiseLoginAdvancedCredentialsCellType) {
+    AFAPremiseLoginAdvancedCredentialsCellTypeSecurityLayer = 0,
     AFAPremiseLoginAdvancedCredentialsCellTypePort,
     AFAPremiseLoginAdvancedCredentialsCellTypeServiceDocument,
     AFAPremiseLoginAdvancedCredentialsCellTypeEnumCount

@@ -142,6 +142,14 @@
                      animations:^{
                          CGRect adjustedButtonViewFrame = self.buttonView.frame;
                          adjustedButtonViewFrame.origin.x += self.frame.size.width / 2.0f * (on ? -1 : 1);
+                         
+                         if (on) {
+                             adjustedButtonViewFrame.origin.x -= 1;
+                             
+                         }else {
+                             adjustedButtonViewFrame.origin.x += 1;
+                         }
+                         
                          self.buttonView.frame = adjustedButtonViewFrame;
                      } completion:nil];
     

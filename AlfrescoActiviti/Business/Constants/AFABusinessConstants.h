@@ -23,6 +23,10 @@
 
 extern NSString *kActivitiCloudHostName;
 
+// Login related
+extern NSUInteger kDefaultLoginUnsecuredPort;
+extern NSUInteger kDefaultLoginSecuredPort;
+
 // Task related
 extern NSInteger  kDayDifferenceForHighPriorityTasks;
 extern NSInteger  kDayDifferenceForMediumPriorityTasks;
