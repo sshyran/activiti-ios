@@ -26,6 +26,13 @@ NSString *kActivitiCloudHostName                    = @"activiti.alfresco.com";
 
 
 #pragma mark -
+#pragma mark Login related
+
+NSUInteger kDefaultLoginUnsecuredPort                = 80;
+NSUInteger kDefaultLoginSecuredPort                  = 443;
+
+
+#pragma mark -
 #pragma mark Task related
 
 NSInteger kDayDifferenceForHighPriorityTasks        = 1;
