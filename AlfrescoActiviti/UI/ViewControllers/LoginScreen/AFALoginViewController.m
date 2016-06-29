@@ -112,7 +112,12 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     } else {
         [self.loginModel updateHostNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseHostNameCredentialIdentifier]];
         [self.loginModel updateCommunicationOverSecureLayer:[[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseSecureLayerCredentialIdentifier] isEqualToString:kBooleanTrueCredentialIdentifier] ? YES : NO];
-        [self.loginModel updatePortEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremisePortCredentialIdentifier]];
+        NSString *cachedPortString = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremisePortCredentialIdentifier];
+        if (!cachedPortString.length) {
+            cachedPortString = [@(kDefaultLoginUnsecuredPort) stringValue];
+        }
+        [self.loginModel updatePortEntry:cachedPortString];
+        
         // If there is no stored value for the service document key, then fallback to the one provided inside the login model
         // at initialization time
         NSString *serviceDocumentValue = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseServiceDocumentCredentialIdentifier];
