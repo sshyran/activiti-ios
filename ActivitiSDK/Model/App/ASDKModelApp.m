@@ -48,7 +48,7 @@
 #pragma mark -
 #pragma mark Value transformations
 
-+ (NSValueTransformer *)modelIDJSONTransformer {
++ (NSValueTransformer *)applicationModelIDJSONTransformer {
     return self.valueTransformerForIDs;
 }
 
