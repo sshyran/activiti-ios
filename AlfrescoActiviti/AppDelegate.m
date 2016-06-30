@@ -21,10 +21,6 @@
 #import "AFALogFormatter.h"
 #import "AFAServiceRepository.h"
 #import "AFAThumbnailManager.h"
-@import HockeySDK;
-#import <Lookback/Lookback.h>
-
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 
 @interface AppDelegate ()
@@ -35,12 +31,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // HockeyApp SDK integration
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"27f3ab835014bff7256377ca7c2a7e03"];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator
-     authenticateInstallation];
-    
     // Cocoa Lumberjack integration
     [[DDASLLogger sharedInstance] setLogFormatter:[AFALogFormatter new]];
     [[DDTTYLogger sharedInstance] setLogFormatter:[AFALogFormatter new]];
@@ -51,16 +41,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // We're enabling debugger colors if you have installed the XCode colors plugin
     // More details here: https://github.com/robbiehanson/XcodeColors
     [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
-    
-    // Lookback SDK integration
-    [Lookback setupWithAppToken:@"5bSBFKwaFzFHeXMdt"];
-    [Lookback sharedLookback].shakeToRecord = YES;
-    [Lookback sharedLookback].options.onStartedUpload = ^(NSURL *destinationURL, NSDate *sessionStartedAt) {
-        // Copy the link just for recent recordings
-        if(fabs([sessionStartedAt timeIntervalSinceNow]) < 60.0f * 60.0f)
-            AFALogVerbose(@"The bug reported video's URL has been copied into the clipboard:%@", destinationURL);
-            [UIPasteboard generalPasteboard].URL = destinationURL;
-    };
     
     application.delegate.window.backgroundColor = [UIColor windowBackgroundColor];
     

@@ -1,12 +1,6 @@
 platform :ios, '8.0'
 use_frameworks!
 
-# Error & crash reporting pods
-def reporting_pods
-	pod 'HockeySDK'
-	pod "Lookback", :configurations => ["Debug", "Release"]
-end
-
 # Shared pods
 def shared_pods
 	pod 'CocoaLumberjack'
@@ -19,7 +13,6 @@ abstract_target 'Shared' do
 	shared_pods
 
 	target 'AlfrescoActiviti' do
-		reporting_pods
 	end
 
 	target 'ActivitiSDK' do
