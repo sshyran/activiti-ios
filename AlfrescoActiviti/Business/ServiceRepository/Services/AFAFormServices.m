@@ -84,13 +84,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.formRenderEngine setupWithTaskModel:task
                         renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                             if (formController && !error) {
-                                AFALogVerbose(@"Received form controller for task:%@ (ID:%@)", task.name, task.instanceID);
+                                AFALogVerbose(@"Received form controller for task:%@ (ID:%@)", task.name, task.modelID);
                                 
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     renderCompletionBlock(formController, nil);
                                 });
                             } else {
-                                AFALogError(@"An error occured while requesting the form controller for task %@ (ID:%@).Reason:%@", task.name, task.instanceID, error.localizedDescription);
+                                AFALogError(@"An error occured while requesting the form controller for task %@ (ID:%@).Reason:%@", task.name, task.modelID, error.localizedDescription);
                                 
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     renderCompletionBlock(nil, error);
@@ -102,7 +102,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                     formCompletionBlock(isFormCompleted, error);
                                 });
                             } else {
-                                AFALogError(@"An error occured while requesting the completion of the form for task definition %@ (ID:%@). Reason:%@", task.name, task.instanceID, error.localizedDescription);
+                                AFALogError(@"An error occured while requesting the completion of the form for task definition %@ (ID:%@). Reason:%@", task.name, task.modelID, error.localizedDescription);
                                 
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     formCompletionBlock(NO, error);
@@ -114,7 +114,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                     formSaveBlock(isFormSaved, nil);
                                 });
                             } else {
-                                AFALogError(@"An error occured while saving the form for task %@ (ID:%@). Reason:%@", task.name, task.instanceID, error.localizedDescription);
+                                AFALogError(@"An error occured while saving the form for task %@ (ID:%@). Reason:%@", task.name, task.modelID, error.localizedDescription);
                             }
                         }];
 }
@@ -129,13 +129,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.formRenderEngine setupWithProcessDefinition:processDefinition
                                 renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                     if (formController && !error) {
-                                        AFALogVerbose(@"Received form controller for process definition:%@ (ID:%@)", processDefinition.name, processDefinition.instanceID);
+                                        AFALogVerbose(@"Received form controller for process definition:%@ (ID:%@)", processDefinition.name, processDefinition.modelID);
                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             renderCompletionBlock(formController, nil);
                                         });
                                     } else {
-                                        AFALogError(@"An error occured while requesting the form controller for process definition %@ (ID:%@).Reason:%@", processDefinition.name, processDefinition.instanceID, error.localizedDescription);
+                                        AFALogError(@"An error occured while requesting the form controller for process definition %@ (ID:%@).Reason:%@", processDefinition.name, processDefinition.modelID, error.localizedDescription);
                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             renderCompletionBlock(nil, error);
@@ -148,7 +148,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                             formCompletionBlock(processInstance, error);
                                         });
                                     } else {
-                                        AFALogVerbose(@"An error occured while requesting the completion of the form for process definition %@ (ID:%@). Reason:%@", processDefinition.name, processDefinition.instanceID, error.localizedDescription);
+                                        AFALogVerbose(@"An error occured while requesting the completion of the form for process definition %@ (ID:%@). Reason:%@", processDefinition.name, processDefinition.modelID, error.localizedDescription);
                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             formCompletionBlock(nil, error);

@@ -33,11 +33,11 @@
 }
 
 - (NSInteger)numberOfRowsInSection:(NSInteger)section {
-    return ((ASDKModelProcessInstanceContent *)self.attachedContentArr[section]).contentList.count;
+    return ((ASDKModelProcessInstanceContent *)self.attachedContentArr[section]).contentArr.count;
 }
 
 - (id)itemAtIndexPath:(NSIndexPath *)indexPath {
-    return ((ASDKModelProcessInstanceContent *)self.attachedContentArr[indexPath.section]).contentList[indexPath.row];
+    return ((ASDKModelProcessInstanceContent *)self.attachedContentArr[indexPath.section]).contentArr[indexPath.row];
 }
 
 - (BOOL)hasContentAvailable {

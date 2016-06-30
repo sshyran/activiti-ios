@@ -37,8 +37,8 @@ typedef NS_ENUM(NSInteger, ASDKModelAppThemeType) {
 @property (strong, nonatomic) NSString              *deploymentID;
 @property (strong, nonatomic) NSString              *name;
 @property (strong, nonatomic) NSString              *icon;
-@property (strong, nonatomic) NSString              *appDescription;
+@property (strong, nonatomic) NSString              *applicationDescription;
 @property (assign, nonatomic) ASDKModelAppThemeType theme;
-@property (strong, nonatomic) NSString              *modelID;
+@property (strong, nonatomic) NSString              *applicationModelID;
 
 @end

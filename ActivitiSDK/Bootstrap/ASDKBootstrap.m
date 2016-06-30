@@ -116,7 +116,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     // Create a service path factory with the passed server configuration
     ASDKServicePathFactory *servicePathFactory =
-    [[ASDKServicePathFactory alloc] initWithHostAddress:self.serverConfiguration.hostAddress
+    [[ASDKServicePathFactory alloc] initWithHostAddress:self.serverConfiguration.hostAddressString
                                     serviceDocumentPath:self.serverConfiguration.serviceDocument
                                                    port:self.serverConfiguration.port
                                         overSecureLayer:self.serverConfiguration.isCommunicationOverSecureLayer];

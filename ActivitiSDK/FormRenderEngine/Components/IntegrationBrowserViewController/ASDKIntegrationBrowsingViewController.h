@@ -31,6 +31,6 @@
 
 @property (weak, nonatomic) id<ASDKIntegrationBrowsingDelegate> delegate;
 
-- (instancetype)initWithDataSource:(id<ASDKIntegrationDataSourceProtocol>)dataSource;
+- (instancetype)initBrowserWithDataSource:(id<ASDKIntegrationDataSourceProtocol>)dataSource;
 
 @end

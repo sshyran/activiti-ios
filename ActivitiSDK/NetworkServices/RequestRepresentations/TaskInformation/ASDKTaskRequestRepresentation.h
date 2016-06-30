@@ -44,7 +44,7 @@ typedef NS_ENUM(NSInteger, ASDKTaskStateType) {
 @property (strong, nonatomic) NSString               *processDefinitionID;
 @property (strong, nonatomic) NSString               *assigneeID;
 @property (strong, nonatomic) NSString               *candidateID;
-@property (assign, nonatomic) ASDKTaskStateType      taskState;
+@property (assign, nonatomic) ASDKTaskStateType      requestTaskState;
 @property (assign, nonatomic) ASDKTaskAssignmentType assignmentType;
 
 @end

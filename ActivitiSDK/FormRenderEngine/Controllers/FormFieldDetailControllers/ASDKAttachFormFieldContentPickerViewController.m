@@ -236,19 +236,19 @@ QLPreviewControllerDelegate>
     [formNetworkService downloadContentWithModel:content
                               allowCachedResults:allowCachedResults
                                    progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                       ASDKLogVerbose(@"Downloaded %@ of content for task with ID:%@ ", formattedReceivedBytesString, content.instanceID);
+                                       ASDKLogVerbose(@"Downloaded %@ of content for task with ID:%@ ", formattedReceivedBytesString, content.modelID);
                                        dispatch_async(dispatch_get_main_queue(), ^{
                                            progressBlock (formattedReceivedBytesString, error);
                                        });
                                    } completionBlock:^(NSString *contentID, NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
                                        if (!error && downloadedContentURL) {
-                                           ASDKLogVerbose(@"Content with ID:%@ was downloaded successfully.", content.instanceID);
+                                           ASDKLogVerbose(@"Content with ID:%@ was downloaded successfully.", content.modelID);
                                            
                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                completionBlock(contentID, downloadedContentURL, isLocalContent, nil);
                                            });
                                        } else {
-                                           ASDKLogError(@"An error occured while downloading content with ID:%@. Reason:%@", content.instanceID, error.localizedDescription);
+                                           ASDKLogError(@"An error occured while downloading content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
                                            
                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                completionBlock(nil, nil, NO, error);
@@ -372,7 +372,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             ASDKLogVerbose(@"Successfully fetched the integration account list:%@.", accounts);
             
             // Filter out all but the Alfresco cloud services - development in progress
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"serviceID == %@", kASDKAPIServiceIDAlfrescoCloud];
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
             NSArray *filtereAccountsdArr = [accounts filteredArrayUsingPredicate:searchPredicate];
             strongSelf.integrationAccounts = filtereAccountsdArr;
             
@@ -397,7 +397,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     ASDKFormNetworkServices *formNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
     
     ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
-    fileContentModel.fileURL = self.currentSelectedUploadResourceURL;
+    fileContentModel.modelFileURL = self.currentSelectedUploadResourceURL;
     
     __weak typeof(self) weakSelf = self;
     [formNetworkService uploadContentWithModel:fileContentModel
@@ -411,7 +411,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                  } completionBlock:^(ASDKModelContent *modelContent, NSError *error) {
                                      __strong typeof(self) strongSelf = weakSelf;
                                      
-                                     BOOL didContentUploadSucceeded = modelContent.isContentAvailable && !error;
+                                     BOOL didContentUploadSucceeded = modelContent.isModelContentAvailable && !error;
                                      
                                      if (didContentUploadSucceeded) {
                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -444,7 +444,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                              
                                              // store uploaded content id
                                              // used for automatic selection local storage version instead of remote version
-                                             [self.uploadedContentIDs addObject:modelContent.instanceID];
+                                             [self.uploadedContentIDs addObject:modelContent.modelID];
                                              
                                              if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
                                                  [weakSelf.delegate pickedContentHasFinishedUploading];
@@ -542,17 +542,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
             NSBundle *frameWorkBundle = [NSBundle bundleForClass:[self class]];
             
-            if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.serviceID]) {
+            if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.integrationServiceID]) {
                 taskCell.iconImageView.image = [UIImage imageNamed:@"alfresco-icon"
                                                           inBundle:frameWorkBundle
                                      compatibleWithTraitCollection:nil];
                 taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentAlfrescoContentText, ASDKLocalizationTable, @"Alfresco cloud text");
-            } else if ([kASDKAPIServiceIDBox isEqualToString:account.serviceID]) {
+            } else if ([kASDKAPIServiceIDBox isEqualToString:account.integrationServiceID]) {
                 taskCell.iconImageView.image = [UIImage imageNamed:@"box-icon"
                                                           inBundle:frameWorkBundle
                                      compatibleWithTraitCollection:nil];
                 taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentBoxContentText, ASDKLocalizationTable, @"Box text");
-            } else if ([kASDKAPIServiceIDGoogleDrive isEqualToString:account.serviceID]) {
+            } else if ([kASDKAPIServiceIDGoogleDrive isEqualToString:account.integrationServiceID]) {
                 taskCell.iconImageView.image = [UIImage imageNamed:@"drive-icon"
                                                           inBundle:frameWorkBundle
                                      compatibleWithTraitCollection:nil];
@@ -587,10 +587,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         default: { // Handle integration services cell behaviour
             ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
             
-            if (!account.authorized) {
+            if (!account.isAccountAuthorized) {
                 __weak typeof(self) weakSelf = self;
                 self.integrationLoginController =
-                [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURL
+                [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURLString
                                                                             completionBlock:^(BOOL isAuthorized) {
                                                                                 if (isAuthorized) {
                                                                                     __strong typeof(self) strongSelf = weakSelf;

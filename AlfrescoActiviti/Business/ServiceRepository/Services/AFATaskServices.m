@@ -248,7 +248,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     NSParameterAssert(completionBlock);
     
     ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
-    fileContentModel.fileURL = fileURL;
+    fileContentModel.modelFileURL = fileURL;
     
     [self.taskNetworkService uploadContentWithModel:fileContentModel
                                           forTaskID:taskID
@@ -286,7 +286,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     NSParameterAssert(completionBlock);
     
     ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
-    fileContentModel.fileURL = fileURL;
+    fileContentModel.modelFileURL = fileURL;
     
     [self.taskNetworkService uploadContentWithModel:fileContentModel
                                         contentData:contentData
@@ -322,13 +322,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.taskNetworkService deleteContent:content
                            completionBlock:^(BOOL isContentDeleted, NSError *error) {
                                if (!error && isContentDeleted) {
-                                   AFALogVerbose(@"Content with ID:%@ was deleted successfully.", content.instanceID);
+                                   AFALogVerbose(@"Content with ID:%@ was deleted successfully.", content.modelID);
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
                                        completionBlock(isContentDeleted, nil);
                                    });
                                } else {
-                                   AFALogError(@"An error occured while deleting content with ID:%@. Reason:%@", content.instanceID, error.localizedDescription);
+                                   AFALogError(@"An error occured while deleting content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
                                        completionBlock(NO, error);
@@ -347,19 +347,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.taskNetworkService downloadContent:content
                           allowCachedResults:allowCachedResults
                                progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                   AFALogVerbose(@"Downloaded %@ of content for task with ID:%@ ", formattedReceivedBytesString, content.instanceID);
+                                   AFALogVerbose(@"Downloaded %@ of content for task with ID:%@ ", formattedReceivedBytesString, content.modelID);
                                    dispatch_async(dispatch_get_main_queue(), ^{
                                        progressBlock (formattedReceivedBytesString, error);
                                    });
                                } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
                                    if (!error && downloadedContentURL) {
-                                       AFALogVerbose(@"Content with ID:%@ was downloaded successfully.", content.instanceID);
+                                       AFALogVerbose(@"Content with ID:%@ was downloaded successfully.", content.modelID);
                                        
                                        dispatch_async(dispatch_get_main_queue(), ^{
                                            completionBlock(downloadedContentURL, isLocalContent,nil);
                                        });
                                    } else {
-                                       AFALogError(@"An error occured while downloading content with ID:%@. Reason:%@", content.instanceID, error.localizedDescription);
+                                       AFALogError(@"An error occured while downloading content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
                                        
                                        dispatch_async(dispatch_get_main_queue(), ^{
                                            completionBlock(nil, NO, error);
@@ -379,13 +379,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                forTaskID:taskID
                          completionBlock:^(BOOL isUserInvolved, NSError *error) {
                              if (!error && isUserInvolved) {
-                                 AFALogVerbose(@"User %@ had been involved with task:%@", [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName], taskID);
+                                 AFALogVerbose(@"User %@ had been involved with task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
                                      completionBlock(isUserInvolved, nil);
                                  });
                              } else {
-                                 AFALogError(@"An error occured while involving user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName], taskID, error.localizedDescription);
+                                 AFALogError(@"An error occured while involving user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
                                      completionBlock(NO, error);
@@ -405,13 +405,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                       forTaskID:taskID
                                 completionBlock:^(BOOL isUserInvolved, NSError *error) {
                                     if (!error && !isUserInvolved) {
-                                        AFALogVerbose(@"User %@ had been removed from task:%@", [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName], taskID);
+                                        AFALogVerbose(@"User %@ had been removed from task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             completionBlock(isUserInvolved, nil);
                                         });
                                     } else {
-                                        AFALogError(@"An error occured while removing user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName], taskID, error.localizedDescription);
+                                        AFALogError(@"An error occured while removing user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
                                         
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             completionBlock(NO, error);
@@ -533,13 +533,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                        toUser:user
                               completionBlock:^(ASDKModelTask *task, NSError *error) {
                                   if (!error && task) {
-                                      AFALogVerbose(@"Assigned user:%@ to task:%@", [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName], task.name);
+                                      AFALogVerbose(@"Assigned user:%@ to task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], task.name);
                                       
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           completionBlock(task, nil);
                                       });
                                   } else {
-                                      AFALogError(@"An error occured while assigning user:%@ to task with ID:%@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName], taskID, error.localizedDescription);
+                                      AFALogError(@"An error occured while assigning user:%@ to task with ID:%@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
                                       
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           completionBlock(nil, error);

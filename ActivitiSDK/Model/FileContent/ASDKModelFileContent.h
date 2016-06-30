@@ -20,7 +20,7 @@
 
 @interface ASDKModelFileContent : NSObject
 
-@property (strong, nonatomic) NSURL                 *fileURL;
+@property (strong, nonatomic) NSURL                 *modelFileURL;
 @property (strong, nonatomic, readonly) NSString    *utiType;
 @property (strong, nonatomic, readonly) NSString    *mimeType;
 @property (strong, nonatomic, readonly) NSString    *fileName;

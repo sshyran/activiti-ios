@@ -22,7 +22,7 @@
 
 @interface ASDKModelFormFieldFileSource : ASDKModelBase
 
-@property (strong, nonatomic) NSString                  *serviceID;
+@property (strong, nonatomic) NSString                  *integrationServiceID;
 @property (strong, nonatomic) NSString                  *name;
 @property (strong, nonatomic) ASDKModelFileSourceFolder *selectedFolder;
 

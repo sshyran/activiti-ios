@@ -117,7 +117,6 @@
 		137194891B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; };
 		137194921B6924DF00D4E1F0 /* ActivitiSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194911B6924DF00D4E1F0 /* ActivitiSDKTests.m */; };
 		137194951B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; };
-		137194961B6924DF00D4E1F0 /* ActivitiSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1372B21A1BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1372B2191BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m */; };
 		137B8DD41BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DD31BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m */; };
 		137B8DD81BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DD71BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m */; };
@@ -527,7 +526,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				137194961B6924DF00D4E1F0 /* ActivitiSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5232,7 +5230,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Emanuel  Lupu-Marinei (46VT8NFR94)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Alfresco Software, Inc. (W8N95J537P)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
@@ -5249,7 +5247,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "Alfresco Activiti";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "a4a50dba-5b34-4d3e-a13f-a88598fb284f";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

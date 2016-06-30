@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, ASDKModelContentAvailabilityType) {
 
 @property (strong, nonatomic) NSString                          *contentName;
 @property (strong, nonatomic) ASDKModelProfile                  *owner;
-@property (assign, nonatomic) BOOL                              isContentAvailable;
+@property (assign, nonatomic) BOOL                              isModelContentAvailable;
 @property (assign, nonatomic) BOOL                              isLink;
 @property (strong, nonatomic) NSString                          *mimeType;
 @property (strong, nonatomic) NSString                          *displayType;

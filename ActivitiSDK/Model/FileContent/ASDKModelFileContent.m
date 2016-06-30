@@ -26,7 +26,7 @@
 @implementation ASDKModelFileContent
 
 - (NSString *)utiType {
-    NSString *extension = [_fileURL pathExtension];
+    NSString *extension = [_modelFileURL pathExtension];
     NSString *utiString = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
                                                                                (__bridge CFStringRef)extension,
                                                                                NULL);
@@ -35,11 +35,11 @@
 }
 
 - (NSString *)fileName {
-    return [[_fileURL absoluteString] lastPathComponent];
+    return [[_modelFileURL absoluteString] lastPathComponent];
 }
 
 - (NSString *)mimeType {
-    NSString *filePath = _fileURL.absoluteString;
+    NSString *filePath = _modelFileURL.absoluteString;
     CFStringRef fileExtension = (__bridge CFStringRef)[filePath pathExtension];
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);

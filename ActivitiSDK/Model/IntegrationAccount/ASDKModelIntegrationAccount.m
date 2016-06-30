@@ -28,11 +28,11 @@
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     
     if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
-                                                          @"authorized"         : @"authorized",
-                                                          @"authorizationURL"   : @"authorizationUrl",
-                                                          @"serviceID"          : @"serviceId",
-                                                          @"isMetadataAllowed"  : @"metaDataAllowed"
+        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property             JSON property
+                                                          @"isAccountAuthorized"    : @"authorized",
+                                                          @"authorizationURLString" : @"authorizationUrl",
+                                                          @"integrationServiceID"   : @"serviceId",
+                                                          @"isMetadataAllowed"      : @"metaDataAllowed"
                                                         }];
     }
     

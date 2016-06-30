@@ -27,6 +27,6 @@ typedef NS_ENUM(NSInteger, ASDKTaskListQuerryStateType) {
 @interface ASDKTaskListQuerryRequestRepresentation : ASDKPagingRequestRepresentation
 
 @property (strong, nonatomic) NSString                      *processInstanceID;
-@property (assign, nonatomic) ASDKTaskListQuerryStateType   taskState;
+@property (assign, nonatomic) ASDKTaskListQuerryStateType   requestTaskState;
 
 @end

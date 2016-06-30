@@ -182,20 +182,20 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)updateProfileWithModel:(ASDKModelProfile *)profileModel
                completionBlock:(ASDKProfileCompletionBlock)completionBlock {
     // Check mandatory fields
-    NSParameterAssert(profileModel.firstName &&
-                      profileModel.lastName &&
+    NSParameterAssert(profileModel.userFirstName &&
+                      profileModel.userLastName &&
                       profileModel.email &&
-                      profileModel.company &&
+                      profileModel.companyName &&
                       completionBlock);
     NSParameterAssert(self.resultsQueue);
     
     // Populate a request representation with the needed information
     ASDKProfileInformationRequestRepresentation *profileInformationRequestRepresentation = [ASDKProfileInformationRequestRepresentation new];
-    profileInformationRequestRepresentation.userID = profileModel.instanceID;
-    profileInformationRequestRepresentation.firstName = profileModel.firstName;
-    profileInformationRequestRepresentation.lastName = profileModel.lastName;
+    profileInformationRequestRepresentation.userID = profileModel.modelID;
+    profileInformationRequestRepresentation.userFirstName = profileModel.userFirstName;
+    profileInformationRequestRepresentation.userLastName = profileModel.userLastName;
     profileInformationRequestRepresentation.email = profileModel.email;
-    profileInformationRequestRepresentation.company = profileModel.company;
+    profileInformationRequestRepresentation.companyName = profileModel.companyName;
     
     self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
     
@@ -431,7 +431,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                          mimeType:file.mimeType];
                  
                  if (error) {
-                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.fileURL);
+                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.modelFileURL);
                  }
              } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                  __strong typeof(self) strongSelf = weakSelf;

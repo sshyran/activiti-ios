@@ -21,7 +21,7 @@
 
 @interface ASDKModelProcessInstanceContent : ASDKModelBase
 
-@property (strong, nonatomic) NSArray                               *contentList;
+@property (strong, nonatomic) NSArray                               *contentArr;
 @property (strong, nonatomic) ASDKModelProcessInstanceContentField  *field;
 
 @end

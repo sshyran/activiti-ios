@@ -34,10 +34,10 @@
     
     if (inheretedPropertyKeys.allKeys.count) {
         [inheretedPropertyKeys addEntriesFromDictionary:
-         @{//Objc property        JSON property
-           @"serviceID"         : @"serviceId",
-           @"name"              : @"name",
-           @"selectedFolder"    : @"selectedFolder"
+         @{//Objc property           JSON property
+           @"integrationServiceID" : @"serviceId",
+           @"name"                 : @"name",
+           @"selectedFolder"       : @"selectedFolder"
            }];
     }
     

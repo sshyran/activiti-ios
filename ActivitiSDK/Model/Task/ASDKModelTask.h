@@ -24,7 +24,7 @@
 
 @property (strong, nonatomic) NSString          *name;
 @property (strong, nonatomic) NSString          *taskDescription;
-@property (strong, nonatomic) ASDKModelProfile  *assignee;
+@property (strong, nonatomic) ASDKModelProfile  *assigneeModel;
 @property (strong, nonatomic) NSDate            *dueDate;
 @property (strong, nonatomic) NSDate            *endDate;
 @property (assign, nonatomic) NSTimeInterval    duration;

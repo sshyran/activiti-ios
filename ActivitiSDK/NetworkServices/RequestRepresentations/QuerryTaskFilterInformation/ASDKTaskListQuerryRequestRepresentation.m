@@ -30,7 +30,7 @@
     if (inheretedPropertyKeys.allKeys.count) {
         [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
                                                           @"processInstanceID"  : @"processInstanceId",
-                                                          @"taskState"          : @"state"
+                                                          @"requestTaskState"   : @"state"
                                                           }];
     }
     

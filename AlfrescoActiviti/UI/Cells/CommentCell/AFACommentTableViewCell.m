@@ -40,7 +40,7 @@
 #pragma mark Public interface
 
 - (void)setUpCellWithComment:(ASDKModelComment *)comment {
-    self.contributorNameLabel.text = [NSString stringWithFormat:@"%@ %@", comment.author.firstName, comment.author.lastName];
+    self.contributorNameLabel.text = [NSString stringWithFormat:@"%@ %@", comment.authorModel.userFirstName, comment.authorModel.userLastName];
     self.commentDescriptionLabel.text = comment.message;
     self.commentDateLabel.text = [comment.creationDate commentFormattedString];
 }

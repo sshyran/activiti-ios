@@ -31,10 +31,10 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{//Objc property      JSON property
              @"userID"          : @"id",
-             @"firstName"       : @"firstName",
-             @"lastName"        : @"lastName",
+             @"userFirstName"   : @"firstName",
+             @"userLastName"    : @"lastName",
              @"email"           : @"email",
-             @"company"         : @"company"
+             @"companyName"     : @"company"
              };
 }
 

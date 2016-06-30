@@ -35,7 +35,7 @@
         [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
                                                           @"name"                   : @"name",
                                                           @"taskDescription"        : @"description",
-                                                          @"assignee"               : @"assignee",
+                                                          @"assigneeModel"          : @"assignee",
                                                           @"dueDate"                : @"dueDate",
                                                           @"endDate"                : @"endDate",
                                                           @"duration"               : @"duration",
@@ -57,7 +57,7 @@
 #pragma mark -
 #pragma mark Value transformations
 
-+ (NSValueTransformer *)assigneeJSONTransformer {
++ (NSValueTransformer *)assigneeModelJSONTransformer {
     return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelProfile.class];
 }
 

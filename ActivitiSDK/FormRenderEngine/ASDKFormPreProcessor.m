@@ -135,7 +135,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                     if (self.dynamicTableFieldID) {
                         [self.formNetworkServices fetchRestFieldValuesForStartFormWithProcessDefinitionID:self.processDefinitionID
                                                                                               withFieldID:self.dynamicTableFieldID
-                                                                                             withColumnID:formField.instanceID                                                                                              completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
+                                                                                             withColumnID:formField.modelID                                                                                              completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
                                                                                                  
                                                                                                  formField.formFieldOptions = restFormFieldOptions;
                                                                                                  
@@ -144,7 +144,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                                                                                              }];
                     } else {
                         [self.formNetworkServices fetchRestFieldValuesForStartFormWithProcessDefinitionID:self.processDefinitionID
-                                                                                              withFieldID:formField.instanceID
+                                                                                              withFieldID:formField.modelID
                                                                                           completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
                                                                                               
                                                                                               formField.formFieldOptions = restFormFieldOptions;
@@ -157,7 +157,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                     if (self.dynamicTableFieldID) {
                         [self.formNetworkServices fetchRestFieldValuesForTaskWithID:self.taskID
                                                                         withFieldID:self.dynamicTableFieldID
-                                                                       withColumnID:formField.instanceID
+                                                                       withColumnID:formField.modelID
                                                                     completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
                                                                         
                                                                         formField.formFieldOptions = restFormFieldOptions;
@@ -167,7 +167,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                                                                     }];
                     } else {
                         [self.formNetworkServices fetchRestFieldValuesForTaskWithID:self.taskID
-                                                                        withFieldID:formField.instanceID
+                                                                        withFieldID:formField.modelID
                                                                     completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
                                                                         
                                                                         formField.formFieldOptions = restFormFieldOptions;
@@ -220,7 +220,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                 // create column definition dictionary for quick access
                 NSMutableDictionary *columnFormFieldDict = [[NSMutableDictionary alloc] init];
                 for (ASDKModelFormField *columnFormField in dynamicTableFormField.columnDefinitions) {
-                    [columnFormFieldDict setValue:columnFormField forKey:columnFormField.instanceID];
+                    [columnFormFieldDict setValue:columnFormField forKey:columnFormField.modelID];
                 }
                 
                 for (NSDictionary *rowValues in dynamicTableFormField.values) {
@@ -294,7 +294,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
             ^(id obj, NSUInteger idx, BOOL *stop) {
                 BOOL res;
                 ASDKModelFormField *modelFormField = (ASDKModelFormField *) obj;
-                if ([property isEqualToString:modelFormField.instanceID]) {
+                if ([property isEqualToString:modelFormField.modelID]) {
                     res = YES;
                     *stop = YES;
                 } else {

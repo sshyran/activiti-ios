@@ -238,7 +238,7 @@
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKModelContent *selectedContent = (ASDKModelContent *)self.currentFormField.values[indexPath.row];
     
-    if (selectedContent.isContentAvailable) {
+    if (selectedContent.isModelContentAvailable) {
         [self.contentPickerViewController dowloadContent:selectedContent
                                       allowCachedContent:YES];
     }
@@ -345,9 +345,9 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     [self onFullscreenOverlayTap:nil];
     
     // Initialize the browsing controller at a top network level based on the selected integration account
-    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:integrationAccount.serviceID]) {
+    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:integrationAccount.integrationServiceID]) {
         ASDKIntegrationNetworksDataSource *dataSource = [[ASDKIntegrationNetworksDataSource alloc] initWithIntegrationAccount:integrationAccount];
-        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:dataSource];
+        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initBrowserWithDataSource:dataSource];
         self.integrationBrowsingController.delegate = self;
     } else {
         self.integrationBrowsingController = nil;

@@ -175,7 +175,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
     
     // Add the process definition ID to the list of passed parameters
     NSMutableDictionary *requestParameters = [NSMutableDictionary dictionaryWithDictionary: [formFieldValuesRepresentation jsonDictionary]];
-    [requestParameters setObject:processDefinition.instanceID
+    [requestParameters setObject:processDefinition.modelID
                           forKey:kASDKAPIProcessDefinitionIDParameter];
     [requestParameters setObject:processDefinition.name
                           forKey:kASDKAPIGenericNameParameter];
@@ -374,7 +374,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                                          mimeType:file.mimeType];
                  
                  if (error) {
-                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.fileURL);
+                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.modelFileURL);
                  }
              } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                  __strong typeof(self) strongSelf = weakSelf;
@@ -475,10 +475,10 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     // If content already exists return the URL to it to the caller and the caller
     // explicitly mentioned cached results are expected return the existing data
     if (allowCachedResults && [self.diskServices doesFileAlreadyExistsForContent:content]) {
-        ASDKLogVerbose(@"Didn't performed content request. Providing cached result for content with ID: %@", content.instanceID);
+        ASDKLogVerbose(@"Didn't performed content request. Providing cached result for content with ID: %@", content.modelID);
         dispatch_async(self.resultsQueue, ^{
             NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];
-            completionBlock(content.instanceID, downloadURL, YES, nil);
+            completionBlock(content.modelID, downloadURL, YES, nil);
         });
         
         return;
@@ -488,7 +488,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskContentDownloadServicePathFormat], content.instanceID]
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskContentDownloadServicePathFormat], content.modelID]
                            parameters:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
@@ -505,7 +505,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                                       
                                       dispatch_async(strongSelf.resultsQueue, ^{
                                           NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];
-                                          completionBlock(content.instanceID, downloadURL, NO, nil);
+                                          completionBlock(content.modelID, downloadURL, NO, nil);
                                       });
                                   } else {
                                       ASDKLogVerbose(@"The form field content failed to download with request: %@ - %@.\nResponse:%@",
@@ -514,7 +514,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                                                      [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
                                       
                                       dispatch_async(strongSelf.resultsQueue, ^{
-                                          completionBlock(content.instanceID, nil, NO, nil);
+                                          completionBlock(content.modelID, nil, NO, nil);
                                       });
                                   }
                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

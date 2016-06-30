@@ -130,7 +130,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         [dependencyDict setObject:influentialFormFieldsForCurrentFormField
-                           forKey:formField.instanceID];
+                           forKey:formField.modelID];
     }
     
     return dependencyDict;
@@ -157,7 +157,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
     }
     
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.instanceID == %@", formFieldID];
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.modelID == %@", formFieldID];
     NSArray *formFields = [self.formFields filteredArrayUsingPredicate:searchPredicate];
     
     return formFields.firstObject;
@@ -191,7 +191,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (NSArray *)parseVisibleFormFields {
     // Because at init time the dependency dict is created which holds information on the affected
     // form fields, we will use that to iterate over and evaluate conditions
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID IN %@", self.dependencyDict.allKeys];
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID IN %@", self.dependencyDict.allKeys];
     NSArray *affectedFormFields = [self.formFields filteredArrayUsingPredicate:searchPredicate];
     NSArray *hiddenFields = [self parseHiddenFormFieldsFromCollection:affectedFormFields];
     
@@ -870,7 +870,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         // Double check that the saved value is actually an option registered
         // in the form field options
         NSString *savedValue = formField.values.firstObject;
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", savedValue];
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", savedValue];
         optionID = [formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject;
     }
     
@@ -882,7 +882,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // If there was no value chosen by the user, but there are saved ones
     // get the label name from the form field option property
     if (!valueToReturn && optionID) {
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", optionID];
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", optionID];
         valueToReturn = [(ASDKModelFormFieldOption *)[formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject name];
     }
     

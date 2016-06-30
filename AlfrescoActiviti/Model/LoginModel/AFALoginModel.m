@@ -146,7 +146,7 @@
 
     // Create the server configuration for the SDK bootstrap
     ASDKModelServerConfiguration *serverConfiguration = [ASDKModelServerConfiguration new];
-    serverConfiguration.hostAddress = self.credentialModel.hostname;
+    serverConfiguration.hostAddressString = self.credentialModel.hostname;
     serverConfiguration.username = self.credentialModel.username;
     serverConfiguration.password = self.credentialModel.password;
     serverConfiguration.port = self.credentialModel.port;
@@ -203,12 +203,12 @@
                                                   forIdentifier:kPasswordCredentialIdentifier];
                         
                         if (AFALoginViewModelAuthentificationTypeCloud == self.authentificationType) {
-                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddress
+                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddressString
                                                       forIdentifier:kCloudHostNameCredentialIdentifier];
                             [AFAKeychainWrapper updateKeychainValue:isCommunicationOverSecureLayerString
                                                       forIdentifier:kCloudSecureLayerCredentialIdentifier];
                         } else {
-                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddress
+                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddressString
                                                       forIdentifier:kPremiseHostNameCredentialIdentifier];
                             [AFAKeychainWrapper updateKeychainValue:serverConfiguration.serviceDocument
                                                       forIdentifier:kPremiseServiceDocumentCredentialIdentifier];
@@ -226,12 +226,12 @@
                         [AFAKeychainWrapper createKeychainValue:serverConfiguration.password
                                                   forIdentifier:kPasswordCredentialIdentifier];
                         if (AFALoginViewModelAuthentificationTypeCloud == self.authentificationType) {
-                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddress
+                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddressString
                                                       forIdentifier:kCloudHostNameCredentialIdentifier];
                             [AFAKeychainWrapper createKeychainValue:isCommunicationOverSecureLayerString
                                                       forIdentifier:kCloudSecureLayerCredentialIdentifier];
                         } else {
-                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddress
+                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddressString
                                                       forIdentifier:kPremiseHostNameCredentialIdentifier];
                             [AFAKeychainWrapper createKeychainValue:serverConfiguration.serviceDocument
                                                       forIdentifier:kPremiseServiceDocumentCredentialIdentifier];

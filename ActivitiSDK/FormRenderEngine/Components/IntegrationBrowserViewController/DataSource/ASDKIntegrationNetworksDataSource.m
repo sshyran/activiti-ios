@@ -68,7 +68,7 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationNetworksForSourceID:self.integrationAccount.serviceID
+    [integrationNetworkService fetchIntegrationNetworksForSourceID:self.integrationAccount.integrationServiceID
                                                    completionBlock:^(NSArray *networks, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
@@ -114,7 +114,7 @@
     ASDKIntegrationBrowsingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDIntegrationBrowsing
                                                                                  forIndexPath:indexPath];
     ASDKModelNetwork *network = self.networkArr[indexPath.row];
-    cell.sourceTitleLabel.text = network.instanceID;
+    cell.sourceTitleLabel.text = network.modelID;
     cell.sourceIconLabel.font = [UIFont glyphiconFontWithSize:24];
     cell.sourceIconLabel.text = [NSString iconStringForIconType:ASDKGlyphIconTypeFolderClosed];
     
