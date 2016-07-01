@@ -60,20 +60,20 @@
                         id formFieldValue = [self determineValueForFormField:columnFormField];
                         if (formFieldValue) {
                             [columnValues setObject:formFieldValue
-                                             forKey:columnFormField.instanceID];
+                                             forKey:columnFormField.modelID];
                         }
                     }
                     [rowValues addObject:columnValues];
                 }
                 [formFieldMetadataValuesDict setObject:rowValues
-                                                forKey:sectionFormField.instanceID];
+                                                forKey:sectionFormField.modelID];
 
             } else {
                 for (ASDKModelFormField *formField in sectionFormField.formFields) {
                     id formFieldValue = [self determineValueForFormField:formField];
                     if (formFieldValue) {
                         [formFieldMetadataValuesDict setObject:formFieldValue
-                                                        forKey:formField.instanceID];
+                                                        forKey:formField.modelID];
                     }
                 }
             }
@@ -94,10 +94,10 @@
             if (ASDKModelFormFieldTypeRestField == formField.fieldType) {
                 NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"name == %@", formField.metadataValue.option.attachedValue];
                 ASDKModelFormFieldOption *chosenOption = [formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject;
-                formFieldValue = @{kASDKAPIGenericIDParameter  : chosenOption.instanceID,
+                formFieldValue = @{kASDKAPIGenericIDParameter  : chosenOption.modelID,
                                    kASDKAPIGenericNameParameter: formField.metadataValue.option.attachedValue};
             } else {
-                formFieldValue = @{kASDKAPIGenericIDParameter  : formField.instanceID,
+                formFieldValue = @{kASDKAPIGenericIDParameter  : formField.modelID,
                                    kASDKAPIGenericNameParameter: formField.metadataValue.option.attachedValue};
             }
         } else if (formField.metadataValue.attachedValue) { // if there's a attached value
@@ -125,7 +125,7 @@
             if (formField.representationType == ASDKModelFormFieldRepresentationTypeAttach) {
                 NSMutableArray *modelContentArray = [NSMutableArray new];
                 for (ASDKModelContent *modelContent in formField.values) {
-                    [modelContentArray addObject:modelContent.instanceID];
+                    [modelContentArray addObject:modelContent.modelID];
                 }
                 formFieldValue = [modelContentArray componentsJoinedByString:@","];
             }
@@ -139,8 +139,8 @@
                         if ([formFieldOption.name isEqualToString:formField.values.firstObject]) {
                             // check if option has id (dynamic table dropdown column types don't have any)
                             NSString *optionID = @"";
-                            if (formFieldOption.instanceID) {
-                                optionID = formFieldOption.instanceID;
+                            if (formFieldOption.modelID) {
+                                optionID = formFieldOption.modelID;
                             }
                             formFieldValue = @{kASDKAPIGenericIDParameter  : optionID,
                                                kASDKAPIGenericNameParameter: formField.values.firstObject};

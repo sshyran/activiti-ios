@@ -34,7 +34,7 @@
     if (inheretedPropertyKeys.allKeys.count) {
         [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property        JSON property
                                                           @"message"             : @"message",
-                                                          @"author"              : @"createdBy",
+                                                          @"authorModel"         : @"createdBy",
                                                           }];
     }
     
@@ -45,7 +45,7 @@
 #pragma mark -
 #pragma mark Value transformations
 
-+ (NSValueTransformer *)authorJSONTransformer {
++ (NSValueTransformer *)authorModelJSONTransformer {
     return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelProfile.class];
 }
 

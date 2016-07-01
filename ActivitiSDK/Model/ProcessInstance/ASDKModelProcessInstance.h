@@ -25,7 +25,7 @@
 @property (strong, nonatomic) NSString          *name;
 @property (strong, nonatomic) NSDate            *endDate;
 @property (strong, nonatomic) NSDate            *startDate;
-@property (strong, nonatomic) ASDKModelProfile  *initiator;
+@property (strong, nonatomic) ASDKModelProfile  *initiatorModel;
 @property (assign, nonatomic) BOOL              graphicalNotationDefined;
 @property (strong, nonatomic) NSString          *processDefinitionCategory;
 @property (strong, nonatomic) NSString          *processDefinitionDeploymentID;

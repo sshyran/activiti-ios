@@ -538,14 +538,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                             parameters:@{kASDKAPIParamIsRelatedContent : @(YES)}
              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
                  NSError *error = nil;
-                 [formData appendPartWithFileURL:file.fileURL
+                 [formData appendPartWithFileURL:file.modelFileURL
                                             name:kASDKAPIContentUploadMultipartParameter
                                         fileName:file.fileName
                                         mimeType:file.mimeType
                                            error:&error];
                  
                  if (error) {
-                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.fileURL);
+                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.modelFileURL);
                  }
              } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                  __strong typeof(self) strongSelf = weakSelf;
@@ -574,7 +574,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                ASDKLogVerbose(@"Successfully parsed model object:%@", parsedObject);
                                                                
                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                   completionBlock(((ASDKModelContent *)parsedObject).isContentAvailable, nil);
+                                                                   completionBlock(((ASDKModelContent *)parsedObject).isModelContentAvailable, nil);
                                                                });
                                                            }
                                                        }];
@@ -635,7 +635,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                          mimeType:file.mimeType];
                  
                  if (error) {
-                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.fileURL);
+                     ASDKLogError(@"An error occured while appending multipart form data from file %@.", file.modelFileURL);
                  }
              } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                  __strong typeof(self) strongSelf = weakSelf;
@@ -665,7 +665,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                ASDKLogVerbose(@"Successfully parsed model object:%@", parsedObject);
                                                                
                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                   completionBlock(((ASDKModelContent *)parsedObject).isContentAvailable, nil);
+                                                                   completionBlock(((ASDKModelContent *)parsedObject).isModelContentAvailable, nil);
                                                                });
                                                            }
                                                        }];
@@ -714,7 +714,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager DELETE:[NSString stringWithFormat:[self.servicePathFactory contentServicePathFormat], content.instanceID]
+    [self.requestOperationManager DELETE:[NSString stringWithFormat:[self.servicePathFactory contentServicePathFormat], content.modelID]
                               parameters:nil
                                  success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                      __strong typeof(self) strongSelf = weakSelf;
@@ -777,7 +777,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // If content already exists return the URL to it to the caller and the caller
     // explicitly mentioned cached results are expected return the existing data
     if (allowCachedResults && [self.diskServices doesFileAlreadyExistsForContent:content]) {
-        ASDKLogVerbose(@"Didn't performed content request. Providing cached result for content with ID: %@", content.instanceID);
+        ASDKLogVerbose(@"Didn't performed content request. Providing cached result for content with ID: %@", content.modelID);
         dispatch_async(self.resultsQueue, ^{
             NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];
             completionBlock(downloadURL, YES, nil);
@@ -790,7 +790,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     __weak typeof(self) weakSelf = self;
     AFHTTPRequestOperation *operation =
-    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskContentDownloadServicePathFormat], content.instanceID]
+    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskContentDownloadServicePathFormat], content.modelID]
                            parameters:nil
                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;

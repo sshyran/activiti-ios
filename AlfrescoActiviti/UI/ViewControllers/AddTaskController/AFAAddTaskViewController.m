@@ -183,7 +183,7 @@
             taskCreateModel.taskName = self.nameTextField.text;
             taskCreateModel.taskDescription = self.descriptionTextView.text;
             taskCreateModel.applicationID = self.applicationID;
-            taskCreateModel.assigneeID = profile.instanceID;
+            taskCreateModel.assigneeID = profile.modelID;
             
             if (AFAAddTaskControllerTypeChecklist == self.controllerType) {
                 [taskServices requestChecklistCreateWithRepresentation:taskCreateModel

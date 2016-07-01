@@ -247,7 +247,7 @@ viewForHeaderInSection:(NSInteger)section {
     
     if (newFormRenderEngine.task) {
         [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
-                                        dynamicTableFormFieldID:self.currentFormField.instanceID
+                                        dynamicTableFormFieldID:self.currentFormField.modelID
                                                       taskModel:newFormRenderEngine.task
                                           renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                               if (formController && !error) {
@@ -288,7 +288,7 @@ viewForHeaderInSection:(NSInteger)section {
                                        }];
     } else {
         [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
-                                        dynamicTableFormFieldID:self.currentFormField.instanceID
+                                        dynamicTableFormFieldID:self.currentFormField.modelID
                                               processDefinition:newFormRenderEngine.processDefinition
                                           renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                               if (formController && !error) {

@@ -61,7 +61,7 @@ moveRowAtIndexPath:(NSIndexPath *)fromIndexPath
 #pragma mark Public interface
 
 - (NSArray *)checkListIDs {
-    return [self.checklistArr valueForKeyPath:@"@unionOfObjects.instanceID"];
+    return [self.checklistArr valueForKeyPath:@"@unionOfObjects.modelID"];
 }
 
 @end

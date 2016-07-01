@@ -77,7 +77,7 @@
                     // and / or completing the task
                     if ((currentModel.currentTask.isMemberOfCandidateGroup ||
                          currentModel.currentTask.isMemberOfCandidateUsers) &&
-                        !currentModel.currentTask.assignee) {
+                        !currentModel.currentTask.assigneeModel) {
                         cell = [self dequeuedClaimCellAtIndexPath:indexPath
                                                     fromTableView:tableView];
                     } else {

@@ -22,6 +22,6 @@
 
 @property (assign, nonatomic) NSInteger size;
 @property (assign, nonatomic) NSInteger start;
-@property (assign, nonatomic) NSInteger total;
+@property (assign, nonatomic) NSInteger pageCount;
 
 @end

@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, ASDKModelJSONAdapterType) {
 
 @interface ASDKModelBase : MTLModel <MTLJSONSerializing>
 
-@property (strong, nonatomic) NSString          *instanceID;
+@property (strong, nonatomic) NSString          *modelID;
 @property (strong, nonatomic) NSDate            *creationDate;
 @property (strong, nonatomic) NSDate            *lastUpdate;
 @property (assign, nonatomic) ASDKModelBaseType  modelType;

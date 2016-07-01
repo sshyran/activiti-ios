@@ -29,10 +29,10 @@ typedef NS_ENUM(NSInteger, ASDKModelProfileState) {
 @property (strong, nonatomic) NSString              *tenantID;
 @property (strong, nonatomic) NSString              *tenantName;
 @property (strong, nonatomic) NSString              *tenantPictureID;
-@property (strong, nonatomic) NSString              *firstName;
-@property (strong, nonatomic) NSString              *lastName;
+@property (strong, nonatomic) NSString              *userFirstName;
+@property (strong, nonatomic) NSString              *userLastName;
 @property (strong, nonatomic) NSString              *email;
-@property (strong, nonatomic) NSString              *company;
+@property (strong, nonatomic) NSString              *companyName;
 @property (strong, nonatomic) NSString              *externalID;
 @property (strong, nonatomic) NSString              *pictureID;
 @property (strong, nonatomic) NSArray               *groups;

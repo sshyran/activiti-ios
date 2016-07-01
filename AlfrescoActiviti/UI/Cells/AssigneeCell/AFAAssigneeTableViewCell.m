@@ -38,8 +38,8 @@
     
     BOOL isAssigneeButtonEnabled = YES;
     NSString *assigneeName = nil;
-    if (task.assignee.firstName || task.assignee.lastName) {
-        assigneeName = [task.assignee normalisedName];
+    if (task.assigneeModel.userFirstName || task.assigneeModel.userLastName) {
+        assigneeName = [task.assigneeModel normalisedName];
     } else {
         assigneeName = NSLocalizedString(kLocalizationTaskDetailsScreenNoInvolvedPeopleText, @"No people involved text");
         isAssigneeButtonEnabled = NO;
@@ -60,8 +60,8 @@
     self.assigneeLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenStartedByText, @"Started by text");
 
     NSString *assigneeName = nil;
-    if (processInstance.initiator.firstName || processInstance.initiator.lastName) {
-        assigneeName = [processInstance.initiator normalisedName];
+    if (processInstance.initiatorModel.userFirstName || processInstance.initiatorModel.userLastName) {
+        assigneeName = [processInstance.initiatorModel normalisedName];
     } else {
         assigneeName = NSLocalizedString(kLocalizationTaskDetailsScreenNoInvolvedPeopleText, @"No people involved text");
     }

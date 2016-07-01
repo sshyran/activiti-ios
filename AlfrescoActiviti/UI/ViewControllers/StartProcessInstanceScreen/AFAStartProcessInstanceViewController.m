@@ -177,7 +177,7 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
     
     if ([kSegueIDProcessInstanceStartForm isEqualToString:segue.identifier]) {
         AFAProcessInstanceDetailsViewController *processInstanceDetailsController = (AFAProcessInstanceDetailsViewController *)segue.destinationViewController;
-        processInstanceDetailsController.processInstanceID = [(ASDKModelProcessInstance *)sender instanceID];
+        processInstanceDetailsController.processInstanceID = [(ASDKModelProcessInstance *)sender modelID];
         processInstanceDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeStartForm;
     }

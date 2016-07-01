@@ -84,7 +84,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 @implementation ASDKIntegrationBrowsingViewController
 
-- (instancetype)initWithDataSource:(id<ASDKIntegrationDataSourceProtocol>)dataSource {
+- (instancetype)initBrowserWithDataSource:(id<ASDKIntegrationDataSourceProtocol>)dataSource {
     UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
                                                              bundle:[NSBundle bundleForClass:[self class]]];
     self = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDIntegrationBrowsingViewController];
@@ -250,7 +250,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Only instantiate a child controller if it has a valid data source
     if (dataSource) {
         [dataSource setIntegrationAccount:[self.dataSource integrationAccount]];
-        childController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:dataSource];
+        childController = [[ASDKIntegrationBrowsingViewController alloc] initBrowserWithDataSource:dataSource];
         childController.delegate = self.delegate;
         if ([self.dataSource respondsToSelector:@selector(nodeTitleForIndexPath:)]) {
             childController.title = [self.dataSource nodeTitleForIndexPath:indexPath];

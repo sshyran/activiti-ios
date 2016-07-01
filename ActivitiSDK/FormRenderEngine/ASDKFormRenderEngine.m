@@ -120,7 +120,7 @@
     self.saveFormCompletionBlock = formSaveBlock;
     
     [self.formNetworkServices
-     fetchFormForTaskWithID:task.instanceID
+     fetchFormForTaskWithID:task.modelID
      completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
          // Check for form description errors first
          if (error) {
@@ -131,7 +131,7 @@
          self.formPreProcessor = [ASDKFormPreProcessor new];
          self.formPreProcessor.formNetworkServices = self.formNetworkServices;
          
-         [self.formPreProcessor setupWithTaskID:task.instanceID
+         [self.formPreProcessor setupWithTaskID:task.modelID
                                  withFormFields:formDescription.formFields
                         withDynamicTableFieldID:nil
                       preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
@@ -177,7 +177,7 @@
     self.startFormCompletionBlock = formCompletionBlock;
     
     [self.formNetworkServices
-     startFormForProcessDefinitionID:processDefinition.instanceID
+     startFormForProcessDefinitionID:processDefinition.modelID
      completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
          // Check for form description errors first
          if (error) {
@@ -187,7 +187,7 @@
          self.formPreProcessor = [ASDKFormPreProcessor new];
          self.formPreProcessor.formNetworkServices = self.formNetworkServices;
          
-         [self.formPreProcessor setupWithProcessDefinitionID:processDefinition.instanceID
+         [self.formPreProcessor setupWithProcessDefinitionID:processDefinition.modelID
                                               withFormFields:formDescription.formFields
                                      withDynamicTableFieldID:nil
                                    preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
@@ -243,7 +243,7 @@
     self.formPreProcessor = [ASDKFormPreProcessor new];
     self.formPreProcessor.formNetworkServices = self.formNetworkServices;
     
-    [self.formPreProcessor setupWithTaskID:task.instanceID
+    [self.formPreProcessor setupWithTaskID:task.modelID
                             withFormFields:dynamicTableRowFormFields
                    withDynamicTableFieldID:dynamicTableFormFieldID
                  preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
@@ -291,7 +291,7 @@
     self.formPreProcessor = [ASDKFormPreProcessor new];
     self.formPreProcessor.formNetworkServices = self.formNetworkServices;
     
-    [self.formPreProcessor setupWithProcessDefinitionID:processDefinition.instanceID
+    [self.formPreProcessor setupWithProcessDefinitionID:processDefinition.modelID
                                          withFormFields:dynamicTableRowFormFields
                                 withDynamicTableFieldID:dynamicTableFormFieldID
                               preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
@@ -324,7 +324,7 @@
     // Check which complete method should be used i.e tasks or process definitions based on the
     // initialised content
     if (self.task) {
-        [self.formNetworkServices completeFormForTaskID:self.task.instanceID
+        [self.formNetworkServices completeFormForTaskID:self.task.modelID
                 withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation
                                         completionBlock:^(BOOL isFormCompleted, NSError *error) {
                                             __strong typeof(self) strongSelf = weakSelf;
@@ -362,7 +362,7 @@
 - (void)saveFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
     __weak typeof(self) weakSelf = self;
     
-    [self.formNetworkServices saveFormForTaskID:self.task.instanceID
+    [self.formNetworkServices saveFormForTaskID:self.task.modelID
        withFormFieldValuesRequestrepresentation:formFieldValueRequestRepresentation
                                 completionBlock:^(BOOL isFormSaved, NSError *error) {
                                     __strong typeof(self) strongSelf = weakSelf;

@@ -117,7 +117,6 @@
 		137194891B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; };
 		137194921B6924DF00D4E1F0 /* ActivitiSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194911B6924DF00D4E1F0 /* ActivitiSDKTests.m */; };
 		137194951B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; };
-		137194961B6924DF00D4E1F0 /* ActivitiSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1372B21A1BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1372B2191BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m */; };
 		137B8DD41BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DD31BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m */; };
 		137B8DD81BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DD71BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m */; };
@@ -167,6 +166,7 @@
 		139050F01CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050EE1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m */; };
 		139050F41CB68F8C004FEA89 /* ASDKModelFormVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */; };
 		139050F51CB68F8C004FEA89 /* ASDKModelFormVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */; };
+		13908B9F1D254886000CF383 /* ActivitiSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		139564E21C20512500BF6153 /* ASDKModelFileSourceFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E01C20512500BF6153 /* ASDKModelFileSourceFolder.h */; };
 		139564E31C20512500BF6153 /* ASDKModelFileSourceFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 139564E11C20512500BF6153 /* ASDKModelFileSourceFolder.m */; };
 		139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E51C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h */; };
@@ -527,7 +527,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				137194961B6924DF00D4E1F0 /* ActivitiSDK.framework in Embed Frameworks */,
+				13908B9F1D254886000CF383 /* ActivitiSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4480,6 +4480,7 @@
 				1371947C1B6924DE00D4E1F0 /* Resources */,
 				7597AEF01B82580800F8B5DE /* Embed Pods Framework */,
 				DD045FB387EF4B9E1902205D /* 📦 Copy Pods Resources */,
+				13908BA11D254B3D000CF383 /* Cocoapods framework clean script */,
 			);
 			buildRules = (
 			);
@@ -4632,6 +4633,20 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "VERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $NEWSUBVERSION\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		13908BA11D254B3D000CF383 /* Cocoapods framework clean script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Cocoapods framework clean script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/\"\nif [[ -d \"Frameworks\" ]]; then\nrm -fr Frameworks\nfi";
 		};
 		141CBF048E5C3F0BFEBBAE04 /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5232,7 +5247,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Emanuel  Lupu-Marinei (46VT8NFR94)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Alfresco Software, Inc. (W8N95J537P)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
@@ -5249,7 +5264,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "Alfresco Activiti";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "a4a50dba-5b34-4d3e-a13f-a88598fb284f";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

@@ -68,7 +68,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     ASDKTaskListQuerryRequestRepresentation *queryRequestRepresentation = [ASDKTaskListQuerryRequestRepresentation new];
     queryRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
     queryRequestRepresentation.processInstanceID = taskFilter.processInstanceID;
-    queryRequestRepresentation.taskState = (NSInteger)taskFilter.state;
+    queryRequestRepresentation.requestTaskState = (NSInteger)taskFilter.state;
     
     [self.queryNetworkService fetchTaskListWithFilterRepresentation:queryRequestRepresentation
                                                     completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {

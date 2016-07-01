@@ -68,8 +68,8 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationSitesForSourceID:self.integrationAccount.serviceID
-                                                      networkID:self.currentNetwork.instanceID
+    [integrationNetworkService fetchIntegrationSitesForSourceID:self.integrationAccount.integrationServiceID
+                                                      networkID:self.currentNetwork.modelID
                                                 completionBlock:^(NSArray *sites, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {

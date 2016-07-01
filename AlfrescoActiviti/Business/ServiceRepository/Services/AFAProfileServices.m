@@ -131,7 +131,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     [self.profileNetworkService fetchProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         if (!error) {
-            AFALogVerbose(@"Profile information fetched successfully for user :%@", [NSString stringWithFormat:@"%@ %@", profile.firstName, profile.lastName]);
+            AFALogVerbose(@"Profile information fetched successfully for user :%@", [NSString stringWithFormat:@"%@ %@", profile.userFirstName, profile.userLastName]);
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionBlock(profile, nil);
@@ -230,7 +230,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     NSParameterAssert(completionBlock);
     
     ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
-    fileContentModel.fileURL = fileURL;
+    fileContentModel.modelFileURL = fileURL;
     
     [self.profileNetworkService uploadProfileImageWithModel:fileContentModel
                                         contentData:contentData

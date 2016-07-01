@@ -32,17 +32,17 @@
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     
     if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
-                                                          @"contentName"        : @"name",
-                                                          @"owner"              : @"createdBy",
-                                                          @"isContentAvailable" : @"contentAvailable",
-                                                          @"isLink"             : @"link",
-                                                          @"mimeType"           : @"mimeType",
-                                                          @"displayType"        : @"simpleType",
-                                                          @"previewStatus"      : @"previewStatus",
-                                                          @"thumbnailStatus"    : @"thumbnailStatus",
-                                                          @"source"             : @"source",
-                                                          @"sourceID"           : @"sourceId"
+        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property              JSON property
+                                                          @"contentName"             : @"name",
+                                                          @"owner"                   : @"createdBy",
+                                                          @"isModelContentAvailable" : @"contentAvailable",
+                                                          @"isLink"                  : @"link",
+                                                          @"mimeType"                : @"mimeType",
+                                                          @"displayType"             : @"simpleType",
+                                                          @"previewStatus"           : @"previewStatus",
+                                                          @"thumbnailStatus"         : @"thumbnailStatus",
+                                                          @"source"                  : @"source",
+                                                          @"sourceID"                : @"sourceId"
                                                          }];
     }
     

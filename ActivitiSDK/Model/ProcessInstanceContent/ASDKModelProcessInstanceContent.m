@@ -30,8 +30,8 @@
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     
     if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property       JSON property
-                                                          @"contentList"        : @"content",
+        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
+                                                          @"contentArr"         : @"content",
                                                           @"field"              : @"field"
                                                           }];
     }
@@ -42,7 +42,7 @@
 #pragma mark -
 #pragma mark Value transformations
 
-+ (NSValueTransformer *)contentListJSONTransformer {
++ (NSValueTransformer *)contentArrJSONTransformer {
     return [MTLJSONAdapter arrayTransformerWithModelClass:ASDKModelContent.class];
 }
 

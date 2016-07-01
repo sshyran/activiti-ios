@@ -181,7 +181,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     if ([kSegueIDProcessInstanceTaskDetails isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *taskDetailsController = (AFATaskDetailsViewController *)segue.destinationViewController;
         taskDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
-        taskDetailsController.taskID = [(ASDKModelTask *)sender instanceID];
+        taskDetailsController.taskID = [(ASDKModelTask *)sender modelID];
         taskDetailsController.unwindActionType = AFATaskDetailsUnwindActionTypeProcessInstanceDetails;
     } else if ([kSegueIDContentPickerComponentEmbedding isEqualToString:segue.identifier]) {
         self.contentPickerViewController = (AFAContentPickerViewController *)segue.destinationViewController;
@@ -717,7 +717,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                                                                
                                                                NSIndexPath *contentToDownloadIndexPath = changeParameters[kCellFactoryCellParameterCellIndexpath];
                                                                AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [weakSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
-                                                               ASDKModelContent *contentToDownload = ((ASDKModelProcessInstanceContent *)processInstanceContentModel.attachedContentArr[contentToDownloadIndexPath.section]).contentList[contentToDownloadIndexPath.row];
+                                                               ASDKModelContent *contentToDownload = ((ASDKModelProcessInstanceContent *)processInstanceContentModel.attachedContentArr[contentToDownloadIndexPath.section]).contentArr[contentToDownloadIndexPath.row];
                                                                
                                                                [strongSelf.contentPickerViewController dowloadContent:contentToDownload
                                                                                                    allowCachedContent:YES];

@@ -53,7 +53,7 @@
                                                           @"assigneeID"         : @"assignee",
                                                           @"candidateID"        : @"candidate",
                                                           @"assignmentType"     : @"assignment",
-                                                          @"taskState"          : @"state"
+                                                          @"requestTaskState"   : @"state"
                                                           }];
     }
     

@@ -676,12 +676,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     for (NSUInteger sectionCount = 0; sectionCount < collection.count; sectionCount++) {
         ASDKModelFormField *sectionField = collection[sectionCount];
         
-        if ([formField.instanceID isEqualToString:sectionField.instanceID]) {
+        if ([formField.modelID isEqualToString:sectionField.modelID]) {
             return sectionCount;
         }
         
         for (ASDKModelFormField *childField in sectionField.formFields) {
-            if ([formField.instanceID isEqualToString:childField.instanceID]) {
+            if ([formField.modelID isEqualToString:childField.modelID]) {
                 return sectionCount;
             }
         }
@@ -693,7 +693,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (BOOL)isFormFieldVisible:(ASDKModelFormField *)formField {
     for (ASDKModelFormField *sectionField in self.visibleFormFields) {
         for (ASDKModelFormField *childField in sectionField.formFields) {
-            if ([formField.instanceID isEqualToString:childField.instanceID]) {
+            if ([formField.modelID isEqualToString:childField.modelID]) {
                 return YES;
             }
         }
@@ -704,7 +704,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (BOOL)doesCollection:(NSArray *)collection
       containFormField:(ASDKModelFormField *)sectionFormField {
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", sectionFormField.instanceID];
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", sectionFormField.modelID];
     NSArray *results = [collection filteredArrayUsingPredicate:searchPredicate];
     
     return results.count ? YES : NO;
@@ -714,7 +714,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __block NSUInteger formFieldIdx = NSNotFound;
     
     [collection enumerateObjectsUsingBlock:^(ASDKModelFormField *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if([obj.instanceID isEqualToString:formField.instanceID]) {
+        if([obj.modelID isEqualToString:formField.modelID]) {
             formFieldIdx = idx;
             *stop = YES;
         }

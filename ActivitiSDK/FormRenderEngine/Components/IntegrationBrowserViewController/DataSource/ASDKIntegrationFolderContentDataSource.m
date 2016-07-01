@@ -78,9 +78,9 @@
     }
     
     __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationFolderContentForSourceID:self.integrationAccount.serviceID
-                                                              networkID:self.currentNetwork.instanceID
-                                                               folderID:self.currentNode.instanceID
+    [integrationNetworkService fetchIntegrationFolderContentForSourceID:self.integrationAccount.integrationServiceID
+                                                              networkID:self.currentNetwork.modelID
+                                                               folderID:self.currentNode.modelID
                                                         completionBlock:^(NSArray *contentList, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
@@ -124,7 +124,7 @@
     nodeContentRepresentation.name  = selectedNodeContent.title;
     nodeContentRepresentation.simpleType = selectedNodeContent.simpleType;
     nodeContentRepresentation.source = kASDKAPIIntegrationAlfrescoCloudPath;
-    nodeContentRepresentation.sourceID = [NSString stringWithFormat:@"%@@%@@%@", selectedNodeContent.instanceID, self.currentSite.instanceID,self.currentNetwork.instanceID];
+    nodeContentRepresentation.sourceID = [NSString stringWithFormat:@"%@@%@@%@", selectedNodeContent.modelID, self.currentSite.modelID,self.currentNetwork.modelID];
     
     return nodeContentRepresentation;
 }

@@ -257,7 +257,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     } else if([kSegueIDTaskDetailsChecklist isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         taskDetailsViewController.navigationBarThemeColor = self.navigationBarThemeColor;
-        taskDetailsViewController.taskID = ((ASDKModelTask *)[self.tableController.model itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]).instanceID;
+        taskDetailsViewController.taskID = ((ASDKModelTask *)[self.tableController.model itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]).modelID;
         taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
     }
 }
@@ -1173,7 +1173,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             [strongSelf showConfirmationAlertControllerWithMessage:[NSString stringWithFormat:NSLocalizedString(kLocalizationAlertDialogDeleteContributorQuestionFormat, @"Delete contributor confirmation question"), contributorName]
                                            confirmationBlockAction:^{
                                                ASDKModelUser *userModel = [ASDKModelUser new];
-                                               userModel.userID = contributor.instanceID;
+                                               userModel.userID = contributor.modelID;
                                                [weakSelf onRemoveInvolvedUserForCurrentTask:userModel];
                                            }];
             
@@ -1367,9 +1367,9 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     [self onFullscreenOverlayTap:nil];
     
     // Initialize the browsing controller at a top network level based on the selected integration account
-    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:integrationAccount.serviceID]) {
+    if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:integrationAccount.integrationServiceID]) {
         ASDKIntegrationNetworksDataSource *dataSource = [[ASDKIntegrationNetworksDataSource alloc] initWithIntegrationAccount:integrationAccount];
-        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initWithDataSource:dataSource];
+        self.integrationBrowsingController = [[ASDKIntegrationBrowsingViewController alloc] initBrowserWithDataSource:dataSource];
         self.integrationBrowsingController.delegate = self;
     } else {
         self.integrationBrowsingController = nil;

@@ -23,6 +23,6 @@
 @interface ASDKModelComment : ASDKModelBase
 
 @property (strong, nonatomic) NSString          *message;
-@property (strong, nonatomic) ASDKModelProfile  *author;
+@property (strong, nonatomic) ASDKModelProfile  *authorModel;
 
 @end

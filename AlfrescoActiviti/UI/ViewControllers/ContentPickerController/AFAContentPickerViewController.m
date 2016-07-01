@@ -146,7 +146,7 @@ QLPreviewControllerDelegate>
     
     __weak typeof(self) weakSelf = self;
     // Check if the content that's about to be downloaded is available
-    if (content.isContentAvailable) {
+    if (content.isModelContentAvailable) {
         [self showDownloadProgressHUD];
         [taskServices requestTaskContentDownloadForContent:content
                                         allowCachedResults:allowCachedContent
@@ -416,7 +416,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         
         if (!error) {
             // Filter out all but the Alfresco cloud services - development in progress
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"serviceID == %@", kASDKAPIServiceIDAlfrescoCloud];
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
             NSArray *filtereAccountsdArr = [accounts filteredArrayUsingPredicate:searchPredicate];
             strongSelf.integrationAccounts = filtereAccountsdArr;
             
@@ -579,13 +579,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         { // Handle the integration cells
             ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - AFAContentPickerCellTypeEnumCount];
             
-            if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.serviceID]) {
+            if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.integrationServiceID]) {
                 taskCell.iconImageView.image = [UIImage imageNamed:@"alfresco-icon"];
                 taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentAlfrescoContentText, @"Alfresco cloud text");
-            } else if ([kASDKAPIServiceIDBox isEqualToString:account.serviceID]) {
+            } else if ([kASDKAPIServiceIDBox isEqualToString:account.integrationServiceID]) {
                 taskCell.iconImageView.image = [UIImage imageNamed:@"box-icon"];
                 taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentBoxContentText, @"Box text");
-            } else if ([kASDKAPIServiceIDGoogleDrive isEqualToString:account.serviceID]) {
+            } else if ([kASDKAPIServiceIDGoogleDrive isEqualToString:account.integrationServiceID]) {
                 taskCell.iconImageView.image = [UIImage imageNamed:@"drive-icon"];
                 taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentDriveContentText, @"Google drive text");
             }
@@ -618,10 +618,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         default: { // Handle integration services cell behaviour
             ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - AFAContentPickerCellTypeEnumCount];
             
-            if (!account.authorized) {
+            if (!account.isAccountAuthorized) {
                 __weak typeof(self) weakSelf = self;
                 self.integrationLoginController =
-                [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURL
+                [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURLString
                                                                             completionBlock:^(BOOL isAuthorized) {
                                                                                 if (isAuthorized) {
                                                                                     __strong typeof(self) strongSelf = weakSelf;

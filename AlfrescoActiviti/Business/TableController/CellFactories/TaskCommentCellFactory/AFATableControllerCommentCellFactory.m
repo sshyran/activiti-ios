@@ -57,13 +57,13 @@
         
         // Get a placeholder and make a request for the profile image
         AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
-        commentCell.avatarView.profileImage = [thumbnailManager thumbnailImageForIdentifier:comment.author.instanceID];
+        commentCell.avatarView.profileImage = [thumbnailManager thumbnailImageForIdentifier:comment.authorModel.modelID];
         
         AFAUserServices *userServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
-        [userServices requestPictureForUserID:comment.author.instanceID
+        [userServices requestPictureForUserID:comment.authorModel.modelID
                                    completionBlock:^(UIImage *profileImage, NSError *error) {
                                        [thumbnailManager thumbnailForImage:profileImage
-                                                            withIdentifier:comment.author.instanceID
+                                                            withIdentifier:comment.authorModel.modelID
                                                                   withSize:CGRectGetHeight(commentCell.avatarView.frame) * [UIScreen mainScreen].scale
                                                  processingCompletionBlock:^(UIImage *processedThumbnailImage) {
                                                      dispatch_async(dispatch_get_main_queue(), ^{

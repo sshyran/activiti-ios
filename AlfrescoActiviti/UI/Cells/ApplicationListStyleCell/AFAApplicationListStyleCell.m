@@ -38,7 +38,7 @@
 
 - (void)setupWithApplication:(ASDKModelApp *)applicationModel {
     self.applicationNameLabel.text = applicationModel.name;
-    self.applicationDescriptionLabel.text = applicationModel.appDescription;
+    self.applicationDescriptionLabel.text = applicationModel.applicationDescription;
     
     self.applicationIconLabel.text = [NSString iconStringForIconType:
                                       [NSString iconTypeForIcontDescription:

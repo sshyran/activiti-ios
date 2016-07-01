@@ -40,7 +40,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSString *documentsPath = documentsPaths.firstObject;
     NSString *contentPath = [[[[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
                               stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath]
-                              stringByAppendingPathComponent:content.instanceID]
+                              stringByAppendingPathComponent:content.modelID]
                               stringByAppendingPathComponent:content.contentName];
     
     return contentPath;

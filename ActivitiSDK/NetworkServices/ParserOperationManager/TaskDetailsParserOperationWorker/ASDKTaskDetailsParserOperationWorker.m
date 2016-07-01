@@ -78,7 +78,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             
             // Manualy extract filter general description information and update the converted model
             filter.name = filterDescription[kASDKAPIJSONKeyName];
-            filter.instanceID = filterDescription[kASDKAPIJSONKeyID];
+            filter.modelID = filterDescription[kASDKAPIJSONKeyID];
             
             [filterList addObject:filter];
         }

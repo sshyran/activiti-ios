@@ -20,7 +20,7 @@
 
 @interface ASDKModelServerConfiguration : NSObject
 
-@property (strong, nonatomic) NSString  *hostAddress;
+@property (strong, nonatomic) NSString  *hostAddressString;
 @property (assign, nonatomic) BOOL      isCommunicationOverSecureLayer;
 @property (strong, nonatomic) NSString  *username;
 @property (strong, nonatomic) NSString  *password;

@@ -163,7 +163,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
             NSArray *objectListForCurrentContentType = [strongSelf objectListForListContentType:strongSelf.listContentType];
             
             // Extract the total number task pages expected to be displayed
-            strongSelf.totalTaskPages = ceilf((float) (paging).total / objectListForCurrentContentType.count);
+            strongSelf.totalTaskPages = ceilf((float) (paging).pageCount / objectListForCurrentContentType.count);
             
             // Compute the preload index that will trigger a new request
             if (strongSelf.totalTaskPages > 1) {
@@ -282,19 +282,19 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
         detailsViewController.navigationBarThemeColor = self.navigationBarThemeColor;
         
         ASDKModelTask *currentSelectedTask = self.taskListArr[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
-        detailsViewController.taskID = currentSelectedTask.instanceID;
+        detailsViewController.taskID = currentSelectedTask.modelID;
     }
     
     if ([kSegueIDStartProcessInstance isEqualToString:segue.identifier]) {
         AFAStartProcessInstanceViewController *startProcessInstanceViewController = (AFAStartProcessInstanceViewController *)segue.destinationViewController;
-        startProcessInstanceViewController.appID = self.currentApp.instanceID;
+        startProcessInstanceViewController.appID = self.currentApp.modelID;
         startProcessInstanceViewController.navigationBarThemeColor = self.navigationBarThemeColor;
     }
     
     if ([kSegueIDProcessInstanceDetails isEqualToString:segue.identifier]) {
         AFAProcessInstanceDetailsViewController *processInstanceDetailsController = (AFAProcessInstanceDetailsViewController *)segue.destinationViewController;
         ASDKModelProcessInstance *currentSelectedProcessInstance = self.processListArr[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
-        processInstanceDetailsController.processInstanceID = currentSelectedProcessInstance.instanceID;
+        processInstanceDetailsController.processInstanceID = currentSelectedProcessInstance.modelID;
         processInstanceDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeProcessList;
     }
@@ -389,7 +389,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
                                   sender:sender];
     } else if(AFAListContentTypeTasks == self.listContentType) {
         AFAAddTaskViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDAddTaskViewController];
-        addTaskController.applicationID = self.currentApp.instanceID;
+        addTaskController.applicationID = self.currentApp.modelID;
         addTaskController.appThemeColor = self.navigationBarThemeColor;
         addTaskController.delegate = self;
         addTaskController.controllerType = AFAAddTaskControllerTypePlainTask;
@@ -451,7 +451,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     // Pass the existing defined filter
     self.currentFilter.text = searchTerm;
     self.currentFilter.page = 0;
-    self.currentFilter.appDefinitionID = self.currentApp.instanceID;
+    self.currentFilter.appDefinitionID = self.currentApp.modelID;
     
     [self fetchContentListWithCompletionBlock:completionBlock];
 }

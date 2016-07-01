@@ -34,7 +34,7 @@
     // for end date and duration
     if ([self isCompletedTask]) {
         return AFACompletedTaskDetailsCellTypeEnumCount;
-    } else if (![self.currentTask.assignee.instanceID isEqualToString:self.userProfile.instanceID]) {
+    } else if (![self.currentTask.assigneeModel.modelID isEqualToString:self.userProfile.modelID]) {
         // If the assignee does not match the current user profile this means that the current user
         // is involved and cannot see the complete/queue cell
         return AFAInvolvedTaskDetailsCellTypeEnumCount;
@@ -52,11 +52,11 @@
 }
 
 - (BOOL)canBeRequeued {
-    return [self.currentTask.involvedPeople containsObject:self.currentTask.assignee];
+    return [self.currentTask.involvedPeople containsObject:self.currentTask.assigneeModel];
 }
 
 - (BOOL)isAssignedTask {
-   return [self.currentTask.assignee.instanceID isEqualToString:self.userProfile.instanceID];
+   return [self.currentTask.assigneeModel.modelID isEqualToString:self.userProfile.modelID];
 }
 
 @end

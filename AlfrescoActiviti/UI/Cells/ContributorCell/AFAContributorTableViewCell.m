@@ -38,15 +38,15 @@
 
 - (void)setUpCellWithProfile:(ASDKModelProfile *)profile {
     NSString *contributorName = nil;
-    if (profile.firstName.length) {
-        contributorName = profile.firstName;
+    if (profile.userFirstName.length) {
+        contributorName = profile.userFirstName;
     }
     
-    if (profile.lastName.length) {
+    if (profile.userLastName.length) {
         if (contributorName.length) {
-            contributorName = [contributorName stringByAppendingFormat:@" %@", profile.lastName];
+            contributorName = [contributorName stringByAppendingFormat:@" %@", profile.userLastName];
         } else {
-            contributorName = profile.lastName;
+            contributorName = profile.userLastName;
         }
     }
     
@@ -56,15 +56,15 @@
 
 - (void)setUpCellWithUser:(ASDKModelUser *)user {
     NSString *contributorName = nil;
-    if (user.firstName.length) {
-        contributorName = user.firstName;
+    if (user.userFirstName.length) {
+        contributorName = user.userFirstName;
     }
     
-    if (user.lastName.length) {
+    if (user.userLastName.length) {
         if (contributorName.length) {
-            contributorName = [contributorName stringByAppendingFormat:@" %@", user.lastName];
+            contributorName = [contributorName stringByAppendingFormat:@" %@", user.userLastName];
         } else {
-            contributorName = user.lastName;
+            contributorName = user.userLastName;
         }
     }
     

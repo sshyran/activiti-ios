@@ -36,7 +36,7 @@
                                                           @"name"                           : @"name",
                                                           @"endDate"                        : @"ended",
                                                           @"startDate"                      : @"started",
-                                                          @"initiator"                      : @"startedBy",
+                                                          @"initiatorModel"                 : @"startedBy",
                                                           @"graphicalNotationDefined"       : @"graphicalNotationDefined",
                                                           @"processDefinitionCategory"      : @"processDefinitionCategory",
                                                           @"processDefinitionDeploymentID"  : @"processDefinitionDeploymentId",

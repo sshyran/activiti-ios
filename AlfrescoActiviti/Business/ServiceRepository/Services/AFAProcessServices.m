@@ -154,7 +154,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     NSParameterAssert(completionBlock);
     
     ASDKStartProcessRequestRepresentation *startProcessRequestRepresentation = [ASDKStartProcessRequestRepresentation new];
-    startProcessRequestRepresentation.processDefinitionID = processDefinition.instanceID;
+    startProcessRequestRepresentation.processDefinitionID = processDefinition.modelID;
     startProcessRequestRepresentation.name = processDefinition.name;
     
     [self.processInstanceNetworkService

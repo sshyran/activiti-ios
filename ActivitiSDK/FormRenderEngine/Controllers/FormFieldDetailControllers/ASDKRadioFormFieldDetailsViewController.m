@@ -70,7 +70,7 @@
             optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject[@"name"]];
         } else {
             if (ASDKModelFormFieldTypeRestField == self.currentFormField.fieldType) {
-                optionPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", self.currentFormField.values.firstObject];
+                optionPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", self.currentFormField.values.firstObject];
             } else {
                 optionPredicate = [NSPredicate predicateWithFormat:@"name==%@", self.currentFormField.values.firstObject];
             }

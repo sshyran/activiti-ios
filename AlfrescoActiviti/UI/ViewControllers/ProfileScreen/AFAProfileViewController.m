@@ -272,8 +272,8 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
             strongSelf.currentProfile = profile;
             
             // Update the table header with the name and registration date
-            self.firstNameTextField.text = profile.firstName;
-            self.lastNameTextField.text = profile.lastName;
+            self.firstNameTextField.text = profile.userFirstName;
+            self.lastNameTextField.text = profile.userLastName;
             self.registeredDateLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationProfileScreenRegisteredFormat, @"Registered since date"), [profile.creationDate listCreationDate]];
             
             // Reload table data
@@ -349,8 +349,8 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                            strongSelf.currentProfile = profile;
                                            
                                            // Update the table header with the name and registration date
-                                           self.firstNameTextField.text = profile.firstName;
-                                           self.lastNameTextField.text = profile.lastName;
+                                           self.firstNameTextField.text = profile.userFirstName;
+                                           self.lastNameTextField.text = profile.userLastName;
                                            
                                            // Reload table data
                                            [strongSelf.profileTableView reloadData];
@@ -360,8 +360,8 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                            
                                            // If an error occured, roll back to the previous valid state of the user profile
                                            // Update the table header with the name and registration date
-                                           self.firstNameTextField.text = strongSelf.currentProfile.firstName;
-                                           self.lastNameTextField.text = strongSelf.currentProfile.lastName;
+                                           self.firstNameTextField.text = strongSelf.currentProfile.userFirstName;
+                                           self.lastNameTextField.text = strongSelf.currentProfile.userLastName;
                                            
                                            // Reload table data
                                            [strongSelf.profileTableView reloadData];
@@ -509,9 +509,9 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                 break;
             
             case AFAProfileControllerContactInformationTypeCompany: {
-                if (![profileCopy.company isEqualToString:value]) {
+                if (![profileCopy.companyName isEqualToString:value]) {
                     isProfileUpdated = YES;
-                    profileCopy.company = value;
+                    profileCopy.companyName = value;
                 }
             }
                 break;
@@ -539,16 +539,16 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     
     // Check for changes made to the profile
     if (self.firstNameTextField == textField) {
-        if (![profileCopy.firstName isEqualToString:textField.text]) {
+        if (![profileCopy.userFirstName isEqualToString:textField.text]) {
             isProfileUpdated = YES;
-            profileCopy.firstName = textField.text;
+            profileCopy.userFirstName = textField.text;
         }
     }
     
     if (self.lastNameTextField == textField) {
-        if (![profileCopy.lastName isEqualToString:textField.text]) {
+        if (![profileCopy.userLastName isEqualToString:textField.text]) {
             isProfileUpdated = YES;
-            profileCopy.lastName = textField.text;
+            profileCopy.userLastName = textField.text;
         }
     }
     
@@ -717,7 +717,7 @@ heightForFooterInSection:(NSInteger)section {
                 contactInformationCell.categoryDescriptionTextField.text = self.currentProfile.email;
             } else {
                 contactInformationCell.categoryTitleLabel.text = NSLocalizedString(kLocalizationProfileScreenCompanyText, @"Company text");
-                contactInformationCell.categoryDescriptionTextField.text = self.currentProfile.company;
+                contactInformationCell.categoryDescriptionTextField.text = self.currentProfile.companyName;
             }
             
             cell = contactInformationCell;

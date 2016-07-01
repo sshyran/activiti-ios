@@ -20,9 +20,9 @@
 
 @interface ASDKModelIntegrationAccount : ASDKModelBase
 
-@property (assign,  nonatomic) BOOL     authorized;
-@property (strong, nonatomic) NSString  *authorizationURL;
-@property (strong, nonatomic) NSString  *serviceID;
+@property (assign,  nonatomic) BOOL     isAccountAuthorized;
+@property (strong, nonatomic) NSString  *authorizationURLString;
+@property (strong, nonatomic) NSString  *integrationServiceID;
 @property (assign, nonatomic) BOOL      isMetadataAllowed;
 
 @end

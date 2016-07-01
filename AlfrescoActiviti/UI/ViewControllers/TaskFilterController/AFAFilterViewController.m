@@ -174,7 +174,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     filter.assignmentType = self.assignmentType;
     filter.sortType = self.sortType;
     filter.filterID = self.filterID;
-    filter.appDefinitionID = self.currentApp.instanceID;
+    filter.appDefinitionID = self.currentApp.modelID;
     
     if ([self.delegate respondsToSelector:@selector(searchWithFilterModel:)]) {
         [self.delegate searchWithFilterModel:filter];
@@ -191,7 +191,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // If there's an app defined fetch the filters for it,
     // otherwise fetch the filter list for ad-hoc tasks
     if (self.currentApp) {
-        [filterServices requestTaskFilterListForAppID:self.currentApp.instanceID
+        [filterServices requestTaskFilterListForAppID:self.currentApp.modelID
                                   withCompletionBlock:completionBlock];
     } else {
         [filterServices requestTaskFilterListWithCompletionBlock:completionBlock];
@@ -204,7 +204,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // If there's an app defined fetch the filters for it,
     // otherwise fetch the filter list for ad-hoc tasks
     if (self.currentApp) {
-        [filterServices requestProcessInstanceFilterListForAppID:self.currentApp.instanceID
+        [filterServices requestProcessInstanceFilterListForAppID:self.currentApp.modelID
                                              withCompletionBlock:completionBlock];
     } else {
         [filterServices requestProcessInstanceFilterListWithCompletionBlock:completionBlock];
@@ -344,7 +344,7 @@ viewForHeaderInSection:(NSInteger)section {
 #pragma mark Utilities
 
 - (AFAGenericFilterModel *)buildFilterFromModel:(ASDKModelFilter *)filterModel {
-    self.filterID = filterModel ? filterModel.instanceID : nil;
+    self.filterID = filterModel ? filterModel.modelID : nil;
     self.assignmentType = filterModel ? (NSInteger)filterModel.assignmentType : AFAGenericFilterAssignmentTypeUndefined;
     self.state = filterModel ? (NSInteger)filterModel.state : AFAGenericFilterStateTypeUndefined;
     self.sortType = (NSInteger)filterModel.sortType;
@@ -354,13 +354,13 @@ viewForHeaderInSection:(NSInteger)section {
     filter.assignmentType = self.assignmentType;
     filter.sortType = self.sortType;
     filter.filterID = self.filterID;
-    filter.appDefinitionID = self.currentApp.instanceID;
+    filter.appDefinitionID = self.currentApp.modelID;
     
     return filter;
 }
 
 - (NSInteger)indexOfModelForFilter:(AFAGenericFilterModel *)filter {
-    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"SELF.instanceID == %@", filter.filterID];
+    NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"SELF.modelID == %@", filter.filterID];
     NSArray *filterCollection = [self.filterListArr filteredArrayUsingPredicate:filterPredicate];
     return [self.filterListArr indexOfObject:filterCollection.firstObject];
 }

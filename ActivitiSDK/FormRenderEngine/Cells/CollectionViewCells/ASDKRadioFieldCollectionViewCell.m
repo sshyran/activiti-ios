@@ -91,7 +91,7 @@
         descriptionLabelText = restFormField.metadataValue.option.attachedValue;
     } else if (restFormField.representationType == ASDKModelFormFieldRepresentationTypeRadio &&
                restFormField.restURL) {
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"instanceID == %@", (NSString *)restFormField.values.firstObject];
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", (NSString *)restFormField.values.firstObject];
         ASDKModelFormFieldOption *correspondingOption = [restFormField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject;
         descriptionLabelText = correspondingOption.name;
         

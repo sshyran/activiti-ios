@@ -1,6 +1,0 @@
-framework module PDKTZipArchive {
-  umbrella header "PDKTZipArchive-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -46,7 +46,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
-             @"instanceID"   : @"id",
+             @"modelID"      : @"id",
              @"creationDate" : @"created",
              @"lastUpdate"   : @"lastUpdate",
              @"modelType"    : @"type"
@@ -57,7 +57,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark - 
 #pragma mark Value transformations
 
-+ (NSValueTransformer *)instanceIDJSONTransformer {
++ (NSValueTransformer *)modelIDJSONTransformer {
     return self.valueTransformerForIDs;
 }
 
@@ -65,7 +65,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
                                                                            @"bpmSuite"   : @(ASDKModelBaseTypeBPMSuite),
                                                                            @"enterprise" : @(ASDKModelBaseTypeEnterprise)
-                                                                           }];
+                                                                          }];
 }
 
 + (NSValueTransformer *)creationDateJSONTransformer {

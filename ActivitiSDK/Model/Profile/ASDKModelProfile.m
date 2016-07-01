@@ -37,10 +37,10 @@
                                                           @"tenantID"           : @"tenantId",
                                                           @"tenantName"         : @"tenantName",
                                                           @"tenantPictureID"    : @"tenantPictureId",
-                                                          @"firstName"          : @"firstName",
-                                                          @"lastName"           : @"lastName",
+                                                          @"userFirstName"      : @"firstName",
+                                                          @"userLastName"       : @"lastName",
                                                           @"email"              : @"email",
-                                                          @"company"            : @"company",
+                                                          @"companyName"        : @"company",
                                                           @"profileState"       : @"status",
                                                           @"externalID"         : @"externalId",
                                                           @"pictureID"          : @"pictureId",
@@ -110,15 +110,15 @@
 
 - (NSString *)normalisedName {
     NSString *contributorName = nil;
-    if (self.firstName.length) {
-        contributorName = self.firstName;
+    if (self.userFirstName.length) {
+        contributorName = self.userFirstName;
     }
     
-    if (self.lastName.length) {
+    if (self.userLastName.length) {
         if (contributorName.length) {
-            contributorName = [contributorName stringByAppendingFormat:@" %@", self.lastName];
+            contributorName = [contributorName stringByAppendingFormat:@" %@", self.userLastName];
         } else {
-            contributorName = self.lastName;
+            contributorName = self.userLastName;
         }
     }
     
