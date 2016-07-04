@@ -184,6 +184,11 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
             strongSelf.listTableView.hidden = YES;
             strongSelf.refreshView.hidden = NO;
             
+            [strongSelf updateCurrentObjectListWithObjectList:nil
+                                           forListContentType:strongSelf.listContentType
+                                                       paging:nil];
+            [strongSelf.listTableView reloadData];
+            
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
         
