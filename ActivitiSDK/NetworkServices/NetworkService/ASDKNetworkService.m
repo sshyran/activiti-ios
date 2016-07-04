@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "ASDKNetworkService.h"
+#import "ASDKNetworkServiceConstants.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -38,10 +39,12 @@
                          parserManager:(ASDKParserOperationManager *)parserManager
                     servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
                           diskServices:(ASDKDiskServices *)diskServices
+                          tokenStorage:(ASDKCSRFTokenStorage *)tokenStorage
                           resultsQueue:(dispatch_queue_t)resultsQueue {
     NSParameterAssert(requestOperationManager);
     NSParameterAssert(parserManager);
     NSParameterAssert(servicePathFactory);
+    NSParameterAssert(tokenStorage);
     
     self = [super init];
     
@@ -50,14 +53,49 @@
         self.parserOperationManager = parserManager;
         self.servicePathFactory = servicePathFactory;
         self.diskServices = diskServices;
+        self.tokenStorage = tokenStorage;
         self.resultsQueue = resultsQueue;
         
         self.responseSerializersDict = @{@(ASDKNetworkServiceResponseSerializerTypeJSON) : [AFJSONResponseSerializer serializer],
                                          @(ASDKNetworkServiceResponseSerializerTypeImage): [AFImageResponseSerializer serializer],
                                          @(ASDKNetworkServiceResponseSerializerTypeHTTP) : [AFHTTPResponseSerializer serializer]};
         
-        self.requestSerializersDict = @{@(ASDKNetworkServiceRequestSerializerTypeJSON) : [AFJSONRequestSerializer serializer],
-                                        @(ASDKNetworkServiceRequestSerializerTypeHTTP) : [AFHTTPRequestSerializer serializer]};
+        // Configure the request serializers to use the CSRF header field
+        AFJSONRequestSerializer *jsonRequestSerializer = [AFJSONRequestSerializer serializer];
+        [jsonRequestSerializer setValue:[tokenStorage csrfTokenString]
+                     forHTTPHeaderField:kASDKAPICSRFHeaderFieldParameter];
+        
+        AFHTTPRequestSerializer *httpRequestSerializer = [AFHTTPRequestSerializer serializer];
+        [httpRequestSerializer setValue:[tokenStorage csrfTokenString]
+                     forHTTPHeaderField:kASDKAPICSRFHeaderFieldParameter];
+        
+        [requestOperationManager.authenticationProvider setValue:[tokenStorage csrfTokenString]
+                                              forHTTPHeaderField:kASDKAPICSRFHeaderFieldParameter];
+        
+        self.requestSerializersDict = @{@(ASDKNetworkServiceRequestSerializerTypeJSON) : jsonRequestSerializer,
+                                        @(ASDKNetworkServiceRequestSerializerTypeHTTP) : httpRequestSerializer};
+        
+        // Search for the CSRF cookie and if it's not available create it for future requests
+        BOOL isCSRFCookieAvailable = NO;
+        for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+            if ([cookie.name isEqualToString:kASDKAPICSRFCookieName]) {
+                isCSRFCookieAvailable = YES;
+                break;
+            }
+        }
+        
+        if (!isCSRFCookieAvailable) {
+            NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithURL:self.requestOperationManager.baseURL
+                                                          resolvingAgainstBaseURL:YES];
+            
+            NSDictionary *cookieProperties = @{NSHTTPCookieName     : kASDKAPICSRFCookieName,
+                                               NSHTTPCookieValue    : [tokenStorage csrfTokenString],
+                                               NSHTTPCookiePath     : @"/",
+                                               NSHTTPCookieVersion  : @"0",
+                                               NSHTTPCookieDomain   : urlComponents.host};
+            NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+        }
     }
     
     return self;

@@ -54,6 +54,7 @@
 #import "ASDKFormRenderEngineProtocol.h"
 #import "ASDKFormColorSchemeManager.h"
 #import "ASDKFormColorSchemeManagerProtocol.h"
+#import "ASDKCSRFTokenStorage.h"
 
 // Configurations imports
 #import "ASDKBasicAuthentificationProvider.h"
@@ -156,11 +157,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Set up the disk services
     ASDKDiskServices *diskService = [ASDKDiskServices new];
     
+    // CSRF token storage
+    ASDKCSRFTokenStorage *tokenStorage = [ASDKCSRFTokenStorage new];
+    
     // Set up the aplication newtork service
     ASDKAppNetworkServices *applicationNetworkService = [[ASDKAppNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                                  parserManager:parserOperationManager
                                                                                             servicePathFactory:servicePathFactory
                                                                                                   diskServices:diskService
+                                                                                                  tokenStorage:tokenStorage
                                                                                                   resultsQueue:nil];
     
     // Check for previously registered services and remove them first
@@ -176,6 +181,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                                      parserManager:parserOperationManager
                                                                                                 servicePathFactory:servicePathFactory
                                                                                                       diskServices:diskService
+                                                                                                      tokenStorage:tokenStorage
                                                                                                       resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProfileNetworkServiceProtocol)]) {
@@ -190,6 +196,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                             parserManager:parserOperationManager
                                                                                        servicePathFactory:servicePathFactory
                                                                                              diskServices:diskService
+                                                                                             tokenStorage:tokenStorage
                                                                                              resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKTaskNetworkServiceProtocol)]) {
@@ -204,6 +211,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                                   parserManager:parserOperationManager
                                                                                              servicePathFactory:servicePathFactory
                                                                                                    diskServices:diskService
+                                                                                                   tokenStorage:tokenStorage
                                                                                                    resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFilterNetworkServiceProtocol)]) {
@@ -220,6 +228,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                          parserManager:parserOperationManager
                                                     servicePathFactory:servicePathFactory
                                                           diskServices:diskService
+                                                          tokenStorage:tokenStorage
                                                           resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessInstanceNetworkServiceProtocol)]) {
@@ -236,6 +245,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                            parserManager:parserOperationManager
                                                       servicePathFactory:servicePathFactory
                                                             diskServices:diskService
+                                                            tokenStorage:tokenStorage
                                                             resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessDefinitionNetworkServiceProtocol)]) {
@@ -252,6 +262,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                               parserManager:parserOperationManager
                                          servicePathFactory:servicePathFactory
                                                diskServices:diskService
+                                               tokenStorage:tokenStorage
                                                resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKUserNetworkServiceProtocol)]) {
@@ -266,6 +277,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                             parserManager:parserOperationManager
                                                                                        servicePathFactory:servicePathFactory
                                                                                              diskServices:diskService
+                                                                                             tokenStorage:tokenStorage
                                                                                              resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormNetworkServiceProtocol)]) {
@@ -280,6 +292,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                                  parserManager:parserOperationManager
                                                                                             servicePathFactory:servicePathFactory
                                                                                                   diskServices:diskService
+                                                                                                  tokenStorage:tokenStorage
                                                                                                   resultsQueue:nil];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKQuerryNetworkServiceProtocol)]) {
@@ -295,6 +308,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                      parserManager:parserOperationManager
                                                 servicePathFactory:servicePathFactory
                                                       diskServices:diskService
+                                                      tokenStorage:tokenStorage
                                                       resultsQueue:nil];
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)]) {
         [_serviceLocator removeService:integrationNetworkService];
