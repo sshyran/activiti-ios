@@ -67,5 +67,6 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
 @property (strong, nonatomic) ASDKModelFormField                    *formFieldParams;
 @property (strong, nonatomic) ASDKModelFormFieldValue               *metadataValue;
 @property (strong, nonatomic) ASDKModelFormVisibilityCondition      *visibilityCondition;
+@property (strong, nonatomic) NSString                              *tabID;
 
 @end

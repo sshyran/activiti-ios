@@ -22,6 +22,7 @@
 @interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineFormDescriptionDataSourceProtocol>
 
 @property (assign, nonatomic) ASDKFormRenderEngineDataSourceType        dataSourceType;
+@property (assign, nonatomic) ASDKFormRenderEngineDataSourceViewMode    dataSourceViewMode;
 @property (assign, nonatomic) BOOL                                      isReadOnlyForm;
 @property (strong, nonatomic) NSArray                                   *visibleFormFields;
 @property (strong, nonatomic) NSArray                                   *renderableFormFields;

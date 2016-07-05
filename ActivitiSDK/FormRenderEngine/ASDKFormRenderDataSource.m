@@ -33,6 +33,7 @@
 #import "ASDKModelFormDescription.h"
 #import "ASDKModelFormOutcome.h"
 #import "ASDKModelDynamicTableFormField.h"
+#import "ASDKModelFormTab.h"
 
 // Managers
 #import "ASDKFormVisibilityConditionsProcessor.h"
@@ -84,8 +85,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         // Prepare the KVO manager to handle visibility conditions re-evaluations
         self.kvoManager = [ASDKKVOManager managerWithObserver:self];
         
-        // Parse the renderable form fields from the form description to a section disposed dictionary
-        self.renderableFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields];
+        // Parse the renderable form fields from the form description to a tab/section disposed array
+        self.renderableFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields
+                                                                             tabList:formDescription.formTabs];
         
         // Deep copy all renderable objects so that the initial collection remains
         // untouched by future mutations of sections and sub-section elements
@@ -240,8 +242,30 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark -
 #pragma mark Form parser methods
 
-- (NSArray *)parseRenderableFormFieldsFromContainerList:(NSArray *)containerList {
+- (NSArray *)parseRenderableFormFieldsFromContainerList:(NSArray *)containerList
+                                                tabList:(NSArray *)tabList {
+    NSMutableArray *sections = [NSMutableArray array];
+    
+    if (tabList.count) {
+        self.dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeTabs;
+        
+        for (ASDKModelFormTab *tab in tabList) {
+            NSPredicate *containerFieldFromTabPredicate = [NSPredicate predicateWithFormat:@"tabID == %@", tab.modelID];
+            NSArray *containerFieldsInTab = [containerList filteredArrayUsingPredicate:containerFieldFromTabPredicate];
+            tab.formFields = [self parseFormFieldSectionsFromContainerList:containerFieldsInTab];
+            [sections addObject:tab];
+        }
+    } else {
+        self.dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeFormFields;
+        [sections addObjectsFromArray:[self parseFormFieldSectionsFromContainerList:containerList]];
+    }
+    
+    return sections;
+}
+
+- (NSArray *)parseFormFieldSectionsFromContainerList:(NSArray *)containerList {
     NSMutableArray *formFieldSections = [NSMutableArray array];
+    
     for (ASDKModelFormField *formField in containerList) {
         if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
             formField.formFields = [self filterSupportedFormFields:formField.formFields];

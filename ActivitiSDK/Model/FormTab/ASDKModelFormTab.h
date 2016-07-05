@@ -18,14 +18,12 @@
 
 #import "ASDKModelBase.h"
 
-@interface ASDKModelFormDescription : ASDKModelBase
+@class ASDKModelFormVisibilityCondition;
 
-@property (strong, nonatomic) NSString          *processDefinitionID;
-@property (strong, nonatomic) NSString          *processDefinitionName;
-@property (strong, nonatomic) NSString          *processDefinitionKey;
-@property (strong, nonatomic) NSArray           *formFields;
-@property (strong, nonatomic) NSArray           *formOutcomes;
-@property (strong, nonatomic) NSArray           *formTabs;
-@property (strong, nonatomic) NSArray           *formVariables;
+@interface ASDKModelFormTab : ASDKModelBase
+
+@property (strong, nonatomic) NSString                          *title;
+@property (strong, nonatomic) ASDKModelFormVisibilityCondition  *visibilityCondition;
+@property (strong, nonatomic) NSArray                           *formFields;
 
 @end

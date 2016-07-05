@@ -103,7 +103,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
            @"formFields"           : @"fields",
            @"formFieldParams"      : @"params",
            @"formFieldOptions"     : @"options",
-           @"visibilityCondition"  : @"visibilityCondition"
+           @"visibilityCondition"  : @"visibilityCondition",
+           @"tabID"                : @"tab"
            }];
     }
     

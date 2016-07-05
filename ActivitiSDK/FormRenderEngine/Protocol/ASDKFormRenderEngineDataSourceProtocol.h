@@ -30,6 +30,11 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
     ASDKFormRenderEngineDataSourceTypeProcessDefinition,
 };
 
+typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
+    ASDKFormRenderEngineDataSourceViewModeTabs,
+    ASDKFormRenderEngineDataSourceViewModeFormFields
+};
+
 @protocol ASDKFormRenderEngineDataSourceProtocol <NSObject>
 
 /**
@@ -39,13 +44,18 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  */
 @property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
 
+/**
+ *  Property meant to indicate what data source mode is currently on i.e. showing
+ *  information about tabs or form fields
+ */
+@property (assign, nonatomic) ASDKFormRenderEngineDataSourceViewMode dataSourceViewMode;
 
 /**
  *  Property meant to hold a reference to renderable but not necessarly visible
- *  form fields, organized per section and stripped of container-like objects
- *  that don't have a visual representation. This property is intended to act
- *  as a reference point when visibility conditions affect a subset of
- *  form fields and some get removed or inserted. We fallback to this property
+ *  form fields, organized per tabs (if they exist) / form sections and stripped 
+ *  of container-like objects that don't have a visual representation. This property 
+ *  is intended to act as a reference point when visibility conditions affect a subset 
+ *  of form fields and some get removed or inserted. We fallback to this property
  *  when we want to find out what was removed, from where, and what's should be
  *  inserted and where.
  */

@@ -16,16 +16,27 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelFormTab.h"
+#import "ASDKModelFormVisibilityCondition.h"
 
-@interface ASDKModelFormDescription : ASDKModelBase
+#if ! __has_feature(objc_arc)
+#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
+#endif
 
-@property (strong, nonatomic) NSString          *processDefinitionID;
-@property (strong, nonatomic) NSString          *processDefinitionName;
-@property (strong, nonatomic) NSString          *processDefinitionKey;
-@property (strong, nonatomic) NSArray           *formFields;
-@property (strong, nonatomic) NSArray           *formOutcomes;
-@property (strong, nonatomic) NSArray           *formTabs;
-@property (strong, nonatomic) NSArray           *formVariables;
+@implementation ASDKModelFormTab
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+    NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
+    
+    if (inheretedPropertyKeys.allKeys.count) {
+        [inheretedPropertyKeys addEntriesFromDictionary:
+         @{//Objc property            JSON property
+           @"title"                 : @"title",
+           @"visibilityCondition"   : @"visibilityCondition"
+          }];
+    }
+    
+    return inheretedPropertyKeys;
+}
 
 @end
