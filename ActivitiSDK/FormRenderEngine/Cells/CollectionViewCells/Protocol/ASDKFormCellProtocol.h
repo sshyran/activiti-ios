@@ -21,7 +21,8 @@
 
 @class ASDKModelFormField,
 ASDKModelFormOutcome,
-ASDKModelFormFieldValue;
+ASDKModelFormFieldValue,
+ASDKModelFormTab;
 
 typedef void  (^ASDKFormCellActionHandlerCompletionBlock) (ASDKModelFormFieldValue *formFieldValue, BOOL refreshItemAtAffectedIndexPath);
 typedef void  (^ASDKFormCellActionHandlerValidationBlock) (ASDKModelFormFieldValue *formFieldValue);
@@ -32,6 +33,7 @@ typedef void  (^ASDKFormCellActionHandlerValidationBlock) (ASDKModelFormFieldVal
 @property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> delegate;
 
 - (void)setupCellWithFormField:(ASDKModelFormField *)formField;
+- (void)setupCellWithFormTab:(ASDKModelFormTab *)formTab;
 - (void)setupCellWithFormOutcome:(ASDKModelFormOutcome *)formOutcome
                enableFormOutcome:(BOOL)enableFormOutcome;
 

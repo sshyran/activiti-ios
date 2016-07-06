@@ -95,6 +95,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         NSArray *renderableFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
         
         // Initialize the visibility condition processor with a plain array of form fields and form variables
+#warning Temporary disabled functionality
+        self.visibleFormFields = renderableFormFieldsCopy;
+        /*
         self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:renderableFormFieldsCopy
                                                                                                  formVariables:formDescription.formVariables];
         
@@ -105,27 +108,32 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         // Handle value changes for form fields that have a direct impact over visibility conditions
         [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
+         */
         
-        // Handle form outcomes
-        self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
-        self.formOutcomesIndexPaths = [NSMutableArray array];
-        
-        if (self.formHasUserdefinedOutcomes) {
-            self.isSaveActionAvailable = YES;
-            self.formOutcomes = formDescription.formOutcomes;
-        } else {
-            ASDKModelFormOutcome *formOutcome = [ASDKModelFormOutcome new];
+        // Handle form outcomes when the data source view mode is set to tabs or
+        // there are no tabs available
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode ||
+            !formDescription.formTabs.count) {
+            self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
+            self.formOutcomesIndexPaths = [NSMutableArray array];
             
-            if (ASDKFormRenderEngineDataSourceTypeTask == dataSourceType) {
-                formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
-                self.formOutcomes = @[formOutcome];
+            if (self.formHasUserdefinedOutcomes) {
                 self.isSaveActionAvailable = YES;
+                self.formOutcomes = formDescription.formOutcomes;
             } else {
-                formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
-                self.formOutcomes = @[formOutcome];
+                ASDKModelFormOutcome *formOutcome = [ASDKModelFormOutcome new];
+                
+                if (ASDKFormRenderEngineDataSourceTypeTask == dataSourceType) {
+                    formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
+                    self.formOutcomes = @[formOutcome];
+                    self.isSaveActionAvailable = YES;
+                } else {
+                    formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
+                    self.formOutcomes = @[formOutcome];
+                }
+                
+                self.dataSourceType = dataSourceType;
             }
-            
-            self.dataSourceType = dataSourceType;
         }
     }
     
@@ -145,47 +153,58 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (NSInteger)numberOfFormFieldsForSection:(NSInteger)section {
-    ASDKModelFormField *sectionFormField = section < self.visibleFormFields.count ? self.visibleFormFields[section] : nil;
     NSUInteger fieldsCount = 0;
     
-    // Check if the controller requested the number of fields for the outcome section
-    if (!sectionFormField) {
+    if (section >= self.visibleFormFields.count) {
         fieldsCount = self.formOutcomes.count;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
-               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
-                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
-        fieldsCount = 1;
     } else {
-        fieldsCount = sectionFormField.formFields.count;
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode) {
+            fieldsCount = 1;
+        } else {
+            ASDKModelFormField *sectionFormField = self.visibleFormFields[section];
+            
+            if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+                (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                 ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
+                    fieldsCount = 1;
+                } else {
+                    fieldsCount = sectionFormField.formFields.count;
+                }
+        }
     }
     
     return fieldsCount;
 }
 
 - (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath {
-    ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
     NSString *cellIdentifier = nil;
     
-    // Check if the controller requested a cell identifier for the outcome section
-    if (!sectionFormField) {
+    if (indexPath.section >= self.visibleFormFields.count) {
         cellIdentifier = kASDKCellIDFormFieldOutcomeRepresentation;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
-               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
-                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
-        cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
     } else {
-        ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
-        cellIdentifier = [self validCellIdentifierForFormField:formFieldAtIndexPath];
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode) {
+            cellIdentifier = kASDKCellIDFormFieldTabRepresentation;
+        } else {
+            ASDKModelFormField *sectionFormField = self.visibleFormFields[indexPath.section];
+            
+            if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+                (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                 ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
+                    cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
+                } else {
+                    ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
+                    cellIdentifier = [self validCellIdentifierForFormField:formFieldAtIndexPath];
+                }
+        }
     }
     
     return cellIdentifier;
 }
 
 - (ASDKModelBase *)modelForIndexPath:(NSIndexPath *)indexPath {
-    ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
     ASDKModelBase *formFieldModel = nil;
     
-    if (!sectionFormField) {
+    if (indexPath.section >= self.visibleFormFields.count) {
         ASDKModelFormOutcome *formOutcome = self.formOutcomes[indexPath.row];
         
         if (NSNotFound == [self.formOutcomesIndexPaths indexOfObject:indexPath]) {
@@ -193,12 +212,20 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         formFieldModel = formOutcome;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
-               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
-                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
-        formFieldModel = sectionFormField;
-    } else {// Set up the cell from the corresponding section
-        formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
+    } else {
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode) {
+            formFieldModel = (ASDKModelFormTab *)self.visibleFormFields[indexPath.section];
+        } else {
+            ASDKModelFormField *sectionFormField = self.visibleFormFields[indexPath.section];
+            
+            if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+                (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                 ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
+                    formFieldModel = sectionFormField;
+                } else {// Set up the cell from the corresponding section
+                    formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
+                }
+        }
     }
     
     return formFieldModel;
@@ -206,12 +233,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (NSString *)sectionHeaderTitleForIndexPath:(NSIndexPath *)indexPath {
     NSString *sectionHeaderTitleString = nil;
-    ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
     
-    // We're checking for header representation types, we don't care for containers of
-    // form field objects without a visual representation
-    if (ASDKModelFormFieldRepresentationTypeHeader == sectionFormField.representationType) {
-        sectionHeaderTitleString = sectionFormField.fieldName;
+    if (ASDKFormRenderEngineDataSourceViewModeFormFields == self.dataSourceViewMode) {
+        ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
+        
+        // We're checking for header representation types, we don't care for containers of
+        // form field objects without a visual representation
+        if (ASDKModelFormFieldRepresentationTypeHeader == sectionFormField.representationType) {
+            sectionHeaderTitleString = sectionFormField.fieldName;
+        }
     }
     
     return sectionHeaderTitleString;
@@ -309,7 +339,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         // If a section has no more attached form fields and it's not a dynamic table remove it,
         // otherwise set the modified form field collection
-        
         BOOL isReadOnlyDynamicTable = (ASDKModelFormFieldRepresentationTypeReadOnly == containerFormField.representationType &&
                                        ASDKModelFormFieldRepresentationTypeDynamicTable == containerFormField.formFieldParams.representationType);
         if (!formFieldsInSection.count &&

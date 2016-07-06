@@ -14,6 +14,7 @@
             <string>GLYPHICONS-Regular</string>
             <string>GLYPHICONS-Regular</string>
             <string>GLYPHICONS-Regular</string>
+            <string>GLYPHICONS-Regular</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -587,8 +588,53 @@
                                     <outlet property="hyperlinkButton" destination="OsG-FZ-nwP" id="GfB-dj-eVY"/>
                                 </connections>
                             </collectionViewCell>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FormFieldOutcomeRepresentationCellID" id="pti-CJ-3Ck" customClass="ASDKFormOutcomeCollectionViewCell">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FormFieldTabRepresentationCellID" id="xuY-4x-870" customClass="ASDKFormTabFieldCollectionViewCell">
                                 <rect key="frame" x="140" y="473" width="320" height="43"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f2e-f1-AHa" userLabel="Hairline view">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                            <color key="backgroundColor" red="0.90711690030000003" green="0.92525923830000001" blue="0.92525923830000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="Z8q-W5-WuT"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Form tab" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZL4-yM-YYA">
+                                            <rect key="frame" x="8" y="10" width="284" height="23"/>
+                                            <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jww-Wy-NCJ" userLabel="Disclosure Indicator Label">
+                                            <rect key="frame" x="300" y="14" width="12" height="14.5"/>
+                                            <fontDescription key="fontDescription" name="GLYPHICONS-Regular" family="GLYPHICONS" pointSize="12"/>
+                                            <color key="textColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Jww-Wy-NCJ" secondAttribute="trailing" constant="8" id="83b-Io-41h"/>
+                                    <constraint firstItem="Jww-Wy-NCJ" firstAttribute="leading" secondItem="ZL4-yM-YYA" secondAttribute="trailing" constant="8" id="CH9-PV-s9i"/>
+                                    <constraint firstItem="ZL4-yM-YYA" firstAttribute="top" secondItem="xuY-4x-870" secondAttribute="top" constant="10" id="EyA-fO-0Ke"/>
+                                    <constraint firstAttribute="bottom" secondItem="ZL4-yM-YYA" secondAttribute="bottom" constant="10" id="UZk-X8-0DR"/>
+                                    <constraint firstItem="f2e-f1-AHa" firstAttribute="leading" secondItem="xuY-4x-870" secondAttribute="leading" id="ZRV-lI-GZ3"/>
+                                    <constraint firstItem="Jww-Wy-NCJ" firstAttribute="centerY" secondItem="ZL4-yM-YYA" secondAttribute="centerY" id="cK8-RX-eDG"/>
+                                    <constraint firstAttribute="trailing" secondItem="f2e-f1-AHa" secondAttribute="trailing" id="qYh-Fa-vIK"/>
+                                    <constraint firstItem="ZL4-yM-YYA" firstAttribute="leading" secondItem="xuY-4x-870" secondAttribute="leading" constant="8" id="wQA-xH-z2h"/>
+                                    <constraint firstItem="f2e-f1-AHa" firstAttribute="top" secondItem="xuY-4x-870" secondAttribute="top" id="yzj-p9-MJO"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="ZL4-yM-YYA" id="ocr-W0-Fdu"/>
+                                </connections>
+                            </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FormFieldOutcomeRepresentationCellID" id="pti-CJ-3Ck" customClass="ASDKFormOutcomeCollectionViewCell">
+                                <rect key="frame" x="140" y="516" width="320" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -654,7 +700,7 @@
                             </connections>
                         </collectionReusableView>
                         <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FormFieldFooterRepresentationCellID" id="UgC-fw-OVd" customClass="ASDKFormFooterCollectionReusableView">
-                            <rect key="frame" x="0.0" y="516" width="600" height="43"/>
+                            <rect key="frame" x="0.0" y="559" width="600" height="43"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqr-2M-FHs" userLabel="HairlineView">
@@ -1149,7 +1195,7 @@
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ASDKIntegrationBrowsingCellID" id="8ZC-ED-mb2" customClass="ASDKIntegrationBrowsingTableViewCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="IntegrationBrowsingCellID" id="8ZC-ED-mb2" customClass="ASDKIntegrationBrowsingTableViewCell">
                                         <rect key="frame" x="0.0" y="28" width="600" height="54"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8ZC-ED-mb2" id="Pzh-jR-hLm">

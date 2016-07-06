@@ -19,11 +19,8 @@
 #import <UIKit/UIKit.h>
 #import "ASDKFormCellProtocol.h"
 
-@interface ASDKFormHyperlinkFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
+@interface ASDKFormTabFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
 
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
-@property (weak, nonatomic) IBOutlet UIButton *hyperlinkButton;
-
-- (IBAction)hyperlinkTapped:(id)sender;
 
 @end

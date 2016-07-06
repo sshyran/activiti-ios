@@ -32,6 +32,7 @@
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormOutcome.h"
 #import "ASDKFormFieldValueRequestRepresentation.h"
+#import "ASDKModelFormTab.h"
 
 // Cells
 #import "ASDKFormHeaderCollectionReusableView.h"
@@ -250,6 +251,8 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     
     if ([modelObject isKindOfClass:[ASDKModelFormField class]]) {
         [cell setupCellWithFormField:(ASDKModelFormField *)modelObject];
+    } else if ([modelObject isKindOfClass:[ASDKModelFormTab class]]) {
+        [cell setupCellWithFormTab:(ASDKModelFormTab *)modelObject];
     } else {
         BOOL isFormOutcomeEnabled = YES;
         
