@@ -36,15 +36,6 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 @protocol ASDKFormRenderEngineProtocol <NSObject>
 
 /**
- *  Holds a reference to the current form description begin used to create
- *  the form view.
- *  NOTE: The property is declared as a readonly to force interaction with the
- *        form description to be made via protocol declared methods thus making
- *        the process safer.
- */
-@property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
-
-/**
  *  Holds a reference to the form network service used in conjucture with the 
  *  convenience setup methods.
  */
@@ -58,16 +49,6 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
  *  changes inside
  */
 @property (strong, nonatomic) ASDKFormEngineActionHandler *actionHandler;
-
-/**
- *  Designated setup method for the form render engine class.
- *
- *  @param formDescription Description object containing form models that will be
- *                         displayed in the form view
- *  @return                A collection view controller instance containing the
- *                         the rendered form view
- */
-- (UICollectionViewController *)setupWithFormDescription:(ASDKModelFormDescription *)formDescription;
 
 /**
  *  Setup method for dynamic table rows
@@ -175,6 +156,18 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
                          processDefinition:(ASDKModelProcessDefinition *)processDefinition
                      renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
                        formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock;
+
+/**
+ *  Designated setup method for the form render engine class when it is used to show the
+ *  content of a form tab. 
+ *
+ *  @param formDescription Description object containing form models that will be
+ *                         displayed in the form view
+ *  @return                A collection view controller instance containing the
+ *                         the rendered form view
+ */
+- (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormDescription *)formDescription;
+
 /**
  *  Performs a form completion request given a form field value request representation object.
  *  

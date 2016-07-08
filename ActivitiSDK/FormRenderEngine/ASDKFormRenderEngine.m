@@ -75,25 +75,6 @@
 #pragma mark -
 #pragma mark ASDKFormRenderEngine Protocol
 
-- (UICollectionViewController *)setupWithFormDescription:(ASDKModelFormDescription *)formDescription {
-    _currenFormDescription = formDescription;
-    
-    // Load from nib the form collection view controller and link it's data source
-    UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
-                                                             bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
-    ASDKFormCollectionViewController *formCollectionViewController = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
-    self.dataSource.delegate = formCollectionViewController;
-    formCollectionViewController.dataSource = self.dataSource;
-    formCollectionViewController.renderDelegate = self;
-    
-    // Set up the form engine action handler
-    self.actionHandler = [ASDKFormEngineActionHandler new];
-    self.actionHandler.dataSourceActionDelegate = (ASDKFormRenderDataSource <ASDKFormEngineDataSourceActionHandlerDelegate> *)self.dataSource;
-    self.actionHandler.formControllerActionDelegate = (ASDKFormCollectionViewController <ASDKFormEngineControllerActionHandlerDelegate> *) formCollectionViewController;
-    
-    return formCollectionViewController;
-}
-
 - (UICollectionViewController *)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields {
     // Load from nib the form collection view controller and link it's data source
     UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
@@ -138,14 +119,13 @@
                           formDescription.formFields = processedFormFields;
                           
                           // Set up the data source for the form collection view controller
-                          self.dataSource = [[ASDKFormRenderDataSource alloc] initWithFormDescription:formDescription
-                                                                                       dataSourceType:ASDKFormRenderEngineDataSourceTypeTask];
+                          self.dataSource = [[ASDKFormRenderDataSource alloc] initWithTaskFormDescription:formDescription];
                           self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
                           
                           // Always dispath on the main queue results related to the form view
                           dispatch_async(dispatch_get_main_queue(), ^{
                               
-                              UICollectionViewController *formCollectionViewController = [self setupWithFormDescription:formDescription];
+                              UICollectionViewController *formCollectionViewController = [self prepareWithFormDescription:formDescription];
                               
                               // First check for integrity errors
                               if (!formCollectionViewController) {
@@ -194,13 +174,12 @@
                                        formDescription.formFields = processedFormFields;
                                        
                                        // Set up the data source for the form collection view controller
-                                       self.dataSource = [[ASDKFormRenderDataSource alloc] initWithFormDescription:formDescription
-                                                                                                    dataSourceType:ASDKFormRenderEngineDataSourceTypeProcessDefinition];
+                                       self.dataSource = [[ASDKFormRenderDataSource alloc] initWithProcessDefinitionFormDescription:formDescription];
                                        self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
                                        
                                        // Always dispath on the main queue results related to the form view
                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                           UICollectionViewController *formCollectionViewController = [self setupWithFormDescription:formDescription];
+                                           UICollectionViewController *formCollectionViewController = [self prepareWithFormDescription:formDescription];
                                            
                                            // First check for integrity errors
                                            if (!formCollectionViewController) {
@@ -237,8 +216,7 @@
     self.formCompletionBlock = formCompletionBlock;
     
     // Set up the data source for the form collection view controller
-    self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields
-                                                                    dataSourceType:ASDKFormRenderEngineDataSourceTypeTask];
+    self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields];
     self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
     self.formPreProcessor = [ASDKFormPreProcessor new];
     self.formPreProcessor.formNetworkServices = self.formNetworkServices;
@@ -285,8 +263,7 @@
     self.formCompletionBlock = formCompletionBlock;
     
     // Set up the data source for the form collection view controller
-    self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields
-                                                                    dataSourceType:ASDKFormRenderEngineDataSourceTypeTask];
+    self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields];
     self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
     self.formPreProcessor = [ASDKFormPreProcessor new];
     self.formPreProcessor.formNetworkServices = self.formNetworkServices;
@@ -316,6 +293,11 @@
                                       }
                                   });
                               }];
+}
+
+- (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormDescription *)formDescription {
+    self.dataSource = [[ASDKFormRenderDataSource alloc] initWithTabFormDescription:formDescription];
+    return [self prepareWithFormDescription:formDescription];
 }
 
 - (void)completeFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
@@ -370,7 +352,7 @@
                                     if (strongSelf.saveFormCompletionBlock) {
                                         strongSelf.saveFormCompletionBlock(isFormSaved, error);
                                     }
-    }];
+                                }];
 }
 
 - (void)performEngineCleanup {
@@ -379,6 +361,29 @@
     self.dataSource = nil;
     self.formCompletionBlock = nil;
     self.startFormCompletionBlock = nil;
+}
+
+
+#pragma mark -
+#pragma mark Private API
+
+- (UICollectionViewController *)prepareWithFormDescription:(ASDKModelFormDescription *)formDescription {
+    // Load from nib the form collection view controller and link it's data source
+    UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
+                                                             bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
+    ASDKFormCollectionViewController *formCollectionViewController = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
+    self.dataSource.delegate = formCollectionViewController;
+    formCollectionViewController.dataSource = self.dataSource;
+    formCollectionViewController.renderDelegate = self;
+    
+#warning Investigate whether action handler should be correlated with form controller or refference not being reset when setup with tab
+    
+    // Set up the form engine action handler
+    self.actionHandler = [ASDKFormEngineActionHandler new];
+    self.actionHandler.dataSourceActionDelegate = (ASDKFormRenderDataSource <ASDKFormEngineDataSourceActionHandlerDelegate> *)self.dataSource;
+    self.actionHandler.formControllerActionDelegate = (ASDKFormCollectionViewController <ASDKFormEngineControllerActionHandlerDelegate> *) formCollectionViewController;
+    
+    return formCollectionViewController;
 }
 
 @end

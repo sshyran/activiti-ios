@@ -620,7 +620,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             displayTaskFormContainerView = YES;
             AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
             [self.taskFormViewController startTaskFormForTaskObject:taskDetailsModel.currentTask];
-            [self formDidLoad];
         }
             break;
             
@@ -1387,7 +1386,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 
 
 #pragma mark -
-#pragma mark AFATaskformViewControllerDelegate
+#pragma mark AFATaskFormViewControllerDelegate
 
 - (void)formDidLoad {
     AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];

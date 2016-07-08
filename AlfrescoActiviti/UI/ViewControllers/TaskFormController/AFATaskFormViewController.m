@@ -157,6 +157,10 @@
                                  [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
                              }
                          }];
+    } else {
+        if ([self.delegate respondsToSelector:@selector(formDidLoad)]) {
+            [self.delegate formDidLoad];
+        }
     }
 }
 

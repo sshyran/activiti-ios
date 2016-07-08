@@ -17,8 +17,9 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import <Mantle/Mantle.h>
 
-@interface ASDKModelFormFieldValue : NSObject
+@interface ASDKModelFormFieldValue : MTLModel
 
 /**
  *  Property intended to hold a reference to the values of a form field

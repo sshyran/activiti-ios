@@ -48,6 +48,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 @interface ASDKFormRenderDataSource() <ASDKFormEngineDataSourceActionHandlerDelegate>
 
 /**
+ *  Holds a reference to the current form description used to initialize the data source
+ */
+@property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
+
+/**
  *  Property meant to hold reference to form outcomes models.
  */
 @property (strong, nonatomic) NSArray *formOutcomes;
@@ -77,67 +82,99 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark -
 #pragma mark Life cycle
 
-- (instancetype)initWithFormDescription:(ASDKModelFormDescription *)formDescription
-                         dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType {
+- (instancetype)initWithTaskFormDescription:(ASDKModelFormDescription *)formDescription {
     self = [super init];
     
     if (self) {
-        // Prepare the KVO manager to handle visibility conditions re-evaluations
-        self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+        _isSaveActionAvailable = YES;
+        _currenFormDescription = formDescription;
         
-        // Parse the renderable form fields from the form description to a tab/section disposed array
-        self.renderableFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields
-                                                                             tabList:formDescription.formTabs];
+        ASDKModelFormOutcome *defaultFormOutcome = [ASDKModelFormOutcome new];
+        defaultFormOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
         
-        // Deep copy all renderable objects so that the initial collection remains
-        // untouched by future mutations of sections and sub-section elements
-        NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.renderableFormFields];
-        NSArray *renderableFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
-        
-        // Initialize the visibility condition processor with a plain array of form fields and form variables
-#warning Temporary disabled functionality
-        self.visibleFormFields = renderableFormFieldsCopy;
-        /*
-        self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:renderableFormFieldsCopy
-                                                                                                 formVariables:formDescription.formVariables];
-        
-        // Run a pre-process operation to evaluate visibility conditions and provide the first set of visible form
-        // fields
-        self.visibleFormFields = [self filterRenderableFormFields:renderableFormFieldsCopy
-                                             forVisibleFormFields:[self.visibilityConditionsProcessor parseVisibleFormFields]];
-        
-        // Handle value changes for form fields that have a direct impact over visibility conditions
-        [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
-         */
-        
-        // Handle form outcomes when the data source view mode is set to tabs or
-        // there are no tabs available
-        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode ||
-            !formDescription.formTabs.count) {
-            self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
-            self.formOutcomesIndexPaths = [NSMutableArray array];
-            
-            if (self.formHasUserdefinedOutcomes) {
-                self.isSaveActionAvailable = YES;
-                self.formOutcomes = formDescription.formOutcomes;
-            } else {
-                ASDKModelFormOutcome *formOutcome = [ASDKModelFormOutcome new];
-                
-                if (ASDKFormRenderEngineDataSourceTypeTask == dataSourceType) {
-                    formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
-                    self.formOutcomes = @[formOutcome];
-                    self.isSaveActionAvailable = YES;
-                } else {
-                    formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
-                    self.formOutcomes = @[formOutcome];
-                }
-                
-                self.dataSourceType = dataSourceType;
-            }
-        }
+        [self setupWithFormDescription:formDescription
+                    defaultFormOutcome:defaultFormOutcome];
     }
     
     return self;
+}
+
+- (instancetype)initWithProcessDefinitionFormDescription:(ASDKModelFormDescription *)formDescription {
+    self = [super init];
+    
+    if (self) {
+        _isSaveActionAvailable = NO;
+        _currenFormDescription = formDescription;
+        
+        ASDKModelFormOutcome *defaultFormOutcome = [ASDKModelFormOutcome new];
+        defaultFormOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
+        
+        [self setupWithFormDescription:formDescription
+                    defaultFormOutcome:defaultFormOutcome];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithTabFormDescription:(ASDKModelFormDescription *)formDescription {
+    self = [super init];
+    
+    if (self) {
+        _isSaveActionAvailable = YES;
+        [self setupWithFormDescription:formDescription
+                    defaultFormOutcome:nil];
+    }
+    
+    return self;
+}
+
+- (void)setupWithFormDescription:(ASDKModelFormDescription *)formDescription
+              defaultFormOutcome:(ASDKModelFormOutcome *)defaultFormOutcome {
+    // Prepare the KVO manager to handle visibility conditions re-evaluations
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    // Parse the renderable form fields from the form description to a tab/section disposed array
+    NSArray *renderableParsedFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields
+                                                                                   tabList:formDescription.formTabs];
+    
+    // Deep copy all renderable objects so that the initial collection remains
+    // untouched by future mutations of sections and sub-section elements
+    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: renderableParsedFormFields];
+    NSArray *renderableParsedFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
+    
+    // Initialize the visibility condition processor with a plain array of form fields and form variables
+#warning Temporary disabled functionality
+    self.renderableFormFields = renderableParsedFormFieldsCopy;
+    self.visibleFormFields = renderableParsedFormFields;
+/*
+     self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:renderableParsedFormFields
+     formVariables:formDescription.formVariables];
+     
+     // Run a pre-process operation to evaluate visibility conditions and provide the first set of visible form
+     // fields
+     self.visibleFormFields = [self filterRenderableFormFields:renderableParsedFormFields
+     forVisibleFormFields:[self.visibilityConditionsProcessor parseVisibleFormFields]];
+     
+     // Handle value changes for form fields that have a direct impact over visibility conditions
+     [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
+ */
+    
+    
+    // Show the form outcomes only when the data source is in tab view mode or
+    // there aren't any defined tabs
+    if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode ||
+        !formDescription.formTabs.count) {
+        self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
+        self.formOutcomesIndexPaths = [NSMutableArray array];
+        
+        if (self.formHasUserdefinedOutcomes) {
+            self.formOutcomes = formDescription.formOutcomes;
+        } else {
+            if (defaultFormOutcome) {
+                self.formOutcomes = @[defaultFormOutcome];
+            }
+        }
+    }
 }
 
 - (void)dealloc {
@@ -268,6 +305,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
 }
 
+- (ASDKModelFormDescription *)formDescriptionForTabAtIndexPath:(NSIndexPath *)indexpath {
+    ASDKModelFormDescription *tabFormDescription = [ASDKModelFormDescription new];
+    tabFormDescription.processDefinitionID = self.currenFormDescription.processDefinitionID;
+    tabFormDescription.processDefinitionName = self.currenFormDescription.processDefinitionName;
+    tabFormDescription.processDefinitionKey = self.currenFormDescription.processDefinitionKey;
+    tabFormDescription.formVariables = self.currenFormDescription.formVariables;
+    
+    ASDKModelFormTab *currentTab = (ASDKModelFormTab *)self.visibleFormFields[indexpath.section];
+    tabFormDescription.formFields = currentTab.formFields;
+    
+    return tabFormDescription;
+}
+
 
 #pragma mark -
 #pragma mark Form parser methods
@@ -277,7 +327,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableArray *sections = [NSMutableArray array];
     
     if (tabList.count) {
-        self.dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeTabs;
+        _dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeTabs;
         
         for (ASDKModelFormTab *tab in tabList) {
             NSPredicate *containerFieldFromTabPredicate = [NSPredicate predicateWithFormat:@"tabID == %@", tab.modelID];
@@ -286,7 +336,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             [sections addObject:tab];
         }
     } else {
-        self.dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeFormFields;
+        _dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeFormFields;
         [sections addObjectsFromArray:[self parseFormFieldSectionsFromContainerList:containerList]];
     }
     
@@ -799,7 +849,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark ASDKFormEngineDataSourceActionHandlerDelegate
 
 - (BOOL)isSaveFormAvailable {
-    return self.isSaveActionAvailable;
+    return self.isSaveActionAvailable && !self.isReadOnlyForm;
 }
 
 @end

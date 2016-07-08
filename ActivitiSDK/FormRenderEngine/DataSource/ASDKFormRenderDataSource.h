@@ -21,14 +21,13 @@
 
 @interface ASDKFormRenderDataSource : NSObject <ASDKFormRenderEngineFormDescriptionDataSourceProtocol>
 
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType        dataSourceType;
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceViewMode    dataSourceViewMode;
-@property (assign, nonatomic) BOOL                                      isReadOnlyForm;
-@property (strong, nonatomic) NSArray                                   *visibleFormFields;
-@property (strong, nonatomic) NSArray                                   *renderableFormFields;
-@property (assign, nonatomic) BOOL                                      formHasUserdefinedOutcomes;
-@property (weak, nonatomic)   id<ASDKFormRenderEngineDataSourceDelegate>delegate;
-@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor     *visibilityConditionsProcessor;
+@property (assign, nonatomic) BOOL                                              isReadOnlyForm;
+@property (strong, nonatomic) NSArray                                           *visibleFormFields;
+@property (strong, nonatomic) NSArray                                           *renderableFormFields;
+@property (assign, nonatomic) BOOL                                              formHasUserdefinedOutcomes;
+@property (weak, nonatomic)   id<ASDKFormRenderEngineDataSourceDelegate>        delegate;
+@property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor             *visibilityConditionsProcessor;
+@property (assign, nonatomic, readonly) ASDKFormRenderEngineDataSourceViewMode  dataSourceViewMode;
 
 - (NSString *)validCellIdentifierForFormField:(ASDKModelFormField *)formField;
 

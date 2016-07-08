@@ -34,17 +34,6 @@ typedef void  (^AFAStartFormServicesEngineCompletionBlock) (ASDKModelProcessInst
 @interface AFAFormServices : NSObject
 
 /**
- *  Prepares the form render engine and generates the form view based on the passed
- *  form description.
- *
- *  @param formDescription Description object containing the form fields to be
- *                         displayed
- *  @return                A collection view controller instance containing the
- *                         the rendered form view
- */
-- (UICollectionViewController *)requestSetupWithFormDescription:(ASDKModelFormDescription *)formDescription;
-
-/**
  *  Performs a request to the form render engine to handle the creation of the form view
  *  given a task object, including all necessary network calls for setup and
  *  completion of the form.

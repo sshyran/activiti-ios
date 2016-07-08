@@ -242,7 +242,65 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     
     UICollectionViewCell<ASDKFormCellProtocol> *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                                                  forIndexPath:indexPath];
+    [self setupCellWithContent:cell
+                  forIndexPath:indexPath];
     
+    // Link the ASDKFormRenderEngineValueTransactionsProtocol delegate
+    if ([cell respondsToSelector:@selector(setDelegate:)]) {
+        cell.delegate = self;
+    }
+    
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    // We first make sure we don't handle cell taps for the outcome section
+    if (![[self.dataSource indexPathsOfFormOutcomes] containsObject:indexPath]) {
+        UIViewController *detailController = nil;
+        
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSource.dataSourceViewMode) {
+            if ([self.renderDelegate respondsToSelector:@selector(setupWithTabFormDescription:)]) {
+                UICollectionViewController<ASDKFormControllerNavigationProtocol> *formFieldsController =
+                (UICollectionViewController<ASDKFormControllerNavigationProtocol> *)[self.renderDelegate setupWithTabFormDescription:[self.dataSource formDescriptionForTabAtIndexPath:indexPath]];
+                formFieldsController.navigationDelegate = self.navigationDelegate;
+                
+                detailController = formFieldsController;
+            }
+        } else {
+            if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
+                UIViewController<ASDKFormFieldDetailsControllerProtocol> *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
+                // Child controllers will have to delegate changes on model updates using the ASDKFormRenderEngineValueTransactionsProtocol
+                childController.valueTransactionDelegate = self;
+                
+                if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
+                    ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
+                    dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
+                }
+                
+                detailController = childController;
+            }
+        }
+        
+        // If there is controller assigned to the selected form field notify the delegate
+        // that it can begin preparing for presentation
+        if (detailController) {
+            [self.navigationDelegate prepareToPresentDetailController:detailController];
+        }
+    }
+}
+
+
+#pragma mark -
+#pragma mark Convenience methods
+
+- (void)refreshContentForCellAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell<ASDKFormCellProtocol> *cell = (UICollectionViewCell<ASDKFormCellProtocol> *)[self.collectionView cellForItemAtIndexPath:indexPath];
+    [self setupCellWithContent:cell
+                  forIndexPath:indexPath];
+}
+
+- (void)setupCellWithContent:(UICollectionViewCell<ASDKFormCellProtocol> *)cell
+                forIndexPath:(NSIndexPath *)indexPath {
     // Acquire the model object to set up the cell
     ASDKModelBase *modelObject = nil;
     if ([self.dataSource respondsToSelector:@selector(modelForIndexPath:)]) {
@@ -265,63 +323,6 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         [cell setupCellWithFormOutcome:(ASDKModelFormOutcome *)modelObject
                      enableFormOutcome:isFormOutcomeEnabled];
     }
-    
-    // Link the ASDKFormRenderEngineValueTransactionsProtocol delegate
-    if ([cell respondsToSelector:@selector(setDelegate:)]) {
-        cell.delegate = self;
-    }
-    
-    return cell;
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    // We first make sure we don't handle cell taps for the outcome section
-    if (![[self.dataSource indexPathsOfFormOutcomes] containsObject:indexPath]) {
-        if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
-            UIViewController<ASDKFormFieldDetailsControllerProtocol> *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
-            // Child controllers will have to delegate changes on model updates using the ASDKFormRenderEngineValueTransactionsProtocol
-            childController.valueTransactionDelegate = self;
-            
-            if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
-                ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
-                dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
-            }
-            
-            // If there is controller assigned to the selected form field notify the delegate
-            // that it can begin preparing for presentation
-            if (childController) {
-                [self.navigationDelegate prepareToPresentDetailController:childController];
-            }
-        }
-    }
-}
-
-
-#pragma mark -
-#pragma mark Convenience methods
-
-- (void)refreshContentForCellAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell<ASDKFormCellProtocol> *cell = (UICollectionViewCell<ASDKFormCellProtocol> *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    
-    ASDKModelBase *modelObject = nil;
-    if ([self.dataSource respondsToSelector:@selector(modelForIndexPath:)]) {
-        modelObject = [self.dataSource modelForIndexPath:indexPath];
-    }
-
-    if ([modelObject isKindOfClass:[ASDKModelFormField class]]) {
-        if (modelObject )
-        [cell setupCellWithFormField:(ASDKModelFormField *)modelObject];
-    } else {
-        BOOL isFormOutcomeEnabled = YES;
-        
-        if (self.dataSource.isReadOnlyForm) {
-            isFormOutcomeEnabled = NO;
-        } else {
-            isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
-        }
-        
-        [cell setupCellWithFormOutcome:(ASDKModelFormOutcome *)modelObject
-                     enableFormOutcome:isFormOutcomeEnabled];
-    }
-}
 @end

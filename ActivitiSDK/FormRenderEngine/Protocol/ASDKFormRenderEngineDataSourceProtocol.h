@@ -25,11 +25,6 @@ ASDKModelBase,
 ASDKModelFormField,
 ASDKFormVisibilityConditionsProcessor;
 
-typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
-    ASDKFormRenderEngineDataSourceTypeTask = 0,
-    ASDKFormRenderEngineDataSourceTypeProcessDefinition,
-};
-
 typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
     ASDKFormRenderEngineDataSourceViewModeTabs,
     ASDKFormRenderEngineDataSourceViewModeFormFields
@@ -38,17 +33,10 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
 @protocol ASDKFormRenderEngineDataSourceProtocol <NSObject>
 
 /**
- *  Property meant to indicate the type of the data source, whether the form
- *  description has been provided from a task or from a process definition 
- *  i.e. process start forms.
- */
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
-
-/**
  *  Property meant to indicate what data source mode is currently on i.e. showing
  *  information about tabs or form fields
  */
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceViewMode dataSourceViewMode;
+@property (assign, nonatomic, readonly) ASDKFormRenderEngineDataSourceViewMode dataSourceViewMode;
 
 /**
  *  Property meant to hold a reference to renderable but not necessarly visible
@@ -162,5 +150,14 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
  *  @return UIViewController initialized instance to be presented
  */
 - (UIViewController<ASDKFormFieldDetailsControllerProtocol> *)childControllerForFormField:(ASDKModelFormField *)formField;
+
+/**
+ *  Method returns a form description tailored for the tab at the requested index path.
+ *
+ *  @param indexpath Index path of the tab for which the form description is requested
+ *
+ *  @return Form description object
+ */
+- (ASDKModelFormDescription *)formDescriptionForTabAtIndexPath:(NSIndexPath *)indexpath;
 
 @end

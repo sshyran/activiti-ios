@@ -16,6 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
+#warning Check validity of app binary without cocoapods clean script before merge
+
 #import <UIKit/UIKit.h>
 
 // Bootstrap
