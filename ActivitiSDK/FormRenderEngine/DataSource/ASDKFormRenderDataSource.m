@@ -133,6 +133,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Prepare the KVO manager to handle visibility conditions re-evaluations
     self.kvoManager = [ASDKKVOManager managerWithObserver:self];
     
+    self.formTitle = formDescription.formTitle;
+    
     // Parse the renderable form fields from the form description to a tab/section disposed array
     NSArray *renderableParsedFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields
                                                                                    tabList:formDescription.formTabs];
@@ -314,6 +316,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     ASDKModelFormTab *currentTab = (ASDKModelFormTab *)self.visibleFormFields[indexpath.section];
     tabFormDescription.formFields = currentTab.formFields;
+    tabFormDescription.formTitle = currentTab.title;
     
     return tabFormDescription;
 }

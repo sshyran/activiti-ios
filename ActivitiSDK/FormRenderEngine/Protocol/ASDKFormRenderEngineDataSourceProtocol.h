@@ -74,6 +74,13 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
 
 /**
+ *  Property meant to hold a refference to the form title.
+ *
+ *  @return String object containing the form title or nil if a title is not defined.
+ */
+@property (strong, nonatomic) NSString *formTitle;
+
+/**
  *  Returns the number of sections available for the current form description.
  *
  *  @return Integer value with number of sections

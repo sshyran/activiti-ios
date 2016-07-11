@@ -23,6 +23,7 @@
 #import "ASDKModelFormFieldOption.h"
 #import "ASDKModelUser.h"
 #import "ASDKModelDynamicTableFormField.h"
+#import "ASDKModelFormTab.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -48,7 +49,17 @@
     return [MTLValueTransformer transformerUsingReversibleBlock:^id(NSArray *formFields, BOOL *success, NSError *__autoreleasing *error) {
         NSMutableDictionary *formFieldMetadataValuesDict = [NSMutableDictionary dictionary];
         
-        for (ASDKModelFormField *sectionFormField in formFields) {
+        // If form tabs are present extract the form field sections from them
+        NSMutableArray *sectionFormFields = [NSMutableArray array];
+        for (id model in formFields) {
+            if ([model isKindOfClass:ASDKModelFormTab.class]) {
+                [sectionFormFields addObjectsFromArray:((ASDKModelFormTab *)model).formFields];
+            } else {
+                [sectionFormFields addObject:model];
+            }
+        }
+        
+        for (ASDKModelFormField *sectionFormField in sectionFormFields) {
             // Extract the form fields for the correspondent container
             if ([sectionFormField isKindOfClass:ASDKModelDynamicTableFormField.class]) {
                 NSMutableArray *rowValues = [NSMutableArray new];

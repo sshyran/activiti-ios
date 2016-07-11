@@ -73,6 +73,20 @@
 
 
 #pragma mark -
+#pragma mark Life cycle
+
+- (instancetype)init {
+    self = [super init];
+    
+    if (self) {
+        self.actionHandler = [ASDKFormEngineActionHandler new];
+    }
+    
+    return self;
+}
+
+
+#pragma mark -
 #pragma mark ASDKFormRenderEngine Protocol
 
 - (UICollectionViewController *)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields {
@@ -375,13 +389,6 @@
     self.dataSource.delegate = formCollectionViewController;
     formCollectionViewController.dataSource = self.dataSource;
     formCollectionViewController.renderDelegate = self;
-    
-#warning Investigate whether action handler should be correlated with form controller or refference not being reset when setup with tab
-    
-    // Set up the form engine action handler
-    self.actionHandler = [ASDKFormEngineActionHandler new];
-    self.actionHandler.dataSourceActionDelegate = (ASDKFormRenderDataSource <ASDKFormEngineDataSourceActionHandlerDelegate> *)self.dataSource;
-    self.actionHandler.formControllerActionDelegate = (ASDKFormCollectionViewController <ASDKFormEngineControllerActionHandlerDelegate> *) formCollectionViewController;
     
     return formCollectionViewController;
 }

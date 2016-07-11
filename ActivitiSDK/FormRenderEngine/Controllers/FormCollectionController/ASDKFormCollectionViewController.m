@@ -58,10 +58,33 @@
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) self.collectionViewLayout;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
     flowLayout.estimatedItemSize = CGSizeMake(CGRectGetWidth(self.view.frame), flowLayout.itemSize.height);
+    
+    // If the data source has a form title defined display it
+    if ([self.dataSource respondsToSelector:@selector(formTitle)]) {
+        NSString *formTitle = self.dataSource.formTitle;
+        
+        if (formTitle.length) {
+            UILabel *titleLabel = [[UILabel alloc] init];
+            titleLabel.text = formTitle;
+            titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
+                                              size:17];
+            
+            ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+            ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+            titleLabel.textColor = colorSchemeManager.navigationBarTitleAndControlsColor;
+            
+            [titleLabel sizeToFit];
+            self.navigationItem.titleView = titleLabel;
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // Set the action handler to point to the active form controller instance
+    self.renderDelegate.actionHandler.dataSourceActionDelegate = (id<ASDKFormEngineDataSourceActionHandlerDelegate>)self.dataSource;
+    self.renderDelegate.actionHandler.formControllerActionDelegate = self;
     
     NSArray *selectedItemsIndexPaths = [self.collectionView indexPathsForSelectedItems];
     for (NSIndexPath *indexPath in selectedItemsIndexPaths) {
@@ -262,6 +285,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
             if ([self.renderDelegate respondsToSelector:@selector(setupWithTabFormDescription:)]) {
                 UICollectionViewController<ASDKFormControllerNavigationProtocol> *formFieldsController =
                 (UICollectionViewController<ASDKFormControllerNavigationProtocol> *)[self.renderDelegate setupWithTabFormDescription:[self.dataSource formDescriptionForTabAtIndexPath:indexPath]];
+                
                 formFieldsController.navigationDelegate = self.navigationDelegate;
                 
                 detailController = formFieldsController;

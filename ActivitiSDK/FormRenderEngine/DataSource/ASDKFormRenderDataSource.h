@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSArray                                           *visibleFormFields;
 @property (strong, nonatomic) NSArray                                           *renderableFormFields;
 @property (assign, nonatomic) BOOL                                              formHasUserdefinedOutcomes;
+@property (strong, nonatomic) NSString                                          *formTitle;
 @property (weak, nonatomic)   id<ASDKFormRenderEngineDataSourceDelegate>        delegate;
 @property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor             *visibilityConditionsProcessor;
 @property (assign, nonatomic, readonly) ASDKFormRenderEngineDataSourceViewMode  dataSourceViewMode;
