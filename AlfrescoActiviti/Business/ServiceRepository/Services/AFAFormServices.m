@@ -62,16 +62,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark -
 #pragma mark Public interface
 
-- (UICollectionViewController *)requestSetupWithFormDescription:(ASDKModelFormDescription *)formDescription {
-    NSParameterAssert(formDescription);
-    
-    UICollectionViewController *formViewController = [self.formRenderEngine setupWithFormDescription:formDescription];
-    
-    AFALogVerbose(@"Form render engine %@ with form description associated with process definition :%@", formViewController ? @"did set up successfully" : @"failed to set up", formDescription.processDefinitionName);
-    
-    return formViewController;
-}
-
 - (void)requestSetupWithTaskModel:(ASDKModelTask *)task
             renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock
               formCompletionBlock:(AFAFormServicesEngineCompletionBlock)formCompletionBlock

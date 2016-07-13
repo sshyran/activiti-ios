@@ -16,14 +16,14 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "ASDKFormCellProtocol.h"
+#import "ASDKModelBase.h"
 
-@interface ASDKFormHyperlinkFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
+@class ASDKModelFormVisibilityCondition;
 
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
-@property (weak, nonatomic) IBOutlet UIButton *hyperlinkButton;
+@interface ASDKModelFormTab : ASDKModelBase
 
-- (IBAction)hyperlinkTapped:(id)sender;
+@property (strong, nonatomic) NSString                          *title;
+@property (strong, nonatomic) ASDKModelFormVisibilityCondition  *visibilityCondition;
+@property (strong, nonatomic) NSArray                           *formFields;
 
 @end

@@ -41,14 +41,12 @@
 #pragma mark -
 #pragma mark Life cycle
 
-- (instancetype)initWithFormFields:(NSArray *)formFields
-                    dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType {
+- (instancetype)initWithFormFields:(NSArray *)formFields {
     self = [super init];
     
     if (self) {
         self.visibleFormFields = @[formFields];
         self.formHasUserdefinedOutcomes = NO;
-        self.dataSourceType = dataSourceType;
     }
     
     return self;

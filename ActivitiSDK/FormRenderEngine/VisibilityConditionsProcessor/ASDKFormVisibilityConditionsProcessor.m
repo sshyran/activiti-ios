@@ -24,6 +24,7 @@
 #import "ASDKModelFormVariable.h"
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelFormFieldOption.h"
+#import "ASDKModelFormTab.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -77,18 +78,27 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     if (self) {
         NSMutableArray *fieldsArr = [NSMutableArray array];
+        NSArray *formTabFields = nil;
         
-        // When parsing the form field array, for ordinary container type form fields
-        // add the containing section as well as the contained form fields in the form
-        // field collection, but for dynamic table type just the section
-        for (ASDKModelFormField *formField in formFieldArr) {
-            if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
-                [fieldsArr addObject:formField];
-                [fieldsArr addObjectsFromArray:formField.formFields];
-            } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType ||
-                       (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType
-                           && ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
-                [fieldsArr addObject:formField];
+        for (ASDKModelBase *field in formFieldArr) {
+            if ([field isKindOfClass:ASDKModelFormTab.class]) {
+                ASDKModelFormTab *formTab = (ASDKModelFormTab *)field;
+                [fieldsArr addObject:formTab];
+                formTabFields = formTab.formFields;
+            }
+            
+            // When parsing the form field array, for ordinary container type form fields
+            // add the containing section as well as the contained form fields in the form
+            // field collection, but for dynamic table type just the section
+            for (ASDKModelFormField *formField in formTabFields ? formTabFields : formFieldArr) {
+                if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+                    [fieldsArr addObject:formField];
+                    [fieldsArr addObjectsFromArray:formField.formFields];
+                } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType ||
+                           (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
+                            ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
+                               [fieldsArr addObject:formField];
+                           }
             }
         }
         
@@ -110,10 +120,16 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"visibilityCondition != nil"];
     NSArray *formFieldsWithVisibilityConditions = [formFields filteredArrayUsingPredicate:searchPredicate];
     
-    for (ASDKModelFormField *formField in formFieldsWithVisibilityConditions) {
+    for (ASDKModelBase *field in formFieldsWithVisibilityConditions) {
         NSMutableArray *influentialFormFieldsForCurrentFormField = [NSMutableArray array];
         
-        ASDKModelFormVisibilityCondition *visibilityCondition = formField.visibilityCondition;
+        ASDKModelFormVisibilityCondition *visibilityCondition = nil;
+        
+        if ([field isKindOfClass:ASDKModelFormTab.class]) {
+            visibilityCondition = ((ASDKModelFormTab *)field).visibilityCondition;
+        } else if ([field isKindOfClass:ASDKModelFormField.class]) {
+            visibilityCondition = ((ASDKModelFormField *)field).visibilityCondition;
+        }
         
         while (visibilityCondition) {
             // If left and / or right form field ID properties aren't emtpy then
@@ -130,7 +146,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         [dependencyDict setObject:influentialFormFieldsForCurrentFormField
-                           forKey:formField.modelID];
+                           forKey:field.modelID];
     }
     
     return dependencyDict;
@@ -171,12 +187,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return formVariable;
 }
 
-- (NSArray *)parseVisibilityConditionsForFormField:(ASDKModelFormField *)formField {
+- (NSArray *)parseVisibilityConditionsForField:(ASDKModelBase *)field {
     NSMutableArray *conditions = [NSMutableArray array];
     
-    if (formField.visibilityCondition) {
-        [conditions addObject:formField.visibilityCondition];
-        ASDKModelFormVisibilityCondition *nextVisibilityCondition = formField.visibilityCondition.nextCondition;
+    ASDKModelFormVisibilityCondition *fieldVisibilityCondition = nil;
+    if ([field isKindOfClass:ASDKModelFormTab.class]) {
+        fieldVisibilityCondition = ((ASDKModelFormTab *)field).visibilityCondition;
+    } else if ([field isKindOfClass:ASDKModelFormField.class]) {
+        fieldVisibilityCondition = ((ASDKModelFormField *)field).visibilityCondition;
+    }
+    
+    if (fieldVisibilityCondition) {
+        [conditions addObject:fieldVisibilityCondition];
+        ASDKModelFormVisibilityCondition *nextVisibilityCondition = fieldVisibilityCondition.nextCondition;
         
         while (nextVisibilityCondition) {
             [conditions addObject:nextVisibilityCondition];
@@ -209,8 +232,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (NSArray *)parseHiddenFormFieldsFromCollection:(NSArray *)formFieldCollection {
     NSMutableArray *hiddenFields = [NSMutableArray array];
     
-    for (ASDKModelFormField *affectedField in formFieldCollection) {
-        NSArray *visibilityConditions = [self parseVisibilityConditionsForFormField:affectedField];
+    for (ASDKModelBase *affectedField in formFieldCollection) {
+        NSArray *visibilityConditions = [self parseVisibilityConditionsForField:affectedField];
         
         BOOL isFormFieldVisible = NO;
         ASDKModelFormVisibilityConditionNextConditionOperatorType nextConditionOperator = ASDKModelFormVisibilityConditionNextConditionOperatorTypeUndefined;
@@ -863,20 +886,22 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Label values apply for form fields that offer an option list so
     // that narrows the search to saved values and values chosen by
     // the user stored inside the metadataValue field of the form field
-    NSString *optionID = nil;
     
-    // Check first for saved form options
-    if (formField.values.count) {
+    // First check if user defined data exists, then it will have precedence over
+    // saved form data
+    if (formField.metadataValue.attachedValue || formField.metadataValue.option.attachedValue) {
+        valueToReturn = formField.metadataValue.attachedValue ? formField.metadataValue.attachedValue : formField.metadataValue.option.attachedValue;
+    }
+    
+    NSString *optionID = nil;
+    if (!valueToReturn && formField.values.count) {
         // Double check that the saved value is actually an option registered
         // in the form field options
         NSString *savedValue = formField.values.firstObject;
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", savedValue];
-        optionID = [formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject;
-    }
-    
-    if (!optionID) {
-        // Otherwise extract information saved by the user
-        valueToReturn = formField.metadataValue.option.attachedValue;
+        if (![savedValue isEqualToString:kASDKFormFieldEmptyStringValue]) {
+            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", savedValue];
+            optionID = ((ASDKModelFormFieldOption *)[formField.formFieldOptions filteredArrayUsingPredicate:searchPredicate].firstObject).modelID;
+        }
     }
     
     // If there was no value chosen by the user, but there are saved ones

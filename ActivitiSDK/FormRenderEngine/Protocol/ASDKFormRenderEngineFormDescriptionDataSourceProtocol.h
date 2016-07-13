@@ -25,15 +25,31 @@ ASDKModelFormField;
 @protocol ASDKFormRenderEngineFormDescriptionDataSourceProtocol <ASDKFormRenderEngineDataSourceProtocol>
 
 /**
- *  Designated initializer method for the collection view controller datasource.
+ *  Designated initializer method for a task based collection view controller datasource.
  *
- *  @param formDescription Description containing the form field objects to be
- *                         displayed
+ *  @param formDescription Description containing the form field objects to be displayed
  *
  *  @return                Instance of the data source object
  */
-- (instancetype)initWithFormDescription:(ASDKModelFormDescription *)formDescription
-                         dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType;
+- (instancetype)initWithTaskFormDescription:(ASDKModelFormDescription *)formDescription;
+
+/**
+ *  Designated initializer method for a process definition based collection view controller datasource.
+ *
+ *  @param formDescription Description containing the form field objects to be displayed
+ *
+ *  @return                Instance of the data source object
+ */
+- (instancetype)initWithProcessDefinitionFormDescription:(ASDKModelFormDescription *)formDescription;
+
+/**
+ *  Designated initializer method for a tab based collection view controller datasource.
+ *
+ *  @param formDescription Description containing the form field objects to be displayed
+ *
+ *  @return                Instance of the data source object
+ */
+- (instancetype)initWithTabFormDescription:(ASDKModelFormDescription *)formDescription;
 
 /**
  *  Property meant to hold a reference to the data source's delegate which will

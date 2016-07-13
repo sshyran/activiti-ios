@@ -66,7 +66,8 @@ NSString *kASDKCellIDFormFieldPeopleAddPeople                       = @"FormFiel
 NSString *kASDKCellIDFormFieldDynamicTableRepresentation            = @"FormFieldDynamicTableRepresentationCellID";
 NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation      = @"FormFieldDynamicTableHeaderRepresentationCellID";
 NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation         = @"FormFieldDynamicTableRowRepresentationCellID";
-NSString *kASDKCellIDIntegrationBrowsing                            = @"ASDKIntegrationBrowsingCellID";
+NSString *kASDKCellIDFormFieldTabRepresentation                     = @"FormFieldTabRepresentationCellID";
+NSString *kASDKCellIDIntegrationBrowsing                            = @"IntegrationBrowsingCellID";
 
 
 #pragma mark -
@@ -76,6 +77,7 @@ NSString *kASDKFormFieldTrueStringValue                         = @"true";
 NSString *kASDKFormFieldFalseStringValue                        = @"false";
 NSString *kASDKFormFieldIDParam                                 = @"formFieldID";
 NSString *kASDKFormFieldLabelParameter                          = @"_LABEL";
+NSString *kASDKFormFieldEmptyStringValue                        = @"empty";
 
 
 #pragma mark -

@@ -57,6 +57,7 @@ extern NSString *kASDKCellIDFormFieldPeopleAddPeople;
 extern NSString *kASDKCellIDFormFieldDynamicTableRepresentation;
 extern NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation;
 extern NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation;
+extern NSString *kASDKCellIDFormFieldTabRepresentation;
 extern NSString *kASDKCellIDIntegrationBrowsing;
 
 // Form field key values
@@ -64,6 +65,7 @@ extern NSString *kASDKFormFieldTrueStringValue;
 extern NSString *kASDKFormFieldFalseStringValue;
 extern NSString *kASDKFormFieldIDParam;
 extern NSString *kASDKFormFieldLabelParameter;
+extern NSString *kASDKFormFieldEmptyStringValue;
 
 // Form errors
 extern NSString *kASDKFormRenderEngineErrorDomain;

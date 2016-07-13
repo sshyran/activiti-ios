@@ -33,6 +33,7 @@
 #import "ASDKModelFormDescription.h"
 #import "ASDKModelFormOutcome.h"
 #import "ASDKModelDynamicTableFormField.h"
+#import "ASDKModelFormTab.h"
 
 // Managers
 #import "ASDKFormVisibilityConditionsProcessor.h"
@@ -45,6 +46,11 @@
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
 @interface ASDKFormRenderDataSource() <ASDKFormEngineDataSourceActionHandlerDelegate>
+
+/**
+ *  Holds a reference to the current form description used to initialize the data source
+ */
+@property (strong, nonatomic, readonly) ASDKModelFormDescription *currenFormDescription;
 
 /**
  *  Property meant to hold reference to form outcomes models.
@@ -76,58 +82,97 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark -
 #pragma mark Life cycle
 
-- (instancetype)initWithFormDescription:(ASDKModelFormDescription *)formDescription
-                         dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType {
+- (instancetype)initWithTaskFormDescription:(ASDKModelFormDescription *)formDescription {
     self = [super init];
     
     if (self) {
-        // Prepare the KVO manager to handle visibility conditions re-evaluations
-        self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+        _isSaveActionAvailable = YES;
+        _currenFormDescription = formDescription;
         
-        // Parse the renderable form fields from the form description to a section disposed dictionary
-        self.renderableFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields];
+        ASDKModelFormOutcome *defaultFormOutcome = [ASDKModelFormOutcome new];
+        defaultFormOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
         
-        // Deep copy all renderable objects so that the initial collection remains
-        // untouched by future mutations of sections and sub-section elements
-        NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.renderableFormFields];
-        NSArray *renderableFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
+        [self setupWithFormDescription:formDescription
+                    defaultFormOutcome:defaultFormOutcome];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithProcessDefinitionFormDescription:(ASDKModelFormDescription *)formDescription {
+    self = [super init];
+    
+    if (self) {
+        _isSaveActionAvailable = NO;
+        _currenFormDescription = formDescription;
         
-        // Initialize the visibility condition processor with a plain array of form fields and form variables
-        self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:renderableFormFieldsCopy
-                                                                                                 formVariables:formDescription.formVariables];
+        ASDKModelFormOutcome *defaultFormOutcome = [ASDKModelFormOutcome new];
+        defaultFormOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
         
-        // Run a pre-process operation to evaluate visibility conditions and provide the first set of visible form
-        // fields
-        self.visibleFormFields = [self filterRenderableFormFields:renderableFormFieldsCopy
-                                             forVisibleFormFields:[self.visibilityConditionsProcessor parseVisibleFormFields]];
-        
-        // Handle value changes for form fields that have a direct impact over visibility conditions
-        [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
-        
-        // Handle form outcomes
+        [self setupWithFormDescription:formDescription
+                    defaultFormOutcome:defaultFormOutcome];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithTabFormDescription:(ASDKModelFormDescription *)formDescription {
+    self = [super init];
+    
+    if (self) {
+        _isSaveActionAvailable = YES;
+        [self setupWithFormDescription:formDescription
+                    defaultFormOutcome:nil];
+    }
+    
+    return self;
+}
+
+- (void)setupWithFormDescription:(ASDKModelFormDescription *)formDescription
+              defaultFormOutcome:(ASDKModelFormOutcome *)defaultFormOutcome {
+    // Prepare the KVO manager to handle visibility conditions re-evaluations
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    self.formTitle = formDescription.formTitle;
+    
+    // Parse the renderable form fields from the form description to a tab/section disposed array
+    NSArray *renderableParsedFormFields = [self parseRenderableFormFieldsFromContainerList:formDescription.formFields
+                                                                                   tabList:formDescription.formTabs];
+    
+    // Deep copy all renderable objects so that the initial collection remains
+    // untouched by future mutations of sections and sub-section elements
+    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: renderableParsedFormFields];
+    NSArray *renderableParsedFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
+    
+    // Initialize the visibility condition processor with a plain array of form fields and form variables
+    self.renderableFormFields = renderableParsedFormFieldsCopy;
+    
+    self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:renderableParsedFormFields
+                                                                                             formVariables:formDescription.formVariables];
+    
+    // Run a pre-process operation to evaluate visibility conditions and provide the first set of visible form
+    // fields
+    self.visibleFormFields = [self filterRenderableFormFields:renderableParsedFormFields
+                                         forVisibleFormFields:[self.visibilityConditionsProcessor parseVisibleFormFields]];
+    
+    // Handle value changes for form fields that have a direct impact over visibility conditions
+    [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
+    
+    // Show the form outcomes only when the data source is in tab view mode or
+    // there aren't any defined tabs
+    if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode ||
+        !formDescription.formTabs.count) {
         self.formHasUserdefinedOutcomes = formDescription.formOutcomes.count ? YES : NO;
         self.formOutcomesIndexPaths = [NSMutableArray array];
         
         if (self.formHasUserdefinedOutcomes) {
-            self.isSaveActionAvailable = YES;
             self.formOutcomes = formDescription.formOutcomes;
         } else {
-            ASDKModelFormOutcome *formOutcome = [ASDKModelFormOutcome new];
-            
-            if (ASDKFormRenderEngineDataSourceTypeTask == dataSourceType) {
-                formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFormOutcome, ASDKLocalizationTable, @"Default outcome");
-                self.formOutcomes = @[formOutcome];
-                self.isSaveActionAvailable = YES;
-            } else {
-                formOutcome.name = ASDKLocalizedStringFromTable(kLocalizationStartProcessFormOutcome, ASDKLocalizationTable, @"Start process outcome");
-                self.formOutcomes = @[formOutcome];
+            if (defaultFormOutcome) {
+                self.formOutcomes = @[defaultFormOutcome];
             }
-            
-            self.dataSourceType = dataSourceType;
         }
     }
-    
-    return self;
 }
 
 - (void)dealloc {
@@ -143,47 +188,58 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (NSInteger)numberOfFormFieldsForSection:(NSInteger)section {
-    ASDKModelFormField *sectionFormField = section < self.visibleFormFields.count ? self.visibleFormFields[section] : nil;
     NSUInteger fieldsCount = 0;
     
-    // Check if the controller requested the number of fields for the outcome section
-    if (!sectionFormField) {
+    if (section >= self.visibleFormFields.count) {
         fieldsCount = self.formOutcomes.count;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
-               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
-                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
-        fieldsCount = 1;
     } else {
-        fieldsCount = sectionFormField.formFields.count;
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode) {
+            fieldsCount = 1;
+        } else {
+            ASDKModelFormField *sectionFormField = self.visibleFormFields[section];
+            
+            if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+                (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                 ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
+                    fieldsCount = 1;
+                } else {
+                    fieldsCount = sectionFormField.formFields.count;
+                }
+        }
     }
     
     return fieldsCount;
 }
 
 - (NSString *)cellIdentifierForIndexPath:(NSIndexPath *)indexPath {
-    ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
     NSString *cellIdentifier = nil;
     
-    // Check if the controller requested a cell identifier for the outcome section
-    if (!sectionFormField) {
+    if (indexPath.section >= self.visibleFormFields.count) {
         cellIdentifier = kASDKCellIDFormFieldOutcomeRepresentation;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
-               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
-                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
-        cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
     } else {
-        ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
-        cellIdentifier = [self validCellIdentifierForFormField:formFieldAtIndexPath];
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode) {
+            cellIdentifier = kASDKCellIDFormFieldTabRepresentation;
+        } else {
+            ASDKModelFormField *sectionFormField = self.visibleFormFields[indexPath.section];
+            
+            if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+                (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                 ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
+                    cellIdentifier = [self validCellIdentifierForFormField:sectionFormField];
+                } else {
+                    ASDKModelFormField *formFieldAtIndexPath = sectionFormField.formFields[indexPath.row];
+                    cellIdentifier = [self validCellIdentifierForFormField:formFieldAtIndexPath];
+                }
+        }
     }
     
     return cellIdentifier;
 }
 
 - (ASDKModelBase *)modelForIndexPath:(NSIndexPath *)indexPath {
-    ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
     ASDKModelBase *formFieldModel = nil;
     
-    if (!sectionFormField) {
+    if (indexPath.section >= self.visibleFormFields.count) {
         ASDKModelFormOutcome *formOutcome = self.formOutcomes[indexPath.row];
         
         if (NSNotFound == [self.formOutcomesIndexPaths indexOfObject:indexPath]) {
@@ -191,12 +247,20 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         formFieldModel = formOutcome;
-    } else if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
-               (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
-                ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
-        formFieldModel = sectionFormField;
-    } else {// Set up the cell from the corresponding section
-        formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
+    } else {
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSourceViewMode) {
+            formFieldModel = (ASDKModelFormTab *)self.visibleFormFields[indexPath.section];
+        } else {
+            ASDKModelFormField *sectionFormField = self.visibleFormFields[indexPath.section];
+            
+            if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField ||
+                (ASDKModelFormFieldRepresentationTypeReadOnly == sectionFormField.representationType &&
+                 ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
+                    formFieldModel = sectionFormField;
+                } else {// Set up the cell from the corresponding section
+                    formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
+                }
+        }
     }
     
     return formFieldModel;
@@ -204,12 +268,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (NSString *)sectionHeaderTitleForIndexPath:(NSIndexPath *)indexPath {
     NSString *sectionHeaderTitleString = nil;
-    ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
     
-    // We're checking for header representation types, we don't care for containers of
-    // form field objects without a visual representation
-    if (ASDKModelFormFieldRepresentationTypeHeader == sectionFormField.representationType) {
-        sectionHeaderTitleString = sectionFormField.fieldName;
+    if (ASDKFormRenderEngineDataSourceViewModeFormFields == self.dataSourceViewMode) {
+        ASDKModelFormField *sectionFormField = indexPath.section < self.visibleFormFields.count ? self.visibleFormFields[indexPath.section] : nil;
+        
+        // We're checking for header representation types, we don't care for containers of
+        // form field objects without a visual representation
+        if (ASDKModelFormFieldRepresentationTypeHeader == sectionFormField.representationType) {
+            sectionHeaderTitleString = sectionFormField.fieldName;
+        }
     }
     
     return sectionHeaderTitleString;
@@ -236,12 +303,48 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
 }
 
+- (ASDKModelFormDescription *)formDescriptionForTabAtIndexPath:(NSIndexPath *)indexpath {
+    ASDKModelFormDescription *tabFormDescription = [ASDKModelFormDescription new];
+    tabFormDescription.processDefinitionID = self.currenFormDescription.processDefinitionID;
+    tabFormDescription.processDefinitionName = self.currenFormDescription.processDefinitionName;
+    tabFormDescription.processDefinitionKey = self.currenFormDescription.processDefinitionKey;
+    tabFormDescription.formVariables = self.currenFormDescription.formVariables;
+    
+    ASDKModelFormTab *currentTab = (ASDKModelFormTab *)self.visibleFormFields[indexpath.section];
+    tabFormDescription.formFields = currentTab.formFields;
+    tabFormDescription.formTitle = currentTab.title;
+    
+    return tabFormDescription;
+}
+
 
 #pragma mark -
 #pragma mark Form parser methods
 
-- (NSArray *)parseRenderableFormFieldsFromContainerList:(NSArray *)containerList {
+- (NSArray *)parseRenderableFormFieldsFromContainerList:(NSArray *)containerList
+                                                tabList:(NSArray *)tabList {
+    NSMutableArray *sections = [NSMutableArray array];
+    
+    if (tabList.count) {
+        _dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeTabs;
+        
+        for (ASDKModelFormTab *tab in tabList) {
+            NSPredicate *containerFieldFromTabPredicate = [NSPredicate predicateWithFormat:@"tabID == %@", tab.modelID];
+            NSArray *containerFieldsInTab = [containerList filteredArrayUsingPredicate:containerFieldFromTabPredicate];
+            tab.formFields = [self parseFormFieldSectionsFromContainerList:containerFieldsInTab];
+            [sections addObject:tab];
+        }
+    } else {
+        _dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeFormFields;
+        [sections addObjectsFromArray:[self parseFormFieldSectionsFromContainerList:containerList]];
+    }
+    
+    return sections;
+}
+
+- (NSArray *)parseFormFieldSectionsFromContainerList:(NSArray *)containerList {
     NSMutableArray *formFieldSections = [NSMutableArray array];
+    
     for (ASDKModelFormField *formField in containerList) {
         if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
             formField.formFields = [self filterSupportedFormFields:formField.formFields];
@@ -263,15 +366,21 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableIndexSet *sectionsToBeRemoved = [NSMutableIndexSet indexSet];
     
     for (int section = 0; section < filteredArr.count; section++) {
-        ASDKModelFormField *containerFormField = (ASDKModelFormField *)filteredArr[section];
+        ASDKModelBase *containerFormField = filteredArr[section];
         
-        // Check first if the section altogether is visible
+        // Check first if the section / tab altogether is visible
         if (![visibleFormFields containsObject:containerFormField]) {
             [sectionsToBeRemoved addIndex:section];
             continue;
         }
         
-        NSMutableArray *formFieldsInSection = [NSMutableArray arrayWithArray:containerFormField.formFields];
+        NSMutableArray *formFieldsInSection = nil;
+        if ([containerFormField isKindOfClass:ASDKModelFormTab.class]) {
+            formFieldsInSection = [NSMutableArray arrayWithArray:((ASDKModelFormTab *)containerFormField).formFields];
+        } else if ([containerFormField isKindOfClass:ASDKModelFormField.class]) {
+            formFieldsInSection = [NSMutableArray arrayWithArray:((ASDKModelFormField *)containerFormField).formFields];
+        }
+        
         NSMutableArray *fieldsToBeRemoved = [NSMutableArray array];
         
         // Iterate over the list of form fields and remove the ones that are not inside
@@ -280,20 +389,34 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             if (![visibleFormFields containsObject:formField]) {
                 [fieldsToBeRemoved addObject:formField];
             }
+            // If dealing with nested form field structures from tabs, iterate through
+            // section child form fields
+            if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+                NSMutableArray *formFieldsInContainer = [NSMutableArray arrayWithArray:formField.formFields];
+                NSMutableArray *sectionFieldsToBeRemoved = [NSMutableArray array];
+                
+                for (ASDKModelFormField *sectionFormField in formFieldsInContainer) {
+                    if (![visibleFormFields containsObject:sectionFormField]) {
+                        [sectionFieldsToBeRemoved addObject:sectionFormField];
+                    }
+                }
+                [formFieldsInContainer removeObjectsInArray:sectionFieldsToBeRemoved];
+            }
         }
         [formFieldsInSection removeObjectsInArray:fieldsToBeRemoved];
         
-        // If a section has no more attached form fields and it's not a dynamic table remove it,
-        // otherwise set the modified form field collection
-        
-        BOOL isReadOnlyDynamicTable = (ASDKModelFormFieldRepresentationTypeReadOnly == containerFormField.representationType &&
-                                       ASDKModelFormFieldRepresentationTypeDynamicTable == containerFormField.formFieldParams.representationType);
-        if (!formFieldsInSection.count &&
-            (ASDKModelFormFieldTypeDynamicTableField != containerFormField.fieldType &&
-             !isReadOnlyDynamicTable)) {
-            [sectionsToBeRemoved addIndex:section];
-        } else {
-            containerFormField.formFields = formFieldsInSection;
+        if ([containerFormField isKindOfClass:ASDKModelFormField.class]) {
+            // If a section has no more attached form fields and it's not a dynamic table remove it,
+            // otherwise set the modified form field collection
+            BOOL isReadOnlyDynamicTable = (ASDKModelFormFieldRepresentationTypeReadOnly == ((ASDKModelFormField *)containerFormField).representationType &&
+                                           ASDKModelFormFieldRepresentationTypeDynamicTable == ((ASDKModelFormField *)containerFormField).formFieldParams.representationType);
+            if (!formFieldsInSection.count &&
+                (ASDKModelFormFieldTypeDynamicTableField != ((ASDKModelFormField *)containerFormField).fieldType &&
+                 !isReadOnlyDynamicTable)) {
+                    [sectionsToBeRemoved addIndex:section];
+                } else {
+                    ((ASDKModelFormField *)containerFormField).formFields = formFieldsInSection;
+                }
         }
     }
     
@@ -533,72 +656,86 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableArray *insertIndexPaths = [NSMutableArray array];
     
     if (fieldsToBeAdded) {
-        for (ASDKModelFormField *formField in fieldsToBeAdded) {
-            BOOL isSectionInsert = (ASDKModelFormFieldTypeContainer == formField.fieldType);
-
-            // To compute the insert index for the current form field we first look at it's position in the
-            // renderable array (which holds all the form fields). We then take the previous item and check
-            // if it's in the visible form fields collection and if so, that means the insert position is
-            // after it. If not, we go back till the first element and repeat the process.
+        for (ASDKModelBase *field in fieldsToBeAdded) {
+            BOOL isTabInsert = [field isKindOfClass:ASDKModelFormTab.class] ? YES : NO;
             
-            if (isSectionInsert) {
-                NSUInteger originalSectionIndex = [self sectionForFormField:formField
-                                                               inCollection:self.renderableFormFields];
+            if (isTabInsert) {
+                NSUInteger originalTabIndex = [self sectionForTab:(ASDKModelFormTab *)field
+                                                     inCollection:self.renderableFormFields];
                 NSUInteger insertIndex = [self insertIndexInFormFieldCollection:visibleFormFields
-                                                                forSectionIndex:originalSectionIndex];
-                [visibleFormFields insertObject:formField
+                                                                forSectionIndex:originalTabIndex];
+                [visibleFormFields insertObject:field
                                         atIndex:insertIndex];
                 
                 [insertSectionIndexSet addIndex:insertIndex];
             } else {
-                // Check where the field was inside the renderable fields collection
-                NSUInteger originalSectionIndex = [self sectionForFormField:formField
-                                                               inCollection:self.renderableFormFields];
-                if (NSNotFound != originalSectionIndex) {
-                    // Check if the section which contains the form field to be added is visible
-                    if (![self doesCollection:visibleFormFields
-                             containFormField:self.renderableFormFields[originalSectionIndex]]) {
-                        // If it doesn't then extract it from the renderable collection and only set
-                        // the element to be added as a child
-                        ASDKModelFormField *sectionToBecomeVisible = self.renderableFormFields[originalSectionIndex];
-                        sectionToBecomeVisible.formFields = @[formField];
-                        
-                        NSUInteger insertIndex = [self insertIndexInFormFieldCollection:visibleFormFields
-                                                                        forSectionIndex:originalSectionIndex];
-                        
-                        [visibleFormFields insertObject:sectionToBecomeVisible
-                                                atIndex:insertIndex];
-                        [insertSectionIndexSet addIndex:insertIndex];
-                    } else {
-                        ASDKModelFormField *originalFormFieldSection = self.renderableFormFields[originalSectionIndex];
-                        NSInteger originalFormFieldIndex = [self indexOfFormField:formField
-                                                                     inCollection:originalFormFieldSection.formFields];
-                        NSUInteger insertIndex = 0;
-                        NSUInteger insertSection = [self sectionForFormField:self.renderableFormFields[originalSectionIndex]
-                                                                inCollection:visibleFormFields];
-                        
-                        for (NSInteger fieldIndex = originalFormFieldIndex - 1; fieldIndex >= 0; fieldIndex--) {
-                            ASDKModelFormField *currentFormField = originalFormFieldSection.formFields[fieldIndex];
-                            if ([self isFormFieldVisible:currentFormField]) {
-                                insertSection = [self sectionForFormField:currentFormField
-                                                             inCollection:visibleFormFields];
-                                ASDKModelFormField *visibleFormFieldSection = visibleFormFields[insertSection];
-                                insertIndex = [self indexOfFormField:currentFormField
-                                                        inCollection:visibleFormFieldSection.formFields] + 1;
-                                break;
-                            }
-                        }
-                        
-                        ASDKModelFormField *sectionFormField = (ASDKModelFormField *)visibleFormFields[insertSection];
-                        NSMutableArray *currentFormFields = [NSMutableArray arrayWithArray:sectionFormField.formFields];
-                        [currentFormFields insertObject:formField
-                                                atIndex:insertIndex];
-                        sectionFormField.formFields = currentFormFields;
-                        [insertIndexPaths addObject:[NSIndexPath indexPathForItem:insertIndex
-                                                                        inSection:insertSection]];
-                    }
+                ASDKModelFormField *formFieldToBeInserted = (ASDKModelFormField *)field;
+                BOOL isSectionInsert = (ASDKModelFormFieldTypeContainer == formFieldToBeInserted.fieldType);
+                
+                // To compute the insert index for the current form field we first look at it's position in the
+                // renderable array (which holds all the form fields). We then take the previous item and check
+                // if it's in the visible form fields collection and if so, that means the insert position is
+                // after it. If not, we go back till the first element and repeat the process.
+                
+                if (isSectionInsert) {
+                    NSUInteger originalSectionIndex = [self sectionForFormField:formFieldToBeInserted
+                                                                   inCollection:self.renderableFormFields];
+                    NSUInteger insertIndex = [self insertIndexInFormFieldCollection:visibleFormFields
+                                                                    forSectionIndex:originalSectionIndex];
+                    [visibleFormFields insertObject:formFieldToBeInserted
+                                            atIndex:insertIndex];
+                    
+                    [insertSectionIndexSet addIndex:insertIndex];
                 } else {
-                    ASDKLogError(@"Cannot find form field that needs to become visibile in the renderable form field collection");
+                    // Check where the field was inside the renderable fields collection
+                    NSUInteger originalSectionIndex = [self sectionForFormField:formFieldToBeInserted
+                                                                   inCollection:self.renderableFormFields];
+                    if (NSNotFound != originalSectionIndex) {
+                        // Check if the section which contains the form field to be added is visible
+                        if (![self doesCollection:visibleFormFields
+                                 containFormField:self.renderableFormFields[originalSectionIndex]]) {
+                            // If it doesn't then extract it from the renderable collection and only set
+                            // the element to be added as a child
+                            ASDKModelFormField *sectionToBecomeVisible = self.renderableFormFields[originalSectionIndex];
+                            sectionToBecomeVisible.formFields = @[formFieldToBeInserted];
+                            
+                            NSUInteger insertIndex = [self insertIndexInFormFieldCollection:visibleFormFields
+                                                                            forSectionIndex:originalSectionIndex];
+                            
+                            [visibleFormFields insertObject:sectionToBecomeVisible
+                                                    atIndex:insertIndex];
+                            [insertSectionIndexSet addIndex:insertIndex];
+                        } else {
+                            ASDKModelFormField *originalFormFieldSection = self.renderableFormFields[originalSectionIndex];
+                            NSInteger originalFormFieldIndex = [self indexOfFormField:formFieldToBeInserted
+                                                                         inCollection:originalFormFieldSection.formFields];
+                            NSUInteger insertIndex = 0;
+                            NSUInteger insertSection = [self sectionForFormField:self.renderableFormFields[originalSectionIndex]
+                                                                    inCollection:visibleFormFields];
+                            
+                            for (NSInteger fieldIndex = originalFormFieldIndex - 1; fieldIndex >= 0; fieldIndex--) {
+                                ASDKModelFormField *currentFormField = originalFormFieldSection.formFields[fieldIndex];
+                                if ([self isFormFieldVisible:currentFormField]) {
+                                    insertSection = [self sectionForFormField:currentFormField
+                                                                 inCollection:visibleFormFields];
+                                    ASDKModelFormField *visibleFormFieldSection = visibleFormFields[insertSection];
+                                    insertIndex = [self indexOfFormField:currentFormField
+                                                            inCollection:visibleFormFieldSection.formFields] + 1;
+                                    break;
+                                }
+                            }
+                            
+                            ASDKModelFormField *sectionFormField = (ASDKModelFormField *)visibleFormFields[insertSection];
+                            NSMutableArray *currentFormFields = [NSMutableArray arrayWithArray:sectionFormField.formFields];
+                            [currentFormFields insertObject:formFieldToBeInserted
+                                                    atIndex:insertIndex];
+                            sectionFormField.formFields = currentFormFields;
+                            [insertIndexPaths addObject:[NSIndexPath indexPathForItem:insertIndex
+                                                                            inSection:insertSection]];
+                        }
+                    } else {
+                        ASDKLogError(@"Cannot find form field that needs to become visibile in the renderable form field collection");
+                    }
                 }
             }
         }
@@ -616,28 +753,39 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableArray *deleteIndexPaths = [NSMutableArray array];
     
     if (fieldsToBeRemoved) {
-        for (ASDKModelFormField *formField in fieldsToBeRemoved) {
-            BOOL isSectionRemoval = (ASDKModelFormFieldTypeContainer == formField.fieldType);
+        for (ASDKModelBase *field in fieldsToBeRemoved) {
+            BOOL isTabRemoval = [field isKindOfClass:ASDKModelFormTab.class] ? YES: NO;
             
-            NSUInteger sectionIndexToDelete = [self sectionForFormField:formField
-                                                           inCollection:visibleFormFields];
-            
-            // If the element to delete is present in the visible forms
-            if (NSNotFound != sectionIndexToDelete) {
-                if (isSectionRemoval) {
-                    [deleteSectionIndexSet addIndex:sectionIndexToDelete];
-                } else {
-                    ASDKModelFormField *sectionFieldToRemoveFrom = visibleFormFields[sectionIndexToDelete];
-                    NSMutableArray *sectionFormFieldsToRemoveFrom = [NSMutableArray arrayWithArray:sectionFieldToRemoveFrom.formFields];
-                    NSUInteger itemIndexToDelete = [self indexOfFormField:formField
-                                                             inCollection:sectionFormFieldsToRemoveFrom];
-                    
-                    // If there are no more form fields inside the section then remove the section altogether
-                    if (!(sectionFormFieldsToRemoveFrom.count - 1)) {
+            if (isTabRemoval) {
+                NSUInteger tabIndexTodelete = [self sectionForTab:(ASDKModelFormTab *)field
+                                                     inCollection:visibleFormFields];
+                if (NSNotFound != tabIndexTodelete) {
+                    [deleteSectionIndexSet addIndex:tabIndexTodelete];
+                }
+            } else {
+                ASDKModelFormField *formFieldToBeRemoved = (ASDKModelFormField *)field;
+                BOOL isSectionRemoval = (ASDKModelFormFieldTypeContainer == formFieldToBeRemoved.fieldType);
+                
+                NSUInteger sectionIndexToDelete = [self sectionForFormField:formFieldToBeRemoved
+                                                               inCollection:visibleFormFields];
+                
+                // If the element to delete is present in the visible forms
+                if (NSNotFound != sectionIndexToDelete) {
+                    if (isSectionRemoval) {
                         [deleteSectionIndexSet addIndex:sectionIndexToDelete];
                     } else {
-                        [deleteIndexPaths addObject:[NSIndexPath indexPathForItem:itemIndexToDelete
-                                                                        inSection:sectionIndexToDelete]];
+                        ASDKModelFormField *sectionFieldToRemoveFrom = visibleFormFields[sectionIndexToDelete];
+                        NSMutableArray *sectionFormFieldsToRemoveFrom = [NSMutableArray arrayWithArray:sectionFieldToRemoveFrom.formFields];
+                        NSUInteger itemIndexToDelete = [self indexOfFormField:formFieldToBeRemoved
+                                                                 inCollection:sectionFormFieldsToRemoveFrom];
+                        
+                        // If there are no more form fields inside the section then remove the section altogether
+                        if (!(sectionFormFieldsToRemoveFrom.count - 1)) {
+                            [deleteSectionIndexSet addIndex:sectionIndexToDelete];
+                        } else {
+                            [deleteIndexPaths addObject:[NSIndexPath indexPathForItem:itemIndexToDelete
+                                                                            inSection:sectionIndexToDelete]];
+                        }
                     }
                 }
             }
@@ -690,6 +838,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return NSNotFound;
 }
 
+- (NSUInteger)sectionForTab:(ASDKModelFormTab *)formTab
+               inCollection:(NSArray *)collection {
+    for (NSUInteger sectionCount = 0; sectionCount < collection.count; sectionCount++) {
+        ASDKModelFormField *sectionTab = collection[sectionCount];
+        
+        if ([formTab.modelID isEqualToString:sectionTab.modelID]) {
+            return sectionCount;
+        }
+    }
+    
+    return NSNotFound;
+}
+
 - (BOOL)isFormFieldVisible:(ASDKModelFormField *)formField {
     for (ASDKModelFormField *sectionField in self.visibleFormFields) {
         for (ASDKModelFormField *childField in sectionField.formFields) {
@@ -703,17 +864,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (BOOL)doesCollection:(NSArray *)collection
-      containFormField:(ASDKModelFormField *)sectionFormField {
+      containFormField:(ASDKModelBase *)sectionFormField {
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", sectionFormField.modelID];
     NSArray *results = [collection filteredArrayUsingPredicate:searchPredicate];
     
     return results.count ? YES : NO;
 }
 
-- (NSUInteger)indexOfFormField:(ASDKModelFormField *)formField inCollection:(NSArray *)collection {
+- (NSUInteger)indexOfFormField:(ASDKModelBase *)formField inCollection:(NSArray *)collection {
     __block NSUInteger formFieldIdx = NSNotFound;
     
-    [collection enumerateObjectsUsingBlock:^(ASDKModelFormField *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [collection enumerateObjectsUsingBlock:^(ASDKModelBase *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if([obj.modelID isEqualToString:formField.modelID]) {
             formFieldIdx = idx;
             *stop = YES;
@@ -728,11 +889,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSUInteger insertIndex = 0;
     
     for (NSInteger sectionCount = sectionIndex - 1; sectionCount >= 0; sectionCount--) {
-        ASDKModelFormField *previousSectionFormField = (ASDKModelFormField *)self.renderableFormFields[sectionCount];
+        ASDKModelBase *previousSectionField = (ASDKModelBase *)self.renderableFormFields[sectionCount];
         
         if ([self doesCollection:formFieldCollection
-                containFormField:previousSectionFormField]) {
-            insertIndex = [self indexOfFormField:previousSectionFormField
+                containFormField:previousSectionField]) {
+            insertIndex = [self indexOfFormField:previousSectionField
                                     inCollection:formFieldCollection] + 1;
             break;
         }
@@ -746,7 +907,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark ASDKFormEngineDataSourceActionHandlerDelegate
 
 - (BOOL)isSaveFormAvailable {
-    return self.isSaveActionAvailable;
+    return self.isSaveActionAvailable && !self.isReadOnlyForm;
 }
 
 @end

@@ -32,6 +32,7 @@
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormOutcome.h"
 #import "ASDKFormFieldValueRequestRepresentation.h"
+#import "ASDKModelFormTab.h"
 
 // Cells
 #import "ASDKFormHeaderCollectionReusableView.h"
@@ -57,10 +58,33 @@
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) self.collectionViewLayout;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
     flowLayout.estimatedItemSize = CGSizeMake(CGRectGetWidth(self.view.frame), flowLayout.itemSize.height);
+    
+    // If the data source has a form title defined display it
+    if ([self.dataSource respondsToSelector:@selector(formTitle)]) {
+        NSString *formTitle = self.dataSource.formTitle;
+        
+        if (formTitle.length) {
+            UILabel *titleLabel = [[UILabel alloc] init];
+            titleLabel.text = formTitle;
+            titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
+                                              size:17];
+            
+            ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+            ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+            titleLabel.textColor = colorSchemeManager.navigationBarTitleAndControlsColor;
+            
+            [titleLabel sizeToFit];
+            self.navigationItem.titleView = titleLabel;
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // Set the action handler to point to the active form controller instance
+    self.renderDelegate.actionHandler.dataSourceActionDelegate = (id<ASDKFormEngineDataSourceActionHandlerDelegate>)self.dataSource;
+    self.renderDelegate.actionHandler.formControllerActionDelegate = self;
     
     NSArray *selectedItemsIndexPaths = [self.collectionView indexPathsForSelectedItems];
     for (NSIndexPath *indexPath in selectedItemsIndexPaths) {
@@ -241,27 +265,8 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     
     UICollectionViewCell<ASDKFormCellProtocol> *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                                                  forIndexPath:indexPath];
-    
-    // Acquire the model object to set up the cell
-    ASDKModelBase *modelObject = nil;
-    if ([self.dataSource respondsToSelector:@selector(modelForIndexPath:)]) {
-        modelObject = [self.dataSource modelForIndexPath:indexPath];
-    }
-    
-    if ([modelObject isKindOfClass:[ASDKModelFormField class]]) {
-        [cell setupCellWithFormField:(ASDKModelFormField *)modelObject];
-    } else {
-        BOOL isFormOutcomeEnabled = YES;
-        
-        if (self.dataSource.isReadOnlyForm) {
-            isFormOutcomeEnabled = NO;
-        } else {
-            isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
-        }
-        
-        [cell setupCellWithFormOutcome:(ASDKModelFormOutcome *)modelObject
-                     enableFormOutcome:isFormOutcomeEnabled];
-    }
+    [self setupCellWithContent:cell
+                  forIndexPath:indexPath];
     
     // Link the ASDKFormRenderEngineValueTransactionsProtocol delegate
     if ([cell respondsToSelector:@selector(setDelegate:)]) {
@@ -274,21 +279,36 @@ referenceSizeForHeaderInSection:(NSInteger)section {
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     // We first make sure we don't handle cell taps for the outcome section
     if (![[self.dataSource indexPathsOfFormOutcomes] containsObject:indexPath]) {
-        if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
-            UIViewController<ASDKFormFieldDetailsControllerProtocol> *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
-            // Child controllers will have to delegate changes on model updates using the ASDKFormRenderEngineValueTransactionsProtocol
-            childController.valueTransactionDelegate = self;
-            
-            if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
-                ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
-                dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
+        UIViewController *detailController = nil;
+        
+        if (ASDKFormRenderEngineDataSourceViewModeTabs == self.dataSource.dataSourceViewMode) {
+            if ([self.renderDelegate respondsToSelector:@selector(setupWithTabFormDescription:)]) {
+                UICollectionViewController<ASDKFormControllerNavigationProtocol> *formFieldsController =
+                (UICollectionViewController<ASDKFormControllerNavigationProtocol> *)[self.renderDelegate setupWithTabFormDescription:[self.dataSource formDescriptionForTabAtIndexPath:indexPath]];
+                
+                formFieldsController.navigationDelegate = self.navigationDelegate;
+                
+                detailController = formFieldsController;
             }
-            
-            // If there is controller assigned to the selected form field notify the delegate
-            // that it can begin preparing for presentation
-            if (childController) {
-                [self.navigationDelegate prepareToPresentDetailController:childController];
+        } else {
+            if ([self.navigationDelegate respondsToSelector:@selector(prepareToPresentDetailController:)]) {
+                UIViewController<ASDKFormFieldDetailsControllerProtocol> *childController = [self.dataSource childControllerForFormField:(ASDKModelFormField *)[self.dataSource modelForIndexPath:indexPath]];
+                // Child controllers will have to delegate changes on model updates using the ASDKFormRenderEngineValueTransactionsProtocol
+                childController.valueTransactionDelegate = self;
+                
+                if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
+                    ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
+                    dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
+                }
+                
+                detailController = childController;
             }
+        }
+        
+        // If there is controller assigned to the selected form field notify the delegate
+        // that it can begin preparing for presentation
+        if (detailController) {
+            [self.navigationDelegate prepareToPresentDetailController:detailController];
         }
     }
 }
@@ -299,15 +319,22 @@ referenceSizeForHeaderInSection:(NSInteger)section {
 
 - (void)refreshContentForCellAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell<ASDKFormCellProtocol> *cell = (UICollectionViewCell<ASDKFormCellProtocol> *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    
+    [self setupCellWithContent:cell
+                  forIndexPath:indexPath];
+}
+
+- (void)setupCellWithContent:(UICollectionViewCell<ASDKFormCellProtocol> *)cell
+                forIndexPath:(NSIndexPath *)indexPath {
+    // Acquire the model object to set up the cell
     ASDKModelBase *modelObject = nil;
     if ([self.dataSource respondsToSelector:@selector(modelForIndexPath:)]) {
         modelObject = [self.dataSource modelForIndexPath:indexPath];
     }
-
+    
     if ([modelObject isKindOfClass:[ASDKModelFormField class]]) {
-        if (modelObject )
         [cell setupCellWithFormField:(ASDKModelFormField *)modelObject];
+    } else if ([modelObject isKindOfClass:[ASDKModelFormTab class]]) {
+        [cell setupCellWithFormTab:(ASDKModelFormTab *)modelObject];
     } else {
         BOOL isFormOutcomeEnabled = YES;
         
@@ -321,4 +348,5 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                      enableFormOutcome:isFormOutcomeEnabled];
     }
 }
+
 @end

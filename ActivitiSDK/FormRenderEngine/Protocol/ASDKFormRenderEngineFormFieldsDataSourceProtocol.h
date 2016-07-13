@@ -24,7 +24,6 @@ ASDKModelFormField;
 
 @protocol ASDKFormRenderEngineFormFieldsDataSourceProtocol <ASDKFormRenderEngineDataSourceProtocol>
 
-- (instancetype)initWithFormFields:(NSArray *)formFields
-                    dataSourceType:(ASDKFormRenderEngineDataSourceType)dataSourceType;
+- (instancetype)initWithFormFields:(NSArray *)formFields;
 
 @end

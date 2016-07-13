@@ -25,27 +25,25 @@ ASDKModelBase,
 ASDKModelFormField,
 ASDKFormVisibilityConditionsProcessor;
 
-typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
-    ASDKFormRenderEngineDataSourceTypeTask = 0,
-    ASDKFormRenderEngineDataSourceTypeProcessDefinition,
+typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
+    ASDKFormRenderEngineDataSourceViewModeTabs,
+    ASDKFormRenderEngineDataSourceViewModeFormFields
 };
 
 @protocol ASDKFormRenderEngineDataSourceProtocol <NSObject>
 
 /**
- *  Property meant to indicate the type of the data source, whether the form
- *  description has been provided from a task or from a process definition 
- *  i.e. process start forms.
+ *  Property meant to indicate what data source mode is currently on i.e. showing
+ *  information about tabs or form fields
  */
-@property (assign, nonatomic) ASDKFormRenderEngineDataSourceType dataSourceType;
-
+@property (assign, nonatomic, readonly) ASDKFormRenderEngineDataSourceViewMode dataSourceViewMode;
 
 /**
  *  Property meant to hold a reference to renderable but not necessarly visible
- *  form fields, organized per section and stripped of container-like objects
- *  that don't have a visual representation. This property is intended to act
- *  as a reference point when visibility conditions affect a subset of
- *  form fields and some get removed or inserted. We fallback to this property
+ *  form fields, organized per tabs (if they exist) / form sections and stripped 
+ *  of container-like objects that don't have a visual representation. This property 
+ *  is intended to act as a reference point when visibility conditions affect a subset 
+ *  of form fields and some get removed or inserted. We fallback to this property
  *  when we want to find out what was removed, from where, and what's should be
  *  inserted and where.
  */
@@ -74,6 +72,13 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  *  end it.
  */
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
+
+/**
+ *  Property meant to hold a refference to the form title.
+ *
+ *  @return String object containing the form title or nil if a title is not defined.
+ */
+@property (strong, nonatomic) NSString *formTitle;
 
 /**
  *  Returns the number of sections available for the current form description.
@@ -152,5 +157,14 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceType) {
  *  @return UIViewController initialized instance to be presented
  */
 - (UIViewController<ASDKFormFieldDetailsControllerProtocol> *)childControllerForFormField:(ASDKModelFormField *)formField;
+
+/**
+ *  Method returns a form description tailored for the tab at the requested index path.
+ *
+ *  @param indexpath Index path of the tab for which the form description is requested
+ *
+ *  @return Form description object
+ */
+- (ASDKModelFormDescription *)formDescriptionForTabAtIndexPath:(NSIndexPath *)indexpath;
 
 @end

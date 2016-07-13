@@ -16,14 +16,27 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "ASDKFormCellProtocol.h"
+#import "ASDKModelFormTab.h"
+#import "ASDKModelFormVisibilityCondition.h"
 
-@interface ASDKFormHyperlinkFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
+#if ! __has_feature(objc_arc)
+#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
+#endif
 
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
-@property (weak, nonatomic) IBOutlet UIButton *hyperlinkButton;
+@implementation ASDKModelFormTab
 
-- (IBAction)hyperlinkTapped:(id)sender;
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+    NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
+    
+    if (inheretedPropertyKeys.allKeys.count) {
+        [inheretedPropertyKeys addEntriesFromDictionary:
+         @{//Objc property            JSON property
+           @"title"                 : @"title",
+           @"visibilityCondition"   : @"visibilityCondition"
+          }];
+    }
+    
+    return inheretedPropertyKeys;
+}
 
 @end
