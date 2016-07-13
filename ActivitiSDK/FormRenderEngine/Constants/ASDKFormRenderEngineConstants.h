@@ -65,6 +65,7 @@ extern NSString *kASDKFormFieldTrueStringValue;
 extern NSString *kASDKFormFieldFalseStringValue;
 extern NSString *kASDKFormFieldIDParam;
 extern NSString *kASDKFormFieldLabelParameter;
+extern NSString *kASDKFormFieldEmptyStringValue;
 
 // Form errors
 extern NSString *kASDKFormRenderEngineErrorDomain;

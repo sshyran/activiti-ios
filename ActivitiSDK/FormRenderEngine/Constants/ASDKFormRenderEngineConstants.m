@@ -77,6 +77,7 @@ NSString *kASDKFormFieldTrueStringValue                         = @"true";
 NSString *kASDKFormFieldFalseStringValue                        = @"false";
 NSString *kASDKFormFieldIDParam                                 = @"formFieldID";
 NSString *kASDKFormFieldLabelParameter                          = @"_LABEL";
+NSString *kASDKFormFieldEmptyStringValue                        = @"empty";
 
 
 #pragma mark -
