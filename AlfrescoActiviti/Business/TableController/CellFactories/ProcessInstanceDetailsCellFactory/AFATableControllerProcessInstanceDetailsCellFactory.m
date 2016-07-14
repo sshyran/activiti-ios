@@ -48,10 +48,8 @@
     UITableViewCell *cell = nil;
     
     AFATableControllerProcessInstanceDetailsModel *currentModel = (AFATableControllerProcessInstanceDetailsModel *)model;
-    BOOL isCompletedTask = [currentModel hasEndDate];
-
     
-    if (!isCompletedTask) {
+    if (![currentModel isCompletedProcessInstance]) {
         // Handle process instance details cell section rows
         switch (indexPath.row) {
             case AFAProcessInstanceDetailsCellTypeProcessName: {

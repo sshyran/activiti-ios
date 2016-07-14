@@ -322,6 +322,13 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                                             if (!error) {
                                                 AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [AFATableControllerProcessInstanceDetailsModel new];
                                                 processInstanceDetailsModel.currentProcessInstance = processInstance;
+                                                
+                                                if (!strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)]) {
+                                                    // Cell actions for all the cell factories are registered after the initial
+                                                    // process instance details are loaded
+                                                    strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsModel;
+                                                    [strongSelf registerCellActions];
+                                                }
                                                 strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsModel;
                                                 
                                                 // Update the table controller model and change the cell factory
@@ -378,11 +385,12 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                                  dispatch_group_leave(activeAndCompletedTasksGroup);
                              }];
     
+    dispatch_group_enter(activeAndCompletedTasksGroup);
+    
     AFAGenericFilterModel *completedTasksFilter = [AFAGenericFilterModel new];
     completedTasksFilter.processInstanceID = self.processInstanceID;
     completedTasksFilter.state = AFAGenericFilterStateTypeCompleted;
     
-    dispatch_group_enter(activeAndCompletedTasksGroup);
     [queryServices requestTaskListWithFilter:completedTasksFilter
                              completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
                                  __strong typeof(self) strongSelf = weakSelf;
@@ -650,7 +658,32 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     // Register process instance details cell factory
     AFATableControllerProcessInstanceDetailsCellFactory *processInstanceDetailsCellFactory = [AFATableControllerProcessInstanceDetailsCellFactory new];
     processInstanceDetailsCellFactory.appThemeColor = self.navigationBarThemeColor;
+    
+    // Register process instance task status cell factory
+    AFATableControllerProcessInstanceTasksCellFactory *processInstanceTasksCellFactory = [AFATableControllerProcessInstanceTasksCellFactory new];
+    processInstanceTasksCellFactory.appThemeColor = self.navigationBarThemeColor;
+    
+    // Register process instance content cell factory
+    AFATableControllerContentCellFactory *processInstanceContentCellFactory = [AFATableControllerContentCellFactory new];
+    processInstanceContentCellFactory.appThemeColor = self.navigationBarThemeColor;
+    
+    // Register process instance comments cell factory
+    AFATableControllerCommentCellFactory *processInstanceDetailsCommentCellFactory = [AFATableControllerCommentCellFactory new];
+    
+    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsCellFactory;
+    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = processInstanceTasksCellFactory;
+    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentCellFactory;
+    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeComments)] = processInstanceDetailsCommentCellFactory;
+}
 
+- (void)registerCellActions {
+    AFATableControllerProcessInstanceDetailsCellFactory *processInstanceDetailsCellFactory =
+    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeDetails)];
+    AFATableControllerProcessInstanceTasksCellFactory *processInstanceTasksCellFactory =
+    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)];
+    AFATableControllerContentCellFactory *processInstanceContentCellFactory =
+    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeContent)];
+    
     __weak typeof(self) weakSelf = self;
     [processInstanceDetailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         __strong typeof(self) strongSelf = weakSelf;
@@ -661,22 +694,10 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         NSString *alertMessage = [NSString stringWithFormat:isCompletedProcessInstance ? NSLocalizedString(kLocalizationProcessInstanceDetailsScreenDeleteProcessConfirmationFormat, @"Delete process instance text") : NSLocalizedString(kLocalizationProcessInstanceDetailsScreenCancelProcessConfirmationFormat, @"Cancel process instance text"), processInstanceDetailsModel.currentProcessInstance.name];
         
         [strongSelf showConfirmationAlertControllerWithMessage:alertMessage
-                                 confirmationBlockAction:^{
-                                     [weakSelf deleteCurrentProcessInstance];
-                                 }];
+                                       confirmationBlockAction:^{
+                                           [weakSelf deleteCurrentProcessInstance];
+                                       }];
     } forCellType:[processInstanceDetailsCellFactory cellTypeForProcessControlCell]];
-    
-    [processInstanceDetailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        [strongSelf.contentPickerViewController downloadAuditLogForProcessInstanceWithID:strongSelf.processInstanceID
-                                                                      allowCachedResults:YES];
-        
-    } forCellType:[processInstanceDetailsCellFactory cellTypeForAuditLogCell]];
-    
-    // Register process instance task status cell factory
-    AFATableControllerProcessInstanceTasksCellFactory *processInstanceTasksCellFactory = [AFATableControllerProcessInstanceTasksCellFactory new];
-    processInstanceTasksCellFactory.appThemeColor = self.navigationBarThemeColor;
     
     [processInstanceTasksCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         __strong typeof(self) strongSelf = weakSelf;
@@ -690,8 +711,6 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         
     } forCellType:[processInstanceTasksCellFactory cellTypeForTaskDetails]];
     
-    // Register process instance content cell factory
-    AFATableControllerContentCellFactory *processInstanceContentCellFactory = [AFATableControllerContentCellFactory new];
     [processInstanceContentCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         // It is possible that at the time of the download request the content's availability status
         // is changed. We perform an additional refresh once content is requested to be downloaded
@@ -724,15 +743,19 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                                                            }];
     } forCellType:[processInstanceContentCellFactory cellTypeForDownloadContent]];
     
-    processInstanceContentCellFactory.appThemeColor = self.navigationBarThemeColor;
+    // Certain actions are performed for completed or ongoing process instances so there is
+    // no reason to register all of them at all times
+    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = self.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)];
     
-    // Register process instance comments cell factory
-    AFATableControllerCommentCellFactory *processInstanceDetailsCommentCellFactory = [AFATableControllerCommentCellFactory new];
-    
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsCellFactory;
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = processInstanceTasksCellFactory;
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentCellFactory;
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeComments)] = processInstanceDetailsCommentCellFactory;
+    if ([processInstanceDetailsModel isCompletedProcessInstance]) {
+        [processInstanceDetailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf.contentPickerViewController downloadAuditLogForProcessInstanceWithID:strongSelf.processInstanceID
+                                                                          allowCachedResults:YES];
+            
+        } forCellType:[processInstanceDetailsCellFactory cellTypeForAuditLogCell]];
+    }
 }
 
 - (id)dequeueCellFactoryForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType {

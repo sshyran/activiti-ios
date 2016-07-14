@@ -680,6 +680,13 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
           if (!error) {
               AFATableControllerTaskDetailsModel *taskDetailsModel = [AFATableControllerTaskDetailsModel new];
               taskDetailsModel.currentTask = task;
+              
+              if (!strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)]) {
+                  // Cell actions for all the cell factories are registered after the initial task details
+                  // are loaded
+                  strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)] = taskDetailsModel;
+                  [strongSelf registerCellActions];
+              }
               strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)] = taskDetailsModel;
               
               // Enable the task form button if the task has a form key defined
@@ -725,10 +732,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                       // controller as not editable
                       strongSelf.tableController.isEditable = !(task.endDate && task.duration);
                   }
-                  
-                  // Cell actions for all the cell factories are registered after the initial task details
-                  // are loaded
-                  [strongSelf registerCellActions];
                   
                   // Because we're switching betweeen task details and contributors views
                   // we're reloading the table view even if there is esentially the same
@@ -1102,8 +1105,8 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     
     // Certain actions are performed for completed or ongoing tasks so there is no reason to
     // register all of them at all times
-    __weak typeof(self) weakSelf = self;
     AFATableControllerTaskDetailsModel *taskDetailsModel = self.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
+    __weak typeof(self) weakSelf = self;
     if ([taskDetailsModel isCompletedTask]) {
         [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
             __strong typeof(self) strongSelf = weakSelf;

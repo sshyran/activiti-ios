@@ -45,7 +45,7 @@
     return self.valueTransformerForIDs;
 }
 
-+ (NSValueTransformer *)taskStateJSONTransformer {
++ (NSValueTransformer *)requestTaskStateJSONTransformer {
     return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *value, BOOL *success, NSError *__autoreleasing *error) {
         if ([@"active" isEqualToString:value]) {
             return @(ASDKTaskListQuerryStateTypeActive);
