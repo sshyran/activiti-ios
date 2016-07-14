@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsCellType) {
     // finite section, but since we're swizzling around in some scenarios
     // different cell types we moved down the position of the enum count
     // to still indicate the total number of cells present on the screen
-    AFAProcessInstanceDetailsCellTypeProcessControl
+    AFAProcessInstanceDetailsCellTypeProcessControl = 10
 };
 
 typedef NS_ENUM(NSInteger, AFACompletedProcessInstanceDetailsCellType) {

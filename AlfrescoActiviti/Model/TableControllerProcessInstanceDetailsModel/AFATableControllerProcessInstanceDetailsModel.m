@@ -29,9 +29,9 @@
 }
 
 - (NSInteger)numberOfRowsInSection:(NSInteger)section {
-    // If we're dealing with a completed task display additional field
+    // If we're dealing with a completed process instance display additional field
     // for end date and duration
-    if ([self hasEndDate]) {
+    if ([self isCompletedProcessInstance]) {
         return AFACompletedProcessInstanceDetailsCellTypeEnumCount;
     } else {
         return AFAProcessInstanceDetailsCellTypeEnumCount;
@@ -42,7 +42,7 @@
     return self.currentProcessInstance;
 }
 
-- (BOOL)hasEndDate {
+- (BOOL)isCompletedProcessInstance {
     return self.currentProcessInstance.endDate ? YES : NO;
 }
 

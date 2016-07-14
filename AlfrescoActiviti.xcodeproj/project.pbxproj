@@ -4541,6 +4541,7 @@
 				1371947C1B6924DE00D4E1F0 /* Resources */,
 				7597AEF01B82580800F8B5DE /* Embed Pods Framework */,
 				DD045FB387EF4B9E1902205D /* 📦 Copy Pods Resources */,
+				13F0E9311D368A0E00BF10A9 /* Cocoapods framework clean script */,
 			);
 			buildRules = (
 			);
@@ -4693,6 +4694,20 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "VERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $NEWSUBVERSION\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		13F0E9311D368A0E00BF10A9 /* Cocoapods framework clean script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Cocoapods framework clean script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/\"\nif [[ -d \"Frameworks\" ]]; then\nrm -fr Frameworks\nfi";
 		};
 		141CBF048E5C3F0BFEBBAE04 /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
