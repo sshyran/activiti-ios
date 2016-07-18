@@ -81,16 +81,12 @@ static NSString * const kASDkHTTPS = @"https";
     return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIRuntimeAppDefinitionsPath];
 }
 
-- (NSString *)authenticationServicePath {
-    return [kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIAppAuthentication];
-}
-
 
 #pragma mark -
 #pragma mark Profile
 
 - (NSString *)profileServicePath {
-    return [[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIProfileAdminPath] stringByAppendingPathComponent:kASDKAPIProfilePath];
+    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProfilePath];
 }
 
 - (NSString *)profilePicturePath {
@@ -101,12 +97,8 @@ static NSString * const kASDkHTTPS = @"https";
     return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProfilePasswordPath];
 }
 
-- (NSString *)profileLogoutPath {
-    return [kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIProfileLogoutPath];
-}
-
 - (NSString *)profilePictureUploadPath {
-    return [[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIProfileAdminPath] stringByAppendingPathComponent:kASDKAPIProfilePicturePath];
+    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProfilePicturePath];
 }
 
 
@@ -154,19 +146,19 @@ static NSString * const kASDkHTTPS = @"https";
 }
 
 - (NSString *)taskCreationServicePath {
-    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath];
+    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath];
 }
 
 - (NSString *)taskClaimServicePathFormat {
-    return [[[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIActionPath] stringByAppendingPathComponent:kASDKAPITaskClaimPath];
+    return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIActionPath] stringByAppendingPathComponent:kASDKAPITaskClaimPath];
 }
 
 - (NSString *)taskUnclaimServicePathFormat {
-    return [[[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIActionPath] stringByAppendingPathComponent:kASDKAPITaskUnclaimPath];
+    return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIActionPath] stringByAppendingPathComponent:kASDKAPITaskUnclaimPath];
 }
 
 - (NSString *)taskAssignServicePathFormat {
-    return [[[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIActionPath] stringByAppendingPathComponent:kASDKAPITaskAssignPath];
+    return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIActionPath] stringByAppendingPathComponent:kASDKAPITaskAssignPath];
 }
 
 - (NSString *)taskAuditLogServicePathFormat {
@@ -174,7 +166,7 @@ static NSString * const kASDkHTTPS = @"https";
 }
 
 - (NSString *)taskCheckListServicePathFormat {
-    return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPITaskChecklistPath];
+    return [[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPITaskChecklistPath];
 }
 
 
@@ -242,15 +234,15 @@ static NSString * const kASDkHTTPS = @"https";
 #pragma mark Process related
 
 - (NSString *)processDefinitionListServicePathFormat {
-    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIProcessDefinitionPath];
+    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessDefinitionPath];
 }
 
 - (NSString *)startProcessInstanceServicePath {
-    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIProcessInstancesPath];
+    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessInstancesPath];
 }
 
 - (NSString *)processInstancesListServicePath {
-    return [[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIFilterPath] stringByAppendingPathComponent:kASDKAPIProcessInstancesPath];
+    return [[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessInstancesPath] stringByAppendingPathComponent:kASDKAPIFilterPath];
 }
 
 - (NSString *)processInstanceDetailsServicePathFormat {
@@ -286,7 +278,7 @@ static NSString * const kASDkHTTPS = @"https";
 #pragma mark Query related
 
 - (NSString *)taskQueryServicePath {
-    return [[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIQueryPath] stringByAppendingPathComponent:kASDKAPITasksPath];
+    return [[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:kASDKAPIQueryPath];
 }
 
 
@@ -294,11 +286,11 @@ static NSString * const kASDkHTTPS = @"https";
 #pragma mark Integration related
 
 - (NSString *)integrationAccountsServicePath {
-    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath];
+    return [[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIIntegrationAccountPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath];
 }
 
 - (NSString *)integrationNetworksServicePathFormat {
-    return [[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIIntegrationPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationNetworksPath];
+    return [[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIIntegrationPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIIntegrationNetworksPath];
 }
 
 - (NSString *)integrationSitesServicePathFormat {
@@ -314,11 +306,11 @@ static NSString * const kASDkHTTPS = @"https";
 }
 
 - (NSString *)integrationContentUploadServicePath {
-    return [[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPIContentPath];
+    return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIContentPath];
 }
 
 - (NSString *)integrationContentUploadForTaskServicePathFormat {
-    return [[[[[kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIRestPath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath] stringByAppendingString:[NSString stringWithFormat:@"?%@=%@", kASDKAPIParamIsRelatedContent, kASDKAPITrueParameter]];
+    return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath] stringByAppendingString:[NSString stringWithFormat:@"?%@=%@", kASDKAPIParamIsRelatedContent, kASDKAPITrueParameter]];
 }
 
 @end

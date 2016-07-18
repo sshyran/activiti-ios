@@ -20,13 +20,6 @@
 
 
 #pragma mark -
-#pragma mark CSRF token
-
-NSString *kASDKAPICSRFHeaderFieldParameter                      = @"X-CSRF-TOKEN";
-NSString *kASDKAPICSRFCookieName                                = @"CSRF-TOKEN";
-
-
-#pragma mark -
 #pragma mark Network API parameters
 
 NSString *kASDKAPIParamIsRelatedContent                         = @"isRelatedContent";

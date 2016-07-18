@@ -47,8 +47,8 @@ typedef NS_ENUM(NSInteger, AFACompletedTaskDetailsCellType) {
     AFACompletedTaskDetailsCellTypeDuration,
     AFACompletedTaskDetailsCellTypeProcess,
     AFACompletedTaskDetailsCellTypeDescription,
-    AFACompletedTaskDetailsCellTypeAuditLog,
-    AFACompletedTaskDetailsCellTypeEnumCount
+    AFACompletedTaskDetailsCellTypeEnumCount,
+    AFACompletedTaskDetailsCellTypeAuditLog // Audit log download function is temporary disabled 
 };
 
 typedef NS_ENUM(NSInteger, AFAInvolvedTaskDetailsCellType) {

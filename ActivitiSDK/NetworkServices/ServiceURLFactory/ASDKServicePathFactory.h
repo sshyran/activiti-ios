@@ -50,13 +50,11 @@
 
 // Apps
 - (NSString *)runtimeAppDefinitionsServicePath;
-- (NSString *)authenticationServicePath;
 
 // Profile related
 - (NSString *)profileServicePath;
 - (NSString *)profilePicturePath;
 - (NSString *)profilePasswordPath;
-- (NSString *)profileLogoutPath;
 - (NSString *)profilePictureUploadPath;
 
 // Task related

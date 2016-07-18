@@ -93,26 +93,30 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self.activitiLogoCenterConstraint.active = NO;
     self.activitiLogoCenterPaddedConstraint.active = YES;
     
-    NSString *authetificationIdentifier = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kAuthentificationTypeCredentialIdentifier];
-    AFALoginViewModelAuthentificationType lastAuthetificationType = [authetificationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginViewModelAuthentificationTypeCloud : AFALoginViewModelAuthentificationTypePremise;
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *authenticationIdentifier = [userDefaults objectForKey:kAuthentificationTypeCredentialIdentifier];
+    AFALoginViewModelAuthentificationType lastAuthetificationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginViewModelAuthentificationTypeCloud : AFALoginViewModelAuthentificationTypePremise;
     
     // Check if we have registered credentials and if so login the user
     // without showing the menu
-    [self.loginModel updateUserNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]];
-    [self.loginModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]];
+    // Note: If no previous successfull attempt to login is recorded in the user defaults
+    // this means the app is freshly installed and even if credentials are registered with
+    // the keychain do not fetch them
+    if (authenticationIdentifier.length) {
+        [self.loginModel updateUserNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]];
+        [self.loginModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]];
+    }
     
     BOOL areCredentialsAvailableFromKeychain = self.loginModel.username.length && self.loginModel.password.length;
     
-    // If login credentials are not available in the keychain for cloud login,
-    // load the on-premise credentials as a fallback
     if (AFALoginViewModelAuthentificationTypeCloud == lastAuthetificationType &&
         areCredentialsAvailableFromKeychain) {
-        [self.loginModel updateHostNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kCloudHostNameCredentialIdentifier]];
-        [self.loginModel updateCommunicationOverSecureLayer:[[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kCloudSecureLayerCredentialIdentifier] isEqualToString:kBooleanTrueCredentialIdentifier] ? YES : NO];
+        [self.loginModel updateHostNameEntry:[userDefaults objectForKey:kCloudHostNameCredentialIdentifier]];
+        [self.loginModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kCloudSecureLayerCredentialIdentifier]];
     } else {
-        [self.loginModel updateHostNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseHostNameCredentialIdentifier]];
-        [self.loginModel updateCommunicationOverSecureLayer:[[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseSecureLayerCredentialIdentifier] isEqualToString:kBooleanTrueCredentialIdentifier] ? YES : NO];
-        NSString *cachedPortString = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremisePortCredentialIdentifier];
+        [self.loginModel updateHostNameEntry:[userDefaults objectForKey:kPremiseHostNameCredentialIdentifier]];
+        [self.loginModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kPremiseSecureLayerCredentialIdentifier]];
+        NSString *cachedPortString = [userDefaults objectForKey:kPremisePortCredentialIdentifier];
         if (!cachedPortString.length) {
             cachedPortString = [@(kDefaultLoginUnsecuredPort) stringValue];
         }
@@ -120,7 +124,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         
         // If there is no stored value for the service document key, then fallback to the one provided inside the login model
         // at initialization time
-        NSString *serviceDocumentValue = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPremiseServiceDocumentCredentialIdentifier];
+        NSString *serviceDocumentValue = [userDefaults objectForKey:kPremiseServiceDocumentCredentialIdentifier];
         if (serviceDocumentValue.length) {
             [self.loginModel updateServiceDocument:serviceDocumentValue];
         }
@@ -139,7 +143,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                 displayEnvironmentMenu = YES;
                 AFALogVerbose(@"Failed to auto login with Keychain credentials. Reason:%@", error.localizedDescription);
             }
-            
             
             if (displayEnvironmentMenu) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -226,6 +229,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (IBAction)onEnvironment:(id)sender {
     // Cancel possible ongoing login request
     [self.loginModel cancelLoginRequest];
+    
+    // Clear credential information
+    [self.loginModel updateUserNameEntry:nil];
+    [self.loginModel updatePasswordEntry:nil];
+    
     [self showEnvironmentPageAnimation];
 }
 

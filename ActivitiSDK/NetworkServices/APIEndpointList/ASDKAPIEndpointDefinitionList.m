@@ -28,7 +28,6 @@ NSString * const kASDKAPIApplicationPath            = @"activiti-app";
 #pragma mark Enterprise component
 
 NSString * const kASDKAPIEnterprisePath             = @"enterprise";
-NSString * const kASDKAPIAppAuthentication          = @"authentication";
 
 
 #pragma mark -
@@ -59,7 +58,6 @@ NSString * const kASDKAPIRuntimeAppDefinitionsPath  = @"runtime-app-definitions"
 NSString * const kASDKAPIProfilePath                 = @"profile";
 NSString * const kASDKAPIProfilePicturePath          = @"profile-picture";
 NSString * const kASDKAPIProfilePasswordPath         = @"profile-password";
-NSString * const kASDKAPIProfileLogoutPath           = @"logout";
 NSString * const kASDKAPIProfileAdminPath            = @"admin";
 
 
@@ -123,6 +121,7 @@ NSString * const kASDKAPIUsersPicturePath           = @"picture";
 #pragma mark -
 #pragma mark Integration related
 
+NSString * const kASDKAPIIntegrationAccountPath         = @"account";
 NSString * const kASDKAPIIntegrationPath                = @"integration";
 NSString * const kASDKAPIIntegrationAlfrescoCloudPath   = @"alfresco-cloud";
 NSString * const kASDKAPIIntegrationNetworksPath        = @"networks";

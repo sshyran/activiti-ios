@@ -32,6 +32,8 @@ NSString *kLocalizationLoginPortPlaceholderText                  = @"loginScreen
 NSString *kLocalizationLoginServiceDocumentPlaceholderText       = @"loginScreenServiceDocumentInputTextFieldPlaceholderText";
 NSString *kLocalizationLoginRememberCredentialsText              = @"loginScreenRememberCredentialsLabelText";
 NSString *kLocalizationLoginAdvancedSectionHeaderText            = @"loginScreenAdvancedSectionHeaderText";
+NSString *kLocalizationLoginInvalidCredentialsText               = @"loginScreenInvalidCredentialsText";
+NSString *kLocalizationLoginUnreachableHostText                  = @"loginScreenUnreachableHostText";
 
 
 #pragma mark -

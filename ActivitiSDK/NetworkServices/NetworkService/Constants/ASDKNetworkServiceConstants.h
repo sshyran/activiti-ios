@@ -18,10 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-// CSRF token
-extern NSString *kASDKAPICSRFHeaderFieldParameter;
-extern NSString *kASDKAPICSRFCookieName;
-
 // Network API parameters
 extern NSString *kASDKAPIParamIsRelatedContent;
 extern NSString *kASDKAPIContentUploadMultipartParameter;

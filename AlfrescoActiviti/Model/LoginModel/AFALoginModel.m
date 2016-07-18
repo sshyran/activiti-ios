@@ -140,7 +140,7 @@
     self.credentialModel.serviceDocument.length;
 }
 
-- (void)requestLoginWithCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock {
+- (void)requestLoginWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock {
     // Authorization in progress
     self.authState = AFALoginViewModelAuthentificationStateInProgress;
 
@@ -168,80 +168,55 @@
                                   forPurpose:AFAServiceObjectTypeProfileServices];
     
     __weak typeof(self) weakSelf = self;
-    [profileServices requestLoginForServerConfiguration:serverConfiguration
-                                    withCompletionBlock:^(BOOL isLoggedIn, NSError *error) {
+    [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
         // Check first if the request wasn't previously canceled
         if (AFALoginViewModelAuthentificationStateCanceled != strongSelf.authState &&
             AFALoginViewModelAuthentificationStatePreparing != strongSelf.authState) {
-            if (!error && isLoggedIn) {
+            if (!error && profile) {
                 // Login is successfull - Check whether the user has choosen to remember credentials
                 // and store them in the keychain
-                if (self.credentialModel.rememberCredentials) {
+                if (strongSelf.credentialModel.rememberCredentials) {
                     
-                    // Store in the keychain which type of login is to be performed in the future
-                    NSString *authetificationIdentifier = [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kAuthentificationTypeCredentialIdentifier];
+                    // Store in the user defaults which type of login is to be performed in the future
                     NSString *currentAuthentificationIdentifier = (strongSelf.authentificationType == AFALoginViewModelAuthentificationTypeCloud) ? kCloudAuthetificationCredentialIdentifier : kPremiseAuthentificationCredentialIdentifier;
                     
-                    if (authetificationIdentifier) {
-                        [AFAKeychainWrapper updateKeychainValue:currentAuthentificationIdentifier
-                                                  forIdentifier:kAuthentificationTypeCredentialIdentifier];
+                    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                    [userDefaults setObject:currentAuthentificationIdentifier
+                                     forKey:kAuthentificationTypeCredentialIdentifier];
+                    
+                    if (AFALoginViewModelAuthentificationTypeCloud == strongSelf.authentificationType) {
+                        [userDefaults setObject:serverConfiguration.hostAddressString
+                                         forKey:kCloudHostNameCredentialIdentifier];
+                        [userDefaults setBool:serverConfiguration.isCommunicationOverSecureLayer
+                                       forKey:kCloudSecureLayerCredentialIdentifier];
                     } else {
-                        [AFAKeychainWrapper createKeychainValue:currentAuthentificationIdentifier
-                                                  forIdentifier:kAuthentificationTypeCredentialIdentifier];
+                        [userDefaults setObject:serverConfiguration.hostAddressString
+                                         forKey:kPremiseHostNameCredentialIdentifier];
+                        [userDefaults setObject:serverConfiguration.serviceDocument
+                                         forKey:kPremiseServiceDocumentCredentialIdentifier];
+                        [userDefaults setBool:serverConfiguration.isCommunicationOverSecureLayer
+                                       forKey:kPremiseSecureLayerCredentialIdentifier];
+                        if (serverConfiguration.port.length) {
+                            [userDefaults setObject:serverConfiguration.port
+                                             forKey:kPremisePortCredentialIdentifier];
+                        }
                     }
+                    [userDefaults synchronize];
                     
                     // Former credentials are registered, will update them
-                    NSString *isCommunicationOverSecureLayerString = serverConfiguration.isCommunicationOverSecureLayer ? kBooleanTrueCredentialIdentifier : kBooleanFalseCredentialIdentifier;
-                    
                     if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier] &&
                         [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]) {
                         [AFAKeychainWrapper updateKeychainValue:serverConfiguration.username
                                                   forIdentifier:kUsernameCredentialIdentifier];
                         [AFAKeychainWrapper updateKeychainValue:serverConfiguration.password
                                                   forIdentifier:kPasswordCredentialIdentifier];
-                        
-                        if (AFALoginViewModelAuthentificationTypeCloud == self.authentificationType) {
-                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddressString
-                                                      forIdentifier:kCloudHostNameCredentialIdentifier];
-                            [AFAKeychainWrapper updateKeychainValue:isCommunicationOverSecureLayerString
-                                                      forIdentifier:kCloudSecureLayerCredentialIdentifier];
-                        } else {
-                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.hostAddressString
-                                                      forIdentifier:kPremiseHostNameCredentialIdentifier];
-                            [AFAKeychainWrapper updateKeychainValue:serverConfiguration.serviceDocument
-                                                      forIdentifier:kPremiseServiceDocumentCredentialIdentifier];
-                            [AFAKeychainWrapper updateKeychainValue:isCommunicationOverSecureLayerString
-                                                      forIdentifier:kPremiseSecureLayerCredentialIdentifier];
-                            if (serverConfiguration.port.length) {
-                                [AFAKeychainWrapper updateKeychainValue:serverConfiguration.port
-                                                          forIdentifier:kPremisePortCredentialIdentifier];
-                            }
-                        }
-                        
                     } else { // Insert new values in the keychain
                         [AFAKeychainWrapper createKeychainValue:serverConfiguration.username
                                                   forIdentifier:kUsernameCredentialIdentifier];
                         [AFAKeychainWrapper createKeychainValue:serverConfiguration.password
                                                   forIdentifier:kPasswordCredentialIdentifier];
-                        if (AFALoginViewModelAuthentificationTypeCloud == self.authentificationType) {
-                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddressString
-                                                      forIdentifier:kCloudHostNameCredentialIdentifier];
-                            [AFAKeychainWrapper createKeychainValue:isCommunicationOverSecureLayerString
-                                                      forIdentifier:kCloudSecureLayerCredentialIdentifier];
-                        } else {
-                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.hostAddressString
-                                                      forIdentifier:kPremiseHostNameCredentialIdentifier];
-                            [AFAKeychainWrapper createKeychainValue:serverConfiguration.serviceDocument
-                                                      forIdentifier:kPremiseServiceDocumentCredentialIdentifier];
-                            [AFAKeychainWrapper createKeychainValue:isCommunicationOverSecureLayerString
-                                                      forIdentifier:kPremiseSecureLayerCredentialIdentifier];
-                            if (serverConfiguration.port.length) {
-                                [AFAKeychainWrapper createKeychainValue:serverConfiguration.port
-                                                          forIdentifier:kPremisePortCredentialIdentifier];
-                            }
-                        }
                     }
                 }
                 
@@ -260,33 +235,16 @@
     }];
 }
 
-- (void)requestLogoutWithCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock {
-    AFAServiceRepository *serviceRepository = [AFAServiceRepository sharedRepository];
-    AFAProfileServices *profileServices = [serviceRepository serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
+- (void)requestLogoutWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock {
+    // Logout is successful - remove also any remembered credentials from the keychain
+    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
+    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
     
-    __weak typeof(self) weakSelf = self;
-    [profileServices requestLogoutWithCompletionBlock:^(BOOL isLoggedIn, NSError *error) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error && !isLoggedIn) {
-            // Logout is successful - remove also any remembered credentials from the keychain
-            [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
-            [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
-            
-            strongSelf.authState = AFALoginViewModelAuthentificationStateLoggedOut;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(NO, nil);
-            });
-        } else {
-            // An error occured
-            strongSelf.authState = AFALoginViewModelAuthentificationStateFailed;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(YES, error);
-            });
-        }
-    }];
+    self.authState = AFALoginViewModelAuthentificationStateLoggedOut;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        completionBlock(NO, nil);
+    });
 }
 
 - (void)cancelLoginRequest {

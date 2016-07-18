@@ -124,7 +124,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.requestSerializer = [self requestSerializerOfType:ASDKNetworkServiceRequestSerializerTypeJSON];
     self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
     
     __weak typeof(self) weakSelf = self;
@@ -133,10 +132,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                             parameters:[request jsonDictionary]
                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
-                                   
-                                   // Reinstate the authentication request serializer
-                                   strongSelf.requestOperationManager.requestSerializer = strongSelf.requestOperationManager.authenticationProvider;
-
                                    
                                    // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];
@@ -169,9 +164,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                    }];
                                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                    __strong typeof(self) strongSelf = weakSelf;
-                                   
-                                   // Reinstate the authentication request serializer
-                                   strongSelf.requestOperationManager.requestSerializer = strongSelf.requestOperationManager.authenticationProvider;
                                    
                                    // Remove operation reference
                                    [strongSelf.networkOperations removeObject:operation];

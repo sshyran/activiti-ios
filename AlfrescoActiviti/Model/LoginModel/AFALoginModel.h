@@ -20,6 +20,8 @@
 #import "AFABaseModel.h"
 #import "AFAProfileServices.h"
 
+typedef void  (^AFALoginModelCompletionBlock) (BOOL isLoggedIn, NSError *error);
+
 typedef NS_ENUM(NSUInteger, AFALoginViewModelAuthentificationType) {
     AFALoginViewModelAuthentificationTypeCloud,
     AFALoginViewModelAuthentificationTypePremise
@@ -61,8 +63,8 @@ typedef NS_ENUM(NSUInteger, AFALoginViewModelAuthentificationState) {
 - (void)updateCommunicationOverSecureLayer:(BOOL)secureLayer;
 
 - (BOOL)canUserSignIn;
-- (void)requestLoginWithCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock;
-- (void)requestLogoutWithCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock;
+- (void)requestLoginWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock;
+- (void)requestLogoutWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock;
 - (void)cancelLoginRequest;
 
 @end
