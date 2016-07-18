@@ -51,8 +51,6 @@ extern NSString *kCloudSecureLayerCredentialIdentifier;
 extern NSString *kPremiseSecureLayerCredentialIdentifier;
 extern NSString *kPremisePortCredentialIdentifier;
 extern NSString *kPremiseServiceDocumentCredentialIdentifier;
-extern NSString *kBooleanTrueCredentialIdentifier;
-extern NSString *kBooleanFalseCredentialIdentifier;
 extern NSString *kAuthentificationTypeCredentialIdentifier;
 
 // Request parameters constants

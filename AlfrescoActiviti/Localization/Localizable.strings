@@ -28,6 +28,8 @@
 "loginScreenServiceDocumentInputTextFieldPlaceholderText"= "service document";
 "loginScreenRememberCredentialsLabelText"                = "Remember credentials";
 "loginScreenAdvancedSectionHeaderText"                   = "Advanced";
+"loginScreenInvalidCredentialsText"                      = "Invalid or insufficient credentials";
+"loginScreenUnreachableHostText"                         = "The host your are trying to connect to is unreachable.";
 
 // Applications screen
 "appScreenTitleText"                                     = "Applications";

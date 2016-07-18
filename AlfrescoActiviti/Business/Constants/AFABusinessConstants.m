@@ -54,8 +54,6 @@ NSString *kCloudSecureLayerCredentialIdentifier         = @"kCloudSecureLayerCre
 NSString *kPremiseSecureLayerCredentialIdentifier       = @"kPremiseSecureLayerCredentialIdentifier";
 NSString *kPremisePortCredentialIdentifier              = @"kPremisePortCredentialIdentifier";
 NSString *kPremiseServiceDocumentCredentialIdentifier   = @"kPremiseServiceDocumentCredentialIdentifier";
-NSString *kBooleanTrueCredentialIdentifier              = @"YES";
-NSString *kBooleanFalseCredentialIdentifier             = @"NO";
 NSString *kAuthentificationTypeCredentialIdentifier     = @"kAuthentificationTypeCredentialIdentifier";
 
 

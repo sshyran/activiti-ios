@@ -62,50 +62,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark -
 #pragma mark Public interface
 
-- (void)requestLoginForServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration
-                       withCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock {
-    NSParameterAssert(serverConfiguration);
-    NSParameterAssert(completionBlock);
-    
-    [self.profileNetworkService authenticateUser:serverConfiguration.username
-                                    withPassword:serverConfiguration.password
-                             withCompletionBlock:^(BOOL didAutheticate, NSError *error) {
-                                 if (!error && didAutheticate) {
-                                     AFALogVerbose(@"User logged in successfully");
-                                     
-                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                         completionBlock(YES, nil);
-                                     });
-                                 } else {
-                                     AFALogError(@"An error occured while the user tried to login. Reason:%@", error.localizedDescription);
-                                     
-                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                         completionBlock(NO, error);
-                                     });
-                                 }
-                             }];
-}
-
-- (void)requestLogoutWithCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock {
-    NSParameterAssert(completionBlock);
-    
-    [self.profileNetworkService logoutWithCompletionBlock:^(BOOL isLogoutPerformed, NSError *error) {
-        if (!error && isLogoutPerformed) {
-            AFALogVerbose(@"User logged out successfully");
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(NO, nil);
-            });
-        } else {
-            AFALogError(@"An error occured while the user tried to logout. Reason:%@", error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(YES, error);
-            });
-        }
-    }];
-}
-
 - (void)requestProfileImageWithCompletionBlock:(AFAProfileServicesProfileImageCompletionBlock)completionBlock {
     NSParameterAssert(completionBlock);
     

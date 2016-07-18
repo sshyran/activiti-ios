@@ -22,7 +22,6 @@
 @class ASDKModelServerConfiguration,
 ASDKModelProfile;
 
-typedef void  (^AFAProfileServicesLoginCompletionBlock)         (BOOL isLoggedIn, NSError *error);
 typedef void  (^AFAProfileServicesProfileImageCompletionBlock)  (UIImage *profileImage, NSError *error);
 typedef void  (^AFAProfileCompletionBlock)                      (ASDKModelProfile *profile, NSError *error);
 typedef void  (^AFAProfilePasswordCompletionBlock)              (BOOL isPasswordUpdated, NSError *error);
@@ -30,25 +29,6 @@ typedef void  (^AFAProfileContentProgressBlock)                 (NSUInteger prog
 typedef void  (^AFAProfileContentUploadCompletionBlock)         (BOOL isContentUploaded, NSError *error);
 
 @interface AFAProfileServices : NSObject
-
-/**
- *  Performs a login call based on values from an already provided server configuration
- *
- *  @param serverConfiguration  Container object that encapsulates information needed to perform a
- *                              user authetication
- *  @param completionBlock      Completion block describing whether the login was successful and an
-                                optional error reason.
- */
-- (void)requestLoginForServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration
-                       withCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock;
-
-/**
- *  Performs a logout call for the current logged in user
- *
- *  @param completionBlock Completion block describing whether the logout was successful and an
- *                         optional error reason.
- */
-- (void)requestLogoutWithCompletionBlock:(AFAProfileServicesLoginCompletionBlock)completionBlock;
 
 /**
  *  Performs a request for the profile image

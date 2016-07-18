@@ -23,7 +23,6 @@ extern NSString * const kASDKAPIApplicationPath;
 
 // Enterprise component
 extern NSString * const kASDKAPIEnterprisePath;
-extern NSString * const kASDKAPIAppAuthentication;
 
 // Server information
 extern NSString * const kASDKAPIServerVersionPath;
@@ -42,7 +41,6 @@ extern NSString * const kASDKAPIRuntimeAppDefinitionsPath;
 extern NSString * const kASDKAPIProfilePath;
 extern NSString * const kASDKAPIProfilePicturePath;
 extern NSString * const kASDKAPIProfilePasswordPath;
-extern NSString * const kASDKAPIProfileLogoutPath;
 extern NSString * const kASDKAPIProfileAdminPath;
 
 // Task related
@@ -86,6 +84,7 @@ extern NSString * const kASDKAPIUsersPath;
 extern NSString * const kASDKAPIUsersPicturePath;
 
 // Integration related
+extern NSString * const kASDKAPIIntegrationAccountPath;
 extern NSString * const kASDKAPIIntegrationPath;
 extern NSString * const kASDKAPIIntegrationAlfrescoCloudPath;
 extern NSString * const kASDKAPIIntegrationNetworksPath;

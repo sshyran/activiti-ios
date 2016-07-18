@@ -38,8 +38,8 @@ typedef NS_ENUM(NSInteger, AFACompletedProcessInstanceDetailsCellType) {
     AFACompletedProcessInstanceDetailsCellTypeStartedBy,
     AFACompletedProcessInstanceDetailsCellTypeStartDate,
     AFACompletedProcessInstanceDetailsCellTypeEndDate,
-    AFACompletedProcessInstanceDetailsCellTypeAuditLog,
-    AFACompletedProcessInstanceDetailsCellTypeEnumCount
+    AFACompletedProcessInstanceDetailsCellTypeEnumCount,
+    AFACompletedProcessInstanceDetailsCellTypeAuditLog // Audit log download function is temporary disabled
 };
 
 

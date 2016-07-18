@@ -23,6 +23,9 @@
 #import "AFABusinessConstants.h"
 #import "AFALocalizationConstants.h"
 
+// Categories
+#import "UIViewController+AFAAlertAddition.h"
+
 // Models
 #import "AFALoginModel.h"
 
@@ -158,6 +161,30 @@
             
             // Notify the user about the error
             if (error) {
+                NSError *underlayingError = error.userInfo[NSUnderlyingErrorKey];
+                NSInteger responseCode = [[underlayingError.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
+                if (!responseCode) {
+                    responseCode = underlayingError.code;
+                }
+                
+                NSString *networkErrorMessage = nil;
+                
+                switch (responseCode) {
+                    case ASDKHTTPCode401Unauthorised:
+                    case ASDKHTTPCode403Forbidden: {
+                        networkErrorMessage = NSLocalizedString(kLocalizationLoginInvalidCredentialsText, @"Invalid credentials text");
+                    }
+                        break;
+                        
+                    case NSURLErrorCannotConnectToHost: {
+                        networkErrorMessage = NSLocalizedString(kLocalizationLoginUnreachableHostText, @"Unreachable host text");
+                    }
+                        
+                    default:
+                        break;
+                }
+                
+                [self showGenericNetworkErrorAlertControllerWithMessage:networkErrorMessage];
                 [(AFASignInTableViewCell *)cell shakeSignInButton];
             }
         }];

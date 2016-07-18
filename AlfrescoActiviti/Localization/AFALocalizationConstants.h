@@ -29,6 +29,8 @@ extern NSString *kLocalizationLoginPortPlaceholderText;
 extern NSString *kLocalizationLoginServiceDocumentPlaceholderText;
 extern NSString *kLocalizationLoginRememberCredentialsText;
 extern NSString *kLocalizationLoginAdvancedSectionHeaderText;
+extern NSString *kLocalizationLoginInvalidCredentialsText;
+extern NSString *kLocalizationLoginUnreachableHostText;
 
 // Applications screen
 extern NSString *kLocalizationAppScreenTitleText;
