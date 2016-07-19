@@ -214,6 +214,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
     ASDKIntegrationBrowsingViewController *childController = nil;
     id<ASDKIntegrationDataSourceProtocol> dataSource = nil;
     
@@ -263,7 +265,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                       target:self
                                                                       action:@selector(popChildController)];
         [backButton setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
-                                             NSForegroundColorAttributeName: [UIColor integrationGreyTintColor]}
+                                             NSForegroundColorAttributeName: colorSchemeManager.navigationBarTitleAndControlsColor}
                                   forState:UIControlStateNormal];
         [self.navigationItem setBackBarButtonItem:backButton];
         childController.navigationItem.leftBarButtonItem = backButton;
