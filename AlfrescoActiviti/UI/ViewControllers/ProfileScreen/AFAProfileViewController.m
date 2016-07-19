@@ -272,9 +272,9 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
             strongSelf.currentProfile = profile;
             
             // Update the table header with the name and registration date
-            self.firstNameTextField.text = profile.userFirstName;
-            self.lastNameTextField.text = profile.userLastName;
-            self.registeredDateLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationProfileScreenRegisteredFormat, @"Registered since date"), [profile.creationDate listCreationDate]];
+            strongSelf.firstNameTextField.text = profile.userFirstName;
+            strongSelf.lastNameTextField.text = profile.userLastName;
+            strongSelf.registeredDateLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationProfileScreenRegisteredFormat, @"Registered since date"), [profile.creationDate listCreationDate]];
             
             // Reload table data
             [strongSelf.profileTableView reloadData];
@@ -346,11 +346,12 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                            });
                                            
                                            // Store the fetched profile
+                                           profile.groups = strongSelf.currentProfile.groups;
                                            strongSelf.currentProfile = profile;
                                            
                                            // Update the table header with the name and registration date
-                                           self.firstNameTextField.text = profile.userFirstName;
-                                           self.lastNameTextField.text = profile.userLastName;
+                                           strongSelf.firstNameTextField.text = profile.userFirstName;
+                                           strongSelf.lastNameTextField.text = profile.userLastName;
                                            
                                            // Reload table data
                                            [strongSelf.profileTableView reloadData];
@@ -360,8 +361,8 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                            
                                            // If an error occured, roll back to the previous valid state of the user profile
                                            // Update the table header with the name and registration date
-                                           self.firstNameTextField.text = strongSelf.currentProfile.userFirstName;
-                                           self.lastNameTextField.text = strongSelf.currentProfile.userLastName;
+                                           strongSelf.firstNameTextField.text = strongSelf.currentProfile.userFirstName;
+                                           strongSelf.lastNameTextField.text = strongSelf.currentProfile.userLastName;
                                            
                                            // Reload table data
                                            [strongSelf.profileTableView reloadData];

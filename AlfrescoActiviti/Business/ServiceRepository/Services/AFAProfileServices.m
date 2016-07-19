@@ -116,9 +116,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                // credentials option
                                                ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
                                                if (![profile.email isEqualToString:sdkBootstrap.serverConfiguration.username]) {
-                                                   ASDKBasicAuthentificationProvider *authenticationProvider = [[ASDKBasicAuthentificationProvider alloc] initWithUserName:profile.email
-                                                                                                                                                                  password:sdkBootstrap.serverConfiguration.password];
-                                                   [sdkBootstrap replaceAuthenticationProvider:authenticationProvider];
+                                                   [sdkBootstrap updateServerConfigurationCredentialsForUsername:profile.email
+                                                                                                        password:sdkBootstrap.serverConfiguration.password];
                                                    
                                                    if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]) {
                                                        [AFAKeychainWrapper updateKeychainValue:profile.email
@@ -155,9 +154,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                      // credentials option
                                                      if (isPasswordUpdated) {
                                                          ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-                                                         ASDKBasicAuthentificationProvider *authenticationProvider = [[ASDKBasicAuthentificationProvider alloc] initWithUserName:sdkBootstrap.serverConfiguration.username
-                                                                                                                                                                        password:updatedPassword];
-                                                         [sdkBootstrap replaceAuthenticationProvider:authenticationProvider];
+                                                         [sdkBootstrap updateServerConfigurationCredentialsForUsername:sdkBootstrap.serverConfiguration.username
+                                                                                                              password:updatedPassword];
                                                          
                                                          if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]) {
                                                              [AFAKeychainWrapper updateKeychainValue:updatedPassword
