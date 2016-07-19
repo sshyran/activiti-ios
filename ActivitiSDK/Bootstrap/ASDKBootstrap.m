@@ -323,7 +323,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKLogVerbose(@"Form color scheme manager...%@", colorSchemeManager ? @"OK" : @"NOT_OK");
 }
 
-- (void)replaceAuthenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider {
+- (void)updateServerConfigurationCredentialsForUsername:(NSString *)username
+                                               password:(NSString *)password {
+    _serverConfiguration.username = username;
+    _serverConfiguration.password = password;
+    
+    ASDKBasicAuthentificationProvider *authenticationProvider =
+    [[ASDKBasicAuthentificationProvider alloc] initWithUserName:username
+                                                       password:password];
     [self.requestOperationManager replaceAuthenticationProvider:authenticationProvider];
 }
 

@@ -22,13 +22,6 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface ASDKBasicAuthentificationProvider()
-
-@property (strong, nonatomic) NSString *username;
-@property (strong, nonatomic) NSString *password;
-
-@end
-
 @implementation ASDKBasicAuthentificationProvider
 
 - (instancetype)initWithUserName:(NSString *)username

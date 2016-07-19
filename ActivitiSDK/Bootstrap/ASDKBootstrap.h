@@ -30,7 +30,8 @@
 
 // Services interface
 - (void)setupServicesWithServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration;
-- (void)replaceAuthenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider;
+- (void)updateServerConfigurationCredentialsForUsername:(NSString *)username
+                                               password:(NSString *)password;
 
 // Read-only properties
 @property (strong, nonatomic, readonly) ASDKServiceLocator              *serviceLocator;
