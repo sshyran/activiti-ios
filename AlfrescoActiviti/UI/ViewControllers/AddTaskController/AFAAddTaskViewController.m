@@ -229,7 +229,7 @@
 #pragma mark Convenience methods
 
 - (void)validateTaskNameFieldForString:(NSString *)taskName {
-    BOOL enableCreateButton = taskName.length ? YES : NO;
+    BOOL enableCreateButton = [taskName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length ? YES : NO;
     
     self.confirmButton.enabled = enableCreateButton;
     [self.confirmButton setBackgroundColor:enableCreateButton ? self.appThemeColor : [UIColor disabledControlColor]];
