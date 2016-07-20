@@ -342,6 +342,8 @@
 		13F07EFA1CBFC8C400002FEB /* ASDKKVOManagerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F07EF41CBFC8C400002FEB /* ASDKKVOManagerInfo.m */; };
 		13F07EFB1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF51CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h */; };
 		13F07EFC1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F07EF61CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m */; };
+		13F0E9341D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F0E9321D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.h */; };
+		13F0E9351D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F0E9331D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.m */; };
 		13F240301B6B753600533B37 /* ASDKServiceLocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F2402E1B6B753600533B37 /* ASDKServiceLocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13F240311B6B753600533B37 /* ASDKServiceLocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F2402F1B6B753600533B37 /* ASDKServiceLocator.m */; };
 		13F240341B6B784A00533B37 /* ASDKServiceLocatorProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F240331B6B784A00533B37 /* ASDKServiceLocatorProtocol.h */; };
@@ -975,6 +977,8 @@
 		13F07EF41CBFC8C400002FEB /* ASDKKVOManagerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKKVOManagerInfo.m; path = KVOManager/ASDKKVOManagerInfo.m; sourceTree = "<group>"; };
 		13F07EF51CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManagerSharedProxy.h; path = KVOManager/ASDKKVOManagerSharedProxy.h; sourceTree = "<group>"; };
 		13F07EF61CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKKVOManagerSharedProxy.m; path = KVOManager/ASDKKVOManagerSharedProxy.m; sourceTree = "<group>"; };
+		13F0E9321D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormDisplayTextFieldCollectionViewCell.h; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormDisplayTextFieldCollectionViewCell.h; sourceTree = "<group>"; };
+		13F0E9331D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormDisplayTextFieldCollectionViewCell.m; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormDisplayTextFieldCollectionViewCell.m; sourceTree = "<group>"; };
 		13F2402E1B6B753600533B37 /* ASDKServiceLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKServiceLocator.h; path = ServiceLocator/ASDKServiceLocator.h; sourceTree = "<group>"; };
 		13F2402F1B6B753600533B37 /* ASDKServiceLocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKServiceLocator.m; path = ServiceLocator/ASDKServiceLocator.m; sourceTree = "<group>"; };
 		13F240331B6B784A00533B37 /* ASDKServiceLocatorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKServiceLocatorProtocol.h; path = ServiceLocator/Protocol/ASDKServiceLocatorProtocol.h; sourceTree = "<group>"; };
@@ -1762,6 +1766,7 @@
 				138F0A331C6B9C8900DA9414 /* FormRadioFieldCell */,
 				8DEA25331C7C8BED00BF376F /* FormHyperlinkFieldCell */,
 				13D3CBDA1D2CFD4900A19F48 /* FormTabFieldCell */,
+				13F0E9361D3E59D900BF10A9 /* FormDisplayTextField */,
 				13BA5C071BE0D0CD0091D6C9 /* FormOutcomeCell */,
 				138F0A431C6CC29400DA9414 /* FormHeaderView */,
 				138F0A481C6CC6CC00DA9414 /* FormFooterView */,
@@ -3628,6 +3633,15 @@
 			name = KVOManager;
 			sourceTree = "<group>";
 		};
+		13F0E9361D3E59D900BF10A9 /* FormDisplayTextField */ = {
+			isa = PBXGroup;
+			children = (
+				13F0E9321D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.h */,
+				13F0E9331D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.m */,
+			);
+			name = FormDisplayTextField;
+			sourceTree = "<group>";
+		};
 		13F2402D1B6B6F3D00533B37 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
@@ -4346,6 +4360,7 @@
 				138F0A461C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.h in Headers */,
 				131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */,
 				13A578611CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h in Headers */,
+				13F0E9341D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.h in Headers */,
 				8D0FFDC51CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h in Headers */,
 				13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */,
 				1306E9721CC8BCF600BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */,
@@ -4667,7 +4682,7 @@
 		};
 		13F0E9311D368A0E00BF10A9 /* Cocoapods framework clean script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
@@ -4675,7 +4690,7 @@
 			name = "Cocoapods framework clean script";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "cd \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/\"\nif [[ -d \"Frameworks\" ]]; then\nrm -fr Frameworks\nfi";
 		};
@@ -5025,6 +5040,7 @@
 				8D9E6AE01CBE4009001EA2CA /* ASDKDynamicTableRenderDataSource.m in Sources */,
 				8D6ABE711CBCDF03008FACB4 /* ASDKDynamicTableRowHeaderTableViewCell.m in Sources */,
 				13D3CBD91D2CFD4500A19F48 /* ASDKFormTabFieldCollectionViewCell.m in Sources */,
+				13F0E9351D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.m in Sources */,
 				8D3A51DB1C80855300FF9A00 /* ASDKStartProcessRequestRepresentation.m in Sources */,
 				135701931B70DA1100A384A7 /* ASDKModelConfiguration.m in Sources */,
 				8DA719141C8F0D5200907218 /* ASDKContentFileTableViewCell.m in Sources */,

@@ -88,6 +88,11 @@
     }
 }
 
+- (void)viewDidLayoutSubviews {
+    [self.multilineTextView setContentOffset:CGPointZero
+                                    animated:NO];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     

@@ -41,6 +41,7 @@ NSString *kLocalizationFormPeopleNoSelectedText                  = @"formPeopleN
 NSString *kLocalizationFormDynamicTableRowsAvailableText         = @"formDynamicTableRowsAvailableText";
 NSString *kLocalizationFormDynamicTableRowHeaderText             = @"formDynamicTableRowHeaderText";
 NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText = @"formDynamicTableDeleteRowConfirmationText";
+NSString *kLocalizationFormValueEmpty                            = @"formValueEmpty";
 
 #pragma mark -
 #pragma mark Content picker component
