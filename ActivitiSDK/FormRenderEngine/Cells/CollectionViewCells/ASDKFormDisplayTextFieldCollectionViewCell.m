@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKFormMultiLineFieldCollectionViewCell.h"
+#import "ASDKFormDisplayTextFieldCollectionViewCell.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
@@ -29,14 +29,13 @@
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLocalizationConstants.h"
 
-@interface ASDKFormMultiLineFieldCollectionViewCell ()
+@interface ASDKFormDisplayTextFieldCollectionViewCell ()
 
 @property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
 
 @end
 
-@implementation ASDKFormMultiLineFieldCollectionViewCell
+@implementation ASDKFormDisplayTextFieldCollectionViewCell
 
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
     // Adjust the cell sizing parameters by constraining with a high priority on the horizontal axis
@@ -60,58 +59,19 @@
 
 - (void)setupCellWithFormField:(ASDKModelFormField *)formField {
     self.formField = formField;
-    self.descriptionLabel.text = formField.fieldName;
     
-    // If dealing with a read-only representation then disable the text field and copy the
-    // user-filled value
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        NSString *formFieldValue = formField.values.firstObject;
-        
-        self.multiLineTextLabel.text = formFieldValue ? formFieldValue : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
-        self.disclosureIndicatorLabel.hidden = formFieldValue.length ? NO : YES;
-        self.multiLineTextLabel.textColor = [UIColor formViewCompletedValueColor];
-    } else {
-        self.isRequired = formField.isRequired;
-        // If a previously selected option is available display it
-        if (formField.metadataValue) {
-            self.multiLineTextLabel.text = formField.metadataValue.attachedValue;
-        } else if (formField.values) {
-            self.multiLineTextLabel.text = formField.values.firstObject;
-        } else {
-            self.multiLineTextLabel.text = @"";
-        }
-        self.disclosureIndicatorLabel.hidden = NO;
-        
-        [self validateCellStateForText:self.multiLineTextLabel.text];
-    }
+    NSString *formFieldDisplayText = formField.values.firstObject;
+    
+    self.displayTextLabel.text = formFieldDisplayText ? formFieldDisplayText : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
+    self.disclosureIndicatorLabel.hidden = formFieldDisplayText.length ? NO : YES;
 }
 
 #pragma mark -
 #pragma mark Cell states & validation
 
 - (void)prepareForReuse {
-    self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
-    self.multiLineTextLabel.text = nil;
-}
-
-- (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
-}
-
-- (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
-}
-
-- (void)validateCellStateForText:(NSString *)text {
-    // Check input in relation to the requirement of the field
-    if (self.isRequired) {
-        if (!text.length) {
-            [self markCellValueAsInvalid];
-        } else {
-            [self markCellValueAsValid];
-        }
-    }
+    self.displayTextLabel.text = nil;
+    self.disclosureIndicatorLabel.hidden = NO;
 }
 
 @end

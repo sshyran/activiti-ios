@@ -436,7 +436,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // If dealing with read-only forms extract the representation type from the attached
     // form field params model
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        representationType = formField.formFieldParams.representationType;
+        NSInteger formFieldParametersRepresentationType = formField.formFieldParams.representationType;
+        representationType =  formFieldParametersRepresentationType ? formFieldParametersRepresentationType : ASDKModelFormFieldRepresentationTypeReadOnly;
     } else {
         representationType = formField.representationType;
     }
@@ -475,8 +476,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         case ASDKModelFormFieldRepresentationTypeMultiline:
-        case ASDKModelFormFieldRepresentationTypeReadonlyText: {
+        case ASDKModelFormFieldRepresentationTypeReadOnly: {
             cellIdentifier = kASDKCellIDFormFieldMultilineRepresentation;
+        }
+            break;
+            
+        case ASDKModelFormFieldRepresentationTypeReadonlyText: {
+            cellIdentifier = kASDKCellIDFormFieldDisplayTextRepresentation;
         }
             break;
             
@@ -495,7 +501,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
-            
         default:
             break;
     }
@@ -512,6 +517,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
          ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType ||
          ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
         representationType = formField.formFieldParams.representationType;
+    } else if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
+               formField.values.count) {
+        representationType = ASDKModelFormFieldRepresentationTypeReadonlyText;
     } else if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType) {
         representationType = formField.representationType;
     }

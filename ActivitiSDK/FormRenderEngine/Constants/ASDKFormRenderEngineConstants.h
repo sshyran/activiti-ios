@@ -58,6 +58,7 @@ extern NSString *kASDKCellIDFormFieldDynamicTableRepresentation;
 extern NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation;
 extern NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation;
 extern NSString *kASDKCellIDFormFieldTabRepresentation;
+extern NSString *kASDKCellIDFormFieldDisplayTextRepresentation;
 extern NSString *kASDKCellIDIntegrationBrowsing;
 
 // Form field key values

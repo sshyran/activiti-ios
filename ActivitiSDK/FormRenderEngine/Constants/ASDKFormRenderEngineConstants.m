@@ -67,6 +67,7 @@ NSString *kASDKCellIDFormFieldDynamicTableRepresentation            = @"FormFiel
 NSString *kASDKCellIDFormFieldDynamicTableHeaderRepresentation      = @"FormFieldDynamicTableHeaderRepresentationCellID";
 NSString *kASDKCellIDFormFieldDynamicTableRowRepresentation         = @"FormFieldDynamicTableRowRepresentationCellID";
 NSString *kASDKCellIDFormFieldTabRepresentation                     = @"FormFieldTabRepresentationCellID";
+NSString *kASDKCellIDFormFieldDisplayTextRepresentation             = @"FormFieldDisplayTextRepresentationCellID";
 NSString *kASDKCellIDIntegrationBrowsing                            = @"IntegrationBrowsingCellID";
 
 
