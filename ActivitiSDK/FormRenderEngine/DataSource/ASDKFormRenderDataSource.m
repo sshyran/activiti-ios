@@ -310,6 +310,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     tabFormDescription.processDefinitionKey = self.currenFormDescription.processDefinitionKey;
     tabFormDescription.formVariables = self.currenFormDescription.formVariables;
     
+#warning Crash region
     ASDKModelFormTab *currentTab = (ASDKModelFormTab *)self.visibleFormFields[indexpath.section];
     tabFormDescription.formFields = currentTab.formFields;
     tabFormDescription.formTitle = currentTab.title;
@@ -676,7 +677,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                         atIndex:insertIndex];
                 
                 [insertSectionIndexSet addIndex:insertIndex];
-            } else {
+            } else if (ASDKFormRenderEngineDataSourceViewModeFormFields == self.dataSourceViewMode) {
                 ASDKModelFormField *formFieldToBeInserted = (ASDKModelFormField *)field;
                 BOOL isSectionInsert = (ASDKModelFormFieldTypeContainer == formFieldToBeInserted.fieldType);
                 
@@ -770,7 +771,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                 if (NSNotFound != tabIndexTodelete) {
                     [deleteSectionIndexSet addIndex:tabIndexTodelete];
                 }
-            } else {
+            } else if (ASDKFormRenderEngineDataSourceViewModeFormFields == self.dataSourceViewMode) {
                 ASDKModelFormField *formFieldToBeRemoved = (ASDKModelFormField *)field;
                 BOOL isSectionRemoval = (ASDKModelFormFieldTypeContainer == formFieldToBeRemoved.fieldType);
                 
@@ -832,12 +833,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     for (NSUInteger sectionCount = 0; sectionCount < collection.count; sectionCount++) {
         ASDKModelFormField *sectionField = collection[sectionCount];
         
+        // Direct match
         if ([formField.modelID isEqualToString:sectionField.modelID]) {
             return sectionCount;
         }
         
-        for (ASDKModelFormField *childField in sectionField.formFields) {
-            if ([formField.modelID isEqualToString:childField.modelID]) {
+        // Section match
+        for (ASDKModelFormField *subSectionField in sectionField.formFields) {
+            if ([formField.modelID isEqualToString:subSectionField.modelID]) {
                 return sectionCount;
             }
         }
