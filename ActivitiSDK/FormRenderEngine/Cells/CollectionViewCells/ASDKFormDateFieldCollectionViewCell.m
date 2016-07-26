@@ -18,15 +18,16 @@
 
 #import "ASDKFormDateFieldCollectionViewCell.h"
 
+// Constants
+#import "ASDKFormRenderEngineConstants.h"
+#import "ASDKModelConfiguration.h"
+
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
 
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
-
-// Constants
-#import "ASDKFormRenderEngineConstants.h"
 
 @interface ASDKFormDateFieldCollectionViewCell ()
 
@@ -92,19 +93,19 @@
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-        dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z";
+        dateFormatter.dateFormat = kASDKServerLongDateFormat;
         
         NSDate *storedDate = [dateFormatter dateFromString:formfieldValues.firstObject];
         
         // try other date formatter
         if (storedDate == nil) {
             //format date in saved form (2016-02-23T23:00:000Z)
-            dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+            dateFormatter.dateFormat = kASDKServerFullDateFormat;
             storedDate = [dateFormatter dateFromString:formfieldValues.firstObject];
         }
         
         NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
-        [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
+        [displayDateFormatter setDateFormat:kASDKServerShortDateFormat];
         
         labelText = [displayDateFormatter stringFromDate:storedDate];
     } else {

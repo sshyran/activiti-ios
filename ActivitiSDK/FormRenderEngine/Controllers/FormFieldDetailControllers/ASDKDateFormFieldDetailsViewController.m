@@ -21,6 +21,7 @@
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLocalizationConstants.h"
+#import "ASDKModelConfiguration.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
@@ -61,7 +62,7 @@
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-        [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+        [dateFormatter setDateFormat:kASDKServerShortDateFormat];
         
         NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.metadataValue.attachedValue];
         [self.datePicker setDate:storedDate];
@@ -70,19 +71,19 @@
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-        dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z";
+        dateFormatter.dateFormat = kASDKServerLongDateFormat;
         
         NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
         
         // try other date formatter
         if (storedDate == nil) {
             //format date in saved form (2016-02-23T23:00:000Z)
-            dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+            dateFormatter.dateFormat = kASDKServerFullDateFormat;
             storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
         }
         
         NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
-        [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
+        [displayDateFormatter setDateFormat:kASDKServerShortDateFormat];
         
         self.selectedDate.text = [displayDateFormatter stringFromDate:storedDate];
         [self.datePicker setDate:storedDate];
@@ -105,7 +106,7 @@
 
 - (IBAction)datePickerAction:(id)sender {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+    [dateFormatter setDateFormat:kASDKServerShortDateFormat];
 
     NSString *formatedDate = [dateFormatter stringFromDate:self.datePicker.date];
     self.selectedDate.text = formatedDate;

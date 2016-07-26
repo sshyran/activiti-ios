@@ -24,6 +24,7 @@
 #import "ASDKModelUser.h"
 #import "ASDKModelDynamicTableFormField.h"
 #import "ASDKModelFormTab.h"
+#import "ASDKModelConfiguration.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -118,14 +119,14 @@
                 NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
                 displayDateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
                 displayDateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-                [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
+                [displayDateFormatter setDateFormat:kASDKServerShortDateFormat];
                 NSDate *storedDate = [displayDateFormatter dateFromString:formField.metadataValue.attachedValue];
                 
                 //format submit date (2016-02-23T23:00:000Z)
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
                 dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-                dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+                dateFormatter.dateFormat = kASDKServerFullDateFormat;
                 
                 formFieldValue = [dateFormatter stringFromDate:storedDate];
             } else {

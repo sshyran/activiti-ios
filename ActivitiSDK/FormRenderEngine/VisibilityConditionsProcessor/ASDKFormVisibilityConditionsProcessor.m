@@ -985,7 +985,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     // If this fails try to pick up the date using a more natural format
     if (!date) {
-        [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+        [dateFormatter setDateFormat:kASDKServerShortDateFormat];
         date = [dateFormatter dateFromString:string];
     }
     
