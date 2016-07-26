@@ -67,6 +67,16 @@ typedef NS_ENUM(NSInteger, ASDKFormVisibilityConditionActionType) {
 - (NSSet *)visibilityInfluentialFormFields;
 
 /**
+ *  Returns a collection of form fields used to check visibility conditions for the mentioned
+ *  tab index.
+ *
+ *  @param tabIdx Tab index for which the form fields are requested
+ *
+ *  @return Array of form field objects
+ */
+- (NSArray *)formFieldsForTabID:(NSString *)tabID;
+
+/**
  *  Requests a reevaluation of the visibility conditions that are affected by a form field's
  *  value change. The result will be delivered as a dictionary where the key is represented
  *  by one of the enumeration values of ASDKFormVisibilityConditionActionType and the value

@@ -16,16 +16,20 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import <Foundation/Foundation.h>
 
-@interface ASDKModelFormDescription : ASDKModelBase
+@class ASDKModelFormField,
+ASDKModelFormTab,
+ASDKModelBase;
 
-@property (strong, nonatomic) NSString          *processDefinitionID;
-@property (strong, nonatomic) NSString          *processDefinitionName;
-@property (strong, nonatomic) NSString          *processDefinitionKey;
-@property (strong, nonatomic) NSArray           *formFields;
-@property (strong, nonatomic) NSArray           *formOutcomes;
-@property (strong, nonatomic) NSArray           *formTabs;
-@property (strong, nonatomic) NSArray           *formVariables;
+@interface NSArray (ASDKFormRenderDataSourceArrayAddition)
+
+- (NSUInteger)sectionForFormField:(ASDKModelFormField *)formField;
+- (NSUInteger)sectionForTab:(ASDKModelFormTab *)formTab;
+- (BOOL)doesCollectionContainFormField:(ASDKModelBase *)sectionFormField;
+- (NSUInteger)indexOfFormField:(ASDKModelBase *)formField;
+- (NSUInteger)insertIndexInFormFieldCollectionForSectionIndex:(NSUInteger)sectionIndex
+                                         refferenceCollection:(NSArray *)refferenceCollection;
+- (BOOL)isFormFieldVisible:(ASDKModelFormField *)formField;
 
 @end

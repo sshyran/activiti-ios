@@ -196,8 +196,12 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
             if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
                 ASDKModelHyperlinkFormField *hyperlinkFormField = (ASDKModelHyperlinkFormField *)formField;
                 ASDKModelHyperlinkFormField *hyperlinkFormFieldParams = (ASDKModelHyperlinkFormField *)formField.formFieldParams;
-                hyperlinkFormField.hyperlinkURL = hyperlinkFormFieldParams.hyperlinkURL;
-                hyperlinkFormField.displayText = hyperlinkFormFieldParams.displayText;
+                if (hyperlinkFormFieldParams.hyperlinkURL) {
+                    hyperlinkFormField.hyperlinkURL = hyperlinkFormFieldParams.hyperlinkURL;
+                }
+                if (hyperlinkFormFieldParams.displayText) {
+                    hyperlinkFormField.displayText = hyperlinkFormFieldParams.displayText;
+                }
             }
             break;
             

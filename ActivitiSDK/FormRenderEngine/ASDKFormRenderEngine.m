@@ -30,6 +30,8 @@
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelFormField.h"
 #import "ASDKModelRestFormField.h"
+#import "ASDKModelFormDescription.h"
+#import "ASDKModelFormTabDescription.h"
 
 // Managers
 #import "ASDKFormRenderDataSource.h"
@@ -309,7 +311,7 @@
                               }];
 }
 
-- (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormDescription *)formDescription {
+- (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormTabDescription *)formDescription {
     self.dataSource = [[ASDKFormRenderDataSource alloc] initWithTabFormDescription:formDescription];
     return [self prepareWithFormDescription:formDescription];
 }

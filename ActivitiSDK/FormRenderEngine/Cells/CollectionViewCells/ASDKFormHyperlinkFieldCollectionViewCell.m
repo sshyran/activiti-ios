@@ -71,11 +71,6 @@
     } else {
         [self.hyperlinkButton setTitle:@"" forState:UIControlStateNormal];
     }
-    
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        [self.hyperlinkButton setTitleColor:[UIColor formViewCompletedValueColor] forState:UIControlStateNormal];
-    }
-    
 }
 
 - (IBAction)hyperlinkTapped:(id)sender {

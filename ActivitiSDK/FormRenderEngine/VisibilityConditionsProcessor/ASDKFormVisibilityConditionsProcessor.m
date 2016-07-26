@@ -90,7 +90,20 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             // When parsing the form field array, for ordinary container type form fields
             // add the containing section as well as the contained form fields in the form
             // field collection, but for dynamic table type just the section
-            for (ASDKModelFormField *formField in formTabFields ? formTabFields : formFieldArr) {
+            if (formTabFields) {
+                for (ASDKModelFormField *formField in formTabFields) {
+                    if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+                        [fieldsArr addObject:formField];
+                        [fieldsArr addObjectsFromArray:formField.formFields];
+                    } else if (ASDKModelFormFieldTypeDynamicTableField == formField.fieldType ||
+                               (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
+                                ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
+                                   [fieldsArr addObject:formField];
+                               }
+                }
+            } else {
+                ASDKModelFormField *formField = (ASDKModelFormField *)field;
+                
                 if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
                     [fieldsArr addObject:formField];
                     [fieldsArr addObjectsFromArray:formField.formFields];
@@ -271,7 +284,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableArray *affectedFormFieldsArr = [NSMutableArray array];
     for (NSString *affectedFieldID in self.dependencyDict.allKeys) {
         NSArray *influencialFormFields = self.dependencyDict[affectedFieldID];
-        if ([influencialFormFields containsObject:formField]) {
+        if ([self doesCollection:influencialFormFields
+                containFormField:formField]) {
             [affectedFormFieldsArr addObject:[self formFieldForID:affectedFieldID]];
         }
     }
@@ -294,7 +308,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             // If the affected form field cannot be found inside the visible form fields
             // but it's not a hidden form field than this means it a form field that
             // became visible
-            if (![self.visibleFormFields containsObject:affectedFormFied]) {
+            if (![self doesCollection:self.visibleFormFields
+                     containFormField:affectedFormFied]) {
                 [formFieldsToAdd addObject:affectedFormFied];
             }
         }
@@ -309,6 +324,44 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     return visibilityActionsDict;
+}
+
+- (NSArray *)formFieldsForTabID:(NSString *)tabID {
+    NSMutableArray *sectionFields = [NSMutableArray array];
+    NSMutableArray *subSectionFields = [NSMutableArray array];
+    ASDKModelFormField *sectionFormField = nil;
+    
+    for (ASDKModelBase *field in self.formFields) {
+        if ([[field class] isSubclassOfClass:[ASDKModelFormField class]]) {
+            ASDKModelFormField *formField = (ASDKModelFormField *)field;
+            if ([formField.tabID isEqualToString:tabID]) {
+                if (formField.fieldType == ASDKModelFormFieldTypeContainer &&
+                    !sectionFormField) {
+                    sectionFormField = formField;
+                } else if ((formField.fieldType == ASDKModelFormFieldTypeContainer ||
+                           formField.fieldType == ASDKModelFormFieldTypeDynamicTableField) &&
+                           sectionFormField) {
+                    sectionFormField.formFields = [NSArray arrayWithArray:subSectionFields];
+                    [subSectionFields removeAllObjects];
+                    [sectionFields addObject:sectionFormField];
+                    sectionFormField = formField;
+                    
+                    if (sectionFormField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+                        [sectionFields addObject:sectionFormField];
+                    }
+                } else {
+                    [subSectionFields addObject:formField];
+                }
+            }
+        }
+    }
+    
+    if (subSectionFields.count) {
+        sectionFormField.formFields = [NSArray arrayWithArray:subSectionFields];
+        [sectionFields addObject:sectionFormField];
+    }
+    
+    return sectionFields;
 }
 
 
@@ -937,6 +990,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     return date;
+}
+
+- (BOOL)doesCollection:(NSArray *)collection
+      containFormField:(ASDKModelBase *)sectionFormField {
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", sectionFormField.modelID];
+    NSArray *results = [collection filteredArrayUsingPredicate:searchPredicate];
+    
+    return results.count ? YES : NO;
 }
 
 

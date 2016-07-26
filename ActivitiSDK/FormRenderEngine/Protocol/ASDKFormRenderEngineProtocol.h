@@ -19,7 +19,7 @@
 #import <UIKit/UIKit.h>
 
 @class ASDKModelFormDescription,
-ASDKModelFormDescription,
+ASDKModelFormTabDescription,
 ASDKFormNetworkServices,
 ASDKModelTask,
 ASDKModelProcessDefinition,
@@ -166,7 +166,7 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
  *  @return                A collection view controller instance containing the
  *                         the rendered form view
  */
-- (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormDescription *)formDescription;
+- (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormTabDescription *)formDescription;
 
 /**
  *  Performs a form completion request given a form field value request representation object.
