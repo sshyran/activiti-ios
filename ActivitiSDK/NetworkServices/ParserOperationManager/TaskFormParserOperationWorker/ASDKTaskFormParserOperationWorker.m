@@ -43,8 +43,8 @@
     if ([CREATE_STRING(ASDKTaskFormParserContentTypeFormModels) isEqualToString:contentType]) {
         NSError *parserError = nil;
         ASDKModelFormDescription *formDescription = [MTLJSONAdapter modelOfClass:ASDKModelFormDescription.class
-                                        fromJSONDictionary:contentDictionary
-                                                     error:&parserError];
+                                                              fromJSONDictionary:contentDictionary
+                                                                           error:&parserError];
         
         dispatch_async(completionQueue, ^{
             completionBlock(formDescription, parserError, nil);
@@ -53,8 +53,8 @@
         NSError *parserError = nil;
         NSArray *responseArray = (NSArray *) contentDictionary;
         NSArray *restFormFieldOptions = [MTLJSONAdapter modelsOfClass:ASDKModelFormFieldOption.class
-                                                   fromJSONArray:responseArray
-                                                           error:&parserError];
+                                                        fromJSONArray:responseArray
+                                                                error:&parserError];
         
         dispatch_async(completionQueue, ^{
             completionBlock(restFormFieldOptions, parserError, nil);
