@@ -16,16 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import <ActivitiSDK/ActivitiSDK.h>
 
-@interface ASDKModelFormDescription : ASDKModelBase
+@interface ASDKModelFormTabDescription : ASDKModelFormDescription
 
-@property (strong, nonatomic) NSString          *processDefinitionID;
-@property (strong, nonatomic) NSString          *processDefinitionName;
-@property (strong, nonatomic) NSString          *processDefinitionKey;
-@property (strong, nonatomic) NSArray           *formFields;
-@property (strong, nonatomic) NSArray           *formOutcomes;
-@property (strong, nonatomic) NSArray           *formTabs;
-@property (strong, nonatomic) NSArray           *formVariables;
+@property (strong, nonatomic) NSString          *formTitle;
+@property (strong, nonatomic) NSArray           *renderableTabFormFields;
+@property (strong, nonatomic) NSArray           *visibleTabFormFields;
 
 @end

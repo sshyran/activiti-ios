@@ -19,6 +19,7 @@
 #import "ASDKFormRenderEngineDataSourceProtocol.h"
 
 @class ASDKModelFormDescription,
+ASDKModelFormTabDescription,
 ASDKModelBase,
 ASDKModelFormField;
 
@@ -49,7 +50,7 @@ ASDKModelFormField;
  *
  *  @return                Instance of the data source object
  */
-- (instancetype)initWithTabFormDescription:(ASDKModelFormDescription *)formDescription;
+- (instancetype)initWithTabFormDescription:(ASDKModelFormTabDescription *)formDescription;
 
 /**
  *  Property meant to hold a reference to the data source's delegate which will

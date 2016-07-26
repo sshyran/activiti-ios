@@ -21,6 +21,7 @@
 #import "ASDKFormFieldDetailsControllerProtocol.h"
 
 @class ASDKModelFormDescription,
+ASDKModelFormTabDescription,
 ASDKModelBase,
 ASDKModelFormField,
 ASDKFormVisibilityConditionsProcessor;
@@ -163,8 +164,8 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
  *
  *  @param indexpath Index path of the tab for which the form description is requested
  *
- *  @return Form description object
+ *  @return Form tab description object
  */
-- (ASDKModelFormDescription *)formDescriptionForTabAtIndexPath:(NSIndexPath *)indexpath;
+- (ASDKModelFormTabDescription *)formDescriptionForTabAtIndexPath:(NSIndexPath *)indexpath;
 
 @end
