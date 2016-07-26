@@ -18,9 +18,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class ASDKModelFormField,
+ASDKModelDynamicTableFormField;
+
 @interface ASDKDynamicTableColumnTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *columnNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *columnValueLabel;
+
+- (void)setupCellWithColumnDefinitionFormField:(ASDKModelFormField *)columnDefinitionformField
+                         dynamicTableFormField:(ASDKModelDynamicTableFormField *)dynamicTableFormField;
 
 @end

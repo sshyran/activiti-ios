@@ -18,6 +18,111 @@
 
 #import "ASDKDynamicTableColumnTableViewCell.h"
 
+// Constants
+#import "ASDKModelConfiguration.h"
+
+// Categories
+#import "UIColor+ASDKFormViewColors.h"
+
+// Models
+#import "ASDKModelFormField.h"
+#import "ASDKModelDynamicTableFormField.h"
+#import "ASDKModelFormFieldValue.h"
+#import "ASDKModelDynamicTableColumnDefinitionAmountFormField.h"
+
+
 @implementation ASDKDynamicTableColumnTableViewCell
+
+- (void)setupCellWithColumnDefinitionFormField:(ASDKModelFormField *)columnDefinitionformField
+                         dynamicTableFormField:(ASDKModelDynamicTableFormField *)dynamicTableFormField {
+    NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
+    self.columnNameLabel.text = columnDefinitionformField.fieldName;
+    
+    // If dealing with read-only forms extract the representation type from the attached
+    // form field params model
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
+        !dynamicTableFormField.isTableEditable) {
+        representationType = columnDefinitionformField.formFieldParams.representationType;
+        // set 'disabled color' for complete forms
+        self.columnValueLabel.textColor = [UIColor formViewCompletedValueColor];
+    } else if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
+               dynamicTableFormField.isTableEditable) {
+        representationType = columnDefinitionformField.formFieldParams.representationType;
+    } else {
+        representationType = columnDefinitionformField.representationType;
+    }
+    
+    switch (representationType) {
+        case ASDKModelFormFieldRepresentationTypeBoolean: {
+            BOOL formFieldValue;
+            if (columnDefinitionformField.metadataValue) {
+                formFieldValue = columnDefinitionformField.metadataValue.attachedValue ? YES: NO;
+            } else {
+                formFieldValue = columnDefinitionformField.values.firstObject ? YES : NO;
+            }
+            self.columnValueLabel.text = formFieldValue ? @"Yes" : @"No";
+        }
+            break;
+            
+        case ASDKModelFormFieldRepresentationTypeAmount: {
+            ASDKModelDynamicTableColumnDefinitionAmountFormField *amountColumnDefinitionFormField = (ASDKModelDynamicTableColumnDefinitionAmountFormField *) columnDefinitionformField;
+            NSString *currencySymbol = (amountColumnDefinitionFormField.currency.length != 0) ? amountColumnDefinitionFormField.currency : @"$";
+            NSMutableAttributedString *labelText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)", amountColumnDefinitionFormField.fieldName, currencySymbol]];
+            [labelText addAttribute:NSForegroundColorAttributeName value:[UIColor formViewAmountFieldSymbolColor] range:NSMakeRange((labelText.length) - 3,3)];
+            self.columnNameLabel.attributedText = labelText;
+            
+            if (columnDefinitionformField.metadataValue) {
+                self.columnValueLabel.text = columnDefinitionformField.metadataValue.attachedValue;
+            } else if (columnDefinitionformField.values) {
+                self.columnValueLabel.text = [NSString stringWithFormat:@"%@", amountColumnDefinitionFormField.values.firstObject];
+            } else {
+                self.columnValueLabel.text = @"";
+            }
+        }
+            break;
+            
+        case ASDKModelFormFieldRepresentationTypeDropdown:
+        case ASDKModelFormFieldRepresentationTypeRadio: {
+            if (columnDefinitionformField.metadataValue) {
+                self.columnValueLabel.text = columnDefinitionformField.metadataValue.option.attachedValue;
+            } else if (columnDefinitionformField.values) {
+                if ([columnDefinitionformField.values.firstObject isKindOfClass:NSDictionary.class]) {
+                    self.columnValueLabel.text = columnDefinitionformField.values.firstObject[@"name"];
+                } else {
+                    self.columnValueLabel.text = columnDefinitionformField.values.firstObject;
+                }
+            } else {
+                self.columnValueLabel.text = @"";
+            }
+        }
+            break;
+            
+        case ASDKModelFormFieldRepresentationTypeDate: {
+            //format date in saved form (2016-02-23T23:00:00Z)
+            if (columnDefinitionformField.metadataValue) {
+                self.columnValueLabel.text = columnDefinitionformField.metadataValue.attachedValue;
+            } else {
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+                dateFormatter.dateFormat = kASDKServerFullDateFormat;
+                
+                NSDate *storedDate = [dateFormatter dateFromString:columnDefinitionformField.values.firstObject];
+                
+                NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
+                [displayDateFormatter setDateFormat:kASDKServerShortDateFormat];
+                
+                self.columnValueLabel.text = [displayDateFormatter stringFromDate:storedDate];
+            }
+        }
+            break;
+            
+        default: {
+            NSString *valueString = columnDefinitionformField.values.firstObject ? columnDefinitionformField.values.firstObject : columnDefinitionformField.metadataValue.attachedValue;
+            self.columnValueLabel.text = valueString;
+        }
+            break;
+    }
+}
 
 @end

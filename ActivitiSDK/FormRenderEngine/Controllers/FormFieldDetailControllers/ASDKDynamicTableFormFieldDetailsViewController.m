@@ -1,4 +1,4 @@
-    /*******************************************************************************
+/*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Activiti Mobile SDK.
@@ -28,15 +28,10 @@
 #import "ASDKLocalizationConstants.h"
 
 // Categories
-#import "UIColor+ASDKFormViewColors.h"
 #import "UIViewController+ASDKAlertAddition.h"
 
 // Models
-#import "ASDKModelFormField.h"
-#import "ASDKModelFormFieldValue.h"
 #import "ASDKModelDynamicTableColumnDefinitionFormField.h"
-#import "ASDKModelDynamicTableColumnDefinitionRestFormField.h"
-#import "ASDKModelDynamicTableColumnDefinitionAmountFormField.h"
 #import "ASDKModelDynamicTableFormField.h"
 
 // Cells
@@ -52,7 +47,7 @@
 @property (assign, nonatomic) NSInteger                 selectedRowIndex;
 @property (strong, nonatomic) NSArray                   *visibleRowColumns;
 @property (strong, nonatomic) NSDictionary              *columnDefinitions;
-@property (weak, nonatomic)   IBOutlet UITableView      *rowsWithVisibleColumnsTableView;
+@property (weak, nonatomic) IBOutlet UITableView        *rowsWithVisibleColumnsTableView;
 @property (weak, nonatomic) IBOutlet ASDKNoContentView  *noRowsView;
 @property (weak, nonatomic) IBOutlet ASDKActivityView   *activityView;
 @property (weak, nonatomic) IBOutlet UIView             *blurEffectView;
@@ -95,18 +90,18 @@
     [self refreshContent];
 }
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 - (void)refreshContent {
     [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
-
+    
     // Display the no rows view if appropiate
     self.noRowsView.hidden = (self.visibleRowColumns.count > 0) ? YES : NO;
     self.noRowsView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
@@ -123,32 +118,32 @@
     
     // make deepcopy of column definitions
     NSArray* dynamicTableDeepCopy = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:dynamicTableFormField.columnDefinitions]];
-
+    
     // and add them as a new table row
     [newDynamicTableRows addObject:dynamicTableDeepCopy];
-
+    
     self.currentFormField.values = [[NSMutableArray alloc] initWithArray:newDynamicTableRows];
     [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
-
+    
     [self refreshContent];
 }
 
 - (void)deleteCurrentDynamicTableRow {
     __weak typeof(self) weakSelf = self;
-
+    
     [self showConfirmationAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableDeleteRowConfirmationText, ASDKLocalizationTable,@"Delete row confirmation question")
-             confirmationBlockAction:^{
-                 __strong typeof(self) strongSelf = weakSelf;
-                 
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                       NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
-                       [formFieldValues removeObjectAtIndex:strongSelf.selectedRowIndex];
-                       strongSelf.currentFormField.values = [formFieldValues copy];
-                       [strongSelf determineVisibleRowColumnsWithFormFieldValues:strongSelf.currentFormField.values];
-                       [strongSelf.navigationController popToViewController:strongSelf
-                                                                   animated:YES];
-                 });
-             }];
+                             confirmationBlockAction:^{
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                     [formFieldValues removeObjectAtIndex:strongSelf.selectedRowIndex];
+                                     strongSelf.currentFormField.values = [formFieldValues copy];
+                                     [strongSelf determineVisibleRowColumnsWithFormFieldValues:strongSelf.currentFormField.values];
+                                     [strongSelf.navigationController popToViewController:strongSelf
+                                                                                 animated:YES];
+                                 });
+                             }];
 }
 
 - (void)determineVisibleRowColumnsWithFormFieldValues:(NSArray *)values {
@@ -195,10 +190,8 @@
     ASDKDynamicTableColumnTableViewCell *visibleColumnCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldDynamicTableRowRepresentation];
     
     ASDKModelFormField *rowFormField = self.visibleRowColumns[indexPath.section][indexPath.row];
-    
-    [self formatNameLabel:visibleColumnCell.columnNameLabel
-            andValueLabel:visibleColumnCell.columnValueLabel
-withColumnDefinitionFormField:rowFormField];
+    [visibleColumnCell setupCellWithColumnDefinitionFormField:rowFormField
+                                        dynamicTableFormField:(ASDKModelDynamicTableFormField *) self.currentFormField];
     
     return visibleColumnCell;
 }
@@ -217,7 +210,7 @@ heightForHeaderInSection:(NSInteger)section {
 - (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
     ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) self.currentFormField;
-
+    
     ASDKDynamicTableRowHeaderTableViewCell *sectionHeaderView = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldDynamicTableHeaderRepresentation];
     [sectionHeaderView setupCellWithSelectionSection:section
                                           headerText:[NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1]
@@ -239,176 +232,84 @@ viewForHeaderInSection:(NSInteger)section {
     newFormRenderEngine.processDefinition = currentFormRenderEngine.processDefinition;
     newFormRenderEngine.task = currentFormRenderEngine.task;
     
-    __weak typeof(self) weakSelf = self;
-    
     self.blurEffectView.hidden = NO;
     self.activityView.hidden = NO;
     self.activityView.animating = YES;
     
+    __weak typeof(self) weakSelf = self;
     if (newFormRenderEngine.task) {
         [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
                                         dynamicTableFormFieldID:self.currentFormField.modelID
                                                       taskModel:newFormRenderEngine.task
                                           renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
                                               if (formController && !error) {
-                                                  self.selectedRowIndex = section;
+                                                  strongSelf.selectedRowIndex = section;
                                                   
-                                                  if (ASDKModelFormFieldRepresentationTypeReadOnly != self.currentFormField.representationType) {
-                                                      UIBarButtonItem *deleteRowBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
-                                                                                                                                  style:UIBarButtonItemStylePlain
-                                                                                                                                 target:self
-                                                                                                                                 action:@selector(deleteCurrentDynamicTableRow)];
+                                                  if (ASDKModelFormFieldRepresentationTypeReadOnly != strongSelf.currentFormField.representationType) {
+                                                      UIBarButtonItem *deleteRowBarButtonItem =
+                                                      [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
+                                                                                       style:UIBarButtonItemStylePlain
+                                                                                      target:strongSelf
+                                                                                      action:@selector(deleteCurrentDynamicTableRow)];
                                                       
-                                                      [deleteRowBarButtonItem setTitleTextAttributes:@{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
-                                                                                                       NSForegroundColorAttributeName : [UIColor whiteColor]}
+                                                      [deleteRowBarButtonItem setTitleTextAttributes:
+                                                       @{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
+                                                         NSForegroundColorAttributeName : [UIColor whiteColor]}
                                                                                             forState:UIControlStateNormal];
-                                                       
+                                                      
                                                       formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
                                                   }
                                                   
-                                                  UILabel *titleLabel = [[UILabel alloc] init];
+                                                  UILabel *titleLabel = [UILabel new];
                                                   titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
                                                   titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
-                                                                                     size:17];
+                                                                                    size:17];
                                                   titleLabel.textColor = [UIColor whiteColor];
                                                   [titleLabel sizeToFit];
-                                                   
+                                                  
                                                   formController.navigationItem.titleView = titleLabel;
-                                                   
+                                                  
                                                   // If there is controller assigned to the selected form field notify the delegate
                                                   // that it can begin preparing for presentation
-                                                  formController.navigationDelegate = self.navigationDelegate;
+                                                  formController.navigationDelegate = strongSelf.navigationDelegate;
                                                   [self.navigationDelegate prepareToPresentDetailController:formController];
                                               }
                                               
-                                              self.activityView.animating = NO;
-                                              self.activityView.hidden = YES;
-                                              self.blurEffectView.hidden = YES;
-                                       } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
-                                       }];
+                                              strongSelf.activityView.animating = NO;
+                                              strongSelf.activityView.hidden = YES;
+                                              strongSelf.blurEffectView.hidden = YES;
+                                          } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
+                                          }];
     } else {
         [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
                                         dynamicTableFormFieldID:self.currentFormField.modelID
                                               processDefinition:newFormRenderEngine.processDefinition
                                           renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
                                               if (formController && !error) {
-                                                   // If there is controller assigned to the selected form field notify the delegate
-                                                   // that it can begin preparing for presentation
-                                                   formController.navigationDelegate = self.navigationDelegate;
-                                                   [self.navigationDelegate prepareToPresentDetailController:formController];
+                                                  // If there is controller assigned to the selected form field notify the delegate
+                                                  // that it can begin preparing for presentation
+                                                  formController.navigationDelegate = strongSelf.navigationDelegate;
+                                                  [strongSelf.navigationDelegate prepareToPresentDetailController:formController];
                                               }
                                               
-                                              self.activityView.animating = NO;
-                                              self.activityView.hidden = YES;
-                                              self.blurEffectView.hidden = YES;
-                                       } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
-                                           __strong typeof(self) strongSelf = weakSelf;
-                                           
-                                           // delete current row
-                                           NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
-                                           [formFieldValues removeObjectAtIndex:section];
-                                           strongSelf.currentFormField.values = [formFieldValues copy];
-                                           [strongSelf determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
-                                           [strongSelf.navigationController popToViewController:self animated:YES];
-                                       }];
+                                              strongSelf.activityView.animating = NO;
+                                              strongSelf.activityView.hidden = YES;
+                                              strongSelf.blurEffectView.hidden = YES;
+                                          } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
+                                              // delete current row
+                                              NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                              [formFieldValues removeObjectAtIndex:section];
+                                              strongSelf.currentFormField.values = [formFieldValues copy];
+                                              [strongSelf determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+                                              [strongSelf.navigationController popToViewController:self animated:YES];
+                                          }];
     }
 }
 
-
-#pragma mark -
-#pragma mark Convenience methods
-
-- (void)formatNameLabel:(UILabel *)nameLabel
-            andValueLabel:(UILabel *)valueLabel
-withColumnDefinitionFormField:(ASDKModelFormField *) columnDefinitionformField {
-    NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
-    nameLabel.text = columnDefinitionformField.fieldName;
-
-    ASDKModelDynamicTableFormField *dynamicTableFormField = (ASDKModelDynamicTableFormField *) self.currentFormField;
-
-    // If dealing with read-only forms extract the representation type from the attached
-    // form field params model
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
-        !dynamicTableFormField.isTableEditable) {
-        representationType = columnDefinitionformField.formFieldParams.representationType;
-        // set 'disabled color' for complete forms
-        valueLabel.textColor = [UIColor formViewCompletedValueColor];
-    } else if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
-               dynamicTableFormField.isTableEditable) {
-        representationType = columnDefinitionformField.formFieldParams.representationType;
-    } else {
-        representationType = columnDefinitionformField.representationType;
-    }
-    
-    switch (representationType) {
-        case ASDKModelFormFieldRepresentationTypeBoolean: {
-            BOOL formFieldValue;
-            if (columnDefinitionformField.metadataValue) {
-                formFieldValue = columnDefinitionformField.metadataValue.attachedValue ? YES: NO;
-            } else {
-                formFieldValue = columnDefinitionformField.values.firstObject ? YES : NO;
-            }
-            valueLabel.text = formFieldValue ? @"Yes" : @"No";
-        }
-            break;
-            
-        case ASDKModelFormFieldRepresentationTypeAmount: {
-            ASDKModelDynamicTableColumnDefinitionAmountFormField *amountColumnDefinitionFormField = (ASDKModelDynamicTableColumnDefinitionAmountFormField *) columnDefinitionformField;
-            NSString *currencySymbol = (amountColumnDefinitionFormField.currency.length != 0) ? amountColumnDefinitionFormField.currency : @"$";
-            NSMutableAttributedString *labelText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)", amountColumnDefinitionFormField.fieldName, currencySymbol]];
-            [labelText addAttribute:NSForegroundColorAttributeName value:[UIColor formViewAmountFieldSymbolColor] range:NSMakeRange((labelText.length) - 3,3)];
-            nameLabel.attributedText = labelText;
-            
-            if (columnDefinitionformField.metadataValue) {
-                valueLabel.text = columnDefinitionformField.metadataValue.attachedValue;
-            } else if (columnDefinitionformField.values) {
-                valueLabel.text = [NSString stringWithFormat:@"%@", amountColumnDefinitionFormField.values.firstObject];
-            } else {
-                valueLabel.text = @"";
-            }
-        }
-            break;
-            
-        case ASDKModelFormFieldRepresentationTypeDropdown:
-        case ASDKModelFormFieldRepresentationTypeRadio: {
-            if (columnDefinitionformField.metadataValue) {
-                valueLabel.text = columnDefinitionformField.metadataValue.option.attachedValue;
-            } else if (columnDefinitionformField.values) {
-                if ([columnDefinitionformField.values.firstObject isKindOfClass:NSDictionary.class]) {
-                    valueLabel.text = columnDefinitionformField.values.firstObject[@"name"];
-                } else {
-                    valueLabel.text = columnDefinitionformField.values.firstObject;
-                }
-            } else {
-                valueLabel.text = @"";
-            }
-        }
-            break;
-            
-        case ASDKModelFormFieldRepresentationTypeDate: {
-            //format date in saved form (2016-02-23T23:00:00Z)
-            if (columnDefinitionformField.metadataValue) {
-                valueLabel.text = columnDefinitionformField.metadataValue.attachedValue;
-            } else {
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-                dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-                dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
-                
-                NSDate *storedDate = [dateFormatter dateFromString:columnDefinitionformField.values.firstObject];
-                
-                NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
-                [displayDateFormatter setDateFormat:@"dd-MM-yyyy"];
-                
-                valueLabel.text = [displayDateFormatter stringFromDate:storedDate];
-            }
-        }
-            break;
-            
-        default: {
-            valueLabel.text = columnDefinitionformField.values.firstObject;
-        }
-            break;
-    }
-}
 @end

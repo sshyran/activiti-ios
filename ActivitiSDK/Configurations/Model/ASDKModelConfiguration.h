@@ -20,3 +20,6 @@
 
 // Accepted date format string that will be used to parse dates
 extern NSString * const kBaseModelDateFormat;
+extern NSString * const kASDKServerFullDateFormat;
+extern NSString * const kASDKServerLongDateFormat;
+extern NSString * const kASDKServerShortDateFormat;

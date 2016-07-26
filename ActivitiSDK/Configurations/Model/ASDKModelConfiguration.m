@@ -18,4 +18,7 @@
 
 #import "ASDKModelConfiguration.h"
 
-NSString * const kBaseModelDateFormat   = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+NSString * const kBaseModelDateFormat       = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+NSString * const kASDKServerFullDateFormat  = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z";
+NSString * const kASDKServerLongDateFormat  = @"yyyy-MM-dd'T'HH:mm:ss'Z";
+NSString * const kASDKServerShortDateFormat = @"dd-MM-yyyy";
