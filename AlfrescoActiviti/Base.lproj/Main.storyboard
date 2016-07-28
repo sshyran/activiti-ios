@@ -3870,20 +3870,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="39.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i7g-Ki-Hxm" customClass="ASDKRoundedBorderView">
-                                                    <rect key="frame" x="486" y="4" width="110" height="31.5"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
-                                                            <color key="value" red="0.21960784310000001" green="0.5568627451" blue="0.77647058820000003" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                            <real key="value" value="3"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </view>
                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eU2-wP-Z1E" customClass="ASDKRoundedBorderView">
-                                                    <rect key="frame" x="366" y="4" width="110" height="31.5"/>
+                                                    <rect key="frame" x="482" y="4" width="110" height="31.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
@@ -3894,24 +3882,8 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8xx-oZ-w36">
-                                                    <rect key="frame" x="486" y="4" width="110" height="31.5"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="110" id="1ra-Co-ssY"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
-                                                    <state key="normal" title="Show diagram">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <state key="highlighted">
-                                                        <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="onShowDiagram:" destination="l5c-k0-OCW" eventType="touchUpInside" id="aWE-d8-Bdo"/>
-                                                    </connections>
-                                                </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LIZ-lx-C28">
-                                                    <rect key="frame" x="366" y="4" width="110" height="31.5"/>
+                                                    <rect key="frame" x="482" y="4" width="110" height="31.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="110" id="6gG-4v-QD8"/>
                                                     </constraints>
@@ -3928,27 +3900,18 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="i7g-Ki-Hxm" firstAttribute="centerY" secondItem="8xx-oZ-w36" secondAttribute="centerY" id="9M8-RP-og0"/>
-                                                <constraint firstAttribute="bottom" secondItem="8xx-oZ-w36" secondAttribute="bottom" constant="4" id="Fx8-U2-RH8"/>
+                                                <constraint firstAttribute="trailing" secondItem="LIZ-lx-C28" secondAttribute="trailing" constant="8" id="IJS-PR-zeh"/>
                                                 <constraint firstAttribute="bottom" secondItem="LIZ-lx-C28" secondAttribute="bottom" constant="4" id="Jqi-mS-f2w"/>
-                                                <constraint firstItem="i7g-Ki-Hxm" firstAttribute="height" secondItem="8xx-oZ-w36" secondAttribute="height" id="SqL-Nk-5R1"/>
                                                 <constraint firstItem="LIZ-lx-C28" firstAttribute="top" secondItem="IPl-Nc-DsG" secondAttribute="top" constant="4" id="WQn-Gh-1Du"/>
-                                                <constraint firstItem="i7g-Ki-Hxm" firstAttribute="centerX" secondItem="8xx-oZ-w36" secondAttribute="centerX" id="Zg8-wK-3F1"/>
                                                 <constraint firstItem="eU2-wP-Z1E" firstAttribute="centerY" secondItem="LIZ-lx-C28" secondAttribute="centerY" id="gEl-Od-8bi"/>
                                                 <constraint firstItem="eU2-wP-Z1E" firstAttribute="centerX" secondItem="LIZ-lx-C28" secondAttribute="centerX" id="hew-cg-ljS"/>
-                                                <constraint firstItem="8xx-oZ-w36" firstAttribute="top" secondItem="IPl-Nc-DsG" secondAttribute="top" constant="4" id="mQ0-EO-iHZ"/>
-                                                <constraint firstAttribute="trailing" secondItem="8xx-oZ-w36" secondAttribute="trailing" constant="4" id="oKX-JC-dm0"/>
                                                 <constraint firstItem="eU2-wP-Z1E" firstAttribute="width" secondItem="LIZ-lx-C28" secondAttribute="width" id="rp2-uA-i6t"/>
-                                                <constraint firstItem="8xx-oZ-w36" firstAttribute="leading" secondItem="LIZ-lx-C28" secondAttribute="trailing" constant="10" id="vGI-GJ-dlB"/>
-                                                <constraint firstItem="i7g-Ki-Hxm" firstAttribute="width" secondItem="8xx-oZ-w36" secondAttribute="width" id="w7L-e7-O1h"/>
                                                 <constraint firstItem="eU2-wP-Z1E" firstAttribute="height" secondItem="LIZ-lx-C28" secondAttribute="height" id="zUA-FL-Jyw"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="processControlButton" destination="LIZ-lx-C28" id="rDX-Td-jfj"/>
                                             <outlet property="processControlRoundedBorderView" destination="eU2-wP-Z1E" id="dlT-Cw-gbA"/>
-                                            <outlet property="showDiagramButton" destination="8xx-oZ-w36" id="IAl-ua-yvA"/>
-                                            <outlet property="showDiagramRoundedBorderView" destination="i7g-Ki-Hxm" id="DeR-mY-bc4"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProcessInstanceDetailsStartedCellID" id="E6k-bS-aPK" customClass="AFACreatedDateTableViewCell">
