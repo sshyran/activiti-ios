@@ -54,6 +54,7 @@
 #import "AFATaskDetailsViewController.h"
 #import "AFAContentPickerViewController.h"
 #import "AFAAddCommentsViewController.h"
+#import "AFAProcessStartFormViewController.h"
 
 // Views
 #import "AFAActivityView.h"
@@ -188,6 +189,11 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     } else if ([kSegueIDProcessInstanceDetailsAddComments isEqualToString:segue.identifier]) {
         AFAAddCommentsViewController *addComentsController = (AFAAddCommentsViewController *)segue.destinationViewController;
         addComentsController.processInstanceID = self.processInstanceID;
+    } else if ([kSegueIDProcessInstanceViewCompletedStartForm isEqualToString:segue.identifier]) {
+        AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+        
+        AFAProcessStartFormViewController *startFormViewController = (AFAProcessStartFormViewController *)segue.destinationViewController;
+        [startFormViewController setupStartFormForProcessInstanceObject:processInstanceDetailsModel.currentProcessInstance];
     }
 }
 
@@ -213,6 +219,9 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 }
 
 - (IBAction)unwindAddProcessInstanceCommentsController:(UIStoryboardSegue *)segue {
+}
+
+- (IBAction)unwindProcessInstanceViewStartForm:(UIStoryboardSegue *)segue {
 }
 
 
@@ -368,6 +377,8 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     activeTasksFilter.processInstanceID = self.processInstanceID;
     
     AFATableControllerProcessInstanceTasksModel *processInstanceTasksModel = [AFATableControllerProcessInstanceTasksModel new];
+    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+    processInstanceTasksModel.isStartFormDefined = processInstanceDetailsModel.currentProcessInstance.isStartFormDefined;
     
     __block BOOL hadEncounteredAnError = NO;
     __weak typeof(self) weakSelf = self;
@@ -706,9 +717,13 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         AFATableControllerProcessInstanceTasksModel *processInstanceTasks = [strongSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
         ASDKModelTask *currentTask = [processInstanceTasks itemAtIndexPath:taskIndexpath];
         
-        [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceTaskDetails
-                                        sender:currentTask];
-        
+        if (currentTask) {
+            [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceTaskDetails
+                                            sender:currentTask];
+        } else if (processInstanceTasks.isStartFormDefined) {
+            [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceViewCompletedStartForm
+                                            sender:nil];
+        }
     } forCellType:[processInstanceTasksCellFactory cellTypeForTaskDetails]];
     
     [processInstanceContentCellFactory registerCellAction:^(NSDictionary *changeParameters) {

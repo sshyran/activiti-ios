@@ -96,6 +96,7 @@
 "processInstanceDetailsScreenShowDiagram"                = "Show diagram";
 "processInstanceDetailsScreenTaskNameText"               = "Task name";
 "processInstanceDetailsScreenActiveTasksText"            = "Active tasks";
+"processInstanceDetailsScreenStartFormText"              = "Start form";
 "processInstanceDetailsScreenCompletedTasksText"         = "Completed tasks";
 "processInstanceDetailsScreenNoTasksAvailableText"       = "There are no available tasks for this process instance.";
 "processInstanceDetailsScreenActiveAndCompletedTasksText"= "Active and completed tasks";

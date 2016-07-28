@@ -260,7 +260,7 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
     if (processDefinition.hasStartForm) {
         self.formViewContainer.hidden = NO;
         self.navigationBarTitle = processDefinition.name;
-        [self.processStartFormController startFormForProcessDefinitionObject:processDefinition];
+        [self.processStartFormController setupStartFormForProcessDefinitionObject:processDefinition];
     } else {
         AFAProcessServices *processService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
         

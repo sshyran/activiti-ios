@@ -147,6 +147,29 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                 }];
 }
 
+- (void)requestSetupWithProcessInstance:(ASDKModelProcessInstance *)processInstance
+                  renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock {
+    NSParameterAssert(processInstance);
+    NSParameterAssert(renderCompletionBlock);
+    
+    [self.formRenderEngine setupWithProcessInstance:processInstance
+                              renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                  if (formController && !error) {
+                                      AFALogVerbose(@"Received form controller for process instance:%@ (ID:%@)", processInstance.name, processInstance.modelID);
+                                      
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                          renderCompletionBlock(formController, nil);
+                                      });
+                                  } else {
+                                      AFALogError(@"An error occured while requesting the form controller for process instance %@ (ID:%@).Reason:%@", processInstance.name, processInstance.modelID, error.localizedDescription);
+                                      
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                          renderCompletionBlock(nil, error);
+                                      });
+                                  }
+                              }];
+}
+
 - (ASDKFormEngineActionHandler *)formEngineActionHandler {
     return self.formRenderEngine.actionHandler;
 }

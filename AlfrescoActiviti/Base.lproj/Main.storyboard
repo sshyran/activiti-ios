@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2sj-96-gBg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="2sj-96-gBg">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -9,6 +9,7 @@
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="glyphicons-regular.otf">
+            <string>GLYPHICONS-Regular</string>
             <string>GLYPHICONS-Regular</string>
             <string>GLYPHICONS-Regular</string>
             <string>GLYPHICONS-Regular</string>
@@ -3816,7 +3817,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="NfO-80-xdz">
-                                    <rect key="frame" x="0.0" y="697" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="758" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mv2-Pc-7Qw">
@@ -4258,7 +4259,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="7n2-uM-sji" secondAttribute="bottom" constant="8" id="0QN-8f-l0n"/>
                                                 <constraint firstItem="Odt-hR-Zq5" firstAttribute="leading" secondItem="whc-J2-XWD" secondAttribute="trailing" constant="8" id="7bu-lx-Ohd"/>
                                                 <constraint firstItem="7n2-uM-sji" firstAttribute="leading" secondItem="Odt-hR-Zq5" secondAttribute="trailing" constant="10" id="9QK-44-U1P"/>
-                                                <constraint firstAttribute="leading" secondItem="whc-J2-XWD" secondAttribute="leading" constant="-8" id="IuI-1P-U9t"/>
+                                                <constraint firstItem="whc-J2-XWD" firstAttribute="leading" secondItem="Ucj-WC-JK8" secondAttribute="leading" constant="8" id="IuI-1P-U9t"/>
                                                 <constraint firstItem="tdv-s6-4Cy" firstAttribute="centerX" secondItem="Odt-hR-Zq5" secondAttribute="centerX" id="LYa-SW-Kt5"/>
                                                 <constraint firstItem="tdv-s6-4Cy" firstAttribute="centerY" secondItem="whc-J2-XWD" secondAttribute="centerY" id="MXz-ZL-X3l"/>
                                                 <constraint firstAttribute="trailing" secondItem="QSs-Ou-kAV" secondAttribute="trailing" constant="8" id="SKS-KB-HLJ"/>
@@ -4569,6 +4570,83 @@
                                             <outlet property="iconImageView" destination="0pI-hP-LDj" id="i0j-pg-RCk"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="StartFormCellID" id="THb-CQ-vDs" customClass="AFAStartFormTableViewCell">
+                                        <rect key="frame" x="0.0" y="697" width="600" height="61"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="THb-CQ-vDs" id="Scc-Bk-CAl">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="60.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="form-icon" translatesAutoresizingMaskIntoConstraints="NO" id="w1v-Rj-yC9">
+                                                    <rect key="frame" x="8" y="16" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="1sF-fJ-Xr8"/>
+                                                        <constraint firstAttribute="height" constant="30" id="D4C-P3-KGH"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrL-WT-lrX" userLabel="Vertical separator">
+                                                    <rect key="frame" x="46" y="0.0" width="1" height="60.5"/>
+                                                    <color key="backgroundColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="1" id="oEJ-GM-soa"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vL7-Zl-C8H" customClass="ASDKRoundedBorderView">
+                                                    <rect key="frame" x="42.5" y="27" width="8" height="8"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="8" id="9Ne-Tf-Fb8"/>
+                                                        <constraint firstAttribute="height" constant="8" id="Tko-6g-ytY"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="4"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                            <color key="value" red="0.29411764709999999" green="0.2784313725" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                            <integer key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                            <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" text="name" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C2i-Kg-OVh">
+                                                    <rect key="frame" x="57" y="12" width="500" height="36.5"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LZs-22-LFo">
+                                                    <rect key="frame" x="580" y="23.5" width="12" height="14.5"/>
+                                                    <fontDescription key="fontDescription" name="GLYPHICONS-Regular" family="GLYPHICONS" pointSize="12"/>
+                                                    <color key="textColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="BrL-WT-lrX" firstAttribute="leading" secondItem="w1v-Rj-yC9" secondAttribute="trailing" constant="8" id="2uV-KK-W9w"/>
+                                                <constraint firstItem="w1v-Rj-yC9" firstAttribute="centerY" secondItem="Scc-Bk-CAl" secondAttribute="centerY" id="3Ik-JJ-Zqa"/>
+                                                <constraint firstItem="C2i-Kg-OVh" firstAttribute="leading" secondItem="BrL-WT-lrX" secondAttribute="trailing" constant="10" id="Cvf-n2-RUr"/>
+                                                <constraint firstItem="vL7-Zl-C8H" firstAttribute="centerX" secondItem="BrL-WT-lrX" secondAttribute="centerX" id="J9m-14-0k4"/>
+                                                <constraint firstItem="vL7-Zl-C8H" firstAttribute="centerY" secondItem="w1v-Rj-yC9" secondAttribute="centerY" id="ebu-dD-BFA"/>
+                                                <constraint firstItem="BrL-WT-lrX" firstAttribute="top" secondItem="Scc-Bk-CAl" secondAttribute="top" id="fmf-bV-Tcf"/>
+                                                <constraint firstAttribute="bottom" secondItem="BrL-WT-lrX" secondAttribute="bottom" id="g5b-u7-GxN"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="C2i-Kg-OVh" secondAttribute="trailing" constant="35" id="iU1-1R-RCq"/>
+                                                <constraint firstItem="C2i-Kg-OVh" firstAttribute="top" secondItem="Scc-Bk-CAl" secondAttribute="top" constant="12" id="mjb-SM-hhx"/>
+                                                <constraint firstAttribute="bottom" secondItem="C2i-Kg-OVh" secondAttribute="bottom" constant="12" id="tat-Lx-h3g"/>
+                                                <constraint firstAttribute="trailing" secondItem="LZs-22-LFo" secondAttribute="trailing" constant="8" id="uLT-hE-5xe"/>
+                                                <constraint firstItem="LZs-22-LFo" firstAttribute="centerY" secondItem="Scc-Bk-CAl" secondAttribute="centerY" id="vaw-u9-9mF"/>
+                                                <constraint firstItem="w1v-Rj-yC9" firstAttribute="leading" secondItem="Scc-Bk-CAl" secondAttribute="leading" constant="8" id="zRx-bt-3IA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="iconImageView" destination="w1v-Rj-yC9" id="uzH-dg-Qqo"/>
+                                            <outlet property="nameLabel" destination="C2i-Kg-OVh" id="S1U-U5-Ia6"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HtY-U5-ifu" customClass="AFAActivityView">
@@ -4825,6 +4903,7 @@
                         <segue destination="tQn-hT-Ybr" kind="unwind" identifier="ProcessInstanceStartFormUnwindSegueID" unwindAction="unwindStartFormProcessInstanceDetailsController:" id="HAM-m0-mf0"/>
                         <segue destination="tQn-hT-Ybr" kind="unwind" identifier="TaskDetailsViewProcessUnwindSegueID" unwindAction="unwindViewProcessInstanceDetailsController:" id="jXp-Ri-Cvw"/>
                         <segue destination="K1K-0q-yJ3" kind="custom" identifier="ProcessInstanceDetailsAddCommentsSegueID" customClass="AFAPushFadeSegue" id="8xE-qE-G6q"/>
+                        <segue destination="uLp-53-rQC" kind="custom" identifier="ProcessInstanceViewCompletedStartFormSegueID" customClass="AFAPushFadeSegue" id="Ubh-jA-md9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RRp-wQ-KIC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5621,7 +5700,7 @@
                         <viewControllerLayoutGuide type="bottom" id="70Q-Eh-dN3"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="LJj-xc-lu6">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
+                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H6z-EC-sRx" customClass="AFAActivityView">
@@ -5656,11 +5735,22 @@
                             <constraint firstItem="H6z-EC-sRx" firstAttribute="centerX" secondItem="LJj-xc-lu6" secondAttribute="centerX" id="z4P-FU-owf"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Gu0-cN-QpM">
+                        <barButtonItem key="leftBarButtonItem" id="AlK-QS-CaX">
+                            <connections>
+                                <action selector="onBack:" destination="uLp-53-rQC" id="vRU-HH-NzZ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
                     <connections>
                         <outlet property="activityView" destination="H6z-EC-sRx" id="KBP-4a-kJN"/>
+                        <outlet property="backBarButtonItem" destination="AlK-QS-CaX" id="4hj-Ny-0UJ"/>
+                        <segue destination="ASR-AJ-PlD" kind="unwind" identifier="ProcessInstanceViewCompletedStartFormUnwindSegueID" unwindAction="unwindProcessInstanceViewStartForm:" id="oIj-mi-A9W"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9TK-fc-9Jv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="ASR-AJ-PlD" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3314" y="255"/>
         </scene>
@@ -5718,9 +5808,10 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="RF7-69-ZNi"/>
         <segue reference="OCj-p8-qSZ"/>
-        <segue reference="XZ3-C5-Oig"/>
+        <segue reference="dAG-4I-soh"/>
+        <segue reference="8xE-qE-G6q"/>
+        <segue reference="Ubh-jA-md9"/>
         <segue reference="Axm-Tn-V6n"/>
     </inferredMetricsTieBreakers>
 </document>

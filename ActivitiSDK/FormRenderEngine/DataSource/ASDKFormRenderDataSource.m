@@ -208,7 +208,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark ASDKFormRenderEngine Protocol
 
 - (NSInteger)numberOfSectionsForCurrentFormDescription {
-    return self.visibleFormFields.count + 1; // Where 1 is the additional section for form outcomes
+    // Where + 1 is the additional section for form outcomes
+    return self.formOutcomes.count ? self.visibleFormFields.count + 1 : self.visibleFormFields.count;
 }
 
 - (NSInteger)numberOfFormFieldsForSection:(NSInteger)section {
@@ -539,13 +540,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
-        (ASDKModelFormFieldRepresentationTypeAttach == formField.formFieldParams.representationType ||
-         ASDKModelFormFieldRepresentationTypeMultiline == formField.formFieldParams.representationType ||
-         ASDKModelFormFieldRepresentationTypeDynamicTable == formField.formFieldParams.representationType)) {
-        representationType = formField.formFieldParams.representationType;
-    } else if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
-               formField.values.count) {
-        representationType = ASDKModelFormFieldRepresentationTypeReadonlyText;
+        formField.formFieldParams) {
+        if (!formField.formFieldParams.representationType) {
+            representationType = ASDKModelFormFieldRepresentationTypeReadonlyText;
+        } else {
+            representationType = formField.formFieldParams.representationType;
+        }
     } else if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType) {
         representationType = formField.representationType;
     }

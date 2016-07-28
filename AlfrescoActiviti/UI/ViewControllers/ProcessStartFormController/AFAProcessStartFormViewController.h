@@ -30,8 +30,9 @@ ASDKModelProcessInstance;
 
 @interface AFAProcessStartFormViewController : AFABaseThemedViewController
 
-@property (weak, nonatomic) id<AFAProcessStartFormViewControllerDelegate> delegate;
+@property (weak, nonatomic)   id<AFAProcessStartFormViewControllerDelegate> delegate;
 
-- (void)startFormForProcessDefinitionObject:(ASDKModelProcessDefinition *)processDefinition;
+- (void)setupStartFormForProcessDefinitionObject:(ASDKModelProcessDefinition *)processDefinition;
+- (void)setupStartFormForProcessInstanceObject:(ASDKModelProcessInstance *)processInstance;
 
 @end

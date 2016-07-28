@@ -118,6 +118,7 @@ NSString *kLocalizationProcessInstanceDetailsScreenStartedByText            = @"
 NSString *kLocalizationProcessInstanceDetailsScreenShowDiagramText          = @"processInstanceDetailsScreenShowDiagram";
 NSString *kLocalizationProcessInstanceDetailsScreenTaskNameText             = @"processInstanceDetailsScreenTaskNameText";
 NSString *kLocalizationProcessInstanceDetailsScreenActiveTasksText          = @"processInstanceDetailsScreenActiveTasksText";
+NSString *kLocalizationProcessInstanceDetailsScreenStartFormText            = @"processInstanceDetailsScreenStartFormText";
 NSString *kLocalizationProcessInstanceDetailsScreenCompletedTasksText       = @"processInstanceDetailsScreenCompletedTasksText";
 NSString *kLocalizationProcessInstanceDetailsScreenNoTasksAvailableText     = @"processInstanceDetailsScreenNoTasksAvailableText";
 NSString *kLocalizationProcessInstanceDetailsScreenActiveAndCompletedText   = @"processInstanceDetailsScreenActiveAndCompletedTasksText";

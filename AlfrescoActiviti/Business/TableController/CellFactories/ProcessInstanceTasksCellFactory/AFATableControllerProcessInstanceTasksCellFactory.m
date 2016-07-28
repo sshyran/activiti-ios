@@ -21,9 +21,11 @@
 // Constants
 #import "AFAUIConstants.h"
 #import "AFABusinessConstants.h"
+#import "AFALocalizationConstants.h"
 
 // Cells
 #import "AFATaskDetailsStyleTableViewCell.h"
+#import "AFAStartFormTableViewCell.h"
 #import "AFASimpleSectionHeaderCell.h"
 
 @implementation AFATableControllerProcessInstanceTasksCellFactory
@@ -34,12 +36,26 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
               cellForIndexPath:(NSIndexPath *)indexPath
                       forModel:(id<AFATableViewModelDelegate>)model {
-    AFATaskDetailsStyleTableViewCell *taskDetailsCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProcessInstanceDetailsTask
-                                                                                        forIndexPath:indexPath];
-    [taskDetailsCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
-    taskDetailsCell.applicationThemeColor = self.appThemeColor;
+    id currentModel = [model itemAtIndexPath:indexPath];
+    UITableViewCell *cell = nil;
     
-    return taskDetailsCell;
+    if (currentModel) {
+        AFATaskDetailsStyleTableViewCell *taskDetailsCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProcessInstanceDetailsTask
+                                                                                            forIndexPath:indexPath];
+        [taskDetailsCell setUpCellWithTask:currentModel];
+        taskDetailsCell.applicationThemeColor = self.appThemeColor;
+        
+        cell = taskDetailsCell;
+    } else {
+        AFAStartFormTableViewCell *startFormCell = [tableView dequeueReusableCellWithIdentifier:kCellIDStartForm
+                                                                                   forIndexPath:indexPath];
+        startFormCell.nameLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenStartFormText, @"Start form text");
+        startFormCell.applicationThemeColor = self.appThemeColor;
+        
+        cell = startFormCell;
+    }
+    
+    return cell;
 }
 
 - (void)tableView:(UITableView *)tableView

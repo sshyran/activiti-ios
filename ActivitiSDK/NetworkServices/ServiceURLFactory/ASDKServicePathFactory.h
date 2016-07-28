@@ -82,7 +82,8 @@
 - (NSString *)contentServicePathFormat;
 
 // Form related
-- (NSString *)startFormServicePathFormat;
+- (NSString *)processDefinitionStartFormServicePathFormat;
+- (NSString *)processInstanceStartFormServicePathFormat;
 - (NSString *)taskFormServicePathFormat;
 - (NSString *)contentFieldUploadServicePath;
 - (NSString *)restFieldValuesServicePathFormat;

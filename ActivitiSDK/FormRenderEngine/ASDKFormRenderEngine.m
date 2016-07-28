@@ -216,6 +216,57 @@
      }];
 }
 
+- (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance
+           renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock {
+    NSParameterAssert(processInstance);
+    NSParameterAssert(renderCompletionBlock);
+    
+    self.processInstance = processInstance;
+    
+    [self.formNetworkServices
+     startFormForProcessInstanceID:processInstance.modelID
+     completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+         // Check for form description errors first
+         if (error) {
+             renderCompletionBlock(nil, error);
+         }
+         
+         self.formPreProcessor = [ASDKFormPreProcessor new];
+         self.formPreProcessor.formNetworkServices = self.formNetworkServices;
+         
+         [self.formPreProcessor setupWithProcessDefinitionID:processInstance.processDefinitionID
+                                              withFormFields:formDescription.formFields
+                                     withDynamicTableFieldID:nil
+                                   preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
+                                       formDescription.formFields = processedFormFields;
+                                       
+                                       // Set up the data source for the form collection view controller
+                                       self.dataSource = [[ASDKFormRenderDataSource alloc] initWithProcessDefinitionFormDescription:formDescription];
+                                       self.dataSource.isReadOnlyForm = YES;
+                                       
+                                       // Always dispath on the main queue results related to the form view
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           UICollectionViewController *formCollectionViewController = [self prepareWithFormDescription:formDescription];
+                                           
+                                           // First check for integrity errors
+                                           if (!formCollectionViewController) {
+                                               NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Setup operation for form controller failed.",
+                                                                          NSLocalizedFailureReasonErrorKey     : @"The operation could not be completed because the form render engine could not generate the form view.",
+                                                                          NSLocalizedRecoverySuggestionErrorKey: @"Please check your form description model and make sure it has all the information needed to render."
+                                                                          };
+                                               NSError *error = [NSError errorWithDomain:kASDKFormRenderEngineErrorDomain
+                                                                                    code:kASDKFormRenderEngineSetupErrorCode
+                                                                                userInfo:userInfo];
+                                               
+                                               renderCompletionBlock(nil, error);
+                                           } else {
+                                               renderCompletionBlock(formCollectionViewController, nil);
+                                           }
+                                       });
+                                   }];
+     }];
+}
+
 - (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
                    dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
                                  taskModel:(ASDKModelTask *)task

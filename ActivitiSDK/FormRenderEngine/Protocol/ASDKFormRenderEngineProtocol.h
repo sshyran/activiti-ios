@@ -106,6 +106,22 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
                formCompletionBlock:(ASDKStartFormRenderEngineCompletionBlock)formCompletionBlock;
 
 /**
+ *  Designated setup method for the form render engine class when it is used to show 
+ *  the completed start form of a process instance. This method relies on the internal
+ *  workings of the form render engine to make the API network calls on your behalf
+ *  and you will be provided with an instance of a collection view controller through
+ *  a completion block.
+ *
+ *  @param processInstance       Process instance object containing the mandatory process instance
+ *                               ID property
+ *  @param renderCompletionBlock Completion block providing a form controller
+ *                               containing the visual representation of the
+ *                               form view and additional error reasons
+ */
+- (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance
+           renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock;
+
+/**
  *  Designated setup method for the form render engine class when it is used
  *  to show the dynamic table row associated to a task. This method relies on the internal
  *  workings of the form render engine to make the API network calls on your

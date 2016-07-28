@@ -193,8 +193,12 @@ static NSString * const kASDkHTTPS = @"https";
 #pragma mark -
 #pragma mark Form related
 
-- (NSString *)startFormServicePathFormat {
+- (NSString *)processDefinitionStartFormServicePathFormat {
     return [[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessDefinitionPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIStartFormPath];
+}
+
+- (NSString *)processInstanceStartFormServicePathFormat {
+    return [[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIProcessInstancesPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIStartFormPath];
 }
 
 - (NSString *)taskFormServicePathFormat {

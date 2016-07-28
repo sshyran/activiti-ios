@@ -51,6 +51,19 @@ typedef void  (^ASDKFormContentDownloadCompletionBlock) (NSString *contentID, NS
                         completionBlock:(ASDKFormModelsCompletionBlock)completionBlock;
 
 /**
+ *  When the process has been started by completeting a start form, this call will 
+ *  retrieve the list of form models that are associated with the start form for that
+ *  process instance.
+ *
+ *  @param processInstanceID The process instance ID for which the form models are 
+ *                           retrieved
+ *  @param completionBlock   Completion block providing the form model list and an
+ *                             optional error reason
+ */
+- (void)startFormForProcessInstanceID:(NSString *)processInstanceID
+                      completionBlock:(ASDKFormModelsCompletionBlock)completionBlock;
+
+/**
  *  Completes a task form associated with a given task ID, with an attached form field values representation 
  *  containing input values from the user and the form outcome the user chosen.
  *
