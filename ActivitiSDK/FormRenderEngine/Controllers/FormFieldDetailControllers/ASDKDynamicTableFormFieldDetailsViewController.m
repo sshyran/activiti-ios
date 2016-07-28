@@ -229,7 +229,17 @@ viewForHeaderInSection:(NSInteger)section {
     ASDKFormRenderEngine *newFormRenderEngine = [ASDKFormRenderEngine new];
     
     newFormRenderEngine.formNetworkServices = currentFormRenderEngine.formNetworkServices;
-    newFormRenderEngine.processDefinition = currentFormRenderEngine.processDefinition;
+    
+    // If the user is browsing a completed start form of a process instance then
+    // recreate the process definition object from the process instance one
+    if (!currentFormRenderEngine.processDefinition &&
+        currentFormRenderEngine.processInstance) {
+        ASDKModelProcessDefinition *processDefinition = [ASDKModelProcessDefinition new];
+        processDefinition.modelID = currentFormRenderEngine.processInstance.processDefinitionID;
+        newFormRenderEngine.processDefinition = processDefinition;
+    } else {
+        newFormRenderEngine.processDefinition = currentFormRenderEngine.processDefinition;
+    }
     newFormRenderEngine.task = currentFormRenderEngine.task;
     
     self.blurEffectView.hidden = NO;
