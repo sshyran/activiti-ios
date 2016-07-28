@@ -73,6 +73,20 @@ typedef void  (^AFAStartFormServicesEngineCompletionBlock) (ASDKModelProcessInst
                       formCompletionBlock:(AFAStartFormServicesEngineCompletionBlock)formCompletionBlock;
 
 /**
+ *  Performs a request to the form render engine to handle the creation of the form view
+ *  given a process instance object, including all the necessary network calls for setup
+ *  and completion of the form
+ *
+ *  @param processInstance       Process instance object containing the mandatory process instance
+                                 ID property
+ *  @param renderCompletionBlock Completion block providing a form controller containing
+ *                               the visual representation of the form view and additional
+ *                               error reasons
+ */
+- (void)requestSetupWithProcessInstance:(ASDKModelProcessInstance *)processInstance
+                  renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock;
+
+/**
  *  Requests the form engine action handler object. See the SDK description for more details.
  *
  *  @return Form engine action handler object

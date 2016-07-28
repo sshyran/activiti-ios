@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2016 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKFormRenderEngineProtocol.h"
+#import <UIKit/UIKit.h>
 
-@interface ASDKFormRenderEngine : NSObject <ASDKFormRenderEngineProtocol>
+@interface AFAStartFormTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) ASDKFormNetworkServices            *formNetworkServices;
-@property (strong, nonatomic) ASDKFormPreProcessor               *formPreProcessor;
-@property (strong, nonatomic) ASDKModelTask                      *task;
-@property (strong, nonatomic) ASDKModelProcessDefinition         *processDefinition;
-@property (strong, nonatomic) ASDKModelProcessInstance           *processInstance;
-@property (strong, nonatomic) ASDKFormEngineActionHandler        *actionHandler;
+@property (weak, nonatomic) IBOutlet UILabel        *nameLabel;
+@property (weak, nonatomic) IBOutlet UIImageView    *iconImageView;
+@property (strong, nonatomic) UIColor               *applicationThemeColor;
 
 @end

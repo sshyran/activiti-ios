@@ -25,10 +25,19 @@ typedef NS_ENUM(NSInteger, AFATableControllerProcessInstanceTasksSectionType) {
     AFATableControllerProcessInstanceTasksSectionTypeEnumCount
 };
 
+typedef NS_ENUM(NSInteger, AFATableControllerProcessInstanceTasksAndStartFormSectionType) {
+    AFATableControllerProcessInstanceTasksAndStartFormSectionTypeActive = 0,
+    AFATableControllerProcessInstanceTasksAndStartFormSectionTypeStartForm,
+    AFATableControllerProcessInstanceTasksAndStartFormSectionTypeCompleted,
+    AFATableControllerProcessInstanceTasksAndStartFormSectionTypeEnumCount
+};
+
+
 @interface AFATableControllerProcessInstanceTasksModel : AFABaseModel <AFATableViewModelDelegate>
 
-@property (strong, nonatomic) NSArray *activeTasks;
-@property (strong, nonatomic) NSArray *completedTasks;
+@property (strong, nonatomic) NSArray   *activeTasks;
+@property (strong, nonatomic) NSArray   *completedTasks;
+@property (assign, nonatomic) BOOL      isStartFormDefined;
 
 - (BOOL)hasTaskListAvailable;
 

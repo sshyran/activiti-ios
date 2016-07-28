@@ -50,6 +50,7 @@
 		1328D34D1BB91CAC0010757C /* AFATableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D34C1BB91CAC0010757C /* AFATableController.m */; };
 		1328D3511BB92D540010757C /* AFATableControllerTaskDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3501BB92D540010757C /* AFATableControllerTaskDetailsModel.m */; };
 		1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */; };
+		132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */; };
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
@@ -599,6 +600,8 @@
 		1328D3501BB92D540010757C /* AFATableControllerTaskDetailsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerTaskDetailsModel.m; path = Model/TableControllerTaskDetailsModel/AFATableControllerTaskDetailsModel.m; sourceTree = "<group>"; };
 		1328D3541BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerTaskDetailsCellFactory.h; path = Business/TableController/CellFactories/TaskDetailsCellFactory/AFATableControllerTaskDetailsCellFactory.h; sourceTree = "<group>"; };
 		1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerTaskDetailsCellFactory.m; path = Business/TableController/CellFactories/TaskDetailsCellFactory/AFATableControllerTaskDetailsCellFactory.m; sourceTree = "<group>"; };
+		132BB7651D48AEB200757493 /* AFAStartFormTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAStartFormTableViewCell.h; path = UI/Cells/StartFormCell/AFAStartFormTableViewCell.h; sourceTree = "<group>"; };
+		132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAStartFormTableViewCell.m; path = UI/Cells/StartFormCell/AFAStartFormTableViewCell.m; sourceTree = "<group>"; };
 		132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProcessInstance.h; path = Model/ProcessInstance/ASDKModelProcessInstance.h; sourceTree = "<group>"; };
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
@@ -1582,6 +1585,15 @@
 			name = TaskDetailsCellFactory;
 			sourceTree = "<group>";
 		};
+		132BB7681D48AEBD00757493 /* StartFormCell */ = {
+			isa = PBXGroup;
+			children = (
+				132BB7651D48AEB200757493 /* AFAStartFormTableViewCell.h */,
+				132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */,
+			);
+			name = StartFormCell;
+			sourceTree = "<group>";
+		};
 		132E60341C2314F5000A2CA5 /* ProcessInstance */ = {
 			isa = PBXGroup;
 			children = (
@@ -1887,6 +1899,7 @@
 				13667FEB1C873566005E4AEA /* ShowDiagramCell */,
 				13667FF71C887FDE005E4AEA /* TaskDetailsStyleCell */,
 				1366800C1C89D29E005E4AEA /* SimpleSectionHeaderCell */,
+				132BB7681D48AEBD00757493 /* StartFormCell */,
 			);
 			name = ProcessInstanceDetailsScreen;
 			sourceTree = "<group>";
@@ -4965,6 +4978,7 @@
 				13667FEA1C87355E005E4AEA /* AFAShowDiagramTableViewCell.m in Sources */,
 				137B8DE01BB99B1200F1A6DC /* AFATableControllerContentCellFactory.m in Sources */,
 				8D7C1A461C808D010092EA81 /* AFAAssigneeTableViewCell.m in Sources */,
+				132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */,
 				139DF5B21C58B29B0062D01D /* AFAFilterHeaderTableViewCell.m in Sources */,
 				13F562C71CA2A3D300F0C7B5 /* AFAClaimTableViewCell.m in Sources */,
 				13AEE2BC1C96B79500E9EB44 /* AFATableControllerProcessInstanceContentModel.m in Sources */,

@@ -31,24 +31,128 @@
 #import "AFAServiceRepository.h"
 #import "AFAFormServices.h"
 
+// Segues
+#import "AFAPushFadeSegueUnwind.h"
+
 // Views
 #import "AFAActivityView.h"
 
+typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
+    AFAProcessStartFormQueueOperationTypeUndefined         = -1,
+    AFAProcessStartFormQueueOperationTypeNone              = 0,
+    AFAProcessStartFormQueueOperationTypeProcessDefinition,
+    AFAProcessStartFormQueueOperationTypeProcessInstance
+};
+
 @interface AFAProcessStartFormViewController () <ASDKFormControllerNavigationProtocol>
 
-@property (weak, nonatomic)   IBOutlet AFAActivityView      *activityView;
+@property (weak, nonatomic) IBOutlet AFAActivityView                    *activityView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem                    *backBarButtonItem;
 
 // Internal state properties
-@property (strong, nonatomic) ASDKModelProcessDefinition    *processDefinition;
-@property (strong, nonatomic) UICollectionViewController    *formViewController;
+@property (strong, nonatomic) ASDKModelProcessDefinition                *processDefinition;
+@property (strong, nonatomic) ASDKModelProcessInstance                  *processInstance;
+@property (strong, nonatomic) UICollectionViewController                *formViewController;
+@property (strong, nonatomic) AFAFormServicesEngineSetupCompletionBlock renderCompletionBlock;
+@property (strong, nonatomic) AFAStartFormServicesEngineCompletionBlock formCompletionBlock;
+@property (assign, nonatomic) AFAProcessStartFormQueueOperationType     queuedOperationType;
 
 @end
 
 @implementation AFAProcessStartFormViewController
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        self.queuedOperationType = AFAProcessStartFormQueueOperationTypeUndefined;
+    }
+    
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    [self.backBarButtonItem setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
+                                                     NSForegroundColorAttributeName: [UIColor whiteColor]}
+                                          forState:UIControlStateNormal];
+    self.backBarButtonItem.title = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft];
+    
+    __weak typeof(self) weakSelf = self;
+    self.renderCompletionBlock =
+    ^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            // Make sure we remove any references of old versions of the form controller
+            for (id childController in strongSelf.childViewControllers) {
+                if ([childController isKindOfClass:[UICollectionViewController class]]) {
+                    [((UICollectionViewController *)childController).view removeFromSuperview];
+                    [(UICollectionViewController *)childController removeFromParentViewController];
+                }
+            }
+            
+            formController.navigationDelegate = strongSelf;
+            strongSelf.formViewController = formController;
+            [strongSelf addChildViewController:formController];
+            
+            UIView *formView = formController.view;
+            formView.frame = strongSelf.view.bounds;
+            [formView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [strongSelf.view addSubview:formController.view];
+            
+            NSDictionary *views = NSDictionaryOfVariableBindings(formView);
+            
+            [strongSelf.view addConstraints:
+             [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[formView]|"
+                                                     options:0
+                                                     metrics:nil
+                                                       views:views]];
+            [strongSelf.view addConstraints:
+             [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[formView]-%d-|", 0]
+                                                     options:0
+                                                     metrics:nil
+                                                       views:views]];
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+        }
+        
+        strongSelf.activityView.animating = NO;
+        strongSelf.activityView.hidden = YES;
+    };
+    
+    self.formCompletionBlock =
+    ^(ASDKModelProcessInstance *processInstance, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (error) {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+        } else {
+            if ([strongSelf.delegate respondsToSelector:@selector(didCompleteFormWithProcessInstance:)]) {
+                [strongSelf.delegate didCompleteFormWithProcessInstance:processInstance];
+            }
+        }
+    };
+    
+    switch (self.queuedOperationType) {
+        case AFAProcessStartFormQueueOperationTypeProcessDefinition: {
+            self.navigationBarTitle = self.processDefinition.name;
+            [self setupStartFormForProcessDefinitionObject:self.processDefinition];
+        }
+            break;
+            
+        case AFAProcessStartFormQueueOperationTypeProcessInstance: {
+            self.navigationBarTitle = self.processInstance.name;
+            [self setupStartFormForProcessInstanceObject:self.processInstance];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    self.queuedOperationType = AFAProcessStartFormQueueOperationTypeNone;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,72 +162,76 @@
 
 
 #pragma mark -
+#pragma mark Navigation
+
+- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
+                                      fromViewController:(UIViewController *)fromViewController
+                                              identifier:(NSString *)identifier {
+    if ([kSegueIDProcessInstanceViewCompletedStartFormUnwind isEqualToString:identifier]) {
+        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
+                                                                                   source:fromViewController
+                                                                              destination:toViewController
+                                                                           performHandler:^{}];
+        return unwindSegue;
+    }
+    
+    return [super segueForUnwindingToViewController:toViewController
+                                 fromViewController:fromViewController
+                                         identifier:identifier];
+}
+
+
+#pragma mark -
 #pragma mark Actions
 
-- (void)startFormForProcessDefinitionObject:(ASDKModelProcessDefinition *)processDefinition {
+- (IBAction)onBack:(id)sender {
+    [self performSegueWithIdentifier:kSegueIDProcessInstanceViewCompletedStartFormUnwind
+                              sender:sender];
+}
+
+- (void)setupStartFormForProcessDefinitionObject:(ASDKModelProcessDefinition *)processDefinition {
     NSParameterAssert(processDefinition);
     
-    if (processDefinition != self.processDefinition) {
+    if (self.queuedOperationType == AFAProcessStartFormQueueOperationTypeUndefined) {
+        self.queuedOperationType = AFAProcessStartFormQueueOperationTypeProcessDefinition;
         self.processDefinition = processDefinition;
-        
-        self.activityView.hidden = NO;
-        self.activityView.animating = YES;
-        
-        __weak typeof(self) weakSelf = self;
-        AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-        [formService requestSetupWithProcessDefinition:processDefinition
-                                 renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-            __strong typeof(self) strongSelf = weakSelf;
+    } else {
+        if (processDefinition != self.processDefinition ||
+            self.queuedOperationType != AFAProcessStartFormQueueOperationTypeUndefined) {
+            self.processDefinition = processDefinition;
             
-            if (!error) {
-                // Make sure we remove any references of old versions of the form controller
-                for (id childController in strongSelf.childViewControllers) {
-                    if ([childController isKindOfClass:[UICollectionViewController class]]) {
-                        [((UICollectionViewController *)childController).view removeFromSuperview];
-                        [(UICollectionViewController *)childController removeFromParentViewController];
-                    }
-                }
-                
-                formController.navigationDelegate = strongSelf;
-                strongSelf.formViewController = formController;
-                [strongSelf addChildViewController:formController];
-                
-                UIView *formView = formController.view;
-                formView.frame = strongSelf.view.bounds;
-                [formView setTranslatesAutoresizingMaskIntoConstraints:NO];
-                [strongSelf.view addSubview:formController.view];
-                
-                NSDictionary *views = NSDictionaryOfVariableBindings(formView);
-                
-                [strongSelf.view addConstraints:
-                 [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[formView]|"
-                                                         options:0
-                                                         metrics:nil
-                                                           views:views]];
-                [strongSelf.view addConstraints:
-                 [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[formView]-%d-|", 0]
-                                                         options:0
-                                                         metrics:nil
-                                                           views:views]];
-            } else {
-                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
-            }
+            self.activityView.hidden = NO;
+            self.activityView.animating = YES;
             
-            strongSelf.activityView.animating = NO;
-            strongSelf.activityView.hidden = YES;
-        } formCompletionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
-            __strong typeof(self) strongSelf = weakSelf;
-            
-            if (error) {
-                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
-            } else {
-                if ([self.delegate respondsToSelector:@selector(didCompleteFormWithProcessInstance:)]) {
-                    [self.delegate didCompleteFormWithProcessInstance:processInstance];
-                }
-            }
-        }];
+            AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
+            [formService requestSetupWithProcessDefinition:processDefinition
+                                     renderCompletionBlock:self.renderCompletionBlock
+                                       formCompletionBlock:self.formCompletionBlock];
+        }
     }
 }
+
+- (void)setupStartFormForProcessInstanceObject:(ASDKModelProcessInstance *)processInstance {
+    NSParameterAssert(processInstance);
+    
+    if (self.queuedOperationType == AFAProcessStartFormQueueOperationTypeUndefined) {
+        self.queuedOperationType = AFAProcessStartFormQueueOperationTypeProcessInstance;
+        self.processInstance = processInstance;
+    } else {
+        if (processInstance != self.processInstance ||
+            self.queuedOperationType != AFAProcessStartFormQueueOperationTypeUndefined) {
+            self.processInstance = processInstance;
+            
+            self.activityView.hidden = NO;
+            self.activityView.animating = YES;
+            
+            AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
+            [formService requestSetupWithProcessInstance:processInstance
+                                   renderCompletionBlock:self.renderCompletionBlock];
+        }
+    }
+}
+
 
 #pragma mark -
 #pragma mark ASDKFormControllerNavigationProtocol

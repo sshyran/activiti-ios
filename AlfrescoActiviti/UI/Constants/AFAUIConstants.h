@@ -78,6 +78,7 @@ extern NSString *kCellIDProfileCategory;
 extern NSString *kCellIDProfileOption;
 extern NSString *kCellIDProfileAction;
 extern NSString *kCellIDAuditLog;
+extern NSString *kCellIDStartForm;
 extern NSString *kCellIDTaskChecklist;
 extern NSString *kCellIDProfileUsage;
 extern NSString *kCellIDLoginSection;
@@ -114,6 +115,8 @@ extern NSString *kSegueIDProcessInstanceStartForm;
 extern NSString *kSegueIDProcessInstanceStartFormUnwind;
 extern NSString *kSegueIDProcessInstanceDetailsAddComments;
 extern NSString *kSegueIDProcessInstanceDetailsAddCommentsUnwind;
+extern NSString *kSegueIDProcessInstanceViewCompletedStartForm;
+extern NSString *kSegueIDProcessInstanceViewCompletedStartFormUnwind;
 extern NSString *kSegueIDProfileContentPickerComponentEmbedding;
 
 // Thumbnail manager

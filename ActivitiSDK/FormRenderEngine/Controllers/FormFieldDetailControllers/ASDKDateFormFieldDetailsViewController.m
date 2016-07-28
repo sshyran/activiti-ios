@@ -76,9 +76,13 @@
         NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
         
         // try other date formatter
-        if (storedDate == nil) {
-            //format date in saved form (2016-02-23T23:00:000Z)
+        if (!storedDate) {
             dateFormatter.dateFormat = kASDKServerFullDateFormat;
+            storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
+        }
+        
+        if (!storedDate) {
+            dateFormatter.dateFormat = kBaseModelDateFormat;
             storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
         }
         
@@ -90,6 +94,8 @@
     } else {
         self.selectedDate.text = ASDKLocalizedStringFromTable(kLocalizationFormDateComponentPickDateLabelText, ASDKLocalizationTable, @"Pick a date");
     }
+    
+    self.datePicker.userInteractionEnabled = self.currentFormField.isReadOnly ? NO : YES;
 }
 
 - (void)didReceiveMemoryWarning {
