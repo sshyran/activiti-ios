@@ -57,7 +57,7 @@
     // Adjust collenction's view estimated item size
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) self.collectionViewLayout;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
-    flowLayout.estimatedItemSize = CGSizeMake(CGRectGetWidth(self.view.frame), flowLayout.itemSize.height);
+    flowLayout.itemSize = CGSizeMake(CGRectGetWidth(self.view.frame), flowLayout.itemSize.height);
     flowLayout.footerReferenceSize = CGSizeMake(flowLayout.footerReferenceSize.width, flowLayout.footerReferenceSize.height - 4);
     
     // If the data source has a form title defined display it

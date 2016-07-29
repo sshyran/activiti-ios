@@ -302,25 +302,27 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         [mutableVisibleFormFieldsArr removeObjectsInArray:hiddenFieldsArr];
         
         self.visibleFormFields = mutableVisibleFormFieldsArr;
-    } else {
-        NSMutableArray *formFieldsToAdd = [NSMutableArray array];
-        for (ASDKModelFormField *affectedFormFied in affectedFormFieldsArr) {
-            // If the affected form field cannot be found inside the visible form fields
-            // but it's not a hidden form field than this means it a form field that
-            // became visible
-            if (![self doesCollection:self.visibleFormFields
-                     containFormField:affectedFormFied]) {
-                [formFieldsToAdd addObject:affectedFormFied];
-            }
+    }
+    
+    [affectedFormFieldsArr removeObjectsInArray:hiddenFieldsArr];
+    
+    NSMutableArray *formFieldsToAdd = [NSMutableArray array];
+    for (ASDKModelFormField *affectedFormFied in affectedFormFieldsArr) {
+        // If the affected form field cannot be found inside the visible form fields
+        // but it's not a hidden form field than this means it a form field that
+        // became visible
+        if (![self doesCollection:self.visibleFormFields
+                 containFormField:affectedFormFied]) {
+            [formFieldsToAdd addObject:affectedFormFied];
         }
+    }
+    
+    if (formFieldsToAdd.count) {
+        [visibilityActionsDict setObject:formFieldsToAdd
+                                  forKey:@(ASDKFormVisibilityConditionActionTypeShowElement)];
         
-        if (formFieldsToAdd.count) {
-            [visibilityActionsDict setObject:formFieldsToAdd
-                                      forKey:@(ASDKFormVisibilityConditionActionTypeShowElement)];
-            
-            // Update the visible forms collection with the new visible form collection
-            self.visibleFormFields = [self.visibleFormFields arrayByAddingObjectsFromArray:formFieldsToAdd];
-        }
+        // Update the visible forms collection with the new visible form collection
+        self.visibleFormFields = [self.visibleFormFields arrayByAddingObjectsFromArray:formFieldsToAdd];
     }
     
     return visibilityActionsDict;
