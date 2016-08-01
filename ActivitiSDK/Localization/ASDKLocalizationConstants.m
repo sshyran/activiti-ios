@@ -92,3 +92,9 @@ NSString *kLocalizationIntegrationBrowsingChooseSiteText          = @"integratio
 NSString *kLocalizationIntegrationBrowsingNoContentAvailableText  = @"integrationBrowsingNoContentAvailableText";
 NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText= @"integrationBrowsingNoIntegrationAccountAvailableText";
 
+#pragma mark -
+#pragma mark Dynamic table component
+
+NSString *kLocalizationDynamicTableNoRows                         = @"dynamicTableControllerNoRows";
+NSString *kLocalizationDynamicTableNoRowsNotEditable              = @"dynamicTableControllerNoRowsNotEditable";
+
