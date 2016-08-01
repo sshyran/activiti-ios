@@ -88,6 +88,7 @@ extern NSString *kLocalizationTaskDetailsScreenClaimButtonText;
 extern NSString *kLocalizationTaskDetailsScreenTaskFormSavedText;
 extern NSString *kLocalizationTaskDetailsScreenChecklistNameText;
 extern NSString *kLocalizationTaskDetailsScreenChecklistTitleText;
+extern NSString *kLocalizationTaskDetailsScreenShowFormText;
 
 // Process details screen
 extern NSString *kLocalizationProcessInstanceDetailsScreenTitleText;

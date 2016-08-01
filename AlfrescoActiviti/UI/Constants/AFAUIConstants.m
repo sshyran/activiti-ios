@@ -62,6 +62,7 @@ NSString *kCellIDTaskDetailsCreated                             = @"TaskDetailsC
 NSString *kCellIDTaskDetailsDue                                 = @"TaskDetailsDueCellID";
 NSString *kCellIDTaskDetailsDescription                         = @"TaskDetailsDescriptionCellID";
 NSString *kCellIDTaskDetailsContributor                         = @"TaskDetailsContributorCellID";
+NSString *kCellIDTaskDetailsAttachedForm                        = @"TaskDetailsAttachedFormCellID";
 NSString *kCellIDComment                                        = @"CommenCellID";
 NSString *kCellIDCommentHeader                                  = @"CommentHeaderCellID";
 NSString *kCellIDTaskDetailsProcess                             = @"TaskDetailsProcessCellID";

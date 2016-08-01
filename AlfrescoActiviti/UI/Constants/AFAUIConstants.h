@@ -57,6 +57,7 @@ extern NSString *kCellIDTaskDetailsCreated;
 extern NSString *kCellIDTaskDetailsDue;
 extern NSString *kCellIDTaskDetailsDescription;
 extern NSString *kCellIDTaskDetailsContributor;
+extern NSString *kCellIDTaskDetailsAttachedForm;
 extern NSString *kCellIDComment;
 extern NSString *kCellIDCommentHeader;
 extern NSString *kCellIDTaskDetailsProcess;

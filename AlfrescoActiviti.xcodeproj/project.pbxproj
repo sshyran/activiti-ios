@@ -51,6 +51,7 @@
 		1328D3511BB92D540010757C /* AFATableControllerTaskDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3501BB92D540010757C /* AFATableControllerTaskDetailsModel.m */; };
 		1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */; };
 		132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */; };
+		132BB76B1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132BB76A1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m */; };
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
@@ -602,6 +603,8 @@
 		1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerTaskDetailsCellFactory.m; path = Business/TableController/CellFactories/TaskDetailsCellFactory/AFATableControllerTaskDetailsCellFactory.m; sourceTree = "<group>"; };
 		132BB7651D48AEB200757493 /* AFAStartFormTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAStartFormTableViewCell.h; path = UI/Cells/StartFormCell/AFAStartFormTableViewCell.h; sourceTree = "<group>"; };
 		132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAStartFormTableViewCell.m; path = UI/Cells/StartFormCell/AFAStartFormTableViewCell.m; sourceTree = "<group>"; };
+		132BB7691D4F3ABD00757493 /* AFAAttachFormTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAttachFormTableViewCell.h; path = UI/Cells/AttachFormCell/AFAAttachFormTableViewCell.h; sourceTree = "<group>"; };
+		132BB76A1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAttachFormTableViewCell.m; path = UI/Cells/AttachFormCell/AFAAttachFormTableViewCell.m; sourceTree = "<group>"; };
 		132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProcessInstance.h; path = Model/ProcessInstance/ASDKModelProcessInstance.h; sourceTree = "<group>"; };
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
@@ -1594,6 +1597,15 @@
 			name = StartFormCell;
 			sourceTree = "<group>";
 		};
+		132BB76C1D4F3AC300757493 /* AttachFormCell */ = {
+			isa = PBXGroup;
+			children = (
+				132BB7691D4F3ABD00757493 /* AFAAttachFormTableViewCell.h */,
+				132BB76A1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m */,
+			);
+			name = AttachFormCell;
+			sourceTree = "<group>";
+		};
 		132E60341C2314F5000A2CA5 /* ProcessInstance */ = {
 			isa = PBXGroup;
 			children = (
@@ -1645,6 +1657,7 @@
 				13F562C81CA2A3D600F0C7B5 /* ClaimCell */,
 				13EBEC981CF5A74600EC8F96 /* AuditLogCell */,
 				13EBECBC1CFDBEB500EC8F96 /* ChecklistCell */,
+				132BB76C1D4F3AC300757493 /* AttachFormCell */,
 			);
 			name = ListDetailsScreen;
 			sourceTree = "<group>";
@@ -4929,6 +4942,7 @@
 				132511F91BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m in Sources */,
 				13A1B2811B989B2700C4B6CE /* AFABaseModel.m in Sources */,
 				13E6E28B1B7E0EE1001F5737 /* AFAFadingTableView.m in Sources */,
+				132BB76B1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m in Sources */,
 				13AAD3B51CDB489800818537 /* AFAProfileViewController.m in Sources */,
 				13CFF33F1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m in Sources */,
 				13CFF3461BBC2B6500D3DEB6 /* AFATaskUpdateModel.m in Sources */,

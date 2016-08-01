@@ -30,16 +30,18 @@
 }
 
 - (NSInteger)numberOfRowsInSection:(NSInteger)section {
+    BOOL isFormDefined = self.currentTask.formKey ? YES : NO;
+    
     // If we're dealing with a completed task display additional field
     // for end date and duration
     if ([self isCompletedTask]) {
-        return AFACompletedTaskDetailsCellTypeEnumCount;
+        return AFACompletedTaskDetailsCellTypeEnumCount - (isFormDefined ? 0 : 1);
     } else if (![self.currentTask.assigneeModel.modelID isEqualToString:self.userProfile.modelID]) {
         // If the assignee does not match the current user profile this means that the current user
         // is involved and cannot see the complete/queue cell
-        return AFAInvolvedTaskDetailsCellTypeEnumCount;
+        return AFAInvolvedTaskDetailsCellTypeEnumCount - (isFormDefined ? 0 : 1);
     } else {
-        return AFATaskDetailsCellTypeEnumCount;
+        return AFATaskDetailsCellTypeEnumCount - (isFormDefined ? 0 : 1);
     }
 }
 

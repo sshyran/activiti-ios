@@ -87,6 +87,7 @@
 "taskDetailsScreenTaskFormClaimedText"                   = "Task form is saved";
 "taskDetailsScreenChecklistNameText"                     = "Checklist name";
 "taskDetailsScreenChecklistTitleText"                    = "Task checklist";
+"taskDetailsScreenShowFormText"                          = "Show form";
 
 // Process instance details screen
 "processInstanceDetailsScreenTitleText"                  = "Process instance details";

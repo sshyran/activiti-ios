@@ -30,6 +30,7 @@
 #import "AFADurationTableViewCell.h"
 #import "AFAClaimTableViewCell.h"
 #import "AFAAuditLogTableViewCell.h"
+#import "AFAAttachFormTableViewCell.h"
 
 // Constants
 #import "AFAUIConstants.h"
@@ -42,7 +43,8 @@
                                                         AFAProcessMembershipTableViewCellDelegate,
                                                         AFAClaimTableViewCellDelegate,
                                                         AFAAssigneeTableViewCellDelegate,
-                                                        AFAAuditLogTableViewCellDelegate>
+                                                        AFAAuditLogTableViewCellDelegate,
+                                                        AFAAttachFormTableViewCellDelegate>
 
 @end
 
@@ -123,6 +125,13 @@
                 }
                     break;
                     
+                case AFATaskDetailsCellTypeAttachedForm: {
+                    cell = [self dequeuedAttachedFormCellAtIndexPath:indexPath
+                                                       fromTableView:tableView
+                                                           withModel:model];
+                }
+                    break;
+                    
                 default: break;
             }
         } else {
@@ -167,6 +176,13 @@
                     cell = [self dequeuedDescriptionCellAtIndexPath:indexPath
                                                       fromTableView:tableView
                                                           withModel:model];
+                }
+                    break;
+                    
+                case AFAInvolvedTaskDetailsCellTypeAttachedForm: {
+                    cell = [self dequeuedAttachedFormCellAtIndexPath:indexPath
+                                                              fromTableView:tableView
+                                                                  withModel:model];
                 }
                     break;
                     
@@ -237,6 +253,13 @@
                 cell = [self dequeuedDescriptionCellAtIndexPath:indexPath
                                                   fromTableView:tableView
                                                       withModel:model];
+            }
+                break;
+                
+            case AFACompletedTaskDetailsCellTypeAttachedForm: {
+                cell = [self dequeuedAttachedFormCellAtIndexPath:indexPath
+                                                   fromTableView:tableView
+                                                       withModel:model];
             }
                 break;
                 
@@ -337,6 +360,17 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 
 #pragma mark -
+#pragma mark AFAAttachFormTableViewCellDelegate
+
+- (void)onViewAttachedFormTap {
+    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeAttachedForm];
+    if (actionBlock) {
+        actionBlock(nil);
+    }
+}
+
+
+#pragma mark -
 #pragma mark Public interface
 
 - (NSInteger)cellTypeForDueDateCell {
@@ -365,6 +399,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (NSInteger)cellTypeForAuditLogCell {
     return AFACompletedTaskDetailsCellTypeAuditLog;
+}
+
+- (NSInteger)cellTypeForAttachedFormCell {
+    return AFATaskDetailsCellTypeAttachedForm;
 }
 
 
@@ -487,6 +525,15 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     auditCell.delegate = self;
 
     return auditCell;
+}
+
+- (UITableViewCell *)dequeuedAttachedFormCellAtIndexPath:(NSIndexPath *)indexPath
+                                           fromTableView:(UITableView *)tableView
+                                               withModel:(id<AFATableViewModelDelegate>)model {
+    AFAAttachFormTableViewCell *attachFormCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsAttachedForm
+                                                                                 forIndexPath:indexPath];
+    attachFormCell.delegate = self;
+    return attachFormCell;
 }
 
 @end

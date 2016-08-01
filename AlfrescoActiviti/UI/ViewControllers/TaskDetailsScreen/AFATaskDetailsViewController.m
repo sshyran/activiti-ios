@@ -1181,6 +1181,10 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             
         } forCellType:[contributorsCellFactory cellTypeForDeleteContributor]];
         
+        [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
+            [self onSectionSwitch:self.taskFormButton];
+        } forCellType:[detailsCellFactory cellTypeForAttachedFormCell]];
+        
         [checklistCellFactory registerCellAction:^(NSDictionary *changeParameters) {
             __strong typeof(self) strongSelf = weakSelf;
             
@@ -1206,7 +1210,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             
         } forCellType:[contentCellFactory cellTypeForDeleteContent]];
     }
-    
     
     [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         __strong typeof(self) strongSelf = weakSelf;
