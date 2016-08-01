@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, AFATaskDetailsCellType) {
     AFATaskDetailsCellTypeDue,
     AFATaskDetailsCellTypeProcess,
     AFATaskDetailsCellTypeDescription,
+    AFATaskDetailsCellTypeAttachedForm,
     // By default the enum count used to describe the number of cells for a
     // finite section, but since we're swizzling around in some scenarios
     // different cell types we moved down the position of the enum count
@@ -47,6 +48,7 @@ typedef NS_ENUM(NSInteger, AFACompletedTaskDetailsCellType) {
     AFACompletedTaskDetailsCellTypeDuration,
     AFACompletedTaskDetailsCellTypeProcess,
     AFACompletedTaskDetailsCellTypeDescription,
+    AFACompletedTaskDetailsCellTypeAttachedForm,
     AFACompletedTaskDetailsCellTypeEnumCount,
     AFACompletedTaskDetailsCellTypeAuditLog // Audit log download function is temporary disabled 
 };
@@ -58,6 +60,7 @@ typedef NS_ENUM(NSInteger, AFAInvolvedTaskDetailsCellType) {
     AFAInvolvedTaskDetailsCellTypeDue,
     AFAInvolvedTaskDetailsCellTypeProcess,
     AFAInvolvedTaskDetailsCellTypeDescription,
+    AFAInvolvedTaskDetailsCellTypeAttachedForm,
     AFAInvolvedTaskDetailsCellTypeEnumCount
 };
 
@@ -72,5 +75,6 @@ typedef NS_ENUM(NSInteger, AFAInvolvedTaskDetailsCellType) {
 - (NSInteger)cellTypeForRequeueCell;
 - (NSInteger)cellTypeForReAssignCell;
 - (NSInteger)cellTypeForAuditLogCell;
+- (NSInteger)cellTypeForAttachedFormCell;
 
 @end

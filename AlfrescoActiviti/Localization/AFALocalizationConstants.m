@@ -106,6 +106,7 @@ NSString *kLocalizationTaskDetailsScreenClaimButtonText          = @"taskDetails
 NSString *kLocalizationTaskDetailsScreenTaskFormSavedText        = @"taskDetailsScreenTaskFormClaimedText";
 NSString *kLocalizationTaskDetailsScreenChecklistNameText        = @"taskDetailsScreenChecklistNameText";
 NSString *kLocalizationTaskDetailsScreenChecklistTitleText       = @"taskDetailsScreenChecklistTitleText";
+NSString *kLocalizationTaskDetailsScreenShowFormText             = @"taskDetailsScreenShowFormText";
 
 
 #pragma mark -
