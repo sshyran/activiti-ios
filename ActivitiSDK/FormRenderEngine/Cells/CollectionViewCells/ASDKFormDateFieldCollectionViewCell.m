@@ -34,8 +34,6 @@
 @property (strong, nonatomic) ASDKModelFormField    *formField;
 @property (assign, nonatomic) BOOL                  isRequired;
 
-- (NSString *)formatLabelTextWithFormFieldValues:(NSArray *)formfieldValues;
-
 @end
 
 @implementation ASDKFormDateFieldCollectionViewCell
@@ -66,7 +64,7 @@
     self.descriptionLabel.text = formField.fieldName;
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        self.selectedDateLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
+        self.selectedDateLabel.text = [self formattedDateStringForDateStringValue:formField.values.firstObject];
         self.selectedDateLabel.textColor = [UIColor formViewCompletedValueColor];
         self.disclosureIndicatorLabel.hidden = YES;
         self.trailingToDisclosureConstraint.priority = UILayoutPriorityFittingSizeLevel;
@@ -77,7 +75,7 @@
         if (formField.metadataValue) {
             self.selectedDateLabel.text = formField.metadataValue.attachedValue;
         } else  {
-            self.selectedDateLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
+            self.selectedDateLabel.text = [self formattedDateStringForDateStringValue:formField.values.firstObject];
         }
         self.disclosureIndicatorLabel.hidden = NO;
         
@@ -85,31 +83,34 @@
     }
 }
 
-- (NSString *)formatLabelTextWithFormFieldValues:(NSArray *)formfieldValues {
+- (NSString *)formattedDateStringForDateStringValue:(NSString *)dateValue {
     NSString *labelText = nil;
     
-    if (formfieldValues) {
+    if (dateValue.length) {
         //format date in saved form (2016-02-23T23:00:Z)
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         dateFormatter.dateFormat = kASDKServerLongDateFormat;
         
-        NSDate *storedDate = [dateFormatter dateFromString:formfieldValues.firstObject];
+        NSDate *storedDate = [dateFormatter dateFromString:dateValue];
         
         // try other date formatter
-        if (storedDate == nil) {
+        if (!storedDate) {
             //format date in saved form (2016-02-23T23:00:000Z)
             dateFormatter.dateFormat = kASDKServerFullDateFormat;
-            storedDate = [dateFormatter dateFromString:formfieldValues.firstObject];
+            storedDate = [dateFormatter dateFromString:dateValue];
+        }
+        
+        if (!storedDate) {
+            dateFormatter.dateFormat = kBaseModelDateFormat;
+            storedDate = [dateFormatter dateFromString:dateValue];
         }
         
         NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
         [displayDateFormatter setDateFormat:kASDKServerShortDateFormat];
         
         labelText = [displayDateFormatter stringFromDate:storedDate];
-    } else {
-        labelText = @"";
     }
     
     return labelText;
