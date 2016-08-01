@@ -75,3 +75,7 @@
 "integrationBrowsingNoContentAvailableText"                     = "There is no content available at this location.";
 "integrationBrowsingNoIntegrationAccountAvailableText"          = "Unable to fetch external integration accounts.";
 
+// Dynamic table component
+"dynamicTableControllerNoRows"                                  = "This table has no rows but you can add some by using the + button.";
+"dynamicTableControllerNoRowsNotEditable"                       = "This table has no rows.";
+

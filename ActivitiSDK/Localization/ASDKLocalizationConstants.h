@@ -81,3 +81,7 @@ extern NSString *kLocalizationIntegrationBrowsingChooseNetworkText;
 extern NSString *kLocalizationIntegrationBrowsingChooseSiteText;
 extern NSString *kLocalizationIntegrationBrowsingNoContentAvailableText;
 extern NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText;
+
+// Dynamic table component
+extern NSString *kLocalizationDynamicTableNoRows;
+extern NSString *kLocalizationDynamicTableNoRowsNotEditable;

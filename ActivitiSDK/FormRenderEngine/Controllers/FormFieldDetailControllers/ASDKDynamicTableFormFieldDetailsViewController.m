@@ -43,14 +43,15 @@
 
 @interface ASDKDynamicTableFormFieldDetailsViewController ()
 
-@property (strong, nonatomic) ASDKModelFormField        *currentFormField;
-@property (assign, nonatomic) NSInteger                 selectedRowIndex;
-@property (strong, nonatomic) NSArray                   *visibleRowColumns;
-@property (strong, nonatomic) NSDictionary              *columnDefinitions;
 @property (weak, nonatomic) IBOutlet UITableView        *rowsWithVisibleColumnsTableView;
 @property (weak, nonatomic) IBOutlet ASDKNoContentView  *noRowsView;
 @property (weak, nonatomic) IBOutlet ASDKActivityView   *activityView;
 @property (weak, nonatomic) IBOutlet UIView             *blurEffectView;
+
+@property (strong, nonatomic) ASDKModelFormField        *currentFormField;
+@property (assign, nonatomic) NSInteger                 selectedRowIndex;
+@property (strong, nonatomic) NSArray                   *visibleRowColumns;
+@property (strong, nonatomic) NSDictionary              *columnDefinitions;
 
 - (IBAction)addDynamicTableRow:(id)sender;
 - (void)deleteCurrentDynamicTableRow;
@@ -78,6 +79,9 @@
     // Remove add row button for completed forms
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         self.navigationItem.rightBarButtonItem = nil;
+        self.noRowsView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationDynamicTableNoRowsNotEditable, ASDKLocalizationTable, @"No rows, not editable text");
+    } else {
+        self.noRowsView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationDynamicTableNoRows, ASDKLocalizationTable, @"No rows text");
     }
 }
 
