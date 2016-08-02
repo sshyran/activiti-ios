@@ -524,23 +524,27 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKAddContentTableViewCell *taskCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldAttachAddContent
                                                                             forIndexPath:indexPath];
+    NSBundle *frameWorkBundle = [NSBundle bundleForClass:[self class]];
     
     switch (indexPath.row) {
         case ASDKAttachFormFieldDetailsCellTypeLocalContent: {
-            taskCell.iconImageView.image = [UIImage imageNamed:@"phone-icon"];
+            taskCell.iconImageView.image = [UIImage imageNamed:@"phone-icon"
+                                                      inBundle:frameWorkBundle
+                                 compatibleWithTraitCollection:nil];
             taskCell.actionDescriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentLocalContentText, ASDKLocalizationTable, @"Local content text");
         }
             break;
             
         case ASDKAttachFormFieldDetailsCellTypeCamera: {
-            taskCell.iconImageView.image = [UIImage imageNamed:@"camera-icon"];
+            taskCell.iconImageView.image = [UIImage imageNamed:@"camera-icon"
+                                                      inBundle:frameWorkBundle
+                                 compatibleWithTraitCollection:nil];
             taskCell.actionDescriptionLabel.text =  ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentCameraContentText, ASDKLocalizationTable,@"Camera content text");
         }
             break;
             
         default: { // Handle the integration cells
             ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
-            NSBundle *frameWorkBundle = [NSBundle bundleForClass:[self class]];
             
             if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.integrationServiceID]) {
                 taskCell.iconImageView.image = [UIImage imageNamed:@"alfresco-icon"
