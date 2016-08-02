@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class UINavigationController;
+
 @protocol ASDKFormControllerNavigationProtocol <NSObject>
 
 @optional
@@ -25,5 +27,6 @@
 @property (weak, nonatomic) id<ASDKFormControllerNavigationProtocol> navigationDelegate;
 
 - (void)prepareToPresentDetailController:(UIViewController *)controller;
+- (UINavigationController *)formNavigationController;
 
 @end

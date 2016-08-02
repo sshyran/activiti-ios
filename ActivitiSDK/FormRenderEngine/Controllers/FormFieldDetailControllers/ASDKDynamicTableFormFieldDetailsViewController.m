@@ -33,6 +33,7 @@
 // Models
 #import "ASDKModelDynamicTableColumnDefinitionFormField.h"
 #import "ASDKModelDynamicTableFormField.h"
+#import "ASDKModelFormFieldValue.h"
 
 // Cells
 #import "ASDKDynamicTableRowHeaderTableViewCell.h"
@@ -79,9 +80,9 @@
     // Remove add row button for completed forms
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         self.navigationItem.rightBarButtonItem = nil;
-        self.noRowsView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationDynamicTableNoRowsNotEditable, ASDKLocalizationTable, @"No rows, not editable text");
+        self.noRowsView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationDynamicTableNoRowsNotEditableText, ASDKLocalizationTable, @"No rows, not editable text");
     } else {
-        self.noRowsView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationDynamicTableNoRows, ASDKLocalizationTable, @"No rows text");
+        self.noRowsView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationDynamicTableNoRowsText, ASDKLocalizationTable, @"No rows text");
     }
 }
 
@@ -131,7 +132,8 @@
     self.currentFormField.values = [[NSMutableArray alloc] initWithArray:newDynamicTableRows];
     [self determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
     
-    [self refreshContent];
+    NSUInteger sectionIdxForAddedElement = [newDynamicTableRows indexOfObject:dynamicTableDeepCopy];
+    [self didEditRow:sectionIdxForAddedElement];
 }
 
 - (void)deleteCurrentDynamicTableRow {
@@ -170,6 +172,58 @@
     
     self.visibleRowColumns = [NSArray arrayWithArray:visibleColumnsInRows];
 }
+
+
+#pragma mark -
+#pragma mark Actions
+
+- (void)validateDynamicTableEntriesForCurrentRowAndPopController {
+    NSArray *currentDynamicTableRowFormFields = self.currentFormField.values[self.selectedRowIndex];
+    BOOL areDynamicTableRowEntriesValid = YES;
+    
+    for (ASDKModelDynamicTableColumnDefinitionFormField *rowFormField in currentDynamicTableRowFormFields) {
+        BOOL hasValueDefined = (rowFormField.metadataValue.attachedValue.length ||
+                                rowFormField.values.count ||
+                                rowFormField.metadataValue.option) ? YES : NO;
+        
+        if (rowFormField.isRequired && !hasValueDefined) {
+            areDynamicTableRowEntriesValid = NO;
+            break;
+        }
+    }
+    
+    if (!areDynamicTableRowEntriesValid) {
+        UIAlertController *requiredFieldsAlertController = [UIAlertController alertControllerWithTitle:nil
+                                                                                               message:ASDKLocalizedStringFromTable(kLocalizationDynamicTableIncompleteRowDataText, ASDKLocalizationTable, @"Incomplete row warning")
+                                                                                        preferredStyle:UIAlertControllerStyleAlert];
+        __weak typeof(self) weakSelf = self;
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:ASDKLocalizedStringFromTable(kLocalizationFormAlertDialogYesButtonText, ASDKLocalizationTable, @"YES button title")
+                                                                style:UIAlertActionStyleDestructive
+                                                              handler:^(UIAlertAction * _Nonnull action) {
+                                                                  __strong typeof(self) strongSelf = weakSelf;
+                                                                  
+                                                                  NSMutableArray *rowEntries = [NSMutableArray arrayWithArray:self.currentFormField.values];
+                                                                  [rowEntries removeObjectAtIndex:strongSelf.selectedRowIndex];
+                                                                  strongSelf.currentFormField.values = [NSArray arrayWithArray:rowEntries];
+                                                                  
+                                                                  [[self.navigationDelegate formNavigationController] popViewControllerAnimated:YES];
+        }];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:ASDKLocalizedStringFromTable(kLocalizationCancelButtonText, ASDKLocalizationTable, @"Cancel button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [requiredFieldsAlertController addAction:confirmAction];
+        [requiredFieldsAlertController addAction:cancelAction];
+        
+        [[self.navigationDelegate formNavigationController] presentViewController:requiredFieldsAlertController
+                                                                         animated:YES
+                                                                       completion:nil];
+    } else {
+        [[self.navigationDelegate formNavigationController] popViewControllerAnimated:YES];
+    }
+}
+
 
 #pragma mark -
 #pragma mark ASDKFormFieldDetailsControllerProtocol
@@ -264,28 +318,10 @@ viewForHeaderInSection:(NSInteger)section {
                                                   strongSelf.selectedRowIndex = section;
                                                   
                                                   if (ASDKModelFormFieldRepresentationTypeReadOnly != strongSelf.currentFormField.representationType) {
-                                                      UIBarButtonItem *deleteRowBarButtonItem =
-                                                      [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
-                                                                                       style:UIBarButtonItemStylePlain
-                                                                                      target:strongSelf
-                                                                                      action:@selector(deleteCurrentDynamicTableRow)];
-                                                      
-                                                      [deleteRowBarButtonItem setTitleTextAttributes:
-                                                       @{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
-                                                         NSForegroundColorAttributeName : [UIColor whiteColor]}
-                                                                                            forState:UIControlStateNormal];
-                                                      
-                                                      formController.navigationItem.rightBarButtonItem = deleteRowBarButtonItem;
+                                                      formController.navigationItem.rightBarButtonItem = [self deleteRowBarButtonItemForDynamicTableController];
                                                   }
-                                                  
-                                                  UILabel *titleLabel = [UILabel new];
-                                                  titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), section + 1];
-                                                  titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
-                                                                                    size:17];
-                                                  titleLabel.textColor = [UIColor whiteColor];
-                                                  [titleLabel sizeToFit];
-                                                  
-                                                  formController.navigationItem.titleView = titleLabel;
+                                                  formController.navigationItem.titleView = [self dynamicTableControllerTitleViewForRow:section];
+                                                  formController.navigationItem.leftBarButtonItem = [self dynamicTableControllerBackBarButtonItem];
                                                   
                                                   // If there is controller assigned to the selected form field notify the delegate
                                                   // that it can begin preparing for presentation
@@ -306,6 +342,12 @@ viewForHeaderInSection:(NSInteger)section {
                                               __strong typeof(self) strongSelf = weakSelf;
                                               
                                               if (formController && !error) {
+                                                  if (ASDKModelFormFieldRepresentationTypeReadOnly != strongSelf.currentFormField.representationType) {
+                                                      formController.navigationItem.rightBarButtonItem = [self deleteRowBarButtonItemForDynamicTableController];
+                                                  }
+                                                  formController.navigationItem.titleView = [self dynamicTableControllerTitleViewForRow:section];
+                                                  formController.navigationItem.leftBarButtonItem = [self dynamicTableControllerBackBarButtonItem];
+                                                  
                                                   // If there is controller assigned to the selected form field notify the delegate
                                                   // that it can begin preparing for presentation
                                                   formController.navigationDelegate = strongSelf.navigationDelegate;
@@ -326,6 +368,47 @@ viewForHeaderInSection:(NSInteger)section {
                                               [strongSelf.navigationController popToViewController:self animated:YES];
                                           }];
     }
+}
+
+
+#pragma mark -
+#pragma mark Utils
+
+- (UIBarButtonItem *)deleteRowBarButtonItemForDynamicTableController {
+    UIBarButtonItem *deleteRowBarButtonItem =
+    [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRemove2]
+                                     style:UIBarButtonItemStylePlain
+                                    target:self
+                                    action:@selector(deleteCurrentDynamicTableRow)];
+    
+    [deleteRowBarButtonItem setTitleTextAttributes:
+     @{NSFontAttributeName            : [UIFont glyphiconFontWithSize:15],
+       NSForegroundColorAttributeName : [UIColor whiteColor]}
+                                          forState:UIControlStateNormal];
+    
+    return deleteRowBarButtonItem;
+}
+
+- (UILabel *)dynamicTableControllerTitleViewForRow:(NSInteger)row{
+    UILabel *titleLabel = [UILabel new];
+    titleLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowHeaderText, ASDKLocalizationTable, @"Row header"), row + 1];
+    titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
+                                      size:17];
+    titleLabel.textColor = [UIColor whiteColor];
+    [titleLabel sizeToFit];
+    
+    return titleLabel;
+}
+
+- (UIBarButtonItem *)dynamicTableControllerBackBarButtonItem {
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft]
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(validateDynamicTableEntriesForCurrentRowAndPopController)];
+    [backButton setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
+                                         NSForegroundColorAttributeName: [UIColor whiteColor]}
+                              forState:UIControlStateNormal];
+    return backButton;
 }
 
 @end

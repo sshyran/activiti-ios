@@ -95,6 +95,6 @@ NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText= @"integratio
 #pragma mark -
 #pragma mark Dynamic table component
 
-NSString *kLocalizationDynamicTableNoRows                         = @"dynamicTableControllerNoRows";
-NSString *kLocalizationDynamicTableNoRowsNotEditable              = @"dynamicTableControllerNoRowsNotEditable";
-
+NSString *kLocalizationDynamicTableNoRowsText                     = @"dynamicTableControllerNoRowsText";
+NSString *kLocalizationDynamicTableNoRowsNotEditableText          = @"dynamicTableControllerNoRowsNotEditableText";
+NSString *kLocalizationDynamicTableIncompleteRowDataText          = @"dynamicTableControllerIncompleteRowDataText";

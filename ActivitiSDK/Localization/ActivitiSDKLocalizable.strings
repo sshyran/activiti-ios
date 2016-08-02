@@ -76,6 +76,7 @@
 "integrationBrowsingNoIntegrationAccountAvailableText"          = "Unable to fetch external integration accounts.";
 
 // Dynamic table component
-"dynamicTableControllerNoRows"                                  = "This table has no rows but you can add some by using the + button.";
-"dynamicTableControllerNoRowsNotEditable"                       = "This table has no rows.";
+"dynamicTableControllerNoRowsText"                              = "This table has no rows but you can add some by using the + button.";
+"dynamicTableControllerNoRowsNotEditableText"                   = "This table has no rows.";
+"dynamicTableControllerIncompleteRowDataText"                   = "Are you sure you want to return without filling in the required field information? The row will be discarded.";
 

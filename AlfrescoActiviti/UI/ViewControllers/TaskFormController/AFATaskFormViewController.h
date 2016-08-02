@@ -25,6 +25,7 @@
 - (void)formDidLoad;
 - (void)userDidCompleteForm;
 - (void)presentFormDetailController:(UIViewController *)controller;
+- (UINavigationController *)formNavigationController;
 
 @end
 

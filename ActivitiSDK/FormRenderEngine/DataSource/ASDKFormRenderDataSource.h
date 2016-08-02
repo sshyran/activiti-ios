@@ -28,7 +28,7 @@
 @property (strong, nonatomic) NSString                                          *formTitle;
 @property (weak, nonatomic)   id<ASDKFormRenderEngineDataSourceDelegate>        delegate;
 @property (strong, nonatomic) ASDKFormVisibilityConditionsProcessor             *visibilityConditionsProcessor;
-@property (assign, nonatomic, readonly) ASDKFormRenderEngineDataSourceViewMode  dataSourceViewMode;
+@property (assign, nonatomic) ASDKFormRenderEngineDataSourceViewMode            dataSourceViewMode;
 
 - (NSString *)validCellIdentifierForFormField:(ASDKModelFormField *)formField;
 
