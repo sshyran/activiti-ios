@@ -102,7 +102,9 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 - (void)refreshContent {
     // Display the no content view if appropiate
     self.noContentView.hidden = (self.currentFormField.values.count > 0) ? YES : NO;
-    self.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"];
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"
+                                                        inBundle:[NSBundle bundleForClass:self.class]
+                                   compatibleWithTraitCollection:nil];
     [self setRightBarButton];
     [self.peopleTableView reloadData];
 }
@@ -198,7 +200,9 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                                      }];
     
     // Tint the image with white
-    UIImage *trashIcon = [UIImage imageNamed:@"trash-icon"];
+    UIImage *trashIcon = [UIImage imageNamed:@"trash-icon"
+                                    inBundle:[NSBundle bundleForClass:self.class]
+               compatibleWithTraitCollection:nil];
     UIGraphicsBeginImageContextWithOptions(trashIcon.size, NO, trashIcon.scale);
     [[UIColor whiteColor] set];
     [trashIcon drawInRect:CGRectMake(0, 0, trashIcon.size.width, trashIcon.size.height)];

@@ -108,7 +108,9 @@
     
     // Display the no rows view if appropiate
     self.noRowsView.hidden = (self.visibleRowColumns.count > 0) ? YES : NO;
-    self.noRowsView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
+    self.noRowsView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"
+                                                     inBundle:[NSBundle bundleForClass:self.class]
+                                compatibleWithTraitCollection:nil];
     
     [self.rowsWithVisibleColumnsTableView reloadData];
 }
