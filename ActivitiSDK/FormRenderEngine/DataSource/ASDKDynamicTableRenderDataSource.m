@@ -47,6 +47,7 @@
     if (self) {
         self.visibleFormFields = @[formFields];
         self.formHasUserdefinedOutcomes = NO;
+        self.dataSourceViewMode = ASDKFormRenderEngineDataSourceViewModeFormFields;
     }
     
     return self;

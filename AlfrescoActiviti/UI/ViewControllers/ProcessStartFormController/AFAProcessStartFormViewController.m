@@ -237,18 +237,25 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
 #pragma mark ASDKFormControllerNavigationProtocol
 
 - (void)prepareToPresentDetailController:(UIViewController *)controller {
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft]
-                                                                   style:UIBarButtonItemStylePlain
-                                                                  target:self
-                                                                  action:@selector(popFormDetailController)];
-    [backButton setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
-                                         NSForegroundColorAttributeName: [UIColor whiteColor]}
-                              forState:UIControlStateNormal];
-    [self.navigationItem setBackBarButtonItem:backButton];
+    // If no back button is provided by the sdk for the controller to be presented
+    // then add a default one with a simple pop action
+    if (!controller.navigationItem.leftBarButtonItem) {
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft]
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(popFormDetailController)];
+        [backButton setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
+                                             NSForegroundColorAttributeName: [UIColor whiteColor]}
+                                  forState:UIControlStateNormal];
+        controller.navigationItem.leftBarButtonItem = backButton;
+    }
     
-    controller.navigationItem.leftBarButtonItem = backButton;
     [self.navigationController pushViewController:controller
                                          animated:YES];
+}
+
+- (UINavigationController *)formNavigationController {
+    return self.navigationController;
 }
 
 - (void)popFormDetailController {

@@ -174,6 +174,13 @@
     }
 }
 
+- (UINavigationController *)formNavigationController {
+    if ([self.delegate respondsToSelector:@selector(formNavigationController)]) {
+        return [self.delegate formNavigationController];
+    }
+    return nil;
+}
+
 
 #pragma mark -
 #pragma mark - Progress hud setup
