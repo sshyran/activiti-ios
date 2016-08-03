@@ -43,6 +43,7 @@ NSString *kLocalizationFormDynamicTableRowHeaderText             = @"formDynamic
 NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText = @"formDynamicTableDeleteRowConfirmationText";
 NSString *kLocalizationFormValueEmpty                            = @"formValueEmpty";
 
+
 #pragma mark -
 #pragma mark Content picker component
 
@@ -62,13 +63,16 @@ NSString *kLocalizationFormContentPickerComponentAlfrescoContentText            
 NSString *kLocalizationFormContentPickerComponentBoxContentText                     = @"formContentPickerComponentBoxContentText";
 NSString *kLocalizationFormContentPickerComponentDriveText                          = @"formContentPickerComponentDriveContentText";
 
+
 #pragma mark -
 #pragma mark People picker component
 
-NSString *kLocalizationPeoplePickerControllerTitleText            = @"peoplePickerControllerTitleText";
-NSString *kLocalizationPeoplePickerControllerInstructionText      = @"peoplePickerControllerInstructionText";
-NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat  = @"peoplePickerControllerInvolvingUserFormat";
-NSString *kLocalizationPeoplePickerControllerRemovingUserFormat   = @"peoplePickerControllerRemovingUserFormat";
+NSString *kLocalizationPeoplePickerControllerTitleText                      = @"peoplePickerControllerTitleText";
+NSString *kLocalizationPeoplePickerControllerInstructionText                = @"peoplePickerControllerInstructionText";
+NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat            = @"peoplePickerControllerInvolvingUserFormat";
+NSString *kLocalizationPeoplePickerControllerRemovingUserFormat             = @"peoplePickerControllerRemovingUserFormat";
+NSString *kLocalizationPeoplePickerControllerNoContributorsText             = @"peoplePickerControllerNoContributorsText";
+NSString *kLocalizationPeoplePickerControllerNoContributorsNotEditableText  = @"peoplePickerControllerNoContributorsNotEditableText";
 
 
 #pragma mark -
@@ -91,6 +95,7 @@ NSString *kLocalizationIntegrationBrowsingChooseNetworkText       = @"integratio
 NSString *kLocalizationIntegrationBrowsingChooseSiteText          = @"integrationBrowsingChooseSiteText";
 NSString *kLocalizationIntegrationBrowsingNoContentAvailableText  = @"integrationBrowsingNoContentAvailableText";
 NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText= @"integrationBrowsingNoIntegrationAccountAvailableText";
+
 
 #pragma mark -
 #pragma mark Dynamic table component

@@ -65,6 +65,8 @@ extern NSString *kLocalizationPeoplePickerControllerTitleText;
 extern NSString *kLocalizationPeoplePickerControllerInstructionText;
 extern NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat;
 extern NSString *kLocalizationPeoplePickerControllerRemovingUserFormat;
+extern NSString *kLocalizationPeoplePickerControllerNoContributorsText;
+extern NSString *kLocalizationPeoplePickerControllerNoContributorsNotEditableText;
 
 // Alert dialog
 extern NSString *kLocalizationFormAlertDialogOopsTitleText;

@@ -105,6 +105,12 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     self.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"
                                                         inBundle:[NSBundle bundleForClass:self.class]
                                    compatibleWithTraitCollection:nil];
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationPeoplePickerControllerNoContributorsNotEditableText, ASDKLocalizationTable, @"No people involved not editable text");
+    } else {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationPeoplePickerControllerNoContributorsText, ASDKLocalizationTable, @"No people involved text");
+    }
+    
     [self setRightBarButton];
     [self.peopleTableView reloadData];
 }
