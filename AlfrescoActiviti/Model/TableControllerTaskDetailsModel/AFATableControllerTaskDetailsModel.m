@@ -54,7 +54,7 @@
 }
 
 - (BOOL)canBeRequeued {
-    return [self.currentTask.involvedPeople containsObject:self.currentTask.assigneeModel];
+    return [self.currentTask.involvedPeople containsObject:self.currentTask.assigneeModel] && (self.currentTask.isMemberOfCandidateUsers || self.currentTask.isMemberOfCandidateGroup);
 }
 
 - (BOOL)isAssignedTask {
