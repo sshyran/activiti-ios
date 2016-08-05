@@ -21,7 +21,8 @@
 #import "AFALogFormatter.h"
 #import "AFAServiceRepository.h"
 #import "AFAThumbnailManager.h"
-
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 @interface AppDelegate ()
 
@@ -41,6 +42,8 @@
     // We're enabling debugger colors if you have installed the XCode colors plugin
     // More details here: https://github.com/robbiehanson/XcodeColors
     [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
+    
+    [Fabric with:@[[Crashlytics class]]];
     
     application.delegate.window.backgroundColor = [UIColor windowBackgroundColor];
     

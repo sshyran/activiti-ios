@@ -4539,6 +4539,7 @@
 				131E27961BA2BF91009586C1 /* Version increment script */,
 				2B0FCEE644C5D6819A7ADB7E /* 📦 Embed Pods Frameworks */,
 				6BD16CE0BCB1F3E226198B90 /* 📦 Copy Pods Resources */,
+				133A21501D537C98000A7661 /* Fabric */,
 			);
 			buildRules = (
 			);
@@ -4735,6 +4736,20 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "VERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $NEWSUBVERSION\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		133A21501D537C98000A7661 /* Fabric */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Fabric;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" e8a01a8f3b3d101465882d84e3cb5a8a5b6befe0 003c7d4d3f26f46c93a0597e9e41109a5469a1c817c6c299daea4bcda2c7aa1b";
 		};
 		13F0E9311D368A0E00BF10A9 /* Cocoapods framework clean script */ = {
 			isa = PBXShellScriptBuildPhase;

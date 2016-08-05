@@ -13,6 +13,8 @@ abstract_target 'Shared' do
 	shared_pods
 
 	target 'AlfrescoActiviti' do
+        pod 'Fabric'
+        pod 'Crashlytics'
 	end
 
 	target 'ActivitiSDK' do
