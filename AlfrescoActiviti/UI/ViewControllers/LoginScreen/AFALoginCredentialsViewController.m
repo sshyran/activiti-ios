@@ -179,6 +179,12 @@
                     case NSURLErrorCannotConnectToHost: {
                         networkErrorMessage = NSLocalizedString(kLocalizationLoginUnreachableHostText, @"Unreachable host text");
                     }
+                        break;
+                        
+                    case NSURLErrorTimedOut: {
+                        networkErrorMessage = NSLocalizedString(kLocalizationLoginTimedOutText, @"Login timed out text");
+                    }
+                        break;
                         
                     default:
                         break;

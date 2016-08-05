@@ -34,6 +34,7 @@ NSString *kLocalizationLoginRememberCredentialsText              = @"loginScreen
 NSString *kLocalizationLoginAdvancedSectionHeaderText            = @"loginScreenAdvancedSectionHeaderText";
 NSString *kLocalizationLoginInvalidCredentialsText               = @"loginScreenInvalidCredentialsText";
 NSString *kLocalizationLoginUnreachableHostText                  = @"loginScreenUnreachableHostText";
+NSString *kLocalizationLoginTimedOutText                         = @"loginScreenRequestTimedOutText";
 
 
 #pragma mark -
