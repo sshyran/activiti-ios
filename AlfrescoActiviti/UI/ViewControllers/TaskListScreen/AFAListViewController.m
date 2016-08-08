@@ -516,7 +516,8 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 #pragma mark -
 #pragma mark AFAFilterViewController Delegate
 
-- (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel {
+- (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel
+                                  filterType:(AFAFilterType)filterType{
     // If no filter information is found don't continue with further requests
     if (!filterModel) {
         self.noRecordsLabel.hidden = NO;
@@ -526,10 +527,15 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
         
         [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
     } else {
-        // Store the filter reference for further reuse
-        self.currentFilter = filterModel;
-        
-        [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
+        if ((AFAFilterTypeTask == filterType &&
+            AFAListContentTypeTasks == self.listContentType) ||
+            (AFAFilterTypeProcessInstance == filterType &&
+             AFAListContentTypeProcessInstances == self.listContentType)) {
+                // Store the filter reference for further reuse
+                self.currentFilter = filterModel;
+                
+                [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
+        }
     }
 }
 

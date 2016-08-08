@@ -706,6 +706,10 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                       dispatch_group_leave(taskDetailsGroup);
                   } else {
                       [weakSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                      
+                      // Mark that the refresh operation has ended
+                      strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                      strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
                   }
               }];
               
@@ -751,18 +755,22 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                   if (strongSelf.refreshControl) {
                       strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
                   }
+                  
+                  // Mark that the refresh operation has ended
+                  strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                  strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
               });
           } else {
               [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+              
+              // Mark that the refresh operation has ended
+              strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+              strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
           }
           
           [[NSOperationQueue currentQueue] addOperationWithBlock:^{
               [weakSelf.refreshControl endRefreshing];
           }];
-                          
-          // Mark that the refresh operation has ended
-          strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-          strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
       }];
 }
 

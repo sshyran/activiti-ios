@@ -21,10 +21,16 @@
 @class AFAGenericFilterModel,
 ASDKModelApp;
 
+typedef NS_ENUM(NSInteger, AFAFilterType) {
+    AFAFilterTypeTask,
+    AFAFilterTypeProcessInstance
+};
+
 @protocol AFAFilterViewControllerDelegate <NSObject>
 
 - (void)searchWithFilterModel:(AFAGenericFilterModel *)filterModel;
-- (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel;
+- (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel
+                                  filterType:(AFAFilterType)filterType;
 - (void)clearFilterInputText;
 
 @end
