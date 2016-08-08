@@ -62,7 +62,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (assign, nonatomic) AFAGenericFilterModelSortType                 sortType;
 @property (assign, nonatomic) AFAGenericFilterAssignmentType                assignmentType;
 @property (strong, nonatomic) NSString                                      *filterID;
-@property (strong, nonatomic) AFAFilterServicesFilterListCompletionBlock    filterListResponseCompletionBlock;
+@property (strong, nonatomic) AFAFilterServicesFilterListCompletionBlock    taskFilterListResponseCompletionBlock;
+@property (strong, nonatomic) AFAFilterServicesFilterListCompletionBlock    processInstanceFilterListResponseCompletionBlock;
 @property (strong, nonatomic) UIColor                                       *applicationThemeColor;
 
 @end
@@ -99,35 +100,18 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self.filterTableView.rowHeight = UITableViewAutomaticDimension;
     
     __weak typeof(self) weakSelf = self;
-    self.filterListResponseCompletionBlock = ^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+    self.taskFilterListResponseCompletionBlock = ^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
-        if (!error) {
-            // Save the results
-            strongSelf.filterListArr = filterList ;
-            
-            // Default as the current filter the first object of the collection
-            ASDKModelFilter *currentSelectedFilter =(ASDKModelFilter *)strongSelf.filterListArr.firstObject;
-            strongSelf.currentFilterModel = [strongSelf buildFilterFromModel:currentSelectedFilter];
-            
-            // Notify the delegate that a filter has been parsed and marked as default
-            if ([strongSelf.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:)]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.delegate filterModelsDidLoadWithDefaultFilter:strongSelf.currentFilterModel];
-                });
-            }
-            
-            [strongSelf.filterTableView reloadData];
-        } else {
-            AFALogError(@"There are no selectable filter options available for the user to choose");
-            
-            // Notify the delegate about the missing filter data
-            if ([strongSelf.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:)]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.delegate filterModelsDidLoadWithDefaultFilter:nil];
-                });
-            }
-            
-        }
+        [strongSelf handleFilterResponseFor:filterList
+                                      error:error
+                                 filterType:AFAFilterTypeTask];
+    };
+    
+    self.processInstanceFilterListResponseCompletionBlock = ^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleFilterResponseFor:filterList
+                                      error:error
+                                 filterType:AFAFilterTypeProcessInstance];
     };
     
     // Fetch filter values from server
@@ -143,12 +127,12 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark -
 #pragma mark Public interface
 
-- (void)loadTaskFilterList {;
-    [self fetchTaskFilterListWithCompletionBlock:self.filterListResponseCompletionBlock];
+- (void)loadTaskFilterList {
+    [self fetchTaskFilterListWithCompletionBlock:self.taskFilterListResponseCompletionBlock];
 }
 
 - (void)loadProcessInstanceFilterList {
-    [self fetchProcessInstanceFilterListWithCompletionBlock:self.filterListResponseCompletionBlock];
+    [self fetchProcessInstanceFilterListWithCompletionBlock:self.processInstanceFilterListResponseCompletionBlock];
 }
 
 - (CGSize)contentSizeForFilterView {
@@ -363,6 +347,43 @@ viewForHeaderInSection:(NSInteger)section {
     NSPredicate *filterPredicate = [NSPredicate predicateWithFormat:@"SELF.modelID == %@", filter.filterID];
     NSArray *filterCollection = [self.filterListArr filteredArrayUsingPredicate:filterPredicate];
     return [self.filterListArr indexOfObject:filterCollection.firstObject];
+}
+
+- (void)handleFilterResponseFor:(NSArray *)filterList
+                          error:(NSError *)error
+                     filterType:(AFAFilterType)filterType {
+    __weak typeof(self) weakSelf = self;
+    if (!error) {
+        // Save the results
+        self.filterListArr = filterList ;
+        
+        // Default as the current filter the first object of the collection
+        ASDKModelFilter *currentSelectedFilter =(ASDKModelFilter *)self.filterListArr.firstObject;
+        self.currentFilterModel = [self buildFilterFromModel:currentSelectedFilter];
+        
+        // Notify the delegate that a filter has been parsed and marked as default
+        if ([self.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:filterType:)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                [strongSelf.delegate filterModelsDidLoadWithDefaultFilter:strongSelf.currentFilterModel
+                                                               filterType:filterType];
+            });
+        }
+        
+        [self.filterTableView reloadData];
+    } else {
+        AFALogError(@"There are no selectable filter options available for the user to choose");
+        
+        // Notify the delegate about the missing filter data
+        if ([self.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:filterType:)]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                [strongSelf.delegate filterModelsDidLoadWithDefaultFilter:nil
+                                                               filterType:filterType];
+            });
+        }
+        
+    }
 }
 
 @end

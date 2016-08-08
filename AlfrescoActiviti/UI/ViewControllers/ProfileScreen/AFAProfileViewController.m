@@ -159,6 +159,10 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     
     // Set a provisory profile image placeholder
     self.avatarView.profileImage = [AFAThumbnailManager placeholderThumbnailImage];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
     // Request the user profile
     self.controllerState = AFAProfileControllerStateRefreshInProgress;
@@ -794,13 +798,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                         forKeyPath:NSStringFromSelector(@selector(controllerState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 
                                  AFAProfileControllerState controllerState = [change[NSKeyValueChangeNewKey] boolValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     strongSelf.activityView.hidden = (AFAProfileControllerStateRefreshInProgress == controllerState) ? NO : YES;
-                                     strongSelf.activityView.animating = (AFAProfileControllerStateRefreshInProgress == controllerState) ? YES : NO;
+                                     weakSelf.activityView.hidden = (AFAProfileControllerStateRefreshInProgress == controllerState) ? NO : YES;
+                                     weakSelf.activityView.animating = (AFAProfileControllerStateRefreshInProgress == controllerState) ? YES : NO;
+                                     weakSelf.profileTableView.hidden = (AFAProfileControllerStateRefreshInProgress == controllerState) ? YES : NO;
                                  });
                              }];
 }
