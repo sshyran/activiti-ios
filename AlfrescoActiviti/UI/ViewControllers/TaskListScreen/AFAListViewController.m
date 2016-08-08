@@ -435,9 +435,14 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     self.currentFilter.size = kDefaultTaskListFetchSize;
     
+    __weak typeof(self) weakSelf = self;
     [taskService requestTaskListWithFilter:self.currentFilter
                        withCompletionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                           completionBlock (taskList, error, paging);
+                           __strong typeof(self) strongSelf = weakSelf;
+                           
+                           if (AFAListContentTypeTasks == strongSelf.listContentType) {
+                               completionBlock (taskList, error, paging);
+                           }
     }];
 }
 
@@ -445,9 +450,14 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
     self.currentFilter.size = kDefaultTaskListFetchSize;
     
+    __weak typeof(self) weakSelf = self;
     [processServices requestProcessInstanceListWithFilter:self.currentFilter
                                       withCompletionBlock:^(NSArray *processInstanceList, NSError *error, ASDKModelPaging *paging) {
-                                          completionBlock(processInstanceList, error, paging);
+                                          __strong typeof(self) strongSelf = weakSelf;
+                                          
+                                          if (AFAListContentTypeProcessInstances == strongSelf.listContentType) {
+                                              completionBlock(processInstanceList, error, paging);
+                                          }
     }];
 }
 
