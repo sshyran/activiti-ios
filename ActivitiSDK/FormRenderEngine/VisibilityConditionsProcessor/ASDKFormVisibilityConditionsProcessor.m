@@ -587,6 +587,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             rightValue = visibilityCondition.rightValue;
         }
         
+        // Perform an extra check on the values to asses whether an ID comparison is made
+        // If the right value represents an ID for an option of the left form field then
+        // make the assumption that comparison is to be made by ID
+        if (visibilityCondition.leftFormFieldID) {
+            ASDKModelFormField *leftFormField = [self formFieldForID:visibilityCondition.leftFormFieldID];
+            NSPredicate *rightValueOptionPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", rightValue];
+            NSArray *leftFormFieldOptions = [leftFormField.formFieldOptions filteredArrayUsingPredicate:rightValueOptionPredicate];
+            if (leftFormFieldOptions.count) {
+                NSPredicate *leftValueOptionPredicate = [NSPredicate predicateWithFormat:@"name == %@", leftValue];
+                leftValue = ((ASDKModelFormFieldOption *)[leftFormField.formFieldOptions filteredArrayUsingPredicate:leftValueOptionPredicate].firstObject).modelID;
+            }
+        }
+        
         // Decide which value comparator should be used. Because we passed the canEvaluateVisibilityCondition type
         // this means that both sides of the visibility condition have the same type thus is safe to just get
         // the type for one
