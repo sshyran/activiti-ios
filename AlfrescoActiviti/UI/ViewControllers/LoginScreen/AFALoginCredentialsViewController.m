@@ -43,6 +43,7 @@
 
 @property (weak, nonatomic)   IBOutlet                       AFAFadingTableView *credentialsTableView;
 @property (assign, nonatomic) AFALoginCredentialEditing      credentialEditing;
+@property (assign, nonatomic) NSUInteger                     fieldTagIdx;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                 *kvoManager;
@@ -99,6 +100,11 @@
     [self.view endEditing:YES];
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+       shouldReceiveTouch:(UITouch *)touch {
+    return ![touch.view isKindOfClass:[UIButton class]];
+}
+
 
 #pragma mark -
 #pragma mark AFACredentialTextFieldTableViewCell Delegate
@@ -131,6 +137,13 @@
         !(self.credentialEditing & AFALoginCredentialEditingSecondField)) {
         self.loginModel.isCredentialInputInProgress = NO;
     }
+}
+
+- (void)inputTextFieldShouldReturn:(UITextField *)inputTextField
+                            inCell:(UITableViewCell *)cell {
+    NSInteger nextTag = inputTextField.tag + 1;
+    [self jumpFromTextField:inputTextField
+     toNextTextFieldWithTag:nextTag];
 }
 
 
@@ -207,6 +220,17 @@
 - (void)lockInterface:(BOOL)lockInterface {
     self.view.userInteractionEnabled = !lockInterface;
     self.loginModel.isCredentialInputInProgress = NO;
+}
+
+- (void)jumpFromTextField:(UITextField *)fromTextField
+   toNextTextFieldWithTag:(NSUInteger)tag {
+    UIResponder *nextResponder = [self.view viewWithTag:tag];
+    
+    if ([nextResponder isKindOfClass:[UITextField class]]) {
+        [nextResponder becomeFirstResponder];
+    } else {
+        [fromTextField resignFirstResponder];
+    }
 }
 
 
@@ -428,6 +452,10 @@ viewForHeaderInSection:(NSInteger)section {
     hostnameCell.inputTextField.text = self.loginModel.hostName;
     hostnameCell.inputTextField.secureTextEntry = NO;
     hostnameCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
+    if (!hostnameCell.inputTextField.tag) {
+        self.fieldTagIdx++;
+        hostnameCell.inputTextField.tag = self.fieldTagIdx;
+    }
     hostnameCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
     
     __weak typeof(self) weakSelf = self;
@@ -452,6 +480,10 @@ viewForHeaderInSection:(NSInteger)section {
     credentialCell.inputTextField.text = self.loginModel.username;
     credentialCell.inputTextField.secureTextEntry = NO;
     credentialCell.inputTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    if (!credentialCell.inputTextField.tag) {
+        self.fieldTagIdx++;
+        credentialCell.inputTextField.tag = self.fieldTagIdx;
+    }
     credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
     
     __weak typeof(self) weakSelf = self;
@@ -476,6 +508,11 @@ viewForHeaderInSection:(NSInteger)section {
     credentialCell.inputTextField.text = self.loginModel.password;
     credentialCell.inputTextField.secureTextEntry = YES;
     credentialCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
+    if (!credentialCell.inputTextField.tag) {
+        self.fieldTagIdx++;
+        credentialCell.inputTextField.tag = self.fieldTagIdx;
+    }
+    credentialCell.inputTextField.returnKeyType = (AFALoginCredentialsTypeCloud == self.loginType) ? UIReturnKeyDone : UIReturnKeyNext;
     credentialCell.cellType = AFACredentialTextFieldCellTypeSecured;
     
     __weak typeof(self) weakSelf = self;
@@ -500,6 +537,10 @@ viewForHeaderInSection:(NSInteger)section {
     credentialCell.inputTextField.text = self.loginModel.port;
     credentialCell.inputTextField.secureTextEntry = NO;
     credentialCell.inputTextField.keyboardType = UIKeyboardTypeNumberPad;
+    if (!credentialCell.inputTextField.tag) {
+        self.fieldTagIdx++;
+        credentialCell.inputTextField.tag = self.fieldTagIdx;
+    }
     credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
     
     __weak typeof(self) weakSelf = self;
@@ -524,6 +565,11 @@ viewForHeaderInSection:(NSInteger)section {
     credentialCell.inputTextField.text = self.loginModel.serviceDocument;
     credentialCell.inputTextField.secureTextEntry = NO;
     credentialCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
+    if (!credentialCell.inputTextField.tag) {
+        self.fieldTagIdx++;
+        credentialCell.inputTextField.tag = self.fieldTagIdx;
+    }
+    credentialCell.inputTextField.returnKeyType = UIReturnKeyDone;
     credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
     
     __weak typeof(self) weakSelf = self;
