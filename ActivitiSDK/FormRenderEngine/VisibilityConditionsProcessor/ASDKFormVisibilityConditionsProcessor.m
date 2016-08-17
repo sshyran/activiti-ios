@@ -972,8 +972,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (NSNumber *)numberFromString:(NSString *)string {
     NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    NSNumber *number = [numberFormatter numberFromString:string];
+    if (!number) {
+        number = @(0);
+    }
     
-    return [numberFormatter numberFromString:string];
+    return number;
 }
 
 - (NSDate *)dateFromString:(NSString *)string {
