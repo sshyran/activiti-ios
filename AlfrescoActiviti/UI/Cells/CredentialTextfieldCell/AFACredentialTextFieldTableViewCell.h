@@ -29,6 +29,8 @@ typedef NS_ENUM(NSUInteger, AFACredentialTextFieldCellType) {
                                  inCell:(UITableViewCell *)cell;
 - (void)inputTextFieldWillEndEditting:(UITextField *)inputTextField
                                inCell:(UITableViewCell *)cell;
+- (void)inputTextFieldShouldReturn:(UITextField *)inputTextField
+                            inCell:(UITableViewCell *)cell;
 
 @end
 

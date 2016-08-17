@@ -51,7 +51,7 @@ CGFloat kHairlineViewAlphaDimmed    = 0.5f;
         [self.delegate inputTextFieldWillBeginEditting:textField
                                                 inCell:self];
     }
-    
+
     return YES;
 }
 
@@ -60,8 +60,17 @@ CGFloat kHairlineViewAlphaDimmed    = 0.5f;
         [self.delegate inputTextFieldWillEndEditting:textField
                                               inCell:self];
     }
-    
+
     return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    if ([self.delegate respondsToSelector:@selector(inputTextFieldShouldReturn:inCell:)]) {
+        [self.delegate inputTextFieldShouldReturn:textField
+                                           inCell:self];
+    }
+    
+    return NO;
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
