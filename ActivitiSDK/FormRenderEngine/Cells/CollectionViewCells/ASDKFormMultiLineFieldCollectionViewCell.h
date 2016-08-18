@@ -25,5 +25,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *multiLineTextLabel;
 @property (weak, nonatomic) IBOutlet UILabel *disclosureIndicatorLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *labelTrailingToDisclosureIndicatorConstraint;
 
 @end

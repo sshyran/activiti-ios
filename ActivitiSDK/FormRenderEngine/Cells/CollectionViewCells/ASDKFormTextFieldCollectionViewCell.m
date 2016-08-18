@@ -17,9 +17,14 @@
  ******************************************************************************/
 
 #import "ASDKFormTextFieldCollectionViewCell.h"
+
+// Constants
+#import "ASDKLocalizationConstants.h"
+#import "UIColor+ASDKFormViewColors.h"
+
+// Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
-#import "UIColor+ASDKFormViewColors.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -61,7 +66,8 @@
     // If dealing with a read-only representation then disable the text field and copy the
     // user-filled value
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        self.textfield.text = formField.values.firstObject;
+        NSString *formFieldValue = formField.values.firstObject;
+        self.textfield.text = formFieldValue ? formFieldValue : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
         self.textfield.enabled = NO;
         self.textfield.textColor = [UIColor formViewCompletedValueColor];
     } else {

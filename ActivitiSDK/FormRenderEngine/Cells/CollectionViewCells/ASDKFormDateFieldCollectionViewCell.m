@@ -21,6 +21,7 @@
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKModelConfiguration.h"
+#import "ASDKLocalizationConstants.h"
 
 // Categories
 #import "UIColor+ASDKFormViewColors.h"
@@ -64,7 +65,8 @@
     self.descriptionLabel.text = formField.fieldName;
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        self.selectedDateLabel.text = [self formattedDateStringForDateStringValue:formField.values.firstObject];
+        NSString *formFieldValue = [self formattedDateStringForDateStringValue:formField.values.firstObject];
+        self.selectedDateLabel.text = formFieldValue ? formFieldValue : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
         self.selectedDateLabel.textColor = [UIColor formViewCompletedValueColor];
         self.disclosureIndicatorLabel.hidden = YES;
         self.trailingToDisclosureConstraint.priority = UILayoutPriorityFittingSizeLevel;

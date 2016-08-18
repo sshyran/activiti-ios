@@ -70,6 +70,9 @@
         self.multiLineTextLabel.text = formFieldValue ? formFieldValue : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
         self.disclosureIndicatorLabel.hidden = formFieldValue.length ? NO : YES;
         self.multiLineTextLabel.textColor = [UIColor formViewCompletedValueColor];
+        if (!formFieldValue.length) {
+            self.labelTrailingToDisclosureIndicatorConstraint.priority = UILayoutPriorityFittingSizeLevel;
+        }
     } else {
         self.isRequired = formField.isRequired;
         // If a previously selected option is available display it
