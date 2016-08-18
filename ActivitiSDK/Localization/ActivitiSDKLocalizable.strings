@@ -34,7 +34,7 @@
 "formDynamicTableRowsAvailableText"                             = "Has %ld rows";
 "formDynamicTableRowHeaderText"                                 = "Row %ld";
 "formDynamicTableDeleteRowConfirmationText"                     = "Are you sure you want to delete this dynamic table row?";
-"formValueEmpty"                                                = "Empty";
+"formValueEmpty"                                                = "(empty)";
 
 // Content picker component
 "formContentPickerComponentLocalContentText"                    = "Open from Device";

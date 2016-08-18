@@ -67,7 +67,6 @@
     self.descriptionLabel.text = formField.fieldName;
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        
         self.selectedPeopleLabel.text = [self formatDescriptionLabelTextWithFormFieldValues:formField.values];
         self.selectedPeopleLabel.textColor = [UIColor formViewCompletedValueColor];
         self.selectedPeopleLabel.enabled = NO;

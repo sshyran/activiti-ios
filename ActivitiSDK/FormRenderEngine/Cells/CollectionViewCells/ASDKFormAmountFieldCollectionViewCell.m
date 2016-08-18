@@ -17,7 +17,12 @@
  ******************************************************************************/
 
 #import "ASDKFormAmountFieldCollectionViewCell.h"
+
+// Constants
 #import "UIColor+ASDKFormViewColors.h"
+#import "ASDKLocalizationConstants.h"
+
+// Models
 #import "ASDKModelAmountFormField.h"
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
@@ -67,8 +72,8 @@
     // In this case the structure received from the server is a bit different
     // then regular or completed form fields and we should handle it accordingly
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
-        
-        self.amountTextfield.text = [NSString stringWithFormat:@"%@", formField.values.firstObject];
+        NSString *formFieldValue = formField.values.firstObject;
+        self.amountTextfield.text = formFieldValue ? [NSString stringWithFormat:@"%@", formFieldValue] : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
         self.amountTextfield.enabled = NO;
         self.amountTextfield.textColor = [UIColor formViewCompletedValueColor];
     } else {
