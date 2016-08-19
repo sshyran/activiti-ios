@@ -25,6 +25,7 @@ ASDKModelContent;
 typedef void  (^ASDKProfileCompletionBlock)             (ASDKModelProfile *profile, NSError *error);
 typedef void  (^ASDKProfileImageCompletionBlock)        (UIImage *profileImage, NSError *error);
 typedef void  (^ASDKProfilePasswordCompletionBlock)     (BOOL isPasswordUpdated, NSError *error);
+typedef void  (^ASDKProfileAutheticationCompletionBlock)(BOOL didAutheticate, NSError *error);
 typedef void  (^ASDKProfileContentProgressBlock)        (NSUInteger progress, NSError *error);
 typedef void  (^ASDKProfileImageContentUploadCompletionBlock)(ASDKModelContent *profilePictureContent, NSError *error);
 
@@ -32,6 +33,20 @@ typedef void  (^ASDKProfileImageContentUploadCompletionBlock)(ASDKModelContent *
 @protocol ASDKProfileNetworkServiceProtocol <NSObject>
 
 @required
+
+/**
+ *  Tries to autheticate the user with the provided password and returns the result
+ *  via a completion block.
+ *
+ *  @param username         Username to be authenticated
+ *  @param password         Password corresponding to the provided user account
+ *  @param completionBlock  Completion block providing whether the autheticated has
+ *                          succeeded or not and an additional error reason.
+ */
+- (void)authenticateUser:(NSString *)username
+            withPassword:(NSString *)password
+     withCompletionBlock:(ASDKProfileAutheticationCompletionBlock)completionBlock;
+
 
 /**
  *  Fetches from REST API and returns via a completion block a profile model object accompanied by

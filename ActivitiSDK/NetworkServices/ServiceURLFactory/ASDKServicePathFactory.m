@@ -277,6 +277,10 @@ static NSString * const kASDkHTTPS = @"https";
     return [[[self userListServicePath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIUsersPicturePath];
 }
 
+- (NSString *)authenticationServicePath {
+    return [kASDKAPIAppPath stringByAppendingPathComponent:kASDKAPIAppAuthentication];
+}
+
 
 #pragma mark -
 #pragma mark Query related

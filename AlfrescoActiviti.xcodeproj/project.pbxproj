@@ -84,6 +84,11 @@
 		135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */; };
 		135EF5651B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 135EF5641B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m */; };
+		1363A23D1D634315009EAC54 /* ASDKCSRFTokenStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1363A23B1D634315009EAC54 /* ASDKCSRFTokenStorage.h */; };
+		1363A23E1D634315009EAC54 /* ASDKCSRFTokenStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1363A23C1D634315009EAC54 /* ASDKCSRFTokenStorage.m */; };
+		1363A2411D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1363A2401D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h */; };
+		1363A24A1D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1363A2481D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.h */; };
+		1363A24B1D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1363A2491D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.m */; };
 		13667FE11C871C8A005E4AEA /* AFATableControllerProcessInstanceDetailsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13667FE01C871C8A005E4AEA /* AFATableControllerProcessInstanceDetailsCellFactory.m */; };
 		13667FE51C8725DC005E4AEA /* AFATableControllerProcessInstanceDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13667FE41C8725DC005E4AEA /* AFATableControllerProcessInstanceDetailsModel.m */; };
 		13667FEA1C87355E005E4AEA /* AFAShowDiagramTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13667FE91C87355E005E4AEA /* AFAShowDiagramTableViewCell.m */; };
@@ -646,6 +651,11 @@
 		135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLogFormatter.m; path = Logging/ASDKLogFormatter.m; sourceTree = "<group>"; };
 		135EF5631B9090E800ECD1B2 /* NSDate+AFAStringTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+AFAStringTransformation.h"; path = "Business/Categories/NSDate+AFAStringTransformation.h"; sourceTree = "<group>"; };
 		135EF5641B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+AFAStringTransformation.m"; path = "Business/Categories/NSDate+AFAStringTransformation.m"; sourceTree = "<group>"; };
+		1363A23B1D634315009EAC54 /* ASDKCSRFTokenStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKCSRFTokenStorage.h; path = NetworkServices/CSRFTokenStorage/ASDKCSRFTokenStorage.h; sourceTree = "<group>"; };
+		1363A23C1D634315009EAC54 /* ASDKCSRFTokenStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKCSRFTokenStorage.m; path = NetworkServices/CSRFTokenStorage/ASDKCSRFTokenStorage.m; sourceTree = "<group>"; };
+		1363A2401D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKCSRFTokenStorageProtocol.h; path = NetworkServices/CSRFTokenStorage/Protocol/ASDKCSRFTokenStorageProtocol.h; sourceTree = "<group>"; };
+		1363A2481D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKAuthenticateRequestRepresentation.h; path = NetworkServices/RequestRepresentations/AuthenticateInformation/ASDKAuthenticateRequestRepresentation.h; sourceTree = "<group>"; };
+		1363A2491D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKAuthenticateRequestRepresentation.m; path = NetworkServices/RequestRepresentations/AuthenticateInformation/ASDKAuthenticateRequestRepresentation.m; sourceTree = "<group>"; };
 		13667FDF1C871C8A005E4AEA /* AFATableControllerProcessInstanceDetailsCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerProcessInstanceDetailsCellFactory.h; path = Business/TableController/CellFactories/ProcessInstanceDetailsCellFactory/AFATableControllerProcessInstanceDetailsCellFactory.h; sourceTree = "<group>"; };
 		13667FE01C871C8A005E4AEA /* AFATableControllerProcessInstanceDetailsCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerProcessInstanceDetailsCellFactory.m; path = Business/TableController/CellFactories/ProcessInstanceDetailsCellFactory/AFATableControllerProcessInstanceDetailsCellFactory.m; sourceTree = "<group>"; };
 		13667FE31C8725DC005E4AEA /* AFATableControllerProcessInstanceDetailsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerProcessInstanceDetailsModel.h; path = Model/TableControllerProcessInstanceDetailsModel/AFATableControllerProcessInstanceDetailsModel.h; sourceTree = "<group>"; };
@@ -1886,6 +1896,33 @@
 				13CFF33E1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m */,
 			);
 			name = NSDate;
+			sourceTree = "<group>";
+		};
+		1363A23F1D634347009EAC54 /* CSRFTokenStorage */ = {
+			isa = PBXGroup;
+			children = (
+				1363A2421D644752009EAC54 /* Protocol */,
+				1363A23B1D634315009EAC54 /* ASDKCSRFTokenStorage.h */,
+				1363A23C1D634315009EAC54 /* ASDKCSRFTokenStorage.m */,
+			);
+			name = CSRFTokenStorage;
+			sourceTree = "<group>";
+		};
+		1363A2421D644752009EAC54 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				1363A2401D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
+		1363A24C1D6724D6009EAC54 /* AuthenticateInformation */ = {
+			isa = PBXGroup;
+			children = (
+				1363A2481D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.h */,
+				1363A2491D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.m */,
+			);
+			name = AuthenticateInformation;
 			sourceTree = "<group>";
 		};
 		13667FE21C871C8F005E4AEA /* ProcessInstanceDetailsCellFactory */ = {
@@ -3500,6 +3537,7 @@
 			children = (
 				13F9BA371B73A8200068BB8C /* ASDKHTTPCodes.h */,
 				1313751E1B6FABD500D2268E /* NetworkService */,
+				1363A23F1D634347009EAC54 /* CSRFTokenStorage */,
 				13E8307C1B6A45670028901A /* APIEndpointList */,
 				138AC9CE1B9DD3FB006C9DD4 /* APIJSONKeyParams */,
 				13E830821B6A4AA00028901A /* ServiceURLFactory */,
@@ -3744,6 +3782,7 @@
 		13F9BA2C1B734F920068BB8C /* RequestRepresentations */ = {
 			isa = PBXGroup;
 			children = (
+				1363A24C1D6724D6009EAC54 /* AuthenticateInformation */,
 				8D3A51D71C80854300FF9A00 /* ProcessInstanceInformation */,
 				8D3A51D21C80850700FF9A00 /* UserInformation */,
 				13F9BA361B739D2C0068BB8C /* BaseRequestRepresentation */,
@@ -4410,6 +4449,7 @@
 				13EBECA31CF8470900EC8F96 /* ASDKFormEngineActionHandler.h in Headers */,
 				8D8F86041C8ED62000356A5B /* ASDKFormAttachFieldCollectionViewCell.h in Headers */,
 				139E54081C21935500CE4674 /* ASDKModelApp.h in Headers */,
+				1363A23D1D634315009EAC54 /* ASDKCSRFTokenStorage.h in Headers */,
 				13F07EFB1CBFC8C400002FEB /* ASDKKVOManagerSharedProxy.h in Headers */,
 				138F0A2E1C6B865700DA9414 /* ASDKFormControllerNavigationProtocol.h in Headers */,
 				138F0A461C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.h in Headers */,
@@ -4453,6 +4493,7 @@
 				1357018D1B70D21700A384A7 /* ASDKModelBase.h in Headers */,
 				138F0A261C6B7C9000DA9414 /* ASDKFormFieldDetailsControllerProtocol.h in Headers */,
 				13BA5C0F1BE11C250091D6C9 /* ASDKModelFormFieldValue.h in Headers */,
+				1363A24A1D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.h in Headers */,
 				13CF72001BCCDA3E0048C322 /* ASDKDiskServicesConstants.h in Headers */,
 				133F054A1BD52B5000C22CFD /* ASDKFormNetworkServiceProtocol.h in Headers */,
 				13B7E2021B7495F4002CBDF4 /* ASDKPagingRequestRepresentation.h in Headers */,
@@ -4507,6 +4548,7 @@
 				133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */,
 				8D3E354E1C9C50F1009F7766 /* ASDKPushFadeSegueUnwind.h in Headers */,
 				13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */,
+				1363A2411D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h in Headers */,
 				13C9B57E1B9497B90009BD27 /* ASDKModelPaging.h in Headers */,
 				13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */,
 				13EBECAA1CF8728900EC8F96 /* ASDKFormEngineDataSourceActionHandlerDelegate.h in Headers */,
@@ -5093,6 +5135,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1363A24B1D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.m in Sources */,
 				13BA5C061BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.m in Sources */,
 				1319EF531C157EE7003FA6C1 /* NSString+ASDKFontGlyphicons.m in Sources */,
 				8D8F86001C8DEE3A00356A5B /* ASDKAddContentTableViewCell.m in Sources */,
@@ -5147,6 +5190,7 @@
 				13EBECA41CF8470900EC8F96 /* ASDKFormEngineActionHandler.m in Sources */,
 				13EEC5CF1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m in Sources */,
 				8D3A51F31C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.m in Sources */,
+				1363A23E1D634315009EAC54 /* ASDKCSRFTokenStorage.m in Sources */,
 				138F0A421C6CC29100DA9414 /* ASDKFormHeaderCollectionReusableView.m in Sources */,
 				8D3A51D61C80851B00FF9A00 /* ASDKUserRequestRepresentation.m in Sources */,
 				8DB399951C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.m in Sources */,
@@ -5387,7 +5431,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "Alfresco Activiti";
-				PROVISIONING_PROFILE = "a4a50dba-5b34-4d3e-a13f-a88598fb284f";
+				PROVISIONING_PROFILE = "d8f028dd-11c5-42c3-a958-28716ead6dc3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

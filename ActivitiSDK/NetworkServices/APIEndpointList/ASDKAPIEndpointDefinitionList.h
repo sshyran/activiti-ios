@@ -20,6 +20,7 @@
 
 // Application path
 extern NSString * const kASDKAPIApplicationPath;
+extern NSString * const kASDKAPIAppAuthentication;
 
 // Enterprise component
 extern NSString * const kASDKAPIEnterprisePath;

@@ -54,6 +54,7 @@
 #import "ASDKFormRenderEngineProtocol.h"
 #import "ASDKFormColorSchemeManager.h"
 #import "ASDKFormColorSchemeManagerProtocol.h"
+#import "ASDKCSRFTokenStorage.h"
 
 // Configurations imports
 #import "ASDKBasicAuthentificationProvider.h"
@@ -156,6 +157,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Set up the disk services
     ASDKDiskServices *diskService = [ASDKDiskServices new];
     
+    // Set up the CSRF token storage manager
+    ASDKCSRFTokenStorage *tokenStorage = [ASDKCSRFTokenStorage new];
+    
     // Set up the aplication newtork service
     ASDKAppNetworkServices *applicationNetworkService = [[ASDKAppNetworkServices alloc] initWithRequestManager:self.requestOperationManager
                                                                                                  parserManager:parserOperationManager
@@ -177,6 +181,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                                 servicePathFactory:servicePathFactory
                                                                                                       diskServices:diskService
                                                                                                       resultsQueue:nil];
+    [profileNetworkService configureWithCSRFTokenStorage:tokenStorage];
     
     if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProfileNetworkServiceProtocol)]) {
         [_serviceLocator removeService:profileNetworkService];
@@ -321,6 +326,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [_serviceLocator addService:colorSchemeManager];
     
     ASDKLogVerbose(@"Form color scheme manager...%@", colorSchemeManager ? @"OK" : @"NOT_OK");
+    
+    // Register the csrf token storage manager
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKCSRFTokenStorageProtocol)]) {
+        [_serviceLocator removeService:tokenStorage];
+    }
+    [_serviceLocator addService:tokenStorage];
+    
+    ASDKLogVerbose(@"CSRF token storage manager...%@", tokenStorage ? @"OK" : @"NOT_OK");
 }
 
 - (void)updateServerConfigurationCredentialsForUsername:(NSString *)username
