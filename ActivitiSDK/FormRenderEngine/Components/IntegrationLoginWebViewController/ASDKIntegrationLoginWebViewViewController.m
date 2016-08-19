@@ -17,10 +17,21 @@
  ******************************************************************************/
 
 #import "ASDKIntegrationLoginWebViewViewController.h"
+
+// Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLogConfiguration.h"
 #import "ASDKLocalizationConstants.h"
 #import "ASDKNetworkServiceConstants.h"
+
+// Model
+#import "ASDKModelServerConfiguration.h"
+
+// Managers
+#import "ASDKCSRFTokenStorage.h"
+#import "ASDKBootstrap.h"
+#import "ASDKServiceLocator.h"
+#import "ASDKProfileNetworkServices.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -63,9 +74,25 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    ASDKLogVerbose(@"Displaying integration login form with request:%@", self.loginURLString);
-    NSURLRequest *loginRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.loginURLString]];
-    [self.webViewContainer loadRequest:loginRequest];
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKProfileNetworkServices *profileNetworkServices = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKProfileNetworkServiceProtocol)];
+    
+    [profileNetworkServices authenticateUser:sdkBootstrap.serverConfiguration.username
+                                withPassword:sdkBootstrap.serverConfiguration.password
+                         withCompletionBlock:^(BOOL didAutheticate, NSError *error) {
+                             if (didAutheticate) {
+                                 ASDKLogVerbose(@"Authentication cookie retrieved successfully.\nDisplaying integration login form with request:%@", self.loginURLString);
+                                 NSMutableURLRequest *loginRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:self.loginURLString]];
+                                 
+                                 // Attach the CSRF token to the login page request
+                                 [loginRequest setValue:[profileNetworkServices.tokenStorage csrfTokenString]
+                                     forHTTPHeaderField:kASDKAPICSRFHeaderFieldParameter];
+                                 
+                                 [self.webViewContainer loadRequest:loginRequest];
+                             } else {
+                                 ASDKLogVerbose(@"An error occured while retrieving the authentication cookie.");
+                             }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -81,6 +108,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self dismissViewControllerAnimated:YES
                              completion:nil];
 }
+
 
 #pragma mark -
 #pragma mark UIWebView Delegate

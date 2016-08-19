@@ -106,6 +106,7 @@
 // User related
 - (NSString *)userListServicePath;
 - (NSString *)userProfileImageServicePathFormat;
+- (NSString *)authenticationServicePath;
 
 // Query related
 - (NSString *)taskQueryServicePath;

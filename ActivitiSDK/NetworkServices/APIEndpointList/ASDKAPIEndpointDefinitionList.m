@@ -22,7 +22,7 @@
 #pragma mark -
 #pragma mark Application path
 NSString * const kASDKAPIApplicationPath            = @"activiti-app";
-
+NSString * const kASDKAPIAppAuthentication          = @"authentication";
 
 #pragma mark -
 #pragma mark Enterprise component

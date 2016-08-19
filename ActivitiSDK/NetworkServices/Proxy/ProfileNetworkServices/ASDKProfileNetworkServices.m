@@ -17,12 +17,20 @@
  ******************************************************************************/
 
 #import "ASDKProfileNetworkServices.h"
+
+// Constants
 #import "ASDKLogConfiguration.h"
+#import "ASDKNetworkServiceConstants.h"
+
+// Models
+#import "ASDKAuthenticateRequestRepresentation.h"
 #import "ASDKProfileInformationRequestRepresentation.h"
 #import "ASDKProfilePasswordRequestRepresentation.h"
 #import "ASDKModelPaging.h"
 #import "ASDKModelFileContent.h"
-#import "ASDKNetworkServiceConstants.h"
+
+// Managers
+#import "ASDKCSRFTokenStorage.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -55,6 +63,70 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 #pragma mark -
 #pragma mark ASDKProfileNetworkService Protocol
+
+- (void)authenticateUser:(NSString *)username
+            withPassword:(NSString *)password
+     withCompletionBlock:(ASDKProfileAutheticationCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(username);
+    NSParameterAssert(password);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    // Use the HTTP with CSRF request serializer type for the authentication call then reinstall the default authentication provider
+    self.requestOperationManager.requestSerializer = [self requestSerializerOfType:(ASDKNetworkServiceRequestSerializerTypeHTTPWithCSRFToken)];
+    
+    ASDKAuthenticateRequestRepresentation *autheticateRequestRepresentation = [ASDKAuthenticateRequestRepresentation new];
+    autheticateRequestRepresentation.username = username;
+    autheticateRequestRepresentation.password = password;
+    
+    __weak typeof(self) weakSelf = self;
+    AFHTTPRequestOperation *operation =
+    [self.requestOperationManager POST:[self.servicePathFactory authenticationServicePath]
+                            parameters:[autheticateRequestRepresentation jsonDictionary]
+                               success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+                                   __strong typeof(self) strongSelf = weakSelf;
+                                   
+                                   // Reinstate the authentication request serializer
+                                   strongSelf.requestOperationManager.requestSerializer = strongSelf.requestOperationManager.authenticationProvider;
+                                   
+                                   // Remove operation reference
+                                   [strongSelf.networkOperations removeObject:operation];
+                                   
+                                   // Check status code
+                                   if (ASDKHTTPCode200OK == operation.response.statusCode) {
+                                       ASDKLogVerbose(@"User authenticated successfully for request: %@ - %@.\nResponse:%@", operation.request.HTTPMethod, operation.request.URL.absoluteString, [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                       
+                                       dispatch_async(strongSelf.resultsQueue, ^{
+                                           completionBlock(YES, nil);
+                                       });
+                                   } else {
+                                       ASDKLogVerbose(@"User failed to authenticate successfully for request: %@ - %@.\nResponse:%@", operation.request.HTTPMethod, operation.request.URL.absoluteString, [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                       
+                                       dispatch_async(strongSelf.resultsQueue, ^{
+                                           completionBlock(NO, nil);
+                                       });
+                                   }
+                               } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+                                   __strong typeof(self) strongSelf = weakSelf;
+                                   
+                                   // Reinstate the authentication request serializer
+                                   strongSelf.requestOperationManager.requestSerializer = strongSelf.requestOperationManager.authenticationProvider;
+                                   
+                                   // Remove operation reference
+                                   [strongSelf.networkOperations removeObject:operation];
+                                   
+                                   NSParameterAssert(strongSelf.resultsQueue);
+                                   ASDKLogError(@"Failed to authenticate successfully for request: %@ - %@. Reason:%@", operation.request.HTTPMethod, operation.request.URL.absoluteString, error.localizedDescription);
+                                   
+                                   dispatch_async(strongSelf.resultsQueue, ^{
+                                       completionBlock(NO, error);
+                                   });
+                               }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:operation];
+}
 
 - (void)fetchProfileWithCompletionBlock:(ASDKProfileCompletionBlock)completionBlock {
     // Check mandatory data

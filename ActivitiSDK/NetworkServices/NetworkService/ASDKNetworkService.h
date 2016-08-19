@@ -24,6 +24,7 @@
 #import "ASDKHTTPCodes.h"
 #import "ASDKDiskServices.h"
 #import "ASDKRequestOperationManager.h"
+#import "ASDKCSRFTokenStorage.h"
 
 typedef NS_ENUM(NSInteger, ASDKNetworkServiceResponseSerializerType) {
     ASDKNetworkServiceResponseSerializerTypeJSON,
@@ -33,10 +34,18 @@ typedef NS_ENUM(NSInteger, ASDKNetworkServiceResponseSerializerType) {
 
 typedef NS_ENUM(NSInteger, ASDKNetworkServiceRequestSerializerType) {
     ASDKNetworkServiceRequestSerializerTypeJSON,
-    ASDKNetworkServiceRequestSerializerTypeHTTP
+    ASDKNetworkServiceRequestSerializerTypeHTTP,
+    ASDKNetworkServiceRequestSerializerTypeHTTPWithCSRFToken
 };
 
 @interface ASDKNetworkService : NSObject <ASDKNetworkServiceProtocol>
+
+@property (strong, nonatomic) ASDKRequestOperationManager   *requestOperationManager;
+@property (strong, nonatomic) ASDKParserOperationManager    *parserOperationManager;
+@property (strong, nonatomic) ASDKServicePathFactory        *servicePathFactory;
+@property (strong, nonatomic) ASDKDiskServices              *diskServices;
+@property (strong, nonatomic) ASDKCSRFTokenStorage          *tokenStorage;
+@property (strong, nonatomic) dispatch_queue_t              resultsQueue;
 
 - (instancetype)initWithRequestManager:(ASDKRequestOperationManager *)requestOperationManager
                          parserManager:(ASDKParserOperationManager *)parserManager
@@ -46,11 +55,6 @@ typedef NS_ENUM(NSInteger, ASDKNetworkServiceRequestSerializerType) {
 
 - (AFHTTPResponseSerializer *)responseSerializerOfType:(ASDKNetworkServiceResponseSerializerType)serializerType;
 - (AFHTTPRequestSerializer *)requestSerializerOfType:(ASDKNetworkServiceRequestSerializerType)serializerType;
-
-@property (strong, nonatomic) ASDKRequestOperationManager   *requestOperationManager;
-@property (strong, nonatomic) ASDKParserOperationManager    *parserOperationManager;
-@property (strong, nonatomic) ASDKServicePathFactory        *servicePathFactory;
-@property (strong, nonatomic) ASDKDiskServices              *diskServices;
-@property (strong, nonatomic) dispatch_queue_t              resultsQueue;
+- (void)configureWithCSRFTokenStorage:(ASDKCSRFTokenStorage *)tokenStorage;
 
 @end

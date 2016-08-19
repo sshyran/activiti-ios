@@ -78,4 +78,36 @@
     return self.requestSerializersDict[@(serializerType)];
 }
 
+- (void)configureWithCSRFTokenStorage:(ASDKCSRFTokenStorage *)tokenStorage {
+    AFHTTPRequestSerializer *httpWithCSRFRequestSerializer = [AFHTTPRequestSerializer serializer];
+    [httpWithCSRFRequestSerializer setValue:[tokenStorage csrfTokenString]
+                         forHTTPHeaderField:kASDKAPICSRFHeaderFieldParameter];
+    
+    NSMutableDictionary *requestSerializersDict = [NSMutableDictionary dictionaryWithDictionary:self.requestSerializersDict];
+    [requestSerializersDict addEntriesFromDictionary:@{@(ASDKNetworkServiceRequestSerializerTypeHTTPWithCSRFToken) : httpWithCSRFRequestSerializer}];
+    self.requestSerializersDict = requestSerializersDict;
+    
+    // Search for the CSRF cookie and if it's not available create it for future requests
+    BOOL isCSRFCookieAvailable = NO;
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+        if ([cookie.name isEqualToString:kASDKAPICSRFCookieName]) {
+            isCSRFCookieAvailable = YES;
+            break;
+        }
+    }
+    
+    if (!isCSRFCookieAvailable) {
+        NSURLComponents *urlComponents = [[NSURLComponents alloc] initWithURL:self.requestOperationManager.baseURL
+                                                      resolvingAgainstBaseURL:YES];
+        
+        NSDictionary *cookieProperties = @{NSHTTPCookieName     : kASDKAPICSRFCookieName,
+                                           NSHTTPCookieValue    : [tokenStorage csrfTokenString],
+                                           NSHTTPCookiePath     : @"/",
+                                           NSHTTPCookieVersion  : @"0",
+                                           NSHTTPCookieDomain   : urlComponents.host};
+        NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+    }
+}
+
 @end
