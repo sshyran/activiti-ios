@@ -772,7 +772,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                          strongSelf.noRecordsLabel.hidden = YES;
                                      } else {
                                          // Check if there are any results to show before showing the task list tableview
-                                         strongSelf.listTableView.hidden = [strongSelf objectListForListContentType:strongSelf.listContentType] ? NO : YES;
+                                         strongSelf.listTableView.hidden = [strongSelf objectListForListContentType:strongSelf.listContentType].count ? NO : YES;
                                      }
                                      strongSelf.loadingActivityView.hidden = (AFAListControllerStateRefreshInProgress == controllerState) ? NO : YES;
                                      strongSelf.loadingActivityView.animating = (AFAListControllerStateRefreshInProgress == controllerState) ? YES : NO;
