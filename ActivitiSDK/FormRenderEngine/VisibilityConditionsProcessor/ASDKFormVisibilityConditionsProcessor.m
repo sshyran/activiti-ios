@@ -399,7 +399,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (ASDKFormFieldSupportedType)supportedTypeForFormField:(ASDKModelFormField *)formField {
-    NSInteger representationType = formField.representationType;
+    NSInteger representationType = ASDKFormFieldSupportedTypeUndefined;
+    
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
+        representationType = formField.formFieldParams.representationType;
+    } else {
+        representationType = formField.representationType;
+    }
     
     switch (representationType) {
         case ASDKModelFormFieldRepresentationTypeDropdown:
