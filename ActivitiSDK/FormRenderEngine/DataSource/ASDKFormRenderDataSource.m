@@ -340,6 +340,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     tabFormDescription.visibleTabFormFields = [self.visibilityConditionsProcessor formFieldsForTabID:currentVisibleTab.modelID];
     tabFormDescription.renderableTabFormFields = currentRenderableTab.formFields;
     tabFormDescription.formTitle = currentVisibleTab.title;
+    tabFormDescription.isReadOnlyForm = self.isReadOnlyForm;
     
     return tabFormDescription;
 }
