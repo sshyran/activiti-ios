@@ -352,7 +352,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                         [sectionFields addObject:sectionFormField];
                     }
                 } else {
-                    [subSectionFields addObject:formField];
+                    if (formField.fieldType == ASDKModelFormFieldTypeDynamicTableField) {
+                        [sectionFields addObject:formField];
+                    } else {
+                        [subSectionFields addObject:formField];
+                    }
                 }
             }
         }
