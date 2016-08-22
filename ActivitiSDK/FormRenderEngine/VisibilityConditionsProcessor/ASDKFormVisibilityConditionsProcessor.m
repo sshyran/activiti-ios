@@ -988,6 +988,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (NSNumber *)numberFromString:(NSString *)string {
     NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+    [numberFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     NSNumber *number = [numberFormatter numberFromString:string];
     if (!number) {
