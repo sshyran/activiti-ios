@@ -364,6 +364,7 @@
 
 - (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormTabDescription *)formDescription {
     self.dataSource = [[ASDKFormRenderDataSource alloc] initWithTabFormDescription:formDescription];
+    self.dataSource.isReadOnlyForm = formDescription.isReadOnlyForm;
     return [self prepareWithFormDescription:formDescription];
 }
 
