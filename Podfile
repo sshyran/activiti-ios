@@ -35,4 +35,13 @@ post_install do |installer|
             config.build_settings['OTHER_CFLAGS'] = cflags
         end
     end
+    
+    require 'fileutils'
+    FileUtils.cp_r('Pods/Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti-acknowledgements.plist', 'AlfrescoActiviti/Resources/Settings.bundle/Acknowledgements.plist', :remove_destination => true)
+end
+
+class ::Pod::Generator::Acknowledgements
+    def footnote_text
+        ""
+    end
 end

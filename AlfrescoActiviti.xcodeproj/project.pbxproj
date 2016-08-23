@@ -127,6 +127,8 @@
 		137194921B6924DF00D4E1F0 /* ActivitiSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194911B6924DF00D4E1F0 /* ActivitiSDKTests.m */; };
 		137194951B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; };
 		1372B21A1BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1372B2191BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m */; };
+		13778DDC1D6C3EF10074C70F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 13778DDB1D6C3EF10074C70F /* Settings.bundle */; };
+		13778DDE1D6C429F0074C70F /* version-update.sh in Resources */ = {isa = PBXBuildFile; fileRef = 13778DDD1D6C429F0074C70F /* version-update.sh */; };
 		137B8DD41BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DD31BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m */; };
 		137B8DD81BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DD71BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m */; };
 		137B8DDC1BB9979000F1A6DC /* AFATableControllerContentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DDB1BB9979000F1A6DC /* AFATableControllerContentModel.m */; };
@@ -704,7 +706,7 @@
 		137194541B6922DE00D4E1F0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		137194551B6922DE00D4E1F0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1371945E1B6922DE00D4E1F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		137194601B6922DE00D4E1F0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		137194601B6922DE00D4E1F0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = "<group>"; };
 		137194631B6922DE00D4E1F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		137194691B6922DE00D4E1F0 /* AlfrescoActivitiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfrescoActivitiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1371946E1B6922DE00D4E1F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -717,6 +719,8 @@
 		137194911B6924DF00D4E1F0 /* ActivitiSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivitiSDKTests.m; sourceTree = "<group>"; };
 		1372B2181BA6E47800E87F04 /* UIViewController+AFAAlertAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+AFAAlertAddition.h"; path = "UI/Categories/UIViewController+AFAAlertAddition.h"; sourceTree = "<group>"; };
 		1372B2191BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+AFAAlertAddition.m"; path = "UI/Categories/UIViewController+AFAAlertAddition.m"; sourceTree = "<group>"; };
+		13778DDB1D6C3EF10074C70F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = "<group>"; };
+		13778DDD1D6C429F0074C70F /* version-update.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = "version-update.sh"; path = "Resources/version-update.sh"; sourceTree = "<group>"; };
 		137B8DD21BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerTaskContributorsModel.h; path = Model/TableControllerTaskContributorsModel/AFATableControllerTaskContributorsModel.h; sourceTree = "<group>"; };
 		137B8DD31BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerTaskContributorsModel.m; path = Model/TableControllerTaskContributorsModel/AFATableControllerTaskContributorsModel.m; sourceTree = "<group>"; };
 		137B8DD61BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerTaskContributorsCellFactory.h; path = Business/TableController/CellFactories/TaskContributorsCellFactory/AFATableControllerTaskContributorsCellFactory.h; sourceTree = "<group>"; };
@@ -898,9 +902,9 @@
 		13BDA7361B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFACredentialTextFieldTableViewCell.m; path = UI/Cells/CredentialTextfieldCell/AFACredentialTextFieldTableViewCell.m; sourceTree = "<group>"; };
 		13BDA73A1B7B4CFC00A2CE40 /* UIColor+AFATheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+AFATheme.h"; path = "UI/Categories/UIColor+AFATheme.h"; sourceTree = "<group>"; };
 		13BDA73B1B7B4CFC00A2CE40 /* UIColor+AFATheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+AFATheme.m"; path = "UI/Categories/UIColor+AFATheme.m"; sourceTree = "<group>"; };
-		13BDA73E1B7B632100A2CE40 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = Localizable.strings; path = Localization/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
-		13BDA7411B7B733400A2CE40 /* AFALocalizationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AFALocalizationConstants.h; path = Localization/AFALocalizationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		13BDA7421B7B733400A2CE40 /* AFALocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFALocalizationConstants.m; path = Localization/AFALocalizationConstants.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		13BDA73E1B7B632100A2CE40 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = Localizable.strings; path = Resources/Localization/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
+		13BDA7411B7B733400A2CE40 /* AFALocalizationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AFALocalizationConstants.h; path = Resources/Localization/AFALocalizationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		13BDA7421B7B733400A2CE40 /* AFALocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFALocalizationConstants.m; path = Resources/Localization/AFALocalizationConstants.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		13C444111BBA6CDB00868904 /* AFATableControllerCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentModel.h; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.h; sourceTree = "<group>"; };
 		13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCommentModel.m; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.m; sourceTree = "<group>"; };
 		13C444151BBA744400868904 /* AFATableControllerCommentCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentCellFactory.h; path = Business/TableController/CellFactories/TaskCommentCellFactory/AFATableControllerCommentCellFactory.h; sourceTree = "<group>"; };
@@ -1731,6 +1735,8 @@
 				13BDA7401B7B632500A2CE40 /* Localization */,
 				137194621B6922DE00D4E1F0 /* LaunchScreen.xib */,
 				137194601B6922DE00D4E1F0 /* Images.xcassets */,
+				13778DDB1D6C3EF10074C70F /* Settings.bundle */,
+				13778DDD1D6C429F0074C70F /* version-update.sh */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -4577,7 +4583,6 @@
 				1371944A1B6922DE00D4E1F0 /* Frameworks */,
 				1371944B1B6922DE00D4E1F0 /* Resources */,
 				1371949A1B6924DF00D4E1F0 /* Embed Frameworks */,
-				131E278C1BA2AE70009586C1 /* HockeyApp Integration */,
 				131E27961BA2BF91009586C1 /* Version increment script */,
 				2B0FCEE644C5D6819A7ADB7E /* 📦 Embed Pods Frameworks */,
 				6BD16CE0BCB1F3E226198B90 /* 📦 Copy Pods Resources */,
@@ -4713,12 +4718,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13778DDE1D6C429F0074C70F /* version-update.sh in Resources */,
 				13A578671CEDDDB90014B6FD /* glyphicons-filetypes.otf in Resources */,
 				1371945F1B6922DE00D4E1F0 /* Main.storyboard in Resources */,
 				13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */,
 				13A578541CEC677C0014B6FD /* glyphicons-regular.otf in Resources */,
 				137194641B6922DE00D4E1F0 /* LaunchScreen.xib in Resources */,
 				137194611B6922DE00D4E1F0 /* Images.xcassets in Resources */,
+				13778DDC1D6C3EF10074C70F /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4751,20 +4758,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		131E278C1BA2AE70009586C1 /* HockeyApp Integration */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "HockeyApp Integration";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "FILE=\"${SRCROOT}/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
-		};
 		131E27961BA2BF91009586C1 /* Version increment script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -4777,7 +4770,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "VERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $NEWSUBVERSION\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+			shellScript = "script_file=\"version-update.sh\"\necho \"Running version increment phase script: $script_file\"\n${PROJECT_DIR}/${PRODUCT_NAME}/Resources/${script_file}\nscriptExitStatus=$?\necho \"Finished running script: ${script_file} (exitStatus=${scriptExitStatus})\"\nexit \"${scriptExitStatus}\"";
 		};
 		133A21501D537C98000A7661 /* Fabric */ = {
 			isa = PBXShellScriptBuildPhase;
