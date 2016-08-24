@@ -60,6 +60,9 @@ NSString *kLocalizationListScreenFilterByText                    = @"listScreenF
 NSString *kLocalizationListScreenSortByText                      = @"listScreenSortByText";
 NSString *kLocalizationListScreenClearAllButtonTitleText         = @"listScreenClearAllButtonTitleText";
 NSString *kLocalizationListScreenTaskAppText                     = @"listScreenTaskAppText";
+NSString *kLocalizationListScreenSearchFieldPlaceholderFormat    = @"listScreenSearchFieldPlaceholderFormat";
+NSString *kLocalizationListScreenTasksText                       = @"listScreenTasksText";
+NSString *kLocalizationListScreenProcessInstancesText            = @"listScreenProcessInstancesText";
 
 
 #pragma mark -
