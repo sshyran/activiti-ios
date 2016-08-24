@@ -702,7 +702,13 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [strongSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
         BOOL isCompletedProcessInstance = processInstanceDetailsModel.currentProcessInstance.endDate ? YES : NO;
         
-        NSString *alertMessage = [NSString stringWithFormat:isCompletedProcessInstance ? NSLocalizedString(kLocalizationProcessInstanceDetailsScreenDeleteProcessConfirmationFormat, @"Delete process instance text") : NSLocalizedString(kLocalizationProcessInstanceDetailsScreenCancelProcessConfirmationFormat, @"Cancel process instance text"), processInstanceDetailsModel.currentProcessInstance.name];
+        NSString *alertMessage = nil;
+        NSString *processInstanceName = processInstanceDetailsModel.currentProcessInstance.name;
+        if (isCompletedProcessInstance) {
+            alertMessage = [NSString stringWithFormat:NSLocalizedString(kLocalizationProcessInstanceDetailsScreenDeleteProcessConfirmationFormat, @"Delete process instance text"), processInstanceName ? processInstanceName : @""];
+        } else {
+            alertMessage = [NSString stringWithFormat:NSLocalizedString(kLocalizationProcessInstanceDetailsScreenCancelProcessConfirmationFormat, @"Cancel process instance text"), processInstanceName ? processInstanceName : @""];
+        }
         
         [strongSelf showConfirmationAlertControllerWithMessage:alertMessage
                                        confirmationBlockAction:^{
