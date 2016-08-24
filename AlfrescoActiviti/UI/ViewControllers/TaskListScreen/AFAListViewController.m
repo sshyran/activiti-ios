@@ -267,6 +267,8 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 - (void)updateSceneForListContentType:(AFAListContentType)contentType {
     // Set up localization support
     self.noRecordsLabel.text = (AFAListContentTypeTasks == contentType) ? NSLocalizedString(kLocalizationListScreenNoTasksAvailableText, @"No tasks available text") : NSLocalizedString(kLocalizationProcessInstanceScreenNoProcessInstancesText, @"No process instances text");
+    NSString *sectionName = (AFAListContentTypeTasks == contentType) ? NSLocalizedString(kLocalizationListScreenTasksText, @"tasks text") : NSLocalizedString(kLocalizationListScreenProcessInstancesText, @"process instances text");
+    self.searchTextField.placeholder = [NSString stringWithFormat:NSLocalizedString(kLocalizationListScreenSearchFieldPlaceholderFormat, @"Search bar format"), sectionName];
 }
 
 

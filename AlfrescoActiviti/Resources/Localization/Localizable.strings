@@ -50,6 +50,9 @@
 "listScreenSortByText"                                   = "SORT BY";
 "listScreenClearAllButtonTitleText"                      = "CLEAR ALL";
 "listScreenTaskAppText"                                  = "Task app";
+"listScreenSearchFieldPlaceholderFormat"                 = "Search for %@...";
+"listScreenTasksText"                                    = "tasks";
+"listScreenProcessInstancesText"                         = "process instances";
 
 // Process instance screen
 "processInstanceScreenStartedOnFormat"                   = "Started on %@";
