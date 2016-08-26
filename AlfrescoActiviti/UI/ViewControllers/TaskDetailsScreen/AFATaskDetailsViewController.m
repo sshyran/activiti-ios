@@ -878,7 +878,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                    strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
                }
            } else {
-               [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+               [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
            }
            
            [[NSOperationQueue currentQueue] addOperationWithBlock:^{
