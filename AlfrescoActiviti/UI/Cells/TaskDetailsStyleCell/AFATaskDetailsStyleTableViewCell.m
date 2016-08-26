@@ -53,7 +53,7 @@
 #pragma mark Public interface
 
 - (void)setUpCellWithTask:(ASDKModelTask *)task {
-    self.nameLabel.text = task.name;
+    self.nameLabel.text = task.name ? task.name : NSLocalizedString(kLocalizationListScreenNoTaskNameText, @"No task name available");
 }
 
 @end
