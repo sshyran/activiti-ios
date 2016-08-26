@@ -62,3 +62,13 @@ NSString *kASDKAPIServiceIDGoogleDrive                          = @"google-drive
 NSString *kASDKAPINetworkServiceNoInternetConnection            = @"NetworkServiceNoInternetConnection";
 NSString *kASDKAPINetworkServiceInternetConnectionAvailable     = @"NetworkServiceInternetConnectionAvailable";
 
+
+#pragma mark -
+#pragma mark Icon parameters
+
+NSString *kASDKAPIIconNameInvolved                              = @"glyphicon-align-left";
+NSString *kASDKAPIIconNameMy                                    = @"glyphicon-inbox";
+NSString *kASDKAPIIconNameQueued                                = @"glyphicon-record";
+NSString *kASDKAPIIconNameCompleted                             = @"glyphicon-ok-sign";
+NSString *kASDKAPIIconNameRunning                               = @"glyphicon-random";
+NSString *kASDKAPIIconNameAll                                   = @"glyphicon-th";

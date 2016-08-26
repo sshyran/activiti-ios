@@ -18,7 +18,7 @@
 
 #import "ASDKBaseRequestRepresentation.h"
 
-@interface ASDKPagingRequestRepresentation : ASDKBaseRequestRepresentation
+@interface ASDKPagingRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString *sort;
 @property (strong, nonatomic) NSString *state;

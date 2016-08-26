@@ -101,7 +101,6 @@ NSString *kLocalizationTaskDetailsScreenCommentFormat            = @"taskDetails
 NSString *kLocalizationTaskDetailsScreenTaskDetailsTitleText     = @"taskDetailsScreenTaskDetailsTitleText";
 NSString *kLocalizationTaskDetailsScreenTaskFormTitleText        = @"taskDetailsScreenTaskFormTitleText";
 NSString *kLocalizationTaskDetailsScreenContentTitleText         = @"taskDetailsScreenContentTitleText";
-NSString *kLocalizationTaskDetailsScreenContributorsTitleText    = @"taskDetailsScreenContributorsTitleText";
 NSString *kLocalizationTaskDetailsScreenCommentsTitleText        = @"taskDetailsScreenCommentsTitleText";
 NSString *kLocalizationTaskDetailsScreenPartOfProcessText        = @"taskDetailsScreenPartOfProcessText";
 NSString *kLocalizationTaskDetailsScreenCompletedDateText        = @"taskDetailsScreenCompletedDateText";
@@ -267,4 +266,16 @@ NSString *kLocalizationProfileScreenCleanCacheAlertText          = @"profileScre
 NSString *kLocalizationProfileScreenDiskUsageText                = @"profileScreenDiskUsageText";
 NSString *kLocalizationProfileScreenDiskUsageAvailableText       = @"profileScreenDiskUsageAvailableText";
 NSString *kLocalizationProfileScreenActivitiDataText             = @"profileScreenActivitiDataText";
+
+
+#pragma mark -
+#pragma mark Default filter names
+
+NSString *kLocalizationDefaultFilterInvolvedTasksText            = @"defaultFilterInvolvedTasksText";
+NSString *kLocalizationDefaultFilterMyTasksText                  = @"defaultFilterMyTasksText";
+NSString *kLocalizationDefaultFilterQueuedTasksText              = @"defaultFilterQueuedTasksText";
+NSString *kLocalizationDefaultFilterCompletedTasksText           = @"defaultFilterCompletedTasksText";
+NSString *kLocalizationDefaultFilterRunningProcessText           = @"defaultFilterRunningProcessesText";
+NSString *kLocalizationDefaultFilterCompletedProcessesText       = @"defaultFilterCompletedProcessesText";
+NSString *kLocalizationDefaultFilterAllProcessesText             = @"defaultFilterAllProcessesText";
 

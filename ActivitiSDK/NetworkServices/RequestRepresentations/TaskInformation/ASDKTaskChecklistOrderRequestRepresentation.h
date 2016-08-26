@@ -18,7 +18,7 @@
 
 #import <ActivitiSDK/ActivitiSDK.h>
 
-@interface ASDKTaskChecklistOrderRequestRepresentation : ASDKBaseRequestRepresentation
+@interface ASDKTaskChecklistOrderRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSArray *checklistOrder;
 

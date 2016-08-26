@@ -30,25 +30,23 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property                   JSON property
+                                                      @"name"                           : @"name",
+                                                      @"endDate"                        : @"ended",
+                                                      @"startDate"                      : @"started",
+                                                      @"initiatorModel"                 : @"startedBy",
+                                                      @"graphicalNotationDefined"       : @"graphicalNotationDefined",
+                                                      @"processDefinitionCategory"      : @"processDefinitionCategory",
+                                                      @"processDefinitionDeploymentID"  : @"processDefinitionDeploymentId",
+                                                      @"processDefinitionDescription"   : @"processDefinitionDescription",
+                                                      @"processDefinitionID"            : @"processDefinitionId",
+                                                      @"processDefinitionKey"           : @"processDefinitionKey",
+                                                      @"processDefinitionName"          : @"processDefinitionName",
+                                                      @"processDefinitionVersion"       : @"processDefinitionVersion",
+                                                      @"isStartFormDefined"             : @"startFormDefined",
+                                                      @"tenantID"                       : @"tenantId"
+                                                      }];
     
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property                   JSON property
-                                                          @"name"                           : @"name",
-                                                          @"endDate"                        : @"ended",
-                                                          @"startDate"                      : @"started",
-                                                          @"initiatorModel"                 : @"startedBy",
-                                                          @"graphicalNotationDefined"       : @"graphicalNotationDefined",
-                                                          @"processDefinitionCategory"      : @"processDefinitionCategory",
-                                                          @"processDefinitionDeploymentID"  : @"processDefinitionDeploymentId",
-                                                          @"processDefinitionDescription"   : @"processDefinitionDescription",
-                                                          @"processDefinitionID"            : @"processDefinitionId",
-                                                          @"processDefinitionKey"           : @"processDefinitionKey",
-                                                          @"processDefinitionName"          : @"processDefinitionName",
-                                                          @"processDefinitionVersion"       : @"processDefinitionVersion",
-                                                          @"isStartFormDefined"             : @"startFormDefined",
-                                                          @"tenantID"                       : @"tenantId"
-                                                          }];
-    }
     return inheretedPropertyKeys;
 }
 

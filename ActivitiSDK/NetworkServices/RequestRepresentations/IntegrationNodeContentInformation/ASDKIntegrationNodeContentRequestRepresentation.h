@@ -18,7 +18,7 @@
 
 #import <ActivitiSDK/ActivitiSDK.h>
 
-@interface ASDKIntegrationNodeContentRequestRepresentation : ASDKPagingRequestRepresentation
+@interface ASDKIntegrationNodeContentRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
 @property (assign, nonatomic) BOOL          isLink;
 @property (strong, nonatomic) NSString      *name;

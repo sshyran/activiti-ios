@@ -18,7 +18,7 @@
 
 #import <ActivitiSDK/ActivitiSDK.h>
 
-@interface ASDKAuthenticateRequestRepresentation : ASDKBaseRequestRepresentation
+@interface ASDKAuthenticateRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString *username;
 @property (strong, nonatomic) NSString *password;

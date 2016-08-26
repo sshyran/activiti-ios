@@ -16,25 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelFormOutcome.h"
+#import <Foundation/Foundation.h>
+#import "ASDKParserOperationWorkerProtocol.h"
 
-@implementation ASDKModelFormOutcome
+typedef NS_ENUM(NSInteger, ASDKFilterParserContentType) {
+    ASDKFilterParserContentTypeUndefined = -1,
+    ASDKFilterParserContentTypeFilterList = 1,              // Start enumeration from 1 to be able to assert
+    ASDKFilterParserContentTypeFilterDetails,
+};
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
-
-
-#pragma mark -
-#pragma mark MTLJSONSerializing Delegate
-
-+ (NSDictionary *)JSONKeyPathsByPropertyKey {
-    NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property      JSON property
-                                                      @"name"            : @"name"
-                                                     }];
-    
-    return inheretedPropertyKeys;
-}
+@interface ASDKFilterParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
 
 @end

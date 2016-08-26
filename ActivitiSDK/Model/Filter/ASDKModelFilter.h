@@ -29,7 +29,9 @@ typedef NS_ENUM(NSInteger, ASDKModelFilterSortType) {
 typedef NS_ENUM(NSInteger, ASDKModelFilterStateType) {
     ASDKModelFilterStateTypeUndefined = -1,
     ASDKModelFilterStateTypeCompleted = 1,
-    ASDKModelFilterStateTypeActive
+    ASDKModelFilterStateTypeActive,
+    ASDKModelFilterStateTypeRunning,
+    ASDKModelFilterStateTypeAll
 };
 
 typedef NS_ENUM(NSInteger, ASDKModelFilterAssignmentType) {

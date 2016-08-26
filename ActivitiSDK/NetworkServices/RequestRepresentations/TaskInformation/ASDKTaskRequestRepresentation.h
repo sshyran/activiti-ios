@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, ASDKTaskStateType) {
  *  be removed from the resulting JSON dictionary. This allows using the class to
  *  be used as a filter class for the Task list API (specifying only some fields)
  */
-@interface ASDKTaskRequestRepresentation : ASDKPagingRequestRepresentation
+@interface ASDKTaskRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString               *taskName;                       // The task name will be filtered using like semantics
 @property (strong, nonatomic) NSString               *appDefinitionID;

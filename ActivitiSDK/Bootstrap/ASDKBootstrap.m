@@ -55,6 +55,7 @@
 #import "ASDKFormColorSchemeManager.h"
 #import "ASDKFormColorSchemeManagerProtocol.h"
 #import "ASDKCSRFTokenStorage.h"
+#import "ASDKFilterParserOperationWorker.h"
 
 // Configurations imports
 #import "ASDKBasicAuthentificationProvider.h"
@@ -150,6 +151,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKIntegrationParserOperationWorker *integrationParserWorker = [ASDKIntegrationParserOperationWorker new];
     [parserOperationManager registerWorker:integrationParserWorker
                                forServices:[integrationParserWorker availableServices]];
+    ASDKFilterParserOperationWorker *filterParserWorker = [ASDKFilterParserOperationWorker new];
+    [parserOperationManager registerWorker:filterParserWorker
+                               forServices:[filterParserWorker availableServices]];
     
     // Link the processing queues between the request and parser managers
     self.requestOperationManager.completionQueue = parserOperationManager.completionQueue;

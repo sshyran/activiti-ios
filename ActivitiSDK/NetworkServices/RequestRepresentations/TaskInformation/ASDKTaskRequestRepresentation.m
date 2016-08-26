@@ -44,18 +44,15 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
-                                                          @"taskName"           : @"text",
-                                                          @"appDefinitionID"    : @"appDefinitionId",
-                                                          @"processDefinitionID": @"processDefinitionId",
-                                                          @"assigneeID"         : @"assignee",
-                                                          @"candidateID"        : @"candidate",
-                                                          @"assignmentType"     : @"assignment",
-                                                          @"requestTaskState"   : @"state"
-                                                          }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
+                                                      @"taskName"           : @"text",
+                                                      @"appDefinitionID"    : @"appDefinitionId",
+                                                      @"processDefinitionID": @"processDefinitionId",
+                                                      @"assigneeID"         : @"assignee",
+                                                      @"candidateID"        : @"candidate",
+                                                      @"assignmentType"     : @"assignment",
+                                                      @"requestTaskState"   : @"state"
+                                                      }];
     
     return inheretedPropertyKeys;
 }

@@ -16,25 +16,48 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKIntegrationNodeContentRequestRepresentation.h"
+#import "ASDKFilterCreationRequestRepresentation.h"
+#import "ASDKModelFilter.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@implementation ASDKIntegrationNodeContentRequestRepresentation
+@implementation ASDKFilterCreationRequestRepresentation
+
+
+#pragma mark -
+#pragma mark MTLJSONSerializing Delegate
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
+    
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
-                                                      @"isLink"             : @"link",
-                                                      @"name"               : @"name",
-                                                      @"simpleType"         : @"simpleType",
-                                                      @"source"             : @"source",
-                                                      @"sourceID"           : @"sourceId"
-                                                      }];
+                                                      @"appID"              : @"appId",
+                                                      @"filter"             : @"filter",
+                                                      @"icon"               : @"icon",
+                                                      @"index"              : @"index",
+                                                      @"name"               : @"name"
+                                                     }];
+    
     
     return inheretedPropertyKeys;
+}
+
+
+#pragma mark -
+#pragma mark Value transformations
+
++ (NSValueTransformer *)appIDJSONTransformer {
+    return self.valueTransformerForIDs;
+}
+
++ (NSValueTransformer *)filterJSONTransformer {
+    return [MTLValueTransformer transformerUsingForwardBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
+        return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelFilter.class];
+    } reverseBlock:^id(ASDKModelFilter *modelFilter, BOOL *success, NSError *__autoreleasing *error) {
+        return [modelFilter jsonDictionary];
+    }];
 }
 
 @end

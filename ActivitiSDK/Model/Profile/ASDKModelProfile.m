@@ -31,22 +31,19 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property       JSON property
-                                                          @"tenantID"           : @"tenantId",
-                                                          @"tenantName"         : @"tenantName",
-                                                          @"tenantPictureID"    : @"tenantPictureId",
-                                                          @"userFirstName"      : @"firstName",
-                                                          @"userLastName"       : @"lastName",
-                                                          @"email"              : @"email",
-                                                          @"companyName"        : @"company",
-                                                          @"profileState"       : @"status",
-                                                          @"externalID"         : @"externalId",
-                                                          @"pictureID"          : @"pictureId",
-                                                          @"groups"             : @"groups"
-                                                          }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property       JSON property
+                                                      @"tenantID"           : @"tenantId",
+                                                      @"tenantName"         : @"tenantName",
+                                                      @"tenantPictureID"    : @"tenantPictureId",
+                                                      @"userFirstName"      : @"firstName",
+                                                      @"userLastName"       : @"lastName",
+                                                      @"email"              : @"email",
+                                                      @"companyName"        : @"company",
+                                                      @"profileState"       : @"status",
+                                                      @"externalID"         : @"externalId",
+                                                      @"pictureID"          : @"pictureId",
+                                                      @"groups"             : @"groups"
+                                                      }];
     
     return inheretedPropertyKeys;
 }

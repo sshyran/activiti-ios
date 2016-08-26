@@ -22,7 +22,6 @@
 typedef NS_ENUM(NSInteger, ASDKTaskDetailsParserContentType) {
     ASDKTaskDetailsParserContentTypeUndefined = -1,
     ASDKTaskDetailsParserContentTypeTaskList = 1,              // Start enumeration from 1 to be able to assert (!=0)
-    ASDKTaskDetailsParserContentTypeFilterList,
     ASDKTaskDetailsParserContentTypeTaskDetails,
     ASDKTaskDetailsParserContentTypeContent,
     ASDKTaskDetailsParserContentTypeComments,

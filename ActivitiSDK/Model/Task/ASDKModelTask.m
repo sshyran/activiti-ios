@@ -30,25 +30,22 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
-                                                          @"name"                   : @"name",
-                                                          @"taskDescription"        : @"description",
-                                                          @"assigneeModel"          : @"assignee",
-                                                          @"dueDate"                : @"dueDate",
-                                                          @"endDate"                : @"endDate",
-                                                          @"duration"               : @"duration",
-                                                          @"priority"               : @"priority",
-                                                          @"processInstanceID"      : @"processInstanceId",
-                                                          @"processDefinitionID"    : @"processDefinitionId",
-                                                          @"processDefinitionName"  : @"processDefinitionName",
-                                                          @"involvedPeople"         : @"involvedPeople",
-                                                          @"formKey"                : @"formKey",
-                                                          @"isMemberOfCandidateGroup" : @"memberOfCandidateGroup",
-                                                          @"isMemberOfCandidateUsers" : @"memberOfCandidateUsers"
-                                                          }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
+                                                      @"name"                   : @"name",
+                                                      @"taskDescription"        : @"description",
+                                                      @"assigneeModel"          : @"assignee",
+                                                      @"dueDate"                : @"dueDate",
+                                                      @"endDate"                : @"endDate",
+                                                      @"duration"               : @"duration",
+                                                      @"priority"               : @"priority",
+                                                      @"processInstanceID"      : @"processInstanceId",
+                                                      @"processDefinitionID"    : @"processDefinitionId",
+                                                      @"processDefinitionName"  : @"processDefinitionName",
+                                                      @"involvedPeople"         : @"involvedPeople",
+                                                      @"formKey"                : @"formKey",
+                                                      @"isMemberOfCandidateGroup" : @"memberOfCandidateGroup",
+                                                      @"isMemberOfCandidateUsers" : @"memberOfCandidateUsers"
+                                                      }];
     
     return inheretedPropertyKeys;
 }

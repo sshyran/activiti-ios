@@ -26,20 +26,16 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:
-         @{//Objc property          JSON property
-           @"leftFormFieldID"       : @"leftFormFieldId",
-           @"leftRestResponseID"    : @"leftRestResponseId",
-           @"operationOperator"     : @"operator",
-           @"rightValue"            : @"rightValue",
-           @"rightFormFieldID"      : @"rightFormFieldId",
-           @"rightRestResponseID"   : @"rightRestResponseId",
-           @"nextConditionOperator" : @"nextConditionOperator",
-           @"nextCondition"         : @"nextCondition"
-         }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property          JSON property
+                                                      @"leftFormFieldID"       : @"leftFormFieldId",
+                                                      @"leftRestResponseID"    : @"leftRestResponseId",
+                                                      @"operationOperator"     : @"operator",
+                                                      @"rightValue"            : @"rightValue",
+                                                      @"rightFormFieldID"      : @"rightFormFieldId",
+                                                      @"rightRestResponseID"   : @"rightRestResponseId",
+                                                      @"nextConditionOperator" : @"nextConditionOperator",
+                                                      @"nextCondition"         : @"nextCondition"
+                                                      }];
     
     return inheretedPropertyKeys;
 }
