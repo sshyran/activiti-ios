@@ -16,25 +16,23 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelFormOutcome.h"
+#import "ASDKBaseRequestRepresentation.h"
 
-@implementation ASDKModelFormOutcome
+@class ASDKModelFilter;
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
+/**
+ *  If properties are not set, when making the convertion to JSON and the jsonAdapterType
+ *  property is set to ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues they will
+ *  be removed from the resulting JSON dictionary. This allows using the class to
+ *  be used as a filter class for the Task list API (specifying only some fields)
+ */
 
+@interface ASDKFilterCreationRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
-#pragma mark -
-#pragma mark MTLJSONSerializing Delegate
-
-+ (NSDictionary *)JSONKeyPathsByPropertyKey {
-    NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property      JSON property
-                                                      @"name"            : @"name"
-                                                     }];
-    
-    return inheretedPropertyKeys;
-}
+@property (strong, nonatomic) NSString          *appID;
+@property (strong, nonatomic) ASDKModelFilter   *filter;
+@property (strong, nonatomic) NSString          *icon;
+@property (assign, nonatomic) NSUInteger        index;
+@property (strong, nonatomic) NSString          *name;
 
 @end

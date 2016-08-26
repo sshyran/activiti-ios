@@ -18,7 +18,7 @@
 
 #import <ActivitiSDK/ActivitiSDK.h>
 
-@interface ASDKTaskCreationRequestRepresentation : ASDKBaseRequestRepresentation
+@interface ASDKTaskCreationRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString          *taskName;
 @property (strong, nonatomic) NSString          *taskDescription;

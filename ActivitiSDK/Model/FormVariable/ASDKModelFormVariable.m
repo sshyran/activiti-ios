@@ -26,15 +26,11 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:
-         @{//Objc property      JSON property
-           @"name"              : @"name",
-           @"type"              : @"type",
-           @"value"             : @"value"
-         }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property      JSON property
+                                                      @"name"              : @"name",
+                                                      @"type"              : @"type",
+                                                      @"value"             : @"value"
+                                                      }];
     
     return inheretedPropertyKeys;
 }

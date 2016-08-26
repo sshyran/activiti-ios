@@ -29,17 +29,14 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property       JSON property
-                                                          @"name"               : @"name",
-                                                          @"sortType"           : @"sort",
-                                                          @"state"              : @"state",
-                                                          @"assignmentType"     : @"assignment",
-                                                          @"appDefinitionID"    : @"appDefinitionId",
-                                                          @"processInstanceID"  : @"processInstanceId"
-                                                          }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property       JSON property
+                                                      @"name"               : @"name",
+                                                      @"sortType"           : @"sort",
+                                                      @"state"              : @"state",
+                                                      @"assignmentType"     : @"assignment",
+                                                      @"appDefinitionID"    : @"appDefinitionId",
+                                                      @"processInstanceID"  : @"processInstanceId"
+                                                      }];
     
     return inheretedPropertyKeys;
 }
@@ -59,7 +56,9 @@
 + (NSValueTransformer *)stateJSONTransformer {
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
                                                                            @"open"           : @(ASDKModelFilterStateTypeActive),
-                                                                           @"completed"      : @(ASDKModelFilterStateTypeCompleted)
+                                                                           @"completed"      : @(ASDKModelFilterStateTypeCompleted),
+                                                                           @"running"        : @(ASDKModelFilterStateTypeRunning),
+                                                                           @"all"            : @(ASDKModelFilterStateTypeAll)
                                                                            }];
 }
 

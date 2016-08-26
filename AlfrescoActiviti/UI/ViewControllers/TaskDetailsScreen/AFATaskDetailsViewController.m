@@ -624,7 +624,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             break;
             
         case AFATaskDetailsSectionTypeContributors: {
-            self.navigationBarTitle = NSLocalizedString(kLocalizationTaskDetailsScreenContributorsTitleText, @"Contributors title");
+            self.navigationBarTitle = NSLocalizedString(kLocalizationTaskDetailsScreenInvolvedPeopleText, @"Contributors title");
             
             AFATableControllerTaskDetailsModel *taskDetailsModel = self.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
             AFATableControllerTaskContributorsModel *taskContributorsModel = [AFATableControllerTaskContributorsModel new];

@@ -19,6 +19,9 @@
 #import "AFAFilterServices.h"
 @import ActivitiSDK;
 
+// Constants
+#import "AFALocalizationConstants.h"
+
 // Configurations
 #import "AFALogConfiguration.h"
 
@@ -85,14 +88,23 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     filterListRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
     filterListRequestRepresentation.appID = appID;
     
+    __weak typeof(self) weakSelf = self;
     [self.filterNetworkService fetchTaskFilterListWithFilter:filterListRequestRepresentation
                                          withCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-                                             if (!error && filterList) {
-                                                 AFALogVerbose(@"Fetched %lu task filter entries", (unsigned long)filterList.count);
-                                                 
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     completionBlock (filterList, nil, paging);
-                                                 });
+                                             if (!error) {
+                                                 if (filterList.count) {
+                                                     AFALogVerbose(@"Fetched %lu task filter entries", (unsigned long)filterList.count);
+                                                     
+                                                     dispatch_async(dispatch_get_main_queue(), ^{
+                                                         completionBlock (filterList, nil, paging);
+                                                     });
+                                                 } else {
+                                                     AFALogVerbose(@"There are no filters defined. Will populate with default ones...");
+                                                     
+                                                     __strong typeof(self) strongSelf = weakSelf;
+                                                     [strongSelf requestCreateDefaultTaskFiltersForAppID:appID
+                                                                                     withCompletionBlock:completionBlock];
+                                                 }
                                              } else {
                                                  AFALogError(@"An error occured while fetching the task filter list. Reason:%@", error.localizedDescription);
                                                  
@@ -132,14 +144,23 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     filterListRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
     filterListRequestRepresentation.appID = appID;
     
+    __weak typeof(self) weakSelf = self;
     [self.filterNetworkService fetchProcessInstanceFilterListWithFilter:filterListRequestRepresentation
                                                     withCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-                                                        if (!error && filterList) {
-                                                            AFALogVerbose(@"Fetched %lu process instance filter entries", (unsigned long)filterList.count);
-                                                            
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                completionBlock (filterList, nil, paging);
-                                                            });
+                                                        if (!error) {
+                                                            if (filterList.count) {
+                                                                AFALogVerbose(@"Fetched %lu process instance filter entries", (unsigned long)filterList.count);
+                                                                
+                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                    completionBlock (filterList, nil, paging);
+                                                                });
+                                                            } else {
+                                                                AFALogVerbose(@"There are no filters defined. Will populate with default ones...");
+                                                                
+                                                                __strong typeof(self) strongSelf = weakSelf;
+                                                                [strongSelf requestCreateDefaultProcessInstanceFiltersForAppID:appID
+                                                                                                           withCompletionBlock:completionBlock];
+                                                            }
                                                         } else {
                                                             AFALogError(@"An error occured while fetching the process instance filter list. Reason:%@", error.localizedDescription);
                                                             
@@ -150,4 +171,216 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                     }];
 }
 
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)requestCreateDefaultTaskFiltersForAppID:(NSString *)appID
+                            withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
+    NSParameterAssert(appID);
+    NSParameterAssert(completionBlock);
+    
+    __block NSError *operationError = nil;
+    __block NSMutableArray *filterArr = [NSMutableArray array];
+    
+    dispatch_group_t defaultTaskFilterGroup = dispatch_group_create();
+    
+    ASDKFilterModelCompletionBlock defaultFilterCompletionBlock = ^(ASDKModelFilter *filter, NSError *error) {
+        if (!error && filter) {
+            AFALogVerbose(@"Created default filter:%@", filter.name);
+            [filterArr addObject:filter];
+        } else {
+            operationError = error;
+        }
+        dispatch_group_leave(defaultTaskFilterGroup);
+    };
+    
+    // Involved tasks filter
+    ASDKFilterCreationRequestRepresentation *involvedTasksFilter = [ASDKFilterCreationRequestRepresentation new];
+    involvedTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    involvedTasksFilter.appID = appID;
+    involvedTasksFilter.icon = kASDKAPIIconNameInvolved;
+    involvedTasksFilter.index = 0;
+    involvedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterInvolvedTasksText, @"Involved tasks text");
+    
+    ASDKModelFilter *involvedFilter = [ASDKModelFilter new];
+    involvedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    involvedFilter.assignmentType = ASDKTaskAssignmentTypeInvolved;
+    involvedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
+    involvedFilter.state = ASDKModelFilterStateTypeActive;
+    
+    involvedTasksFilter.filter = involvedFilter;
+    
+    dispatch_group_enter(defaultTaskFilterGroup);
+    [self.filterNetworkService createUserTaskFilterWithRepresentation:involvedTasksFilter
+                                                  withCompletionBlock:defaultFilterCompletionBlock];
+    
+    // My tasks filter
+    ASDKFilterCreationRequestRepresentation *myTasksFilter = [ASDKFilterCreationRequestRepresentation new];
+    myTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    myTasksFilter.appID = appID;
+    myTasksFilter.icon = kASDKAPIIconNameMy;
+    myTasksFilter.index = 1;
+    myTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterMyTasksText, @"My tasks text");
+    
+    ASDKModelFilter *myFilter = [ASDKModelFilter new];
+    myFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    myFilter.assignmentType = ASDKTaskAssignmentTypeAssignee;
+    myFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
+    myFilter.state = ASDKModelFilterStateTypeActive;
+    
+    myTasksFilter.filter = myFilter;
+    
+    dispatch_group_enter(defaultTaskFilterGroup);
+    [self.filterNetworkService createUserTaskFilterWithRepresentation:myTasksFilter
+                                                  withCompletionBlock:defaultFilterCompletionBlock];
+    
+    // Queued tasks
+    ASDKFilterCreationRequestRepresentation *queuedTasksFilter = [ASDKFilterCreationRequestRepresentation new];
+    queuedTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    queuedTasksFilter.appID = appID;
+    queuedTasksFilter.icon = kASDKAPIIconNameQueued;
+    queuedTasksFilter.index = 2;
+    queuedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterQueuedTasksText, @"Queued tasks text");
+    
+    ASDKModelFilter *queuedFilter = [ASDKModelFilter new];
+    queuedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    queuedFilter.assignmentType = ASDKTaskAssignmentTypeCandidate;
+    queuedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
+    queuedFilter.state = ASDKModelFilterStateTypeActive;
+    
+    queuedTasksFilter.filter = queuedFilter;
+    
+    dispatch_group_enter(defaultTaskFilterGroup);
+    [self.filterNetworkService createUserTaskFilterWithRepresentation:queuedTasksFilter
+                                                  withCompletionBlock:defaultFilterCompletionBlock];
+    
+    // Completed tasks
+    ASDKFilterCreationRequestRepresentation *completedTasksFilter = [ASDKFilterCreationRequestRepresentation new];
+    completedTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    completedTasksFilter.appID = appID;
+    completedTasksFilter.icon = kASDKAPIIconNameCompleted;
+    completedTasksFilter.index = 3;
+    completedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedTasksText, @"Completed tasks text");
+    
+    ASDKModelFilter *completedFilter = [ASDKModelFilter new];
+    completedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    completedFilter.assignmentType = ASDKTaskAssignmentTypeInvolved;
+    completedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
+    completedFilter.state = ASDKModelFilterStateTypeCompleted;
+    
+    completedTasksFilter.filter = completedFilter;
+    
+    dispatch_group_enter(defaultTaskFilterGroup);
+    [self.filterNetworkService createUserTaskFilterWithRepresentation:completedTasksFilter
+                                                  withCompletionBlock:defaultFilterCompletionBlock];
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_group_notify(defaultTaskFilterGroup, dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (operationError) {
+            AFALogError(@"Encountered an error for default task filter create operation. Reason:%@", operationError.localizedDescription);
+            completionBlock(nil, operationError, nil);
+        } else {
+            // Re-fetch again because filter detail information is not suficient to be reported back
+            AFALogVerbose(@"Successfully created %lu default task filters. Re-fetching filter details...", filterArr.count);
+            [strongSelf requestTaskFilterListForAppID:appID
+                                  withCompletionBlock:completionBlock];
+        }
+    });
+}
+
+- (void)requestCreateDefaultProcessInstanceFiltersForAppID:(NSString *)appID
+                                      withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
+    NSParameterAssert(appID);
+    NSParameterAssert(completionBlock);
+    
+    __block NSError *operationError = nil;
+    __block NSMutableArray *filterArr = [NSMutableArray array];
+    
+    dispatch_group_t defaultProcessInstanceFilterGroup = dispatch_group_create();
+    
+    ASDKFilterModelCompletionBlock defaultFilterCompletionBlock = ^(ASDKModelFilter *filter, NSError *error) {
+        if (!error && filter) {
+            AFALogVerbose(@"Created default filter:%@", filter.name);
+            [filterArr addObject:filter];
+        } else {
+            operationError = error;
+        }
+        dispatch_group_leave(defaultProcessInstanceFilterGroup);
+    };
+    
+    // Running process instances filter
+    ASDKFilterCreationRequestRepresentation *runningProcessInstancesFilter = [ASDKFilterCreationRequestRepresentation new];
+    runningProcessInstancesFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    runningProcessInstancesFilter.appID = appID;
+    runningProcessInstancesFilter.icon = kASDKAPIIconNameRunning;
+    runningProcessInstancesFilter.index = 0;
+    runningProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterRunningProcessText, @"Running process instances text");
+    
+    ASDKModelFilter *runningFilter = [ASDKModelFilter new];
+    runningFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    runningFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
+    runningFilter.state = ASDKModelFilterStateTypeRunning;
+    
+    runningProcessInstancesFilter.filter = runningFilter;
+    
+    dispatch_group_enter(defaultProcessInstanceFilterGroup);
+    [self.filterNetworkService createProcessInstanceTaskFilterWithRepresentation:runningProcessInstancesFilter
+                                                  withCompletionBlock:defaultFilterCompletionBlock];
+    
+    // Completed process instances filter
+    ASDKFilterCreationRequestRepresentation *completedProcessInstancesFilter = [ASDKFilterCreationRequestRepresentation new];
+    completedProcessInstancesFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    completedProcessInstancesFilter.appID = appID;
+    completedProcessInstancesFilter.icon = kASDKAPIIconNameCompleted;
+    completedProcessInstancesFilter.index = 1;
+    completedProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedProcessesText, @"Completed process instances text");
+    
+    ASDKModelFilter *completedFilter = [ASDKModelFilter new];
+    completedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    completedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
+    completedFilter.state = ASDKModelFilterStateTypeCompleted;
+    
+    completedProcessInstancesFilter.filter = completedFilter;
+    
+    dispatch_group_enter(defaultProcessInstanceFilterGroup);
+    [self.filterNetworkService createProcessInstanceTaskFilterWithRepresentation:completedProcessInstancesFilter
+                                                  withCompletionBlock:defaultFilterCompletionBlock];
+    
+    // All process instances filter
+    ASDKFilterCreationRequestRepresentation *allProcessInstancesFilter = [ASDKFilterCreationRequestRepresentation new];
+    allProcessInstancesFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    allProcessInstancesFilter.appID = appID;
+    allProcessInstancesFilter.icon = kASDKAPIIconNameAll;
+    allProcessInstancesFilter.index = 2;
+    allProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterAllProcessesText, @"All process instances text");
+    
+    ASDKModelFilter *allFilter = [ASDKModelFilter new];
+    allFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
+    allFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
+    allFilter.state = ASDKModelFilterStateTypeAll;
+    
+    allProcessInstancesFilter.filter = allFilter;
+    
+    dispatch_group_enter(defaultProcessInstanceFilterGroup);
+    [self.filterNetworkService createProcessInstanceTaskFilterWithRepresentation:allProcessInstancesFilter
+                                                  withCompletionBlock:defaultFilterCompletionBlock];
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_group_notify(defaultProcessInstanceFilterGroup, dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (operationError) {
+            AFALogError(@"Encountered an error for default process instance filter create operation. Reason:%@", operationError.localizedDescription);
+            completionBlock(nil, operationError, nil);
+        } else {
+            // Re-fetch again because filter detail information is not suficient to be reported back
+            AFALogVerbose(@"Successfully created %lu default process instance filters. Re-fetching filter details...", filterArr.count);
+            [strongSelf requestProcessInstanceFilterListForAppID:appID
+                                             withCompletionBlock:completionBlock];
+        }
+    });
+}
 @end

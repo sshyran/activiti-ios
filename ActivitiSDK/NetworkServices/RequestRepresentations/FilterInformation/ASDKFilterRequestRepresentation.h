@@ -26,7 +26,7 @@
  *  be removed from the resulting JSON dictionary. This allows using the class to
  *  be used as a filter class for the Task list API (specifying only some fields)
  */
-@interface ASDKFilterRequestRepresentation : ASDKPagingRequestRepresentation
+@interface ASDKFilterRequestRepresentation : ASDKPagingRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString          *appDefinitionID;
 @property (strong, nonatomic) NSString          *filterID;

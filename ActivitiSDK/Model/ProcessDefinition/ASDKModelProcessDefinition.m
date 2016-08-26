@@ -30,19 +30,16 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
-                                                          @"name"                   : @"name",
-                                                          @"definitionDescription"  : @"description",
-                                                          @"key"                    : @"key",
-                                                          @"category"               : @"category",
-                                                          @"version"                : @"version",
-                                                          @"deploymentID"           : @"deploymentID",
-                                                          @"tenantID"               : @"tenantID",
-                                                          @"hasStartForm"           : @"hasStartForm"
-                                                          }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
+                                                      @"name"                   : @"name",
+                                                      @"definitionDescription"  : @"description",
+                                                      @"key"                    : @"key",
+                                                      @"category"               : @"category",
+                                                      @"version"                : @"version",
+                                                      @"deploymentID"           : @"deploymentID",
+                                                      @"tenantID"               : @"tenantID",
+                                                      @"hasStartForm"           : @"hasStartForm"
+                                                      }];
     
     return inheretedPropertyKeys;
 }

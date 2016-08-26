@@ -23,15 +23,12 @@
 #import "ASDKModelFilter.h"
 #import "ASDKModelContent.h"
 #import "ASDKModelComment.h"
-#import "ASDKLogConfiguration.h"
 #import "ASDKAPIJSONKeyParams.h"
 @import Mantle;
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
-
-static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
 @implementation ASDKTaskDetailsParserOperationWorker
 
@@ -57,34 +54,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                     error:&parserError];
         dispatch_async(completionQueue, ^{
             completionBlock(taskList, parserError, paging);
-        });
-    }
-    
-    if ([CREATE_STRING(ASDKTaskDetailsParserContentTypeFilterList) isEqualToString:contentType]) {
-        NSError *parserError = nil;
-        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
-        
-        NSMutableArray *filterList = [NSMutableArray array];
-        for (NSDictionary *filterDescription in contentDictionary[kASDKAPIJSONKeyData]) {
-            // Extract nested filter information
-            ASDKModelFilter *filter = [MTLJSONAdapter modelOfClass:ASDKModelFilter.class
-                                                fromJSONDictionary:filterDescription[kASDKAPIJSONKeyFilter]
-                                                             error:&parserError];
-            if (parserError) {
-                ASDKLogError(@"Internal loop parser error for filter model.Reason:%@", parserError.localizedDescription);
-            }
-            
-            // Manualy extract filter general description information and update the converted model
-            filter.name = filterDescription[kASDKAPIJSONKeyName];
-            filter.modelID = filterDescription[kASDKAPIJSONKeyID];
-            
-            [filterList addObject:filter];
-        }
-        
-        dispatch_async(completionQueue, ^{
-            completionBlock(filterList, parserError, paging);
         });
     }
     
@@ -146,7 +115,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (NSArray *)availableServices {
     return @[CREATE_STRING(ASDKTaskDetailsParserContentTypeTaskList),
-             CREATE_STRING(ASDKTaskDetailsParserContentTypeFilterList),
              CREATE_STRING(ASDKTaskDetailsParserContentTypeTaskDetails),
              CREATE_STRING(ASDKTaskDetailsParserContentTypeContent),
              CREATE_STRING(ASDKTaskDetailsParserContentTypeComments),

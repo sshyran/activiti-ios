@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, ASDKTaskListQuerryStateType) {
     ASDKTaskListQuerryStateTypeActive
 };
 
-@interface ASDKTaskListQuerryRequestRepresentation : ASDKPagingRequestRepresentation
+@interface ASDKTaskListQuerryRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString                      *processInstanceID;
 @property (assign, nonatomic) ASDKTaskListQuerryStateType   requestTaskState;

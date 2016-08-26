@@ -83,7 +83,6 @@ extern NSString *kLocalizationTaskDetailsScreenCommentFormat;
 extern NSString *kLocalizationTaskDetailsScreenTaskDetailsTitleText;
 extern NSString *kLocalizationTaskDetailsScreenTaskFormTitleText;
 extern NSString *kLocalizationTaskDetailsScreenContentTitleText;
-extern NSString *kLocalizationTaskDetailsScreenContributorsTitleText;
 extern NSString *kLocalizationTaskDetailsScreenCommentsTitleText;
 extern NSString *kLocalizationTaskDetailsScreenPartOfProcessText;
 extern NSString *kLocalizationTaskDetailsScreenCompletedDateText;
@@ -220,3 +219,12 @@ extern NSString *kLocalizationProfileScreenCleanCacheAlertText;
 extern NSString *kLocalizationProfileScreenDiskUsageText;
 extern NSString *kLocalizationProfileScreenDiskUsageAvailableText;
 extern NSString *kLocalizationProfileScreenActivitiDataText;
+
+// Default filter names
+extern NSString *kLocalizationDefaultFilterInvolvedTasksText;
+extern NSString *kLocalizationDefaultFilterMyTasksText;
+extern NSString *kLocalizationDefaultFilterQueuedTasksText;
+extern NSString *kLocalizationDefaultFilterCompletedTasksText;
+extern NSString *kLocalizationDefaultFilterRunningProcessText;
+extern NSString *kLocalizationDefaultFilterCompletedProcessesText;
+extern NSString *kLocalizationDefaultFilterAllProcessesText;

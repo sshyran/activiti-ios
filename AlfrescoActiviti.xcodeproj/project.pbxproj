@@ -52,6 +52,10 @@
 		1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */; };
 		132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */; };
 		132BB76B1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132BB76A1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m */; };
+		132C8D341D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 132C8D321D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		132C8D351D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D331D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m */; };
+		132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */; };
+		132C8D391D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */; };
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
@@ -612,6 +616,10 @@
 		132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAStartFormTableViewCell.m; path = UI/Cells/StartFormCell/AFAStartFormTableViewCell.m; sourceTree = "<group>"; };
 		132BB7691D4F3ABD00757493 /* AFAAttachFormTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAttachFormTableViewCell.h; path = UI/Cells/AttachFormCell/AFAAttachFormTableViewCell.h; sourceTree = "<group>"; };
 		132BB76A1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAttachFormTableViewCell.m; path = UI/Cells/AttachFormCell/AFAAttachFormTableViewCell.m; sourceTree = "<group>"; };
+		132C8D321D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterCreationRequestRepresentation.h; path = NetworkServices/RequestRepresentations/FilterInformation/ASDKFilterCreationRequestRepresentation.h; sourceTree = "<group>"; };
+		132C8D331D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterCreationRequestRepresentation.m; path = NetworkServices/RequestRepresentations/FilterInformation/ASDKFilterCreationRequestRepresentation.m; sourceTree = "<group>"; };
+		132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterParserOperationWorker.h; path = NetworkServices/ParserOperationManager/ASDKFilterParserOperationWorker/ASDKFilterParserOperationWorker.h; sourceTree = "<group>"; };
+		132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterParserOperationWorker.m; path = NetworkServices/ParserOperationManager/ASDKFilterParserOperationWorker/ASDKFilterParserOperationWorker.m; sourceTree = "<group>"; };
 		132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProcessInstance.h; path = Model/ProcessInstance/ASDKModelProcessInstance.h; sourceTree = "<group>"; };
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
@@ -1274,6 +1282,7 @@
 				137B94471BD671BD00134BF1 /* TaskFormParserWorker */,
 				139E54051C218F1600CE4674 /* AppParserWorker */,
 				13A7842E1CE46ACB00DBE648 /* IntegrationParserWorker */,
+				132C8D3A1D6F1586003AC8EE /* FilterParserWorker */,
 				1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */,
 				1313750C1B6F927C00D2268E /* ASDKParserOperationManager.m */,
 			);
@@ -1618,6 +1627,15 @@
 				132BB76A1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m */,
 			);
 			name = AttachFormCell;
+			sourceTree = "<group>";
+		};
+		132C8D3A1D6F1586003AC8EE /* FilterParserWorker */ = {
+			isa = PBXGroup;
+			children = (
+				132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */,
+				132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */,
+			);
+			name = FilterParserWorker;
 			sourceTree = "<group>";
 		};
 		132E60341C2314F5000A2CA5 /* ProcessInstance */ = {
@@ -3242,6 +3260,8 @@
 			children = (
 				13C94BE21B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.h */,
 				13C94BE31B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m */,
+				132C8D321D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h */,
+				132C8D331D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m */,
 			);
 			name = FilterInformation;
 			sourceTree = "<group>";
@@ -4519,6 +4539,7 @@
 				139050EF1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h in Headers */,
 				131375121B6F963A00D2268E /* ASDKProfileNetworkServices.h in Headers */,
 				13F9BA341B739D290068BB8C /* ASDKBaseRequestRepresentation.h in Headers */,
+				132C8D341D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h in Headers */,
 				135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */,
 				13A0BCB31BD7BF8E00599661 /* ASDKFormCheckbox.h in Headers */,
 				137B944F1BD67CB300134BF1 /* ASDKModelFormField.h in Headers */,
@@ -4557,6 +4578,7 @@
 				1363A2411D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h in Headers */,
 				13C9B57E1B9497B90009BD27 /* ASDKModelPaging.h in Headers */,
 				13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */,
+				132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */,
 				13EBECAA1CF8728900EC8F96 /* ASDKFormEngineDataSourceActionHandlerDelegate.h in Headers */,
 				136E11441CEAFC5F00047E38 /* ASDKIntegrationBrowsingViewController.h in Headers */,
 				8DD3B76F1CA0382F00B5D561 /* ASDKPushFadeSegue.h in Headers */,
@@ -5211,6 +5233,7 @@
 				13CDFDD81BB191040019919B /* ASDKModelComment.m in Sources */,
 				8D3A51F71C808A4400FF9A00 /* ASDKUserParserOperationWorker.m in Sources */,
 				13C94BE51B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m in Sources */,
+				132C8D391D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m in Sources */,
 				13A5785D1CEDA58A0014B6FD /* ASDKModelIntegrationContent.m in Sources */,
 				1357018E1B70D21700A384A7 /* ASDKModelBase.m in Sources */,
 				136E11401CEA11E800047E38 /* ASDKModelSite.m in Sources */,
@@ -5239,6 +5262,7 @@
 				8D3A51E51C8089A300FF9A00 /* ASDKModelUser.m in Sources */,
 				8DEA25381C7DDBD200BF376F /* ASDKModelHyperlinkFormField.m in Sources */,
 				133F05471BD52A9000C22CFD /* ASDKFormNetworkServices.m in Sources */,
+				132C8D351D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m in Sources */,
 				8DEA25411C7E044900BF376F /* ASDKMultilineFormFieldDetailsViewController.m in Sources */,
 				137B944B1BD67A8600134BF1 /* ASDKModelFormDescription.m in Sources */,
 				13667FFF1C8995C7005E4AEA /* ASDKTaskListQuerryRequestRepresentation.m in Sources */,

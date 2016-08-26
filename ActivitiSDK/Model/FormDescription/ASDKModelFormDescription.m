@@ -34,18 +34,15 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property                 JSON property
-                                                          @"processDefinitionID"        : @"processDefinitionId",
-                                                          @"processDefinitionName"      : @"processDefinitionName",
-                                                          @"processDefinitionKey"       : @"processDefinitionKey",
-                                                          @"formFields"                 : @"fields",
-                                                          @"formOutcomes"               : @"outcomes",
-                                                          @"formTabs"                   : @"tabs",
-                                                          @"formVariables"              : @"variables"
-                                                          }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property                 JSON property
+                                                      @"processDefinitionID"        : @"processDefinitionId",
+                                                      @"processDefinitionName"      : @"processDefinitionName",
+                                                      @"processDefinitionKey"       : @"processDefinitionKey",
+                                                      @"formFields"                 : @"fields",
+                                                      @"formOutcomes"               : @"outcomes",
+                                                      @"formTabs"                   : @"tabs",
+                                                      @"formVariables"              : @"variables"
+                                                      }];
     return inheretedPropertyKeys;
 }
 

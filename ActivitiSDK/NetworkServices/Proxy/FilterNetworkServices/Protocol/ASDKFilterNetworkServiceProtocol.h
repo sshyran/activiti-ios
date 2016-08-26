@@ -19,9 +19,12 @@
 #import <Foundation/Foundation.h>
 
 @class ASDKModelPaging,
-ASDKFilterListRequestRepresentation;
+ASDKModelFilter,
+ASDKFilterListRequestRepresentation,
+ASDKFilterCreationRequestRepresentation;
 
 typedef void  (^ASDKFilterListCompletionBlock) (NSArray *filterList, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKFilterModelCompletionBlock) (ASDKModelFilter *filter, NSError *error);
 
 @protocol ASDKFilterNetworkServiceProtocol <NSObject>
 
@@ -66,6 +69,28 @@ typedef void  (^ASDKFilterListCompletionBlock) (NSArray *filterList, NSError *er
  */
 - (void)fetchProcessInstanceFilterListWithFilter:(ASDKFilterListRequestRepresentation *)filter
                              withCompletionBlock:(ASDKFilterListCompletionBlock)completionBlock;
+
+/**
+ *  Creates a task list filter given a filter request representation and returns via the completion
+ *  block the filter description.
+ *
+ *  @param filter          Filter representation describing properties of the filter to be created
+ *  @param completionBlock Completion block providing the filter description and an optional error
+ *                         reason
+ */
+- (void)createUserTaskFilterWithRepresentation:(ASDKFilterCreationRequestRepresentation *)filter
+                           withCompletionBlock:(ASDKFilterModelCompletionBlock)completionBlock;
+
+/**
+ *  Creates a process instance list filter given a filter request representation and returns via the
+ *  completion block the filter description.
+ *
+ *  @param filter          Filter representation describing properties of the filter to be created
+ *  @param completionBlock Completion block providing the filter description and an optional error
+ *                         reason
+ */
+- (void)createProcessInstanceTaskFilterWithRepresentation:(ASDKFilterCreationRequestRepresentation *)filter
+                                      withCompletionBlock:(ASDKFilterModelCompletionBlock)completionBlock;
 
 /**
  *  Cancells all queued or running network operations

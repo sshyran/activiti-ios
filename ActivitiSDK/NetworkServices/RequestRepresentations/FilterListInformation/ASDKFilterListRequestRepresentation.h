@@ -25,8 +25,8 @@
  *  be used as a filter class for the Task list API (specifying only some fields)
  */
 
-@interface ASDKFilterListRequestRepresentation : ASDKPagingRequestRepresentation
+@interface ASDKFilterListRequestRepresentation : ASDKBaseRequestRepresentation <MTLJSONSerializing>
 
-@property (strong, nonatomic) NSString          *appID;
+@property (strong, nonatomic) NSString *appID;
 
 @end

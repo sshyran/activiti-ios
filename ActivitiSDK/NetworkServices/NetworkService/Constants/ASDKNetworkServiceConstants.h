@@ -49,3 +49,12 @@ extern NSString *kASDKAPIServiceIDGoogleDrive;
 // Reachability constants
 extern NSString *kASDKAPINetworkServiceNoInternetConnection;
 extern NSString *kASDKAPINetworkServiceInternetConnectionAvailable;
+
+// Icon parameters
+extern NSString *kASDKAPIIconNameInvolved;
+extern NSString *kASDKAPIIconNameMy;
+extern NSString *kASDKAPIIconNameQueued;
+extern NSString *kASDKAPIIconNameCompleted;
+extern NSString *kASDKAPIIconNameRunning;
+extern NSString *kASDKAPIIconNameAll;
+

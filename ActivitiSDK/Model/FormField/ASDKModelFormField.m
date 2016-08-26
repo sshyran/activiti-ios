@@ -87,26 +87,22 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    
-    if (inheretedPropertyKeys.allKeys.count) {
-        [inheretedPropertyKeys addEntriesFromDictionary:
-         @{//Objc property           JSON property
-           @"fieldType"            : @"fieldType",
-           @"fieldName"            : @"name",
-           @"representationType"   : @"type",
-           @"placeholer"           : @"placeholder",
-           @"values"               : @"value",
-           @"isReadOnly"           : @"readOnly",
-           @"isRequired"           : @"required",
-           @"sizeX"                : @"sizeX",
-           @"sizeY"                : @"sizeY",
-           @"formFields"           : @"fields",
-           @"formFieldParams"      : @"params",
-           @"formFieldOptions"     : @"options",
-           @"visibilityCondition"  : @"visibilityCondition",
-           @"tabID"                : @"tab"
-           }];
-    }
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
+                                                      @"fieldType"            : @"fieldType",
+                                                      @"fieldName"            : @"name",
+                                                      @"representationType"   : @"type",
+                                                      @"placeholer"           : @"placeholder",
+                                                      @"values"               : @"value",
+                                                      @"isReadOnly"           : @"readOnly",
+                                                      @"isRequired"           : @"required",
+                                                      @"sizeX"                : @"sizeX",
+                                                      @"sizeY"                : @"sizeY",
+                                                      @"formFields"           : @"fields",
+                                                      @"formFieldParams"      : @"params",
+                                                      @"formFieldOptions"     : @"options",
+                                                      @"visibilityCondition"  : @"visibilityCondition",
+                                                      @"tabID"                : @"tab"
+                                                      }];
     
     return inheretedPropertyKeys;
 }
