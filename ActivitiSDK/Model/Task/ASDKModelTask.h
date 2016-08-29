@@ -36,5 +36,6 @@
 @property (strong, nonatomic) NSString          *formKey;
 @property (assign, nonatomic) BOOL              isMemberOfCandidateGroup;
 @property (assign, nonatomic) BOOL              isMemberOfCandidateUsers;
+@property (assign, nonatomic) BOOL              isManagerOfCandidateGroup;
 
 @end
