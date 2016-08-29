@@ -65,6 +65,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [self.credentialsTableView setContentOffset:CGPointZero
+                                       animated:NO];
     [self.credentialsTableView reloadData];
 }
 
