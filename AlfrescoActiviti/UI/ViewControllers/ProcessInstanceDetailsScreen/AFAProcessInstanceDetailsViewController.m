@@ -55,6 +55,7 @@
 #import "AFAContentPickerViewController.h"
 #import "AFAAddCommentsViewController.h"
 #import "AFAProcessStartFormViewController.h"
+#import "AFAListViewController.h"
 
 // Views
 #import "AFAActivityView.h"
@@ -578,7 +579,15 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                                             __strong typeof(self) strongSelf = weakSelf;
                                             
                                             if (!error) {
-                                                [strongSelf onBack:nil];
+                                                // To avoid hierarchy complications that cand be encountered when accessing the
+                                                // process instance details via task information listing  we'll always pop back
+                                                // to the first list view controller in the navigation stack
+                                                NSPredicate *listControllerSearchPredicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+                                                    return [evaluatedObject isKindOfClass:[AFAListViewController class]];
+                                                }];
+                                                UIViewController *parentController = [self.navigationController.viewControllers filteredArrayUsingPredicate:listControllerSearchPredicate].firstObject;
+                                                [strongSelf.navigationController popToViewController:parentController
+                                                                                            animated:YES];
                                             } else {
                                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
                                             }
