@@ -47,7 +47,6 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
 
 @property (weak, nonatomic)   IBOutlet UITableView  *menuTableView;
 @property (strong, nonatomic) UIImage               *profileImage;
-@property (assign, nonatomic) BOOL                  processedProfileImage;
 
 @end
 
@@ -128,14 +127,23 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
 #pragma mark -
 #pragma mark Service integration
 
-- (void)updateProfileImage {
+- (void)updateProfileImageForIndexPath:(NSIndexPath *)indexPath  {
     AFAProfileServices *profileService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
     __weak typeof(self) weakSelf = self;
     [profileService requestProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
+        
         if (!error) {
-            strongSelf.profileImage = profileImage;
-            [strongSelf.menuTableView reloadData];
+            AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
+            AFAAvatarMenuTableViewCell *refetchedAvatarCell = (AFAAvatarMenuTableViewCell *)[strongSelf.menuTableView cellForRowAtIndexPath:indexPath];
+            strongSelf.profileImage = [thumbnailManager thumbnailForImage:profileImage
+                                                     withIdentifier:kProfileImageThumbnailIdentifier
+                                                           withSize:CGRectGetHeight(refetchedAvatarCell.avatarView.frame) * [UIScreen mainScreen].scale
+                                          processingCompletionBlock:^(UIImage *processedThumbnailImage) {
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  refetchedAvatarCell.avatarView.profileImage = processedThumbnailImage;
+                                              });
+                                          }];
         }
     }];
 }
@@ -164,24 +172,10 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
             // If we don't have loaded a thumbnail image use a placeholder instead
             // otherwise look in the cache or compute the image and set it once
             // available
-            __weak typeof(self) weakSelf = self;
             AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
-            
-            if (self.processedProfileImage) {
-                self.profileImage = [thumbnailManager thumbnailImageForIdentifier:kProfileImageThumbnailIdentifier];
-            } else {
-                self.profileImage = [thumbnailManager thumbnailForImage:self.profileImage
-                                                         withIdentifier:kProfileImageThumbnailIdentifier
-                                                               withSize:CGRectGetHeight(avatarCell.avatarView.frame) * [UIScreen mainScreen].scale
-                                              processingCompletionBlock:^(UIImage *processedThumbnailImage) {
-                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                      __strong typeof(self) strongSelf = weakSelf;
-                                                      strongSelf.processedProfileImage = YES;
-                                                      
-                                                      AFAAvatarMenuTableViewCell *refetchedAvatarCell = (AFAAvatarMenuTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-                                                      refetchedAvatarCell.avatarView.profileImage = processedThumbnailImage;
-                                                  });
-                                              }];
+            self.profileImage = [thumbnailManager thumbnailImageForIdentifier:kProfileImageThumbnailIdentifier];
+            if (self.profileImage == [thumbnailManager placeholderThumbnailImage]) {
+                [self updateProfileImageForIndexPath:indexPath];
             }
             
             avatarCell.avatarView.profileImage = self.profileImage;

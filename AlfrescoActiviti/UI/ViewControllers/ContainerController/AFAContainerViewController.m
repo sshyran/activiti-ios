@@ -124,9 +124,6 @@
     
     [self setNeedsStatusBarAppearanceUpdate];
     
-    // Request a profile image update
-    [self.drawerMenuViewController updateProfileImage];
-    
     // Only draw the menu view when the menu is toggled
     self.menuContainerView.hidden = YES;
 }

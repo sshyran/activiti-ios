@@ -27,7 +27,7 @@ typedef void (^AFAThumbnailProcessingCompletionBlock)(UIImage *processedThumbnai
  *
  *  @return     Local placeholder image
  */
-+ (UIImage *)placeholderThumbnailImage;
+- (UIImage *)placeholderThumbnailImage;
 
 /**
  *  Returns a cached image object for the specified identifier and if that's not available

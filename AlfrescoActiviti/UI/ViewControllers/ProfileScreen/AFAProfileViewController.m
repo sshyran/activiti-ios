@@ -158,7 +158,8 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     self.lastNameTextField.delegate = self;
     
     // Set a provisory profile image placeholder
-    self.avatarView.profileImage = [AFAThumbnailManager placeholderThumbnailImage];
+    AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
+    self.avatarView.profileImage = [thumbnailManager placeholderThumbnailImage];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

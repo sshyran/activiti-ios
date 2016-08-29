@@ -26,6 +26,7 @@
 @property (strong, nonatomic) NSCache           *imageCache;
 @property (strong, nonatomic) dispatch_queue_t  imageProcessingQueue;
 @property (strong, nonatomic) dispatch_queue_t  ioProcessingQueue;
+@property (strong, nonatomic) UIImage           *placeholderThumbnailImage;
 
 @end
 
@@ -42,6 +43,7 @@
         self.imageCache.name = [NSString stringWithFormat:@"%@.thumbnailsCache", [NSBundle mainBundle].bundleIdentifier];
         self.imageProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.thumbnailsProcessingQueue", [NSBundle mainBundle].bundleIdentifier] UTF8String], DISPATCH_QUEUE_SERIAL);
         self.ioProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.thumbnailsIOProcessingQueue", [NSBundle mainBundle].bundleIdentifier] UTF8String], DISPATCH_QUEUE_SERIAL);
+        self.placeholderThumbnailImage = [UIImage imageNamed:@"image-placeholder-icon"];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(cleanupMemoryCache)
@@ -55,10 +57,6 @@
 
 #pragma mark -
 #pragma mark Public interface
-
-+ (UIImage *)placeholderThumbnailImage {
-    return [UIImage imageNamed:@"image-placeholder-icon"];
-}
 
 - (UIImage *)thumbnailForImage:(UIImage *)largeImage
                       withSize:(CGFloat)imageSize {
@@ -124,7 +122,7 @@
                 });
             }
         } else {
-            cachedImage = [AFAThumbnailManager placeholderThumbnailImage];
+            cachedImage = self.placeholderThumbnailImage;
             
             if (completionBlock) {
                 __weak typeof(self) weakSelf = self;
@@ -151,7 +149,7 @@
     UIImage *thumbnailImage = [self cachedImageForForKey:imageIdentifier];
     
     if (!thumbnailImage) {
-        thumbnailImage = [AFAThumbnailManager placeholderThumbnailImage];
+        thumbnailImage = self.placeholderThumbnailImage;
     }
     
     return thumbnailImage;
