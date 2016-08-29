@@ -207,6 +207,12 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     };
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self searchWithTerm:self.searchTextField.text];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -324,20 +330,15 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 }
 
 - (IBAction)unwindTaskListController:(UIStoryboardSegue *)segue {
-    // Refresh task list with current filter and search term
-    [self searchWithTerm:self.searchTextField.text];
 }
 
 - (IBAction)unwindStartProcessInstanceController:(UIStoryboardSegue *)segue {
-    [self refreshContentList];
 }
 
 - (IBAction)unwindProcessInstanceDetailsController:(UIStoryboardSegue *)segue {
-    [self searchWithTerm:self.searchTextField.text];
 }
 
 - (IBAction)unwindStartFormProcessInstanceDetailsController:(UIStoryboardSegue *)segue {
-    [self searchWithTerm:self.searchTextField.text];
 }
 
 
@@ -553,10 +554,12 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 }
 
 - (void)searchWithTerm:(NSString *)term {
-    self.controllerState = AFAListControllerStateRefreshInProgress;
-    
-    [self fetchListForSearchTerm:term
-             withCompletionBlock:self.listResponseCompletionBlock];
+    if (self.currentFilter) {
+        self.controllerState = AFAListControllerStateRefreshInProgress;
+        
+        [self fetchListForSearchTerm:term
+                 withCompletionBlock:self.listResponseCompletionBlock];
+    }
 }
 
 - (void)clearFilterInputText {
