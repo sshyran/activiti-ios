@@ -63,6 +63,7 @@
     if (![currentModel isCompletedTask]) {
         if ([currentModel isAssignedTask] ||
             currentModel.currentTask.isMemberOfCandidateUsers ||
+            currentModel.currentTask.isManagerOfCandidateGroup ||
             currentModel.currentTask.isMemberOfCandidateGroup) {
             // Handle task details cell section rows
             switch (indexPath.row) {
@@ -78,7 +79,8 @@
                     // position as the complete cell with choices regarding claiming
                     // and / or completing the task
                     if ((currentModel.currentTask.isMemberOfCandidateGroup ||
-                         currentModel.currentTask.isMemberOfCandidateUsers) &&
+                         currentModel.currentTask.isMemberOfCandidateUsers ||
+                         currentModel.currentTask.isManagerOfCandidateGroup) &&
                         !currentModel.currentTask.assigneeModel) {
                         cell = [self dequeuedClaimCellAtIndexPath:indexPath
                                                     fromTableView:tableView];
