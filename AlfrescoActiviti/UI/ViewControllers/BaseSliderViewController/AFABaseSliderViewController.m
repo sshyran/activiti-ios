@@ -28,6 +28,15 @@
 
 @implementation AFABaseSliderViewController
 
+- (void)viewDidLoad {
+    UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                                 action:@selector(handleSwipeAction)];
+    swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipeGestureRecognizer];
+    
+    [super viewDidLoad];
+}
+
 
 #pragma mark -
 #pragma mark Actions
@@ -37,6 +46,13 @@
     
     if ([self.delegate respondsToSelector:@selector(toggleDrawerMenu)]) {
         [self.delegate toggleDrawerMenu];
+    }
+}
+
+- (void)handleSwipeAction {
+    // Only handle swipe actions for root controllers
+    if (self == self.navigationController.viewControllers.firstObject) {
+        [self toggleMenu:nil];
     }
 }
 
