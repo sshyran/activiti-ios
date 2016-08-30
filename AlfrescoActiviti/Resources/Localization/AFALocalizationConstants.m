@@ -103,6 +103,7 @@ NSString *kLocalizationTaskDetailsScreenTaskFormTitleText        = @"taskDetails
 NSString *kLocalizationTaskDetailsScreenContentTitleText         = @"taskDetailsScreenContentTitleText";
 NSString *kLocalizationTaskDetailsScreenCommentsTitleText        = @"taskDetailsScreenCommentsTitleText";
 NSString *kLocalizationTaskDetailsScreenPartOfProcessText        = @"taskDetailsScreenPartOfProcessText";
+NSString *kLocalizationTaskDetailsScreenPartOfText               = @"taskDetailsScreenPartOfText";
 NSString *kLocalizationTaskDetailsScreenCompletedDateText        = @"taskDetailsScreenCompletedDateText";
 NSString *kLocalizationTaskDetailsScreenDurationText             = @"taskDetailsScreenDurationText";
 NSString *kLocalizationTaskDetailsScreenClaimButtonText          = @"taskDetailsScreenClaimButtonText";

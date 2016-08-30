@@ -124,7 +124,6 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (assign, nonatomic) NSInteger                                     currentSelectedSection;
 @property (strong, nonatomic) AFATableController                            *tableController;
 @property (strong, nonatomic) NSMutableDictionary                           *cellFactoryDict;
-@property (strong, nonatomic) ASDKModelProfile                              *currentUserProfile;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
@@ -258,6 +257,12 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         taskDetailsViewController.navigationBarThemeColor = self.navigationBarThemeColor;
         taskDetailsViewController.taskID = ((ASDKModelTask *)[self.tableController.model itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]).modelID;
+        taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
+    } else if ([kSegueIDTaskDetailsViewTask isEqualToString:segue.identifier]) {
+        AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
+        AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+        taskDetailsViewController.taskID = taskDetailsModel.currentTask.parentTaskID;
+        taskDetailsViewController.navigationBarThemeColor = self.navigationBarThemeColor;
         taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
     }
 }
@@ -700,41 +705,63 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
               // Fetch profile information
               dispatch_group_enter(taskDetailsGroup);
               AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
+              __block ASDKModelProfile *currentUserProfile = nil;
               [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
                   if (!error) {
-                      weakSelf.currentUserProfile = profile;
+                      currentUserProfile = profile;
                       dispatch_group_leave(taskDetailsGroup);
                   } else {
                       [weakSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
                       
                       // Mark that the refresh operation has ended
-                      strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-                      strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+                      weakSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                      weakSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
                   }
               }];
               
+              // Fetch parent task if applicable
+              __block ASDKModelTask *parentTask = nil;
+              if (AFATaskDetailsSectionTypeTaskDetails == strongSelf.currentSelectedSection &&
+                  task.parentTaskID) {
+                  dispatch_group_enter(taskDetailsGroup);
+                  [taskServices requestTaskDetailsForID:task.parentTaskID
+                                    withCompletionBlock:^(ASDKModelTask *task, NSError *error) {
+                                        if (!error) {
+                                            parentTask = task;
+                                            dispatch_group_leave(taskDetailsGroup);
+                                        } else {
+                                            [weakSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                            
+                                            // Mark that the refresh operation has ended
+                                            weakSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                                            weakSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+                                        }
+                                    }];
+              }
+              
               dispatch_group_notify(taskDetailsGroup, dispatch_get_main_queue(), ^{
-                  if (AFATaskDetailsSectionTypeTaskDetails == strongSelf.currentSelectedSection) {
-                      AFATableControllerTaskDetailsModel *taskDetailsModel = strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
-                      taskDetailsModel.userProfile = weakSelf.currentUserProfile;
-                      strongSelf.tableController.model = taskDetailsModel;
+                  if (AFATaskDetailsSectionTypeTaskDetails == weakSelf.currentSelectedSection) {
+                      AFATableControllerTaskDetailsModel *taskDetailsModel = weakSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
+                      taskDetailsModel.userProfile = currentUserProfile;
+                      taskDetailsModel.parentTask = parentTask;
+                      weakSelf.tableController.model = taskDetailsModel;
                       
                       // Change the cell factory
-                      strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-                  } else if (AFATaskDetailsSectionTypeContributors == strongSelf.currentSelectedSection) {
+                      weakSelf.tableController.cellFactory = [weakSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+                  } else if (AFATaskDetailsSectionTypeContributors == weakSelf.currentSelectedSection) {
                       // Extract the number of collaborators for the given task
                       AFATableControllerTaskContributorsModel *taskContributorsModel = [AFATableControllerTaskContributorsModel new];
-                      AFATableControllerTaskDetailsModel *currentTaskModel = strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
+                      AFATableControllerTaskDetailsModel *currentTaskModel = weakSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)];
                       taskContributorsModel.involvedPeople = currentTaskModel.currentTask.involvedPeople;
-                      strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeContributors)] = taskContributorsModel;
-                      strongSelf.tableController.model = taskContributorsModel;
+                      weakSelf.sectionContentDict[@(AFATaskDetailsSectionTypeContributors)] = taskContributorsModel;
+                      weakSelf.tableController.model = taskContributorsModel;
                       
                       // Change the cell factory
-                      strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeContributors];
+                      weakSelf.tableController.cellFactory = [weakSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeContributors];
                       
                       // Check if the task is already completed and in that case mark the table
                       // controller as not editable
-                      strongSelf.tableController.isEditable = !(task.endDate && task.duration);
+                      weakSelf.tableController.isEditable = !(task.endDate && task.duration);
                   }
                   
                   // Because we're switching betweeen task details and contributors views
@@ -1218,9 +1245,14 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        [strongSelf performSegueWithIdentifier:kSegueIDTaskDetailsViewProcess
-                                        sender:nil];
-    } forCellType:[detailsCellFactory cellTypeForProcessCell]];
+        if (AFATaskDetailsPartOfCellTypeProcess == [changeParameters[kCellFactoryCellParameterActionType] intValue]) {
+            [strongSelf performSegueWithIdentifier:kSegueIDTaskDetailsViewProcess
+                                            sender:nil];
+        } else {
+            [strongSelf performSegueWithIdentifier:kSegueIDTaskDetailsViewTask
+                                            sender:nil];
+        }
+    } forCellType:[detailsCellFactory cellTypeForPartOfCell]];
     
     [detailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         [self onSectionSwitch:self.taskFormButton];

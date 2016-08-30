@@ -61,4 +61,8 @@
    return [self.currentTask.assigneeModel.modelID isEqualToString:self.userProfile.modelID];
 }
 
+- (BOOL)isChecklistTask {
+    return self.currentTask.parentTaskID ? YES : NO;
+}
+
 @end

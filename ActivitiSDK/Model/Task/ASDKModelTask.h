@@ -37,5 +37,6 @@
 @property (assign, nonatomic) BOOL              isMemberOfCandidateGroup;
 @property (assign, nonatomic) BOOL              isMemberOfCandidateUsers;
 @property (assign, nonatomic) BOOL              isManagerOfCandidateGroup;
+@property (strong, nonatomic) NSString          *parentTaskID;
 
 @end

@@ -16,19 +16,23 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
-@import ActivitiSDK;
+#import <UIKit/UIKit.h>
 
-@interface AFATableControllerTaskDetailsModel : AFABaseModel <AFATableViewModelDelegate>
+@class ASDKModelTask;
 
-@property (strong, nonatomic) ASDKModelTask     *currentTask;
-@property (strong, nonatomic) ASDKModelTask     *parentTask;
-@property (strong, nonatomic) ASDKModelProfile  *userProfile;
+@protocol AFATaskMembershipTableViewCellDelegate <NSObject>
 
-- (BOOL)canBeRequeued;
-- (BOOL)isCompletedTask;
-- (BOOL)isAssignedTask;
-- (BOOL)isChecklistTask;
+- (void)onViewTaskTap;
+
+@end
+
+@interface AFATaskMembershipTableViewCell : UITableViewCell
+
+@property (weak, nonatomic) id<AFATaskMembershipTableViewCellDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
+@property (weak, nonatomic) IBOutlet UILabel *taskLabel;
+@property (weak, nonatomic) IBOutlet UIButton *taskNameButton;
+
+- (void)setUpCellWithTask:(ASDKModelTask *)task;
 
 @end

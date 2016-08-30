@@ -88,6 +88,7 @@
 		135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */; };
 		135EF5651B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 135EF5641B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m */; };
+		136130141D74788F00B23F71 /* AFATaskMembershipTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 136130131D74788F00B23F71 /* AFATaskMembershipTableViewCell.m */; };
 		1363A23D1D634315009EAC54 /* ASDKCSRFTokenStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1363A23B1D634315009EAC54 /* ASDKCSRFTokenStorage.h */; };
 		1363A23E1D634315009EAC54 /* ASDKCSRFTokenStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1363A23C1D634315009EAC54 /* ASDKCSRFTokenStorage.m */; };
 		1363A2411D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1363A2401D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h */; };
@@ -661,6 +662,8 @@
 		135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLogFormatter.m; path = Logging/ASDKLogFormatter.m; sourceTree = "<group>"; };
 		135EF5631B9090E800ECD1B2 /* NSDate+AFAStringTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+AFAStringTransformation.h"; path = "Business/Categories/NSDate+AFAStringTransformation.h"; sourceTree = "<group>"; };
 		135EF5641B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+AFAStringTransformation.m"; path = "Business/Categories/NSDate+AFAStringTransformation.m"; sourceTree = "<group>"; };
+		136130121D74788F00B23F71 /* AFATaskMembershipTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskMembershipTableViewCell.h; path = UI/Cells/TaskMembershipCell/AFATaskMembershipTableViewCell.h; sourceTree = "<group>"; };
+		136130131D74788F00B23F71 /* AFATaskMembershipTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskMembershipTableViewCell.m; path = UI/Cells/TaskMembershipCell/AFATaskMembershipTableViewCell.m; sourceTree = "<group>"; };
 		1363A23B1D634315009EAC54 /* ASDKCSRFTokenStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKCSRFTokenStorage.h; path = NetworkServices/CSRFTokenStorage/ASDKCSRFTokenStorage.h; sourceTree = "<group>"; };
 		1363A23C1D634315009EAC54 /* ASDKCSRFTokenStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKCSRFTokenStorage.m; path = NetworkServices/CSRFTokenStorage/ASDKCSRFTokenStorage.m; sourceTree = "<group>"; };
 		1363A2401D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKCSRFTokenStorageProtocol.h; path = NetworkServices/CSRFTokenStorage/Protocol/ASDKCSRFTokenStorageProtocol.h; sourceTree = "<group>"; };
@@ -1676,6 +1679,7 @@
 				8D7C1A6B1C8090530092EA81 /* DurationCell */,
 				8D7C1A671C8090430092EA81 /* CompletedDateCell */,
 				8D7C1A631C80901E0092EA81 /* ProcessMembershipCell */,
+				136130151D74789400B23F71 /* TaskMembershipCell */,
 				8D7C1A5F1C808DA30092EA81 /* CreatedDateCell */,
 				8D7C1A5B1C808D850092EA81 /* CommentHeaderCell */,
 				8D7C1A571C808D710092EA81 /* CommentCell */,
@@ -1920,6 +1924,15 @@
 				13CFF33E1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m */,
 			);
 			name = NSDate;
+			sourceTree = "<group>";
+		};
+		136130151D74789400B23F71 /* TaskMembershipCell */ = {
+			isa = PBXGroup;
+			children = (
+				136130121D74788F00B23F71 /* AFATaskMembershipTableViewCell.h */,
+				136130131D74788F00B23F71 /* AFATaskMembershipTableViewCell.m */,
+			);
+			name = TaskMembershipCell;
 			sourceTree = "<group>";
 		};
 		1363A23F1D634347009EAC54 /* CSRFTokenStorage */ = {
@@ -5082,6 +5095,7 @@
 				8D7C1A561C808D640092EA81 /* AFAContentFileTableViewCell.m in Sources */,
 				13A5D5FB1C9C4C6B00EFA760 /* AFAAddTaskViewController.m in Sources */,
 				13AE35861C47D69300BEB477 /* AFABaseThemedViewController.m in Sources */,
+				136130141D74788F00B23F71 /* AFATaskMembershipTableViewCell.m in Sources */,
 				8D7C1A5E1C808D970092EA81 /* AFACommentHeaderTableViewCell.m in Sources */,
 				13667FEE1C887490005E4AEA /* AFATableControllerProcessInstanceTasksModel.m in Sources */,
 				13C444131BBA6CDB00868904 /* AFATableControllerCommentModel.m in Sources */,
