@@ -84,6 +84,7 @@
 "taskDetailsScreenContentTitleText"                      = "Attached content";
 "taskDetailsScreenCommentsTitleText"                     = "Comments";
 "taskDetailsScreenPartOfProcessText"                     = "Part of process";
+"taskDetailsScreenPartOfText"                            = "Part of";
 "taskDetailsScreenCompletedDateText"                     = "Completed date";
 "taskDetailsScreenDurationText"                          = "Duration";
 "taskDetailsScreenClaimButtonText"                       = "Claim";

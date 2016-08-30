@@ -64,4 +64,5 @@ extern NSString *kRequestParameterOperationSucceededFlag;
 
 // Cell factory
 extern NSString *kCellFactoryCellParameterCellIdx;
-extern NSString  *kCellFactoryCellParameterCellIndexpath;
+extern NSString *kCellFactoryCellParameterCellIndexpath;
+extern NSString *kCellFactoryCellParameterActionType;

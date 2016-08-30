@@ -74,3 +74,5 @@ NSString *kRequestParameterOperationSucceededFlag   = @"operationSucceededFlag";
 
 NSString  *kCellFactoryCellParameterCellIdx         = @"kCellFactoryCellParameterCellIdx";
 NSString  *kCellFactoryCellParameterCellIndexpath   = @"kCellFactoryCellParameterCellIndexpath";
+NSString  *kCellFactoryCellParameterActionType      = @"kCellFactoryCellParameterActionType";
+

@@ -45,7 +45,8 @@
                                                       @"formKey"                    : @"formKey",
                                                       @"isMemberOfCandidateGroup"   : @"memberOfCandidateGroup",
                                                       @"isMemberOfCandidateUsers"   : @"memberOfCandidateUsers",
-                                                      @"isManagerOfCandidateGroup"  : @"managerOfCandidateGroup"
+                                                      @"isManagerOfCandidateGroup"  : @"managerOfCandidateGroup",
+                                                      @"parentTaskID"               : @"parentTaskId"
                                                       }];
     
     return inheretedPropertyKeys;
@@ -76,6 +77,10 @@
 }
 
 + (NSValueTransformer *)processDefinitionIDJSONTransformer {
+    return self.valueTransformerForIDs;
+}
+
++ (NSValueTransformer *)parentTaskIDJSONTransformer {
     return self.valueTransformerForIDs;
 }
 

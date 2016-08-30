@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, AFATaskDetailsCellType) {
     AFATaskDetailsCellTypeAssignee,
     AFATaskDetailsCellTypeCreated,
     AFATaskDetailsCellTypeDue,
-    AFATaskDetailsCellTypeProcess,
+    AFATaskDetailsCellTypePartOf,
     AFATaskDetailsCellTypeDescription,
     AFATaskDetailsCellTypeAttachedForm,
     // By default the enum count used to describe the number of cells for a
@@ -46,7 +46,7 @@ typedef NS_ENUM(NSInteger, AFACompletedTaskDetailsCellType) {
     AFACompletedTaskDetailsCellTypeDue,
     AFACompletedTaskDetailsCellTypeEnd,
     AFACompletedTaskDetailsCellTypeDuration,
-    AFACompletedTaskDetailsCellTypeProcess,
+    AFACompletedTaskDetailsCellTypePartOf,
     AFACompletedTaskDetailsCellTypeDescription,
     AFACompletedTaskDetailsCellTypeAttachedForm,
     AFACompletedTaskDetailsCellTypeEnumCount,
@@ -58,10 +58,15 @@ typedef NS_ENUM(NSInteger, AFAInvolvedTaskDetailsCellType) {
     AFAInvolvedTaskDetailsCellTypeAssignee,
     AFAInvolvedTaskDetailsCellTypeCreated,
     AFAInvolvedTaskDetailsCellTypeDue,
-    AFAInvolvedTaskDetailsCellTypeProcess,
+    AFAInvolvedTaskDetailsCellTypePartOf,
     AFAInvolvedTaskDetailsCellTypeDescription,
     AFAInvolvedTaskDetailsCellTypeAttachedForm,
     AFAInvolvedTaskDetailsCellTypeEnumCount
+};
+
+typedef NS_ENUM(NSInteger, AFATaskDetailsPartOfCellType) {
+    AFATaskDetailsPartOfCellTypeProcess,
+    AFATaskDetailsPartOfCellTypeTask
 };
 
 @interface AFATableControllerTaskDetailsCellFactory : AFATableControllerCellFactory <AFATableViewCellFactory>
@@ -70,7 +75,7 @@ typedef NS_ENUM(NSInteger, AFAInvolvedTaskDetailsCellType) {
 
 - (NSInteger)cellTypeForDueDateCell;
 - (NSInteger)cellTypeForCompleteCell;
-- (NSInteger)cellTypeForProcessCell;
+- (NSInteger)cellTypeForPartOfCell;
 - (NSInteger)cellTypeForClaimCell;
 - (NSInteger)cellTypeForRequeueCell;
 - (NSInteger)cellTypeForReAssignCell;

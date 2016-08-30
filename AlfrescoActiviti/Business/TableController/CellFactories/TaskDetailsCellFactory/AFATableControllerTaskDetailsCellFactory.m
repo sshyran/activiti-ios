@@ -26,6 +26,7 @@
 #import "AFADescriptionTableViewCell.h"
 #import "AFACreatedDateTableViewCell.h"
 #import "AFAProcessMembershipTableViewCell.h"
+#import "AFATaskMembershipTableViewCell.h"
 #import "AFACompletedDateTableViewCell.h"
 #import "AFADurationTableViewCell.h"
 #import "AFAClaimTableViewCell.h"
@@ -34,6 +35,7 @@
 
 // Constants
 #import "AFAUIConstants.h"
+#import "AFABusinessConstants.h"
 
 // Model
 #import "AFATableControllerTaskDetailsModel.h"
@@ -41,6 +43,7 @@
 @interface AFATableControllerTaskDetailsCellFactory () <AFADueTableViewCellDelegate,
                                                         AFACompleteTableViewCellDelegate,
                                                         AFAProcessMembershipTableViewCellDelegate,
+                                                        AFATaskMembershipTableViewCellDelegate,
                                                         AFAClaimTableViewCellDelegate,
                                                         AFAAssigneeTableViewCellDelegate,
                                                         AFAAuditLogTableViewCellDelegate,
@@ -113,10 +116,16 @@
                 }
                     break;
                     
-                case AFATaskDetailsCellTypeProcess: {
-                    cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
-                                                            fromTableView:tableView
-                                                                withModel:model];
+                case AFATaskDetailsCellTypePartOf: {
+                    if ([currentModel isChecklistTask]) {
+                        cell = [self dequeuedTaskMembershipCellAtIndexPath:indexPath
+                                                             fromTableView:tableView
+                                                                 withModel:model];
+                    } else {
+                        cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
+                                                                fromTableView:tableView
+                                                                    withModel:model];
+                    }
                 }
                     break;
                     
@@ -167,10 +176,16 @@
                 }
                     break;
                     
-                case AFAInvolvedTaskDetailsCellTypeProcess: {
-                    cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
-                                                            fromTableView:tableView
-                                                                withModel:model];
+                case AFAInvolvedTaskDetailsCellTypePartOf: {
+                    if ([currentModel isChecklistTask]) {
+                        cell = [self dequeuedTaskMembershipCellAtIndexPath:indexPath
+                                                             fromTableView:tableView
+                                                                 withModel:model];
+                    } else {
+                        cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
+                                                                fromTableView:tableView
+                                                                    withModel:model];
+                    }
                 }
                     break;
                     
@@ -237,10 +252,16 @@
             }
                 break;
                 
-            case AFACompletedTaskDetailsCellTypeProcess: {
-                cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
-                                                        fromTableView:tableView
-                                                            withModel:model];
+            case AFACompletedTaskDetailsCellTypePartOf: {
+                if ([currentModel isChecklistTask]) {
+                    cell = [self dequeuedTaskMembershipCellAtIndexPath:indexPath
+                                                         fromTableView:tableView
+                                                             withModel:model];
+                } else {
+                    cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
+                                                            fromTableView:tableView
+                                                                withModel:model];
+                }
             }
                 break;
                 
@@ -332,9 +353,20 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark AFAProcessMembershipTableViewCellDelegate
 
 - (void)onViewProcessTap {
-    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeProcess];
+    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypePartOf];
     if (actionBlock) {
-        actionBlock(nil);
+        actionBlock(@{kCellFactoryCellParameterActionType : @(AFATaskDetailsPartOfCellTypeProcess)});
+    }
+}
+
+
+#pragma mark -
+#pragma mark AFATaskMembershipTableViewCellDelegate
+
+- (void)onViewTaskTap {
+    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypePartOf];
+    if (actionBlock) {
+        actionBlock(@{kCellFactoryCellParameterActionType : @(AFATaskDetailsPartOfCellTypeTask)});
     }
 }
 
@@ -383,8 +415,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     return AFATaskDetailsCellTypeComplete;
 }
 
-- (NSInteger)cellTypeForProcessCell {
-    return AFATaskDetailsCellTypeProcess;
+- (NSInteger)cellTypeForPartOfCell {
+    return AFATaskDetailsCellTypePartOf;
 }
 
 - (NSInteger)cellTypeForClaimCell {
@@ -488,6 +520,17 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     processCell.delegate = self;
     
     return processCell;
+}
+
+- (UITableViewCell *)dequeuedTaskMembershipCellAtIndexPath:(NSIndexPath *)indexPath
+                                             fromTableView:(UITableView *)tableView
+                                                 withModel:(id<AFATableViewModelDelegate>)model {
+    AFATaskMembershipTableViewCell *taskCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsTask
+                                                                               forIndexPath:indexPath];
+    [taskCell setUpCellWithTask:((AFATableControllerTaskDetailsModel *)model).parentTask];
+    taskCell.delegate = self;
+    
+    return taskCell;
 }
 
 - (UITableViewCell *)dequeuedDescriptionCellAtIndexPath:(NSIndexPath *)indexPath
