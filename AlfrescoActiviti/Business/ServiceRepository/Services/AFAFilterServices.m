@@ -284,7 +284,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             completionBlock(nil, operationError, nil);
         } else {
             // Re-fetch again because filter detail information is not suficient to be reported back
-            AFALogVerbose(@"Successfully created %lu default task filters. Re-fetching filter details...", filterArr.count);
+            AFALogVerbose(@"Successfully created %lu default task filters. Re-fetching filter details...", (unsigned long)filterArr.count);
             [strongSelf requestTaskFilterListForAppID:appID
                                   withCompletionBlock:completionBlock];
         }
@@ -377,7 +377,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             completionBlock(nil, operationError, nil);
         } else {
             // Re-fetch again because filter detail information is not suficient to be reported back
-            AFALogVerbose(@"Successfully created %lu default process instance filters. Re-fetching filter details...", filterArr.count);
+            AFALogVerbose(@"Successfully created %lu default process instance filters. Re-fetching filter details...", (unsigned long)filterArr.count);
             [strongSelf requestProcessInstanceFilterListForAppID:appID
                                              withCompletionBlock:completionBlock];
         }

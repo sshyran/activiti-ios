@@ -290,6 +290,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)handleSuccessfulFilterCreationResponseForOperation:(AFHTTPRequestOperation *)operation
                                           responseObject:(id)responseObject
                                          completionBlock:(ASDKFilterModelCompletionBlock)completionBlock {
+    NSParameterAssert(self.resultsQueue);
+    
     // Remove operation reference
     [self.networkOperations removeObject:operation];
     
@@ -306,9 +308,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.parserOperationManager parseContentDictionary:responseDictionary
                                                        ofType:CREATE_STRING(ASDKFilterParserContentTypeFilterDetails)
                                           withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                              __strong typeof(self) strongSelf = weakSelf;
-                                              NSParameterAssert(strongSelf.resultsQueue);
-                                              
                                               if (error) {
                                                   ASDKLogError(@"Error parsing filter details. Description:%@", error.localizedDescription);
                                                   
