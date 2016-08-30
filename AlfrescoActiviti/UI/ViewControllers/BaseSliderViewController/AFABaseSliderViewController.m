@@ -29,10 +29,14 @@
 @implementation AFABaseSliderViewController
 
 - (void)viewDidLoad {
-    UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                                                 action:@selector(handleSwipeAction)];
-    swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:swipeGestureRecognizer];
+    UISwipeGestureRecognizer *slideOpenGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                                     action:@selector(handleSwipeAction:)];
+    UISwipeGestureRecognizer *slideCloseGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                                      action:@selector(handleSwipeAction:)];
+    slideOpenGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    slideCloseGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:slideOpenGestureRecognizer];
+    [self.view addGestureRecognizer:slideCloseGestureRecognizer];
     
     [super viewDidLoad];
 }
@@ -49,10 +53,36 @@
     }
 }
 
-- (void)handleSwipeAction {
+- (void)handleSwipeAction:(UISwipeGestureRecognizer *)gestureRecognizer {
     // Only handle swipe actions for root controllers
     if (self == self.navigationController.viewControllers.firstObject) {
-        [self toggleMenu:nil];
+        BOOL performToggle = NO;
+        switch (gestureRecognizer.direction) {
+            case UISwipeGestureRecognizerDirectionRight: {
+                if ([self.delegate respondsToSelector:@selector(isDrawerMenuOpen)]) {
+                    if (![self.delegate isDrawerMenuOpen]) {
+                        performToggle = YES;
+                    }
+                }
+            }
+                break;
+                
+            case UISwipeGestureRecognizerDirectionLeft: {
+                if ([self.delegate respondsToSelector:@selector(isDrawerMenuOpen)]) {
+                    if ([self.delegate isDrawerMenuOpen]) {
+                        performToggle = YES;
+                    }
+                }
+            }
+                break;
+                
+            default:
+                break;
+        }
+        
+        if (performToggle) {
+            [self toggleMenu:nil];
+        }
     }
 }
 

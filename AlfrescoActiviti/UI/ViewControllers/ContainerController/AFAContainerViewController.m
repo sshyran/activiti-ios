@@ -163,6 +163,10 @@
 #pragma mark -
 #pragma mark AFAContainerViewController Delegate
 
+- (BOOL)isDrawerMenuOpen {
+    return _isDrawerMenuOpen;
+}
+
 - (void)toggleDrawerMenu {
     [self.drawerMenuViewController refreshDrawerMenu];
     self.isDrawerMenuOpen = !self.isDrawerMenuOpen;

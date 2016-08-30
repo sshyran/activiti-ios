@@ -21,6 +21,7 @@
 @class AFALoginModel;
 @protocol AFAContainerViewControllerDelegate <NSObject>
 
+- (BOOL)isDrawerMenuOpen;
 - (void)toggleDrawerMenu;
 - (void)logoutUser;
 - (void)showAdhocTasks;
