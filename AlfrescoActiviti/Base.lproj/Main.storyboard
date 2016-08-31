@@ -5444,7 +5444,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Fx7-t4-U7e"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Rli-zA-tH6">
-                        <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ooh-CE-8eb" userLabel="Search view" customClass="ASDKRoundedBorderView">
@@ -5492,10 +5492,10 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="61" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3XV-4g-yt4">
-                                <rect key="frame" x="0.0" y="40" width="600" height="516"/>
+                                <rect key="frame" x="0.0" y="40" width="600" height="496"/>
                                 <color key="backgroundColor" red="0.98039215686274506" green="0.98039215686274506" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="mCa-sj-J9r">
-                                    <rect key="frame" x="0.0" y="89" width="600" height="44"/>
+                                    <rect key="frame" x="0.0" y="89" width="600" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aVP-ZP-7RL">
@@ -5600,7 +5600,7 @@
                                 </connections>
                             </tableView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6UB-j7-O4e" customClass="AFAActivityView">
-                                <rect key="frame" x="280" y="258" width="40" height="40"/>
+                                <rect key="frame" x="280" y="248" width="40" height="40"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="9fm-UY-OX7"/>
@@ -5625,13 +5625,13 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No contributors available" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0QU-5H-h3I" userLabel="No Records Label">
-                                <rect key="frame" x="205" y="268" width="190.5" height="20.5"/>
+                                <rect key="frame" x="205" y="258" width="190.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qeT-5x-UvP" userLabel="Instructions view">
-                                <rect key="frame" x="150" y="228" width="300" height="100"/>
+                                <rect key="frame" x="150" y="218" width="300" height="100"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="information-icon" translatesAutoresizingMaskIntoConstraints="NO" id="yVm-ml-8bt">
                                         <rect key="frame" x="130" y="8" width="40" height="40"/>
@@ -5659,7 +5659,7 @@
                                 </constraints>
                             </view>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1cV-Vx-8aH" userLabel="Overlay view">
-                                <rect key="frame" x="0.0" y="40" width="600" height="516"/>
+                                <rect key="frame" x="0.0" y="40" width="600" height="496"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -5946,9 +5946,9 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="dAG-4I-soh"/>
-        <segue reference="KJK-Sb-lGO"/>
-        <segue reference="8xE-qE-G6q"/>
+        <segue reference="Rct-bP-63w"/>
         <segue reference="Ubh-jA-md9"/>
-        <segue reference="Axm-Tn-V6n"/>
+        <segue reference="XZ3-C5-Oig"/>
+        <segue reference="fpJ-UB-l4s"/>
     </inferredMetricsTieBreakers>
 </document>
