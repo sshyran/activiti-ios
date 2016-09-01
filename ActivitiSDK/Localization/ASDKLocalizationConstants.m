@@ -62,6 +62,8 @@ NSString *kLocalizationFormContentPickerComponentGetLatestVersionText           
 NSString *kLocalizationFormContentPickerComponentAlfrescoContentText                = @"formContentPickerComponentAlfrescoContentText";
 NSString *kLocalizationFormContentPickerComponentBoxContentText                     = @"formContentPickerComponentBoxContentText";
 NSString *kLocalizationFormContentPickerComponentDriveText                          = @"formContentPickerComponentDriveContentText";
+NSString *kLocalizationContentPickerComponentNoContentText                          = @"formContentPickerComponentNoContentText";
+NSString *kLocalizationContentPickerComponentNoContentNotEditableText               = @"formContentPickerComponentNoContentNotEditableText";
 
 
 #pragma mark -

@@ -115,13 +115,22 @@
 
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section {
-    return self.currentFormField.formFieldOptions.count;
+    NSUInteger formFieldOptionsCount = self.currentFormField.formFieldOptions.count;
+    return formFieldOptionsCount ? formFieldOptionsCount : self.currentFormField.values.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKRadioOptionTableViewCell *radioCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldRadioOptionRepresentation];
-    radioCell.radioOptionLabel.text = [(ASDKModelFormFieldOption *)self.currentFormField.formFieldOptions[indexPath.row] name];
+    
+    NSUInteger formFieldOptionsCount = self.currentFormField.formFieldOptions.count;
+    NSString *optionName = nil;
+    if (!formFieldOptionsCount) {
+        optionName = self.currentFormField.values[indexPath.row];
+    } else {
+        optionName = [(ASDKModelFormFieldOption *)self.currentFormField.formFieldOptions[indexPath.row] name];
+    }
+    radioCell.radioOptionLabel.text = optionName;
     radioCell.checkMarkIconImageView.hidden = !(self.currentOptionSelection == indexPath.row);
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
