@@ -52,6 +52,8 @@
 "formContentPickerComponentAlfrescoContentText"                 = "Alfresco Cloud";
 "formContentPickerComponentBoxContentText"                      = "Box";
 "formContentPickerComponentDriveContentText"                    = "Google Drive";
+"formContentPickerComponentNoContentText"                       = "You have no available content but you can add some by using the + button.";
+"formContentPickerComponentNoContentNotEditableText"            = "You have no available content.";
 
 // Alert dialogs use
 "formAlertDialogOopsTitleText"                                  = "Oops...";

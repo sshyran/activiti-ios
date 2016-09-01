@@ -117,6 +117,11 @@
     self.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"
                                                         inBundle:[NSBundle bundleForClass:self.class]
                                    compatibleWithTraitCollection:nil];
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationContentPickerComponentNoContentNotEditableText, ASDKLocalizationTable, @"No content available not editable text");
+    } else {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationContentPickerComponentNoContentText, ASDKLocalizationTable, @"No content available text");
+    }
     
     [self setRightBarButton];
     [self.attachedContentTableView reloadData];
