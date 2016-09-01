@@ -725,7 +725,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                     and:(NSNumber *)secondNumber
                             forOperator:(ASDKModelFormVisibilityConditionOperatorType)operatorType
                                   error:(NSError **)error {
-    BOOL result;
+    BOOL result = NO;
+    
+    if (!firstNumber || !secondNumber) {
+        return result;
+    }
     
     switch (operatorType) {
         case ASDKModelFormVisibilityConditionOperatorTypeEqual: {
@@ -997,9 +1001,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [numberFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
     numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     NSNumber *number = [numberFormatter numberFromString:string];
-    if (!number) {
-        number = @(0);
-    }
     
     return number;
 }

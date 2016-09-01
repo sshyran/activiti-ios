@@ -684,10 +684,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSDictionary *visibilityActionsDict = [self.visibilityConditionsProcessor reevaluateVisibilityConditionsAffectedByFormField:formField];
     
     NSMutableDictionary *indexPathOperations = [NSMutableDictionary dictionary];
-    NSArray *fieldsToBeAdded = visibilityActionsDict[@(ASDKFormVisibilityConditionActionTypeShowElement)];
-    [indexPathOperations addEntriesFromDictionary:[self addVisibleFormFieldsFromCollection:fieldsToBeAdded]];
     NSArray *fieldsToBeRemoved = visibilityActionsDict[@(ASDKFormVisibilityConditionActionTypeHideElement)];
     [indexPathOperations addEntriesFromDictionary:[self removeVisibleFormFieldsFromCollection:fieldsToBeRemoved]];
+    NSArray *fieldsToBeAdded = visibilityActionsDict[@(ASDKFormVisibilityConditionActionTypeShowElement)];
+    [indexPathOperations addEntriesFromDictionary:[self addVisibleFormFieldsFromCollection:fieldsToBeAdded]];
     
     // The form outcome indexes will have to be rebuilt
     [self.formOutcomesIndexPaths removeAllObjects];
@@ -742,7 +742,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                         if (![visibleFormFields doesCollectionContainFormField:self.renderableFormFields[originalSectionIndex]]) {
                             // If it doesn't then extract it from the renderable collection and only set
                             // the element to be added as a child
-                            ASDKModelFormField *sectionToBecomeVisible = self.renderableFormFields[originalSectionIndex];
+                            NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject:self.renderableFormFields[originalSectionIndex]];
+                            ASDKModelFormField *sectionToBecomeVisible = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
                             sectionToBecomeVisible.formFields = @[formFieldToBeInserted];
                             
                             NSUInteger insertIndex = [visibleFormFields insertIndexInFormFieldCollectionForSectionIndex:originalSectionIndex
@@ -776,7 +777,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                             inSection:insertSection]];
                         }
                     } else {
-                        ASDKLogError(@"Cannot find form field that needs to become visibile in the renderable form field collection");
+                        ASDKLogError(@"Cannot find original form field section index for form field:%@ that needs to become visibile in the renderable form field collection", formFieldToBeInserted.fieldName);
                     }
                 }
             }
