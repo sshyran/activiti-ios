@@ -36,6 +36,16 @@ CGFloat kHairlineViewAlphaDimmed    = 0.5f;
               animated:animated];
 }
 
+- (void)prepareForReuse {
+    self.inputTextField.text = nil;
+    self.inputTextField.keyboardType = UIKeyboardTypeDefault;
+    self.inputTextField.secureTextEntry = NO;
+    self.inputTextField.returnKeyType = UIReturnKeyNext;
+    self.cellType = AFACredentialTextFieldCellTypeUnsecured;
+    self.delegate = nil;
+    _inputText = nil;
+}
+
 
 #pragma mark -
 #pragma mark UITextField Delegate

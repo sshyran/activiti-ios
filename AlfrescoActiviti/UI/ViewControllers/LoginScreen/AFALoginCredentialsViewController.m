@@ -413,11 +413,51 @@ viewForHeaderInSection:(NSInteger)section {
 #pragma mark - 
 #pragma mark Cell builders
 
+- (void)registerStateHandlerForCredentialCell:(AFACredentialTextFieldTableViewCell *)credentialCell {
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:credentialCell
+                        forKeyPath:NSStringFromSelector(@selector(inputText))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 
+                                 switch (credentialCell.inputTextField.tag) {
+                                     case AFALoginCredentialsFocusFieldOrderUsername: {
+                                         [strongSelf.loginModel updateUserNameEntry:change[NSKeyValueChangeNewKey]];
+                                     }
+                                         break;
+                                         
+                                     case AFALoginCredentialsFocusFieldOrderPassword: {
+                                         [strongSelf.loginModel updatePasswordEntry:change[NSKeyValueChangeNewKey]];
+                                     }
+                                         break;
+                                         
+                                     case AFALoginCredentialsFocusFieldOrderHostname: {
+                                         [strongSelf.loginModel updateHostNameEntry:change[NSKeyValueChangeNewKey]];
+                                     }
+                                         break;
+                                         
+                                     case AFALoginCredentialsFocusFieldOrderPort: {
+                                         [strongSelf.loginModel updatePortEntry:change[NSKeyValueChangeNewKey]];
+                                     }
+                                         break;
+                                         
+                                     case AFALoginCredentialsFocusFieldOrderServiceDocument: {
+                                         [strongSelf.loginModel updateServiceDocument:change[NSKeyValueChangeNewKey]];
+                                     }
+                                         break;
+                                         
+                                     default:
+                                         break;
+                                 }
+                             }];
+}
+
+
 - (AFASecurityLayerTableViewCell *)dequeueSecurityLayerCellForTableView:(UITableView *)tableView
                                                               indexPath:(NSIndexPath *)indexPath {
     AFASecurityLayerTableViewCell *securityLayerCell = [tableView dequeueReusableCellWithIdentifier:kCellIDSecurityLayer
                                                                                        forIndexPath:indexPath];
-    
     securityLayerCell.switchViewButton.isOn = self.loginModel.isSecureLayer;
     
     __weak typeof(self) weakSelf = self;
@@ -446,30 +486,15 @@ viewForHeaderInSection:(NSInteger)section {
 
 - (AFACredentialTextFieldTableViewCell *)dequeueHostNameCellForTableView:(UITableView *)tableView
                                                                indexPath:(NSIndexPath *)indexPath {
-    AFACredentialTextFieldTableViewCell *hostnameCell = [tableView dequeueReusableCellWithIdentifier:kCellIDCredentialTextField
+    AFACredentialTextFieldTableViewCell *credentialCell = [tableView dequeueReusableCellWithIdentifier:kCellIDCredentialTextField
                                                                                         forIndexPath:indexPath];
-    hostnameCell.delegate = self;
+    credentialCell.delegate = self;
+    credentialCell.inputTextField.attributedPlaceholder = self.loginModel.hostnameAttributedPlaceholderText;
+    credentialCell.inputTextField.text = self.loginModel.hostName;
+    credentialCell.inputTextField.tag = AFALoginCredentialsFocusFieldOrderHostname;
+    [self registerStateHandlerForCredentialCell:credentialCell];
     
-    hostnameCell.inputTextField.attributedPlaceholder = self.loginModel.hostnameAttributedPlaceholderText;
-    hostnameCell.inputTextField.text = self.loginModel.hostName;
-    hostnameCell.inputTextField.secureTextEntry = NO;
-    hostnameCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
-    if (!hostnameCell.inputTextField.tag) {
-        self.fieldTagIdx++;
-        hostnameCell.inputTextField.tag = self.fieldTagIdx;
-    }
-    hostnameCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
-    
-    __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:hostnameCell
-                        forKeyPath:NSStringFromSelector(@selector(inputText))
-                           options:NSKeyValueObservingOptionNew
-                             block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 [strongSelf.loginModel updateHostNameEntry:change[NSKeyValueChangeNewKey]];
-                             }];
-    
-    return hostnameCell;
+    return credentialCell;
 }
 
 - (AFACredentialTextFieldTableViewCell *)dequeueEmailCellForTableView:(UITableView *)tableView
@@ -480,22 +505,9 @@ viewForHeaderInSection:(NSInteger)section {
     
     credentialCell.inputTextField.attributedPlaceholder = self.loginModel.usernameAttributedPlaceholderText;
     credentialCell.inputTextField.text = self.loginModel.username;
-    credentialCell.inputTextField.secureTextEntry = NO;
     credentialCell.inputTextField.keyboardType = UIKeyboardTypeEmailAddress;
-    if (!credentialCell.inputTextField.tag) {
-        self.fieldTagIdx++;
-        credentialCell.inputTextField.tag = self.fieldTagIdx;
-    }
-    credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
-    
-    __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:credentialCell
-                        forKeyPath:NSStringFromSelector(@selector(inputText))
-                           options:NSKeyValueObservingOptionNew
-                             block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 [strongSelf.loginModel updateUserNameEntry:change[NSKeyValueChangeNewKey]];
-                             }];
+    credentialCell.inputTextField.tag = AFALoginCredentialsFocusFieldOrderUsername;
+    [self registerStateHandlerForCredentialCell:credentialCell];
     
     return credentialCell;
 }
@@ -509,22 +521,10 @@ viewForHeaderInSection:(NSInteger)section {
     credentialCell.inputTextField.attributedPlaceholder = self.loginModel.passwordAttributedPlaceholderText;
     credentialCell.inputTextField.text = self.loginModel.password;
     credentialCell.inputTextField.secureTextEntry = YES;
-    credentialCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
-    if (!credentialCell.inputTextField.tag) {
-        self.fieldTagIdx++;
-        credentialCell.inputTextField.tag = self.fieldTagIdx;
-    }
+    credentialCell.inputTextField.tag = AFALoginCredentialsFocusFieldOrderPassword;
     credentialCell.inputTextField.returnKeyType = (AFALoginCredentialsTypeCloud == self.loginType) ? UIReturnKeyDone : UIReturnKeyNext;
     credentialCell.cellType = AFACredentialTextFieldCellTypeSecured;
-    
-    __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:credentialCell
-                        forKeyPath:NSStringFromSelector(@selector(inputText))
-                           options:NSKeyValueObservingOptionNew
-                             block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 [strongSelf.loginModel updatePasswordEntry:change[NSKeyValueChangeNewKey]];
-                             }];
+    [self registerStateHandlerForCredentialCell:credentialCell];
     
     return credentialCell;
 }
@@ -537,22 +537,10 @@ viewForHeaderInSection:(NSInteger)section {
     
     credentialCell.inputTextField.attributedPlaceholder = self.loginModel.portAttributedPlaceholderText;
     credentialCell.inputTextField.text = self.loginModel.port;
-    credentialCell.inputTextField.secureTextEntry = NO;
     credentialCell.inputTextField.keyboardType = UIKeyboardTypeNumberPad;
-    if (!credentialCell.inputTextField.tag) {
-        self.fieldTagIdx++;
-        credentialCell.inputTextField.tag = self.fieldTagIdx;
-    }
+    credentialCell.inputTextField.tag = AFALoginCredentialsFocusFieldOrderPort;
     credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
-    
-    __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:credentialCell
-                        forKeyPath:NSStringFromSelector(@selector(inputText))
-                           options:NSKeyValueObservingOptionNew
-                             block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 [strongSelf.loginModel updatePortEntry:change[NSKeyValueChangeNewKey]];
-                             }];
+    [self registerStateHandlerForCredentialCell:credentialCell];
     
     return credentialCell;
 }
@@ -564,24 +552,10 @@ viewForHeaderInSection:(NSInteger)section {
     credentialCell.delegate = self;
     
     credentialCell.inputTextField.attributedPlaceholder = self.loginModel.serviceDocumentAttributedPlaceholderText;
-    credentialCell.inputTextField.text = self.loginModel.serviceDocument;
-    credentialCell.inputTextField.secureTextEntry = NO;
-    credentialCell.inputTextField.keyboardType = UIKeyboardTypeDefault;
-    if (!credentialCell.inputTextField.tag) {
-        self.fieldTagIdx++;
-        credentialCell.inputTextField.tag = self.fieldTagIdx;
-    }
+    credentialCell.inputTextField.text =self.loginModel.serviceDocument;
+    credentialCell.inputTextField.tag = AFALoginCredentialsFocusFieldOrderServiceDocument;
     credentialCell.inputTextField.returnKeyType = UIReturnKeyDone;
-    credentialCell.cellType = AFACredentialTextFieldCellTypeUnsecured;
-    
-    __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:credentialCell
-                        forKeyPath:NSStringFromSelector(@selector(inputText))
-                           options:NSKeyValueObservingOptionNew
-                             block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 [strongSelf.loginModel updateServiceDocument:change[NSKeyValueChangeNewKey]];
-                             }];
+    [self registerStateHandlerForCredentialCell:credentialCell];
     
     return credentialCell;
 }

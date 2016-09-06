@@ -70,6 +70,14 @@ typedef NS_OPTIONS(NSUInteger, AFALoginCredentialEditing) {
     AFALoginCredentialEditingSecondField = 1<<1,
 };
 
+typedef NS_ENUM(NSInteger, AFALoginCredentialsFocusFieldOrder) {
+    AFALoginCredentialsFocusFieldOrderUsername = 0,
+    AFALoginCredentialsFocusFieldOrderPassword,
+    AFALoginCredentialsFocusFieldOrderHostname,
+    AFALoginCredentialsFocusFieldOrderPort,
+    AFALoginCredentialsFocusFieldOrderServiceDocument
+};
+
 @interface AFALoginCredentialsViewController : UIViewController
 
 @property (assign, nonatomic) AFALoginCredentialsType        loginType;
