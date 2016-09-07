@@ -32,9 +32,9 @@ PODS:
     - Fabric (~> 1.6.3)
   - Fabric (1.6.8)
   - JGProgressHUD (1.4)
-  - Mantle (2.0.5):
-    - Mantle/extobjc (= 2.0.5)
-  - Mantle/extobjc (2.0.5)
+  - Mantle (2.0.7):
+    - Mantle/extobjc (= 2.0.7)
+  - Mantle/extobjc (2.0.7)
 
 DEPENDENCIES:
   - AFNetworking (= 2.6.1)
@@ -50,7 +50,7 @@ SPEC CHECKSUMS:
   Crashlytics: 8601d9c74a4c4d28f3e7f408bf4c0e490c70e8b4
   Fabric: 5755268d0171435ab167e3d0878a28a777deaf10
   JGProgressHUD: 1617b0940cf80bb53e8f7d6f0fd69252ea45d6d4
-  Mantle: 1912395033f601de5adc8ee91e48f46e4c7051ad
+  Mantle: bc40bb061d8c2c6fb48d5083e04d928c3b7f73d9
 
 PODFILE CHECKSUM: 75099e9d4afb6280cf57d621173340d6bb37234f
 
