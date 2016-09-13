@@ -26,12 +26,6 @@
 #import "ASDKRequestOperationManager.h"
 #import "ASDKCSRFTokenStorage.h"
 
-typedef NS_ENUM(NSInteger, ASDKNetworkServiceResponseSerializerType) {
-    ASDKNetworkServiceResponseSerializerTypeJSON,
-    ASDKNetworkServiceResponseSerializerTypeImage,
-    ASDKNetworkServiceResponseSerializerTypeHTTP
-};
-
 typedef NS_ENUM(NSInteger, ASDKNetworkServiceRequestSerializerType) {
     ASDKNetworkServiceRequestSerializerTypeJSON,
     ASDKNetworkServiceRequestSerializerTypeHTTP,
@@ -53,7 +47,6 @@ typedef NS_ENUM(NSInteger, ASDKNetworkServiceRequestSerializerType) {
                           diskServices:(ASDKDiskServices *)diskServices
                           resultsQueue:(dispatch_queue_t)resultsQueue;
 
-- (AFHTTPResponseSerializer *)responseSerializerOfType:(ASDKNetworkServiceResponseSerializerType)serializerType;
 - (AFHTTPRequestSerializer *)requestSerializerOfType:(ASDKNetworkServiceRequestSerializerType)serializerType;
 - (void)configureWithCSRFTokenStorage:(ASDKCSRFTokenStorage *)tokenStorage;
 

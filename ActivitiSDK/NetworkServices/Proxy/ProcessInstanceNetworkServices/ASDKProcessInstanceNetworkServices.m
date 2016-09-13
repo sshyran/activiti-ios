@@ -17,11 +17,19 @@
  ******************************************************************************/
 
 #import "ASDKProcessInstanceNetworkServices.h"
-#import "ASDKLogConfiguration.h"
-#import "ASDKFilterRequestRepresentation.h"
-#import "ASDKStartProcessRequestRepresentation.h"
+
+// Constants
 #import "ASDKNetworkServiceConstants.h"
 #import "ASDKDiskServicesConstants.h"
+#import "ASDKLogConfiguration.h"
+
+// Categories
+#import "NSURLSessionTask+ASDKAdditions.h"
+
+// Model
+#import "ASDKFilterRequestRepresentation.h"
+#import "ASDKStartProcessRequestRepresentation.h"
+
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -57,55 +65,48 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
-    
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[self.servicePathFactory processInstancesListServicePath]
                             parameters:[filter jsonDictionary]
-                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                              progress:nil
+                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
                                    // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
+                                   [strongSelf.networkOperations removeObject:dataTask];
                                    
                                    NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-                                   ASDKLogVerbose(@"Process instance list fetched successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                                                  operation.request.HTTPMethod,
-                                                  operation.request.URL.absoluteString,
-                                                  [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                  responseDictionary);
+                                   ASDKLogVerbose(@"Process instance list fetched successfully for request: %@",
+                                                  [task stateDescriptionForResponse:responseDictionary]);
                                    
                                    // Parse response data
-                                   [self.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                ofType:CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceList)
-                                                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                                       if (error) {
-                                                                           ASDKLogError(@"Error parsing process instance list. Description:%@", error.localizedDescription);
-                                                                           
-                                                                           dispatch_async(self.resultsQueue, ^{
-                                                                               completionBlock(nil, error, nil);
-                                                                           });
-                                                                       } else {
-                                                                           NSArray *processInstanceList = (NSArray *)parsedObject;
-                                                                           ASDKLogVerbose(@"Successfully parsed model object:%@", processInstanceList);
-                                                                           
-                                                                           dispatch_async(self.resultsQueue, ^{
-                                                                               completionBlock(processInstanceList, nil, paging);
-                                                                           });
-                                                                       }
-                                                                   }];
-                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                   NSString *parserContentType = CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceList);
+                                   
+                                   [self.parserOperationManager
+                                    parseContentDictionary:responseDictionary
+                                    ofType:parserContentType
+                                    withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                        if (error) {
+                                            ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
+                                            dispatch_async(self.resultsQueue, ^{
+                                                completionBlock(nil, error, nil);
+                                            });
+                                        } else {
+                                            ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
+                                            dispatch_async(self.resultsQueue, ^{
+                                                completionBlock(parsedObject, nil, paging);
+                                            });
+                                        }
+                                    }];
+                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
                                    // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
+                                   [strongSelf.networkOperations removeObject:dataTask];
                                    
-                                   ASDKLogError(@"Failed to fetch process instance list for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                                operation.request.HTTPMethod,
-                                                operation.request.URL.absoluteString,
-                                                [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                error.localizedDescription);
+                                   ASDKLogError(@"Failed to fetch process instance list for request: %@",
+                                                [task stateDescriptionForError:error]);
                                    
                                    dispatch_async(self.resultsQueue, ^{
                                        completionBlock(nil, error, nil);
@@ -113,7 +114,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)startProcessInstanceWithStartProcessRequestRepresentation:(ASDKStartProcessRequestRepresentation *)request
@@ -124,55 +125,48 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
-    
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[self.servicePathFactory startProcessInstanceServicePath]
                             parameters:[request jsonDictionary]
-                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                              progress:nil
+                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
                                    // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
+                                   [strongSelf.networkOperations removeObject:dataTask];
                                    
                                    NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-                                   ASDKLogVerbose(@"Process instance started successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                                                  operation.request.HTTPMethod,
-                                                  operation.request.URL.absoluteString,
-                                                  [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                  responseDictionary);
+                                   ASDKLogVerbose(@"Process instance started successfully for request: %@",
+                                                  [task stateDescriptionForResponse:responseDictionary]);
                                    
                                    // Parse response data
-                                   [self.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                ofType:CREATE_STRING(ASDKProcessParserContentTypeStartProcessInstance)
-                                                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                                       if (error) {
-                                                                           ASDKLogError(@"Error parsing process instance. Description:%@", error.localizedDescription);
-                                                                           
-                                                                           dispatch_async(self.resultsQueue, ^{
-                                                                               completionBlock(nil, error);
-                                                                           });
-                                                                       } else {
-                                                                           ASDKModelProcessInstance *startedProcessInstance = (ASDKModelProcessInstance *)parsedObject;
-                                                                           ASDKLogVerbose(@"Successfully parsed model object:%@", startedProcessInstance);
-                                                                           
-                                                                           dispatch_async(self.resultsQueue, ^{
-                                                                               completionBlock(startedProcessInstance, nil);
-                                                                           });
-                                                                       }
-                                                                   }];
-                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                   NSString *parserContentType = CREATE_STRING(ASDKProcessParserContentTypeStartProcessInstance);
+                                   
+                                   [self.parserOperationManager
+                                    parseContentDictionary:responseDictionary
+                                    ofType:parserContentType
+                                    withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                        if (error) {
+                                            ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
+                                            dispatch_async(self.resultsQueue, ^{
+                                                completionBlock(nil, error);
+                                            });
+                                        } else {
+                                            ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
+                                            dispatch_async(self.resultsQueue, ^{
+                                                completionBlock(parsedObject, nil);
+                                            });
+                                        }
+                                    }];
+                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
                                    // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
+                                   [strongSelf.networkOperations removeObject:dataTask];
                                    
-                                   ASDKLogError(@"Failed to start process instance for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                                operation.request.HTTPMethod,
-                                                operation.request.URL.absoluteString,
-                                                [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                error.localizedDescription);
+                                   ASDKLogError(@"Failed to start process instance for request: %@",
+                                                [task stateDescriptionForError:error]);
                                    
                                    dispatch_async(self.resultsQueue, ^{
                                        completionBlock(nil, error);
@@ -180,7 +174,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)fetchProcessInstanceDetailsForID:(NSString *)processInstanceID
@@ -189,63 +183,57 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
-    
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceDetailsServicePathFormat], processInstanceID]
-                            parameters:nil
-                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                   __strong typeof(self) strongSelf = weakSelf;
-                                   
-                                   // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
-                                   
-                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-                                   ASDKLogVerbose(@"Process instance details fetched successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                                                  operation.request.HTTPMethod,
-                                                  operation.request.URL.absoluteString,
-                                                  [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                  responseDictionary);
-                                   
-                                   // Parse response data
-                                   [self.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                ofType:CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceDetails)
-                                                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                                       if (error) {
-                                                                           ASDKLogError(@"Error parsing model. Description:%@", error.localizedDescription);
-                                                                           
-                                                                           dispatch_async(self.resultsQueue, ^{
-                                                                               completionBlock(nil, error);
-                                                                           });
-                                                                       } else {
-                                                                           ASDKModelProcessInstance *processInstanceDetails = (ASDKModelProcessInstance *)parsedObject;
-                                                                           ASDKLogVerbose(@"Successfully parsed model object:%@", processInstanceDetails);
-                                                                           
-                                                                           dispatch_async(self.resultsQueue, ^{
-                                                                               completionBlock(processInstanceDetails, nil);
-                                                                           });
-                                                                       }
-                                                                   }];
-                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                   __strong typeof(self) strongSelf = weakSelf;
-                                   
-                                   // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
-                                   
-                                   ASDKLogError(@"Failed to fetch process instance details for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                                operation.request.HTTPMethod,
-                                                operation.request.URL.absoluteString,
-                                                [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                error.localizedDescription);
-                                   
-                                   dispatch_async(self.resultsQueue, ^{
-                                       completionBlock(nil, error);
-                                   });
-                               }];
+                           parameters:nil
+                             progress:nil
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:dataTask];
+                                  
+                                  NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                                  ASDKLogVerbose(@"Process instance details fetched successfully for request: %@",
+                                                 [task stateDescriptionForResponse:responseDictionary]);
+                                  
+                                  // Parse response data
+                                  NSString *parserContentType = CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceDetails);
+                                  
+                                  [self.parserOperationManager
+                                   parseContentDictionary:responseDictionary
+                                   ofType:parserContentType
+                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                       if (error) {
+                                           ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
+                                           dispatch_async(self.resultsQueue, ^{
+                                               completionBlock(nil, error);
+                                           });
+                                       } else {
+                                           ASDKModelProcessInstance *processInstanceDetails = (ASDKModelProcessInstance *)parsedObject;
+                                           ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
+                                           dispatch_async(self.resultsQueue, ^{
+                                               completionBlock(processInstanceDetails, nil);
+                                           });
+                                       }
+                                   }];
+                              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:dataTask];
+                                  
+                                  ASDKLogError(@"Failed to fetch process instance details for request: %@",
+                                               [task stateDescriptionForError:error]);
+                                  
+                                  dispatch_async(self.resultsQueue, ^{
+                                      completionBlock(nil, error);
+                                  });
+                              }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)fetchProcesInstanceContentForProcessInstanceID:(NSString *)processInstanceID
@@ -255,55 +243,48 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
-    
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceContentServicePathFormat], processInstanceID]
                            parameters:nil
-                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                             progress:nil
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
+                                  [strongSelf.networkOperations removeObject:dataTask];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-                                  ASDKLogVerbose(@"Process instance content fetched successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                                                 operation.request.HTTPMethod,
-                                                 operation.request.URL.absoluteString,
-                                                 [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                 responseDictionary);
+                                  ASDKLogVerbose(@"Process instance content fetched successfully for request: %@",
+                                                 [task stateDescriptionForResponse:responseDictionary]);
                                   
                                   // Parse response data
-                                  [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                     ofType:CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceContent)
-                                                                        withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                                            if (error) {
-                                                                                ASDKLogError(@"Error parsing model. Description:%@", error.localizedDescription);
-                                                                                
-                                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                    completionBlock(nil, error);
-                                                                                });
-                                                                            } else {
-                                                                                NSArray *contentList = (NSArray *)parsedObject;
-                                                                                ASDKLogVerbose(@"Successfully parsed model object:%@", contentList);
-                                                                                
-                                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                    completionBlock(contentList, nil);
-                                                                                });
-                                                                            }
-                                                                        }];
-                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  NSString *parserContentType = CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceContent);
+                                  
+                                  [strongSelf.parserOperationManager
+                                   parseContentDictionary:responseDictionary
+                                   ofType:parserContentType
+                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                       if (error) {
+                                           ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
+                                           dispatch_async(weakSelf.resultsQueue, ^{
+                                               completionBlock(nil, error);
+                                           });
+                                       } else {
+                                           ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
+                                           dispatch_async(weakSelf.resultsQueue, ^{
+                                               completionBlock(parsedObject, nil);
+                                           });
+                                       }
+                                   }];
+                              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
+                                  [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  ASDKLogError(@"Failed to fetch process instance content for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                               operation.request.HTTPMethod,
-                                               operation.request.URL.absoluteString,
-                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                               error.localizedDescription);
+                                  ASDKLogError(@"Failed to fetch process instance content for request: %@",
+                                               [task stateDescriptionForError:error]);
                                   
                                   dispatch_async(strongSelf.resultsQueue, ^{
                                       completionBlock(nil, error);
@@ -311,7 +292,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)fetchProcessInstanceCommentsForProcessInstanceID:(NSString *)processInstanceID
@@ -321,55 +302,48 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
-    
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceCommentServicePathFormat], processInstanceID]
                            parameters:nil
-                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                             progress:nil
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
+                                  [strongSelf.networkOperations removeObject:dataTask];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-                                  ASDKLogVerbose(@"Process instance comments fetched successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                                                 operation.request.HTTPMethod,
-                                                 operation.request.URL.absoluteString,
-                                                 [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                 responseDictionary);
+                                  ASDKLogVerbose(@"Process instance comments fetched successfully for request: %@",
+                                                 [task stateDescriptionForResponse:responseDictionary]);
                                   
                                   // Parse response data
-                                  [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                     ofType:CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceComments)
-                                                                        withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                                            if (error) {
-                                                                                ASDKLogError(@"Error parsing process instance comments. Description:%@", error.localizedDescription);
-                                                                                
-                                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                    completionBlock(nil, error, nil);
-                                                                                });
-                                                                            } else {
-                                                                                NSArray *commentList = (NSArray *)parsedObject;
-                                                                                ASDKLogVerbose(@"Successfully parsed model object:%@", commentList);
-                                                                                
-                                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                    completionBlock(commentList, nil, paging);
-                                                                                });
-                                                                            }
-                                                                        }];
-                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  NSString *parserContentType = CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceComments);
+                                  
+                                  [strongSelf.parserOperationManager
+                                   parseContentDictionary:responseDictionary
+                                   ofType:parserContentType
+                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                       if (error) {
+                                           ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
+                                           dispatch_async(weakSelf.resultsQueue, ^{
+                                               completionBlock(nil, error, nil);
+                                           });
+                                       } else {
+                                           ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
+                                           dispatch_async(weakSelf.resultsQueue, ^{
+                                               completionBlock(parsedObject, nil, paging);
+                                           });
+                                       }
+                                   }];
+                              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
+                                  [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  ASDKLogError(@"Failed to fetch process instance comments for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                               operation.request.HTTPMethod,
-                                               operation.request.URL.absoluteString,
-                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                               error.localizedDescription);
+                                  ASDKLogError(@"Failed to fetch process instance comments for request: %@",
+                                               [task stateDescriptionForError:error]);
                                   
                                   dispatch_async(strongSelf.resultsQueue, ^{
                                       completionBlock(nil, error, nil);
@@ -377,7 +351,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)createComment:(NSString *)comment
@@ -389,54 +363,48 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
-    
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory processInstanceCommentServicePathFormat], processInstanceID]
                             parameters:@{kASDKAPIMessageParameter : comment}
-                               success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                              progress:nil
+                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
                                    // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
+                                   [strongSelf.networkOperations removeObject:dataTask];
                                    
                                    NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-                                   ASDKLogVerbose(@"Comment created successfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                                                  operation.request.HTTPMethod,
-                                                  operation.request.URL.absoluteString,
-                                                  [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                  responseDictionary);
+                                   ASDKLogVerbose(@"Comment created successfully for request: %@",
+                                                  [task stateDescriptionForResponse:responseDictionary]);
                                    
                                    // Parse response data
-                                   [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                      ofType:CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceComment)
-                                                                         withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                                             if (error) {
-                                                                                 ASDKLogError(@"Error parsing task. Description:%@", error.localizedDescription);
-                                                                                 
-                                                                                 dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                     completionBlock(nil, error);
-                                                                                 });
-                                                                             } else {
-                                                                                 ASDKLogVerbose(@"Successfully parsed model object:%@", parsedObject);
-                                                                                 
-                                                                                 dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                     completionBlock(parsedObject, nil);
-                                                                                 });
-                                                                             }
-                                                                         }];
-                               } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                   NSString *parserContentType = CREATE_STRING(ASDKProcessParserContentTypeProcessInstanceComment);
+                                   
+                                   [strongSelf.parserOperationManager
+                                    parseContentDictionary:responseDictionary
+                                    ofType:parserContentType
+                                    withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                        if (error) {
+                                            ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
+                                            dispatch_async(weakSelf.resultsQueue, ^{
+                                                completionBlock(nil, error);
+                                            });
+                                        } else {
+                                            ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
+                                            dispatch_async(weakSelf.resultsQueue, ^{
+                                                completionBlock(parsedObject, nil);
+                                            });
+                                        }
+                                    }];
+                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
                                    // Remove operation reference
-                                   [strongSelf.networkOperations removeObject:operation];
+                                   [strongSelf.networkOperations removeObject:dataTask];
                                    
-                                   ASDKLogError(@"Failed to create process instance comment for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                                operation.request.HTTPMethod,
-                                                operation.request.URL.absoluteString,
-                                                [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                error.localizedDescription);
+                                   ASDKLogError(@"Failed to create process instance comment for request: %@",
+                                                [task stateDescriptionForError:error]);
                                    
                                    dispatch_async(strongSelf.resultsQueue, ^{
                                        completionBlock(nil, error);
@@ -444,7 +412,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)deleteProcessInstanceWithID:(NSString *)processInstanceID
@@ -452,50 +420,43 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Check mandatory properties
     NSParameterAssert(processInstanceID);
     NSParameterAssert(completionBlock);
-    
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
+    NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager DELETE:[NSString stringWithFormat:[self.servicePathFactory processInstanceDetailsServicePathFormat], processInstanceID]
                               parameters:nil
-                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                 success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                      __strong typeof(self) strongSelf = weakSelf;
                                      
                                      // Remove operation reference
-                                     [strongSelf.networkOperations removeObject:operation];
+                                     [strongSelf.networkOperations removeObject:dataTask];
                                      
                                      // Check status code
-                                     if (ASDKHTTPCode200OK == operation.response.statusCode) {
-                                         ASDKLogVerbose(@"The process instance was deleted successfully for request: %@ - %@.\nResponse:%@",
-                                                        operation.request.HTTPMethod,
-                                                        operation.request.URL.absoluteString,
-                                                        [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                     NSInteger statusCode = [task statusCode];
+                                     if (ASDKHTTPCode200OK == statusCode) {
+                                         ASDKLogVerbose(@"The process instance was deleted successfully for request: %@",
+                                                        [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
                                          
                                          dispatch_async(strongSelf.resultsQueue, ^{
                                              completionBlock(YES, nil);
                                          });
                                      } else {
-                                         ASDKLogVerbose(@"Failed to delete process instance for request: %@ - %@.\nResponse:%@",
-                                                        operation.request.HTTPMethod,
-                                                        operation.request.URL.absoluteString,
-                                                        [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
+                                         ASDKLogError(@"Failed to delete process instance for request: %@",
+                                                      [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
                                          
                                          dispatch_async(strongSelf.resultsQueue, ^{
                                              completionBlock(NO, nil);
                                          });
                                      }
-                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                      __strong typeof(self) strongSelf = weakSelf;
                                      
                                      // Remove operation reference
-                                     [strongSelf.networkOperations removeObject:operation];
+                                     [strongSelf.networkOperations removeObject:dataTask];
                                      
-                                     ASDKLogError(@"Failed to delete process instance for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                                  operation.request.HTTPMethod,
-                                                  operation.request.URL.absoluteString,
-                                                  [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                                  error.localizedDescription);
+                                     ASDKLogError(@"Failed to delete process instance for request: %@",
+                                                  [task stateDescriptionForError:error]);
                                      
                                      dispatch_async(strongSelf.resultsQueue, ^{
                                          completionBlock(NO, error);
@@ -503,7 +464,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                  }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
@@ -531,76 +492,83 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         return;
     }
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeHTTP];
+    NSString *urlString = [[NSURL URLWithString:[NSString stringWithFormat:[self.servicePathFactory processInstanceAuditLogServicePathFormat], processInstanceID] relativeToURL:self.requestOperationManager.baseURL] absoluteString];
+    NSError *downloadRequestError = nil;
+    NSURLRequest *downloadRequest =
+    [self.requestOperationManager.requestSerializer requestWithMethod:@"GET"
+                                                            URLString:urlString
+                                                           parameters:nil
+                                                                error:&downloadRequestError];
+    if (downloadRequestError) {
+        ASDKLogError(@"Cannot create request to download content. Reason:%@", downloadRequestError.localizedDescription);
+        dispatch_async(self.resultsQueue, ^{
+            completionBlock(nil, NO, downloadRequestError);
+        });
+        return;
+    }
     
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
-    [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceAuditLogServicePathFormat], processInstanceID]
-                           parameters:nil
-                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                  __strong typeof(self) strongSelf = weakSelf;
-                                  
-                                  // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
-                                  
-                                  // Check status code
-                                  if (ASDKHTTPCode200OK == operation.response.statusCode) {
-                                      ASDKLogVerbose(@"The audit log content was successfully downloaded with request: %@ - %@.\nResponse:%@",
-                                                     operation.request.HTTPMethod,
-                                                     operation.request.URL.absoluteString,
-                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
-                                      
-                                      dispatch_async(strongSelf.resultsQueue, ^{
-                                          NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];
-                                          completionBlock(downloadURL, NO, nil);
-                                      });
-                                  } else {
-                                      ASDKLogVerbose(@"The audit log content failed to download with request: %@ - %@.\nResponse:%@",
-                                                     operation.request.HTTPMethod,
-                                                     operation.request.URL.absoluteString,
-                                                     [NSHTTPURLResponse localizedStringForStatusCode:operation.response.statusCode]);
-                                      
-                                      dispatch_async(strongSelf.resultsQueue, ^{
-                                          completionBlock(nil, NO, nil);
-                                      });
-                                  }
-                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                  __strong typeof(self) strongSelf = weakSelf;
-                                  
-                                  // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
-                                  
-                                  ASDKLogError(@"Failed to download audit log content with request: %@ - %@.\nBody:%@.\nReason:%@",
-                                               operation.request.HTTPMethod,
-                                               operation.request.URL.absoluteString,
-                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                               error.localizedDescription);
-                                  
-                                  dispatch_async(strongSelf.resultsQueue, ^{
-                                      completionBlock(nil, NO, error);
-                                  });
-                              }];
-    
-    // Set the output file stream
-    // NOTE: output stream size checks are taken care of by AFNetworking which will call the failure block of the
-    // request operation
-    operation.outputStream = [NSOutputStream outputStreamWithURL:[NSURL fileURLWithPath:downloadPathForContent]
-                                                          append:NO];
-    [operation.outputStream open];
+    NSURLSessionDownloadTask *downloadTask =
+    [self.requestOperationManager downloadTaskWithRequest:downloadRequest
+                                                 progress:nil
+                                              destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+                                                  return [NSURL fileURLWithPath:downloadPathForContent];
+                                              } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                                                  __strong typeof(self) strongSelf = weakSelf;
+                                                  
+                                                  // Remove operation reference
+                                                  [strongSelf.networkOperations removeObject:downloadTask];
+                                                  
+                                                  if (!error) {
+                                                      // Check status code
+                                                      NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+                                                      if (ASDKHTTPCode200OK == statusCode) {
+                                                          ASDKLogVerbose(@"The audit log content was successfully downloaded with request: %@",
+                                                                         [downloadTask stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+                                                          
+                                                          dispatch_async(strongSelf.resultsQueue, ^{
+                                                              NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForContent];
+                                                              completionBlock(downloadURL, NO, nil);
+                                                          });
+                                                      } else {
+                                                          ASDKLogVerbose(@"The audit log content failed to download with request: %@",
+                                                                         [downloadTask stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+                                                          
+                                                          dispatch_async(strongSelf.resultsQueue, ^{
+                                                              completionBlock(nil, NO, nil);
+                                                          });
+                                                      }
+                                                  } else {
+                                                      ASDKLogError(@"Failed to download audit log content with request: %@ - %@.\nBody:%@.\nReason:%@",
+                                                                   downloadRequest.HTTPMethod,
+                                                                   downloadRequest.URL.absoluteString,
+                                                                   [[NSString alloc] initWithData:downloadRequest.HTTPBody encoding:NSUTF8StringEncoding],
+                                                                   error.localizedDescription);
+                                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                                          completionBlock(nil, NO, error);
+                                                      });
+                                                  }
+                                              }];
     
     // If a progress block is provided report transfer progress information
     if (progressBlock) {
-        [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        [self.requestOperationManager setDownloadTaskDidWriteDataBlock:^(NSURLSession * _Nonnull session,
+                                                                         NSURLSessionDownloadTask * _Nonnull downloadTask,
+                                                                         int64_t bytesWritten,
+                                                                         int64_t totalBytesWritten,
+                                                                         int64_t totalBytesExpectedToWrite) {
             __strong typeof(self) strongSelf = weakSelf;
             
             dispatch_async(strongSelf.resultsQueue, ^{
-                progressBlock([weakSelf.diskServices sizeStringForByteCount:totalBytesRead] , nil);
+                progressBlock([weakSelf.diskServices sizeStringForByteCount:totalBytesWritten] , nil);
             });
         }];
     }
     
+    [downloadTask resume];
+    
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:downloadTask];
 }
 
 - (void)cancelAllTaskNetworkOperations {

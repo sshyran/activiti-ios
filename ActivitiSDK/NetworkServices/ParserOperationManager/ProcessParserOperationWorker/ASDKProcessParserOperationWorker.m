@@ -17,12 +17,16 @@
  ******************************************************************************/
 
 #import "ASDKProcessParserOperationWorker.h"
+
+// Constants
+#import "ASDKNetworkServiceConstants.h"
+
+// Model
 #import "ASDKModelPaging.h"
 #import "ASDKModelProcessDefinition.h"
 #import "ASDKModelProcessInstance.h"
 #import "ASDKModelProcessInstanceContent.h"
 #import "ASDKModelComment.h"
-#import "ASDKAPIJSONKeyParams.h"
 
 @import Mantle;
 

@@ -46,6 +46,15 @@ extern NSString *kASDKAPIServiceIDAlfrescoCloud;
 extern NSString *kASDKAPIServiceIDBox;
 extern NSString *kASDKAPIServiceIDGoogleDrive;
 
+// Network API response formats
+extern NSString *kASDKAPISuccessfulResponseFormat;
+extern NSString *kASDKAPIFailedResponseFormat;
+extern NSString *kASDKAPIResponseFormat;
+
+// Parser manager status formats
+extern NSString *kASDKAPIParserManagerConversionErrorFormat;
+extern NSString *kASDKAPIParserManagerConversionFormat;
+
 // Reachability constants
 extern NSString *kASDKAPINetworkServiceNoInternetConnection;
 extern NSString *kASDKAPINetworkServiceInternetConnectionAvailable;
@@ -57,4 +66,11 @@ extern NSString *kASDKAPIIconNameQueued;
 extern NSString *kASDKAPIIconNameCompleted;
 extern NSString *kASDKAPIIconNameRunning;
 extern NSString *kASDKAPIIconNameAll;
+
+// Filter keys
+extern NSString * const kASDKAPIJSONKeyData;
+extern NSString * const kASDKAPIJSONKeyName;
+extern NSString * const kASDKAPIJSONKeyFilter;
+extern NSString * const kASDKAPIJSONKeyID;
+extern NSString * const kASDKAPIJSONKeyContent;
 

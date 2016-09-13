@@ -17,9 +17,13 @@
  ******************************************************************************/
 
 #import "ASDKUserParserOperationWorker.h"
+
+// Constants
+#import "ASDKNetworkServiceConstants.h"
+
+// Model
 #import "ASDKModelPaging.h"
 #import "ASDKModelUser.h"
-#import "ASDKAPIJSONKeyParams.h"
 
 @import Mantle;
 

@@ -6,7 +6,7 @@ def shared_pods
 	pod 'CocoaLumberjack'
 	pod 'Mantle'
 	pod 'JGProgressHUD'
-	pod 'AFNetworking', '~> 2.0'
+	pod 'AFNetworking'
 end
 
 abstract_target 'Shared' do

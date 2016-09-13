@@ -17,7 +17,15 @@
  ******************************************************************************/
 
 #import "ASDKAppNetworkServices.h"
+
+// Constants
 #import "ASDKLogConfiguration.h"
+#import "ASDKNetworkServiceConstants.h"
+
+// Categories
+#import "NSURLSessionTask+ASDKAdditions.h"
+
+// Model
 #import "ASDKFilterRequestRepresentation.h"
 
 #if ! __has_feature(objc_arc)
@@ -53,55 +61,47 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    self.requestOperationManager.responseSerializer = [self responseSerializerOfType:ASDKNetworkServiceResponseSerializerTypeJSON];
-    
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperation *operation =
+    NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[self.servicePathFactory runtimeAppDefinitionsServicePath]
                            parameters:nil
-                              success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                             progress:nil
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
+                                  [strongSelf.networkOperations removeObject:dataTask];
                                   
                                   NSDictionary *responseDictionary = (NSDictionary *)responseObject;
-                                  ASDKLogVerbose(@"Runtime app definitions fetched succesfully for request: %@ - %@.\nBody:%@.\nResponse:%@",
-                                                 operation.request.HTTPMethod,
-                                                 operation.request.URL.absoluteString,
-                                                 [[NSString alloc] initWithData:operation.request.HTTPBody
-                                                                       encoding:NSUTF8StringEncoding],
-                                                 responseDictionary);
+                                  ASDKLogVerbose(@"Runtime app definitions fetched succesfully for request: %@",
+                                                 [task stateDescriptionForResponse:responseDictionary]);
                                   
                                   // Parse response data
-                                  [strongSelf.parserOperationManager parseContentDictionary:responseDictionary
-                                                                                     ofType:CREATE_STRING(ASDKAppParserContentTypeRuntimeAppDefinitionsList)
-                                                                        withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
-                                                                            if (error) {
-                                                                                ASDKLogError(@"Error parsing runtime app definition list. Description:%@", error.localizedDescription);
-                                                                                
-                                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                    completionBlock(nil, error, paging);
-                                                                                });
-                                                                            } else {
-                                                                                ASDKLogVerbose(@"Successfully parsed model object:%@", parsedObject);
-                                                                                
-                                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                                    completionBlock(parsedObject, nil, paging);
-                                                                                });
-                                                                            }
-                                                                        }];
-                              } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                  NSString *parserContentType = CREATE_STRING(ASDKAppParserContentTypeRuntimeAppDefinitionsList);
+                                  [strongSelf.parserOperationManager
+                                   parseContentDictionary:responseDictionary
+                                   ofType:parserContentType
+                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
+                                       if (error) {
+                                           ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
+                                           dispatch_async(weakSelf.resultsQueue, ^{
+                                               completionBlock(nil, error, paging);
+                                           });
+                                       } else {
+                                           ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
+                                           dispatch_async(weakSelf.resultsQueue, ^{
+                                               completionBlock(parsedObject, nil, paging);
+                                           });
+                                       }
+                                   }];
+                              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
-                                  [strongSelf.networkOperations removeObject:operation];
+                                  [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  ASDKLogError(@"Failed to fetch runtime app definition list for request: %@ - %@.\nBody:%@.\nReason:%@",
-                                               operation.request.HTTPMethod,
-                                               operation.request.URL.absoluteString,
-                                               [[NSString alloc] initWithData:operation.request.HTTPBody encoding:NSUTF8StringEncoding],
-                                               error.localizedDescription);
+                                  ASDKLogError(@"Failed to fetch runtime app definition list for request: %@",
+                                               [task stateDescriptionForError:error]);
                                   
                                   dispatch_async(strongSelf.resultsQueue, ^{
                                       completionBlock(nil, error, nil);
@@ -110,7 +110,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               }];
     
     // Keep network operation reference to be able to cancel it
-    [self.networkOperations addObject:operation];
+    [self.networkOperations addObject:dataTask];
 }
 
 - (void)cancelAllAppNetworkOperations {
