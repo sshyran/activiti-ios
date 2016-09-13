@@ -25,7 +25,6 @@
 
 @interface ASDKNetworkService()
 
-@property (strong, nonatomic) NSDictionary *responseSerializersDict;
 @property (strong, nonatomic) NSDictionary *requestSerializersDict;
 
 @end
@@ -53,9 +52,11 @@
         self.diskServices = diskServices;
         self.resultsQueue = resultsQueue;
         
-        self.responseSerializersDict = @{@(ASDKNetworkServiceResponseSerializerTypeJSON) : [AFJSONResponseSerializer serializer],
-                                         @(ASDKNetworkServiceResponseSerializerTypeImage): [AFImageResponseSerializer serializer],
-                                         @(ASDKNetworkServiceResponseSerializerTypeHTTP) : [AFHTTPResponseSerializer serializer]};
+        AFCompoundResponseSerializer *compoundResponseSerializer =[AFCompoundResponseSerializer compoundSerializerWithResponseSerializers:
+                                                                   @[[AFJSONResponseSerializer serializer],
+                                                                     [AFImageResponseSerializer serializer],
+                                                                     [AFHTTPResponseSerializer serializer]]];
+        self.requestOperationManager.responseSerializer = compoundResponseSerializer;
         
         AFJSONRequestSerializer *jsonRequestSerializer = [AFJSONRequestSerializer serializer];
         AFHTTPRequestSerializer *httpRequestSerializer = [AFHTTPRequestSerializer serializer];
@@ -69,10 +70,6 @@
 
 #pragma mark - 
 #pragma mark Public interface
-
-- (AFHTTPResponseSerializer *)responseSerializerOfType:(ASDKNetworkServiceResponseSerializerType)serializerType {
-    return self.responseSerializersDict[@(serializerType)];
-}
 
 - (AFHTTPRequestSerializer *)requestSerializerOfType:(ASDKNetworkServiceRequestSerializerType)serializerType {
     return self.requestSerializersDict[@(serializerType)];

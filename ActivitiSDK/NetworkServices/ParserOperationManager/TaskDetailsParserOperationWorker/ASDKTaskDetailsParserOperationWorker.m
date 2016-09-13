@@ -17,13 +17,17 @@
  ******************************************************************************/
 
 #import "ASDKTaskDetailsParserOperationWorker.h"
+
+// Constants
+#import "ASDKNetworkServiceConstants.h"
+
+// Model
 #import "ASDKModelProfile.h"
 #import "ASDKModelTask.h"
 #import "ASDKModelPaging.h"
 #import "ASDKModelFilter.h"
 #import "ASDKModelContent.h"
 #import "ASDKModelComment.h"
-#import "ASDKAPIJSONKeyParams.h"
 @import Mantle;
 
 #if ! __has_feature(objc_arc)

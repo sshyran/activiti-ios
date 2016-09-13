@@ -20,7 +20,7 @@
 
 // Constants
 #import "ASDKLogConfiguration.h"
-#import "ASDKAPIJSONKeyParams.h"
+#import "ASDKNetworkServiceConstants.h"
 
 // Models
 #import "ASDKModelPaging.h"

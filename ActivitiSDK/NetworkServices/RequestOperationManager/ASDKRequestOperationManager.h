@@ -20,7 +20,7 @@
 
 @class AFHTTPRequestSerializer;
 
-@interface ASDKRequestOperationManager : AFHTTPRequestOperationManager
+@interface ASDKRequestOperationManager : AFHTTPSessionManager
 
 - (instancetype)initWithBaseURL:(NSURL *)url
          authenticationProvider:(AFHTTPRequestSerializer *)authenticationProvider;

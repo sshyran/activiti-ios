@@ -23,7 +23,7 @@
 @protocol ASDKNetworkServiceProtocol <NSObject>
 
 @required
-@property (strong, nonatomic) AFHTTPRequestOperationManager *requestOperationManager;
+@property (strong, nonatomic) AFHTTPSessionManager *requestOperationManager;
 @property (strong, nonatomic) ASDKParserOperationManager *parserOperationManager;
 @property (strong, nonatomic) dispatch_queue_t resultsQueue;
 

@@ -57,6 +57,20 @@ NSString *kASDKAPIServiceIDGoogleDrive                          = @"google-drive
 
 
 #pragma mark -
+#pragma mark Network API response formats
+
+NSString *kASDKAPISuccessfulResponseFormat                      = @"Response: %@";
+NSString *kASDKAPIFailedResponseFormat                          = @"Error: %@";
+NSString *kASDKAPIResponseFormat                                = @"%@ - %@\nBody: %@\n";
+
+
+#pragma mark -
+#pragma mark Parser manager status formats
+NSString *kASDKAPIParserManagerConversionErrorFormat            = @"Error parsing model object of type:%@. Reason:%@";
+NSString *kASDKAPIParserManagerConversionFormat                 = @"Successfully parsed model object of type:%@. Content:%@";
+
+
+#pragma mark -
 #pragma mark Reachability constants
 
 NSString *kASDKAPINetworkServiceNoInternetConnection            = @"NetworkServiceNoInternetConnection";
@@ -72,3 +86,13 @@ NSString *kASDKAPIIconNameQueued                                = @"glyphicon-re
 NSString *kASDKAPIIconNameCompleted                             = @"glyphicon-ok-sign";
 NSString *kASDKAPIIconNameRunning                               = @"glyphicon-random";
 NSString *kASDKAPIIconNameAll                                   = @"glyphicon-th";
+
+
+#pragma mark -
+#pragma makr Filter keys
+
+NSString * const kASDKAPIJSONKeyData                = @"data";
+NSString * const kASDKAPIJSONKeyName                = @"name";
+NSString * const kASDKAPIJSONKeyFilter              = @"filter";
+NSString * const kASDKAPIJSONKeyID                  = @"id";
+NSString * const kASDKAPIJSONKeyContent             = @"content";
