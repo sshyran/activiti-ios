@@ -28,6 +28,8 @@
 #pragma mark Life cycle
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.descriptionLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenDescriptionText, @"Description text");
     self.iconImageView.tintColor = [UIColor disabledControlColor];
 }

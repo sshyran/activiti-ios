@@ -62,23 +62,26 @@
     NSMutableString *result = [NSMutableString string];
     while (result.length != length) {
         NSMutableData *data = [NSMutableData dataWithLength:1];
-        SecRandomCopyBytes(kSecRandomDefault, 1, [data mutableBytes]);
-        Byte currentChar = 0;
-        [data getBytes:&currentChar
-                length:1];
-        NSString *temp = [[NSString alloc] initWithData:data
-                                               encoding:NSUTF8StringEncoding];
-        if (currentChar > ASCII_START_NUMERS && currentChar < ASCII_END_NUMERS) { // 0 to 0
-            [result appendString:temp];
-            continue;
-        }
-        if (currentChar > ASCII_START_LETTERS_A && currentChar < ASCII_END_LETTERS_Z) { // A to Z
-            [result appendString:temp];
-            continue;
-        }
-        if (currentChar > ASCII_START_LETTERS_a && currentChar < ASCII_END_LETTERS_z) { // a to z
-            [result appendString:temp];
-            continue;
+        if (!SecRandomCopyBytes(kSecRandomDefault, 1, [data mutableBytes])) {
+            Byte currentChar = 0;
+            [data getBytes:&currentChar
+                    length:1];
+            NSString *temp = [[NSString alloc] initWithData:data
+                                                   encoding:NSUTF8StringEncoding];
+            if (currentChar > ASCII_START_NUMERS && currentChar < ASCII_END_NUMERS) { // 0 to 0
+                [result appendString:temp];
+                continue;
+            }
+            if (currentChar > ASCII_START_LETTERS_A && currentChar < ASCII_END_LETTERS_Z) { // A to Z
+                [result appendString:temp];
+                continue;
+            }
+            if (currentChar > ASCII_START_LETTERS_a && currentChar < ASCII_END_LETTERS_z) { // a to z
+                [result appendString:temp];
+                continue;
+            }
+        } else {
+            break;
         }
     }
     return result;

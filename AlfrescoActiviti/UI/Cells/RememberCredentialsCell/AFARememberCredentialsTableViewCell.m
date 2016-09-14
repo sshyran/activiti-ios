@@ -22,6 +22,8 @@
 @implementation AFARememberCredentialsTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.rememberCredentialsLabel.text = NSLocalizedString(kLocalizationLoginRememberCredentialsText, @"Remember credentials labe");
 }
 

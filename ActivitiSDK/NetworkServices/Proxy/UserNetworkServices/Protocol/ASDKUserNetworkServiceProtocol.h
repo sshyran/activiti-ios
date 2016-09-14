@@ -27,7 +27,10 @@ typedef void  (^ASDKUsersPictureCompletionBlock) (UIImage *profileImage, NSError
 @protocol ASDKUserNetworkServiceProtocol <NSObject>
 
 /**
- *  Fetches and returns via the completion block a list of users
+ *  Fetches and returns via the completion block a list of users. 
+ *  
+ *  Note: This would be useful used when a user wants to involve 
+ *        or assign another user to a task.
  *
  *  @param userRequest              Request object describing which subset of the user list
  *                                  collection should be fetched
@@ -38,7 +41,7 @@ typedef void  (^ASDKUsersPictureCompletionBlock) (UIImage *profileImage, NSError
                                completionBlock:(ASDKUsersCompletionBlock)completionBlock;
 
 /**
- *  Fetches and returns via the completion block the profile picture of a user
+ *  Fetches and returns via the completion block the profile picture of a user.
  *
  *  @param userID                   ID of the user for which the picture is fetched
  *  @param completionBlock          Completion block providing the picture image and an optional

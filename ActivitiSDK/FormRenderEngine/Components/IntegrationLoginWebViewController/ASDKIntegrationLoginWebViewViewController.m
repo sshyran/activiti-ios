@@ -68,6 +68,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     [self.cancelBarButtonItem setTitle:ASDKLocalizedStringFromTable(kLocalizationCancelButtonText, ASDKLocalizationTable, @"Cancel button")];
 }
 

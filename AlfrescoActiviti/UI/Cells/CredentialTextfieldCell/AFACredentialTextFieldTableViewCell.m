@@ -27,6 +27,8 @@ CGFloat kHairlineViewAlphaDimmed    = 0.5f;
 @implementation AFACredentialTextFieldTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.hairlineView.alpha = kHairlineViewAlphaDimmed;
     self.inputTextField.delegate = self;
 }

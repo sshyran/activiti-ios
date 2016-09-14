@@ -42,6 +42,8 @@
 @implementation ASDKFormAmountFieldCollectionViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.amountTextfield.delegate = self;
 }
 

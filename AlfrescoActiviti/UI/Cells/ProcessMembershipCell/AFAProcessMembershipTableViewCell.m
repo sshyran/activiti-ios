@@ -24,6 +24,8 @@
 @implementation AFAProcessMembershipTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.iconImageView.tintColor = [UIColor disabledControlColor];
     self.processLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenPartOfProcessText, @"Part of process text");
 }

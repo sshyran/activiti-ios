@@ -23,6 +23,8 @@
 @implementation AFAApplicationListStyleCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     UIView *backgroundColorView = [UIView new];
     backgroundColorView.backgroundColor = [UIColor applicationCellSelectedBackgroundColor];
     [self setSelectedBackgroundView:backgroundColorView];

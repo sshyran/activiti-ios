@@ -25,6 +25,8 @@
 @implementation AFADurationTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.iconImageView.tintColor = [UIColor disabledControlColor];
     self.durationLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenDurationText, @"Duration text");
 }

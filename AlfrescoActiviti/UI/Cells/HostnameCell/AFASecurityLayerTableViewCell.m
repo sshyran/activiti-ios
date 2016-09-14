@@ -22,6 +22,8 @@
 @implementation AFASecurityLayerTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.switchViewButton.onLabelText = NSLocalizedString(kLocalizationLoginHostnameSwitchONText, @"ON label");
     self.switchViewButton.offLabelText = NSLocalizedString(kLocalizationLoginHostnameSwitchOFFText, @"OFF label");
     self.switchViewButton.switchDescriptionText = NSLocalizedString(kLocalizationLoginHostnameSwitchHTTPSText, @"Hostname label");

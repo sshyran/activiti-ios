@@ -26,6 +26,8 @@
 @implementation AFACreatedDateTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.iconImageView.tintColor = [UIColor disabledControlColor];
 }
 

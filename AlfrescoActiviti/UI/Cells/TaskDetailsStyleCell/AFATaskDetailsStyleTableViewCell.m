@@ -24,6 +24,8 @@
 @implementation AFATaskDetailsStyleTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.iconImageView.tintColor = [UIColor disabledControlColor];
     self.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenTaskNameText, @"Task name text");
 }
