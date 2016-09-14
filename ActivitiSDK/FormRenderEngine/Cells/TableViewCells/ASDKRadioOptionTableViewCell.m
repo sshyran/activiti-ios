@@ -24,6 +24,8 @@
 @implementation ASDKRadioOptionTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.checkMarkIconImageView.tintColor = [UIColor generalTintColor];
 }

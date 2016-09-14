@@ -29,6 +29,8 @@
 #pragma mark Life cycle
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.dueLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenDueText, @"Due text");
     self.iconImageView.tintColor = [UIColor disabledControlColor];
 }

@@ -26,6 +26,8 @@
 #pragma mark - Life cycle
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     [self.completeTaskButton setTitle:NSLocalizedString(kLocalizationTaskDetailsScreenCompleteTaskButtonText, @"Complete task text")
                              forState:UIControlStateNormal];
 }

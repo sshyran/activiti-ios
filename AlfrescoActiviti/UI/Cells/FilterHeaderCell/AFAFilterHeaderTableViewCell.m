@@ -23,6 +23,8 @@
 @implementation AFAFilterHeaderTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.headerIconLabel.font = [UIFont glyphiconFontWithSize:17];
     [self.clearButton setTitle:NSLocalizedString(kLocalizationListScreenClearAllButtonTitleText, @"Clear all")
                       forState:UIControlStateNormal];

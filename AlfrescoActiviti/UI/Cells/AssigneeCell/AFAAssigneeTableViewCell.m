@@ -24,6 +24,8 @@
 @implementation AFAAssigneeTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.iconImageView.tintColor = [UIColor disabledControlColor];
 }
 

@@ -40,6 +40,8 @@
 @implementation ASDKFormTextFieldCollectionViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.textfield.delegate = self;
 }
 

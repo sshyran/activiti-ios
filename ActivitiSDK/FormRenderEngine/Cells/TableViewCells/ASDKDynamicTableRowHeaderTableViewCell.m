@@ -25,6 +25,7 @@
 @implementation ASDKDynamicTableRowHeaderTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
 }
 
 - (void)setupCellWithSelectionSection:(NSInteger)section

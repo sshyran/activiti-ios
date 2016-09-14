@@ -22,6 +22,8 @@
 @implementation AFAShowDiagramTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     [self.showDiagramButton setTitle:NSLocalizedString(kLocalizationProcessInstanceDetailsScreenShowDiagramText, @"Show diagram text")
                             forState:UIControlStateNormal];
 }

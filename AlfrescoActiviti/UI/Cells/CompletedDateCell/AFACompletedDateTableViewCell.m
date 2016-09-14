@@ -25,6 +25,8 @@
 @implementation AFACompletedDateTableViewCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
+    
     self.iconImageView.tintColor = [UIColor disabledControlColor];
     self.completedLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenCompletedDateText, @"Completed date text");
 }
