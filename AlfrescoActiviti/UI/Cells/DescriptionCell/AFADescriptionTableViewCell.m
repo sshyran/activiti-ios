@@ -45,7 +45,7 @@
 #pragma mark Public interface
 
 - (void)setUpCellWithTask:(ASDKModelTask *)task {
-    self.descriptionTextLabel.text = task.taskDescription ? task.taskDescription : NSLocalizedString(kLocalizationGeneralUseNoneText, @"None text");
+    self.descriptionTextLabel.text = task.taskDescription.length ? task.taskDescription : NSLocalizedString(kLocalizationGeneralUseNoneText, @"None text");
 }
 
 @end
