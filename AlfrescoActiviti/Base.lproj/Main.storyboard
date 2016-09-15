@@ -17,7 +17,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Eel-Pt-SHF">
             <objects>
-                <navigationController storyboardIdentifier="Navigation" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="Navigation" navigationBarHidden="YES" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="v9Y-ro-k4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2111,7 +2111,7 @@
                                         <rect key="frame" x="0.0" y="590" width="600" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8EL-9I-JLp" id="3fH-UF-di6">
-                                            <frame key="frameInset" width="600" height="60.5"/>
+                                            <frame key="frameInset" width="600" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info-icon" translatesAutoresizingMaskIntoConstraints="NO" id="WUI-rN-C2F">
@@ -2584,7 +2584,7 @@
                                         <rect key="frame" x="0.0" y="1036" width="600" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0VF-Rk-0M3" id="AuL-do-4ct">
-                                            <frame key="frameInset" width="600" height="60.5"/>
+                                            <frame key="frameInset" width="600" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check-icon" translatesAutoresizingMaskIntoConstraints="NO" id="lqq-s4-rPg">
@@ -2892,7 +2892,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D00-yq-Hig">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D00-yq-Hig">
                                 <items>
                                     <barButtonItem title="Remove" id="Spc-Zy-UHA">
                                         <color key="tintColor" red="0.058823529409999999" green="0.062745098040000002" blue="0.066666666669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -4084,7 +4084,7 @@
                                         <rect key="frame" x="0.0" y="312" width="375" height="61"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DaG-2G-X00" id="Ucj-WC-JK8">
-                                            <frame key="frameInset" width="375" height="60.5"/>
+                                            <frame key="frameInset" width="375" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="page-icon" translatesAutoresizingMaskIntoConstraints="NO" id="whc-J2-XWD">
@@ -5620,9 +5620,9 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="RN3-5C-FKi"/>
-        <segue reference="KJK-Sb-lGO"/>
         <segue reference="dAG-4I-soh"/>
-        <segue reference="8xE-qE-G6q"/>
+        <segue reference="Rct-bP-63w"/>
         <segue reference="fpJ-UB-l4s"/>
+        <segue reference="XZ3-C5-Oig"/>
     </inferredMetricsTieBreakers>
 </document>
