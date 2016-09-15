@@ -73,7 +73,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[self.servicePathFactory processDefinitionListServicePathFormat]
                            parameters:parameters
                              progress:nil

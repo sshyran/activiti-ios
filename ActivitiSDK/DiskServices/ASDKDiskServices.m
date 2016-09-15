@@ -122,8 +122,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // Get an extension for a UTI
     CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef _Nonnull)(mimeType), NULL);
     CFStringRef extension = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension);
+    CFRelease(uti);
     
     NSString *filename = [NSString stringWithFormat:@"%@.%@", [self userDefaultsFilenameIncrementedValue], extension];
+    CFRelease(extension);
+    
     return filename;
 }
 

@@ -70,7 +70,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processDefinitionStartFormServicePathFormat], processDefinitionID]
                            parameters:nil
                              progress:nil
@@ -109,7 +109,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceStartFormServicePathFormat], processInstanceID]
                            parameters:nil
                              progress:nil
@@ -149,7 +149,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory taskFormServicePathFormat], taskID]
                             parameters:[formFieldValuesRepresentation jsonDictionary]
                               progress:nil
@@ -211,7 +211,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                           forKey:kASDKAPIGenericNameParameter];
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[self.servicePathFactory startFormCompletionPath]
                             parameters:requestParameters
                               progress:nil
@@ -272,7 +272,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory saveFormServicePathFormat], taskID]
                             parameters:[formFieldValuesRepresentation jsonDictionary]
                               progress:nil
@@ -327,7 +327,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory taskFormServicePathFormat], taskID]
                            parameters:nil
                              progress:nil
@@ -370,7 +370,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[self.servicePathFactory contentFieldUploadServicePath]
                             parameters:nil
              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -572,7 +572,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory restFieldValuesServicePathFormat], taskID, fieldID]
                            parameters:nil
                              progress:nil
@@ -638,7 +638,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory dynamicTableRestFieldValuesServicePathFormat], taskID, fieldID, columnID]
                            parameters:nil
                              progress:nil
@@ -700,7 +700,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory startFormRestFieldValuesServicePathFormat], processDefinitionID, fieldID]
                            parameters:nil
                              progress:nil
@@ -763,7 +763,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory startFormDynamicTableRestFieldValuesServicePathFormat], processDefinitionID, fieldID, columnID]
                            parameters:nil
                              progress:nil

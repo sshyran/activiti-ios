@@ -170,7 +170,6 @@
 + (NSString *)durationTimeForInterval:(NSTimeInterval) interval {
     unsigned long milliseconds = interval;
     unsigned long seconds = milliseconds / 1000;
-    milliseconds %= 1000;
     unsigned long minutes = seconds / 60;
     seconds %= 60;
     unsigned long hours = minutes / 60;

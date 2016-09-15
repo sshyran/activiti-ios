@@ -27,10 +27,10 @@
 
 - (NSString *)utiType {
     NSString *extension = [_modelFileURL pathExtension];
-    NSString *utiString = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
-                                                                               (__bridge CFStringRef)extension,
-                                                                               NULL);
-    
+    CFStringRef utiType = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
+                                                                (__bridge CFStringRef)extension,
+                                                                NULL);
+    NSString *utiString = (NSString *)CFBridgingRelease(utiType);
     return utiString;
 }
 

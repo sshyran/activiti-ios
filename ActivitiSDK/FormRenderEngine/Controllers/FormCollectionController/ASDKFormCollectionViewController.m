@@ -54,6 +54,8 @@
 #pragma mark Life cycle
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+    
     // Adjust collenction's view estimated item size
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) self.collectionViewLayout;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -252,6 +254,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         reusableview = sectionFooterView;
     }
     
+    NSParameterAssert(reusableview);
     return reusableview;
 }
 

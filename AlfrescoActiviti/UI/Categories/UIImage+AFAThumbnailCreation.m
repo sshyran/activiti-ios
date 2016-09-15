@@ -31,27 +31,30 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     CFMutableDataRef dataRef = (__bridge CFMutableDataRef)imageData;
     CGImageSourceRef imgSrc  = CGImageSourceCreateWithData(dataRef, NULL);
     
+    UIImage *scaledImage = nil;
+    
     if (imgSrc == NULL){
         AFALogError(@"Error creating image source for thumbnail generation. Image source is nil");
+    } else {
+        
+        NSDictionary *options = @{(__bridge NSString *)kCGImageSourceCreateThumbnailFromImageAlways : @YES,
+                                  (__bridge NSString *)kCGImageSourceCreateThumbnailWithTransform: @YES,
+                                  (__bridge NSString *)kCGImageSourceThumbnailMaxPixelSize : @(imageSize)};
+        
+        CFDictionaryRef cfOptions     = (__bridge CFDictionaryRef)options;
+        CGImageRef img                = CGImageSourceCreateThumbnailAtIndex(imgSrc, 0, cfOptions);
+        CFStringRef type              = CGImageSourceGetType(imgSrc);
+        CGImageDestinationRef imgDest = CGImageDestinationCreateWithData(dataRef, type, 1, NULL);
+        
+        CGImageDestinationAddImage(imgDest, img, NULL);
+        CGImageDestinationFinalize(imgDest);
+        
+        scaledImage = [UIImage imageWithCGImage:img];
+        
+        CFRelease(imgSrc);
+        CGImageRelease(img);
+        CFRelease(imgDest);
     }
-    
-    NSDictionary *options = @{(__bridge NSString *)kCGImageSourceCreateThumbnailFromImageAlways : @YES,
-                              (__bridge NSString *)kCGImageSourceCreateThumbnailWithTransform: @YES,
-                              (__bridge NSString *)kCGImageSourceThumbnailMaxPixelSize : @(imageSize)};
-    
-    CFDictionaryRef cfOptions     = (__bridge CFDictionaryRef)options;
-    CGImageRef img                = CGImageSourceCreateThumbnailAtIndex(imgSrc, 0, cfOptions);
-    CFStringRef type              = CGImageSourceGetType(imgSrc);
-    CGImageDestinationRef imgDest = CGImageDestinationCreateWithData(dataRef, type, 1, NULL);
-    
-    CGImageDestinationAddImage(imgDest, img, NULL);
-    CGImageDestinationFinalize(imgDest);
-    
-    UIImage *scaledImage = [UIImage imageWithCGImage:img];
-    
-    CFRelease(imgSrc);
-    CGImageRelease(img);
-    CFRelease(imgDest);
     
     return scaledImage;
 }

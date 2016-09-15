@@ -364,7 +364,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     if (subSectionFields.count) {
         sectionFormField.formFields = [NSArray arrayWithArray:subSectionFields];
-        [sectionFields addObject:sectionFormField];
+        if (sectionFormField) {
+            [sectionFields addObject:sectionFormField];
+        }
     }
     
     return sectionFields;
@@ -689,7 +691,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                     and:(NSString *)secondString
                             forOperator:(ASDKModelFormVisibilityConditionOperatorType)operatorType
                                   error:(NSError **)error {
-    BOOL result;
+    BOOL result = NO;
     
     switch (operatorType) {
         case ASDKModelFormVisibilityConditionOperatorTypeEqual: {
@@ -713,7 +715,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         default: {
-            *error = [self unsupportedOperatorTypeError];
+            if (error) {
+                *error = [self unsupportedOperatorTypeError];
+            }
         }
             break;
     }
@@ -775,7 +779,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         default: {
-            *error = [self unsupportedOperatorTypeError];
+            if (error) {
+                *error = [self unsupportedOperatorTypeError];
+            }
         }
             break;
     }
@@ -787,7 +793,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   and:(NSDate *)secondDate
                           forOperator:(ASDKModelFormVisibilityConditionOperatorType)operatorType
                                 error:(NSError **)error {
-    BOOL result;
+    BOOL result = NO;
     
     // For the evaluation of the date we don't want to compare hours so we discard
     // the hour component from the date
@@ -852,7 +858,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         default: {
-            *error = [self unsupportedOperatorTypeError];
+            if (error) {
+                *error = [self unsupportedOperatorTypeError];
+            }
         }
             break;
     }
@@ -864,7 +872,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                      and:(NSString *)secondBooleanString
                              forOperator:(ASDKModelFormVisibilityConditionOperatorType)operatorType
                                    error:(NSError **)error {
-    BOOL result;
+    BOOL result = NO;
     
     BOOL firstBoolean = [firstBooleanString isEqualToString:kASDKFormFieldTrueStringValue] ||
                         [firstBooleanString isEqualToString:@"1"] ? YES : NO;
@@ -883,7 +891,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         default: {
-            *error = [self unsupportedOperatorTypeError];
+            if (error) {
+                *error = [self unsupportedOperatorTypeError];
+            }
         }
             break;
     }
@@ -895,7 +905,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                   and:(BOOL)secondConditionResult
                                           forOperator:(ASDKModelFormVisibilityConditionNextConditionOperatorType)operatorType
                                                 error:(NSError **)error {
-    BOOL result;
+    BOOL result = NO;
     
     switch (operatorType) {
         case ASDKModelFormVisibilityConditionNextConditionOperatorTypeAnd: {
@@ -919,7 +929,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             break;
             
         default: {
-            *error = [self unsupportedOperatorTypeError];
+            if (error) {
+                *error = [self unsupportedOperatorTypeError];
+            }
         }
             break;
     }
