@@ -63,7 +63,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[self.servicePathFactory userListServicePath]
                            parameters:[userRequest jsonDictionary]
                              progress:nil
@@ -121,7 +121,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory userProfileImageServicePathFormat], userID]
                            parameters:nil
                              progress:nil

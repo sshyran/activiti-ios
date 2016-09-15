@@ -406,7 +406,7 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                                                               
                                                               if (!error) {
                                                                   ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)strongSelf.currentFormField.formFieldParams;
-                                                                  NSMutableArray *currentValuesArray = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                                                  NSMutableArray *currentValuesArray = nil;
                                                                   
                                                                   if (formFieldParameters.allowMultipleFiles) {
                                                                       currentValuesArray = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];

@@ -111,6 +111,8 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     // Update the navigation bar theme color
     self.navigationBarThemeColor = [UIColor applicationThemeDefaultColor];
     

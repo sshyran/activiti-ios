@@ -90,6 +90,8 @@ QLPreviewControllerDelegate>
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+    
     if (AFAContentPickerViewControllerTypeProfileRelated != self.pickerType) {
         [self fetchIntegrationAccounts];
     }

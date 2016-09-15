@@ -25,11 +25,8 @@
     UIView *inView = [UIApplication sharedApplication].keyWindow;
     UIViewController *toViewController = self.destinationViewController;
     
-    // First check if the source controller is embedded inside a navigation controller
-    UIView *fromView = ((UIViewController *)self.sourceViewController).navigationController.view;
-    
     // If not get the sourceViewController's view directly
-    fromView = ((UIViewController *)self.sourceViewController).view;
+    UIView *fromView = ((UIViewController *)self.sourceViewController).view;
     
     toViewController.view.frame = inView.frame;
     CATransform3D scale = CATransform3DIdentity;

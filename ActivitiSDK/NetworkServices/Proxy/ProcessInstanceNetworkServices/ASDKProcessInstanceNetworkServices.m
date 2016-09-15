@@ -66,7 +66,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[self.servicePathFactory processInstancesListServicePath]
                             parameters:[filter jsonDictionary]
                               progress:nil
@@ -126,7 +126,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[self.servicePathFactory startProcessInstanceServicePath]
                             parameters:[request jsonDictionary]
                               progress:nil
@@ -184,7 +184,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceDetailsServicePathFormat], processInstanceID]
                            parameters:nil
                              progress:nil
@@ -244,7 +244,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceContentServicePathFormat], processInstanceID]
                            parameters:nil
                              progress:nil
@@ -303,7 +303,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager GET:[NSString stringWithFormat:[self.servicePathFactory processInstanceCommentServicePathFormat], processInstanceID]
                            parameters:nil
                              progress:nil
@@ -364,7 +364,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory processInstanceCommentServicePathFormat], processInstanceID]
                             parameters:@{kASDKAPIMessageParameter : comment}
                               progress:nil
@@ -423,7 +423,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager DELETE:[NSString stringWithFormat:[self.servicePathFactory processInstanceDetailsServicePathFormat], processInstanceID]
                               parameters:nil
                                  success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {

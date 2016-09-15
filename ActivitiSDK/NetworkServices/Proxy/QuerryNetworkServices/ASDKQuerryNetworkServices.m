@@ -64,7 +64,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(self.resultsQueue);
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *dataTask =
+    __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[self.servicePathFactory taskQueryServicePath]
                             parameters:[filter jsonDictionary]
                               progress:nil

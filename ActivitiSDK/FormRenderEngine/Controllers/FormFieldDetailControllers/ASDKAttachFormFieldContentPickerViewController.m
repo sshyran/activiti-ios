@@ -100,6 +100,8 @@ QLPreviewControllerDelegate>
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+    
     [self fetchIntegrationAccounts];
 }
 
