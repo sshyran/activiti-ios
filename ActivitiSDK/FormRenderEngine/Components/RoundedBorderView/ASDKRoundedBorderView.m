@@ -27,9 +27,9 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.layer.borderWidth = self.borderWidth;
+    self.layer.borderWidth = self.borderWidth.integerValue;
     self.layer.borderColor = self.borderColor.CGColor;
-    self.layer.cornerRadius = self.cornerRadius;
+    self.layer.cornerRadius = self.cornerRadius.floatValue;
     self.layer.backgroundColor = self.fillColor.CGColor;
 }
 

@@ -21,9 +21,9 @@
 IB_DESIGNABLE
 @interface ASDKRoundedBorderView : UIView
 
-@property (assign, nonatomic) IBInspectable NSInteger borderWidth;
-@property (strong, nonatomic) IBInspectable UIColor   *borderColor;
-@property (strong, nonatomic) IBInspectable UIColor   *fillColor;
-@property (assign, nonatomic) IBInspectable CGFloat   cornerRadius;
+@property (assign, nonatomic) IBInspectable NSNumber    *borderWidth;
+@property (strong, nonatomic) IBInspectable UIColor     *borderColor;
+@property (strong, nonatomic) IBInspectable UIColor     *fillColor;
+@property (assign, nonatomic) IBInspectable NSNumber    *cornerRadius;
 
 @end
