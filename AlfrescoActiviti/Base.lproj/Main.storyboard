@@ -3121,13 +3121,13 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="z1L-yg-S6H" userLabel="FilterTableView">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="40" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <view key="tableFooterView" contentMode="scaleToFill" id="PpM-C3-lY6">
+                                <view key="tableFooterView" contentMode="scaleToFill" misplaced="YES" id="PpM-C3-lY6">
                                     <rect key="frame" x="0.0" y="116" width="375" height="1"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilterOptionCellID" id="2cj-1b-y9T" customClass="AFAFilterOptionTableViewCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilterOptionCellID" id="2cj-1b-y9T" customClass="AFAFilterOptionTableViewCell">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2cj-1b-y9T" id="XwZ-ym-4co">
@@ -3174,7 +3174,7 @@
                                             <outlet property="filterLabel" destination="NzO-Bn-rQ2" id="s80-xx-lex"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilterHeaderCellID" id="le0-4F-Fe5" customClass="AFAFilterHeaderTableViewCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilterHeaderCellID" id="le0-4F-Fe5" customClass="AFAFilterHeaderTableViewCell">
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="le0-4F-Fe5" id="LOe-mq-Z83">
@@ -4782,7 +4782,7 @@
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="DrawerMenuAvatarCellID" id="18z-3D-QUy" customClass="AFAAvatarMenuTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="DrawerMenuAvatarCellID" id="18z-3D-QUy" customClass="AFAAvatarMenuTableViewCell">
                                         <rect key="frame" x="0.0" y="22" width="80" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="18z-3D-QUy" id="5TC-0f-3EK">
@@ -4837,7 +4837,7 @@
                                             <outlet property="avatarView" destination="7Fa-OT-T0V" id="cqp-1O-rsn"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DrawerMenuButtonCellID" id="9nn-zU-TOD" customClass="AFAMenuButtonCell">
+                                    <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DrawerMenuButtonCellID" id="9nn-zU-TOD" customClass="AFAMenuButtonCell">
                                         <rect key="frame" x="0.0" y="122" width="80" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9nn-zU-TOD" id="8nt-gJ-7K6">
@@ -5029,56 +5029,67 @@
                                         <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Bf-Yf-H32">
-                                        <color key="backgroundColor" red="0.75294117650000003" green="0.23529411759999999" blue="0.1960784314" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3SR-yg-yWw">
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Bf-Yf-H32">
+                                                <color key="backgroundColor" red="0.75294117650000003" green="0.23529411759999999" blue="0.1960784314" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="107" id="LQz-zg-j0C"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="onCancel:" destination="Tc8-Io-xen" eventType="touchUpInside" id="Ft9-NJ-8pL"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-do-Gf6">
+                                                <color key="backgroundColor" red="0.21960784310000001" green="0.5568627451" blue="0.77647058820000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="107" id="9bR-RF-V00"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                                                <state key="normal" title="Create">
+                                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="onConfirm:" destination="Tc8-Io-xen" eventType="touchUpInside" id="JnJ-Cb-TKk"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="107" id="LQz-zg-j0C"/>
+                                            <constraint firstItem="AZB-do-Gf6" firstAttribute="leading" secondItem="5Bf-Yf-H32" secondAttribute="trailing" constant="10" id="PjS-gN-hUa"/>
+                                            <constraint firstAttribute="bottom" secondItem="AZB-do-Gf6" secondAttribute="bottom" id="SeE-uW-QFt"/>
+                                            <constraint firstItem="5Bf-Yf-H32" firstAttribute="top" secondItem="3SR-yg-yWw" secondAttribute="top" id="Zfd-fh-mF5"/>
+                                            <constraint firstAttribute="bottom" secondItem="5Bf-Yf-H32" secondAttribute="bottom" id="dPX-4p-rnL"/>
+                                            <constraint firstItem="AZB-do-Gf6" firstAttribute="top" secondItem="3SR-yg-yWw" secondAttribute="top" id="i3b-7p-maw"/>
+                                            <constraint firstItem="5Bf-Yf-H32" firstAttribute="leading" secondItem="3SR-yg-yWw" secondAttribute="leading" id="kb2-z0-nG1"/>
+                                            <constraint firstAttribute="trailing" secondItem="AZB-do-Gf6" secondAttribute="trailing" id="xhx-gP-ifT"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
-                                        <state key="normal" title="Cancel">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onCancel:" destination="Tc8-Io-xen" eventType="touchUpInside" id="Ft9-NJ-8pL"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-do-Gf6">
-                                        <color key="backgroundColor" red="0.21960784310000001" green="0.5568627451" blue="0.77647058820000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="107" id="9bR-RF-V00"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
-                                        <state key="normal" title="Create">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onConfirm:" destination="Tc8-Io-xen" eventType="touchUpInside" id="JnJ-Cb-TKk"/>
-                                        </connections>
-                                    </button>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="fPg-vW-jXr" firstAttribute="leading" secondItem="TYR-R0-J49" secondAttribute="leading" constant="8" id="08O-iO-w6L"/>
                                     <constraint firstItem="47P-Rh-lAi" firstAttribute="leading" secondItem="TYR-R0-J49" secondAttribute="leading" constant="8" id="1Vd-kB-9F4"/>
-                                    <constraint firstAttribute="bottom" secondItem="5Bf-Yf-H32" secondAttribute="bottom" constant="8" id="1X8-AH-jip"/>
+                                    <constraint firstItem="3SR-yg-yWw" firstAttribute="centerX" secondItem="TYR-R0-J49" secondAttribute="centerX" id="39w-k3-ImU"/>
                                     <constraint firstItem="fPg-vW-jXr" firstAttribute="centerY" secondItem="LLj-BF-x6C" secondAttribute="centerY" id="7GG-JW-CKS"/>
                                     <constraint firstItem="fPg-vW-jXr" firstAttribute="height" secondItem="LLj-BF-x6C" secondAttribute="height" id="7Hd-lo-DeX"/>
-                                    <constraint firstItem="AZB-do-Gf6" firstAttribute="leading" secondItem="5Bf-Yf-H32" secondAttribute="trailing" constant="10" id="9GZ-KO-q84"/>
-                                    <constraint firstAttribute="bottom" secondItem="AZB-do-Gf6" secondAttribute="bottom" constant="8" id="9P5-0X-pRJ"/>
                                     <constraint firstItem="UFw-n7-v8V" firstAttribute="leading" secondItem="TYR-R0-J49" secondAttribute="leading" constant="8" id="Ch3-g3-yzg"/>
                                     <constraint firstItem="UFw-n7-v8V" firstAttribute="top" secondItem="LLj-BF-x6C" secondAttribute="bottom" constant="8" id="E2E-2S-9DQ"/>
-                                    <constraint firstItem="5Bf-Yf-H32" firstAttribute="leading" secondItem="TYR-R0-J49" secondAttribute="leading" constant="8" id="ELB-h1-6M3"/>
                                     <constraint firstItem="47P-Rh-lAi" firstAttribute="top" secondItem="UFw-n7-v8V" secondAttribute="bottom" constant="8" id="FDZ-6f-neJ"/>
                                     <constraint firstAttribute="trailing" secondItem="gWC-FE-olK" secondAttribute="trailing" constant="8" id="GzM-w8-sQk"/>
                                     <constraint firstItem="LLj-BF-x6C" firstAttribute="leading" secondItem="TYR-R0-J49" secondAttribute="leading" constant="12" id="M6c-Ge-vsN"/>
                                     <constraint firstItem="gWC-FE-olK" firstAttribute="leading" secondItem="TYR-R0-J49" secondAttribute="leading" constant="8" id="Opd-Pj-6gT"/>
                                     <constraint firstAttribute="trailing" secondItem="LLj-BF-x6C" secondAttribute="trailing" constant="8" id="Phu-FS-hy3"/>
-                                    <constraint firstAttribute="width" constant="240" id="T8a-jr-Tyf"/>
                                     <constraint firstItem="Kfp-ay-OZP" firstAttribute="leading" secondItem="TYR-R0-J49" secondAttribute="leading" constant="8" id="Th9-8W-BR8"/>
-                                    <constraint firstAttribute="trailing" secondItem="AZB-do-Gf6" secondAttribute="trailing" constant="8" id="TqM-RS-b6R"/>
                                     <constraint firstAttribute="trailing" secondItem="47P-Rh-lAi" secondAttribute="trailing" constant="8" id="Uoq-0C-JP2"/>
                                     <constraint firstAttribute="trailing" secondItem="fPg-vW-jXr" secondAttribute="trailing" constant="8" id="aTD-xw-yeL"/>
                                     <constraint firstAttribute="trailing" secondItem="UFw-n7-v8V" secondAttribute="trailing" constant="8" id="b43-Pd-A6g"/>
+                                    <constraint firstAttribute="bottom" secondItem="3SR-yg-yWw" secondAttribute="bottom" constant="8" id="bik-8A-Oc5"/>
+                                    <constraint firstItem="3SR-yg-yWw" firstAttribute="top" secondItem="47P-Rh-lAi" secondAttribute="bottom" constant="10" id="cKS-AI-VQ7"/>
                                     <constraint firstAttribute="trailing" secondItem="Kfp-ay-OZP" secondAttribute="trailing" constant="8" id="cZl-ro-3hv"/>
                                     <constraint firstItem="LLj-BF-x6C" firstAttribute="top" secondItem="Kfp-ay-OZP" secondAttribute="bottom" constant="1" id="dup-jR-ha5"/>
                                     <constraint firstItem="gWC-FE-olK" firstAttribute="top" secondItem="TYR-R0-J49" secondAttribute="top" constant="20" id="lL3-Qe-UmB"/>
@@ -5100,8 +5111,10 @@
                             <constraint firstItem="xe8-RZ-lNo" firstAttribute="top" secondItem="GqY-ff-JII" secondAttribute="bottom" id="1RY-6T-7KA"/>
                             <constraint firstItem="GqY-ff-JII" firstAttribute="top" secondItem="g8T-nk-qIB" secondAttribute="bottom" constant="-20" id="5oN-9W-GjG"/>
                             <constraint firstAttribute="trailing" secondItem="GqY-ff-JII" secondAttribute="trailing" id="M4F-yO-4v9"/>
+                            <constraint firstAttribute="trailing" secondItem="TYR-R0-J49" secondAttribute="trailing" constant="40" id="QGO-hh-auN"/>
                             <constraint firstItem="TYR-R0-J49" firstAttribute="centerY" secondItem="Ikw-Kg-zv4" secondAttribute="centerY" id="S0H-4o-6vY"/>
                             <constraint firstItem="GqY-ff-JII" firstAttribute="leading" secondItem="Ikw-Kg-zv4" secondAttribute="leading" id="Xuo-Qf-4YM"/>
+                            <constraint firstItem="TYR-R0-J49" firstAttribute="leading" secondItem="Ikw-Kg-zv4" secondAttribute="leading" constant="40" id="uwi-rM-SjV"/>
                             <constraint firstItem="TYR-R0-J49" firstAttribute="centerX" secondItem="Ikw-Kg-zv4" secondAttribute="centerX" id="wE0-pT-VVb"/>
                         </constraints>
                     </view>
@@ -5124,7 +5137,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2511" y="239"/>
+            <point key="canvasLocation" x="2509.5999999999999" y="238.83058470764618"/>
         </scene>
         <!--People Picker View Controller-->
         <scene sceneID="53P-jv-f9Y">

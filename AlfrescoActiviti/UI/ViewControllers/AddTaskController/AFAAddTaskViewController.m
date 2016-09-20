@@ -57,6 +57,11 @@
 
 @implementation AFAAddTaskViewController
 
+- (void)dealloc {
+    [self.alertContainerView removeObserver:self
+                                 forKeyPath:@"bounds"];
+}
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
@@ -73,16 +78,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:self.alertContainerView.bounds];
-    self.alertContainerView.layer.masksToBounds = NO;
-    self.alertContainerView.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.alertContainerView.layer.shadowOffset = CGSizeMake(0.0f, 5.0f);
-    self.alertContainerView.layer.shadowOpacity = 0.5f;
-    self.alertContainerView.layer.shadowPath = shadowPath.CGPath;
-    
-    self.alertContainerView.alpha = .0f;
-    self.alertContainerView.transform = CGAffineTransformMakeScale(1.3f, 1.3f);
-    
     // Set up localization
     self.alertTitleLabel.text = (AFAAddTaskControllerTypePlainTask == self.controllerType) ? NSLocalizedString(kLocalizationAddTaskScreenTitleText, @"New task title") : NSLocalizedString(kLocalizationAddTaskScreenChecklistTitleText, @"New checklist title");
     self.nameLabel.text = NSLocalizedString(kLocalizationAddTaskScreenNameLabelText, @"Name label");
@@ -95,10 +90,18 @@
     [self validateTaskNameFieldForString:self.nameTextField.text];
     
     self.progressHUD = [self configureProgressHUD];
+    
+    [self.alertContainerView addObserver:self
+                              forKeyPath:@"bounds"
+                                 options:NSKeyValueObservingOptionNew
+                                 context:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    self.alertContainerView.alpha = .0f;
+    self.alertContainerView.transform = CGAffineTransformMakeScale(1.3f, 1.3f);
     
     // Apply a fade-in animation
     [UIView animateWithDuration:kOverlayAlphaChangeTime
@@ -233,6 +236,24 @@
     
     self.confirmButton.enabled = enableCreateButton;
     [self.confirmButton setBackgroundColor:enableCreateButton ? self.appThemeColor : [UIColor disabledControlColor]];
+}
+
+
+#pragma mark -
+#pragma mark KVO handling 
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change
+                       context:(void *)context {
+    if (object == self.alertContainerView) {
+        UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRect:self.alertContainerView.bounds];
+        self.alertContainerView.layer.masksToBounds = NO;
+        self.alertContainerView.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.alertContainerView.layer.shadowOffset = CGSizeMake(0.0f, 5.0f);
+        self.alertContainerView.layer.shadowOpacity = 0.5f;
+        self.alertContainerView.layer.shadowPath = shadowPath.CGPath;
+    }
 }
 
 
