@@ -568,6 +568,7 @@
 		130761501BEA41970082EA2D /* ActivitiSDKLocalizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ActivitiSDKLocalizable.strings; path = Localization/ActivitiSDKLocalizable.strings; sourceTree = "<group>"; };
 		130761521BEA42EC0082EA2D /* ASDKLocalizationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKLocalizationConstants.h; path = Localization/ASDKLocalizationConstants.h; sourceTree = "<group>"; };
 		130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLocalizationConstants.m; path = Localization/ASDKLocalizationConstants.m; sourceTree = "<group>"; };
+		1310F2F31D927481002FF53F /* AlfrescoActiviti.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AlfrescoActiviti.entitlements; sourceTree = "<group>"; };
 		131375081B6F677B00D2268E /* ASDKNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKNetworkServiceProtocol.h; path = NetworkServices/NetworkService/Protocol/ASDKNetworkServiceProtocol.h; sourceTree = "<group>"; };
 		1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKParserOperationManager.h; path = NetworkServices/ParserOperationManager/ASDKParserOperationManager.h; sourceTree = "<group>"; };
 		1313750C1B6F927C00D2268E /* ASDKParserOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKParserOperationManager.m; path = NetworkServices/ParserOperationManager/ASDKParserOperationManager.m; sourceTree = "<group>"; };
@@ -1754,6 +1755,7 @@
 		133B7FE01B78FA3300C17D06 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1310F2F31D927481002FF53F /* AlfrescoActiviti.entitlements */,
 				13BDA7401B7B632500A2CE40 /* Localization */,
 				137194621B6922DE00D4E1F0 /* LaunchScreen.xib */,
 				137194601B6922DE00D4E1F0 /* Images.xcassets */,
@@ -5478,6 +5480,7 @@
 			baseConfigurationReference = 005DF383148C17706DBC40C9 /* Pods-Shared-AlfrescoActiviti.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AlfrescoActiviti/AlfrescoActiviti.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = AlfrescoActiviti/Info.plist;
@@ -5493,6 +5496,7 @@
 			baseConfigurationReference = A8116C6AA8C2812C26F400F9 /* Pods-Shared-AlfrescoActiviti.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AlfrescoActiviti/AlfrescoActiviti.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = AlfrescoActiviti/Info.plist;
