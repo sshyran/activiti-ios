@@ -433,12 +433,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                                              // otherwise -> replace
                                              
                                              ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)self.currentFormField.formFieldParams;
-                                             NSMutableArray *currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
+                                             NSMutableArray *currentValuesArray = nil;
                                              
                                              if (formFieldParameters.allowMultipleFiles) {
                                                  currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
                                              } else {
-                                                 currentValuesArray = [[NSMutableArray alloc] init];
+                                                 currentValuesArray = [NSMutableArray array];
                                              }
                                              
                                              [currentValuesArray addObject:modelContent];

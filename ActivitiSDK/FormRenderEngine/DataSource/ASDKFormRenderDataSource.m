@@ -610,8 +610,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     // Check if mandatory form field values had been addressed
     for (ASDKModelFormField *sectionFormField in self.visibleFormFields) {
-        NSArray *associatedFormFields = nil;
-        
         if ([sectionFormField isKindOfClass:ASDKModelDynamicTableFormField.class]) { // Extract formfields from dynamic table
             NSMutableArray *dynamicTableFormFields = [NSMutableArray new];
             
@@ -621,10 +619,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             for (NSArray *dynamicTableRow in sectionFormField.values) {
                 [dynamicTableFormFields addObjectsFromArray:dynamicTableRow];
             }
-            
-            associatedFormFields = [dynamicTableFormFields copy];
-        } else { // Extract the form fields for the correspondent container
-            associatedFormFields = sectionFormField.formFields;
         }
         
         // Enumerate through the associated form fields and check if they
