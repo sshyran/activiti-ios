@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 typedef NS_ENUM(NSInteger, ASDKModelAppThemeType) {
     ASDKModelAppThemeTypeUndefined = -1,
@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, ASDKModelAppThemeType) {
     ASDKModelAppThemeTypeTen
 };
 
-@interface ASDKModelApp : ASDKModelBase <MTLJSONSerializing>
+@interface ASDKModelApp : ASDKModelAttributable <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString              *deploymentID;
 @property (strong, nonatomic) NSString              *name;

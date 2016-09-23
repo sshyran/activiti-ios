@@ -25,6 +25,7 @@
 
 @implementation ASDKModelProcessInstance
 
+
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
 
@@ -44,8 +45,7 @@
                                                       @"processDefinitionName"          : @"processDefinitionName",
                                                       @"processDefinitionVersion"       : @"processDefinitionVersion",
                                                       @"isStartFormDefined"             : @"startFormDefined",
-                                                      @"tenantID"                       : @"tenantId"
-                                                      }];
+                                                      @"tenantID"                       : @"tenantId"}];
     
     return inheretedPropertyKeys;
 }
@@ -64,6 +64,34 @@
 
 + (NSValueTransformer *)initiatorJSONTransformer {
     return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelProfile.class];
+}
+
+
+#pragma mark -
+#pragma mark KVC Override
+
+/**
+ *  If for some reason the API changes, or is unavailable in the API result,
+ *  or it so happens that a mapped key is not found as described in this model
+ *  (the base class construct might not accomodate every API endpoint), KVC will
+ *  ask to replace nil when the field is of scalar type. In the current context
+ *  this can happen when trying to set the enum properties defined in the model.
+ *
+ *  By convention we substitute scalar values with a sentinel value (undefined)
+ *  when nil is being passed
+ *
+ *  @param key Name of the property KVC is trying to set
+ */
+- (void)setNilValueForKey:(NSString *)key {
+    if ([NSStringFromSelector(@selector(graphicalNotationDefined)) isEqualToString:key]) {
+        _graphicalNotationDefined = NO;
+    }
+    if ([NSStringFromSelector(@selector(processDefinitionVersion)) isEqualToString:key]) {
+        _processDefinitionVersion = 0;
+    }
+    if ([NSStringFromSelector(@selector(isStartFormDefined)) isEqualToString:key]) {
+        _isStartFormDefined = NO;
+    }
 }
 
 @end

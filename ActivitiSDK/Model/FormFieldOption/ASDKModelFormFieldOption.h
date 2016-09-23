@@ -16,9 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
-@interface ASDKModelFormFieldOption : ASDKModelBase
+@interface ASDKModelFormFieldOption : ASDKModelAttributable
 
 @property (strong, nonatomic) NSString *name;
 

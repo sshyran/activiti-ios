@@ -33,8 +33,7 @@
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
                                                       @"appDefinitionID"    : @"appDefinitionId",
                                                       @"filterID"           : @"filterId",
-                                                      @"filterModel"        : @"filter"
-                                                      }];
+                                                      @"filterModel"        : @"filter"}];
     
     return inheretedPropertyKeys;
 }

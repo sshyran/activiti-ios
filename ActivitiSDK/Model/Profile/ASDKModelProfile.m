@@ -42,8 +42,9 @@
                                                       @"profileState"       : @"status",
                                                       @"externalID"         : @"externalId",
                                                       @"pictureID"          : @"pictureId",
-                                                      @"groups"             : @"groups"
-                                                      }];
+                                                      @"groups"             : @"groups",
+                                                      @"creationDate"       : @"created",
+                                                      @"lastUpdate"         : @"lastUpdate"}];
     
     return inheretedPropertyKeys;
 }
@@ -69,14 +70,20 @@
 }
 
 + (NSValueTransformer *)profileStateJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @"active"   : @(ASDKModelProfileStateActive),
-                                                                           @"inactive" : @(ASDKModelProfileStateDisabled)
-                                                                           }];
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"active"   : @(ASDKModelProfileStateActive),
+                                                                           @"inactive" : @(ASDKModelProfileStateDisabled)}];
 }
 
 + (NSValueTransformer *)groupsJSONTransformer {
     return [MTLJSONAdapter arrayTransformerWithModelClass:[ASDKModelGroup class]];
+}
+
++ (NSValueTransformer *)creationDateJSONTransformer {
+    return self.valueTransformerForDate;
+}
+
++ (NSValueTransformer *)lastUpdateJSONTransformer {
+    return self.valueTransformerForDate;
 }
 
 
@@ -97,7 +104,7 @@
  */
 - (void)setNilValueForKey:(NSString *)key {
     if ([NSStringFromSelector(@selector(profileState)) isEqualToString:key]) {
-        self.profileState = ASDKModelProfileStateUndefined;
+        _profileState = ASDKModelProfileStateUndefined;
     }
 }
 

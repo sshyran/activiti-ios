@@ -261,8 +261,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return cellIdentifier;
 }
 
-- (ASDKModelBase *)modelForIndexPath:(NSIndexPath *)indexPath {
-    ASDKModelBase *formFieldModel = nil;
+- (ASDKModelAttributable *)modelForIndexPath:(NSIndexPath *)indexPath {
+    ASDKModelAttributable *formFieldModel = nil;
     
     if (indexPath.section >= self.visibleFormFields.count) {
         ASDKModelFormOutcome *formOutcome = self.formOutcomes[indexPath.row];
@@ -394,7 +394,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableIndexSet *sectionsToBeRemoved = [NSMutableIndexSet indexSet];
     
     for (int section = 0; section < filteredArr.count; section++) {
-        ASDKModelBase *containerFormField = filteredArr[section];
+        ASDKModelAttributable *containerFormField = filteredArr[section];
         
         // Check first if the section / tab altogether is visible
         if (![visibleFormFields doesCollectionContainFormField:containerFormField]) {
@@ -465,7 +465,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     // form field params model
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
         NSInteger formFieldParametersRepresentationType = formField.formFieldParams.representationType;
-        representationType =  formFieldParametersRepresentationType ? formFieldParametersRepresentationType : ASDKModelFormFieldRepresentationTypeReadOnly;
+        representationType =  (formFieldParametersRepresentationType != ASDKModelFormFieldRepresentationTypeUndefined) ? formFieldParametersRepresentationType : ASDKModelFormFieldRepresentationTypeReadOnly;
     } else {
         representationType = formField.representationType;
     }
@@ -700,7 +700,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     if (fieldsToBeAdded) {
         NSMutableArray *visibleFormFields = [NSMutableArray arrayWithArray:self.visibleFormFields];
         
-        for (ASDKModelBase *field in fieldsToBeAdded) {
+        for (ASDKModelAttributable *field in fieldsToBeAdded) {
             BOOL isTabInsert = [field isKindOfClass:ASDKModelFormTab.class] ? YES : NO;
             
             if (isTabInsert) {
@@ -797,7 +797,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableArray *visibleFormFields = [NSMutableArray arrayWithArray:self.visibleFormFields];
     
     if (fieldsToBeRemoved) {
-        for (ASDKModelBase *field in fieldsToBeRemoved) {
+        for (ASDKModelAttributable *field in fieldsToBeRemoved) {
             BOOL isTabRemoval = [field isKindOfClass:ASDKModelFormTab.class] ? YES: NO;
             
             if (isTabRemoval) {

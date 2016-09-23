@@ -20,9 +20,9 @@
 
 @interface ASDKModelFormTabDescription : ASDKModelFormDescription
 
-@property (strong, nonatomic) NSString          *formTitle;
-@property (strong, nonatomic) NSArray           *renderableTabFormFields;
-@property (strong, nonatomic) NSArray           *visibleTabFormFields;
-@property (assign, nonatomic) BOOL              isReadOnlyForm;
+@property (strong, nonatomic) NSString  *formTitle;
+@property (strong, nonatomic) NSArray   *renderableTabFormFields;
+@property (strong, nonatomic) NSArray   *visibleTabFormFields;
+@property (assign, nonatomic) BOOL      isReadOnlyForm;
 
 @end

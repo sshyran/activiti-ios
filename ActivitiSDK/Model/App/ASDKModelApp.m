@@ -35,8 +35,7 @@
                                                       @"icon"                   : @"icon",
                                                       @"applicationDescription" : @"description",
                                                       @"theme"                  : @"theme",
-                                                      @"applicationModelID"     : @"modelId"
-                                                      }];
+                                                      @"applicationModelID"     : @"modelId"}];
     
     return inheretedPropertyKeys;
 }
@@ -50,8 +49,7 @@
 }
 
 + (NSValueTransformer *)themeJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @"theme-1"  : @(ASDKModelAppThemeTypeOne),
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"theme-1"  : @(ASDKModelAppThemeTypeOne),
                                                                            @"theme-2"  : @(ASDKModelAppThemeTypeTwo),
                                                                            @"theme-3"  : @(ASDKModelAppThemeTypeThree),
                                                                            @"theme-4"  : @(ASDKModelAppThemeTypeFour),
@@ -60,8 +58,29 @@
                                                                            @"theme-7"  : @(ASDKModelAppThemeTypeSeven),
                                                                            @"theme-8"  : @(ASDKModelAppThemeTypeEight),
                                                                            @"theme-9"  : @(ASDKModelAppThemeTypeNine),
-                                                                           @"theme-10" : @(ASDKModelAppThemeTypeTen)
-                                                                          }];
+                                                                           @"theme-10" : @(ASDKModelAppThemeTypeTen)}];
+}
+
+
+#pragma mark -
+#pragma mark KVC Override
+
+/**
+ *  If for some reason the API changes, or is unavailable in the API result,
+ *  or it so happens that a mapped key is not found as described in this model
+ *  (the base class construct might not accomodate every API endpoint), KVC will
+ *  ask to replace nil when the field is of scalar type. In the current context
+ *  this can happen when trying to set the enum properties defined in the model.
+ *
+ *  By convention we substitute scalar values with a sentinel value (undefined)
+ *  when nil is being passed
+ *
+ *  @param key Name of the property KVC is trying to set
+ */
+- (void)setNilValueForKey:(NSString *)key {
+    if ([NSStringFromSelector(@selector(theme)) isEqualToString:key]) {
+        _theme = ASDKModelAppThemeTypeUndefined;
+    }
 }
 
 @end

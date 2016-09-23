@@ -51,8 +51,7 @@
                                                       @"assigneeID"         : @"assignee",
                                                       @"candidateID"        : @"candidate",
                                                       @"assignmentType"     : @"assignment",
-                                                      @"requestTaskState"   : @"state"
-                                                      }];
+                                                      @"requestTaskState"   : @"state"}];
     
     return inheretedPropertyKeys;
 }

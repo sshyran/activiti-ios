@@ -16,9 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
-@interface ASDKModelSite : ASDKModelBase
+@interface ASDKModelSite : ASDKModelAttributable
 
 @property (strong, nonatomic) NSString *title;
 

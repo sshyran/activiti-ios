@@ -318,7 +318,7 @@ static NSString * const kASDkHTTPS = @"https";
 }
 
 - (NSString *)integrationContentUploadForTaskServicePathFormat {
-    return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath] stringByAppendingString:[NSString stringWithFormat:@"?%@=%@", kASDKAPIParamIsRelatedContent, kASDKAPITrueParameter]];
+    return [[[[[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPITasksPath] stringByAppendingPathComponent:@"%@"] stringByAppendingPathComponent:kASDKAPIContentPath] stringByAppendingString:[NSString stringWithFormat:@"?%@=%@", kASDKAPIIsRelatedContentParameter, kASDKAPITrueParameter]];
 }
 
 @end

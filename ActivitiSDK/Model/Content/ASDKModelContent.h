@@ -16,16 +16,17 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 @class ASDKModelProfile;
 
 typedef NS_ENUM(NSInteger, ASDKModelContentAvailabilityType) {
-    ASDKModelContentAvailabilityTypeQueued = 0,
+    ASDKModelContentAvailabilityTypeUndefined   = -1,
+    ASDKModelContentAvailabilityTypeQueued      = 0,
     ASDKModelContentAvailabilityTypeCreated
 };
 
-@interface ASDKModelContent : ASDKModelBase
+@interface ASDKModelContent : ASDKModelAttributable
 
 @property (strong, nonatomic) NSString                          *contentName;
 @property (strong, nonatomic) ASDKModelProfile                  *owner;

@@ -36,9 +36,7 @@
              @"excludeTaskID"              : @"excludeTaskId",
              @"excludeProcessID"           : @"excludeProcessId",
              @"groupID"                    : @"groupId",
-             @"tenantID"                   : @"tenantId"
-
-             };
+             @"tenantID"                   : @"tenantId"};
 }
 
 @end

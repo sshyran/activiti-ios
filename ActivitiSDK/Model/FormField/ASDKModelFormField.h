@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 typedef NS_ENUM(NSInteger, ASDKModelFormFieldType) {
     ASDKModelFormFieldTypeUndefined = -1,
@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
 
 @class ASDKModelFormFieldValue, ASDKModelFormVisibilityCondition;
 
-@interface ASDKModelFormField : ASDKModelBase
+@interface ASDKModelFormField : ASDKModelAttributable
 
 @property (assign, nonatomic) ASDKModelFormFieldType                fieldType;
 @property (assign, nonatomic) ASDKModelFormFieldRepresentationType  representationType;

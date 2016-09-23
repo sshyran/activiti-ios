@@ -22,7 +22,7 @@
 
 @class ASDKModelFormDescription,
 ASDKModelFormTabDescription,
-ASDKModelBase,
+ASDKModelAttributable,
 ASDKModelFormField,
 ASDKFormVisibilityConditionsProcessor;
 
@@ -124,7 +124,7 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
  *
  *  @return          Model object associated with the passed index path
  */
-- (ASDKModelBase *)modelForIndexPath:(NSIndexPath *)indexPath;
+- (ASDKModelAttributable *)modelForIndexPath:(NSIndexPath *)indexPath;
 
 /**
  *  Method returns the section header title string for the provided index path if

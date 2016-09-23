@@ -15,6 +15,8 @@
 		130761511BEA41970082EA2D /* ActivitiSDKLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 130761501BEA41970082EA2D /* ActivitiSDKLocalizable.strings */; };
 		130761541BEA42EC0082EA2D /* ASDKLocalizationConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 130761521BEA42EC0082EA2D /* ASDKLocalizationConstants.h */; };
 		130761551BEA42EC0082EA2D /* ASDKLocalizationConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */; };
+		130A3FC51D93F878000A41C3 /* ASDKModelAttributable.h in Headers */ = {isa = PBXBuildFile; fileRef = 130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */; };
+		130A3FC61D93F878000A41C3 /* ASDKModelAttributable.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */; };
 		131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 131375081B6F677B00D2268E /* ASDKNetworkServiceProtocol.h */; };
 		1313750D1B6F927C00D2268E /* ASDKParserOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */; };
 		1313750E1B6F927C00D2268E /* ASDKParserOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1313750C1B6F927C00D2268E /* ASDKParserOperationManager.m */; };
@@ -568,6 +570,8 @@
 		130761501BEA41970082EA2D /* ActivitiSDKLocalizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ActivitiSDKLocalizable.strings; path = Localization/ActivitiSDKLocalizable.strings; sourceTree = "<group>"; };
 		130761521BEA42EC0082EA2D /* ASDKLocalizationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKLocalizationConstants.h; path = Localization/ASDKLocalizationConstants.h; sourceTree = "<group>"; };
 		130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLocalizationConstants.m; path = Localization/ASDKLocalizationConstants.m; sourceTree = "<group>"; };
+		130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelAttributable.h; path = Model/Attributable/ASDKModelAttributable.h; sourceTree = "<group>"; };
+		130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelAttributable.m; path = Model/Attributable/ASDKModelAttributable.m; sourceTree = "<group>"; };
 		1310F2F31D927481002FF53F /* AlfrescoActiviti.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AlfrescoActiviti.entitlements; sourceTree = "<group>"; };
 		131375081B6F677B00D2268E /* ASDKNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKNetworkServiceProtocol.h; path = NetworkServices/NetworkService/Protocol/ASDKNetworkServiceProtocol.h; sourceTree = "<group>"; };
 		1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKParserOperationManager.h; path = NetworkServices/ParserOperationManager/ASDKParserOperationManager.h; sourceTree = "<group>"; };
@@ -1267,6 +1271,15 @@
 			name = AmountFormField;
 			sourceTree = "<group>";
 		};
+		130A3FC71D93F87C000A41C3 /* Attributable */ = {
+			isa = PBXGroup;
+			children = (
+				130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */,
+				130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */,
+			);
+			name = Attributable;
+			sourceTree = "<group>";
+		};
 		1313750A1B6F678400D2268E /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
@@ -1361,10 +1374,11 @@
 		131375281B6FB38A00D2268E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1357018F1B70D21B00A384A7 /* Base */,
+				130A3FC71D93F87C000A41C3 /* Attributable */,
 				8D3A51E11C80899800FF9A00 /* User */,
 				8D3A51DC1C80867400FF9A00 /* ProcessDefinition */,
 				131375291B6FB39200D2268E /* ServerConfiguration */,
-				1357018F1B70D21B00A384A7 /* Base */,
 				139E540A1C21935900CE4674 /* App */,
 				135701991B70E0A700A384A7 /* Profile */,
 				139FEC181B720FA900CE6B01 /* Group */,
@@ -4518,6 +4532,7 @@
 				137B94541BD692E500134BF1 /* ASDKModelFormOutcome.h in Headers */,
 				8DEA25371C7DDBD200BF376F /* ASDKModelHyperlinkFormField.h in Headers */,
 				8DB3999D1C9AEDFF0089E0AB /* ASDKPeopleFormFieldDetailsViewController.h in Headers */,
+				130A3FC51D93F878000A41C3 /* ASDKModelAttributable.h in Headers */,
 				139E54031C218F1100CE4674 /* ASDKAppParserOperationWorker.h in Headers */,
 				13B7E2151B74E9BE002CBDF4 /* ASDKModelTask.h in Headers */,
 				139564EB1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h in Headers */,
@@ -5180,6 +5195,7 @@
 				136E113B1CEA11A500047E38 /* ASDKModelNetwork.m in Sources */,
 				132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */,
 				8D3B50ED1C873108005BEEEB /* ASDKFormPreProcessor.m in Sources */,
+				130A3FC61D93F878000A41C3 /* ASDKModelAttributable.m in Sources */,
 				13FF679A1CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m in Sources */,
 				13C855BB1C4D197600F84422 /* ASDKFilterListRequestRepresentation.m in Sources */,
 				13F9BA351B739D290068BB8C /* ASDKBaseRequestRepresentation.m in Sources */,

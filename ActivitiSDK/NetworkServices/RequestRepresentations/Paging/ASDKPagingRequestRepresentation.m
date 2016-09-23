@@ -33,8 +33,7 @@
              @"sort"    : @"sort",
              @"state"   : @"state",
              @"page"    : @"page",
-             @"size"    : @"size"
-             };
+             @"size"    : @"size"};
 }
 
 @end

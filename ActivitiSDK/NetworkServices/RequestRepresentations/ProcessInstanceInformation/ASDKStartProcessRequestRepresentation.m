@@ -35,8 +35,7 @@
              @"processDefinitionID"        : @"processDefinitionId",
              @"name"                       : @"name",
              @"startFormValues"            : @"values",
-             @"outcome"                    : @"outcome"
-             };
+             @"outcome"                    : @"outcome"};
 }
 
 @end

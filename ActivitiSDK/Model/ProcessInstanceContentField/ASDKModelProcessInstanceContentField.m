@@ -24,11 +24,14 @@
 
 @implementation ASDKModelProcessInstanceContentField
 
+
+#pragma mark -
+#pragma mark MTLJSONSerializing Delegate
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property       JSON property
-                                                      @"name"               : @"name"
-                                                      }];
+                                                      @"name"               : @"name"}];
     
     return inheretedPropertyKeys;
 }

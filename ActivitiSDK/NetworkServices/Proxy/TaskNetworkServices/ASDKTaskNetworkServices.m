@@ -497,7 +497,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory taskContentUploadServicePathFormat], taskID]
-                            parameters:@{kASDKAPIParamIsRelatedContent : @(YES)}
+                            parameters:@{kASDKAPIIsRelatedContentParameter : @(YES)}
              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
                  NSError *error = nil;
                  [formData appendPartWithFileURL:file.modelFileURL
@@ -581,7 +581,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager POST:[NSString stringWithFormat:[self.servicePathFactory taskContentUploadServicePathFormat], taskID]
-                            parameters:@{kASDKAPIParamIsRelatedContent : @(YES)}
+                            parameters:@{kASDKAPIIsRelatedContentParameter : @(YES)}
              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
                  NSError *error = nil;
                  
@@ -814,7 +814,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskUserInvolveServicePathFormat], taskID]
-                           parameters:@{kASDKAPIUserIdParameter : user.userID}
+                           parameters:@{kASDKAPIUserIdParameter : user.modelID}
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
@@ -867,7 +867,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskUserRemoveInvolvedServicePathFormat], taskID]
-                           parameters:@{kASDKAPIUserIdParameter : user.userID}
+                           parameters:@{kASDKAPIUserIdParameter : user.modelID}
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
@@ -1060,7 +1060,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskAssignServicePathFormat], taskID]
-                           parameters:@{kASDKAPIAssigneeParameter: user.userID}
+                           parameters:@{kASDKAPIAssigneeParameter: user.modelID}
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   

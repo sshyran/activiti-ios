@@ -16,24 +16,24 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelFormOutcome.h"
+#import "ASDKModelAttributable.h"
 
-#if ! __has_feature(objc_arc)
-#warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
-
-@implementation ASDKModelFormOutcome
-
+@implementation ASDKModelAttributable
 
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
-    NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property      JSON property
-                                                      @"name"            : @"name"}];
-    
-    return inheretedPropertyKeys;
+    return @{//Objc property      JSON property
+             @"modelID"         : @"id"};
+}
+
+
+#pragma mark -
+#pragma mark Value transformations
+
++ (NSValueTransformer *)modelIDJSONTransformer {
+    return self.valueTransformerForIDs;
 }
 
 @end

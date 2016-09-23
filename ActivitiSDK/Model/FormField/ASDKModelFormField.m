@@ -43,44 +43,50 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Class cluster handling
 
 + (Class)classForParsingJSONDictionary:(NSDictionary *)JSONDictionary {
-    // input forms
-    if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"AmountFieldRepresentation"]) {
+    NSString *formFieldTypeString = JSONDictionary[kASDKAPIFormFieldTypeParameter];
+    
+    // Input forms
+    if ([formFieldTypeString isEqualToString:@"AmountFieldRepresentation"]) {
         return ASDKModelAmountFormField.class;
-    } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"HyperlinkRepresentation"]) {
+    } else if ([formFieldTypeString isEqualToString:@"HyperlinkRepresentation"]) {
         return ASDKModelHyperlinkFormField.class;
-    } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"RestFieldRepresentation"]) {
+    } else if ([formFieldTypeString isEqualToString:@"RestFieldRepresentation"]) {
         return ASDKModelRestFormField.class;
-    } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"FormFieldRepresentation"]
-               && [JSONDictionary[@"type"] isEqualToString:@"people"]) {
+    } else if ([formFieldTypeString isEqualToString:@"FormFieldRepresentation"] &&
+               [JSONDictionary[@"type"] isEqualToString:@"people"]) {
         return ASDKModelPeopleFormField.class;
-    } else if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"DynamicTableRepresentation"]) {
+    } else if ([formFieldTypeString isEqualToString:@"DynamicTableRepresentation"]) {
         return ASDKModelDynamicTableFormField.class;
     }
-    // completed forms
-    if ([JSONDictionary[@"type"] isEqualToString:@"readonly"]) {
-        if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"people"]) {
+    
+    NSString *fieldTypeParameterString = JSONDictionary[kASDKAPIParametersParameter][kASDKAPIFormFieldParameter][kASDKAPITypeParameter];
+    BOOL isReadOnlyType = [JSONDictionary[kASDKAPITypeParameter] isEqualToString:@"readonly"];
+    
+    // Completed forms
+    if (isReadOnlyType) {
+        if ([fieldTypeParameterString isEqualToString:@"people"]) {
             return ASDKModelPeopleFormField.class;
         }
     }
     
-    // display value
-    if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"FormFieldRepresentation"]
-        && [JSONDictionary[@"type"] isEqualToString:@"readonly"]) {
+    // Display value
+    if ([JSONDictionary[kASDKAPIFormFieldTypeParameter] isEqualToString:@"FormFieldRepresentation"] &&
+        isReadOnlyType) {
         
-        if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"amount"]) {
+        if ([fieldTypeParameterString isEqualToString:@"amount"]) {
             return ASDKModelAmountFormField.class;
         }
-        if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"hyperlink"]) {
+        if ([fieldTypeParameterString isEqualToString:@"hyperlink"]) {
             return ASDKModelHyperlinkFormField.class;
         }
-        if ([JSONDictionary[@"params"][@"field"][@"type"] isEqualToString:@"dynamic-table"]) {
+        if ([fieldTypeParameterString isEqualToString:@"dynamic-table"]) {
             return ASDKModelDynamicTableFormField.class;
         }
-
     }
-
+    
     return self;
 }
+
 
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
@@ -101,8 +107,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                       @"formFieldParams"      : @"params",
                                                       @"formFieldOptions"     : @"options",
                                                       @"visibilityCondition"  : @"visibilityCondition",
-                                                      @"tabID"                : @"tab"
-                                                      }];
+                                                      @"tabID"                : @"tab"}];
     
     return inheretedPropertyKeys;
 }
@@ -113,21 +118,18 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 + (NSValueTransformer *)fieldTypeJSONTransformer {
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:
-            @{
-              @"ContainerRepresentation"       : @(ASDKModelFormFieldTypeContainer),
+            @{@"ContainerRepresentation"       : @(ASDKModelFormFieldTypeContainer),
               @"FormFieldRepresentation"       : @(ASDKModelFormFieldTypeFormField),
               @"RestFieldRepresentation"       : @(ASDKModelFormFieldTypeRestField),
               @"AmountFieldRepresentation"     : @(ASDKModelFormFieldTypeAmountField),
               @"AttachFileFieldRepresentation" : @(ASDKModelFormFieldTypeAttachField),
               @"HyperlinkRepresentation"       : @(ASDKModelFormFieldTypeHyperlinkField),
-              @"DynamicTableRepresentation"    : @(ASDKModelFormFieldTypeDynamicTableField)
-            }];
+              @"DynamicTableRepresentation"    : @(ASDKModelFormFieldTypeDynamicTableField)}];
 }
 
 + (NSValueTransformer *)representationTypeJSONTransformer {
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:
-            @{
-              @"readonly"       : @(ASDKModelFormFieldRepresentationTypeReadOnly),
+            @{@"readonly"       : @(ASDKModelFormFieldRepresentationTypeReadOnly),
               @"container"      : @(ASDKModelFormFieldRepresentationTypeContainer),
               @"group"          : @(ASDKModelFormFieldRepresentationTypeHeader),
               @"text"           : @(ASDKModelFormFieldRepresentationTypeText),
@@ -142,8 +144,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
               @"upload"         : @(ASDKModelFormFieldRepresentationTypeAttach),
               @"hyperlink"      : @(ASDKModelFormFieldRepresentationTypeHyperlink),
               @"people"         : @(ASDKModelFormFieldRepresentationTypePeople),
-              @"dynamic-table"  : @(ASDKModelFormFieldRepresentationTypeDynamicTable)
-              }];
+              @"dynamic-table"  : @(ASDKModelFormFieldRepresentationTypeDynamicTable)}];
 }
 
 + (NSValueTransformer *)formFieldsJSONTransformer {
@@ -176,15 +177,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         id parsedFormFieldParams = nil;
         
         if (value[kASDKAPIFormFieldParameter]) {
-            if ([value[kASDKAPIFormFieldParameter][@"type"] isEqualToString:@"amount"]) {
+            NSString *formFieldTypeString = value[kASDKAPIFormFieldParameter][kASDKAPITypeParameter];
+            
+            if ([formFieldTypeString isEqualToString:@"amount"]) {
                 parsedFormFieldParams = [MTLJSONAdapter modelOfClass:ASDKModelAmountFormField.class
                                                   fromJSONDictionary:value[kASDKAPIFormFieldParameter]
                                                                error:&formFieldsParseError];
-            } else if([value[kASDKAPIFormFieldParameter][@"type"] isEqualToString:@"hyperlink"]) {
+            } else if([formFieldTypeString isEqualToString:@"hyperlink"]) {
                 parsedFormFieldParams = [MTLJSONAdapter modelOfClass:ASDKModelHyperlinkFormField.class
                                                   fromJSONDictionary:value[kASDKAPIFormFieldParameter]
                                                                error:&formFieldsParseError];
-            } else if([value[kASDKAPIFormFieldParameter][@"type"] isEqualToString:@"dynamic-table"]) {
+            } else if([formFieldTypeString isEqualToString:@"dynamic-table"]) {
                 parsedFormFieldParams = [MTLJSONAdapter modelOfClass:ASDKModelDynamicTableFormField.class
                                                   fromJSONDictionary:value[kASDKAPIFormFieldParameter]
                                                                error:&formFieldsParseError];
@@ -215,47 +218,85 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 + (NSValueTransformer *)valuesJSONTransformer {
     return [MTLValueTransformer transformerUsingForwardBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
+        if (!value) {
+            return nil;
+        }
+        
         if ([value isKindOfClass:[NSString class]]) {
             return @[value];
-        }
-        
-        if (value) {
-            if ([value isKindOfClass:[NSArray class]]) {
-                if (!((NSArray *)value).count) {
-                    return nil;
-                } else {
-                    NSError *formFieldsParseError = nil;
-                    NSArray *formFields = nil;
+        } else if ([value isKindOfClass:[NSArray class]]) {
+            NSArray *valuesArr = (NSArray *)value;
+            
+            if (!valuesArr.count) {
+                return nil;
+            } else {
+                NSError *formFieldsParseError = nil;
+                NSArray *formFields = nil;
+                
+                // Examine one of the collection's element to check for their type
+                // and then try to parse it to a model if possible
+                if ([valuesArr.firstObject isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *firstElement = valuesArr.firstObject;
                     
-                    // Examine one of the collection's element to check for their type
-                    // and then try to parse it to a model if possible
-                    if ([((NSArray *)value).firstObject isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary *firstElement = [value firstObject];
-                        
-                        // Check for form fields attached content
-                        if (firstElement[kASDKAPIContentAvailableParameter]) {
-                            formFields = [MTLJSONAdapter modelsOfClass:ASDKModelContent.class
-                                                         fromJSONArray:value
-                                                                 error:&formFieldsParseError];
-                            if (formFieldsParseError) {
-                                ASDKLogVerbose(@"Cannot parse form field parameters model. Reason:%@", formFieldsParseError.localizedDescription);
-                            }
+                    // Check for form fields attached content
+                    if (firstElement[kASDKAPIContentAvailableParameter]) {
+                        formFields = [MTLJSONAdapter modelsOfClass:ASDKModelContent.class
+                                                     fromJSONArray:value
+                                                             error:&formFieldsParseError];
+                        if (formFieldsParseError) {
+                            ASDKLogVerbose(@"Cannot parse form field parameters model. Reason:%@", formFieldsParseError.localizedDescription);
                         }
                     }
-                    
-                    return formFields;
                 }
-            } else {
-                return @[[NSString stringWithFormat:@"%@", value]];
+                
+                return formFields;
             }
+        } else {
+            return @[[NSString stringWithFormat:@"%@", value]];
         }
-        
-        return nil;
     }];
 }
 
 + (NSValueTransformer *)visibilityConditionJSONTransformer {
     return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelFormVisibilityCondition.class];
 }
+
+
+#pragma mark -
+#pragma mark KVC Override
+
+/**
+ *  If for some reason the API changes, or is unavailable in the API result,
+ *  or it so happens that a mapped key is not found as described in this model
+ *  (the base class construct might not accomodate every API endpoint), KVC will
+ *  ask to replace nil when the field is of scalar type. In the current context
+ *  this can happen when trying to set the enum properties defined in the model.
+ *
+ *  By convention we substitute scalar values with a sentinel value (undefined)
+ *  when nil is being passed
+ *
+ *  @param key Name of the property KVC is trying to set
+ */
+- (void)setNilValueForKey:(NSString *)key {
+    if ([NSStringFromSelector(@selector(representationType)) isEqualToString:key]) {
+        _representationType = ASDKModelFormFieldRepresentationTypeUndefined;
+    }
+    if ([NSStringFromSelector(@selector(fieldType)) isEqualToString:key]) {
+        _fieldType = ASDKModelFormFieldTypeUndefined;
+    }
+    if ([NSStringFromSelector(@selector(isReadOnly)) isEqualToString:key]) {
+        _fieldType = NO;
+    }
+    if ([NSStringFromSelector(@selector(isRequired)) isEqualToString:key]) {
+        _isRequired = NO;
+    }
+    if ([NSStringFromSelector(@selector(sizeX)) isEqualToString:key]) {
+        _sizeX = NO;
+    }
+    if ([NSStringFromSelector(@selector(sizeY)) isEqualToString:key]) {
+        _sizeY = NO;
+    }
+}
+
 
 @end

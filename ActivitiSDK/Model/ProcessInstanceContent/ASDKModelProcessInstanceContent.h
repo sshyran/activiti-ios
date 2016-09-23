@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "ASDKModelBase.h"
+
 @class ASDKModelProcessInstanceContentField;
 
 @interface ASDKModelProcessInstanceContent : ASDKModelBase

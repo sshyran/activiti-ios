@@ -41,8 +41,7 @@
                                                       @"formFields"                 : @"fields",
                                                       @"formOutcomes"               : @"outcomes",
                                                       @"formTabs"                   : @"tabs",
-                                                      @"formVariables"              : @"variables"
-                                                      }];
+                                                      @"formVariables"              : @"variables"}];
     return inheretedPropertyKeys;
 }
 

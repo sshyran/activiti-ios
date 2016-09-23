@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 typedef NS_ENUM(NSInteger, ASDKModelGroupState) {
     ASDKModelGroupStateUndefined = -1,
@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, ASDKModelGroupType) {
     ASDKModelGroupTypeFunctional
 };
 
-@interface ASDKModelGroup : ASDKModelBase
+@interface ASDKModelGroup : ASDKModelAttributable
 
 @property (strong, nonatomic) NSString              *tenantID;
 @property (strong, nonatomic) NSString              *name;

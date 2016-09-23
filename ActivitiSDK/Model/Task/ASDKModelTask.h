@@ -16,11 +16,11 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 @class ASDKModelProfile;
 
-@interface ASDKModelTask : ASDKModelBase <MTLJSONSerializing>
+@interface ASDKModelTask : ASDKModelAttributable <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString          *name;
 @property (strong, nonatomic) NSString          *taskDescription;
@@ -38,5 +38,6 @@
 @property (assign, nonatomic) BOOL              isMemberOfCandidateUsers;
 @property (assign, nonatomic) BOOL              isManagerOfCandidateGroup;
 @property (strong, nonatomic) NSString          *parentTaskID;
+@property (strong, nonatomic) NSDate            *creationDate;
 
 @end
