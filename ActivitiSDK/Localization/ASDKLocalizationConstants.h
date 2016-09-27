@@ -39,6 +39,7 @@ extern NSString *kLocalizationFormAttachFileNoContentText;
 extern NSString *kLocalizationFormAttachFileItemsAttachedText;
 extern NSString *kLocalizationFormPeopleNoSelectedText;
 extern NSString *kLocalizationFormDynamicTableRowsAvailableText;
+extern NSString *kLocalizationFormDynamicTableRowAvailableText;
 extern NSString *kLocalizationFormDynamicTableRowHeaderText;
 extern NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText;
 extern NSString *kLocalizationFormValueEmpty;

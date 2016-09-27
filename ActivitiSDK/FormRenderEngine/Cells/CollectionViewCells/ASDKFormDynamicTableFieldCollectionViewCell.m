@@ -85,9 +85,14 @@
 
 - (NSString *)formatLabelTextWithFormFieldValues:(NSArray *)formfieldValues {
     NSString *labelText = nil;
+    NSUInteger valuesCount = formfieldValues.count;
     
-    if (formfieldValues.count) {
-        labelText = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowsAvailableText, ASDKLocalizationTable, @"Number of rows"), formfieldValues.count];
+    if (valuesCount) {
+        if (valuesCount == 1) {
+            labelText = ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowAvailableText, ASDKLocalizationTable, @"One field available text");
+        } else {
+            labelText = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormDynamicTableRowsAvailableText, ASDKLocalizationTable, @"Number of rows"), valuesCount];
+        }
     } else {
         labelText = @"";
     }
