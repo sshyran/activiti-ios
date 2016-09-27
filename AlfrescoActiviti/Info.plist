@@ -45,6 +45,8 @@
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This allows Alfresco Activiti to let you pick images from your photo library and attach them to tasks.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This allows Alfresco Activiti to let you take pictures with your camera and attach them to tasks.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>glyphicons-filetypes.otf</string>
