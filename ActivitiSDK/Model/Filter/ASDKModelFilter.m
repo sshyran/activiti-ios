@@ -24,6 +24,7 @@
 
 @implementation ASDKModelFilter
 
+
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
 
@@ -35,39 +36,61 @@
                                                       @"state"              : @"state",
                                                       @"assignmentType"     : @"assignment",
                                                       @"appDefinitionID"    : @"appDefinitionId",
-                                                      @"processInstanceID"  : @"processInstanceId"
-                                                      }];
+                                                      @"processInstanceID"  : @"processInstanceId"}];
     
     return inheretedPropertyKeys;
 }
+
 
 #pragma mark -
 #pragma mark Value transformations
 
 + (NSValueTransformer *)sortTypeJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @"created-desc"   : @(ASDKModelFilterSortTypeCreatedDesc),
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"created-desc"   : @(ASDKModelFilterSortTypeCreatedDesc),
                                                                            @"created-asc"    : @(ASDKModelFilterSortTypeCreatedAsc),
                                                                            @"due-desc"       : @(ASDKModelFilterSortTypeDueDesc),
-                                                                           @"due-asc"        : @(ASDKModelFilterSortTypeDueAsc)
-                                                                           }];
+                                                                           @"due-asc"        : @(ASDKModelFilterSortTypeDueAsc)}];
 }
 
 + (NSValueTransformer *)stateJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @"open"           : @(ASDKModelFilterStateTypeActive),
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"open"           : @(ASDKModelFilterStateTypeActive),
                                                                            @"completed"      : @(ASDKModelFilterStateTypeCompleted),
                                                                            @"running"        : @(ASDKModelFilterStateTypeRunning),
-                                                                           @"all"            : @(ASDKModelFilterStateTypeAll)
-                                                                           }];
+                                                                           @"all"            : @(ASDKModelFilterStateTypeAll)}];
 }
 
 + (NSValueTransformer *)assignmentTypeJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @"involved"        : @(ASDKModelFilterAssignmentTypeInvolved),
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"involved"        : @(ASDKModelFilterAssignmentTypeInvolved),
                                                                            @"assignee"        : @(ASDKModelFilterAssignmentTypeAssignee),
-                                                                           @"candidate"       : @(ASDKModelFilterAssignmentTypeCandidate)
-                                                                           }];
+                                                                           @"candidate"       : @(ASDKModelFilterAssignmentTypeCandidate)}];
+}
+
+
+#pragma mark -
+#pragma mark KVC Override
+
+/**
+ *  If for some reason the API changes, or is unavailable in the API result,
+ *  or it so happens that a mapped key is not found as described in this model
+ *  (the base class construct might not accomodate every API endpoint), KVC will
+ *  ask to replace nil when the field is of scalar type. In the current context
+ *  this can happen when trying to set the enum properties defined in the model.
+ *
+ *  By convention we substitute scalar values with a sentinel value (undefined)
+ *  when nil is being passed
+ *
+ *  @param key Name of the property KVC is trying to set
+ */
+- (void)setNilValueForKey:(NSString *)key {
+    if ([NSStringFromSelector(@selector(sortType)) isEqualToString:key]) {
+        _sortType = ASDKModelFilterSortTypeUndefined;
+    }
+    if ([NSStringFromSelector(@selector(state)) isEqualToString:key]) {
+        _state = ASDKModelFilterStateTypeUndefined;
+    }
+    if ([NSStringFromSelector(@selector(assignmentType)) isEqualToString:key]) {
+        _assignmentType = ASDKModelFilterAssignmentTypeUndefined;
+    }
 }
 
 @end

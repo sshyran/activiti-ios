@@ -20,7 +20,6 @@
 
 @class ASDKModelFormDescription,
 ASDKModelFormTabDescription,
-ASDKModelBase,
 ASDKModelFormField;
 
 @protocol ASDKFormRenderEngineFormDescriptionDataSourceProtocol <ASDKFormRenderEngineDataSourceProtocol>

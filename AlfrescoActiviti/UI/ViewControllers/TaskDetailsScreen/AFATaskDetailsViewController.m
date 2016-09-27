@@ -1210,7 +1210,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
             [strongSelf showConfirmationAlertControllerWithMessage:[NSString stringWithFormat:NSLocalizedString(kLocalizationAlertDialogDeleteContributorQuestionFormat, @"Delete contributor confirmation question"), contributorName]
                                            confirmationBlockAction:^{
                                                ASDKModelUser *userModel = [ASDKModelUser new];
-                                               userModel.userID = contributor.modelID;
+                                               userModel.modelID = contributor.modelID;
                                                [weakSelf onRemoveInvolvedUserForCurrentTask:userModel];
                                            }];
             

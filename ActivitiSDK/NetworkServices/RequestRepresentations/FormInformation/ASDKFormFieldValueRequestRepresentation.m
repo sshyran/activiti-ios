@@ -38,8 +38,7 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{//Objc property          JSON property
              @"formFields"          : @"values",
-             @"outcome"             : @"outcome"
-             };
+             @"outcome"             : @"outcome"};
 }
 
 

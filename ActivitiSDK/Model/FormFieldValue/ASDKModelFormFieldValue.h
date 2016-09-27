@@ -24,17 +24,17 @@
 /**
  *  Property intended to hold a reference to the values of a form field
  */
-@property (strong, nonatomic) NSString                          *attachedValue;
+@property (strong, nonatomic) NSString                  *attachedValue;
 
 /**
  *  Property intended to hold a reference to nesting form field value object types
  */
-@property (strong, nonatomic) ASDKModelFormFieldValue           *option;
+@property (strong, nonatomic) ASDKModelFormFieldValue   *option;
 
 /**
  *  Property intended to hold a reference to additional objects containing information
  *  relevant to metadata values of a form field.
  */
-@property (strong, nonatomic) id                                userInfo;
+@property (strong, nonatomic) id                        userInfo;
 
 @end

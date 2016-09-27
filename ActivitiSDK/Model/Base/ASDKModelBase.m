@@ -30,7 +30,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 @implementation ASDKModelBase
 
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Lifecycle
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionaryValue
@@ -45,35 +45,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark MTLJSONSerializing Delegate
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return @{
-             @"modelID"      : @"id",
-             @"creationDate" : @"created",
-             @"lastUpdate"   : @"lastUpdate",
-             @"modelType"    : @"type"
-            };
-}
-
-
-#pragma mark - 
-#pragma mark Value transformations
-
-+ (NSValueTransformer *)modelIDJSONTransformer {
-    return self.valueTransformerForIDs;
-}
-
-+ (NSValueTransformer *)modelTypeJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @"bpmSuite"   : @(ASDKModelBaseTypeBPMSuite),
-                                                                           @"enterprise" : @(ASDKModelBaseTypeEnterprise)
-                                                                          }];
-}
-
-+ (NSValueTransformer *)creationDateJSONTransformer {
-    return self.valueTransformerForDate;
-}
-
-+ (NSValueTransformer *)lastUpdateJSONTransformer {
-    return self.valueTransformerForDate;
+    return nil;
 }
 
 
@@ -106,28 +78,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     return jsonDict;
-}
-
-
-#pragma mark -
-#pragma mark KVC Override
-
-/**
- *  If for some reason the API changes, or is unavailable in the API result, 
- *  or it so happens that a mapped key is not found as described in this model 
- *  (the base class construct might not accomodate every API endpoint), KVC will
- *  ask to replace nil when the field is of scalar type. In the current context
- *  this can happen when trying to set the enum properties defined in the model.
- * 
- *  By convention we substitute scalar values with a sentinel value (undefined) 
- *  when nil is being passed
- *
- *  @param key Name of the property KVC is trying to set
- */
-- (void)setNilValueForKey:(NSString *)key {
-    if ([NSStringFromSelector(@selector(modelType)) isEqualToString:key]) {
-        self.modelType = ASDKModelBaseTypeUndefined;
-    }
 }
 
 

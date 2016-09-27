@@ -16,17 +16,17 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
-@interface ASDKModelProcessDefinition : ASDKModelBase <MTLJSONSerializing>
+@interface ASDKModelProcessDefinition : ASDKModelAttributable <MTLJSONSerializing>
 
-@property (strong, nonatomic) NSString          *name;
-@property (strong, nonatomic) NSString          *definitionDescription;
-@property (strong, nonatomic) NSString          *key;
-@property (strong, nonatomic) NSString          *category;
-@property (assign, nonatomic) NSInteger         version;
-@property (strong, nonatomic) NSString          *deploymentID;
-@property (strong, nonatomic) NSString          *tenantID;
-@property (assign, nonatomic) BOOL              hasStartForm;
+@property (strong, nonatomic) NSString  *name;
+@property (strong, nonatomic) NSString  *definitionDescription;
+@property (strong, nonatomic) NSString  *key;
+@property (strong, nonatomic) NSString  *category;
+@property (assign, nonatomic) NSInteger version;
+@property (strong, nonatomic) NSString  *deploymentID;
+@property (strong, nonatomic) NSString  *tenantID;
+@property (assign, nonatomic) BOOL      hasStartForm;
 
 @end

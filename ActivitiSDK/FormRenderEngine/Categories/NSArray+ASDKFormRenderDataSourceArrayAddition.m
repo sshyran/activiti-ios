@@ -21,6 +21,7 @@
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormTab.h"
+#import "ASDKModelAttributable.h"
 
 @implementation NSArray (ASDKFormRenderDataSourceArrayAddition)
 
@@ -56,17 +57,17 @@
     return NSNotFound;
 }
 
-- (BOOL)doesCollectionContainFormField:(ASDKModelBase *)sectionFormField {
+- (BOOL)doesCollectionContainFormField:(ASDKModelAttributable *)sectionFormField {
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", sectionFormField.modelID];
     NSArray *results = [self filteredArrayUsingPredicate:searchPredicate];
     
     return results.count ? YES : NO;
 }
 
-- (NSUInteger)indexOfFormField:(ASDKModelBase *)formField {
+- (NSUInteger)indexOfFormField:(ASDKModelAttributable *)formField {
     __block NSUInteger formFieldIdx = NSNotFound;
     
-    [self enumerateObjectsUsingBlock:^(ASDKModelBase *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self enumerateObjectsUsingBlock:^(ASDKModelAttributable *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if([obj.modelID isEqualToString:formField.modelID]) {
             formFieldIdx = idx;
             *stop = YES;
@@ -81,7 +82,7 @@
     NSUInteger insertIndex = 0;
     
     for (NSInteger sectionCount = sectionIndex - 1; sectionCount >= 0; sectionCount--) {
-        ASDKModelBase *previousSectionField = (ASDKModelBase *)refferenceCollection[sectionCount];
+        ASDKModelAttributable *previousSectionField = (ASDKModelAttributable *)refferenceCollection[sectionCount];
         
         if ([self doesCollectionContainFormField:previousSectionField]) {
             insertIndex = [self indexOfFormField:previousSectionField] + 1;

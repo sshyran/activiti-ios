@@ -33,7 +33,7 @@
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property        JSON property
                                                       @"message"             : @"message",
                                                       @"authorModel"         : @"createdBy",
-                                                      }];
+                                                      @"creationDate"        : @"created"}];
     
     return inheretedPropertyKeys;
 }
@@ -44,6 +44,10 @@
 
 + (NSValueTransformer *)authorModelJSONTransformer {
     return [MTLJSONAdapter dictionaryTransformerWithModelClass:ASDKModelProfile.class];
+}
+
++ (NSValueTransformer *)creationDateJSONTransformer {
+    return self.valueTransformerForDate;
 }
 
 @end

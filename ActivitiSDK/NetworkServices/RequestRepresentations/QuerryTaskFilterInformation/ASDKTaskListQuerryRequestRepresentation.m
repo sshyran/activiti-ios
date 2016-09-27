@@ -28,8 +28,7 @@
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property         JSON property
                                                       @"processInstanceID"  : @"processInstanceId",
-                                                      @"requestTaskState"   : @"state"
-                                                      }];
+                                                      @"requestTaskState"   : @"state"}];
     
     return inheretedPropertyKeys;
 }

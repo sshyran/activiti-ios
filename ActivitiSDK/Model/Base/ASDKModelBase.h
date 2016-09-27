@@ -20,23 +20,12 @@
 
 typedef void (^ASDKModelMergePolicyBlock) (id<MTLModel>model);
 
-typedef NS_ENUM(NSInteger, ASDKModelBaseType) {
-    ASDKModelBaseTypeUndefined = -1,
-    ASDKModelBaseTypeBPMSuite = 1,
-    ASDKModelBaseTypeEnterprise,
-};
-
 typedef NS_ENUM(NSInteger, ASDKModelJSONAdapterType) {
     ASDKModelJSONAdapterTypeDefault,
     ASDKModelJSONAdapterTypeExcludeNilValues
 };
 
 @interface ASDKModelBase : MTLModel <MTLJSONSerializing>
-
-@property (strong, nonatomic) NSString          *modelID;
-@property (strong, nonatomic) NSDate            *creationDate;
-@property (strong, nonatomic) NSDate            *lastUpdate;
-@property (assign, nonatomic) ASDKModelBaseType  modelType;
 
 /**
  *  When defined, the default implementation of the MTLModel changes and

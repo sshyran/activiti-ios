@@ -34,9 +34,7 @@
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
                                                       @"integrationServiceID" : @"serviceId",
                                                       @"name"                 : @"name",
-                                                      @"selectedFolder"       : @"selectedFolder"
-                                                      }];
-    
+                                                      @"selectedFolder"       : @"selectedFolder"}];
     return inheretedPropertyKeys;
 }
 

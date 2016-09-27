@@ -32,8 +32,7 @@
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
                                                       @"hyperlinkURL"           : @"hyperlinkUrl",
-                                                      @"displayText"            : @"displayText"
-                                                      }];
+                                                      @"displayText"            : @"displayText"}];
     
     return inheretedPropertyKeys;
 }

@@ -19,7 +19,8 @@
 #import "ASDKModelBase.h"
 
 typedef NS_ENUM(NSInteger, ASDKModelFormVariableType) {
-    ASDKModelFormVariableTypeString,
+    ASDKModelFormVariableTypeUndefined = -1,
+    ASDKModelFormVariableTypeString    = 0,
     ASDKModelFormVariableTypeInteger,
     ASDKModelFormVariableTypeBoolean
 };

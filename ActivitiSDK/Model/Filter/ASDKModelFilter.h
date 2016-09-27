@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 typedef NS_ENUM(NSInteger, ASDKModelFilterSortType) {
     ASDKModelFilterSortTypeUndefined   = -1,
@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, ASDKModelFilterAssignmentType) {
 };
 
 
-@interface ASDKModelFilter : ASDKModelBase
+@interface ASDKModelFilter : ASDKModelAttributable
 
 @property (strong, nonatomic) NSString                      *name;
 @property (assign, nonatomic) ASDKModelFilterSortType       sortType;

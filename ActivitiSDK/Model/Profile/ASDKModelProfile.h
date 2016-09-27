@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 typedef NS_ENUM(NSInteger, ASDKModelProfileState) {
     ASDKModelProfileStateUndefined = -1,
@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, ASDKModelProfileState) {
     ASDKModelProfileStateDisabled
 };
 
-@interface ASDKModelProfile : ASDKModelBase <MTLJSONSerializing>
+@interface ASDKModelProfile : ASDKModelAttributable <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString              *tenantID;
 @property (strong, nonatomic) NSString              *tenantName;
@@ -37,6 +37,8 @@ typedef NS_ENUM(NSInteger, ASDKModelProfileState) {
 @property (strong, nonatomic) NSString              *pictureID;
 @property (strong, nonatomic) NSArray               *groups;
 @property (assign, nonatomic) ASDKModelProfileState profileState;
+@property (strong, nonatomic) NSDate                *creationDate;
+@property (strong, nonatomic) NSDate                *lastUpdate;
 
 - (NSString *)normalisedName;
 

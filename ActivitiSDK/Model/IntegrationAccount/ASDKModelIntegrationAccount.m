@@ -24,16 +24,44 @@
 
 @implementation ASDKModelIntegrationAccount
 
+
+#pragma mark -
+#pragma mark MTLJSONSerializing Delegate
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property             JSON property
                                                       @"isAccountAuthorized"    : @"authorized",
                                                       @"authorizationURLString" : @"authorizationUrl",
                                                       @"integrationServiceID"   : @"serviceId",
-                                                      @"isMetadataAllowed"      : @"metaDataAllowed"
-                                                      }];
+                                                      @"isMetadataAllowed"      : @"metaDataAllowed"}];
     
     return inheretedPropertyKeys;
+}
+
+
+#pragma mark -
+#pragma mark KVC Override
+
+/**
+ *  If for some reason the API changes, or is unavailable in the API result,
+ *  or it so happens that a mapped key is not found as described in this model
+ *  (the base class construct might not accomodate every API endpoint), KVC will
+ *  ask to replace nil when the field is of scalar type. In the current context
+ *  this can happen when trying to set the enum properties defined in the model.
+ *
+ *  By convention we substitute scalar values with a sentinel value (undefined)
+ *  when nil is being passed
+ *
+ *  @param key Name of the property KVC is trying to set
+ */
+- (void)setNilValueForKey:(NSString *)key {
+    if ([NSStringFromSelector(@selector(isAccountAuthorized)) isEqualToString:key]) {
+        _isAccountAuthorized = NO;
+    }
+    if ([NSStringFromSelector(@selector(isMetadataAllowed)) isEqualToString:key]) {
+        _isMetadataAllowed = NO;
+    }
 }
 
 @end

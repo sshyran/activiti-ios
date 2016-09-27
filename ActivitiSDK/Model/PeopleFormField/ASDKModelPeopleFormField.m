@@ -27,6 +27,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 @implementation ASDKModelPeopleFormField
 
+
 #pragma mark -
 #pragma mark MTLJSONSerializing Delegate
 
@@ -35,6 +36,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     return inheretedPropertyKeys;
 }
+
 
 #pragma mark -
 #pragma mark Value transformations

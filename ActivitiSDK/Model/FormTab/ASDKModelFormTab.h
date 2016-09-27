@@ -16,11 +16,11 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 @class ASDKModelFormVisibilityCondition;
 
-@interface ASDKModelFormTab : ASDKModelBase
+@interface ASDKModelFormTab : ASDKModelAttributable
 
 @property (strong, nonatomic) NSString                          *title;
 @property (strong, nonatomic) ASDKModelFormVisibilityCondition  *visibilityCondition;

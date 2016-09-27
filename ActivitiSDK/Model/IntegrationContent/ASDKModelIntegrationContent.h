@@ -16,9 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
-@interface ASDKModelIntegrationContent : ASDKModelBase
+@interface ASDKModelIntegrationContent : ASDKModelAttributable
 
 @property (assign, nonatomic) BOOL      isFolder;
 @property (strong, nonatomic) NSString  *simpleType;

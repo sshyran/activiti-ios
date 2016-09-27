@@ -20,6 +20,4 @@
 
 @interface ASDKModelPeopleFormField : ASDKModelFormField
 
-@property (assign, nonatomic) BOOL      enableFractions;
-
 @end

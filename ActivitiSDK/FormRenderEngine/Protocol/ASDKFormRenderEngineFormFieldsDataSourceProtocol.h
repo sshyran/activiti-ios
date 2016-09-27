@@ -18,10 +18,6 @@
 
 #import "ASDKFormRenderEngineDataSourceProtocol.h"
 
-@class ASDKModelFormDescription,
-ASDKModelBase,
-ASDKModelFormField;
-
 @protocol ASDKFormRenderEngineFormFieldsDataSourceProtocol <ASDKFormRenderEngineDataSourceProtocol>
 
 - (instancetype)initWithFormFields:(NSArray *)formFields;

@@ -20,14 +20,14 @@
 
 @class ASDKModelFormField,
 ASDKModelFormTab,
-ASDKModelBase;
+ASDKModelAttributable;
 
 @interface NSArray (ASDKFormRenderDataSourceArrayAddition)
 
 - (NSUInteger)sectionForFormField:(ASDKModelFormField *)formField;
 - (NSUInteger)sectionForTab:(ASDKModelFormTab *)formTab;
-- (BOOL)doesCollectionContainFormField:(ASDKModelBase *)sectionFormField;
-- (NSUInteger)indexOfFormField:(ASDKModelBase *)formField;
+- (BOOL)doesCollectionContainFormField:(ASDKModelAttributable *)sectionFormField;
+- (NSUInteger)indexOfFormField:(ASDKModelAttributable *)formField;
 - (NSUInteger)insertIndexInFormFieldCollectionForSectionIndex:(NSUInteger)sectionIndex
                                          refferenceCollection:(NSArray *)refferenceCollection;
 - (BOOL)isFormFieldVisible:(ASDKModelFormField *)formField;

@@ -20,7 +20,7 @@
 
 @interface ASDKModelDynamicTableColumnDefinitionRestFormField : ASDKModelRestFormField
 
-@property (assign, nonatomic) BOOL                 editable;
-@property (assign, nonatomic) BOOL                 visible;
+@property (assign, nonatomic) BOOL  editable;
+@property (assign, nonatomic) BOOL  visible;
 
 @end

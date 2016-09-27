@@ -332,7 +332,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKModelUser *selectedUser = self.usersArr[indexPath.row];
     [peopleCell setUpCellWithUser:selectedUser];
     
-    if (self.selectedUser.userID == selectedUser.userID) {
+    if (self.selectedUser.modelID == selectedUser.modelID) {
         peopleCell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
         peopleCell.accessoryType = UITableViewCellAccessoryNone;
@@ -345,7 +345,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKModelUser *selectedUser = self.usersArr[indexPath.row];
     
-    if (self.selectedUser.userID == selectedUser.userID) {
+    if (self.selectedUser.modelID == selectedUser.modelID) {
         self.selectedUser = nil;
         [self removeUserFromCurrentFormField];
     } else {

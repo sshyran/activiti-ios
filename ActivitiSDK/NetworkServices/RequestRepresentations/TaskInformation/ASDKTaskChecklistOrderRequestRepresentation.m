@@ -30,8 +30,7 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{//Objc property          JSON property
-             @"checklistOrder"      : @"order"
-            };
+             @"checklistOrder"      : @"order"};
 }
 
 @end

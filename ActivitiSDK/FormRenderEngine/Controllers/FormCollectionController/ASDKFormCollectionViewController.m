@@ -28,7 +28,6 @@
 #import "ASDKFormEngineControllerActionHandlerDelegate.h"
 
 // Models
-#import "ASDKModelBase.h"
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormOutcome.h"
 #import "ASDKFormFieldValueRequestRepresentation.h"
@@ -330,7 +329,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
 - (void)setupCellWithContent:(UICollectionViewCell<ASDKFormCellProtocol> *)cell
                 forIndexPath:(NSIndexPath *)indexPath {
     // Acquire the model object to set up the cell
-    ASDKModelBase *modelObject = nil;
+    ASDKModelAttributable *modelObject = nil;
     if ([self.dataSource respondsToSelector:@selector(modelForIndexPath:)]) {
         modelObject = [self.dataSource modelForIndexPath:indexPath];
     }

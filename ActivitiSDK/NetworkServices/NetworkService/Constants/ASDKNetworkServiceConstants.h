@@ -23,7 +23,7 @@ extern NSString *kASDKAPICSRFHeaderFieldParameter;
 extern NSString *kASDKAPICSRFCookieName;
 
 // Network API parameters
-extern NSString *kASDKAPIParamIsRelatedContent;
+extern NSString *kASDKAPIIsRelatedContentParameter;
 extern NSString *kASDKAPIContentUploadMultipartParameter;
 extern NSString *kASDKAPIFormFieldParameter;
 extern NSString *kASDKAPIGenericIDParameter;
@@ -40,6 +40,8 @@ extern NSString *kASDKAPIProcessDefinitionIDParameter;
 extern NSString *kASDKAPIMessageParameter;
 extern NSString *kASDKAPIAssigneeParameter;
 extern NSString *kASDKAPITableEditableParameter;
+extern NSString *kASDKAPITypeParameter;
+extern NSString *kASDKAPIParametersParameter;
 
 // Network API parameter values
 extern NSString *kASDKAPIServiceIDAlfrescoCloud;

@@ -20,12 +20,12 @@
 
 @interface ASDKModelFormDescription : ASDKModelBase
 
-@property (strong, nonatomic) NSString          *processDefinitionID;
-@property (strong, nonatomic) NSString          *processDefinitionName;
-@property (strong, nonatomic) NSString          *processDefinitionKey;
-@property (strong, nonatomic) NSArray           *formFields;
-@property (strong, nonatomic) NSArray           *formOutcomes;
-@property (strong, nonatomic) NSArray           *formTabs;
-@property (strong, nonatomic) NSArray           *formVariables;
+@property (strong, nonatomic) NSString  *processDefinitionID;
+@property (strong, nonatomic) NSString  *processDefinitionName;
+@property (strong, nonatomic) NSString  *processDefinitionKey;
+@property (strong, nonatomic) NSArray   *formFields;
+@property (strong, nonatomic) NSArray   *formOutcomes;
+@property (strong, nonatomic) NSArray   *formTabs;
+@property (strong, nonatomic) NSArray   *formVariables;
 
 @end

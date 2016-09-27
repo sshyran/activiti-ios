@@ -31,8 +31,7 @@
                                                       @"name"               : @"name",
                                                       @"simpleType"         : @"simpleType",
                                                       @"source"             : @"source",
-                                                      @"sourceID"           : @"sourceId"
-                                                      }];
+                                                      @"sourceID"           : @"sourceId"}];
     
     return inheretedPropertyKeys;
 }

@@ -32,8 +32,7 @@
     return @{//Objc property         JSON property
              @"name"                : @"name",
              @"taskDescription"     : @"description",
-             @"dueDate"             : @"dueDate"
-             };
+             @"dueDate"             : @"dueDate"};
 }
 
 

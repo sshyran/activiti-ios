@@ -16,16 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
-@interface ASDKModelUser : ASDKModelBase <MTLJSONSerializing>
+@interface ASDKModelUser : ASDKModelAttributable <MTLJSONSerializing>
 
-@property (strong, nonatomic) NSString          *userID;
-@property (strong, nonatomic) NSString          *userFirstName;
-@property (strong, nonatomic) NSString          *userLastName;
-@property (strong, nonatomic) NSString          *email;
-@property (strong, nonatomic) NSString          *externalID;
-@property (assign, nonatomic) NSInteger         pictureID;
+@property (strong, nonatomic) NSString  *userFirstName;
+@property (strong, nonatomic) NSString  *userLastName;
+@property (strong, nonatomic) NSString  *email;
+@property (strong, nonatomic) NSString  *externalID;
+@property (assign, nonatomic) NSInteger pictureID;
 
 - (NSString *)normalisedName;
 

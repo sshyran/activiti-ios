@@ -35,9 +35,7 @@
                                                        @"accountID"         : @"accountId",
                                                        @"pathID"            : @"pathId",
                                                        @"path"              : @"path",
-                                                       @"folderTree"        : @"folderTree"
-                                                       }];
-    
+                                                       @"folderTree"        : @"folderTree"}];
     return inheretedPropertyKeys;
 }
 

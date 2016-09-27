@@ -28,11 +28,9 @@
 #pragma mark MTLJSONSerializing Delegate
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return @{
-             @"size"        : @"size",
+    return @{@"size"        : @"size",
              @"start"       : @"start",
-             @"pageCount"   : @"total"
-            };
+             @"pageCount"   : @"total"};
 }
 
 @end

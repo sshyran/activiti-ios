@@ -38,8 +38,7 @@
                                                       @"groupState"         : @"status",
                                                       @"subGroups"          : @"groups",
                                                       @"type"               : @"type",
-                                                      @"userProfiles"       : @"users"
-                                                      }];
+                                                      @"userProfiles"       : @"users"}];
     
     return inheretedPropertyKeys;
 }
@@ -49,17 +48,13 @@
 #pragma mark Value transformations
 
 + (NSValueTransformer *)groupStateJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @"active"   : @(ASDKModelGroupStateActive),
-                                                                           @"inactive" : @(ASDKModelGroupStateDisabled)
-                                                                           }];
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"active"   : @(ASDKModelGroupStateActive),
+                                                                           @"inactive" : @(ASDKModelGroupStateDisabled)}];
 }
 
 + (NSValueTransformer *)typeJSONTransformer {
-    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
-                                                                           @(0)         : @(ASDKModelGroupTypeSystem),
-                                                                           @(1)         : @(ASDKModelGroupTypeFunctional)
-                                                                           }];
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@(0)         : @(ASDKModelGroupTypeSystem),
+                                                                           @(1)         : @(ASDKModelGroupTypeFunctional)}];
 }
 
 + (NSValueTransformer *)subGroupsJSONTransformer {
@@ -100,11 +95,11 @@
  */
 - (void)setNilValueForKey:(NSString *)key {
     if ([NSStringFromSelector(@selector(groupState)) isEqualToString:key]) {
-        self.groupState = ASDKModelGroupStateUndefined;
+        _groupState = ASDKModelGroupStateUndefined;
     }
     
     if ([NSStringFromSelector(@selector(type)) isEqualToString:key]) {
-        self.type = ASDKModelGroupTypeUndefined;
+        _type = ASDKModelGroupTypeUndefined;
     }
 }
 

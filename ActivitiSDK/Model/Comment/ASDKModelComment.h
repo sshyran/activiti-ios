@@ -16,13 +16,14 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelBase.h"
+#import "ASDKModelAttributable.h"
 
 @class ASDKModelProfile;
 
-@interface ASDKModelComment : ASDKModelBase
+@interface ASDKModelComment : ASDKModelAttributable
 
 @property (strong, nonatomic) NSString          *message;
 @property (strong, nonatomic) ASDKModelProfile  *authorModel;
+@property (strong, nonatomic) NSDate            *creationDate;
 
 @end

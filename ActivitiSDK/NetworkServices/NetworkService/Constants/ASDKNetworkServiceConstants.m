@@ -29,7 +29,7 @@ NSString *kASDKAPICSRFCookieName                                = @"CSRF-TOKEN";
 #pragma mark -
 #pragma mark Network API parameters
 
-NSString *kASDKAPIParamIsRelatedContent                         = @"isRelatedContent";
+NSString *kASDKAPIIsRelatedContentParameter                     = @"isRelatedContent";
 NSString *kASDKAPIContentUploadMultipartParameter               = @"file";
 NSString *kASDKAPIFormFieldParameter                            = @"field";
 NSString *kASDKAPIGenericIDParameter                            = @"id";
@@ -46,6 +46,8 @@ NSString *kASDKAPIProcessDefinitionIDParameter                  = @"processDefin
 NSString *kASDKAPIMessageParameter                              = @"message";
 NSString *kASDKAPIAssigneeParameter                             = @"assignee";
 NSString *kASDKAPITableEditableParameter                        = @"tableEditable";
+NSString *kASDKAPITypeParameter                                 = @"type";
+NSString *kASDKAPIParametersParameter                           = @"params";
 
 
 #pragma mark -

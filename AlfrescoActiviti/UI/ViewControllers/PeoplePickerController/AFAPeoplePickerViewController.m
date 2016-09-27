@@ -371,7 +371,7 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
     ASDKModelUser *selectedUser = self.contributorsArr[indexPath.row];
     [contributorCell setUpCellWithUser:selectedUser];
     
-    if (self.selectedContributors[selectedUser.userID]) {
+    if (self.selectedContributors[selectedUser.modelID]) {
         contributorCell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
         contributorCell.accessoryType = UITableViewCellAccessoryNone;
@@ -383,19 +383,19 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKModelUser *selectedUser = self.contributorsArr[indexPath.row];
-    if (!self.selectedContributors[selectedUser.userID]) {
+    if (!self.selectedContributors[selectedUser.modelID]) {
         if (AFAPeoplePickerControllerTypeInvolve == self.peoplePickerType) {
-            self.selectedContributors[selectedUser.userID] = @(YES);
+            self.selectedContributors[selectedUser.modelID] = @(YES);
             [self involveUserForCurrentTask:selectedUser];
         } else {
             [self.selectedContributors removeAllObjects];
-            self.selectedContributors[selectedUser.userID] = @(YES);
+            self.selectedContributors[selectedUser.modelID] = @(YES);
             
             [self assignUserForCurrentTask:selectedUser];
         }
     } else {
         if (AFAPeoplePickerControllerTypeInvolve == self.peoplePickerType) {
-            [self.selectedContributors removeObjectForKey:selectedUser.userID];
+            [self.selectedContributors removeObjectForKey:selectedUser.modelID];
             [self removeInvolvedUserForCurrentTask:selectedUser];
         }
     }

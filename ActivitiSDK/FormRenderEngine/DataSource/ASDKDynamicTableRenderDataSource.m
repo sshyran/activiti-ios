@@ -82,9 +82,9 @@
     return cellIdentifier;
 }
 
-- (ASDKModelBase *)modelForIndexPath:(NSIndexPath *)indexPath {
+- (ASDKModelAttributable *)modelForIndexPath:(NSIndexPath *)indexPath {
     NSArray *sectionFormFields = self.visibleFormFields[indexPath.section];
-    ASDKModelBase *formFieldModel = nil;
+    ASDKModelAttributable *formFieldModel = nil;
     
     if (sectionFormFields.count) {
         formFieldModel = sectionFormFields[indexPath.row];

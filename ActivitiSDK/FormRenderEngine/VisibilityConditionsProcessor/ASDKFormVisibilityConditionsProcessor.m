@@ -80,7 +80,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         NSMutableArray *fieldsArr = [NSMutableArray array];
         NSArray *formTabFields = nil;
         
-        for (ASDKModelBase *field in formFieldArr) {
+        for (ASDKModelAttributable *field in formFieldArr) {
             if ([field isKindOfClass:ASDKModelFormTab.class]) {
                 ASDKModelFormTab *formTab = (ASDKModelFormTab *)field;
                 [fieldsArr addObject:formTab];
@@ -133,7 +133,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"visibilityCondition != nil"];
     NSArray *formFieldsWithVisibilityConditions = [formFields filteredArrayUsingPredicate:searchPredicate];
     
-    for (ASDKModelBase *field in formFieldsWithVisibilityConditions) {
+    for (ASDKModelAttributable *field in formFieldsWithVisibilityConditions) {
         NSMutableArray *influentialFormFieldsForCurrentFormField = [NSMutableArray array];
         
         ASDKModelFormVisibilityCondition *visibilityCondition = nil;
@@ -200,7 +200,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return formVariable;
 }
 
-- (NSArray *)parseVisibilityConditionsForField:(ASDKModelBase *)field {
+- (NSArray *)parseVisibilityConditionsForField:(ASDKModelAttributable *)field {
     NSMutableArray *conditions = [NSMutableArray array];
     
     ASDKModelFormVisibilityCondition *fieldVisibilityCondition = nil;
@@ -245,7 +245,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (NSArray *)parseHiddenFormFieldsFromCollection:(NSArray *)formFieldCollection {
     NSMutableArray *hiddenFields = [NSMutableArray array];
     
-    for (ASDKModelBase *affectedField in formFieldCollection) {
+    for (ASDKModelAttributable *affectedField in formFieldCollection) {
         NSArray *visibilityConditions = [self parseVisibilityConditionsForField:affectedField];
         
         BOOL isFormFieldVisible = NO;
@@ -333,7 +333,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSMutableArray *subSectionFields = [NSMutableArray array];
     ASDKModelFormField *sectionFormField = nil;
     
-    for (ASDKModelBase *field in self.formFields) {
+    for (ASDKModelAttributable *field in self.formFields) {
         if ([[field class] isSubclassOfClass:[ASDKModelFormField class]]) {
             ASDKModelFormField *formField = (ASDKModelFormField *)field;
             if ([formField.tabID isEqualToString:tabID]) {
@@ -1036,7 +1036,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (BOOL)doesCollection:(NSArray *)collection
-      containFormField:(ASDKModelBase *)sectionFormField {
+      containFormField:(ASDKModelAttributable *)sectionFormField {
     NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", sectionFormField.modelID];
     NSArray *results = [collection filteredArrayUsingPredicate:searchPredicate];
     
