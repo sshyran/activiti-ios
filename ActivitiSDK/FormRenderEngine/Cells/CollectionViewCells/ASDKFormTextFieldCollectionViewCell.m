@@ -179,7 +179,15 @@
 }
 
 - (ASDKFormTextFieldKeyboardType)keyBoardTypeForFormField:(ASDKModelFormField *)formField {
-    switch (formField.representationType) {
+    ASDKModelFormFieldRepresentationType fieldRepresentationType = ASDKModelFormFieldRepresentationTypeUndefined;
+    
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
+        fieldRepresentationType = formField.formFieldParams.representationType;
+    } else {
+        fieldRepresentationType = formField.representationType;
+    }
+    
+    switch (fieldRepresentationType) {
         case ASDKModelFormFieldRepresentationTypeText: {
             return ASDKFormTextFieldKeyboardTypeASCII;
         }

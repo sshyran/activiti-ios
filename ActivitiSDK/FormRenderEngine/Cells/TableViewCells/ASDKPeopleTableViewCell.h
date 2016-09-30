@@ -28,5 +28,6 @@
 
 - (void)setUpCellWithProfile:(ASDKModelProfile *)profile;
 - (void)setUpCellWithUser:(ASDKModelUser *)user;
+- (void)setupCellWithUserNameString:(NSString *)userNameString;
 
 @end
