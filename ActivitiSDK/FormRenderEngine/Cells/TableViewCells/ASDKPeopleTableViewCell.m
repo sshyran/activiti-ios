@@ -49,4 +49,10 @@
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
+- (void)setupCellWithUserNameString:(NSString *)userNameString {
+    self.contributorNameLabel.text = userNameString;
+    [self.avararInitialsView updateInitialsForName:userNameString];
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
 @end

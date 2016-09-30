@@ -38,6 +38,7 @@
 #import "ASDKModelDynamicTableFormField.h"
 #import "ASDKModelFormTab.h"
 #import "ASDKModelFormTabDescription.h"
+#import "ASDKModelFormVariable.h"
 
 // Managers
 #import "ASDKFormVisibilityConditionsProcessor.h"
@@ -73,7 +74,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 @property (assign, nonatomic) BOOL isSaveActionAvailable;
 
 /**
- *  Property meant to hold a reference to a KVO manager that will be monitoring 
+ *  Property meant to hold a reference to a KVO manager that will be monitoring
  *  the state of form field objects
  */
 @property (strong, nonatomic) ASDKKVOManager *kvoManager;
@@ -283,7 +284,18 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                  ASDKModelFormFieldRepresentationTypeDynamicTable == sectionFormField.formFieldParams.representationType)) {
                     formFieldModel = sectionFormField;
                 } else {// Set up the cell from the corresponding section
-                    formFieldModel = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
+                    ASDKModelFormField *formFieldForCurrentIndexPath = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
+                    
+                    // If form variables exist for this form field
+                    // attach their string value to the form field
+                    NSPredicate *searchVariablePredicate = [NSPredicate predicateWithFormat:@"name==%@", formFieldForCurrentIndexPath.formFieldParams.modelID];
+                    NSArray *matchingVariables = [self.currenFormDescription.formVariables filteredArrayUsingPredicate:searchVariablePredicate];
+                    if (matchingVariables.count &&
+                        !formFieldForCurrentIndexPath.values.count) {
+                        ASDKModelFormVariable *formVariable = (ASDKModelFormVariable *)matchingVariables.firstObject;
+                        formFieldForCurrentIndexPath.values = @[formVariable.value];
+                    }
+                    formFieldModel = formFieldForCurrentIndexPath;
                 }
         }
     }
@@ -469,7 +481,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     } else {
         representationType = formField.representationType;
     }
-        
+    
     switch (representationType) {
         case ASDKModelFormFieldRepresentationTypeText:
         case ASDKModelFormFieldRepresentationTypeNumerical:{
@@ -486,7 +498,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             cellIdentifier = kASDKCellIDFormFieldAmountRepresentation;
         }
             break;
-        
+            
         case ASDKModelFormFieldRepresentationTypeDropdown:
         case ASDKModelFormFieldRepresentationTypeRadio: {
             cellIdentifier = kASDKCellIDFormFieldRadioRepresentation;
@@ -542,7 +554,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
         formField.formFieldParams) {
-        if (!formField.formFieldParams.representationType) {
+        if (ASDKModelFormFieldRepresentationTypeUndefined == formField.formFieldParams.representationType) {
             representationType = ASDKModelFormFieldRepresentationTypeReadonlyText;
         } else {
             // Don't provide a child controller for completed date form fields
@@ -622,7 +634,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         // Enumerate through the associated form fields and check if they
-        // have a value or attached metadata values 
+        // have a value or attached metadata values
         for (ASDKModelFormField *formField in sectionFormField.formFields) {
             if (formField.isRequired) {
                 if (formField.representationType == ASDKModelFormFieldRepresentationTypeBoolean) {
@@ -632,7 +644,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                     } else if (formField.values) {
                         checked = [formField.values.firstObject boolValue];
                     }
-                
+                    
                     if (!checked) {
                         formFieldsAreValid = NO;
                         break;

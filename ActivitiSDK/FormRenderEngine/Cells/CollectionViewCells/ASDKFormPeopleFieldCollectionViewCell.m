@@ -35,8 +35,6 @@
 @property (strong, nonatomic) ASDKModelFormField    *formField;
 @property (assign, nonatomic) BOOL                  isRequired;
 
-- (NSString *)formatDescriptionLabelTextWithFormFieldValues:(NSArray *)formfieldValues;
-
 @end
 
 @implementation ASDKFormPeopleFieldCollectionViewCell
@@ -90,12 +88,19 @@
     }
 }
 
-- (NSString *)formatDescriptionLabelTextWithFormFieldValues:(NSArray *)formfieldValues {
+- (NSString *)formatDescriptionLabelTextWithFormFieldValues:(NSArray *)formFieldValues {
     NSString *descriptionLabelText = nil;
     
-    if ([formfieldValues count] > 0) {
-        ASDKModelUser *selectedPeople = (ASDKModelUser *) formfieldValues.firstObject;
-        descriptionLabelText = selectedPeople.normalisedName;
+    if ([formFieldValues count] > 0) {
+        // If passed values cannot be casted to concrete user models
+        // fallback to string representation
+        id formFieldValue = formFieldValues.firstObject;
+        if ([formFieldValue isKindOfClass:[ASDKModelUser class]]) {
+            ASDKModelUser *selectedPeople = (ASDKModelUser *) formFieldValues.firstObject;
+            descriptionLabelText = selectedPeople.normalisedName;
+        } else {
+            descriptionLabelText = formFieldValue;
+        }
     } else {
         descriptionLabelText = ASDKLocalizedStringFromTable(kLocalizationFormPeopleNoSelectedText, ASDKLocalizationTable, @"No people selected");
     }

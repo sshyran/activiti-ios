@@ -187,8 +187,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKPeopleTableViewCell *peopleCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldPeopleAddPeople];
-    ASDKModelUser *selectedUser = self.currentFormField.values[indexPath.row];
-    [peopleCell setUpCellWithUser:selectedUser];
+    id userInformation = self.currentFormField.values[indexPath.row];
+    
+    // User information might not contain the concrete user model class
+    // and if that's the case, build a string representation out of the
+    // pased information
+    if ([userInformation isKindOfClass:[ASDKModelUser class]]) {
+        [peopleCell setUpCellWithUser:userInformation];
+    } else {
+        [peopleCell setupCellWithUserNameString:userInformation];
+    }
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         peopleCell.userInteractionEnabled = NO;
