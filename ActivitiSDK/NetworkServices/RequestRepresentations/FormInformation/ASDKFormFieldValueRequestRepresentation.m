@@ -63,7 +63,7 @@
             // Extract the form fields for the correspondent container
             if ([sectionFormField isKindOfClass:ASDKModelDynamicTableFormField.class]) {
                 NSMutableArray *rowValues = [NSMutableArray new];
-
+                
                 for (NSArray *row in sectionFormField.values) {
                     NSMutableDictionary *columnValues = [NSMutableDictionary new];
                     
@@ -78,7 +78,7 @@
                 }
                 [formFieldMetadataValuesDict setObject:rowValues
                                                 forKey:sectionFormField.modelID];
-
+                
             } else {
                 for (ASDKModelFormField *formField in sectionFormField.formFields) {
                     id formFieldValue = [self determineValueForFormField:formField];
@@ -147,6 +147,7 @@
                     formFieldValue = formField.values.firstObject;
                 } else {
                     for (ASDKModelFormFieldOption *formFieldOption in formField.formFieldOptions) {
+                        // First try to identify the option through the name parameter
                         if ([formFieldOption.name isEqualToString:formField.values.firstObject]) {
                             // check if option has id (dynamic table dropdown column types don't have any)
                             NSString *optionID = @"";
@@ -155,6 +156,13 @@
                             }
                             formFieldValue = @{kASDKAPIGenericIDParameter  : optionID,
                                                kASDKAPIGenericNameParameter: formField.values.firstObject};
+                            break;
+                        }
+                        
+                        // If no names are matching try to match by ID
+                        if ([formFieldOption.modelID isEqualToString:formField.values.firstObject]) {
+                            formFieldValue = @{kASDKAPIGenericIDParameter   : formFieldOption.modelID,
+                                               kASDKAPIGenericNameParameter : formFieldOption.name};
                             break;
                         }
                     }

@@ -33,12 +33,10 @@
 }
 
 - (NSString *)requestDescription {
-    
-    
     return [NSString stringWithFormat:kASDKAPIResponseFormat,
-            self.currentRequest.HTTPMethod,
-            self.currentRequest.URL.absoluteString,
-            [[NSString alloc] initWithData:self.currentRequest.HTTPBody encoding:NSUTF8StringEncoding]];
+            self.originalRequest.HTTPMethod,
+            self.originalRequest.URL.absoluteString,
+            [[NSString alloc] initWithData:self.originalRequest.HTTPBody encoding:NSUTF8StringEncoding]];
 }
 
 - (NSString *)stateDescriptionForResponse:(id)responseObject
