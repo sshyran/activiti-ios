@@ -286,15 +286,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                 } else {// Set up the cell from the corresponding section
                     ASDKModelFormField *formFieldForCurrentIndexPath = [(ASDKModelFormField *)self.visibleFormFields[indexPath.section] formFields][indexPath.row];
                     
-                    // If form variables exist for this form field
-                    // attach their string value to the form field
-                    NSPredicate *searchVariablePredicate = [NSPredicate predicateWithFormat:@"name==%@", formFieldForCurrentIndexPath.formFieldParams.modelID];
-                    NSArray *matchingVariables = [self.currenFormDescription.formVariables filteredArrayUsingPredicate:searchVariablePredicate];
-                    if (matchingVariables.count &&
-                        !formFieldForCurrentIndexPath.values.count) {
-                        ASDKModelFormVariable *formVariable = (ASDKModelFormVariable *)matchingVariables.firstObject;
-                        formFieldForCurrentIndexPath.values = @[formVariable.value];
+                    // If form variables exist for this form field attach their string value to the form field
+                    // Double check if formFieldParams is a ASDKModelFormField derived object because it is
+                    // probable to have other types of parameters that do not have the same inheritance
+                    if ([formFieldForCurrentIndexPath.formFieldParams isKindOfClass:[ASDKModelFormField class]]) {
+                        NSPredicate *searchVariablePredicate = [NSPredicate predicateWithFormat:@"name==%@", formFieldForCurrentIndexPath.formFieldParams.modelID];
+                        NSArray *matchingVariables = [self.currenFormDescription.formVariables filteredArrayUsingPredicate:searchVariablePredicate];
+                        if (matchingVariables.count &&
+                            !formFieldForCurrentIndexPath.values.count) {
+                            ASDKModelFormVariable *formVariable = (ASDKModelFormVariable *)matchingVariables.firstObject;
+                            formFieldForCurrentIndexPath.values = @[formVariable.value];
+                        }
                     }
+
                     formFieldModel = formFieldForCurrentIndexPath;
                 }
         }

@@ -608,7 +608,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             NSArray *leftFormFieldOptions = [leftFormField.formFieldOptions filteredArrayUsingPredicate:rightValueOptionPredicate];
             if (leftFormFieldOptions.count) {
                 NSPredicate *leftValueOptionPredicate = [NSPredicate predicateWithFormat:@"name == %@", leftValue];
-                leftValue = ((ASDKModelFormFieldOption *)[leftFormField.formFieldOptions filteredArrayUsingPredicate:leftValueOptionPredicate].firstObject).modelID;
+                ASDKModelFormFieldOption *leftValueOption = (ASDKModelFormFieldOption *)[leftFormField.formFieldOptions filteredArrayUsingPredicate:leftValueOptionPredicate].firstObject;
+                if(leftValueOption) {
+                    leftValue = leftValueOption.modelID;
+                }
             }
         }
         
@@ -1020,13 +1023,28 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (NSDate *)dateFromString:(NSString *)string {
     NSDate *date = nil;
     
+    if (!string ||
+        !string.length) {
+        return date;
+    }
+    
     // First try to match a date using the server date format
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     dateFormatter.dateFormat = kBaseModelDateFormat;
     date = [dateFormatter dateFromString:string];
     
-    // If this fails try to pick up the date using a more natural format
+    // If this fails try to make a conversion with other date formats
+    if (!date) {
+        [dateFormatter setDateFormat:kASDKServerFullDateFormat];
+        date = [dateFormatter dateFromString:string];
+    }
+    
+    if (!date) {
+        [dateFormatter setDateFormat:kASDKServerLongDateFormat];
+        date = [dateFormatter dateFromString:string];
+    }
+    
     if (!date) {
         [dateFormatter setDateFormat:kASDKServerShortDateFormat];
         date = [dateFormatter dateFromString:string];

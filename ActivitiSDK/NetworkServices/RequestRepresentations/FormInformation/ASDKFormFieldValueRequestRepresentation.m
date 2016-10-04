@@ -186,9 +186,10 @@
             else if (formField.representationType == ASDKModelFormFieldRepresentationTypeBoolean) {
                 if (!formField.values.firstObject) {
                     formFieldValue = @NO;
+                } else {
+                    formFieldValue = [NSNumber numberWithBool:((NSString *)formField.values.firstObject).boolValue];
                 }
-            }
-            else {
+            } else {
                 formFieldValue = formField.values.firstObject;
             }
             
