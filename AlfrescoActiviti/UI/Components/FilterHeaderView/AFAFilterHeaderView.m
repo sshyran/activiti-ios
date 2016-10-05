@@ -170,10 +170,12 @@
 
 - (void)setUpForFilterList {
     _headerTitleLabel.text = NSLocalizedString(kLocalizationListScreenFilterByText, @"Filter by");
+    _clearAllButton.hidden = NO;
 }
 
 - (void)setUpForSortList {
     _headerTitleLabel.text = NSLocalizedString(kLocalizationListScreenSortByText, @"Sort by");
+    _clearAllButton.hidden = YES;
 }
 
 
