@@ -3114,7 +3114,7 @@
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="40" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="PpM-C3-lY6">
-                                    <rect key="frame" x="0.0" y="116" width="375" height="1"/>
+                                    <rect key="frame" x="0.0" y="72" width="375" height="1"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </view>
@@ -3164,53 +3164,6 @@
                                         <connections>
                                             <outlet property="checkboxButton" destination="xqz-T5-sGS" id="k8H-uG-kzT"/>
                                             <outlet property="filterLabel" destination="NzO-Bn-rQ2" id="s80-xx-lex"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilterHeaderCellID" id="le0-4F-Fe5" customClass="AFAFilterHeaderTableViewCell">
-                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="le0-4F-Fe5" id="LOe-mq-Z83">
-                                            <frame key="frameInset" width="375" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDu-p5-LJX">
-                                                    <fontDescription key="fontDescription" name="GLYPHICONS-Regular" family="GLYPHICONS" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="FILTER BY" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C4f-35-Ge2">
-                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="12"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rQ0-wW-G8Z">
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="100" id="gWJ-iz-8Dt"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
-                                                    <state key="normal" title="CLEAR ALL">
-                                                        <color key="titleColor" red="0.27058823529411763" green="0.27058823529411763" blue="0.27058823529411763" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="onClear:" destination="le0-4F-Fe5" eventType="touchUpInside" id="m9l-Ba-5C7"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="C4f-35-Ge2" firstAttribute="leading" secondItem="fDu-p5-LJX" secondAttribute="trailing" constant="8" id="2wG-j5-r5y"/>
-                                                <constraint firstAttribute="trailing" secondItem="rQ0-wW-G8Z" secondAttribute="trailing" constant="8" id="Nh6-vE-4m7"/>
-                                                <constraint firstItem="C4f-35-Ge2" firstAttribute="centerY" secondItem="fDu-p5-LJX" secondAttribute="centerY" id="bcW-dm-2YQ"/>
-                                                <constraint firstAttribute="leading" secondItem="fDu-p5-LJX" secondAttribute="leading" constant="-11" id="bk2-O5-UAJ"/>
-                                                <constraint firstItem="rQ0-wW-G8Z" firstAttribute="centerY" secondItem="fDu-p5-LJX" secondAttribute="centerY" id="fFG-Yw-LL8"/>
-                                                <constraint firstItem="fDu-p5-LJX" firstAttribute="centerY" secondItem="LOe-mq-Z83" secondAttribute="centerY" id="t93-ug-kII"/>
-                                                <constraint firstItem="rQ0-wW-G8Z" firstAttribute="leading" secondItem="C4f-35-Ge2" secondAttribute="trailing" constant="8" id="uH2-0i-dtm"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.91764705882352937" green="0.91764705882352937" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <connections>
-                                            <outlet property="clearButton" destination="rQ0-wW-G8Z" id="ohA-Xw-KKD"/>
-                                            <outlet property="headerIconLabel" destination="fDu-p5-LJX" id="pWI-UU-TJH"/>
-                                            <outlet property="headerTitleLabel" destination="C4f-35-Ge2" id="gbF-nI-6YP"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -5623,10 +5576,10 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="XZ3-C5-Oig"/>
         <segue reference="dAG-4I-soh"/>
         <segue reference="Rct-bP-63w"/>
         <segue reference="Ubh-jA-md9"/>
-        <segue reference="fpJ-UB-l4s"/>
+        <segue reference="XZ3-C5-Oig"/>
+        <segue reference="Axm-Tn-V6n"/>
     </inferredMetricsTieBreakers>
 </document>

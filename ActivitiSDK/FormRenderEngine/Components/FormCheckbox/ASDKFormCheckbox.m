@@ -54,6 +54,9 @@ NSTimeInterval const animationDuration = .3f;
         self.selected = NO;
         self.selectedInternal = NO;
         
+        self.backgroundColor = [UIColor clearColor];
+        self.opaque = NO;
+        
         [self addTarget:self
                  action:@selector(onTouchUpInside:)
        forControlEvents:UIControlEventTouchUpInside];
@@ -92,10 +95,14 @@ NSTimeInterval const animationDuration = .3f;
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    self.backgroundColor = [UIColor clearColor];
     [self configureShapeLayer:self.trailCircle];
     [self configureShapeLayer:self.circle];
     [self configureShapeLayer:self.checkmark];
+}
+
+- (void)drawRect:(CGRect)rect {
+    [self.backgroundColor setFill];
+    UIRectFill([self bounds]);
 }
 
 

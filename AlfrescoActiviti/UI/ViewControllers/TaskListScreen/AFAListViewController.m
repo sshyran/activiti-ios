@@ -613,8 +613,6 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     CGFloat maximumAdmittedHeightForFilterView = CGRectGetHeight(self.view.frame) - 10;
     self.advancedSearchContainerHeightConstraint.constant = [self.filterViewController contentSizeForFilterView].height > maximumAdmittedHeightForFilterView ? maximumAdmittedHeightForFilterView : [self.filterViewController contentSizeForFilterView].height;
     
-    [self.advancedFilterContainerView layoutIfNeeded];
-    
     [self toggleContentTransparentOverlay];
     
     [UIView animateWithDuration:kDefaultAnimationTime

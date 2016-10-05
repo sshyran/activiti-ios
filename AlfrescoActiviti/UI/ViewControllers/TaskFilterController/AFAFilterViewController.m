@@ -23,7 +23,9 @@
 
 // Cells
 #import "AFAFilterOptionTableViewCell.h"
-#import "AFAFilterHeaderTableViewCell.h"
+
+// Views
+#import "AFAFilterHeaderView.h"
 
 // Managers
 #import "AFAServiceRepository.h"
@@ -48,7 +50,7 @@ typedef NS_ENUM(NSInteger, AFAFilterSectionType) {
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
-@interface AFAFilterViewController () <AFAFilterOptionTableViewcellProtocol, AFAFilterHeaderTableViewCellProtocol>
+@interface AFAFilterViewController () <AFAFilterOptionTableViewcellProtocol, AFAFilterHeaderViewProtocol>
 
 @property (weak, nonatomic) IBOutlet UITableView                            *filterTableView;
 @property (weak, nonatomic) IBOutlet UIButton                               *searchButton;
@@ -98,6 +100,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // Set up the filter list table view to adjust it's size automatically
     self.filterTableView.estimatedRowHeight = 44.0f;
     self.filterTableView.rowHeight = UITableViewAutomaticDimension;
+    
+    // Register the header section
+    [self.filterTableView registerClass:[AFAFilterHeaderView class]
+     forHeaderFooterViewReuseIdentifier:kCellIDFilterHeader];
     
     __weak typeof(self) weakSelf = self;
     self.taskFilterListResponseCompletionBlock = ^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
@@ -226,7 +232,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark -
 #pragma mark AFAFilterHeaderTableViewCellProtocol
 
-- (void)didClearAll:(AFAFilterHeaderTableViewCell *)cell {
+- (void)didClearAll:(AFAFilterHeaderView *)headerView {
     // Reset back to the first filter of the collection
     self.currentFilterModel = [self buildFilterFromModel:self.filterListArr.firstObject];
     [self.filterTableView reloadData];
@@ -268,17 +274,17 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 -(UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
-    AFAFilterHeaderTableViewCell *filterHeaderViewCell = [tableView dequeueReusableCellWithIdentifier:kCellIDFilterHeader];
-    filterHeaderViewCell.delegate = self;
+    AFAFilterHeaderView *filterHeaderView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:kCellIDFilterHeader];
+    filterHeaderView.delegate = self;
     
     switch (section) {
         case AFAFilterSectionTypeFilterOptions: {
-            [filterHeaderViewCell setUpForFilterList];
+            [filterHeaderView setUpForFilterList];
         }
             break;
             
         case AFAFilterSectionTypeSortOptions: {
-            [filterHeaderViewCell setUpForSortList];
+            [filterHeaderView setUpForSortList];
         }
             break;
             
@@ -286,7 +292,7 @@ viewForHeaderInSection:(NSInteger)section {
             break;
     }
     
-    return filterHeaderViewCell;
+    return filterHeaderView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
