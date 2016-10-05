@@ -18,22 +18,18 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol AFAFilterHeaderTableViewCellProtocol;
+@protocol AFAFilterHeaderViewProtocol;
 
-@interface AFAFilterHeaderTableViewCell : UITableViewCell
-
-@property (weak, nonatomic) IBOutlet UILabel    *headerIconLabel;
-@property (weak, nonatomic) IBOutlet UILabel    *headerTitleLabel;
-@property (weak, nonatomic) IBOutlet UIButton   *clearButton;
-@property (weak, nonatomic) id<AFAFilterHeaderTableViewCellProtocol> delegate;
+@interface AFAFilterHeaderView : UITableViewHeaderFooterView
+@property (weak, nonatomic) id<AFAFilterHeaderViewProtocol> delegate;
 
 - (void)setUpForFilterList;
 - (void)setUpForSortList;
 
 @end
 
-@protocol AFAFilterHeaderTableViewCellProtocol <NSObject>
+@protocol AFAFilterHeaderViewProtocol <NSObject>
 
-- (void)didClearAll:(AFAFilterHeaderTableViewCell *)cell;
+- (void)didClearAll:(AFAFilterHeaderView *)headerView;
 
 @end
