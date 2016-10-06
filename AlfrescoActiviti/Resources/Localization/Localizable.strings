@@ -31,6 +31,7 @@
 "loginScreenInvalidCredentialsText"                      = "Invalid or insufficient credentials.";
 "loginScreenUnreachableHostText"                         = "The host your are trying to connect to is unreachable.";
 "loginScreenRequestTimedOutText"                         = "The login request timed out.";
+"loginScreenUnauthorizedRequestErrorText"                = "Invalid credentials, you will be redirected to the login screen";
 
 // Applications screen
 "appScreenTitleText"                                     = "Applications";

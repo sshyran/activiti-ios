@@ -93,8 +93,14 @@ NSString *kASDKAPIIconNameAll                                   = @"glyphicon-th
 #pragma mark -
 #pragma makr Filter keys
 
-NSString * const kASDKAPIJSONKeyData                = @"data";
-NSString * const kASDKAPIJSONKeyName                = @"name";
-NSString * const kASDKAPIJSONKeyFilter              = @"filter";
-NSString * const kASDKAPIJSONKeyID                  = @"id";
-NSString * const kASDKAPIJSONKeyContent             = @"content";
+NSString * const kASDKAPIJSONKeyData                            = @"data";
+NSString * const kASDKAPIJSONKeyName                            = @"name";
+NSString * const kASDKAPIJSONKeyFilter                          = @"filter";
+NSString * const kASDKAPIJSONKeyID                              = @"id";
+NSString * const kASDKAPIJSONKeyContent                         = @"content";
+
+
+#pragma mark -
+#pragma mark Notification keys
+
+NSString * const kADSKAPIUnauthorizedRequestNotification        = @"com.alfresco.activiti.ActivitiSDK.networkService.responseSerializer";
