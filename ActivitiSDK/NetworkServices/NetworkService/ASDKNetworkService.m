@@ -18,6 +18,9 @@
 
 #import "ASDKNetworkService.h"
 #import "ASDKNetworkServiceConstants.h"
+#import "ASDKJSONResponseSerializer.h"
+#import "ASDKHTTPResponseSerializer.h"
+#import "ASDKImageResponseSerializer.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -53,9 +56,9 @@
         self.resultsQueue = resultsQueue;
         
         AFCompoundResponseSerializer *compoundResponseSerializer =[AFCompoundResponseSerializer compoundSerializerWithResponseSerializers:
-                                                                   @[[AFJSONResponseSerializer serializer],
-                                                                     [AFImageResponseSerializer serializer],
-                                                                     [AFHTTPResponseSerializer serializer]]];
+                                                                   @[[ASDKJSONResponseSerializer serializer],
+                                                                     [ASDKImageResponseSerializer serializer],
+                                                                     [ASDKHTTPResponseSerializer serializer]]];
         self.requestOperationManager.responseSerializer = compoundResponseSerializer;
         
         AFJSONRequestSerializer *jsonRequestSerializer = [AFJSONRequestSerializer serializer];

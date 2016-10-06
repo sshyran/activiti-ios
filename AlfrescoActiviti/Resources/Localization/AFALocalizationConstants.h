@@ -32,6 +32,7 @@ extern NSString *kLocalizationLoginAdvancedSectionHeaderText;
 extern NSString *kLocalizationLoginInvalidCredentialsText;
 extern NSString *kLocalizationLoginUnreachableHostText;
 extern NSString *kLocalizationLoginTimedOutText;
+extern NSString *kLocalizationLoginUnauthorizedRequestErrorText;
 
 // Applications screen
 extern NSString *kLocalizationAppScreenTitleText;

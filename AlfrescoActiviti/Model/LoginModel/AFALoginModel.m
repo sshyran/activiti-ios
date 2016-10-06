@@ -235,16 +235,12 @@
     }];
 }
 
-- (void)requestLogoutWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock {
+- (void)requestLogout {
     // Logout is successful - remove also any remembered credentials from the keychain
     [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
     [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
     
     self.authState = AFALoginViewModelAuthentificationStateLoggedOut;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        completionBlock(NO, nil);
-    });
 }
 
 - (void)cancelLoginRequest {

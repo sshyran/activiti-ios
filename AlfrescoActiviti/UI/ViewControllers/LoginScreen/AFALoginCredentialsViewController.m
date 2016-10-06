@@ -175,11 +175,17 @@
             [strongSelf lockInterface:NO];
             
             // Notify the user about the error
+            NSInteger responseCode = 0;
             if (error) {
                 NSError *underlayingError = error.userInfo[NSUnderlyingErrorKey];
-                NSInteger responseCode = [[underlayingError.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
-                if (!responseCode) {
-                    responseCode = underlayingError.code;
+                if (underlayingError) {
+                    responseCode = [[underlayingError.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
+                    if (!responseCode) {
+                        responseCode = underlayingError.code;
+                    }
+                } else {
+                    NSHTTPURLResponse *urlResponse = error.userInfo[AFNetworkingOperationFailingURLResponseErrorKey];
+                    responseCode = urlResponse.statusCode;
                 }
                 
                 NSString *networkErrorMessage = nil;

@@ -39,6 +39,7 @@
 #import "AFAUserServices.h"
 #import "AFAQueryServices.h"
 #import "AFAIntegrationServices.h"
+@import ActivitiSDK;
 
 // Models
 #import "AFALoginModel.h"
@@ -70,6 +71,10 @@
 @end
 
 @implementation AFAContainerViewController
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
@@ -114,6 +119,11 @@
         AFAThumbnailManager *thumbnailManager = [AFAThumbnailManager new];
         [serviceRepository registerServiceObject:thumbnailManager
                                       forPurpose:AFAServiceObjectTypeThumbnailManager];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleUnAuthorizedRequestNotification)
+                                                     name:kADSKAPIUnauthorizedRequestNotification
+                                                   object:nil];
     }
     
     return self;
@@ -138,7 +148,7 @@
 }
 
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
@@ -209,17 +219,8 @@
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction *action) {
                                                                 __strong typeof(self) strongSelf = weakSelf;
-                                                                
-                                                                [strongSelf.loginModel requestLogoutWithCompletionBlock:^(BOOL isLoggedIn, NSError *error) {
-                                                                    if (!isLoggedIn && !error) {
-                                                                        // User succesfully logged out
-                                                                        [strongSelf performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
-                                                                                                        sender:alertController];
-                                                                    } else {
-                                                                        // An error occured preventing the operation to finish
-                                                                        [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                                                    }
-                                                                }];
+
+                                                                [strongSelf requestUserLogout];
                                                             }];
     UIAlertAction *cancelButtonAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogCancelButtonText, @"Cancel button title")
                                                                  style:UIAlertActionStyleDefault
@@ -235,12 +236,37 @@
                      completion:nil];
 }
 
+- (void)requestUserLogout {
+    [self.loginModel requestLogout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
+                                  sender:nil];
+    });
+}
+
+- (void)handleUnAuthorizedRequestNotification {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:NSLocalizedString(kLocalizationLoginUnauthorizedRequestErrorText, @"Unauthorized request text")
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    UIAlertAction *okButtonAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogOkButtonText, @"OK button title")
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *action) {
+                                                               __strong typeof(self) strongSelf = weakSelf;
+                                                               [strongSelf requestUserLogout];
+                                                           }];
+    [alertController addAction:okButtonAction];
+    [self presentViewController:alertController
+                       animated:YES
+                     completion:nil];
+}
+
 - (void)showUserProfile {
     [self toggleDrawerMenu];
     
     AFAProfileViewController *profileViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDProfileViewController];
     profileViewController.delegate = self;
-
+    
     UIBarButtonItem *menuItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu-dots-icon"]
                                                                  style:UIBarButtonItemStylePlain
                                                                 target:profileViewController

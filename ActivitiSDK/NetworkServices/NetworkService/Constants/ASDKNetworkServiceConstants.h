@@ -76,3 +76,6 @@ extern NSString * const kASDKAPIJSONKeyFilter;
 extern NSString * const kASDKAPIJSONKeyID;
 extern NSString * const kASDKAPIJSONKeyContent;
 
+// Notification keys
+extern NSString * const kADSKAPIUnauthorizedRequestNotification;
+

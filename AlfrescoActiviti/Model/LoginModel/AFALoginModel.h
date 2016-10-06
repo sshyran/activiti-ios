@@ -64,7 +64,7 @@ typedef NS_ENUM(NSUInteger, AFALoginViewModelAuthentificationState) {
 
 - (BOOL)canUserSignIn;
 - (void)requestLoginWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock;
-- (void)requestLogoutWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock;
+- (void)requestLogout;
 - (void)cancelLoginRequest;
 
 @end
