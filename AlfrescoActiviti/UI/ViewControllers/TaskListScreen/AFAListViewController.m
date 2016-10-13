@@ -22,7 +22,7 @@
 #import "AFATaskDetailsViewController.h"
 #import "AFAStartProcessInstanceViewController.h"
 #import "AFAProcessInstanceDetailsViewController.h"
-#import "AFAAddTaskViewController.h"
+#import "AFAModalTaskDetailsViewController.h"
 
 // Constants
 #import "AFAUIConstants.h"
@@ -40,6 +40,7 @@
 #import "AFATaskServices.h"
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
+#import "AFAModalTaskDetailsCreateTaskAction.h"
 @import ActivitiSDK;
 
 // Categories
@@ -64,7 +65,7 @@ typedef NS_ENUM(NSInteger, AFAListControllerState) {
 
 typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *error, ASDKModelPaging *paging);
 
-@interface AFAListViewController () <AFAFilterViewControllerDelegate, UITextFieldDelegate, AFAAddTaskViewControllerDelegate>
+@interface AFAListViewController () <AFAFilterViewControllerDelegate, UITextFieldDelegate, AFAModalTaskDetailsViewControllerDelegate>
 
 // Task list related
 @property (weak, nonatomic)   IBOutlet UITableView                          *listTableView;
@@ -396,11 +397,14 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
         [self performSegueWithIdentifier:kSegueIDStartProcessInstance
                                   sender:sender];
     } else if(AFAListContentTypeTasks == self.listContentType) {
-        AFAAddTaskViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDAddTaskViewController];
+        AFAModalTaskDetailsViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
+        addTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenTitleText, @"New task title");
         addTaskController.applicationID = self.currentApp.modelID;
         addTaskController.appThemeColor = self.navigationBarThemeColor;
         addTaskController.delegate = self;
-        addTaskController.controllerType = AFAAddTaskControllerTypePlainTask;
+        
+        AFAModalTaskDetailsCreateTaskAction *createTaskAction = [AFAModalTaskDetailsCreateTaskAction new];
+        addTaskController.confirmAlertAction =  createTaskAction;
         
         addTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         addTaskController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -568,7 +572,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 
 
 #pragma mark -
-#pragma mark AFAAddTaskViewController Delegate
+#pragma mark AFAModalTaskDetailsViewControllerDelegate Delegate
 
 - (void)didCreateTask:(ASDKModelTask *)task {
     [self searchWithTerm:self.searchTextField.text];

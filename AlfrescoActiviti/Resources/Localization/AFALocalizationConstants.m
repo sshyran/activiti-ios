@@ -239,6 +239,7 @@ NSString *kLocalizationAddCommentScreenPostInProgressText         = @"addComment
 
 NSString *kLocalizationAddTaskScreenTitleText                    = @"addTaskScreenTitleText";
 NSString *kLocalizationAddTaskScreenChecklistTitleText           = @"addTaskScreenChecklistTitleText";
+NSString *kLocalizationAddTaskScreenUpdateTitleText              = @"addTaskScreenUpdateTitleText";
 NSString *kLocalizationAddTaskScreenNameLabelText                = @"addTaskScreenNameLabelText";
 NSString *kLocalizationAddTaskScreenDescriptionLabelText         = @"addTaskScreenDescriptionLabelText";
 NSString *kLocalizationAddTaskScreenCreateButtonText             = @"addTaskScreenCreateButtonText";

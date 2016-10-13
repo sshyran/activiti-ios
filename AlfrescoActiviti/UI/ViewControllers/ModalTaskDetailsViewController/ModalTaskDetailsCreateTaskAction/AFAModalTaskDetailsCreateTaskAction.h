@@ -16,20 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
-@import ActivitiSDK;
+#import <Foundation/Foundation.h>
+#import "AFAModalTaskDetailsViewController.h"
 
-@interface AFATableControllerTaskDetailsModel : AFABaseModel <AFATableViewModelDelegate>
-
-@property (strong, nonatomic) ASDKModelTask     *currentTask;
-@property (strong, nonatomic) ASDKModelTask     *parentTask;
-@property (strong, nonatomic) ASDKModelProfile  *userProfile;
-
-- (BOOL)canBeRequeued;
-- (BOOL)isCompletedTask;
-- (BOOL)isAssignedTask;
-- (BOOL)isChecklistTask;
-- (BOOL)isAdhocTask;
+@interface AFAModalTaskDetailsCreateTaskAction : NSObject <AFAModalTaskDetailsAction>
 
 @end
