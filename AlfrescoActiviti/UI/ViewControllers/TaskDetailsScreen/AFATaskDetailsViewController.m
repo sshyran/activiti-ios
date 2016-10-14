@@ -366,18 +366,23 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 }
 
 - (void)onTaskDetailsEdit:(id)sender {
-    AFAModalTaskDetailsViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
-    addTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenUpdateTitleText, @"Update task title");
-    addTaskController.appThemeColor = self.navigationBarThemeColor;
-    addTaskController.delegate = self;
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    AFAModalTaskDetailsViewController *editTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
+    editTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenUpdateTitleText, @"Update task title");
+    editTaskController.confirmButtonTitle = NSLocalizedString(kLocalizationAlertDialogConfirmText, @"Confirm button");
+    editTaskController.taskName = taskDetailsModel.currentTask.name;
+    editTaskController.taskDescription = taskDetailsModel.currentTask.taskDescription;
+    editTaskController.appThemeColor = self.navigationBarThemeColor;
+    editTaskController.delegate = self;
     
     AFAModalTaskDetailsUpdateTaskAction *updateTaskAction = [AFAModalTaskDetailsUpdateTaskAction new];
-    addTaskController.confirmAlertAction = updateTaskAction;
+    updateTaskAction.currentTaskID = self.taskID;
+    editTaskController.confirmAlertAction = updateTaskAction;
     
-    addTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    addTaskController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    editTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    editTaskController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     
-    [self presentViewController:addTaskController
+    [self presentViewController:editTaskController
                        animated:YES
                      completion:nil];
 }
@@ -478,6 +483,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     } else if (AFATaskDetailsSectionTypeChecklist == self.currentSelectedSection) {
         AFAModalTaskDetailsViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
         addTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenChecklistTitleText, @"New checklist title");
+        addTaskController.confirmButtonTitle = NSLocalizedString(kLocalizationAddTaskScreenCreateButtonText, @"Confirm button");
         addTaskController.appThemeColor = self.navigationBarThemeColor;
         addTaskController.delegate = self;
         
@@ -1552,6 +1558,10 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 
 - (void)didCreateTask:(ASDKModelTask *)task {
     [self refreshTaskChecklist];
+}
+
+- (void)didUpdateCurrentTask {
+    [self refreshContentForCurrentSection];
 }
 
 @end

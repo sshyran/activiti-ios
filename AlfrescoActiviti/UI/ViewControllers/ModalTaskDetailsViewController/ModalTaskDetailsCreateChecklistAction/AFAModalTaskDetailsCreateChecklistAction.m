@@ -21,12 +21,16 @@
 
 @implementation AFAModalTaskDetailsCreateChecklistAction
 
-- (void)executeAlertActionWithModel:(AFATaskCreateModel *)taskCreateModel
-                    completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
+- (void)executeAlertActionWithModel:(id)modelObject
+                    completionBlock:(id)completionBlock {
     AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    [taskServices requestChecklistCreateWithRepresentation:taskCreateModel
+    [taskServices requestChecklistCreateWithRepresentation:modelObject
                                                     taskID:self.parentTaskID
                                            completionBlock:completionBlock];
+}
+
+- (AFAModalTaskDetailsActionType)actionType {
+    return AFAModalTaskDetailsActionTypeCreate;
 }
 
 @end

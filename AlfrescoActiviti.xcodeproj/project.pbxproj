@@ -236,7 +236,6 @@
 		13A578671CEDDDB90014B6FD /* glyphicons-filetypes.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */; };
 		13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5786B1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */; };
-		13A5D5FB1C9C4C6B00EFA760 /* AFAAddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */; };
 		13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */; };
 		13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */; };
@@ -865,8 +864,6 @@
 		13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationFolderContentDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationFolderContentDataSource.m; sourceTree = "<group>"; };
 		13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNodeContentRequestRepresentation.h; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.h; sourceTree = "<group>"; };
 		13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationNodeContentRequestRepresentation.m; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.m; sourceTree = "<group>"; };
-		13A5D5F91C9C4C6B00EFA760 /* AFAAddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddTaskViewController.h; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.h; sourceTree = "<group>"; };
-		13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddTaskViewController.m; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.m; sourceTree = "<group>"; };
 		13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKTaskCreationRequestRepresentation.h; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.h; sourceTree = "<group>"; };
 		13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKTaskCreationRequestRepresentation.m; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.m; sourceTree = "<group>"; };
 		13A5D6011CA046CF00EFA760 /* AFATaskCreateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskCreateModel.h; path = Model/TaskCreateModel/AFATaskCreateModel.h; sourceTree = "<group>"; };
@@ -1515,14 +1512,14 @@
 			name = ModalTaskDetailsUpdateTaskAction;
 			sourceTree = "<group>";
 		};
-		131DCF501DAFB6D100E08798 /* ConfirmActions */ = {
+		131DCF501DAFB6D100E08798 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
 				131DCF441DAFB03100E08798 /* ModalTaskDetailsCreateChecklistAction */,
 				131DCF481DAFB08800E08798 /* ModalTaskDetailsCreateTaskAction */,
 				131DCF4F1DAFB19100E08798 /* ModalTaskDetailsUpdateTaskAction */,
 			);
-			name = ConfirmActions;
+			name = Actions;
 			sourceTree = "<group>";
 		};
 		13207D0E1BE251C900116A98 /* Categories */ = {
@@ -2216,7 +2213,7 @@
 		136DFF821DA7D8DF00FA40E0 /* ModalTaskDetailsController */ = {
 			isa = PBXGroup;
 			children = (
-				131DCF501DAFB6D100E08798 /* ConfirmActions */,
+				131DCF501DAFB6D100E08798 /* Actions */,
 				136DFF7F1DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.h */,
 				136DFF801DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m */,
 			);
@@ -2906,15 +2903,6 @@
 			name = IntregrationNodeContentInformation;
 			sourceTree = "<group>";
 		};
-		13A5D5FC1C9C4C6E00EFA760 /* AddTaskController */ = {
-			isa = PBXGroup;
-			children = (
-				13A5D5F91C9C4C6B00EFA760 /* AFAAddTaskViewController.h */,
-				13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */,
-			);
-			name = AddTaskController;
-			sourceTree = "<group>";
-		};
 		13A5D6041CA046D300EFA760 /* TaskCreateModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -3422,7 +3410,6 @@
 			isa = PBXGroup;
 			children = (
 				13C9B57B1B9451C40009BD27 /* FilterController */,
-				13A5D5FC1C9C4C6E00EFA760 /* AddTaskController */,
 				13C958001B837D48002A08F1 /* AFAListViewController.h */,
 				13C958011B837D48002A08F1 /* AFAListViewController.m */,
 			);
@@ -5211,7 +5198,6 @@
 				13C957F61B833525002A08F1 /* AFABusinessConstants.m in Sources */,
 				13C958021B837D48002A08F1 /* AFAListViewController.m in Sources */,
 				8D7C1A561C808D640092EA81 /* AFAContentFileTableViewCell.m in Sources */,
-				13A5D5FB1C9C4C6B00EFA760 /* AFAAddTaskViewController.m in Sources */,
 				13AE35861C47D69300BEB477 /* AFABaseThemedViewController.m in Sources */,
 				136130141D74788F00B23F71 /* AFATaskMembershipTableViewCell.m in Sources */,
 				8D7C1A5E1C808D970092EA81 /* AFACommentHeaderTableViewCell.m in Sources */,

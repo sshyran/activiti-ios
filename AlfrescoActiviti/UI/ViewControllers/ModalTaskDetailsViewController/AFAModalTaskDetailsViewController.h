@@ -20,16 +20,24 @@
 #import "AFATaskServices.h"
 @class ASDKModelTask;
 
+typedef NS_ENUM(NSInteger, AFAModalTaskDetailsActionType) {
+    AFAModalTaskDetailsActionTypeUndefined = -1,
+    AFAModalTaskDetailsActionTypeCreate = 0,
+    AFAModalTaskDetailsActionTypeUpdate
+};
+
 @protocol AFAModalTaskDetailsViewControllerDelegate <NSObject>
 
 - (void)didCreateTask:(ASDKModelTask *)task;
+- (void)didUpdateCurrentTask;
 
 @end
 
 @protocol AFAModalTaskDetailsAction <NSObject>
 
-- (void)executeAlertActionWithModel:(AFATaskCreateModel *)taskCreateModel
-                    completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock;
+- (void)executeAlertActionWithModel:(id)modelObject
+                    completionBlock:(id)completionBlock;
+- (AFAModalTaskDetailsActionType)actionType;
 
 @end
 
@@ -39,6 +47,9 @@
 @property (strong, nonatomic) UIColor   *appThemeColor;
 @property (strong, nonatomic) NSString  *alertTitle;
 @property (strong, nonatomic) NSString  *progressTitle;
+@property (strong, nonatomic) NSString  *confirmButtonTitle;
+@property (strong, nonatomic) NSString  *taskName;
+@property (strong, nonatomic) NSString  *taskDescription;
 @property (strong, nonatomic) id<AFAModalTaskDetailsAction> confirmAlertAction;
 @property (weak, nonatomic)   id<AFAModalTaskDetailsViewControllerDelegate> delegate;
 

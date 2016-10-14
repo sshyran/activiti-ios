@@ -21,11 +21,15 @@
 
 @implementation AFAModalTaskDetailsCreateTaskAction
 
-- (void)executeAlertActionWithModel:(AFATaskCreateModel *)taskCreateModel
-                    completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
+- (void)executeAlertActionWithModel:(id)modelObject
+                    completionBlock:(id)completionBlock {
     AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    [taskServices requestCreateTaskWithRepresentation:taskCreateModel
+    [taskServices requestCreateTaskWithRepresentation:modelObject
                                       completionBlock:completionBlock];
+}
+
+- (AFAModalTaskDetailsActionType)actionType {
+    return AFAModalTaskDetailsActionTypeCreate;
 }
 
 @end

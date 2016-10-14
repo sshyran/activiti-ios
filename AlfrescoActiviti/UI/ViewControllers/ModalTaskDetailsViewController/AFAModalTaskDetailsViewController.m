@@ -34,6 +34,7 @@
 
 // Models
 #import "AFATaskCreateModel.h"
+#import "AFATaskUpdateModel.h"
 
 // Views
 #import <JGProgressHUD/JGProgressHUD.h>
@@ -83,8 +84,10 @@
     [self.cancelButton setTitle:NSLocalizedString(kLocalizationAlertDialogCancelButtonText, @"Cancel button")
                        forState:UIControlStateNormal];
     self.confirmButton.backgroundColor = self.appThemeColor;
-    [self.confirmButton setTitle:NSLocalizedString(kLocalizationAddTaskScreenCreateButtonText, @"Confirm button")
+    [self.confirmButton setTitle:self.confirmButtonTitle
                         forState:UIControlStateNormal];
+    self.nameTextField.text = self.taskName;
+    self.descriptionTextView.text = self.taskDescription;
     [self validateTaskNameFieldForString:self.nameTextField.text];
     
     self.progressHUD = [self configureProgressHUD];
@@ -165,27 +168,60 @@
         }
     };
     
+    AFATaskServicesTaskUpdateCompletionBlock taskDetailsUpdateCompletionBlock = ^(BOOL isTaskUpdated, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                weakSelf.progressHUD.detailTextLabel.text = nil;
+                
+                weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+            });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateCurrentTask)]) {
+                    [weakSelf.delegate didUpdateCurrentTask];
+                }
+                
+                [weakSelf.progressHUD dismiss];
+                [weakSelf dismissViewControllerAnimated:YES
+                                             completion:nil];
+            });
+        } else {
+            [strongSelf.progressHUD dismiss];
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    };
+
     AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
     [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
-            AFATaskCreateModel *taskCreateModel = [AFATaskCreateModel new];
-            taskCreateModel.taskName = self.nameTextField.text;
-            taskCreateModel.taskDescription = self.descriptionTextView.text;
-            taskCreateModel.applicationID = self.applicationID;
-            taskCreateModel.assigneeID = profile.modelID;
-            
             if ([self.confirmAlertAction respondsToSelector:@selector(executeAlertActionWithModel:completionBlock:)]) {
-                [self.confirmAlertAction executeAlertActionWithModel:taskCreateModel
-                                                     completionBlock:taskDetailsCompletionBlock];
+                if (AFAModalTaskDetailsActionTypeCreate == [self.confirmAlertAction actionType]) {
+                    AFATaskCreateModel *taskCreateModel = [AFATaskCreateModel new];
+                    taskCreateModel.taskName = self.nameTextField.text;
+                    taskCreateModel.taskDescription = self.descriptionTextView.text;
+                    taskCreateModel.applicationID = self.applicationID;
+                    taskCreateModel.assigneeID = profile.modelID;
+                    
+                    [self.confirmAlertAction executeAlertActionWithModel:taskCreateModel
+                                                         completionBlock:taskDetailsCompletionBlock];
+                } else if (AFAModalTaskDetailsActionTypeUpdate == [self.confirmAlertAction actionType]) {
+                    AFATaskUpdateModel *taskUpdate = [AFATaskUpdateModel new];
+                    taskUpdate.taskName = self.nameTextField.text;
+                    taskUpdate.taskDescription = self.descriptionTextView.text;
+                    
+                    [self.confirmAlertAction executeAlertActionWithModel:taskUpdate
+                                                         completionBlock:taskDetailsUpdateCompletionBlock];
+                }
             }
         } else {
             [strongSelf.progressHUD dismiss];
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
     }];
-    
-
 }
 
 - (IBAction)onKeyboardDismiss:(UITapGestureRecognizer *)sender {

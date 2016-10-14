@@ -399,6 +399,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     } else if(AFAListContentTypeTasks == self.listContentType) {
         AFAModalTaskDetailsViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
         addTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenTitleText, @"New task title");
+        addTaskController.confirmButtonTitle = NSLocalizedString(kLocalizationAddTaskScreenCreateButtonText, @"Confirm button");
         addTaskController.applicationID = self.currentApp.modelID;
         addTaskController.appThemeColor = self.navigationBarThemeColor;
         addTaskController.delegate = self;

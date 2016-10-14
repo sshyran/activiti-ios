@@ -17,11 +17,20 @@
  ******************************************************************************/
 
 #import "AFAModalTaskDetailsUpdateTaskAction.h"
+#import "AFAServiceRepository.h"
 
 @implementation AFAModalTaskDetailsUpdateTaskAction
 
-- (void)executeAlertActionWithModel:(AFATaskCreateModel *)taskCreateModel
-                    completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
+- (void)executeAlertActionWithModel:(id)modelObject
+                    completionBlock:(id)completionBlock {
+    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    [taskServices requestTaskUpdateWithRepresentation:modelObject
+                                            forTaskID:self.currentTaskID
+                                  withCompletionBlock:completionBlock];
+}
+
+- (AFAModalTaskDetailsActionType)actionType {
+    return AFAModalTaskDetailsActionTypeUpdate;
 }
 
 @end

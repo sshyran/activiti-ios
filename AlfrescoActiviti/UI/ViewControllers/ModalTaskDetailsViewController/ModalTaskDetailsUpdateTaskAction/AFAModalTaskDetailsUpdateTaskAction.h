@@ -21,4 +21,6 @@
 
 @interface AFAModalTaskDetailsUpdateTaskAction : NSObject <AFAModalTaskDetailsAction>
 
+@property (strong, nonatomic) NSString *currentTaskID;
+
 @end
