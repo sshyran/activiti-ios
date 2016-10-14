@@ -44,6 +44,8 @@
 #import "AFAFormServices.h"
 #import "AFAProfileServices.h"
 #import "AFAIntegrationServices.h"
+#import "AFAModalTaskDetailsCreateChecklistAction.h"
+#import "AFAModalTaskDetailsUpdateTaskAction.h"
 @import ActivitiSDK;
 
 // Models
@@ -65,7 +67,7 @@
 #import "AFAPeoplePickerViewController.h"
 #import "AFAProcessInstanceDetailsViewController.h"
 #import "AFAAddCommentsViewController.h"
-#import "AFAAddTaskViewController.h"
+#import "AFAModalTaskDetailsViewController.h"
 
 typedef NS_ENUM(NSInteger, AFATaskDetailsSectionType) {
     AFATaskDetailsSectionTypeTaskDetails = 0,
@@ -87,7 +89,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                                             AFATaskFormViewControllerDelegate,
                                             ASDKIntegrationBrowsingDelegate,
                                             AFAConfirmationViewDelegate,
-                                            AFAAddTaskViewControllerDelegate>
+                                            AFAModalTaskDetailsViewControllerDelegate>
 
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *backBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UITableView                          *taskDetailsTableView;
@@ -112,6 +114,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 @property (weak, nonatomic)   IBOutlet UIView                               *formViewContainer;
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *taskDetailsTableViewTopConstraint;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                      *addBarButtonItem;
+@property (strong, nonatomic) UIBarButtonItem                               *editBarButtonItem;
 @property (weak, nonatomic)   IBOutlet AFANoContentView                     *noContentView;
 @property (strong, nonatomic) ASDKIntegrationBrowsingViewController         *integrationBrowsingController;
 @property (weak, nonatomic)   IBOutlet AFAConfirmationView                  *confirmationView;
@@ -203,6 +206,12 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     // Make sure the add button is not pressent on certain categories.
     // It will be enabled based on the current section selection
     self.navigationItem.rightBarButtonItem = nil;
+    
+    // Set up edit button for ad-hoc task details section
+    self.editBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                           target:self
+                                                                           action:@selector(onTaskDetailsEdit:)];
+    self.editBarButtonItem.tintColor = [UIColor whiteColor];
     
     // Set the confirmation view delegate
     self.confirmationView.delegate = self;
@@ -356,6 +365,28 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     }
 }
 
+- (void)onTaskDetailsEdit:(id)sender {
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    AFAModalTaskDetailsViewController *editTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
+    editTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenUpdateTitleText, @"Update task title");
+    editTaskController.confirmButtonTitle = NSLocalizedString(kLocalizationAlertDialogConfirmText, @"Confirm button");
+    editTaskController.taskName = taskDetailsModel.currentTask.name;
+    editTaskController.taskDescription = taskDetailsModel.currentTask.taskDescription;
+    editTaskController.appThemeColor = self.navigationBarThemeColor;
+    editTaskController.delegate = self;
+    
+    AFAModalTaskDetailsUpdateTaskAction *updateTaskAction = [AFAModalTaskDetailsUpdateTaskAction new];
+    updateTaskAction.currentTaskID = self.taskID;
+    editTaskController.confirmAlertAction = updateTaskAction;
+    
+    editTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    editTaskController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    
+    [self presentViewController:editTaskController
+                       animated:YES
+                     completion:nil];
+}
+
 - (IBAction)onDatePickerRemove:(id)sender {
     // Remove the due date from the current task details model
     AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
@@ -450,11 +481,15 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
         [self toggleFullscreenOverlayView];
         [self toggleContentPickerComponent];
     } else if (AFATaskDetailsSectionTypeChecklist == self.currentSelectedSection) {
-        AFAAddTaskViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDAddTaskViewController];
-        addTaskController.parentTaskID = self.taskID;
+        AFAModalTaskDetailsViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
+        addTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenChecklistTitleText, @"New checklist title");
+        addTaskController.confirmButtonTitle = NSLocalizedString(kLocalizationAddTaskScreenCreateButtonText, @"Confirm button");
         addTaskController.appThemeColor = self.navigationBarThemeColor;
         addTaskController.delegate = self;
-        addTaskController.controllerType = AFAAddTaskControllerTypeChecklist;
+        
+        AFAModalTaskDetailsCreateChecklistAction *createCheckListAction = [AFAModalTaskDetailsCreateChecklistAction new];
+        createCheckListAction.parentTaskID = self.taskID;
+        addTaskController.confirmAlertAction = createCheckListAction;
         
         addTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
         addTaskController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
@@ -748,6 +783,11 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                       
                       // Change the cell factory
                       weakSelf.tableController.cellFactory = [weakSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+                      
+                      // For ad-hoc tasks expose an edit button option
+                      if ([taskDetailsModel isAdhocTask]) {
+                          weakSelf.navigationItem.rightBarButtonItem = weakSelf.editBarButtonItem;
+                      }
                   } else if (AFATaskDetailsSectionTypeContributors == weakSelf.currentSelectedSection) {
                       // Extract the number of collaborators for the given task
                       AFATableControllerTaskContributorsModel *taskContributorsModel = [AFATableControllerTaskContributorsModel new];
@@ -1514,10 +1554,14 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 
 
 #pragma mark -
-#pragma mark AFAAddTaskViewController Delegate
+#pragma mark AFAModalTaskDetailsViewControllerDelegate Delegate
 
 - (void)didCreateTask:(ASDKModelTask *)task {
     [self refreshTaskChecklist];
+}
+
+- (void)didUpdateCurrentTask {
+    [self refreshContentForCurrentSection];
 }
 
 @end

@@ -16,20 +16,21 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
-@import ActivitiSDK;
+#import "AFAModalTaskDetailsCreateChecklistAction.h"
+#import "AFAServiceRepository.h"
 
-@interface AFATableControllerTaskDetailsModel : AFABaseModel <AFATableViewModelDelegate>
+@implementation AFAModalTaskDetailsCreateChecklistAction
 
-@property (strong, nonatomic) ASDKModelTask     *currentTask;
-@property (strong, nonatomic) ASDKModelTask     *parentTask;
-@property (strong, nonatomic) ASDKModelProfile  *userProfile;
+- (void)executeAlertActionWithModel:(id)modelObject
+                    completionBlock:(id)completionBlock {
+    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    [taskServices requestChecklistCreateWithRepresentation:modelObject
+                                                    taskID:self.parentTaskID
+                                           completionBlock:completionBlock];
+}
 
-- (BOOL)canBeRequeued;
-- (BOOL)isCompletedTask;
-- (BOOL)isAssignedTask;
-- (BOOL)isChecklistTask;
-- (BOOL)isAdhocTask;
+- (AFAModalTaskDetailsActionType)actionType {
+    return AFAModalTaskDetailsActionTypeCreate;
+}
 
 @end

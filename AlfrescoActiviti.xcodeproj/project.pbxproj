@@ -37,6 +37,9 @@
 		1319EF531C157EE7003FA6C1 /* NSString+ASDKFontGlyphicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 136737131B86122600364886 /* NSString+ASDKFontGlyphicons.m */; };
 		1319EF541C157EEB003FA6C1 /* UIFont+ASDKGlyphicons.h in Headers */ = {isa = PBXBuildFile; fileRef = 1367370E1B860FF900364886 /* UIFont+ASDKGlyphicons.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1319EF551C157EEF003FA6C1 /* UIFont+ASDKGlyphicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 1367370F1B860FF900364886 /* UIFont+ASDKGlyphicons.m */; };
+		131DCF431DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */; };
+		131DCF471DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF461DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m */; };
+		131DCF4E1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */; };
 		13207D0C1BE251C300116A98 /* UIColor+ASDKFormViewColors.h in Headers */ = {isa = PBXBuildFile; fileRef = 13207D0A1BE251C300116A98 /* UIColor+ASDKFormViewColors.h */; };
 		13207D0D1BE251C300116A98 /* UIColor+ASDKFormViewColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 13207D0B1BE251C300116A98 /* UIColor+ASDKFormViewColors.m */; };
 		132167101B8AF37500B7406B /* AFAAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1321670F1B8AF37500B7406B /* AFAAvatarView.m */; };
@@ -118,6 +121,7 @@
 		136DFF761DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF741DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.m */; };
 		136DFF791DA653DA00FA40E0 /* ASDKImageResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF771DA653DA00FA40E0 /* ASDKImageResponseSerializer.h */; };
 		136DFF7A1DA653DA00FA40E0 /* ASDKImageResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF781DA653DA00FA40E0 /* ASDKImageResponseSerializer.m */; };
+		136DFF811DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF801DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m */; };
 		136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */; };
 		136E11351CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		136E11361CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11341CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.m */; };
@@ -232,7 +236,6 @@
 		13A578671CEDDDB90014B6FD /* glyphicons-filetypes.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */; };
 		13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5786B1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */; };
-		13A5D5FB1C9C4C6B00EFA760 /* AFAAddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */; };
 		13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A5D6001CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */; };
 		13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A5D6021CA046CF00EFA760 /* AFATaskCreateModel.m */; };
@@ -595,6 +598,12 @@
 		1317C3481BCB9DBB00F0B03F /* ASDKDiskServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDiskServices.h; path = DiskServices/ASDKDiskServices.h; sourceTree = "<group>"; };
 		1317C3491BCB9DBB00F0B03F /* ASDKDiskServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKDiskServices.m; path = DiskServices/ASDKDiskServices.m; sourceTree = "<group>"; };
 		1317C34D1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDiskServiceProtocol.h; path = DiskServices/Protocol/ASDKDiskServiceProtocol.h; sourceTree = "<group>"; };
+		131DCF411DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsCreateChecklistAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.h; sourceTree = "<group>"; };
+		131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsCreateChecklistAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.m; sourceTree = "<group>"; };
+		131DCF451DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsCreateTaskAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateTaskAction/AFAModalTaskDetailsCreateTaskAction.h; sourceTree = "<group>"; };
+		131DCF461DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsCreateTaskAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateTaskAction/AFAModalTaskDetailsCreateTaskAction.m; sourceTree = "<group>"; };
+		131DCF4C1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsUpdateTaskAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsUpdateTaskAction/AFAModalTaskDetailsUpdateTaskAction.h; sourceTree = "<group>"; };
+		131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsUpdateTaskAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsUpdateTaskAction/AFAModalTaskDetailsUpdateTaskAction.m; sourceTree = "<group>"; };
 		13207D0A1BE251C300116A98 /* UIColor+ASDKFormViewColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+ASDKFormViewColors.h"; path = "FormRenderEngine/Categories/UIColor+ASDKFormViewColors.h"; sourceTree = "<group>"; };
 		13207D0B1BE251C300116A98 /* UIColor+ASDKFormViewColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ASDKFormViewColors.m"; path = "FormRenderEngine/Categories/UIColor+ASDKFormViewColors.m"; sourceTree = "<group>"; };
 		1321670E1B8AF37500B7406B /* AFAAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAvatarView.h; path = UI/Components/AvatarView/AFAAvatarView.h; sourceTree = "<group>"; };
@@ -717,6 +726,8 @@
 		136DFF741DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKHTTPResponseSerializer.m; path = NetworkServices/NetworkService/ResponseSerializers/ASDKHTTPResponseSerializer.m; sourceTree = "<group>"; };
 		136DFF771DA653DA00FA40E0 /* ASDKImageResponseSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKImageResponseSerializer.h; path = NetworkServices/NetworkService/ResponseSerializers/ASDKImageResponseSerializer.h; sourceTree = "<group>"; };
 		136DFF781DA653DA00FA40E0 /* ASDKImageResponseSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKImageResponseSerializer.m; path = NetworkServices/NetworkService/ResponseSerializers/ASDKImageResponseSerializer.m; sourceTree = "<group>"; };
+		136DFF7F1DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsViewController.h; path = UI/ViewControllers/ModalTaskDetailsViewController/AFAModalTaskDetailsViewController.h; sourceTree = "<group>"; };
+		136DFF801DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsViewController.m; path = UI/ViewControllers/ModalTaskDetailsViewController/AFAModalTaskDetailsViewController.m; sourceTree = "<group>"; };
 		136E112F1CE4AE1400047E38 /* AFAIntegrationServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAIntegrationServices.h; path = Business/ServiceRepository/Services/AFAIntegrationServices.h; sourceTree = "<group>"; };
 		136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAIntegrationServices.m; path = Business/ServiceRepository/Services/AFAIntegrationServices.m; sourceTree = "<group>"; };
 		136E11331CE5BE0400047E38 /* ASDKIntegrationLoginWebViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationLoginWebViewViewController.h; path = FormRenderEngine/Components/IntegrationLoginWebViewController/ASDKIntegrationLoginWebViewViewController.h; sourceTree = "<group>"; };
@@ -853,8 +864,6 @@
 		13A578641CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationFolderContentDataSource.m; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationFolderContentDataSource.m; sourceTree = "<group>"; };
 		13A578681CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationNodeContentRequestRepresentation.h; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.h; sourceTree = "<group>"; };
 		13A578691CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationNodeContentRequestRepresentation.m; path = NetworkServices/RequestRepresentations/IntegrationNodeContentInformation/ASDKIntegrationNodeContentRequestRepresentation.m; sourceTree = "<group>"; };
-		13A5D5F91C9C4C6B00EFA760 /* AFAAddTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddTaskViewController.h; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.h; sourceTree = "<group>"; };
-		13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddTaskViewController.m; path = UI/ViewControllers/AddTaskController/AFAAddTaskViewController.m; sourceTree = "<group>"; };
 		13A5D5FD1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKTaskCreationRequestRepresentation.h; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.h; sourceTree = "<group>"; };
 		13A5D5FE1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKTaskCreationRequestRepresentation.m; path = NetworkServices/RequestRepresentations/TaskInformation/ASDKTaskCreationRequestRepresentation.m; sourceTree = "<group>"; };
 		13A5D6011CA046CF00EFA760 /* AFATaskCreateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskCreateModel.h; path = Model/TaskCreateModel/AFATaskCreateModel.h; sourceTree = "<group>"; };
@@ -1476,6 +1485,43 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		131DCF441DAFB03100E08798 /* ModalTaskDetailsCreateChecklistAction */ = {
+			isa = PBXGroup;
+			children = (
+				131DCF411DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.h */,
+				131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */,
+			);
+			name = ModalTaskDetailsCreateChecklistAction;
+			sourceTree = "<group>";
+		};
+		131DCF481DAFB08800E08798 /* ModalTaskDetailsCreateTaskAction */ = {
+			isa = PBXGroup;
+			children = (
+				131DCF451DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.h */,
+				131DCF461DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m */,
+			);
+			name = ModalTaskDetailsCreateTaskAction;
+			sourceTree = "<group>";
+		};
+		131DCF4F1DAFB19100E08798 /* ModalTaskDetailsUpdateTaskAction */ = {
+			isa = PBXGroup;
+			children = (
+				131DCF4C1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.h */,
+				131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */,
+			);
+			name = ModalTaskDetailsUpdateTaskAction;
+			sourceTree = "<group>";
+		};
+		131DCF501DAFB6D100E08798 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				131DCF441DAFB03100E08798 /* ModalTaskDetailsCreateChecklistAction */,
+				131DCF481DAFB08800E08798 /* ModalTaskDetailsCreateTaskAction */,
+				131DCF4F1DAFB19100E08798 /* ModalTaskDetailsUpdateTaskAction */,
+			);
+			name = Actions;
+			sourceTree = "<group>";
+		};
 		13207D0E1BE251C900116A98 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -1742,6 +1788,7 @@
 				133B7FDA1B78DBB400C17D06 /* LoginScreen */,
 				13FFF4111C43A6EB00550747 /* ApplicationScreen */,
 				13CE8ED21B85B2810022F17A /* DrawerMenuScreen */,
+				136DFF821DA7D8DF00FA40E0 /* ModalTaskDetailsController */,
 				13C958031B837D53002A08F1 /* ListScreen */,
 				132511F21BA80FB700C4CA64 /* TaskDetailsScreen */,
 				13EED87B1C56721A00F17105 /* ConnectivityScreen */,
@@ -1767,7 +1814,7 @@
 		133B7FDF1B78FA0F00C17D06 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				1371945D1B6922DE00D4E1F0 /* Main.storyboard */,
+				136DFF831DA7E54800FA40E0 /* Storyboards */,
 				13DBF3591B79E1E5003E6938 /* Constants */,
 				13DBF3541B79DF53003E6938 /* Categories */,
 				133B7FE41B78FB2500C17D06 /* Components */,
@@ -2161,6 +2208,24 @@
 				136DFF781DA653DA00FA40E0 /* ASDKImageResponseSerializer.m */,
 			);
 			name = ResponseSerializers;
+			sourceTree = "<group>";
+		};
+		136DFF821DA7D8DF00FA40E0 /* ModalTaskDetailsController */ = {
+			isa = PBXGroup;
+			children = (
+				131DCF501DAFB6D100E08798 /* Actions */,
+				136DFF7F1DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.h */,
+				136DFF801DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m */,
+			);
+			name = ModalTaskDetailsController;
+			sourceTree = "<group>";
+		};
+		136DFF831DA7E54800FA40E0 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				1371945D1B6922DE00D4E1F0 /* Main.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 		136E11321CE4AE1800047E38 /* AFAIntegrationServices */ = {
@@ -2838,15 +2903,6 @@
 			name = IntregrationNodeContentInformation;
 			sourceTree = "<group>";
 		};
-		13A5D5FC1C9C4C6E00EFA760 /* AddTaskController */ = {
-			isa = PBXGroup;
-			children = (
-				13A5D5F91C9C4C6B00EFA760 /* AFAAddTaskViewController.h */,
-				13A5D5FA1C9C4C6B00EFA760 /* AFAAddTaskViewController.m */,
-			);
-			name = AddTaskController;
-			sourceTree = "<group>";
-		};
 		13A5D6041CA046D300EFA760 /* TaskCreateModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -3354,7 +3410,6 @@
 			isa = PBXGroup;
 			children = (
 				13C9B57B1B9451C40009BD27 /* FilterController */,
-				13A5D5FC1C9C4C6E00EFA760 /* AddTaskController */,
 				13C958001B837D48002A08F1 /* AFAListViewController.h */,
 				13C958011B837D48002A08F1 /* AFAListViewController.m */,
 			);
@@ -5094,7 +5149,9 @@
 				13DBF3531B79DE9A003E6938 /* UIView+AFAViewAnimations.m in Sources */,
 				8D7C1A741C8090D10092EA81 /* AFAGenericFilterModel.m in Sources */,
 				75CFBC6D1B81CB900018DADE /* AFASecurityLayerTableViewCell.m in Sources */,
+				136DFF811DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m in Sources */,
 				8D7C1A661C8090340092EA81 /* AFAProcessMembershipTableViewCell.m in Sources */,
+				131DCF431DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m in Sources */,
 				13C711EB1D0996F700E8550D /* AFACredentialSectionTableViewCell.m in Sources */,
 				13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */,
 				13BDA7431B7B733400A2CE40 /* AFALocalizationConstants.m in Sources */,
@@ -5116,6 +5173,7 @@
 				13667FE11C871C8A005E4AEA /* AFATableControllerProcessInstanceDetailsCellFactory.m in Sources */,
 				137C58AB1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m in Sources */,
 				137B94421BD656E700134BF1 /* AFATaskFormViewController.m in Sources */,
+				131DCF471DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m in Sources */,
 				1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */,
 				136680071C89AEF9005E4AEA /* AFAQueryServices.m in Sources */,
 				13EBECBB1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m in Sources */,
@@ -5126,6 +5184,7 @@
 				132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */,
 				13F562C71CA2A3D300F0C7B5 /* AFAClaimTableViewCell.m in Sources */,
 				13AEE2BC1C96B79500E9EB44 /* AFATableControllerProcessInstanceContentModel.m in Sources */,
+				131DCF4E1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m in Sources */,
 				8D7C1A811C8091D40092EA81 /* AFAPeoplePickerViewController.m in Sources */,
 				136DFF681DA3DB8300FA40E0 /* AFAFilterHeaderView.m in Sources */,
 				133B7FDD1B78DBFE00C17D06 /* AFALoginViewController.m in Sources */,
@@ -5139,7 +5198,6 @@
 				13C957F61B833525002A08F1 /* AFABusinessConstants.m in Sources */,
 				13C958021B837D48002A08F1 /* AFAListViewController.m in Sources */,
 				8D7C1A561C808D640092EA81 /* AFAContentFileTableViewCell.m in Sources */,
-				13A5D5FB1C9C4C6B00EFA760 /* AFAAddTaskViewController.m in Sources */,
 				13AE35861C47D69300BEB477 /* AFABaseThemedViewController.m in Sources */,
 				136130141D74788F00B23F71 /* AFATaskMembershipTableViewCell.m in Sources */,
 				8D7C1A5E1C808D970092EA81 /* AFACommentHeaderTableViewCell.m in Sources */,

@@ -19,7 +19,7 @@
             <objects>
                 <navigationController storyboardIdentifier="Navigation" navigationBarHidden="YES" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="v9Y-ro-k4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="v9Y-ro-k4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -35,7 +35,7 @@
         <scene sceneID="5ZC-YG-evy">
             <objects>
                 <navigationController id="Xjc-tR-raA" customClass="AFANavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="IqS-JF-Kuz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="IqS-JF-Kuz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.19215686274509802" green="0.26666666666666666" blue="0.29411764705882354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -4916,10 +4916,10 @@
             </objects>
             <point key="canvasLocation" x="3555" y="2288"/>
         </scene>
-        <!--Add Task View Controller-->
+        <!--Modal Task Details View Controller-->
         <scene sceneID="2S2-re-cYc">
             <objects>
-                <viewController storyboardIdentifier="AddTaskViewControllerID" id="Tc8-Io-xen" customClass="AFAAddTaskViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ModalTaskDetailsViewControllerID" id="Tc8-Io-xen" customClass="AFAModalTaskDetailsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="g8T-nk-qIB"/>
                         <viewControllerLayoutGuide type="bottom" id="xe8-RZ-lNo"/>

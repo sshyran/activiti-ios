@@ -16,31 +16,30 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFAAddTaskViewController.h"
+#import "AFAModalTaskDetailsViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 // Constants
+#import "AFAUIConstants.h"
 #import "AFALocalizationConstants.h"
 
 // Categories
 #import "UIColor+AFATheme.h"
+#import "UIViewController+AFAAlertAddition.h"
 
 // Managers
-#import "AFATaskServices.h"
 #import "AFAProfileServices.h"
 #import "AFAServiceRepository.h"
 @import ActivitiSDK;
 
-// Controllers
-#import "UIViewController+AFAAlertAddition.h"
-
 // Models
 #import "AFATaskCreateModel.h"
+#import "AFATaskUpdateModel.h"
 
 // Views
 #import <JGProgressHUD/JGProgressHUD.h>
 
-@interface AFAAddTaskViewController ()
+@interface AFAModalTaskDetailsViewController ()
 
 @property (weak, nonatomic) IBOutlet UIView             *alertContainerView;
 @property (weak, nonatomic) IBOutlet UILabel            *alertTitleLabel;
@@ -55,7 +54,7 @@
 
 @end
 
-@implementation AFAAddTaskViewController
+@implementation AFAModalTaskDetailsViewController
 
 - (void)dealloc {
     [self.alertContainerView removeObserver:self
@@ -79,14 +78,16 @@
     [super viewDidLoad];
     
     // Set up localization
-    self.alertTitleLabel.text = (AFAAddTaskControllerTypePlainTask == self.controllerType) ? NSLocalizedString(kLocalizationAddTaskScreenTitleText, @"New task title") : NSLocalizedString(kLocalizationAddTaskScreenChecklistTitleText, @"New checklist title");
+    self.alertTitleLabel.text = self.alertTitle;
     self.nameLabel.text = NSLocalizedString(kLocalizationAddTaskScreenNameLabelText, @"Name label");
     self.descriptionLabel.text = NSLocalizedString(kLocalizationAddTaskScreenDescriptionLabelText, @"Description label");
     [self.cancelButton setTitle:NSLocalizedString(kLocalizationAlertDialogCancelButtonText, @"Cancel button")
                        forState:UIControlStateNormal];
     self.confirmButton.backgroundColor = self.appThemeColor;
-    [self.confirmButton setTitle:NSLocalizedString(kLocalizationAddTaskScreenCreateButtonText, @"Confirm button")
+    [self.confirmButton setTitle:self.confirmButtonTitle
                         forState:UIControlStateNormal];
+    self.nameTextField.text = self.taskName;
+    self.descriptionTextView.text = self.taskDescription;
     [self validateTaskNameFieldForString:self.nameTextField.text];
     
     self.progressHUD = [self configureProgressHUD];
@@ -115,26 +116,16 @@
                      } completion:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)keyboardWillChange:(NSNotification *)notification {
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     self.alertContainerViewVerticalConstraint.constant = (keyboardFrame.origin.y == self.view.frame.size.height) ? .0f : - CGRectGetHeight(keyboardFrame) / 2.0f;
     [self.view layoutIfNeeded];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
-*/
 
 
 #pragma mark -
@@ -177,24 +168,54 @@
         }
     };
     
+    AFATaskServicesTaskUpdateCompletionBlock taskDetailsUpdateCompletionBlock = ^(BOOL isTaskUpdated, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                weakSelf.progressHUD.detailTextLabel.text = nil;
+                
+                weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+            });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateCurrentTask)]) {
+                    [weakSelf.delegate didUpdateCurrentTask];
+                }
+                
+                [weakSelf.progressHUD dismiss];
+                [weakSelf dismissViewControllerAnimated:YES
+                                             completion:nil];
+            });
+        } else {
+            [strongSelf.progressHUD dismiss];
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    };
+
     AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
     [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
-            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-            AFATaskCreateModel *taskCreateModel = [AFATaskCreateModel new];
-            taskCreateModel.taskName = self.nameTextField.text;
-            taskCreateModel.taskDescription = self.descriptionTextView.text;
-            taskCreateModel.applicationID = self.applicationID;
-            taskCreateModel.assigneeID = profile.modelID;
-            
-            if (AFAAddTaskControllerTypeChecklist == self.controllerType) {
-                [taskServices requestChecklistCreateWithRepresentation:taskCreateModel
-                                                                taskID:strongSelf.parentTaskID
-                                                       completionBlock:taskDetailsCompletionBlock];
-            } else {
-                [taskServices requestCreateTaskWithRepresentation:taskCreateModel
-                                                  completionBlock:taskDetailsCompletionBlock];
+            if ([self.confirmAlertAction respondsToSelector:@selector(executeAlertActionWithModel:completionBlock:)]) {
+                if (AFAModalTaskDetailsActionTypeCreate == [self.confirmAlertAction actionType]) {
+                    AFATaskCreateModel *taskCreateModel = [AFATaskCreateModel new];
+                    taskCreateModel.taskName = self.nameTextField.text;
+                    taskCreateModel.taskDescription = self.descriptionTextView.text;
+                    taskCreateModel.applicationID = self.applicationID;
+                    taskCreateModel.assigneeID = profile.modelID;
+                    
+                    [self.confirmAlertAction executeAlertActionWithModel:taskCreateModel
+                                                         completionBlock:taskDetailsCompletionBlock];
+                } else if (AFAModalTaskDetailsActionTypeUpdate == [self.confirmAlertAction actionType]) {
+                    AFATaskUpdateModel *taskUpdate = [AFATaskUpdateModel new];
+                    taskUpdate.taskName = self.nameTextField.text;
+                    taskUpdate.taskDescription = self.descriptionTextView.text;
+                    
+                    [self.confirmAlertAction executeAlertActionWithModel:taskUpdate
+                                                         completionBlock:taskDetailsUpdateCompletionBlock];
+                }
             }
         } else {
             [strongSelf.progressHUD dismiss];
@@ -208,9 +229,8 @@
 }
 
 - (IBAction)onTaskNameTextFieldChange:(UITextField *)sender {
-    [self validateTaskNameFieldForString:sender.text];  
+    [self validateTaskNameFieldForString:sender.text];
 }
-
 
 #pragma mark -
 #pragma mark Progress hud setup
@@ -221,7 +241,7 @@
     JGProgressHUDFadeZoomAnimation *zoomAnimation = [JGProgressHUDFadeZoomAnimation animation];
     hud.animation = zoomAnimation;
     hud.layoutChangeAnimationDuration = .0f;
-    hud.textLabel.text = (AFAAddTaskControllerTypePlainTask == self.controllerType) ? NSLocalizedString(kLocalizationAddTaskScreenCreatingTaskText, @"Creating task text") : NSLocalizedString(kLocalizationAddTaskScreenCreatingChecklistText, @"Creating checklist text");
+    hud.textLabel.text = self.progressTitle;
     hud.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
     
     return hud;
@@ -240,7 +260,7 @@
 
 
 #pragma mark -
-#pragma mark KVO handling 
+#pragma mark KVO handling
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
@@ -255,6 +275,5 @@
         self.alertContainerView.layer.shadowPath = shadowPath.CGPath;
     }
 }
-
 
 @end

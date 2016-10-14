@@ -16,28 +16,21 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "AFAUIConstants.h"
+#import "AFAModalTaskDetailsUpdateTaskAction.h"
+#import "AFAServiceRepository.h"
 
-@class ASDKModelTask;
+@implementation AFAModalTaskDetailsUpdateTaskAction
 
-typedef NS_ENUM(NSInteger, AFAAddTaskControllerType) {
-    AFAAddTaskControllerTypePlainTask,
-    AFAAddTaskControllerTypeChecklist
-};
+- (void)executeAlertActionWithModel:(id)modelObject
+                    completionBlock:(id)completionBlock {
+    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    [taskServices requestTaskUpdateWithRepresentation:modelObject
+                                            forTaskID:self.currentTaskID
+                                  withCompletionBlock:completionBlock];
+}
 
-@protocol AFAAddTaskViewControllerDelegate <NSObject>
-
-- (void)didCreateTask:(ASDKModelTask *)task;
-
-@end
-
-@interface AFAAddTaskViewController : UIViewController
-
-@property (weak, nonatomic)   id<AFAAddTaskViewControllerDelegate> delegate;
-@property (strong, nonatomic) NSString                 *applicationID;
-@property (strong, nonatomic) NSString                 *parentTaskID;
-@property (strong, nonatomic) UIColor                  *appThemeColor;
-@property (assign, nonatomic) AFAAddTaskControllerType controllerType;
+- (AFAModalTaskDetailsActionType)actionType {
+    return AFAModalTaskDetailsActionTypeUpdate;
+}
 
 @end

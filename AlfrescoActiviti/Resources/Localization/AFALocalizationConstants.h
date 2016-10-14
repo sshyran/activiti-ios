@@ -195,6 +195,7 @@ extern NSString *kLocalizationAddCommentScreenPostInProgressText;
 // Add task screen
 extern NSString *kLocalizationAddTaskScreenTitleText;
 extern NSString *kLocalizationAddTaskScreenChecklistTitleText;
+extern NSString *kLocalizationAddTaskScreenUpdateTitleText;
 extern NSString *kLocalizationAddTaskScreenNameLabelText;
 extern NSString *kLocalizationAddTaskScreenDescriptionLabelText;
 extern NSString *kLocalizationAddTaskScreenCreateButtonText;

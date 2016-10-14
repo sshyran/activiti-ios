@@ -65,4 +65,8 @@
     return self.currentTask.parentTaskID ? YES : NO;
 }
 
+- (BOOL)isAdhocTask {
+    return !self.currentTask.processInstanceID.length && !self.currentTask.parentTaskID ? YES : NO;
+}
+
 @end

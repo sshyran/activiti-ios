@@ -194,6 +194,7 @@
 // Add task screen
 "addTaskScreenTitleText"                                 = "New task";
 "addTaskScreenChecklistTitleText"                        = "New checklist item";
+"addTaskScreenUpdateTitleText"                           = "Update task";
 "addTaskScreenNameLabelText"                             = "Name";
 "addTaskScreenDescriptionLabelText"                      = "Description";
 "addTaskScreenCreateButtonText"                          = "Create";
