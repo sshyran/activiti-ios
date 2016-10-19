@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, AFAModalTaskDetailsActionType) {
 
 @protocol AFAModalTaskDetailsViewControllerDelegate <NSObject>
 
+@optional
 - (void)didCreateTask:(ASDKModelTask *)task;
 - (void)didUpdateCurrentTask;
 
