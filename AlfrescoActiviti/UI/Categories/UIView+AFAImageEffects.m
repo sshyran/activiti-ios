@@ -30,7 +30,7 @@
     
     // Get the snapshot
     UIImage *snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIImage *blurredSnapshotImage = [snapshotImage applyLightEffect];
+    UIImage *blurredSnapshotImage = [snapshotImage applyDarkEffect];
 
     UIGraphicsEndImageContext();
     return blurredSnapshotImage;
