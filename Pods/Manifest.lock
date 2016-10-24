@@ -24,7 +24,7 @@ PODS:
     - CocoaLumberjack/Default
   - Crashlytics (3.8.0):
     - Fabric (~> 1.6.3)
-  - Fabric (1.6.8)
+  - Fabric (1.6.10)
   - JGProgressHUD (1.4)
   - Mantle (2.1.0):
     - Mantle/extobjc (= 2.1.0)
@@ -42,7 +42,7 @@ SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
   Crashlytics: 8601d9c74a4c4d28f3e7f408bf4c0e490c70e8b4
-  Fabric: 5755268d0171435ab167e3d0878a28a777deaf10
+  Fabric: c73f371ee543e3f0b80608f2674750e4910d1669
   JGProgressHUD: 1617b0940cf80bb53e8f7d6f0fd69252ea45d6d4
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
 
