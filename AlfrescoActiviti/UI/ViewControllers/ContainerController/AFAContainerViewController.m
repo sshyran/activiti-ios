@@ -211,7 +211,7 @@
 
 - (void)logoutUser {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:NSLocalizedString(kLocalizationAlertDialogLogoutDescriptionText, @"Log out title text")
+                                                                             message:NSLocalizedString(kLocalizationAlertDialogSignOutDescriptionText, @"Sign out title text")
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     
     __weak typeof(self) weakSelf = self;

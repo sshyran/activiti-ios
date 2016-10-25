@@ -20,9 +20,23 @@
 
 @implementation AFAMenuButtonCell
 
+- (void)setSelected:(BOOL)selected {
+    if (selected) {
+        [self.menuButton setTintColor:[UIColor cyanColor]];
+    } else {
+        [self.menuButton setTintColor:[UIColor whiteColor]];
+    }
+}
+
+#pragma mark -
+#pragma mark Actions
+
 - (IBAction)onMenuButton:(id)sender {
     if ([self.delegate respondsToSelector:@selector(onMenuButtonFromCell:)]) {
         [self.delegate onMenuButtonFromCell:self];
     }
 }
+
+
+
 @end

@@ -21,6 +21,7 @@
 // Constants
 #import "AFAUIConstants.h"
 #import "AFABusinessConstants.h"
+#import "AFALocalizationConstants.h"
 
 // Cells
 #import "AFAAvatarMenuTableViewCell.h"
@@ -47,6 +48,7 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
 
 @property (weak, nonatomic)   IBOutlet UITableView  *menuTableView;
 @property (strong, nonatomic) UIImage               *profileImage;
+@property (assign, nonatomic) AFADrawerMenuCellType currentSelectedMenuCell;
 
 @end
 
@@ -87,33 +89,36 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
     if ([self.delegate respondsToSelector:@selector(showUserProfile)]) {
         [self.delegate showUserProfile];
     }
+    self.currentSelectedMenuCell = AFADrawerMenuCellTypeAvatar;
 }
 
 
 #pragma mark -
-#pragma mark MenuButtonTableViewCell Delegate
+#pragma mark MenuButtonTableViewCellDelegate
 
 - (void)onMenuButtonFromCell:(UITableViewCell *)cell {
     AFADrawerMenuCellType cellType = [self.menuTableView indexPathForCell:cell].row;
     
     switch (cellType) {
+        case AFADrawerMenuCellTypeApplications: {
+            if ([self.delegate respondsToSelector:@selector(showApplications)]) {
+                [self.delegate showApplications];
+            }
+            self.currentSelectedMenuCell = cellType;
+        }
+            break;
+            
         case AFADrawerMenuCellTypeTasks: {
             if ([self.delegate respondsToSelector:@selector(showAdhocTasks)]) {
                 [self.delegate showAdhocTasks];
             }
+            self.currentSelectedMenuCell = cellType;
         }
             break;
             
         case AFADrawerMenuCellTypeLogout: {
             if ([self.delegate respondsToSelector:@selector(logoutUser)]) {
                 [self.delegate logoutUser];
-            }
-        }
-            break;
-            
-        case AFADrawerMenuCellTypeApplications: {
-            if ([self.delegate respondsToSelector:@selector(showApplications)]) {
-                [self.delegate showApplications];
             }
         }
             break;
@@ -161,6 +166,12 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
     return AFADrawerMenuCellTypeEnumCount;
 }
 
+- (void)tableView:(UITableView *)tableView
+  willDisplayCell:(UITableViewCell *)cell
+forRowAtIndexPath:(NSIndexPath *)indexPath {
+    cell.selected = (indexPath.row == self.currentSelectedMenuCell && indexPath.row != AFADrawerMenuCellTypeLogout) ? YES : NO;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = nil;
@@ -191,6 +202,7 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
             [taskButtonCell.menuButton setImage:[UIImage imageNamed:@"application-icon"]
                                        forState:UIControlStateNormal];
             taskButtonCell.menuButton.tintColor = [UIColor whiteColor];
+            taskButtonCell.menuItemTitleLabel.text = NSLocalizedString(kLocalizationAppScreenTitleText, @"Applications title");
             
             cell = taskButtonCell;
         }
@@ -202,6 +214,7 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
             [taskButtonCell.menuButton setImage:[UIImage imageNamed:@"adhoc-icon"]
                                        forState:UIControlStateNormal];
             taskButtonCell.menuButton.tintColor = [UIColor whiteColor];
+            taskButtonCell.menuItemTitleLabel.text = NSLocalizedString(kLocalizationListScreenTaskAppText, @"Ad-Hoc task app title");
             
             cell = taskButtonCell;
         }
@@ -213,6 +226,7 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
             [logoutButtonCell.menuButton setImage:[UIImage imageNamed:@"logout-icon"]
                                          forState:UIControlStateNormal];
             logoutButtonCell.tintColor = [[UIColor whiteColor] colorWithAlphaComponent:.7f];
+            logoutButtonCell.menuItemTitleLabel.text = NSLocalizedString(kLocalizationSignOutText, @"Sign out title");
             
             cell = logoutButtonCell;
         }

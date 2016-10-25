@@ -173,6 +173,7 @@ NSString *kLocalizationGeneralUseLastUpdateTextFormat            = @"generalUseL
 NSString *kLocalizationGeneralUseNoneText                        = @"generalUseNoneText";
 NSString *kLocalizationSuccessText                               = @"successText";
 NSString *kLocalizationAuditLogText                              = @"auditLogText";
+NSString *kLocalizationSignOutText                               = @"signOutText";
 
 
 #pragma mark -
@@ -183,7 +184,7 @@ NSString *kLocalizationAlertDialogGenericNetworkErrorText        = @"alertDialog
 NSString *kLocalizationAlertDialogOkButtonText                   = @"alertDialogOkButtonText";
 NSString *kLocalizationAlertDialogYesButtonText                  = @"alertDialogYesButtonText";
 NSString *kLocalizationAlertDialogCancelButtonText               = @"alertDialogCancelButtonText";
-NSString *kLocalizationAlertDialogLogoutDescriptionText          = @"alertDialogLogoutDescriptionText";
+NSString *kLocalizationAlertDialogSignOutDescriptionText          = @"alertDialogSignOutDescriptionText";
 NSString *kLocalizationAlertDialogTaskContentFetchErrorText      = @"alertDialogTaskContentFetchErrorText";
 NSString *kLocalizationAlertDialogTaskUpdateErrorText            = @"alertDialogTaskDetailsUpdateErrorText";
 NSString *kLocalizationAlertDialogTaskContentDeleteErrorText     = @"alertDialogTaskContentDeleteErrorText";
