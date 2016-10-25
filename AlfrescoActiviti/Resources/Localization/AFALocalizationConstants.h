@@ -143,6 +143,7 @@ extern NSString *kLocalizationGeneralUseLastUpdateTextFormat;
 extern NSString *kLocalizationGeneralUseNoneText;
 extern NSString *kLocalizationSuccessText;
 extern NSString *kLocalizationAuditLogText;
+extern NSString *kLocalizationSignOutText;
 
 // Alert dialogs use
 extern NSString *kLocalizationAlertDialogOopsTitleText;
@@ -150,7 +151,7 @@ extern NSString *kLocalizationAlertDialogGenericNetworkErrorText;
 extern NSString *kLocalizationAlertDialogOkButtonText;
 extern NSString *kLocalizationAlertDialogYesButtonText;
 extern NSString *kLocalizationAlertDialogCancelButtonText;
-extern NSString *kLocalizationAlertDialogLogoutDescriptionText;
+extern NSString *kLocalizationAlertDialogSignOutDescriptionText;
 extern NSString *kLocalizationAlertDialogTaskContentFetchErrorText;
 extern NSString *kLocalizationAlertDialogTaskContentDeleteErrorText;
 extern NSString *kLocalizationAlertDialogTaskUpdateErrorText;

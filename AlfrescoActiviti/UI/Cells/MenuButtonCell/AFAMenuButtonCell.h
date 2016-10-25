@@ -27,6 +27,7 @@
 @interface AFAMenuButtonCell : UITableViewCell
 @property (weak, nonatomic) id<AFAMenuButtonTableViewCellDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIButton *menuButton;
+@property (weak, nonatomic) IBOutlet UILabel *menuItemTitleLabel;
 
 - (IBAction)onMenuButton:(id)sender;
 

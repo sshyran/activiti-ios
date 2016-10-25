@@ -49,11 +49,13 @@
 
 - (UIImage *)applyDarkEffect
 {
-    UIColor *tintColor = [UIColor colorWithWhite:0.11
-                                           alpha:0.73];
-    return [self applyBlurWithRadius:20
+    UIColor *tintColor = [UIColor colorWithHue:.0f
+                                    saturation:.0f
+                                    brightness:.0f
+                                         alpha:.2f];
+    return [self applyBlurWithRadius:1.7f
                            tintColor:tintColor
-               saturationDeltaFactor:1.8
+               saturationDeltaFactor:1.0f
                            maskImage:nil];
 }
 

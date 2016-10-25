@@ -142,6 +142,7 @@
 "generalUseNoneText"                                     = "None";
 "successText"                                            = "Success";
 "auditLogText"                                           = "Audit log";
+"signOutText"                                            = "Sign out";
 
 // Alert dialogs use
 "alertDialogOopsTitleText"                               = "Oops...";
@@ -149,7 +150,7 @@
 "alertDialogOkButtonText"                                = "OK";
 "alertDialogYesButtonText"                               = "Yes";
 "alertDialogCancelButtonText"                            = "Cancel";
-"alertDialogLogoutDescriptionText"                       = "Are you sure you want to log out of Activiti mobile?";
+"alertDialogSignOutDescriptionText"                       = "Are you sure you want to sign out of Activiti mobile?";
 "alertDialogTaskContentFetchErrorText"                   = "We've encountered an issue while fetching the content associated with this task.\nPlease try again...";
 "alertDialogTaskContentUploadErrorText"                  = "We've encountered an issue while uploading your content.\nPlease try again...";
 "alertDialogTaskContentDownloadErrorText"                = "We've encountered an issue while downloading your content.\nPlase try again...";
