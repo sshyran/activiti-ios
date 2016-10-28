@@ -18,13 +18,14 @@ abstract_target 'Shared' do
 	end
 
 	target 'ActivitiSDK' do
+        target 'ActivitiSDKTests' do
+            inherit! :search_paths
+            pod 'OCMock'
+        end
 	end
 end
 
 target 'AlfrescoActivitiTests' do
-end
-
-target 'ActivitiSDKTests' do
 end
 
 post_install do |installer|

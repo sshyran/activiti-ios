@@ -71,13 +71,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
     }
     
     if (protocolListName.count > 1) {
-        ASDKLogWarn(@"Service class:%@ breaking single protocol conformity rule. Make sure sure service class only conform to one service protocol.", NSStringFromClass(serviceClass));
+        ASDKLogError(@"Service class:%@ breaking single protocol conformity rule. Make sure sure service class only conform to one service protocol.", NSStringFromClass(serviceClass));
+        return;
+    } else {
+        OSSpinLockLock(&_spinLock);
+        [self.serviceDictionary setObject:service
+                                   forKey:protocolListName.firstObject];
+        OSSpinLockUnlock(&_spinLock);
     }
-    
-    OSSpinLockLock(&_spinLock);
-    [self.serviceDictionary setObject:service
-                               forKey:protocolListName.firstObject];
-    OSSpinLockUnlock(&_spinLock);
 }
 
 - (BOOL)isServiceRegistered:(id)service {

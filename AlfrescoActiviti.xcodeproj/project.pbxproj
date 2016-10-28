@@ -142,7 +142,6 @@
 		137194701B6922DE00D4E1F0 /* AlfrescoActivitiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1371946F1B6922DE00D4E1F0 /* AlfrescoActivitiTests.m */; };
 		137194831B6924DE00D4E1F0 /* ActivitiSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 137194821B6924DE00D4E1F0 /* ActivitiSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		137194891B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; };
-		137194921B6924DF00D4E1F0 /* ActivitiSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 137194911B6924DF00D4E1F0 /* ActivitiSDKTests.m */; };
 		137194951B6924DF00D4E1F0 /* ActivitiSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; };
 		1372B21A1BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 1372B2191BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m */; };
 		13778DDC1D6C3EF10074C70F /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 13778DDB1D6C3EF10074C70F /* Settings.bundle */; };
@@ -204,6 +203,7 @@
 		139564E81C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 139564E61C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m */; };
 		139564EB1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564EA1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1395CD9B1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1395CD9A1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h */; };
+		13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */; };
 		139DF5BA1C5A40C10062D01D /* AFAAppServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DF5B91C5A40C10062D01D /* AFAAppServices.m */; };
 		139DF5BE1C5A63740062D01D /* AFAProfileServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DF5BD1C5A63740062D01D /* AFAProfileServices.m */; };
 		139DF5C21C5B6BB00062D01D /* AFATaskServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DF5C11C5B6BB00062D01D /* AFATaskServices.m */; };
@@ -344,6 +344,8 @@
 		13E8307B1B6A45640028901A /* ASDKAPIEndpointDefinitionList.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830791B6A45640028901A /* ASDKAPIEndpointDefinitionList.m */; };
 		13E830801B6A4A9B0028901A /* ASDKServicePathFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E8307E1B6A4A9B0028901A /* ASDKServicePathFactory.h */; };
 		13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8307F1B6A4A9B0028901A /* ASDKServicePathFactory.m */; };
+		13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8CE471DC34FEF00D5247F /* ASDKDiskServiceTest.m */; };
+		13E8CE501DC3955A00D5247F /* ASDKBaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8CE4A1DC37DA900D5247F /* ASDKBaseTest.m */; };
 		13EBEC971CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBEC961CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m */; };
 		13EBEC9B1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBEC991CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13EBEC9C1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBEC9A1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m */; };
@@ -757,7 +759,6 @@
 		137194821B6924DE00D4E1F0 /* ActivitiSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivitiSDK.h; sourceTree = "<group>"; };
 		137194881B6924DF00D4E1F0 /* ActivitiSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ActivitiSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		137194901B6924DF00D4E1F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		137194911B6924DF00D4E1F0 /* ActivitiSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ActivitiSDKTests.m; sourceTree = "<group>"; };
 		1372B2181BA6E47800E87F04 /* UIViewController+AFAAlertAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+AFAAlertAddition.h"; path = "UI/Categories/UIViewController+AFAAlertAddition.h"; sourceTree = "<group>"; };
 		1372B2191BA6E47800E87F04 /* UIViewController+AFAAlertAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+AFAAlertAddition.m"; path = "UI/Categories/UIViewController+AFAAlertAddition.m"; sourceTree = "<group>"; };
 		13778DDB1D6C3EF10074C70F /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = "<group>"; };
@@ -827,6 +828,7 @@
 		139564E61C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFileSourceFolderTreeElement.m; path = Model/FormFieldFileSourceFolderTreeElement/ASDKModelFileSourceFolderTreeElement.m; sourceTree = "<group>"; };
 		139564EA1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKAppNetworkServiceProtocol.h; path = NetworkServices/Proxy/AppNetworkServices/Protocol/ASDKAppNetworkServiceProtocol.h; sourceTree = "<group>"; };
 		1395CD9A1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineDataSourceProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineDataSourceProtocol.h; sourceTree = "<group>"; };
+		13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKServiceLocatorTest.m; sourceTree = "<group>"; };
 		139DF5B81C5A40C10062D01D /* AFAAppServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAppServices.h; path = Business/ServiceRepository/Services/AFAAppServices.h; sourceTree = "<group>"; };
 		139DF5B91C5A40C10062D01D /* AFAAppServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAppServices.m; path = Business/ServiceRepository/Services/AFAAppServices.m; sourceTree = "<group>"; };
 		139DF5BC1C5A63740062D01D /* AFAProfileServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileServices.h; path = Business/ServiceRepository/Services/AFAProfileServices.h; sourceTree = "<group>"; };
@@ -1012,6 +1014,9 @@
 		13E830791B6A45640028901A /* ASDKAPIEndpointDefinitionList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKAPIEndpointDefinitionList.m; path = NetworkServices/APIEndpointList/ASDKAPIEndpointDefinitionList.m; sourceTree = "<group>"; };
 		13E8307E1B6A4A9B0028901A /* ASDKServicePathFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKServicePathFactory.h; path = NetworkServices/ServiceURLFactory/ASDKServicePathFactory.h; sourceTree = "<group>"; };
 		13E8307F1B6A4A9B0028901A /* ASDKServicePathFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKServicePathFactory.m; path = NetworkServices/ServiceURLFactory/ASDKServicePathFactory.m; sourceTree = "<group>"; };
+		13E8CE471DC34FEF00D5247F /* ASDKDiskServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKDiskServiceTest.m; sourceTree = "<group>"; };
+		13E8CE4A1DC37DA900D5247F /* ASDKBaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKBaseTest.m; sourceTree = "<group>"; };
+		13E8CE4F1DC3950A00D5247F /* ASDKBaseTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKBaseTest.h; sourceTree = "<group>"; };
 		13EBEC951CF5A74200EC8F96 /* AFAAuditLogTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAuditLogTableViewCell.h; path = UI/Cells/AuditLogCell/AFAAuditLogTableViewCell.h; sourceTree = "<group>"; };
 		13EBEC961CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAuditLogTableViewCell.m; path = UI/Cells/AuditLogCell/AFAAuditLogTableViewCell.m; sourceTree = "<group>"; };
 		13EBEC991CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormColorSchemeManager.h; path = FormRenderEngine/FormColorSchemeManager/ASDKFormColorSchemeManager.h; sourceTree = "<group>"; };
@@ -2304,7 +2309,6 @@
 			children = (
 				1371944F1B6922DE00D4E1F0 /* AlfrescoActiviti */,
 				1371947F1B6924DE00D4E1F0 /* ActivitiSDK */,
-				13E830661B6A0BD40028901A /* UnitTests */,
 				1371944E1B6922DE00D4E1F0 /* Products */,
 				177C913B08C211EC66C0256F /* Pods */,
 				318B5A1183698EF8116993DD /* Frameworks */,
@@ -2331,6 +2335,7 @@
 				133352A41B7CB32D00953E1A /* Business */,
 				133B7FDF1B78FA0F00C17D06 /* UI */,
 				133B7FE01B78FA3300C17D06 /* Resources */,
+				1371946C1B6922DE00D4E1F0 /* AlfrescoActivitiTests */,
 				137194501B6922DE00D4E1F0 /* Supporting Files */,
 			);
 			path = AlfrescoActiviti;
@@ -2352,7 +2357,7 @@
 				1371946D1B6922DE00D4E1F0 /* Supporting Files */,
 			);
 			path = AlfrescoActivitiTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		1371946D1B6922DE00D4E1F0 /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -2375,6 +2380,7 @@
 				131375281B6FB38A00D2268E /* Model */,
 				131375191B6F993600D2268E /* Bootstrap */,
 				1319EF571C15827D003FA6C1 /* Resources */,
+				1371948E1B6924DF00D4E1F0 /* ActivitiSDKTests */,
 				137194801B6924DE00D4E1F0 /* Supporting Files */,
 			);
 			path = ActivitiSDK;
@@ -2392,11 +2398,14 @@
 		1371948E1B6924DF00D4E1F0 /* ActivitiSDKTests */ = {
 			isa = PBXGroup;
 			children = (
-				137194911B6924DF00D4E1F0 /* ActivitiSDKTests.m */,
+				13E8CE4F1DC3950A00D5247F /* ASDKBaseTest.h */,
+				13E8CE4A1DC37DA900D5247F /* ASDKBaseTest.m */,
+				13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */,
+				13E8CE471DC34FEF00D5247F /* ASDKDiskServiceTest.m */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
 			path = ActivitiSDKTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		1371948F1B6924DF00D4E1F0 /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -3640,15 +3649,6 @@
 				13E6E28A1B7E0EE1001F5737 /* AFAFadingTableView.m */,
 			);
 			name = FadingTableView;
-			sourceTree = "<group>";
-		};
-		13E830661B6A0BD40028901A /* UnitTests */ = {
-			isa = PBXGroup;
-			children = (
-				1371946C1B6922DE00D4E1F0 /* AlfrescoActivitiTests */,
-				1371948E1B6924DF00D4E1F0 /* ActivitiSDKTests */,
-			);
-			name = UnitTests;
 			sourceTree = "<group>";
 		};
 		13E8306C1B6A21F80028901A /* Authentification */ = {
@@ -5437,7 +5437,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				137194921B6924DF00D4E1F0 /* ActivitiSDKTests.m in Sources */,
+				13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */,
+				13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */,
+				13E8CE501DC3955A00D5247F /* ASDKBaseTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
