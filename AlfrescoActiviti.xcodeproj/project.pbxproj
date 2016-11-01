@@ -63,6 +63,8 @@
 		132C8D391D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */; };
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
+		133070E11DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */; };
+		133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
 		133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */; };
 		133A6BCD1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */; };
@@ -346,6 +348,10 @@
 		13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8307F1B6A4A9B0028901A /* ASDKServicePathFactory.m */; };
 		13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8CE471DC34FEF00D5247F /* ASDKDiskServiceTest.m */; };
 		13E8CE501DC3955A00D5247F /* ASDKBaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8CE4A1DC37DA900D5247F /* ASDKBaseTest.m */; };
+		13E8CE541DC74C5D00D5247F /* alfresco-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 13E8CE521DC74C5700D5247F /* alfresco-icon.png */; };
+		13E8CE561DC7554B00D5247F /* alfresco-icon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 13E8CE551DC7554B00D5247F /* alfresco-icon.jpg */; };
+		13E8CE591DC782DC00D5247F /* ASDKServicePathFactoryTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8CE571DC782D600D5247F /* ASDKServicePathFactoryTest.m */; };
+		13E8CE5B1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E8CE5A1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m */; };
 		13EBEC971CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBEC961CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m */; };
 		13EBEC9B1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EBEC991CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13EBEC9C1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBEC9A1CF73CD400EC8F96 /* ASDKFormColorSchemeManager.m */; };
@@ -645,6 +651,8 @@
 		132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterParserOperationWorker.m; path = NetworkServices/ParserOperationManager/ASDKFilterParserOperationWorker/ASDKFilterParserOperationWorker.m; sourceTree = "<group>"; };
 		132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProcessInstance.h; path = Model/ProcessInstance/ASDKModelProcessInstance.h; sourceTree = "<group>"; };
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
+		133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKRequestOperationManagerTest.m; sourceTree = "<group>"; };
+		133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKBasicAuthentificationProviderTest.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
 		133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFATaskListStyleCell.m; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ASDKFormRenderDataSourceArrayAddition.h"; path = "FormRenderEngine/Categories/NSArray+ASDKFormRenderDataSourceArrayAddition.h"; sourceTree = "<group>"; };
@@ -1017,6 +1025,10 @@
 		13E8CE471DC34FEF00D5247F /* ASDKDiskServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKDiskServiceTest.m; sourceTree = "<group>"; };
 		13E8CE4A1DC37DA900D5247F /* ASDKBaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKBaseTest.m; sourceTree = "<group>"; };
 		13E8CE4F1DC3950A00D5247F /* ASDKBaseTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKBaseTest.h; sourceTree = "<group>"; };
+		13E8CE521DC74C5700D5247F /* alfresco-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "alfresco-icon.png"; path = "Resources/alfresco-icon.png"; sourceTree = "<group>"; };
+		13E8CE551DC7554B00D5247F /* alfresco-icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "alfresco-icon.jpg"; path = "Resources/alfresco-icon.jpg"; sourceTree = "<group>"; };
+		13E8CE571DC782D600D5247F /* ASDKServicePathFactoryTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKServicePathFactoryTest.m; sourceTree = "<group>"; };
+		13E8CE5A1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKCSRFTokenStorageTest.m; sourceTree = "<group>"; };
 		13EBEC951CF5A74200EC8F96 /* AFAAuditLogTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAuditLogTableViewCell.h; path = UI/Cells/AuditLogCell/AFAAuditLogTableViewCell.h; sourceTree = "<group>"; };
 		13EBEC961CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAuditLogTableViewCell.m; path = UI/Cells/AuditLogCell/AFAAuditLogTableViewCell.m; sourceTree = "<group>"; };
 		13EBEC991CF73CD400EC8F96 /* ASDKFormColorSchemeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormColorSchemeManager.h; path = FormRenderEngine/FormColorSchemeManager/ASDKFormColorSchemeManager.h; sourceTree = "<group>"; };
@@ -2402,6 +2414,11 @@
 				13E8CE4A1DC37DA900D5247F /* ASDKBaseTest.m */,
 				13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */,
 				13E8CE471DC34FEF00D5247F /* ASDKDiskServiceTest.m */,
+				13E8CE571DC782D600D5247F /* ASDKServicePathFactoryTest.m */,
+				13E8CE5A1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m */,
+				133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */,
+				133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */,
+				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
 			path = ActivitiSDKTests;
@@ -3721,6 +3738,15 @@
 			name = ServiceURLFactory;
 			sourceTree = "<group>";
 		};
+		13E8CE511DC74C4C00D5247F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				13E8CE551DC7554B00D5247F /* alfresco-icon.jpg */,
+				13E8CE521DC74C5700D5247F /* alfresco-icon.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		13EBEC981CF5A74600EC8F96 /* AuditLogCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -4888,6 +4914,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13E8CE541DC74C5D00D5247F /* alfresco-icon.png in Resources */,
+				13E8CE561DC7554B00D5247F /* alfresco-icon.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5437,6 +5465,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				133070E11DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m in Sources */,
+				13E8CE591DC782DC00D5247F /* ASDKServicePathFactoryTest.m in Sources */,
+				133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */,
+				13E8CE5B1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m in Sources */,
 				13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */,
 				13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */,
 				13E8CE501DC3955A00D5247F /* ASDKBaseTest.m in Sources */,

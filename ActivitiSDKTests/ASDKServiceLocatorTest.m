@@ -76,6 +76,14 @@
     XCTAssertTrue([self.serviceLocator isServiceRegistered:internalService]);
 }
 
+- (void)testThatItCannotConfirmRegisteredService {
+    // given
+    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    
+    // then
+    XCTAssertFalse([self.serviceLocator isServiceRegistered:internalService]);
+}
+
 - (void)testThatItValidatesRegisteredServiceForProtocol {
     // given
     id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
@@ -150,7 +158,7 @@
     
     // when
     __weak typeof(self) weakSelf = self;
-    for (NSInteger idx = 0; idx < 500; idx++) {
+    for (NSInteger idx = 0; idx < 100; idx++) {
         XCTestExpectation *insertExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.insertExpectation", NSStringFromSelector(_cmd)]];
         XCTestExpectation *readExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.readExpectation", NSStringFromSelector(_cmd)]];
         XCTestExpectation *deleteExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.deleteExpectation", NSStringFromSelector(_cmd)]];

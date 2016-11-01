@@ -30,6 +30,10 @@
     [super tearDown];
 }
 
+
+#pragma mark -
+#pragma mark Utils
+
 - (NSData *)createRandomNSDataOfSize:(NSUInteger)byteSize {
     NSMutableData* theData = [NSMutableData dataWithCapacity:byteSize];
     for( unsigned int idx = 0; idx < byteSize/4; ++idx)
@@ -39,6 +43,33 @@
                       length:4];
     }
     return theData;
+}
+
+- (BOOL)isURL:(NSURL *)firstURL equivalentToURL:(NSURL *)secondURL {
+    if ([firstURL isEqual:secondURL]) {
+        return YES;
+    }
+    if ([firstURL.scheme caseInsensitiveCompare:secondURL.scheme] != NSOrderedSame) {
+        return NO;
+    }
+    if ([firstURL.host caseInsensitiveCompare:secondURL.host] != NSOrderedSame) {
+        return NO;
+    }
+    if ([firstURL.path compare:secondURL.path] != NSOrderedSame) {
+        return NO;
+    }
+    if (firstURL.port || secondURL.port) {
+        if (![firstURL.port isEqual:secondURL.port]) {
+            return NO;
+        }
+        if (firstURL.query || secondURL.query) {
+            if (![firstURL.query isEqual:secondURL.query]) {
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
 }
 
 @end

@@ -86,6 +86,127 @@
     XCTAssertTrue([self.diskServices doesFileAlreadyExistsForContent:content]);
 }
 
+- (void)testThatItChecksForAbsenceOfFileForContentModel {
+    // given
+    id content = OCMPartialMock([ASDKModelContent new]);
+    OCMStub([content modelID]).andReturn(self.contentID);
+    OCMStub([content contentName]).andReturn(self.contentName);
+    
+    // then
+    XCTAssertFalse([self.diskServices doesFileAlreadyExistsForContent:content]);
+}
+
+- (void)testThatItChecksForExistenceOfContentIdentifierAndFilename {
+    // when
+    if (![self createRandomFileInDocumentsDirectoryForContentID:self.contentID
+                                                    contentName:self.contentName]) {
+        XCTFail(@"%@ - An error occured while creating test file", NSStringFromSelector(_cmd));
+    }
+    
+    // then
+    XCTAssertTrue([self.diskServices doesFileAlreadyExistsForResouceWithIdentifier:self.contentID
+                                                                          filename:self.contentName]);
+}
+
+- (void)testThatItChecksForAbscenceOfContentIdentifierAndFilename {
+    XCTAssertFalse([self.diskServices doesFileAlreadyExistsForResouceWithIdentifier:self.contentID
+                                                                           filename:self.contentName]);
+}
+
+- (void)testThatItReturnsCorrectSizeOfFileAtPath {
+    // given
+    id content = OCMPartialMock([ASDKModelContent new]);
+    OCMStub([content modelID]).andReturn(self.contentID);
+    OCMStub([content contentName]).andReturn(self.contentName);
+    NSString *contentPath = [self documentsContentPathForContentIdentifier:self.contentID
+                                                               contentName:self.contentName];
+    
+    // when
+    if (![self createRandomFileInDocumentsDirectoryForContentID:self.contentID
+                                                    contentName:self.contentName]) {
+        XCTFail(@"%@ - An error occured while creating test file", NSStringFromSelector(_cmd));
+    }
+    
+    // then
+    XCTAssertEqual([self.diskServices sizeOfFileAtPath:contentPath], 1024);
+}
+
+- (void)testThatItGuessesMimeTypeFromRandomData {
+    // given
+    NSData *randomData = [self createRandomNSDataOfSize:1024];
+    
+    // then
+    XCTAssertTrue([[ASDKDiskServices mimeTypeByGuessingFromData:randomData] isEqualToString:@"application/octet-stream"]);
+}
+
+- (void)testThatItGuessesMimeTypeFromPNGData {
+    // given
+    NSString *imagePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"alfresco-icon" ofType:@"png"];
+    
+    // when
+    NSData *imageData = [NSData dataWithContentsOfFile:imagePath];
+    
+    // then
+    XCTAssertTrue([[ASDKDiskServices mimeTypeByGuessingFromData:imageData] isEqualToString:@"image/png"]);
+}
+
+- (void)testThatItGuessesMimeTypeFromJPGData {
+    //given
+    NSString *imagePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"alfresco-icon" ofType:@"jpg"];
+    
+    // when
+    NSData *imageData = [NSData dataWithContentsOfFile:imagePath];
+    
+    // then
+    XCTAssertTrue([[ASDKDiskServices mimeTypeByGuessingFromData:imageData] isEqualToString:@"image/jpeg"]);
+}
+
+- (void)testThatItDeletesLocalData {
+    // given
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = documentsPaths.firstObject;
+    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
+                             stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    // when
+    if (![self createRandomFileInDocumentsDirectoryForContentID:self.contentID
+                                                    contentName:self.contentName]) {
+        XCTFail(@"%@ - An error occured while creating test file", NSStringFromSelector(_cmd));
+    }
+    [ASDKDiskServices deleteLocalData];
+    
+    // then
+    XCTAssertFalse([fileManager fileExistsAtPath:contentPath]);
+}
+
+- (void)testThatItCalculatesUsedDiskSpaceForDownloads {
+    // when
+    [self createRandomFileInDocumentsDirectoryForContentID:self.contentID
+                                               contentName:self.contentName];
+    
+    // then
+    NSString *usedDiskSpace = [ASDKDiskServices usedDiskSpaceForDownloads];
+    XCTAssertTrue([usedDiskSpace isEqualToString:@"1 KB"]);
+}
+
+- (void)testThatItCreatesSizeStringForByteCount {
+    XCTAssertTrue([[self.diskServices sizeStringForByteCount:1024] isEqualToString:@"1.00 KB"]);
+}
+
+- (void)testThatItGeneratesFilenameForFileWithMIMEType {
+    // given
+    NSString *mimeType = @"image/jpeg";
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:nil
+                     forKey:kASDKFilenameGeneratorLastValueUsed];
+    
+    // when
+    NSString *filenameIncrementedValueForMimeType = [ASDKDiskServices generateFilenameForFileWithMIMEType:mimeType];
+    
+    XCTAssertTrue([filenameIncrementedValueForMimeType isEqualToString:@"File_001.jpeg"]);
+}
+
 
 #pragma mark -
 #pragma mark Utils

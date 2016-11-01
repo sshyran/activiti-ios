@@ -16,14 +16,28 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <XCTest/XCTest.h>
-@import ActivitiSDK;
-@import OCMock;
+#import "ASDKBaseTest.h"
 
-@interface ASDKBaseTest : XCTestCase
+@interface ASDKBasicAuthentificationProviderTest : ASDKBaseTest
 
-// Utils
-- (NSData *)createRandomNSDataOfSize:(NSUInteger)byteSize;
-- (BOOL)isURL:(NSURL *)firstURL equivalentToURL:(NSURL *)secondURL;
+@end
+
+@implementation ASDKBasicAuthentificationProviderTest
+
+- (void)setUp {
+    [super setUp];
+}
+
+- (void)tearDown {
+    [super tearDown];
+}
+
+- (void)testThatItConfiguresProviderWithBasicAuthentication {
+    // given
+    ASDKBasicAuthentificationProvider *basicAuthentication = [[ASDKBasicAuthentificationProvider alloc] initWithUserName:@"test"
+                                                                                                                password:@"test"];
+    // then
+    XCTAssertTrue([[basicAuthentication valueForHTTPHeaderField:@"Authorization"] isEqualToString:@"Basic dGVzdDp0ZXN0"]);
+}
 
 @end

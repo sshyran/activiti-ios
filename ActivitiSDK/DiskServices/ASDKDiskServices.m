@@ -62,13 +62,16 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSString *downloadPathForContent = [self downloadPathForContent:content];
     BOOL doesFileExist = [[NSFileManager defaultManager] fileExistsAtPath:downloadPathForContent];
     
-    NSError *error = nil;
     // Make sure we create the directory structure needed for the download
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:[downloadPathForContent stringByDeletingLastPathComponent]
+    if (!doesFileExist) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] createDirectoryAtPath:[downloadPathForContent stringByDeletingLastPathComponent]
                                   withIntermediateDirectories:YES
                                                    attributes:nil
-                                                        error:&error]) {
-        ASDKLogError(@"Encountered an error while generating the folder structure for content with path :%@.", downloadPathForContent);
+                                                        error:&error];
+        if (error) {
+            ASDKLogError(@"Encountered an error while generating the folder structure for content with path :%@. Reason:%@", downloadPathForContent, error.localizedDescription);
+        }
     }
     
     return doesFileExist;
@@ -80,13 +83,16 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                           filename:filename];
     BOOL doesFileExist = [[NSFileManager defaultManager] fileExistsAtPath:downloadPathForContent];
     
-    NSError *error = nil;
-    // Make sure we create the directory structure needed for the download
-    if (![[NSFileManager defaultManager] createDirectoryAtPath:[downloadPathForContent stringByDeletingLastPathComponent]
-                                   withIntermediateDirectories:YES
-                                                    attributes:nil
-                                                         error:&error]) {
-        ASDKLogError(@"Encountered an error while generating the folder structure for resource with path :%@.", downloadPathForContent);
+    if (!doesFileExist) {
+        NSError *error = nil;
+        // Make sure we create the directory structure needed for the download
+        [[NSFileManager defaultManager] createDirectoryAtPath:[downloadPathForContent stringByDeletingLastPathComponent]
+                                  withIntermediateDirectories:YES
+                                                   attributes:nil
+                                                        error:&error];
+        if (error) {
+            ASDKLogError(@"Encountered an error while generating the folder structure for resource with path :%@. Reason:%@", downloadPathForContent, error.localizedDescription);
+        }
     }
     
     return doesFileExist;
@@ -104,13 +110,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (NSString *)sizeStringForByteCount:(long long)byteCount {
-    
     double convertedValue = byteCount;
     int multiplyFactor = 0;
     
     NSArray *tokens = @[@"bytes",@"KB",@"MB",@"GB",@"TB"];
     
-    while (convertedValue > 1024) {
+    while (convertedValue >= 1024) {
         convertedValue /= 1024;
         multiplyFactor++;
     }
