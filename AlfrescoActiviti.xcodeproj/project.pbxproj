@@ -65,6 +65,8 @@
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
 		133070E11DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */; };
 		133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */; };
+		133070E71DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E61DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m */; };
+		133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E81DC9EE100089CA95 /* ASDKNetworkServiceTest.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
 		133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */; };
 		133A6BCD1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */; };
@@ -117,11 +119,11 @@
 		1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800E1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m */; };
 		136D035B1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */; };
 		136DFF681DA3DB8300FA40E0 /* AFAFilterHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF671DA3DB8300FA40E0 /* AFAFilterHeaderView.m */; };
-		136DFF711DA643B300FA40E0 /* ASDKJSONResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF6F1DA643B300FA40E0 /* ASDKJSONResponseSerializer.h */; };
+		136DFF711DA643B300FA40E0 /* ASDKJSONResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF6F1DA643B300FA40E0 /* ASDKJSONResponseSerializer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		136DFF721DA643B300FA40E0 /* ASDKJSONResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF701DA643B300FA40E0 /* ASDKJSONResponseSerializer.m */; };
-		136DFF751DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF731DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.h */; };
+		136DFF751DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF731DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		136DFF761DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF741DA653BB00FA40E0 /* ASDKHTTPResponseSerializer.m */; };
-		136DFF791DA653DA00FA40E0 /* ASDKImageResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF771DA653DA00FA40E0 /* ASDKImageResponseSerializer.h */; };
+		136DFF791DA653DA00FA40E0 /* ASDKImageResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF771DA653DA00FA40E0 /* ASDKImageResponseSerializer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		136DFF7A1DA653DA00FA40E0 /* ASDKImageResponseSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF781DA653DA00FA40E0 /* ASDKImageResponseSerializer.m */; };
 		136DFF811DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF801DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m */; };
 		136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */; };
@@ -653,6 +655,8 @@
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
 		133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKRequestOperationManagerTest.m; sourceTree = "<group>"; };
 		133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKBasicAuthentificationProviderTest.m; sourceTree = "<group>"; };
+		133070E61DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKResponseSerializersTest.m; sourceTree = "<group>"; };
+		133070E81DC9EE100089CA95 /* ASDKNetworkServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKNetworkServiceTest.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
 		133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFATaskListStyleCell.m; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ASDKFormRenderDataSourceArrayAddition.h"; path = "FormRenderEngine/Categories/NSArray+ASDKFormRenderDataSourceArrayAddition.h"; sourceTree = "<group>"; };
@@ -2418,6 +2422,8 @@
 				13E8CE5A1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m */,
 				133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */,
 				133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */,
+				133070E61DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m */,
+				133070E81DC9EE100089CA95 /* ASDKNetworkServiceTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -5469,8 +5475,10 @@
 				13E8CE591DC782DC00D5247F /* ASDKServicePathFactoryTest.m in Sources */,
 				133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */,
 				13E8CE5B1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m in Sources */,
+				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
 				13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */,
 				13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */,
+				133070E71DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m in Sources */,
 				13E8CE501DC3955A00D5247F /* ASDKBaseTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5739,6 +5747,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -5758,6 +5767,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				INFOPLIST_FILE = ActivitiSDKTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.alfresco.activiti.$(PRODUCT_NAME:rfc1034identifier)";

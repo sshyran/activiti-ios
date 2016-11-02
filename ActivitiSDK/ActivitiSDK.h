@@ -73,6 +73,11 @@
 #import <ActivitiSDK/ASDKQuerryNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKIntegrationNetworkServiceProtocol.h>
 
+// Response serializers
+#import <ActivitiSDK/ASDKHTTPResponseSerializer.h>
+#import <ActivitiSDK/ASDKJSONResponseSerializer.h>
+#import <ActivitiSDK/ASDKImageResponseSerializer.h>
+
 // Other service protocols
 #import <ActivitiSDK/ASDKDiskServiceProtocol.h>
 #import <ActivitiSDK/ASDKFormColorSchemeManagerProtocol.h>

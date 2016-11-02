@@ -30,19 +30,11 @@
     [super tearDown];
 }
 
-
 #pragma mark -
-#pragma mark Utils
+#pragma mark Public interface
 
-- (NSData *)createRandomNSDataOfSize:(NSUInteger)byteSize {
-    NSMutableData* theData = [NSMutableData dataWithCapacity:byteSize];
-    for( unsigned int idx = 0; idx < byteSize/4; ++idx)
-    {
-        u_int32_t randomBits = arc4random();
-        [theData appendBytes:(void*)&randomBits
-                      length:4];
-    }
-    return theData;
+- (NSURL *)baseURL {
+    return [NSURL URLWithString:@"https://httpbin.org"];
 }
 
 - (BOOL)isURL:(NSURL *)firstURL equivalentToURL:(NSURL *)secondURL {
@@ -70,6 +62,17 @@
     }
     
     return YES;
+}
+
+- (NSData *)createRandomNSDataOfSize:(NSUInteger)byteSize {
+    NSMutableData* theData = [NSMutableData dataWithCapacity:byteSize];
+    for( unsigned int idx = 0; idx < byteSize/4; ++idx)
+    {
+        u_int32_t randomBits = arc4random();
+        [theData appendBytes:(void*)&randomBits
+                      length:4];
+    }
+    return theData;
 }
 
 @end
