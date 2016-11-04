@@ -39,7 +39,7 @@
                                                                                                 port:port
                                                                                      overSecureLayer:overSecureLayer];
     
-    id authenticationProvider = [OCMockObject mockForClass:[ASDKBasicAuthentificationProvider class]];
+    id authenticationProvider = OCMClassMock([ASDKBasicAuthentificationProvider class]);
     self.requestOperationManager = [[ASDKRequestOperationManager alloc] initWithBaseURL:servicePathFactory.baseURL
                                                                  authenticationProvider:authenticationProvider];
 }
@@ -61,7 +61,7 @@
 
 - (void)testThatItReplacesAuthenticationProvider {
     // given
-    id newAuthenticationProvider = [OCMockObject mockForClass:[AFJSONRequestSerializer class]];
+    id newAuthenticationProvider = OCMClassMock([AFJSONRequestSerializer class]);
     
     // when
     [self.requestOperationManager replaceAuthenticationProvider:newAuthenticationProvider];

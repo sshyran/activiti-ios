@@ -29,10 +29,10 @@
 - (void)setUp {
     [super setUp];
     
-    id servicePathFactory = [OCMockObject mockForClass:[ASDKServicePathFactory class]];
-    id parserOperationManager = [OCMockObject mockForClass:[ASDKParserOperationManager class]];
-    id diskServices = [OCMockObject mockForClass:[ASDKDiskServices class]];
-    id authenticationProvider = [OCMockObject mockForClass:[ASDKBasicAuthentificationProvider class]];
+    id servicePathFactory = OCMClassMock([ASDKServicePathFactory class]);
+    id parserOperationManager = OCMClassMock([ASDKParserOperationManager class]);
+    id diskServices = OCMClassMock([ASDKDiskServices class]);
+    id authenticationProvider = OCMClassMock([ASDKBasicAuthentificationProvider class]);
     ASDKRequestOperationManager *requestOperationManager = [[ASDKRequestOperationManager alloc] initWithBaseURL:[self baseURL]
                                                                                          authenticationProvider:authenticationProvider];
     self.genericNetworkService = [[ASDKNetworkService alloc] initWithRequestManager:requestOperationManager
@@ -128,7 +128,7 @@
 
 - (void)testThatItDoesntOverrideExistentCSRFCookie {
     // given
-    id tokenStorage = [OCMockObject mockForClass:[ASDKCSRFTokenStorage class]];
+    id tokenStorage = OCMClassMock([ASDKCSRFTokenStorage class]);
     OCMStub([tokenStorage csrfTokenString]).andReturn(@"token");
     
     NSDictionary *cookieProperties = @{NSHTTPCookieName     : kASDKAPICSRFCookieName,

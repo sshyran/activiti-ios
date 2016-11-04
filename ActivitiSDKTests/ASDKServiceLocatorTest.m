@@ -56,7 +56,7 @@
 
 - (void)testThatItAddsService {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -67,7 +67,7 @@
 
 - (void)testThatItValidatesRegisteredService {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -78,7 +78,7 @@
 
 - (void)testThatItCannotConfirmRegisteredService {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // then
     XCTAssertFalse([self.serviceLocator isServiceRegistered:internalService]);
@@ -86,7 +86,7 @@
 
 - (void)testThatItValidatesRegisteredServiceForProtocol {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -97,7 +97,7 @@
 
 - (void)testThatItRetrievesServiceConformingToCertainProtocol {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -108,7 +108,7 @@
 
 - (void)testThatItRemovesServiceConformingToProtocol {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -120,7 +120,7 @@
 
 - (void)testThatItRemovesService {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -132,7 +132,7 @@
 
 - (void)testThatItDoesntBreakSingleProtocolConformityRule {
     // given
-    id internalService = [OCMockObject mockForClass:[MultipleDependencyService class]];
+    id internalService = OCMClassMock([MultipleDependencyService class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -154,7 +154,7 @@
 
 - (void)testThatItManagesMultiThreadedAccesAndRegistration {
     // given
-    id internalService = [OCMockObject mockForClass:[ASDKFormRenderEngine class]];
+    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
     
     // when
     __weak typeof(self) weakSelf = self;

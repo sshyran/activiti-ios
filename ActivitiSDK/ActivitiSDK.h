@@ -72,6 +72,7 @@
 #import <ActivitiSDK/ASDKUserNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKQuerryNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKIntegrationNetworkServiceProtocol.h>
+#import <ActivitiSDK/ASDKServicePathFactory.h>
 
 // Response serializers
 #import <ActivitiSDK/ASDKHTTPResponseSerializer.h>
@@ -97,6 +98,9 @@
 #import <ActivitiSDK/ASDKQuerryNetworkServices.h>
 #import <ActivitiSDK/ASDKDiskServices.h>
 #import <ActivitiSDK/ASDKIntegrationNetworkServices.h>
+
+// Service categories
+#import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>
 
 // Form render engine
 #import <ActivitiSDK/ASDKFormRenderEngine.h>
