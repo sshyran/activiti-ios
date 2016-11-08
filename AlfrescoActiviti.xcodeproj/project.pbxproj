@@ -17,6 +17,9 @@
 		130761551BEA42EC0082EA2D /* ASDKLocalizationConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */; };
 		130A3FC51D93F878000A41C3 /* ASDKModelAttributable.h in Headers */ = {isa = PBXBuildFile; fileRef = 130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */; };
 		130A3FC61D93F878000A41C3 /* ASDKModelAttributable.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */; };
+		130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */; };
+		130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */; };
+		130F06421DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */; };
 		131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 131375081B6F677B00D2268E /* ASDKNetworkServiceProtocol.h */; };
 		1313750D1B6F927C00D2268E /* ASDKParserOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */; };
 		1313750E1B6F927C00D2268E /* ASDKParserOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1313750C1B6F927C00D2268E /* ASDKParserOperationManager.m */; };
@@ -29,7 +32,7 @@
 		131375211B6FAE5C00D2268E /* ASDKProfileNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 131375201B6FAE5C00D2268E /* ASDKProfileNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		131375261B6FB38500D2268E /* ASDKModelServerConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 131375241B6FB38500D2268E /* ASDKModelServerConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		131375271B6FB38500D2268E /* ASDKModelServerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 131375251B6FB38500D2268E /* ASDKModelServerConfiguration.m */; };
-		1315B8021BD126FE00C2EC6F /* ASDKParserOperationWorkerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1315B8011BD126FE00C2EC6F /* ASDKParserOperationWorkerProtocol.h */; };
+		1315B8021BD126FE00C2EC6F /* ASDKParserOperationWorkerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1315B8011BD126FE00C2EC6F /* ASDKParserOperationWorkerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1317C34A1BCB9DBB00F0B03F /* ASDKDiskServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 1317C3481BCB9DBB00F0B03F /* ASDKDiskServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1317C34B1BCB9DBB00F0B03F /* ASDKDiskServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 1317C3491BCB9DBB00F0B03F /* ASDKDiskServices.m */; };
 		1317C34E1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1317C34D1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -71,6 +74,7 @@
 		133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */; };
 		133A6BCD1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */; };
 		133B7FDD1B78DBFE00C17D06 /* AFALoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B7FDC1B78DBFE00C17D06 /* AFALoginViewController.m */; };
+		133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B9C621DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m */; };
 		133F053C1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 133F053A1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h */; };
 		133F053D1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 133F053B1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m */; };
 		133F05411BD4EFE400C22CFD /* ASDKTaskDetailsParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 133F053F1BD4EFE400C22CFD /* ASDKTaskDetailsParserOperationWorker.h */; };
@@ -206,6 +210,8 @@
 		139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E51C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h */; };
 		139564E81C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 139564E61C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m */; };
 		139564EB1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564EA1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1395C1721DD2087400CC2AB3 /* ProcessDefinitionList.json in Resources */ = {isa = PBXBuildFile; fileRef = 1395C16F1DD207ED00CC2AB3 /* ProcessDefinitionList.json */; };
+		1395C1751DD20E2E00CC2AB3 /* ProcessInstanceList.json in Resources */ = {isa = PBXBuildFile; fileRef = 1395C1731DD20A7400CC2AB3 /* ProcessInstanceList.json */; };
 		1395CD9B1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1395CD9A1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h */; };
 		13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */; };
 		139DF5BA1C5A40C10062D01D /* AFAAppServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DF5B91C5A40C10062D01D /* AFAAppServices.m */; };
@@ -254,7 +260,7 @@
 		13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */; };
 		13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CAB71B8B3FB100B7A25E /* AFAMenuButtonCell.m */; };
 		13A8CABC1B8B49B400B7A25E /* AFAServiceRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CABB1B8B49B400B7A25E /* AFAServiceRepository.m */; };
-		13AAC7D81BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 13AAC7D61BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.h */; };
+		13AAC7D81BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.h in Headers */ = {isa = PBXBuildFile; fileRef = 13AAC7D61BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13AAC7D91BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAC7D71BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m */; };
 		13AAD3B51CDB489800818537 /* AFAProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3B41CDB489800818537 /* AFAProfileViewController.m */; };
 		13AAD3B91CDB81E100818537 /* AFAProfileSectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3B81CDB81E100818537 /* AFAProfileSectionTableViewCell.m */; };
@@ -280,7 +286,7 @@
 		13B7E2081B749A07002CBDF4 /* ASDKTaskNetworkServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7E2061B749A07002CBDF4 /* ASDKTaskNetworkServices.m */; };
 		13B7E20B1B749E80002CBDF4 /* ASDKTaskRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B7E2091B749E80002CBDF4 /* ASDKTaskRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B7E20C1B749E80002CBDF4 /* ASDKTaskRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7E20A1B749E80002CBDF4 /* ASDKTaskRequestRepresentation.m */; };
-		13B7E2101B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B7E20E1B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.h */; };
+		13B7E2101B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B7E20E1B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B7E2111B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7E20F1B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.m */; };
 		13B7E2151B74E9BE002CBDF4 /* ASDKModelTask.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B7E2131B74E9BE002CBDF4 /* ASDKModelTask.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B7E2161B74E9BE002CBDF4 /* ASDKModelTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B7E2141B74E9BE002CBDF4 /* ASDKModelTask.m */; };
@@ -343,7 +349,7 @@
 		13E6E28B1B7E0EE1001F5737 /* AFAFadingTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E6E28A1B7E0EE1001F5737 /* AFAFadingTableView.m */; };
 		13E8306A1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830681B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13E8306B1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830691B6A21DD0028901A /* ASDKBasicAuthentificationProvider.m */; };
-		13E830741B6A303B0028901A /* ASDKRequestOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830721B6A303B0028901A /* ASDKRequestOperationManager.h */; };
+		13E830741B6A303B0028901A /* ASDKRequestOperationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830721B6A303B0028901A /* ASDKRequestOperationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13E830751B6A303B0028901A /* ASDKRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830731B6A303B0028901A /* ASDKRequestOperationManager.m */; };
 		13E8307A1B6A45640028901A /* ASDKAPIEndpointDefinitionList.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830781B6A45640028901A /* ASDKAPIEndpointDefinitionList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13E8307B1B6A45640028901A /* ASDKAPIEndpointDefinitionList.m in Sources */ = {isa = PBXBuildFile; fileRef = 13E830791B6A45640028901A /* ASDKAPIEndpointDefinitionList.m */; };
@@ -429,7 +435,7 @@
 		8D3A51E91C8089EC00FF9A00 /* ASDKUserNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3A51E81C8089EC00FF9A00 /* ASDKUserNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D3A51EC1C8089F200FF9A00 /* ASDKUserNetworkServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3A51EA1C8089F200FF9A00 /* ASDKUserNetworkServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D3A51ED1C8089F200FF9A00 /* ASDKUserNetworkServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A51EB1C8089F200FF9A00 /* ASDKUserNetworkServices.m */; };
-		8D3A51F21C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3A51F01C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.h */; };
+		8D3A51F21C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3A51F01C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D3A51F31C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A51F11C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.m */; };
 		8D3A51F61C808A4400FF9A00 /* ASDKUserParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3A51F41C808A4400FF9A00 /* ASDKUserParserOperationWorker.h */; };
 		8D3A51F71C808A4400FF9A00 /* ASDKUserParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A51F51C808A4400FF9A00 /* ASDKUserParserOperationWorker.m */; };
@@ -592,6 +598,9 @@
 		130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLocalizationConstants.m; path = Localization/ASDKLocalizationConstants.m; sourceTree = "<group>"; };
 		130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelAttributable.h; path = Model/Attributable/ASDKModelAttributable.h; sourceTree = "<group>"; };
 		130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelAttributable.m; path = Model/Attributable/ASDKModelAttributable.m; sourceTree = "<group>"; };
+		130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKMantleJSONAdapterCustomPolicyTest.m; sourceTree = "<group>"; };
+		130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKParserOperationManagerTest.m; sourceTree = "<group>"; };
+		130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessParserOperationWorkerTest.m; sourceTree = "<group>"; };
 		1310F2F31D927481002FF53F /* AlfrescoActiviti.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AlfrescoActiviti.entitlements; sourceTree = "<group>"; };
 		131375081B6F677B00D2268E /* ASDKNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKNetworkServiceProtocol.h; path = NetworkServices/NetworkService/Protocol/ASDKNetworkServiceProtocol.h; sourceTree = "<group>"; };
 		1313750B1B6F927C00D2268E /* ASDKParserOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKParserOperationManager.h; path = NetworkServices/ParserOperationManager/ASDKParserOperationManager.h; sourceTree = "<group>"; };
@@ -666,6 +675,7 @@
 		133B7FDC1B78DBFE00C17D06 /* AFALoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFALoginViewController.m; path = UI/ViewControllers/LoginScreen/AFALoginViewController.m; sourceTree = "<group>"; };
 		133B7FE11B78FAD300C17D06 /* ASDKRoundedBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKRoundedBorderView.h; path = ../ActivitiSDK/FormRenderEngine/Components/RoundedBorderView/ASDKRoundedBorderView.h; sourceTree = "<group>"; };
 		133B7FE21B78FAD300C17D06 /* ASDKRoundedBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKRoundedBorderView.m; path = ../ActivitiSDK/FormRenderEngine/Components/RoundedBorderView/ASDKRoundedBorderView.m; sourceTree = "<group>"; };
+		133B9C621DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKMantleJSONAdapterExcludeZeroNilTest.m; sourceTree = "<group>"; };
 		133F053A1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProfileParserOperationWorker.h; path = NetworkServices/ParserOperationManager/ProfileParserOperationWorker/ASDKProfileParserOperationWorker.h; sourceTree = "<group>"; };
 		133F053B1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKProfileParserOperationWorker.m; path = NetworkServices/ParserOperationManager/ProfileParserOperationWorker/ASDKProfileParserOperationWorker.m; sourceTree = "<group>"; };
 		133F053F1BD4EFE400C22CFD /* ASDKTaskDetailsParserOperationWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKTaskDetailsParserOperationWorker.h; path = NetworkServices/ParserOperationManager/TaskDetailsParserOperationWorker/ASDKTaskDetailsParserOperationWorker.h; sourceTree = "<group>"; };
@@ -840,6 +850,8 @@
 		139564E51C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFileSourceFolderTreeElement.h; path = Model/FormFieldFileSourceFolderTreeElement/ASDKModelFileSourceFolderTreeElement.h; sourceTree = "<group>"; };
 		139564E61C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFileSourceFolderTreeElement.m; path = Model/FormFieldFileSourceFolderTreeElement/ASDKModelFileSourceFolderTreeElement.m; sourceTree = "<group>"; };
 		139564EA1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKAppNetworkServiceProtocol.h; path = NetworkServices/Proxy/AppNetworkServices/Protocol/ASDKAppNetworkServiceProtocol.h; sourceTree = "<group>"; };
+		1395C16F1DD207ED00CC2AB3 /* ProcessDefinitionList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ProcessDefinitionList.json; path = Resources/JSONResponses/ProcessDefinitionList.json; sourceTree = "<group>"; };
+		1395C1731DD20A7400CC2AB3 /* ProcessInstanceList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ProcessInstanceList.json; path = Resources/JSONResponses/ProcessInstanceList.json; sourceTree = "<group>"; };
 		1395CD9A1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineDataSourceProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineDataSourceProtocol.h; sourceTree = "<group>"; };
 		13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKServiceLocatorTest.m; sourceTree = "<group>"; };
 		139DF5B81C5A40C10062D01D /* AFAAppServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAppServices.h; path = Business/ServiceRepository/Services/AFAAppServices.h; sourceTree = "<group>"; };
@@ -1031,8 +1043,8 @@
 		13E8CE471DC34FEF00D5247F /* ASDKDiskServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKDiskServiceTest.m; sourceTree = "<group>"; };
 		13E8CE4A1DC37DA900D5247F /* ASDKBaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKBaseTest.m; sourceTree = "<group>"; };
 		13E8CE4F1DC3950A00D5247F /* ASDKBaseTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKBaseTest.h; sourceTree = "<group>"; };
-		13E8CE521DC74C5700D5247F /* alfresco-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "alfresco-icon.png"; path = "Resources/alfresco-icon.png"; sourceTree = "<group>"; };
-		13E8CE551DC7554B00D5247F /* alfresco-icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "alfresco-icon.jpg"; path = "Resources/alfresco-icon.jpg"; sourceTree = "<group>"; };
+		13E8CE521DC74C5700D5247F /* alfresco-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "alfresco-icon.png"; path = "Resources/Images/alfresco-icon.png"; sourceTree = "<group>"; };
+		13E8CE551DC7554B00D5247F /* alfresco-icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "alfresco-icon.jpg"; path = "Resources/Images/alfresco-icon.jpg"; sourceTree = "<group>"; };
 		13E8CE571DC782D600D5247F /* ASDKServicePathFactoryTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKServicePathFactoryTest.m; sourceTree = "<group>"; };
 		13E8CE5A1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKCSRFTokenStorageTest.m; sourceTree = "<group>"; };
 		13EBEC951CF5A74200EC8F96 /* AFAAuditLogTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAuditLogTableViewCell.h; path = UI/Cells/AuditLogCell/AFAAuditLogTableViewCell.h; sourceTree = "<group>"; };
@@ -2427,6 +2439,10 @@
 				133070E61DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m */,
 				133070E81DC9EE100089CA95 /* ASDKNetworkServiceTest.m */,
 				13B16D301DCB91CE00F95428 /* NSURLSessionTask_ASDKAdditionsTest.m */,
+				133B9C621DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m */,
+				130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */,
+				130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */,
+				130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -2775,6 +2791,24 @@
 				139564EA1C2156B200BF6153 /* ASDKAppNetworkServiceProtocol.h */,
 			);
 			name = Protocol;
+			sourceTree = "<group>";
+		};
+		1395C16E1DD207A900CC2AB3 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				13E8CE551DC7554B00D5247F /* alfresco-icon.jpg */,
+				13E8CE521DC74C5700D5247F /* alfresco-icon.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		1395C1711DD2082200CC2AB3 /* JSONResponses */ = {
+			isa = PBXGroup;
+			children = (
+				1395C16F1DD207ED00CC2AB3 /* ProcessDefinitionList.json */,
+				1395C1731DD20A7400CC2AB3 /* ProcessInstanceList.json */,
+			);
+			name = JSONResponses;
 			sourceTree = "<group>";
 		};
 		139DF5B71C5A40650062D01D /* Services */ = {
@@ -3750,8 +3784,8 @@
 		13E8CE511DC74C4C00D5247F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				13E8CE551DC7554B00D5247F /* alfresco-icon.jpg */,
-				13E8CE521DC74C5700D5247F /* alfresco-icon.png */,
+				1395C16E1DD207A900CC2AB3 /* Images */,
+				1395C1711DD2082200CC2AB3 /* JSONResponses */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -4923,8 +4957,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1395C1751DD20E2E00CC2AB3 /* ProcessInstanceList.json in Resources */,
 				13E8CE541DC74C5D00D5247F /* alfresco-icon.png in Resources */,
 				13E8CE561DC7554B00D5247F /* alfresco-icon.jpg in Resources */,
+				1395C1721DD2087400CC2AB3 /* ProcessDefinitionList.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5478,10 +5514,14 @@
 				13E8CE591DC782DC00D5247F /* ASDKServicePathFactoryTest.m in Sources */,
 				133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */,
 				13E8CE5B1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m in Sources */,
+				130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */,
+				130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */,
 				13B16D321DCB93C300F95428 /* NSURLSessionTask_ASDKAdditionsTest.m in Sources */,
 				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
+				133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */,
 				13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */,
 				13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */,
+				130F06421DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m in Sources */,
 				133070E71DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m in Sources */,
 				13E8CE501DC3955A00D5247F /* ASDKBaseTest.m in Sources */,
 			);

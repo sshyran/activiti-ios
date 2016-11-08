@@ -74,6 +74,10 @@
 #import <ActivitiSDK/ASDKIntegrationNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKServicePathFactory.h>
 
+// JSON adapters
+#import <ActivitiSDK/ASDKMantleJSONAdapterExcludeZeroNil.h>
+#import <ActivitiSDK/ASDKMantleJSONAdapterCustomPolicy.h>
+
 // Response serializers
 #import <ActivitiSDK/ASDKHTTPResponseSerializer.h>
 #import <ActivitiSDK/ASDKJSONResponseSerializer.h>
@@ -82,6 +86,11 @@
 // Other service protocols
 #import <ActivitiSDK/ASDKDiskServiceProtocol.h>
 #import <ActivitiSDK/ASDKFormColorSchemeManagerProtocol.h>
+
+// Parser manager and workers
+#import <ActivitiSDK/ASDKParserOperationWorkerProtocol.h>
+#import <ActivitiSDK/ASDKRequestOperationManager.h>
+#import <ActivitiSDK/ASDKProcessParserOperationWorker.h>
 
 // Service locator imports
 #import <ActivitiSDK/ASDKServiceLocator.h>
