@@ -52,7 +52,7 @@
     // given
     NSError *error = nil;
     
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessDefinitionList" ofType:@"json"];
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessDefinitionListResponse" ofType:@"json"];
     NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
     NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
                                                                              options:NSJSONReadingMutableContainers
@@ -96,7 +96,7 @@
     // given
     NSError *error = nil;
     
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessInstanceList" ofType:@"json"];
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessInstanceListResponse" ofType:@"json"];
     NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
     NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
                                                                              options:NSJSONReadingMutableContainers
@@ -147,7 +147,7 @@
     // given
     NSError *error = nil;
     
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessInstanceDetails" ofType:@"json"];
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessInstanceDetailsResponse" ofType:@"json"];
     NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
     NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
                                                                              options:NSJSONReadingMutableContainers
@@ -206,7 +206,7 @@
     // given
     NSError *error = nil;
     
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessInstanceContentList" ofType:@"json"];
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ProcessInstanceContentListResponse" ofType:@"json"];
     NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
     NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
                                                                              options:NSJSONReadingMutableContainers
@@ -327,7 +327,8 @@
                                  handler:nil];
 }
 
-- (void)testThatItHandlesInvalidParseData {
+- (void)testThatItHandlesInvalidJSONData {
+    // expect
     XCTestExpectation *processDefinitionListExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.processDefinitionList",NSStringFromSelector(_cmd)]];
     XCTestExpectation *processInstanceListExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.processInstanceList",NSStringFromSelector(_cmd)]];
     XCTestExpectation *startProcessInstanceExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.processStartProcessInstanceExpectation",NSStringFromSelector(_cmd)]];
@@ -336,13 +337,14 @@
     XCTestExpectation *processInstanceCommentsExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.processInstanceCommentsExpectation",NSStringFromSelector(_cmd)]];
     XCTestExpectation *processInstanceCommentExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.processInstanceCommentExpectation",NSStringFromSelector(_cmd)]];
     
-    // Invalid JSON data
+    // when
     NSDictionary *invalidContentDictionary = @{@"foo":@"bar"};
     [self.processParserWorker parseContentDictionary:invalidContentDictionary
                                               ofType:CREATE_STRING(ASDKProcessParserContentTypeProcessDefinitionList)
                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                      XCTAssertNotNil(error);
                                      XCTAssertNil(parsedObject);
+                                     XCTAssertNil(paging);
                                      [processDefinitionListExpectation fulfill];
                                  } queue:dispatch_get_main_queue()];
     [self.processParserWorker parseContentDictionary:invalidContentDictionary
@@ -350,6 +352,7 @@
                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                      XCTAssertNotNil(error);
                                      XCTAssertNil(parsedObject);
+                                     XCTAssertNil(paging);
                                      [processInstanceListExpectation fulfill];
                                  } queue:dispatch_get_main_queue()];
     [self.processParserWorker parseContentDictionary:invalidContentDictionary
@@ -357,6 +360,7 @@
                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                      XCTAssertNotNil(error);
                                      XCTAssertNil(parsedObject);
+                                     XCTAssertNil(paging);
                                      [startProcessInstanceExpectation fulfill];
                                  } queue:dispatch_get_main_queue()];
     [self.processParserWorker parseContentDictionary:invalidContentDictionary
@@ -364,6 +368,7 @@
                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                      XCTAssertNotNil(error);
                                      XCTAssertNil(parsedObject);
+                                     XCTAssertNil(paging);
                                      [processInstanceDetailsExpectation fulfill];
                                  } queue:dispatch_get_main_queue()];
     [self.processParserWorker parseContentDictionary:invalidContentDictionary
@@ -371,6 +376,7 @@
                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                      XCTAssertNotNil(error);
                                      XCTAssertNil(parsedObject);
+                                     XCTAssertNil(paging);
                                      [processInstanceContentExpectation fulfill];
                                  } queue:dispatch_get_main_queue()];
     [self.processParserWorker parseContentDictionary:invalidContentDictionary
@@ -378,6 +384,7 @@
                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                      XCTAssertNotNil(error);
                                      XCTAssertNil(parsedObject);
+                                     XCTAssertNil(paging);
                                      [processInstanceCommentsExpectation fulfill];
                                  } queue:dispatch_get_main_queue()];
     [self.processParserWorker parseContentDictionary:invalidContentDictionary
@@ -385,6 +392,7 @@
                                  withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {
                                      XCTAssertNotNil(error);
                                      XCTAssertNil(parsedObject);
+                                     XCTAssertNil(paging);
                                      [processInstanceCommentExpectation fulfill];
                                  } queue:dispatch_get_main_queue()];
     

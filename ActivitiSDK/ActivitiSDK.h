@@ -61,7 +61,8 @@
 #import <ActivitiSDK/ASDKIntegrationSiteContentDataSource.h>
 #import <ActivitiSDK/ASDKIntegrationFolderContentDataSource.h>
 
-// Network services protocols
+// Network services and protocols
+#import <ActivitiSDK/ASDKRequestOperationManager.h>
 #import <ActivitiSDK/ASDKAppNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKProfileNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKFilterNetworkServiceProtocol.h>
@@ -89,8 +90,8 @@
 
 // Parser manager and workers
 #import <ActivitiSDK/ASDKParserOperationWorkerProtocol.h>
-#import <ActivitiSDK/ASDKRequestOperationManager.h>
 #import <ActivitiSDK/ASDKProcessParserOperationWorker.h>
+#import <ActivitiSDK/ASDKUserParserOperationWorker.h>
 
 // Service locator imports
 #import <ActivitiSDK/ASDKServiceLocator.h>

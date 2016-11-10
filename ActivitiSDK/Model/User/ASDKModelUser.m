@@ -34,8 +34,8 @@
                                                       @"userLastName"       : @"lastName",
                                                       @"email"              : @"email",
                                                       @"externalID"         : @"externalId",
-                                                      @"pictureID"          : @"pictureId"}];
-
+                                                      @"pictureID"          : @"pictureId",
+                                                      @"companyName"        : @"company"}];
     
     return inheretedPropertyKeys;
 }
@@ -44,6 +44,10 @@
 #pragma mark Value transformations
 
 + (NSValueTransformer *)userIDJSONTransformer {
+    return self.valueTransformerForIDs;
+}
+
++ (NSValueTransformer *)pictureIDJSONTransformer {
     return self.valueTransformerForIDs;
 }
 

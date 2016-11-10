@@ -24,8 +24,9 @@
 @property (strong, nonatomic) NSString  *userLastName;
 @property (strong, nonatomic) NSString  *email;
 @property (strong, nonatomic) NSString  *externalID;
-@property (assign, nonatomic) NSInteger pictureID;
-
+@property (strong, nonatomic) NSString  *pictureID;
+@property (strong, nonatomic) NSString  *companyName;
+ 
 - (NSString *)normalisedName;
 
 @end

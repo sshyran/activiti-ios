@@ -25,8 +25,6 @@
 #import "ASDKModelPaging.h"
 #import "ASDKModelUser.h"
 
-@import Mantle;
-
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
@@ -46,13 +44,21 @@
     
     if ([CREATE_STRING(ASDKUserParserContentTypeUserList) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
+        ASDKModelPaging *paging = nil;
+        NSArray *userList = nil;
+        Class pagingClass = ASDKModelPaging.class;
         
-        NSArray *userList = [MTLJSONAdapter modelsOfClass:ASDKModelUser.class
-                                                         fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
-                                                                 error:&parserError];
+        if ([self validateJSONPropertyMappingOfClass:pagingClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
+                               fromJSONDictionary:contentDictionary
+                                            error:&parserError];
+            userList = [MTLJSONAdapter modelsOfClass:ASDKModelUser.class
+                                                fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
+                                                        error:&parserError];
+        }
+        
         dispatch_async(completionQueue, ^{
             completionBlock(userList, parserError, paging);
         });
