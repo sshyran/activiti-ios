@@ -16,25 +16,11 @@
  *  limitations under the License.
  ******************************************************************************/
 
-@import Foundation;
-@import Mantle;
-@class ASDKModelPaging;
+#import <Foundation/Foundation.h>
+#import "ASDKParserOperationWorkerProtocol.h"
 
-#define CREATE_STRING(varName) @#varName
+@interface ASDKBaseParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
 
-typedef void  (^ASDKParserCompletionBlock) (id parsedObject, NSError *error, ASDKModelPaging *paging);
-
-@protocol ASDKParserOperationWorkerProtocol <NSObject>
-
-- (void)parseContentDictionary:(NSDictionary *)contentDictionary
-                        ofType:(NSString *)contentType
-           withCompletionBlock:(ASDKParserCompletionBlock)completionBlock
-                         queue:(dispatch_queue_t)completionQueue;
-
-@optional
-- (NSArray *)availableServices;
-- (BOOL)validateJSONPropertyMappingOfClass:(Class <MTLJSONSerializing>)modelClass
-                     withContentDictionary:(NSDictionary *)contentDictionary
-                                     error:(NSError **)error;
+- (NSError *)invalidJSONMappingErrorForModelClass:(Class)modelClass;
 
 @end

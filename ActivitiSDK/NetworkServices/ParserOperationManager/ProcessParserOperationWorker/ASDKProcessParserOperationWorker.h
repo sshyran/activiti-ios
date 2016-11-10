@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKParserOperationWorkerProtocol.h"
+#import "ASDKBaseParserOperationWorker.h"
 
 typedef NS_ENUM(NSInteger, ASDKProcessParserContentType) {
     ASDKProcessParserContentTypeUndefined = -1,
@@ -30,6 +30,6 @@ typedef NS_ENUM(NSInteger, ASDKProcessParserContentType) {
     ASDKProcessParserContentTypeProcessInstanceComment
 };
 
-@interface ASDKProcessParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
+@interface ASDKProcessParserOperationWorker : ASDKBaseParserOperationWorker
 
 @end
