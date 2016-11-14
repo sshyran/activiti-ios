@@ -1,0 +1,13 @@
+{
+    "id": 8010,
+    "message": "Another text here...",
+    "created": "2016-11-14T09:58:45.460+0000",
+    "createdBy": {
+        "firstName": "John",
+        "id": 2,
+        "lastName": "Doe",
+        "email": "john.doe@alfresco.com",
+        "company": "Alfresco",
+        "pictureId": 7007
+    }
+}

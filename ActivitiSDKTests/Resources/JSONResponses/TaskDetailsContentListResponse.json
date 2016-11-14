@@ -1,0 +1,44 @@
+{
+    "size": 2,
+    "data": [{
+             "mimeType": "image/jpeg",
+             "simpleType": "image",
+             "thumbnailStatus": "queued",
+             "id": 10010,
+             "relatedContent": true,
+             "contentAvailable": true,
+             "created": "2016-11-14T09:41:16.589+0000",
+             "createdBy": {
+             "firstName": "John",
+             "id": 2,
+             "lastName": "Doe",
+             "email": "john.doe@alfresco.com",
+             "company": "Alfresco",
+             "pictureId": 7007
+             },
+             "link": false,
+             "previewStatus": "queued",
+             "name": "IMG_0003.JPG"
+             }, {
+             "mimeType": "image/jpeg",
+             "simpleType": "image",
+             "thumbnailStatus": "queued",
+             "id": 10011,
+             "relatedContent": true,
+             "contentAvailable": true,
+             "created": "2016-11-14T09:42:30.033+0000",
+             "createdBy": {
+             "firstName": "John",
+             "id": 2,
+             "lastName": "Doe",
+             "email": "john.doe@alfresco.com",
+             "company": "Alfresco",
+             "pictureId": 7007
+             },
+             "link": false,
+             "previewStatus": "queued",
+             "name": "IMG_0004.JPG"
+             }],
+    "total": 2,
+    "start": 0
+}

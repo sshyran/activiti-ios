@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKParserOperationWorkerProtocol.h"
+#import "ASDKBaseParserOperationWorker.h"
 
 typedef NS_ENUM(NSInteger, ASDKTaskDetailsParserContentType) {
     ASDKTaskDetailsParserContentTypeUndefined = -1,
@@ -28,6 +28,6 @@ typedef NS_ENUM(NSInteger, ASDKTaskDetailsParserContentType) {
     ASDKTaskDetailsParserContentTypeComment
 };
 
-@interface ASDKTaskDetailsParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
+@interface ASDKTaskDetailsParserOperationWorker : ASDKBaseParserOperationWorker
 
 @end
