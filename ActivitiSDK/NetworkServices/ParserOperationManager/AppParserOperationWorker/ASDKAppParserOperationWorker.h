@@ -17,13 +17,13 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKParserOperationWorkerProtocol.h"
+#import "ASDKBaseParserOperationWorker.h"
 
 typedef NS_ENUM(NSInteger, ASDKAppParserContentType) {
     ASDKAppParserContentTypeUndefined                 = -1,
     ASDKAppParserContentTypeRuntimeAppDefinitionsList = 1,              // Start enumeration from 1 to be able to assert (!=0)
 };
 
-@interface ASDKAppParserOperationWorker : NSObject <ASDKParserOperationWorkerProtocol>
+@interface ASDKAppParserOperationWorker : ASDKBaseParserOperationWorker
 
 @end

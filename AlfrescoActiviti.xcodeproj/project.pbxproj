@@ -238,7 +238,7 @@
 		139DF5FC1C64D7240062D01D /* ASDKFormRenderDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DF5FA1C64D7240062D01D /* ASDKFormRenderDataSource.m */; };
 		139E53FF1C215C9A00CE4674 /* ASDKAppNetworkServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 139E53FD1C215C9A00CE4674 /* ASDKAppNetworkServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139E54001C215C9A00CE4674 /* ASDKAppNetworkServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E53FE1C215C9A00CE4674 /* ASDKAppNetworkServices.m */; };
-		139E54031C218F1100CE4674 /* ASDKAppParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 139E54011C218F1100CE4674 /* ASDKAppParserOperationWorker.h */; };
+		139E54031C218F1100CE4674 /* ASDKAppParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 139E54011C218F1100CE4674 /* ASDKAppParserOperationWorker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139E54041C218F1100CE4674 /* ASDKAppParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54021C218F1100CE4674 /* ASDKAppParserOperationWorker.m */; };
 		139E54081C21935500CE4674 /* ASDKModelApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 139E54061C21935500CE4674 /* ASDKModelApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139E54091C21935500CE4674 /* ASDKModelApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54071C21935500CE4674 /* ASDKModelApp.m */; };
@@ -321,6 +321,8 @@
 		13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 13BDA73E1B7B632100A2CE40 /* Localizable.strings */; };
 		13BDA7431B7B733400A2CE40 /* AFALocalizationConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA7421B7B733400A2CE40 /* AFALocalizationConstants.m */; };
 		13C0C6971DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 13C0C6961DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json */; };
+		13C0C6991DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C0C6981DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m */; };
+		13C0C69B1DDDE69F00C46ED4 /* ApplicationListResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 13C0C69A1DDDE69F00C46ED4 /* ApplicationListResponse.json */; };
 		13C444131BBA6CDB00868904 /* AFATableControllerCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */; };
 		13C444171BBA744400868904 /* AFATableControllerCommentCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */; };
 		13C4441B1BBAD8C100868904 /* AFATableControllerCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C4441A1BBAD8C100868904 /* AFATableControllerCellFactory.m */; };
@@ -1009,6 +1011,8 @@
 		13BDA7411B7B733400A2CE40 /* AFALocalizationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AFALocalizationConstants.h; path = Resources/Localization/AFALocalizationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		13BDA7421B7B733400A2CE40 /* AFALocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFALocalizationConstants.m; path = Resources/Localization/AFALocalizationConstants.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		13C0C6961DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskFormWithVariableResponse.json; path = Resources/JSONResponses/TaskFormWithVariableResponse.json; sourceTree = "<group>"; };
+		13C0C6981DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKAppParserOperationWorkerTest.m; sourceTree = "<group>"; };
+		13C0C69A1DDDE69F00C46ED4 /* ApplicationListResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ApplicationListResponse.json; path = Resources/JSONResponses/ApplicationListResponse.json; sourceTree = "<group>"; };
 		13C444111BBA6CDB00868904 /* AFATableControllerCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentModel.h; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.h; sourceTree = "<group>"; };
 		13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCommentModel.m; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.m; sourceTree = "<group>"; };
 		13C444151BBA744400868904 /* AFATableControllerCommentCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentCellFactory.h; path = Business/TableController/CellFactories/TaskCommentCellFactory/AFATableControllerCommentCellFactory.h; sourceTree = "<group>"; };
@@ -2494,6 +2498,7 @@
 				135752C81DD5D2F4000793D4 /* ASDKProfileParserOperationWorkerTest.m */,
 				135752D01DD9B2ED000793D4 /* ASDKTaskDetailsParserOperationWorkerTest.m */,
 				135752E01DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m */,
+				13C0C6981DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -2875,6 +2880,7 @@
 				135752E61DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json */,
 				135752E41DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json */,
 				13C0C6961DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json */,
+				13C0C69A1DDDE69F00C46ED4 /* ApplicationListResponse.json */,
 			);
 			name = JSONResponses;
 			sourceTree = "<group>";
@@ -5052,6 +5058,7 @@
 				135752D51DD9BDDD000793D4 /* TaskDetailsResponse.json in Resources */,
 				135752DB1DD9C01D000793D4 /* TaskDetailsContentListResponse.json in Resources */,
 				13C0C6971DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json in Resources */,
+				13C0C69B1DDDE69F00C46ED4 /* ApplicationListResponse.json in Resources */,
 				135752CB1DD600F3000793D4 /* ProfileDetailsResponse.json in Resources */,
 				135752CF1DD603D7000793D4 /* ProfileContentResponse.json in Resources */,
 				135752D71DD9BEF4000793D4 /* TaskDetailsUploadContentResponse.json in Resources */,
@@ -5609,6 +5616,7 @@
 				135752D11DD9B2ED000793D4 /* ASDKTaskDetailsParserOperationWorkerTest.m in Sources */,
 				133070E11DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m in Sources */,
 				13E8CE591DC782DC00D5247F /* ASDKServicePathFactoryTest.m in Sources */,
+				13C0C6991DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m in Sources */,
 				13DD8D441DD4A16A0067337E /* ASDKUserParserOperationWorkerTest.m in Sources */,
 				133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */,
 				13E8CE5B1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m in Sources */,

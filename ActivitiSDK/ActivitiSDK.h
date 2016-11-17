@@ -109,6 +109,7 @@
 #import <ActivitiSDK/ASDKProfileParserOperationWorker.h>
 #import <ActivitiSDK/ASDKTaskDetailsParserOperationWorker.h>
 #import <ActivitiSDK/ASDKTaskFormParserOperationWorker.h>
+#import <ActivitiSDK/ASDKAppParserOperationWorker.h>
 
 // Service locator imports
 #import <ActivitiSDK/ASDKServiceLocator.h>
