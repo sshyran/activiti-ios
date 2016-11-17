@@ -46,7 +46,8 @@
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:
             @{@"string"       : @(ASDKModelFormVariableTypeString),
               @"integer"      : @(ASDKModelFormVariableTypeInteger),
-              @"boolean"      : @(ASDKModelFormVariableTypeBoolean),}];
+              @"boolean"      : @(ASDKModelFormVariableTypeBoolean),
+              @"people"       : @(ASDKModelFormVariableTypePeople)}];
 }
 
 + (NSValueTransformer *)valueJSONTransformer {

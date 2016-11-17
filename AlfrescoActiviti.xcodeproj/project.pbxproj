@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		130269691C57735800152F71 /* AFAFilterOptionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 130269681C57735800152F71 /* AFAFilterOptionTableViewCell.m */; };
-		13044FC91BFA178A008FF6E6 /* ASDKModelAmountFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 13044FC71BFA178A008FF6E6 /* ASDKModelAmountFormField.h */; };
+		13044FC91BFA178A008FF6E6 /* ASDKModelAmountFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 13044FC71BFA178A008FF6E6 /* ASDKModelAmountFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13044FCA1BFA178A008FF6E6 /* ASDKModelAmountFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 13044FC81BFA178A008FF6E6 /* ASDKModelAmountFormField.m */; };
 		1306E9701CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1306E96F1CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h */; };
 		1306E9721CC8BCF600BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1306E9711CC8BCF600BF696E /* ASDKFormRenderEngineDataSourceDelegate.h */; };
@@ -107,6 +107,10 @@
 		135752DB1DD9C01D000793D4 /* TaskDetailsContentListResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752DA1DD9C01D000793D4 /* TaskDetailsContentListResponse.json */; };
 		135752DD1DD9C150000793D4 /* TaskDetailsCommentListResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752DC1DD9C150000793D4 /* TaskDetailsCommentListResponse.json */; };
 		135752DF1DD9C282000793D4 /* TaskDetailsCreateCommentResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752DE1DD9C282000793D4 /* TaskDetailsCreateCommentResponse.json */; };
+		135752E11DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 135752E01DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m */; };
+		135752E31DDB0CC2000793D4 /* TaskAllFieldsFormResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752E21DDB0CC2000793D4 /* TaskAllFieldsFormResponse.json */; };
+		135752E51DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752E41DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json */; };
+		135752E71DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752E61DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json */; };
 		135DB32B1B6B616A009138FC /* ASDKLogConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830671B6A12AB0028901A /* ASDKLogConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */; };
@@ -169,7 +173,7 @@
 		137B8DDC1BB9979000F1A6DC /* AFATableControllerContentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DDB1BB9979000F1A6DC /* AFATableControllerContentModel.m */; };
 		137B8DE01BB99B1200F1A6DC /* AFATableControllerContentCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B8DDF1BB99B1200F1A6DC /* AFATableControllerContentCellFactory.m */; };
 		137B94421BD656E700134BF1 /* AFATaskFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B94411BD656E700134BF1 /* AFATaskFormViewController.m */; };
-		137B94451BD671BA00134BF1 /* ASDKTaskFormParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 137B94431BD671BA00134BF1 /* ASDKTaskFormParserOperationWorker.h */; };
+		137B94451BD671BA00134BF1 /* ASDKTaskFormParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 137B94431BD671BA00134BF1 /* ASDKTaskFormParserOperationWorker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		137B94461BD671BA00134BF1 /* ASDKTaskFormParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B94441BD671BA00134BF1 /* ASDKTaskFormParserOperationWorker.m */; };
 		137B944A1BD67A8600134BF1 /* ASDKModelFormDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 137B94481BD67A8600134BF1 /* ASDKModelFormDescription.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		137B944B1BD67A8600134BF1 /* ASDKModelFormDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 137B94491BD67A8600134BF1 /* ASDKModelFormDescription.m */; };
@@ -210,9 +214,9 @@
 		139050E71CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050E51CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.h */; };
 		139050E81CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050E61CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.m */; };
 		139050EB1CB3FF49004FEA89 /* ASDKFormVisibilityConditionsProcessorProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050EA1CB3FF49004FEA89 /* ASDKFormVisibilityConditionsProcessorProtocol.h */; };
-		139050EF1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050ED1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h */; };
+		139050EF1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050ED1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139050F01CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050EE1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m */; };
-		139050F41CB68F8C004FEA89 /* ASDKModelFormVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */; };
+		139050F41CB68F8C004FEA89 /* ASDKModelFormVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139050F51CB68F8C004FEA89 /* ASDKModelFormVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */; };
 		13908B9F1D254886000CF383 /* ActivitiSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		139564E21C20512500BF6153 /* ASDKModelFileSourceFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E01C20512500BF6153 /* ASDKModelFileSourceFolder.h */; };
@@ -266,7 +270,7 @@
 		13A7842D1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */; };
 		13A784311CE46DB300DBE648 /* ASDKModelIntegrationAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A784321CE46DB300DBE648 /* ASDKModelIntegrationAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */; };
-		13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */; };
+		13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */; };
 		13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CAB71B8B3FB100B7A25E /* AFAMenuButtonCell.m */; };
 		13A8CABC1B8B49B400B7A25E /* AFAServiceRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CABB1B8B49B400B7A25E /* AFAServiceRepository.m */; };
@@ -316,6 +320,7 @@
 		13BDA73C1B7B4CFC00A2CE40 /* UIColor+AFATheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA73B1B7B4CFC00A2CE40 /* UIColor+AFATheme.m */; };
 		13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 13BDA73E1B7B632100A2CE40 /* Localizable.strings */; };
 		13BDA7431B7B733400A2CE40 /* AFALocalizationConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA7421B7B733400A2CE40 /* AFALocalizationConstants.m */; };
+		13C0C6971DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 13C0C6961DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json */; };
 		13C444131BBA6CDB00868904 /* AFATableControllerCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */; };
 		13C444171BBA744400868904 /* AFATableControllerCommentCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */; };
 		13C4441B1BBAD8C100868904 /* AFATableControllerCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C4441A1BBAD8C100868904 /* AFATableControllerCellFactory.m */; };
@@ -348,7 +353,7 @@
 		13CFF3421BBBDEF900D3DEB6 /* ASDKTaskUpdateRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CFF3401BBBDEF900D3DEB6 /* ASDKTaskUpdateRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13CFF3431BBBDEF900D3DEB6 /* ASDKTaskUpdateRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CFF3411BBBDEF900D3DEB6 /* ASDKTaskUpdateRequestRepresentation.m */; };
 		13CFF3461BBC2B6500D3DEB6 /* AFATaskUpdateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CFF3451BBC2B6500D3DEB6 /* AFATaskUpdateModel.m */; };
-		13D3CBD31D2BD9F900A19F48 /* ASDKModelFormTab.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D3CBD11D2BD9F900A19F48 /* ASDKModelFormTab.h */; };
+		13D3CBD31D2BD9F900A19F48 /* ASDKModelFormTab.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D3CBD11D2BD9F900A19F48 /* ASDKModelFormTab.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13D3CBD41D2BD9F900A19F48 /* ASDKModelFormTab.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D3CBD21D2BD9F900A19F48 /* ASDKModelFormTab.m */; };
 		13D3CBD81D2CFD4500A19F48 /* ASDKFormTabFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D3CBD61D2CFD4500A19F48 /* ASDKFormTabFieldCollectionViewCell.h */; };
 		13D3CBD91D2CFD4500A19F48 /* ASDKFormTabFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13D3CBD71D2CFD4500A19F48 /* ASDKFormTabFieldCollectionViewCell.m */; };
@@ -393,9 +398,9 @@
 		13EBECB41CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBECB21CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.m */; };
 		13EBECB71CFD902700EC8F96 /* AFATaskChecklistCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBECB61CFD902700EC8F96 /* AFATaskChecklistCellFactory.m */; };
 		13EBECBB1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EBECBA1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m */; };
-		13EEC5CE1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5CC1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h */; };
+		13EEC5CE1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5CC1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13EEC5CF1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EEC5CD1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m */; };
-		13EEC5D41C04D0E100B95740 /* ASDKModelFormFieldFileSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */; };
+		13EEC5D41C04D0E100B95740 /* ASDKModelFormFieldFileSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13EEC5D51C04D0E100B95740 /* ASDKModelFormFieldFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EEC5D31C04D0E100B95740 /* ASDKModelFormFieldFileSource.m */; };
 		13EEC5E51C05CD0700B95740 /* ASDKRoundedBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B7FE21B78FAD300C17D06 /* ASDKRoundedBorderView.m */; };
 		13EEC5E61C05CDFE00B95740 /* ASDKRoundedBorderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 133B7FE11B78FAD300C17D06 /* ASDKRoundedBorderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -457,7 +462,7 @@
 		8D3A51F31C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A51F11C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.m */; };
 		8D3A51F61C808A4400FF9A00 /* ASDKUserParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3A51F41C808A4400FF9A00 /* ASDKUserParserOperationWorker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D3A51F71C808A4400FF9A00 /* ASDKUserParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A51F51C808A4400FF9A00 /* ASDKUserParserOperationWorker.m */; };
-		8D3B50E81C86E258005BEEEB /* ASDKModelRestFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3B50E61C86E258005BEEEB /* ASDKModelRestFormField.h */; };
+		8D3B50E81C86E258005BEEEB /* ASDKModelRestFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3B50E61C86E258005BEEEB /* ASDKModelRestFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D3B50E91C86E258005BEEEB /* ASDKModelRestFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3B50E71C86E258005BEEEB /* ASDKModelRestFormField.m */; };
 		8D3B50EC1C873108005BEEEB /* ASDKFormPreProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D3B50EA1C873108005BEEEB /* ASDKFormPreProcessor.h */; };
 		8D3B50ED1C873108005BEEEB /* ASDKFormPreProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3B50EB1C873108005BEEEB /* ASDKFormPreProcessor.m */; };
@@ -472,13 +477,13 @@
 		8D6ABE751CBCE7CD008FACB4 /* ASDKDynamicTableColumnTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6ABE731CBCE7CD008FACB4 /* ASDKDynamicTableColumnTableViewCell.m */; };
 		8D6ABE781CBCEA22008FACB4 /* ASDKDynamicTableFormFieldDetailsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6ABE761CBCEA22008FACB4 /* ASDKDynamicTableFormFieldDetailsViewController.h */; };
 		8D6ABE791CBCEA22008FACB4 /* ASDKDynamicTableFormFieldDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6ABE771CBCEA22008FACB4 /* ASDKDynamicTableFormFieldDetailsViewController.m */; };
-		8D6ABE7C1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6ABE7A1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.h */; };
+		8D6ABE7C1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6ABE7A1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D6ABE7D1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6ABE7B1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.m */; };
-		8D6ABE801CBD1DFB008FACB4 /* ASDKModelDynamicTableColumnDefinitionAmountFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6ABE7E1CBD1DFB008FACB4 /* ASDKModelDynamicTableColumnDefinitionAmountFormField.h */; };
+		8D6ABE801CBD1DFB008FACB4 /* ASDKModelDynamicTableColumnDefinitionAmountFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6ABE7E1CBD1DFB008FACB4 /* ASDKModelDynamicTableColumnDefinitionAmountFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D6ABE811CBD1DFB008FACB4 /* ASDKModelDynamicTableColumnDefinitionAmountFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6ABE7F1CBD1DFB008FACB4 /* ASDKModelDynamicTableColumnDefinitionAmountFormField.m */; };
-		8D6ABE841CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6ABE821CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.h */; };
+		8D6ABE841CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6ABE821CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D6ABE851CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6ABE831CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.m */; };
-		8D6B2D7E1CB79D150011EC42 /* ASDKModelDynamicTableFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6B2D7C1CB79D150011EC42 /* ASDKModelDynamicTableFormField.h */; };
+		8D6B2D7E1CB79D150011EC42 /* ASDKModelDynamicTableFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6B2D7C1CB79D150011EC42 /* ASDKModelDynamicTableFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D6B2D7F1CB79D150011EC42 /* ASDKModelDynamicTableFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6B2D7D1CB79D150011EC42 /* ASDKModelDynamicTableFormField.m */; };
 		8D6E969B1C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D6E96991C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.h */; };
 		8D6E969C1C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6E969A1C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.m */; };
@@ -526,7 +531,7 @@
 		8DB399901C98762A0089E0AB /* ASDKNoContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB3998E1C98762A0089E0AB /* ASDKNoContentView.m */; };
 		8DB399941C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB399921C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.h */; };
 		8DB399951C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB399931C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.m */; };
-		8DB399991C9AAC4D0089E0AB /* ASDKModelPeopleFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB399971C9AAC4D0089E0AB /* ASDKModelPeopleFormField.h */; };
+		8DB399991C9AAC4D0089E0AB /* ASDKModelPeopleFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB399971C9AAC4D0089E0AB /* ASDKModelPeopleFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8DB3999A1C9AAC4D0089E0AB /* ASDKModelPeopleFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB399981C9AAC4D0089E0AB /* ASDKModelPeopleFormField.m */; };
 		8DB3999D1C9AEDFF0089E0AB /* ASDKPeopleFormFieldDetailsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DB3999B1C9AEDFF0089E0AB /* ASDKPeopleFormFieldDetailsViewController.h */; };
 		8DB3999E1C9AEDFF0089E0AB /* ASDKPeopleFormFieldDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DB3999C1C9AEDFF0089E0AB /* ASDKPeopleFormFieldDetailsViewController.m */; };
@@ -542,7 +547,7 @@
 		8DD3B7701CA0382F00B5D561 /* ASDKPushFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD3B76E1CA0382F00B5D561 /* ASDKPushFadeSegue.m */; };
 		8DEA25311C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEA252F1C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.h */; };
 		8DEA25321C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEA25301C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.m */; };
-		8DEA25371C7DDBD200BF376F /* ASDKModelHyperlinkFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEA25351C7DDBD200BF376F /* ASDKModelHyperlinkFormField.h */; };
+		8DEA25371C7DDBD200BF376F /* ASDKModelHyperlinkFormField.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEA25351C7DDBD200BF376F /* ASDKModelHyperlinkFormField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8DEA25381C7DDBD200BF376F /* ASDKModelHyperlinkFormField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEA25361C7DDBD200BF376F /* ASDKModelHyperlinkFormField.m */; };
 		8DEA253C1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DEA253A1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.h */; };
 		8DEA253D1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DEA253B1C7DF94700BF376F /* ASDKFormMultiLineFieldCollectionViewCell.m */; };
@@ -731,6 +736,10 @@
 		135752DA1DD9C01D000793D4 /* TaskDetailsContentListResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskDetailsContentListResponse.json; path = Resources/JSONResponses/TaskDetailsContentListResponse.json; sourceTree = "<group>"; };
 		135752DC1DD9C150000793D4 /* TaskDetailsCommentListResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskDetailsCommentListResponse.json; path = Resources/JSONResponses/TaskDetailsCommentListResponse.json; sourceTree = "<group>"; };
 		135752DE1DD9C282000793D4 /* TaskDetailsCreateCommentResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskDetailsCreateCommentResponse.json; path = Resources/JSONResponses/TaskDetailsCreateCommentResponse.json; sourceTree = "<group>"; };
+		135752E01DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKTaskFormParserOperationWorkerTest.m; sourceTree = "<group>"; };
+		135752E21DDB0CC2000793D4 /* TaskAllFieldsFormResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskAllFieldsFormResponse.json; path = Resources/JSONResponses/TaskAllFieldsFormResponse.json; sourceTree = "<group>"; };
+		135752E41DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskFormRestFieldValuesResponse.json; path = Resources/JSONResponses/TaskFormRestFieldValuesResponse.json; sourceTree = "<group>"; };
+		135752E61DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskTabsWithVisibilityConditionsFormResponse.json; path = Resources/JSONResponses/TaskTabsWithVisibilityConditionsFormResponse.json; sourceTree = "<group>"; };
 		135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKLogFormatter.h; path = Logging/ASDKLogFormatter.h; sourceTree = "<group>"; };
 		135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLogFormatter.m; path = Logging/ASDKLogFormatter.m; sourceTree = "<group>"; };
 		135EF5631B9090E800ECD1B2 /* NSDate+AFAStringTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+AFAStringTransformation.h"; path = "Business/Categories/NSDate+AFAStringTransformation.h"; sourceTree = "<group>"; };
@@ -999,6 +1008,7 @@
 		13BDA73E1B7B632100A2CE40 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = Localizable.strings; path = Resources/Localization/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		13BDA7411B7B733400A2CE40 /* AFALocalizationConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = AFALocalizationConstants.h; path = Resources/Localization/AFALocalizationConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		13BDA7421B7B733400A2CE40 /* AFALocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFALocalizationConstants.m; path = Resources/Localization/AFALocalizationConstants.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		13C0C6961DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskFormWithVariableResponse.json; path = Resources/JSONResponses/TaskFormWithVariableResponse.json; sourceTree = "<group>"; };
 		13C444111BBA6CDB00868904 /* AFATableControllerCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentModel.h; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.h; sourceTree = "<group>"; };
 		13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCommentModel.m; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.m; sourceTree = "<group>"; };
 		13C444151BBA744400868904 /* AFATableControllerCommentCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentCellFactory.h; path = Business/TableController/CellFactories/TaskCommentCellFactory/AFATableControllerCommentCellFactory.h; sourceTree = "<group>"; };
@@ -2483,6 +2493,7 @@
 				13DD8D431DD4A16A0067337E /* ASDKUserParserOperationWorkerTest.m */,
 				135752C81DD5D2F4000793D4 /* ASDKProfileParserOperationWorkerTest.m */,
 				135752D01DD9B2ED000793D4 /* ASDKTaskDetailsParserOperationWorkerTest.m */,
+				135752E01DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -2860,6 +2871,10 @@
 				135752DA1DD9C01D000793D4 /* TaskDetailsContentListResponse.json */,
 				135752DC1DD9C150000793D4 /* TaskDetailsCommentListResponse.json */,
 				135752DE1DD9C282000793D4 /* TaskDetailsCreateCommentResponse.json */,
+				135752E21DDB0CC2000793D4 /* TaskAllFieldsFormResponse.json */,
+				135752E61DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json */,
+				135752E41DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json */,
+				13C0C6961DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json */,
 			);
 			name = JSONResponses;
 			sourceTree = "<group>";
@@ -5026,17 +5041,21 @@
 				135752DD1DD9C150000793D4 /* TaskDetailsCommentListResponse.json in Resources */,
 				13DBDF0B1DD317F70086C899 /* ProcessInstanceDetailsResponse.json in Resources */,
 				135752D31DD9BD10000793D4 /* TaskListResponse.json in Resources */,
+				135752E51DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json in Resources */,
 				13DD8D3D1DD34EBF0067337E /* CommentDetailsResponse.json in Resources */,
 				13E8CE561DC7554B00D5247F /* alfresco-icon.jpg in Resources */,
+				135752E31DDB0CC2000793D4 /* TaskAllFieldsFormResponse.json in Resources */,
 				13DD8D3B1DD3287F0067337E /* CommentListResponse.json in Resources */,
 				13DBDF101DD31A2A0086C899 /* ProcessInstanceContentListResponse.json in Resources */,
 				13DD8D461DD4A9790067337E /* UserListResponse.json in Resources */,
 				1395C1721DD2087400CC2AB3 /* ProcessDefinitionListResponse.json in Resources */,
 				135752D51DD9BDDD000793D4 /* TaskDetailsResponse.json in Resources */,
 				135752DB1DD9C01D000793D4 /* TaskDetailsContentListResponse.json in Resources */,
+				13C0C6971DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json in Resources */,
 				135752CB1DD600F3000793D4 /* ProfileDetailsResponse.json in Resources */,
 				135752CF1DD603D7000793D4 /* ProfileContentResponse.json in Resources */,
 				135752D71DD9BEF4000793D4 /* TaskDetailsUploadContentResponse.json in Resources */,
+				135752E71DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5599,6 +5618,7 @@
 				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
 				133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */,
 				13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */,
+				135752E11DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m in Sources */,
 				13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */,
 				130F06421DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m in Sources */,
 				135752C91DD5D2F4000793D4 /* ASDKProfileParserOperationWorkerTest.m in Sources */,

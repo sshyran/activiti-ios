@@ -49,7 +49,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                     return nil;
                 } else {
                     NSError *peopleValuesParseError = nil;
-                    NSArray *peopleValues = [MTLJSONAdapter modelsOfClass:ASDKModelContent.class
+                    NSArray *peopleValues = [MTLJSONAdapter modelsOfClass:ASDKModelUser.class
                                                             fromJSONArray:value
                                                                     error:&peopleValuesParseError];
                     if (peopleValuesParseError) {

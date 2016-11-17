@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <ActivitiSDK/ActivitiSDK.h>
+#import "ASDKModelFormField.h"
 
 @interface ASDKModelRestFormField : ASDKModelFormField
 

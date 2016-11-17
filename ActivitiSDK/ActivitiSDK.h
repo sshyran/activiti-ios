@@ -46,7 +46,21 @@
 #import <ActivitiSDK/ASDKModelComment.h>
 #import <ActivitiSDK/ASDKModelFileContent.h>
 #import <ActivitiSDK/ASDKModelFormDescription.h>
+#import <ActivitiSDK/ASDKModelFormFieldOption.h>
 #import <ActivitiSDK/ASDKModelFormField.h>
+#import <ActivitiSDK/ASDKModelAmountFormField.h>
+#import <ActivitiSDK/ASDKModelRestFormField.h>
+#import <ActivitiSDK/ASDKModelPeopleFormField.h>
+#import <ActivitiSDK/ASDKModelHyperlinkFormField.h>
+#import <ActivitiSDK/ASDKModelFormFieldAttachParameter.h>
+#import <ActivitiSDK/ASDKModelFormFieldFileSource.h>
+#import <ActivitiSDK/ASDKModelFormTab.h>
+#import <ActivitiSDK/ASDKModelFormVisibilityCondition.h>
+#import <ActivitiSDK/ASDKModelDynamicTableFormField.h>
+#import <ActivitiSDK/ASDKModelDynamicTableColumnDefinitionFormField.h>
+#import <ActivitiSDK/ASDKModelDynamicTableColumnDefinitionAmountFormField.h>
+#import <ActivitiSDK/ASDKModelDynamicTableColumnDefinitionRestFormField.h>
+#import <ActivitiSDK/ASDKModelFormVariable.h>
 #import <ActivitiSDK/ASDKModelFormOutcome.h>
 #import <ActivitiSDK/ASDKModelProcessInstance.h>
 #import <ActivitiSDK/ASDKModelProcessDefinition.h>
@@ -94,6 +108,7 @@
 #import <ActivitiSDK/ASDKUserParserOperationWorker.h>
 #import <ActivitiSDK/ASDKProfileParserOperationWorker.h>
 #import <ActivitiSDK/ASDKTaskDetailsParserOperationWorker.h>
+#import <ActivitiSDK/ASDKTaskFormParserOperationWorker.h>
 
 // Service locator imports
 #import <ActivitiSDK/ASDKServiceLocator.h>
