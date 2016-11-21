@@ -69,6 +69,9 @@
 #import <ActivitiSDK/ASDKModelProcessInstanceContentField.h>
 #import <ActivitiSDK/ASDKModelGroup.h>
 #import <ActivitiSDK/ASDKModelIntegrationAccount.h>
+#import <ActivitiSDK/ASDKModelNetwork.h>
+#import <ActivitiSDK/ASDKModelSite.h>
+#import <ActivitiSDK/ASDKModelIntegrationContent.h>
 
 #import <ActivitiSDK/ASDKIntegrationNetworksDataSource.h>
 #import <ActivitiSDK/ASDKIntegrationSitesDataSource.h>
@@ -110,6 +113,7 @@
 #import <ActivitiSDK/ASDKTaskDetailsParserOperationWorker.h>
 #import <ActivitiSDK/ASDKTaskFormParserOperationWorker.h>
 #import <ActivitiSDK/ASDKAppParserOperationWorker.h>
+#import <ActivitiSDK/ASDKIntegrationParserOperationWorker.h>
 
 // Service locator imports
 #import <ActivitiSDK/ASDKServiceLocator.h>

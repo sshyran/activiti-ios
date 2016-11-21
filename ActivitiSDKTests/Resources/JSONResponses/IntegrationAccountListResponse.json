@@ -1,0 +1,20 @@
+{
+    "size": 3,
+    "data": [{
+             "authorized": true,
+             "serviceId": "alfresco-cloud",
+             "metaDataAllowed": true
+             }, {
+             "metaDataAllowed": false,
+             "serviceId": "box",
+             "authorizationUrl": "https://app.box.com/api/oauth2/authorize?client_id=clientIDCode&redirect_uri=http%3A%2F%2Flocalhost%3A9999%2Factiviti-app%2Fapp%2Frest%2Fintegration%2Fbox%2Fconfirm-auth-request&response_type=code",
+             "authorized": false
+             }, {
+             "metaDataAllowed": true,
+             "serviceId": "google-drive",
+             "authorizationUrl": "https://accounts.google.com/o/oauth2/auth?access_type=offline&approval_prompt=force&client_id=cliendIDCode&redirect_uri=http://localhost:9999/activiti-app/app/rest/integration/google-drive/confirm-auth-request&response_type=code&scope=https://www.googleapis.com/auth/drive",
+             "authorized": false
+             }],
+    "total": 3,
+    "start": 0
+}
