@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, ASDKModelFilterAssignmentType) {
 @property (assign, nonatomic) ASDKModelFilterSortType       sortType;
 @property (assign, nonatomic) ASDKModelFilterStateType      state;
 @property (assign, nonatomic) ASDKModelFilterAssignmentType assignmentType;
-@property (strong, nonatomic) NSString                      *appDefinitionID;
+@property (strong, nonatomic) NSString                      *applicationID;
 @property (strong, nonatomic) NSString                      *processInstanceID;
 
 @end

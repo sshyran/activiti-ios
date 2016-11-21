@@ -1,0 +1,54 @@
+{
+    "size": 4,
+    "data": [{
+             "appId": 3,
+             "id": 33,
+             "recent": true,
+             "icon": "glyphicon-align-left",
+             "name": "Involved Tasks",
+             "filter": {
+             "assignment": "involved",
+             "state": "open",
+             "sort": "created-desc",
+             "name": ""
+             }
+             }, {
+             "appId": 3,
+             "id": 34,
+             "recent": false,
+             "icon": "glyphicon-inbox",
+             "name": "My Tasks",
+             "filter": {
+             "assignment": "assignee",
+             "state": "open",
+             "sort": "created-desc",
+             "name": ""
+             }
+             }, {
+             "appId": 3,
+             "id": 35,
+             "recent": false,
+             "icon": "glyphicon-record",
+             "name": "Queued Tasks",
+             "filter": {
+             "assignment": "candidate",
+             "state": "open",
+             "sort": "created-desc",
+             "name": ""
+             }
+             }, {
+             "appId": 3,
+             "id": 36,
+             "recent": false,
+             "icon": "glyphicon-ok-sign",
+             "name": "Completed Tasks",
+             "filter": {
+             "assignment": "involved",
+             "state": "completed",
+             "sort": "created-desc",
+             "name": ""
+             }
+             }],
+    "total": 4,
+    "start": 0
+}

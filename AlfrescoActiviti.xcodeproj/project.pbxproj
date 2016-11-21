@@ -62,7 +62,7 @@
 		132BB76B1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132BB76A1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m */; };
 		132C8D341D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 132C8D321D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132C8D351D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D331D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m */; };
-		132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */; };
+		132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132C8D391D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */; };
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
@@ -330,6 +330,9 @@
 		13C0C6A51DDF005100C46ED4 /* IntegrationFolderContentResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 13C0C6A41DDF005100C46ED4 /* IntegrationFolderContentResponse.json */; };
 		13C0C6A71DDF020300C46ED4 /* IntegrationUploadContentResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 13C0C6A61DDF020300C46ED4 /* IntegrationUploadContentResponse.json */; };
 		13C0C6A91DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C0C6A81DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m */; };
+		13C0C6AB1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C0C6AA1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m */; };
+		13C0C6AD1DE2FCB700C46ED4 /* FilterListResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 13C0C6AC1DE2FCB700C46ED4 /* FilterListResponse.json */; };
+		13C0C6AF1DE2FE8E00C46ED4 /* FilterDetailsResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 13C0C6AE1DE2FE8E00C46ED4 /* FilterDetailsResponse.json */; };
 		13C444131BBA6CDB00868904 /* AFATableControllerCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */; };
 		13C444171BBA744400868904 /* AFATableControllerCommentCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */; };
 		13C4441B1BBAD8C100868904 /* AFATableControllerCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C4441A1BBAD8C100868904 /* AFATableControllerCellFactory.m */; };
@@ -1027,6 +1030,9 @@
 		13C0C6A41DDF005100C46ED4 /* IntegrationFolderContentResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = IntegrationFolderContentResponse.json; path = Resources/JSONResponses/IntegrationFolderContentResponse.json; sourceTree = "<group>"; };
 		13C0C6A61DDF020300C46ED4 /* IntegrationUploadContentResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = IntegrationUploadContentResponse.json; path = Resources/JSONResponses/IntegrationUploadContentResponse.json; sourceTree = "<group>"; };
 		13C0C6A81DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKIntegrationParserOperationWorkerTest.m; sourceTree = "<group>"; };
+		13C0C6AA1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKFilterParserOperationWorkerTest.m; sourceTree = "<group>"; };
+		13C0C6AC1DE2FCB700C46ED4 /* FilterListResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = FilterListResponse.json; path = Resources/JSONResponses/FilterListResponse.json; sourceTree = "<group>"; };
+		13C0C6AE1DE2FE8E00C46ED4 /* FilterDetailsResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = FilterDetailsResponse.json; path = Resources/JSONResponses/FilterDetailsResponse.json; sourceTree = "<group>"; };
 		13C444111BBA6CDB00868904 /* AFATableControllerCommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentModel.h; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.h; sourceTree = "<group>"; };
 		13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCommentModel.m; path = Model/TableControllerTaskCommentModel/AFATableControllerCommentModel.m; sourceTree = "<group>"; };
 		13C444151BBA744400868904 /* AFATableControllerCommentCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCommentCellFactory.h; path = Business/TableController/CellFactories/TaskCommentCellFactory/AFATableControllerCommentCellFactory.h; sourceTree = "<group>"; };
@@ -2514,6 +2520,7 @@
 				135752E01DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m */,
 				13C0C6981DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m */,
 				13C0C6A81DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m */,
+				13C0C6AA1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -2902,6 +2909,8 @@
 				13C0C6A21DDEFFB000C46ED4 /* IntegrationSiteContentResponse.json */,
 				13C0C6A41DDF005100C46ED4 /* IntegrationFolderContentResponse.json */,
 				13C0C6A61DDF020300C46ED4 /* IntegrationUploadContentResponse.json */,
+				13C0C6AC1DE2FCB700C46ED4 /* FilterListResponse.json */,
+				13C0C6AE1DE2FE8E00C46ED4 /* FilterDetailsResponse.json */,
 			);
 			name = JSONResponses;
 			sourceTree = "<group>";
@@ -5069,6 +5078,7 @@
 				13DBDF0B1DD317F70086C899 /* ProcessInstanceDetailsResponse.json in Resources */,
 				13C0C69F1DDEFDED00C46ED4 /* IntegrationNetworkListResponse.json in Resources */,
 				135752D31DD9BD10000793D4 /* TaskListResponse.json in Resources */,
+				13C0C6AD1DE2FCB700C46ED4 /* FilterListResponse.json in Resources */,
 				135752E51DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json in Resources */,
 				13DD8D3D1DD34EBF0067337E /* CommentDetailsResponse.json in Resources */,
 				13E8CE561DC7554B00D5247F /* alfresco-icon.jpg in Resources */,
@@ -5076,6 +5086,7 @@
 				135752E31DDB0CC2000793D4 /* TaskAllFieldsFormResponse.json in Resources */,
 				13C0C6A71DDF020300C46ED4 /* IntegrationUploadContentResponse.json in Resources */,
 				13DD8D3B1DD3287F0067337E /* CommentListResponse.json in Resources */,
+				13C0C6AF1DE2FE8E00C46ED4 /* FilterDetailsResponse.json in Resources */,
 				13C0C6A11DDEFF3D00C46ED4 /* IntegrationSiteListResponse.json in Resources */,
 				13DBDF101DD31A2A0086C899 /* ProcessInstanceContentListResponse.json in Resources */,
 				13DD8D461DD4A9790067337E /* UserListResponse.json in Resources */,
@@ -5650,6 +5661,7 @@
 				130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */,
 				130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */,
 				13B16D321DCB93C300F95428 /* NSURLSessionTask_ASDKAdditionsTest.m in Sources */,
+				13C0C6AB1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m in Sources */,
 				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
 				133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */,
 				13C0C6A91DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m in Sources */,

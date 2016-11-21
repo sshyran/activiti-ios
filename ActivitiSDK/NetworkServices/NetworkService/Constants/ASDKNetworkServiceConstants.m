@@ -98,6 +98,7 @@ NSString * const kASDKAPIJSONKeyName                            = @"name";
 NSString * const kASDKAPIJSONKeyFilter                          = @"filter";
 NSString * const kASDKAPIJSONKeyID                              = @"id";
 NSString * const kASDKAPIJSONKeyContent                         = @"content";
+NSString * const kASDKAPIJSONKeyApplicationID                   = @"appId";
 
 
 #pragma mark -
