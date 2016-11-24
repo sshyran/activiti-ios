@@ -70,6 +70,8 @@
 		133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */; };
 		133070E71DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E61DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m */; };
 		133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E81DC9EE100089CA95 /* ASDKNetworkServiceTest.m */; };
+		1330978F1DE4707B00026035 /* ASDKUserNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1330978E1DE4707B00026035 /* ASDKUserNetworkServicesTest.m */; };
+		1330979C1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1330979B1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
 		133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */; };
 		133A6BCD1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */; };
@@ -702,6 +704,9 @@
 		133070E21DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKBasicAuthentificationProviderTest.m; sourceTree = "<group>"; };
 		133070E61DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKResponseSerializersTest.m; sourceTree = "<group>"; };
 		133070E81DC9EE100089CA95 /* ASDKNetworkServiceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKNetworkServiceTest.m; sourceTree = "<group>"; };
+		1330978E1DE4707B00026035 /* ASDKUserNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKUserNetworkServicesTest.m; sourceTree = "<group>"; };
+		1330979A1DE5951D00026035 /* ASDKNetworkProxyBaseTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASDKNetworkProxyBaseTest.h; sourceTree = "<group>"; };
+		1330979B1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKNetworkProxyBaseTest.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
 		133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFATaskListStyleCell.m; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ASDKFormRenderDataSourceArrayAddition.h"; path = "FormRenderEngine/Categories/NSArray+ASDKFormRenderDataSourceArrayAddition.h"; sourceTree = "<group>"; };
@@ -2521,6 +2526,9 @@
 				13C0C6981DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m */,
 				13C0C6A81DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m */,
 				13C0C6AA1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m */,
+				1330979A1DE5951D00026035 /* ASDKNetworkProxyBaseTest.h */,
+				1330979B1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m */,
+				1330978E1DE4707B00026035 /* ASDKUserNetworkServicesTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -5657,6 +5665,7 @@
 				13C0C6991DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m in Sources */,
 				13DD8D441DD4A16A0067337E /* ASDKUserParserOperationWorkerTest.m in Sources */,
 				133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */,
+				1330978F1DE4707B00026035 /* ASDKUserNetworkServicesTest.m in Sources */,
 				13E8CE5B1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m in Sources */,
 				130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */,
 				130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */,
@@ -5672,6 +5681,7 @@
 				135752C91DD5D2F4000793D4 /* ASDKProfileParserOperationWorkerTest.m in Sources */,
 				133070E71DC9DF6E0089CA95 /* ASDKResponseSerializersTest.m in Sources */,
 				13E8CE501DC3955A00D5247F /* ASDKBaseTest.m in Sources */,
+				1330979C1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
