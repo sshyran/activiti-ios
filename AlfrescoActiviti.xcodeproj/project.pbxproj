@@ -272,6 +272,7 @@
 		13A7842D1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */; };
 		13A784311CE46DB300DBE648 /* ASDKModelIntegrationAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A784321CE46DB300DBE648 /* ASDKModelIntegrationAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */; };
+		13A7DE031DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A7DE021DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m */; };
 		13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A82E411BF348E4005537A9 /* ASDKModelFormFieldOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */; };
 		13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A8CAB71B8B3FB100B7A25E /* AFAMenuButtonCell.m */; };
@@ -957,6 +958,7 @@
 		13A7842B1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationParserOperationWorker.m; path = NetworkServices/ParserOperationManager/IntegrationParserOperationWorker/ASDKIntegrationParserOperationWorker.m; sourceTree = "<group>"; };
 		13A7842F1CE46DB300DBE648 /* ASDKModelIntegrationAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelIntegrationAccount.h; path = Model/IntegrationAccount/ASDKModelIntegrationAccount.h; sourceTree = "<group>"; };
 		13A784301CE46DB300DBE648 /* ASDKModelIntegrationAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelIntegrationAccount.m; path = Model/IntegrationAccount/ASDKModelIntegrationAccount.m; sourceTree = "<group>"; };
+		13A7DE021DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProfileNetworkServicesTest.m; sourceTree = "<group>"; };
 		13A82E3E1BF348E4005537A9 /* ASDKModelFormFieldOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldOption.h; path = Model/FormFieldOption/ASDKModelFormFieldOption.h; sourceTree = "<group>"; };
 		13A82E3F1BF348E4005537A9 /* ASDKModelFormFieldOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldOption.m; path = Model/FormFieldOption/ASDKModelFormFieldOption.m; sourceTree = "<group>"; };
 		13A8CAB61B8B3FB100B7A25E /* AFAMenuButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAMenuButtonCell.h; path = UI/Cells/MenuButtonCell/AFAMenuButtonCell.h; sourceTree = "<group>"; };
@@ -2529,6 +2531,7 @@
 				1330979A1DE5951D00026035 /* ASDKNetworkProxyBaseTest.h */,
 				1330979B1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m */,
 				1330978E1DE4707B00026035 /* ASDKUserNetworkServicesTest.m */,
+				13A7DE021DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -5661,6 +5664,7 @@
 			files = (
 				135752D11DD9B2ED000793D4 /* ASDKTaskDetailsParserOperationWorkerTest.m in Sources */,
 				133070E11DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m in Sources */,
+				13A7DE031DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m in Sources */,
 				13E8CE591DC782DC00D5247F /* ASDKServicePathFactoryTest.m in Sources */,
 				13C0C6991DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m in Sources */,
 				13DD8D441DD4A16A0067337E /* ASDKUserParserOperationWorkerTest.m in Sources */,

@@ -91,9 +91,7 @@
         NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode400BadRequest];
         [invocation setReturnValue:&dataTask];
         
-        failureBlock(dataTask, [NSError errorWithDomain:@"error"
-                                                   code:0
-                                               userInfo:nil]);
+        failureBlock(dataTask, [self requestGenericError]);
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
@@ -159,9 +157,7 @@
         NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode400BadRequest];
         [invocation setReturnValue:&dataTask];
         
-        failureBlock(dataTask, [NSError errorWithDomain:@"error"
-                                                   code:0
-                                               userInfo:nil]);
+        failureBlock(dataTask, [self requestGenericError]);
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when

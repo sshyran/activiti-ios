@@ -30,7 +30,7 @@
 
 - (NSURLResponse *)response {
     id responseMock = OCMClassMock([NSHTTPURLResponse class]);
-    OCMStub([responseMock statusCode]).andReturn(_expectedError);
+    OCMStub([responseMock statusCode]).andReturn(_expectedStatusCode);
     
     return responseMock;
 }
@@ -77,6 +77,12 @@
                                                                                error:&error];
     
     return response;
+}
+
+- (NSError *)requestGenericError {
+    return [NSError errorWithDomain:@"com.activitiSDK.tests"
+                               code:0
+                           userInfo:nil];
 }
 
 @end

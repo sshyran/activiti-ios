@@ -28,4 +28,6 @@
 
 - (NSDictionary *)contentDictionaryFromJSON:(NSString *)jsonFileName;
 
+- (NSError *)requestGenericError;
+
 @end

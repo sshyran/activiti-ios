@@ -25,7 +25,7 @@ ASDKModelContent;
 typedef void  (^ASDKProfileCompletionBlock)             (ASDKModelProfile *profile, NSError *error);
 typedef void  (^ASDKProfileImageCompletionBlock)        (UIImage *profileImage, NSError *error);
 typedef void  (^ASDKProfilePasswordCompletionBlock)     (BOOL isPasswordUpdated, NSError *error);
-typedef void  (^ASDKProfileAutheticationCompletionBlock)(BOOL didAutheticate, NSError *error);
+typedef void  (^ASDKProfileAutheticationCompletionBlock)(BOOL didAuthenticate, NSError *error);
 typedef void  (^ASDKProfileContentProgressBlock)        (NSUInteger progress, NSError *error);
 typedef void  (^ASDKProfileImageContentUploadCompletionBlock)(ASDKModelContent *profilePictureContent, NSError *error);
 
