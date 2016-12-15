@@ -46,6 +46,37 @@
 
 @end
 
+@interface NSURLSessionDownloadTaskMock : NSURLSessionDownloadTask
+
+@property (assign, nonatomic) ASDKHTTPCode  expectedStatusCode;
+@property (strong, nonatomic) NSError       *expectedError;
+@property (strong, nonatomic) NSURL         *expectedBaseURL;
+
+@end
+
+@implementation NSURLSessionDownloadTaskMock
+
+- (NSURLResponse *)response {
+    id responseMock = OCMClassMock([NSHTTPURLResponse class]);
+    OCMStub([responseMock statusCode]).andReturn(_expectedStatusCode);
+    
+    return responseMock;
+}
+
+- (NSURLRequest *)originalRequest {
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_expectedBaseURL];
+    return request;
+}
+
+- (NSError *)error {
+    return _expectedError;
+}
+
+- (void)resume {
+}
+
+@end
+
 @implementation ASDKNetworkProxyBaseTest
 
 - (void)setUp {
@@ -66,6 +97,21 @@
 - (NSURLSessionDataTask *)dataTaskWithStatusCode:(ASDKHTTPCode)statusCode {
     return [self dataTaskWithStatusCode:statusCode
                                    error:nil];
+}
+
+- (NSURLSessionDownloadTask *)downloadTaskWithStatusCode:(ASDKHTTPCode)statusCode {
+    return [self downloadTaskWithStatusCode:statusCode
+                                      error:nil];
+}
+
+- (NSURLSessionDownloadTask *)downloadTaskWithStatusCode:(ASDKHTTPCode)statusCode
+                                                   error:(NSError *)error {
+    NSURLSessionDownloadTaskMock *mockTask = [NSURLSessionDownloadTaskMock new];
+    mockTask.expectedStatusCode = statusCode;
+    mockTask.expectedError = error;
+    mockTask.expectedBaseURL = self.baseURL;
+
+    return (NSURLSessionDownloadTask *)mockTask;
 }
 
 - (NSDictionary *)contentDictionaryFromJSON:(NSString *)jsonFileName {

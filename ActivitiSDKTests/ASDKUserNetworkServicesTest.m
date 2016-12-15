@@ -51,7 +51,7 @@
     // expect
     XCTestExpectation *fetchUsersExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -84,7 +84,7 @@
     // expect
     XCTestExpectation *fetchUsersExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
                         atIndex:failureBlockParameterIdxInMethodSignature];
@@ -116,7 +116,7 @@
     // expect
     XCTestExpectation *fetchUserPictureExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -150,7 +150,7 @@
     // expect
     XCTestExpectation *fetchUserPictureExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
                         atIndex:failureBlockParameterIdxInMethodSignature];

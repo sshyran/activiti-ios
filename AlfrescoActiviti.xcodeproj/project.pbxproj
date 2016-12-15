@@ -40,6 +40,7 @@
 		1319EF531C157EE7003FA6C1 /* NSString+ASDKFontGlyphicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 136737131B86122600364886 /* NSString+ASDKFontGlyphicons.m */; };
 		1319EF541C157EEB003FA6C1 /* UIFont+ASDKGlyphicons.h in Headers */ = {isa = PBXBuildFile; fileRef = 1367370E1B860FF900364886 /* UIFont+ASDKGlyphicons.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1319EF551C157EEF003FA6C1 /* UIFont+ASDKGlyphicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 1367370F1B860FF900364886 /* UIFont+ASDKGlyphicons.m */; };
+		131AC4E01DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */; };
 		131DCF431DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */; };
 		131DCF471DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF461DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m */; };
 		131DCF4E1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */; };
@@ -656,6 +657,7 @@
 		1317C3481BCB9DBB00F0B03F /* ASDKDiskServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDiskServices.h; path = DiskServices/ASDKDiskServices.h; sourceTree = "<group>"; };
 		1317C3491BCB9DBB00F0B03F /* ASDKDiskServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKDiskServices.m; path = DiskServices/ASDKDiskServices.m; sourceTree = "<group>"; };
 		1317C34D1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDiskServiceProtocol.h; path = DiskServices/Protocol/ASDKDiskServiceProtocol.h; sourceTree = "<group>"; };
+		131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKTaskNetworkServicesTest.m; sourceTree = "<group>"; };
 		131DCF411DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsCreateChecklistAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.h; sourceTree = "<group>"; };
 		131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsCreateChecklistAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.m; sourceTree = "<group>"; };
 		131DCF451DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsCreateTaskAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateTaskAction/AFAModalTaskDetailsCreateTaskAction.h; sourceTree = "<group>"; };
@@ -2532,6 +2534,7 @@
 				1330979B1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m */,
 				1330978E1DE4707B00026035 /* ASDKUserNetworkServicesTest.m */,
 				13A7DE021DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m */,
+				131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -5674,6 +5677,7 @@
 				130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */,
 				130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */,
 				13B16D321DCB93C300F95428 /* NSURLSessionTask_ASDKAdditionsTest.m in Sources */,
+				131AC4E01DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m in Sources */,
 				13C0C6AB1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m in Sources */,
 				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
 				133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */,

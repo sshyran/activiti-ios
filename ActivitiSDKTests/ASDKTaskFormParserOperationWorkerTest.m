@@ -511,8 +511,6 @@
     
     // when
     NSDictionary *invalidContentDictionary = @{@"foo":@"bar"};
-    
-    // when
     [self.taskFormParserWorker parseContentDictionary:invalidContentDictionary
                                                ofType:CREATE_STRING(ASDKTaskFormParserContentTypeFormModels)
                                   withCompletionBlock:^(id parsedObject, NSError *error, ASDKModelPaging *paging) {

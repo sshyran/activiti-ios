@@ -50,7 +50,7 @@
     // expect
     XCTestExpectation *authenticateUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -82,7 +82,7 @@
     // expect
     XCTestExpectation *authenticateUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -114,7 +114,7 @@
     // expect
     XCTestExpectation *fetchProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -144,7 +144,7 @@
     // expect
     XCTestExpectation *fetchProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
                         atIndex:failureBlockParameterIdxInMethodSignature];
@@ -179,7 +179,7 @@
     // expect
     XCTestExpectation *updateProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -215,7 +215,7 @@
     // expect
     XCTestExpectation *updateProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
                         atIndex:failureBlockParameterIdxInMethodSignature];
@@ -246,7 +246,7 @@
     // expect
     XCTestExpectation *profileImageExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -279,7 +279,7 @@
     //expect
     XCTestExpectation *profileImageExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
                         atIndex:failureBlockParameterIdxInMethodSignature];
@@ -309,7 +309,7 @@
     // expect
     XCTestExpectation *profilePasswordExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -341,7 +341,7 @@
     // expect
     XCTestExpectation *profilePasswordExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
                         atIndex:failureBlockParameterIdxInMethodSignature];
@@ -375,7 +375,7 @@
     // expect
     XCTestExpectation *imageUploadExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^progressBlock)(NSProgress * _Nonnull uploadProgress);
+        ASDKTestRequestProgressBlock progressBlock;
         NSUInteger progressBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&progressBlock
                         atIndex:progressBlockParameterIdxInMethodSignature];
@@ -414,7 +414,7 @@
     // expect
     XCTestExpectation *imageUploadExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^successBlock)(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject);
+        ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&successBlock
                         atIndex:successBlockParameterIdxInMethodSignature];
@@ -449,7 +449,7 @@
     // expect
     XCTestExpectation *imageUploadExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
-        void (^failureBlock)(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error);
+        ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 7;
         [invocation getArgument:&failureBlock
                         atIndex:failureBlockParameterIdxInMethodSignature];

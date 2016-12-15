@@ -18,6 +18,10 @@
 
 #import "ASDKBaseTest.h"
 
+typedef void (^ASDKTestRequestSuccessBlock)(NSURLSessionDataTask *task, id responseObject);
+typedef void (^ASDKTestRequestFailureBlock)(NSURLSessionDataTask *task, NSError *error);
+typedef void (^ASDKTestRequestProgressBlock)(NSProgress *uploadProgress);
+
 @interface ASDKNetworkProxyBaseTest : ASDKBaseTest
 
 @property (strong, nonatomic) ASDKParserOperationManager *parserOperationManager;
@@ -25,6 +29,10 @@
 - (NSURLSessionDataTask *)dataTaskWithStatusCode:(ASDKHTTPCode)statusCode
                                             error:(NSError *)error;
 - (NSURLSessionDataTask *)dataTaskWithStatusCode:(ASDKHTTPCode)statusCode;
+
+- (NSURLSessionDownloadTask *)downloadTaskWithStatusCode:(ASDKHTTPCode)statusCode;
+- (NSURLSessionDownloadTask *)downloadTaskWithStatusCode:(ASDKHTTPCode)statusCode
+                                                   error:(NSError *)error;
 
 - (NSDictionary *)contentDictionaryFromJSON:(NSString *)jsonFileName;
 
