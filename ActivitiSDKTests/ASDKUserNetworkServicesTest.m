@@ -21,6 +21,7 @@
 @interface ASDKUserNetworkServicesTest : ASDKNetworkProxyBaseTest
 
 @property (strong, nonatomic) ASDKUserNetworkServices *userNetworkService;
+@property (strong, nonatomic) id                       requestOperationManagerMock;
 
 @end
 
@@ -33,6 +34,7 @@
     self.userNetworkService.resultsQueue = dispatch_get_main_queue();
     self.userNetworkService.parserOperationManager = self.parserOperationManager;
     self.userNetworkService.servicePathFactory = [ASDKServicePathFactory new];
+    self.requestOperationManagerMock = OCMClassMock([ASDKRequestOperationManager class]);
     
     ASDKUserParserOperationWorker *userParserWorker = [ASDKUserParserOperationWorker new];
     [self.userNetworkService.parserOperationManager registerWorker:userParserWorker
@@ -46,11 +48,10 @@
 - (void)testThatItFetchesUsers {
     // given
     id userRequestRepresentation = OCMClassMock([ASDKUserRequestRepresentation class]);
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
     
     // expect
     XCTestExpectation *fetchUsersExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
@@ -62,7 +63,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.userNetworkService.requestOperationManager = requestOperationManager;
+    self.userNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.userNetworkService fetchUsersWithUserRequestRepresentation:userRequestRepresentation
                                                      completionBlock:^(NSArray *users, NSError *error, ASDKModelPaging *paging) {
                                                          XCTAssert(users.count == 2);
@@ -79,11 +80,10 @@
 - (void)testThatItHandlesFetchUsersRequestFailure {
     // given
     id userRequestRepresentation = OCMClassMock([ASDKUserRequestRepresentation class]);
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
     
     // expect
     XCTestExpectation *fetchUsersExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
@@ -95,7 +95,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.userNetworkService.requestOperationManager = requestOperationManager;
+    self.userNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.userNetworkService fetchUsersWithUserRequestRepresentation:userRequestRepresentation
                                                      completionBlock:^(NSArray *users, NSError *error, ASDKModelPaging *paging) {
                                                          XCTAssertNil(users);
@@ -110,12 +110,9 @@
 }
 
 - (void)testThatItFetchesPictureForUser {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *fetchUserPictureExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
@@ -130,7 +127,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.userNetworkService.requestOperationManager = requestOperationManager;
+    self.userNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.userNetworkService fetchPictureForUserID:@"id"
                                    completionBlock:^(UIImage *profileImage, NSError *error) {
                                        XCTAssertNil(error);
@@ -144,12 +141,9 @@
 }
 
 - (void)testThatItHandlesFetchPictureForUserRequestFailure {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *fetchUserPictureExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
@@ -161,7 +155,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.userNetworkService.requestOperationManager = requestOperationManager;
+    self.userNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.userNetworkService fetchPictureForUserID:@"id"
                                    completionBlock:^(UIImage *profileImage, NSError *error) {
                                        XCTAssertNotNil(error);

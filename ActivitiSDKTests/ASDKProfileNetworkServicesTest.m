@@ -21,6 +21,7 @@
 @interface ASDKProfileNetworkServicesTest : ASDKNetworkProxyBaseTest
 
 @property (strong, nonatomic) ASDKProfileNetworkServices *profileNetworkService;
+@property (strong, nonatomic) id                          requestOperationManagerMock;
 
 @end
 
@@ -33,6 +34,7 @@
     self.profileNetworkService.resultsQueue = dispatch_get_main_queue();
     self.profileNetworkService.parserOperationManager = self.parserOperationManager;
     self.profileNetworkService.servicePathFactory = [ASDKServicePathFactory new];
+    self.requestOperationManagerMock = OCMClassMock([ASDKRequestOperationManager class]);
     
     ASDKProfileParserOperationWorker *profileParserWorker = [ASDKProfileParserOperationWorker new];
     [self.profileNetworkService.parserOperationManager registerWorker:profileParserWorker
@@ -44,12 +46,9 @@
 }
 
 - (void)testThatItAuthenticatesUser {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *authenticateUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
@@ -61,7 +60,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService authenticateUser:@"test"
                                     withPassword:@"test"
                              withCompletionBlock:^(BOOL didAutheticate, NSError *error) {
@@ -76,16 +75,13 @@
 }
 
 - (void)testThatItHandlesAuthenticateUserRequestFailure {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *authenticateUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
-        NSUInteger successBlockParameterIdxInMethodSignature = 6;
+        NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
-                        atIndex:successBlockParameterIdxInMethodSignature];
+                        atIndex:failureBlockParameterIdxInMethodSignature];
         NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode400BadRequest];
         [invocation setReturnValue:&dataTask];
         
@@ -93,7 +89,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService authenticateUser:@"test"
                                     withPassword:@"test"
                              withCompletionBlock:^(BOOL didAutheticate, NSError *error) {
@@ -108,12 +104,9 @@
 }
 
 - (void)testThatItFetchesProfileData {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *fetchProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
@@ -125,7 +118,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService fetchProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         XCTAssertNil(error);
         XCTAssertNotNil(profile);
@@ -138,12 +131,9 @@
 }
 
 - (void)testThatItHandlesFetchProfileDataRequestFailure {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *fetchProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
@@ -155,7 +145,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService fetchProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         XCTAssertNil(profile);
         XCTAssertNotNil(error);
@@ -169,7 +159,6 @@
 
 - (void)testThatItUpdatesProfile {
     // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
     ASDKModelProfile *profile = OCMClassMock([ASDKModelProfile class]);
     OCMStub([profile userFirstName]).andReturn(@"John");
     OCMStub([profile userLastName]).andReturn(@"Doe");
@@ -178,7 +167,7 @@
     
     // expect
     XCTestExpectation *updateProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
@@ -190,7 +179,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService updateProfileWithModel:profile
                                        completionBlock:^(ASDKModelProfile *profile, NSError *error) {
                                            XCTAssertNil(error);
@@ -205,7 +194,6 @@
 
 - (void)testThatItHandlesProfileUpdateRequestFailure {
     // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
     ASDKModelProfile *profile = OCMClassMock([ASDKModelProfile class]);
     OCMStub([profile userFirstName]).andReturn(@"John");
     OCMStub([profile userLastName]).andReturn(@"Doe");
@@ -214,7 +202,7 @@
     
     // expect
     XCTestExpectation *updateProfileExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
@@ -226,7 +214,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService updateProfileWithModel:profile
                                        completionBlock:^(ASDKModelProfile *profile, NSError *error) {
                                            XCTAssertNil(profile);
@@ -240,12 +228,9 @@
 }
 
 - (void)testThatItFetchesProfileImage {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *profileImageExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
@@ -260,7 +245,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService fetchProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
         XCTAssertNil(error);
         XCTAssertNotNil(profileImage);
@@ -273,12 +258,9 @@
 }
 
 - (void)testThatItHandlesProfileImageRequestFailure {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     //expect
     XCTestExpectation *profileImageExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
@@ -290,7 +272,7 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService fetchProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
         XCTAssertNil(profileImage);
         XCTAssertNotNil(error);
@@ -303,12 +285,9 @@
 }
 
 - (void)testThatItHandlesProfilePasswordUpdate {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *profilePasswordExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&successBlock
@@ -320,7 +299,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService updateProfileWithNewPassword:@"test"
                                                  oldPassword:@"test1"
                                              completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
@@ -335,12 +314,9 @@
 }
 
 - (void)testThatItHandlesProfilePasswordUpdateRequestFailure {
-    // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
-    
     // expect
     XCTestExpectation *profilePasswordExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&failureBlock
@@ -352,7 +328,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService updateProfileWithNewPassword:@"test"
                                                  oldPassword:@"test1"
                                              completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
@@ -368,13 +344,12 @@
 
 - (void)testThatItHandlesProfileImageUploadProgress {
     // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
     id fileContent = OCMClassMock([ASDKModelFileContent class]);
     NSData *dummyData = [self createRandomNSDataOfSize:10];
     
     // expect
     XCTestExpectation *imageUploadExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestProgressBlock progressBlock;
         NSUInteger progressBlockParameterIdxInMethodSignature = 5;
         [invocation getArgument:&progressBlock
@@ -389,7 +364,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY constructingBodyWithBlock:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService uploadProfileImageWithModel:fileContent
                                                 contentData:dummyData
                                               progressBlock:^(NSUInteger progress, NSError *error) {
@@ -407,13 +382,12 @@
 
 - (void)testThatItHandlesProfileImageUpload {
     // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
     id fileContent = OCMClassMock([ASDKModelFileContent class]);
     NSData *dummyData = [self createRandomNSDataOfSize:10];
     
     // expect
     XCTestExpectation *imageUploadExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 6;
         [invocation getArgument:&successBlock
@@ -425,7 +399,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY constructingBodyWithBlock:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService uploadProfileImageWithModel:fileContent
                                                 contentData:dummyData
                                               progressBlock:nil
@@ -434,7 +408,7 @@
                                                 XCTAssertNotNil(profilePictureContent);
                                                 
                                                 [imageUploadExpectation fulfill];
-    }];
+                                            }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -442,13 +416,12 @@
 
 - (void)testThatItHandlesProfileImageUploadRequestFailure {
     // given
-    id requestOperationManager = OCMClassMock([ASDKRequestOperationManager class]);
     id fileContent = OCMClassMock([ASDKModelFileContent class]);
     NSData *dummyData = [self createRandomNSDataOfSize:10];
     
     // expect
     XCTestExpectation *imageUploadExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[requestOperationManager expect] andDo:^(NSInvocation *invocation) {
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 7;
         [invocation getArgument:&failureBlock
@@ -460,7 +433,7 @@
     }] POST:OCMOCK_ANY parameters:OCMOCK_ANY constructingBodyWithBlock:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.profileNetworkService.requestOperationManager = requestOperationManager;
+    self.profileNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.profileNetworkService uploadProfileImageWithModel:fileContent
                                                 contentData:dummyData
                                               progressBlock:nil

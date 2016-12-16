@@ -194,6 +194,7 @@
 		137C58AB1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C58AA1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m */; };
 		137C58AE1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C58AD1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m */; };
 		137FC4311C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */; };
+		1380854A1E02C30800455FAE /* ASDKFilterNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */; };
 		13891CAA1D00258800A61015 /* AFAConfirmationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13891CA91D00258800A61015 /* AFAConfirmationView.m */; };
 		138C48B51C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 138C48B41C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		138C48BA1C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 138C48B81C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -873,6 +874,7 @@
 		137C58AC1BF9C6BC00DF41B3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageEffects.h"; path = "UI/Categories/UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		137C58AD1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageEffects.m"; path = "UI/Categories/UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineValueTransactionsProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineValueTransactionsProtocol.h; sourceTree = "<group>"; };
+		138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKFilterNetworkServicesTest.m; sourceTree = "<group>"; };
 		13891CA81D00258800A61015 /* AFAConfirmationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAConfirmationView.h; path = UI/Components/ConfirmationView/AFAConfirmationView.h; sourceTree = "<group>"; };
 		13891CA91D00258800A61015 /* AFAConfirmationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAConfirmationView.m; path = UI/Components/ConfirmationView/AFAConfirmationView.m; sourceTree = "<group>"; };
 		138C48B41C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceNetworkServiceProtocol.h; path = NetworkServices/Proxy/ProcessInstanceNetworkServices/Protocol/ASDKProcessInstanceNetworkServiceProtocol.h; sourceTree = "<group>"; };
@@ -2535,6 +2537,7 @@
 				1330978E1DE4707B00026035 /* ASDKUserNetworkServicesTest.m */,
 				13A7DE021DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m */,
 				131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */,
+				138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -5678,6 +5681,7 @@
 				130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */,
 				13B16D321DCB93C300F95428 /* NSURLSessionTask_ASDKAdditionsTest.m in Sources */,
 				131AC4E01DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m in Sources */,
+				1380854A1E02C30800455FAE /* ASDKFilterNetworkServicesTest.m in Sources */,
 				13C0C6AB1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m in Sources */,
 				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
 				133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */,
