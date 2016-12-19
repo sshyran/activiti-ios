@@ -17,6 +17,7 @@
 		130761551BEA42EC0082EA2D /* ASDKLocalizationConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */; };
 		130A3FC51D93F878000A41C3 /* ASDKModelAttributable.h in Headers */ = {isa = PBXBuildFile; fileRef = 130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */; };
 		130A3FC61D93F878000A41C3 /* ASDKModelAttributable.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */; };
+		130A6FEE1E08063C0086936C /* ASDKAppNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FED1E08063C0086936C /* ASDKAppNetworkServicesTest.m */; };
 		130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */; };
 		130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */; };
 		130F06421DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */; };
@@ -65,6 +66,7 @@
 		132C8D351D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D331D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m */; };
 		132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132C8D391D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */; };
+		132DC47F1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 132DC47E1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m */; };
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
 		133070E11DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */; };
@@ -317,7 +319,7 @@
 		13B8E6361BD7BC01005E95B6 /* ASDKFormRenderEngineConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B8E6341BD7BC01005E95B6 /* ASDKFormRenderEngineConstants.m */; };
 		13BA5C051BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BA5C031BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.h */; };
 		13BA5C061BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5C041BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.m */; };
-		13BA5C0A1BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BA5C081BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.h */; };
+		13BA5C0A1BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BA5C081BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13BA5C0B1BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5C091BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.m */; };
 		13BA5C0F1BE11C250091D6C9 /* ASDKModelFormFieldValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BA5C0D1BE11C250091D6C9 /* ASDKModelFormFieldValue.h */; };
 		13BA5C101BE11C250091D6C9 /* ASDKModelFormFieldValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5C0E1BE11C250091D6C9 /* ASDKModelFormFieldValue.m */; };
@@ -638,6 +640,7 @@
 		130761531BEA42EC0082EA2D /* ASDKLocalizationConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLocalizationConstants.m; path = Localization/ASDKLocalizationConstants.m; sourceTree = "<group>"; };
 		130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelAttributable.h; path = Model/Attributable/ASDKModelAttributable.h; sourceTree = "<group>"; };
 		130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelAttributable.m; path = Model/Attributable/ASDKModelAttributable.m; sourceTree = "<group>"; };
+		130A6FED1E08063C0086936C /* ASDKAppNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKAppNetworkServicesTest.m; sourceTree = "<group>"; };
 		130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKMantleJSONAdapterCustomPolicyTest.m; sourceTree = "<group>"; };
 		130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKParserOperationManagerTest.m; sourceTree = "<group>"; };
 		130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessParserOperationWorkerTest.m; sourceTree = "<group>"; };
@@ -702,6 +705,7 @@
 		132C8D331D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterCreationRequestRepresentation.m; path = NetworkServices/RequestRepresentations/FilterInformation/ASDKFilterCreationRequestRepresentation.m; sourceTree = "<group>"; };
 		132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterParserOperationWorker.h; path = NetworkServices/ParserOperationManager/ASDKFilterParserOperationWorker/ASDKFilterParserOperationWorker.h; sourceTree = "<group>"; };
 		132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterParserOperationWorker.m; path = NetworkServices/ParserOperationManager/ASDKFilterParserOperationWorker/ASDKFilterParserOperationWorker.m; sourceTree = "<group>"; };
+		132DC47E1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKFormNetworkServicesTest.m; sourceTree = "<group>"; };
 		132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProcessInstance.h; path = Model/ProcessInstance/ASDKModelProcessInstance.h; sourceTree = "<group>"; };
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
 		133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKRequestOperationManagerTest.m; sourceTree = "<group>"; };
@@ -2538,6 +2542,8 @@
 				13A7DE021DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m */,
 				131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */,
 				138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */,
+				132DC47E1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m */,
+				130A6FED1E08063C0086936C /* ASDKAppNetworkServicesTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -5673,6 +5679,7 @@
 				13A7DE031DED732E00A5A86B /* ASDKProfileNetworkServicesTest.m in Sources */,
 				13E8CE591DC782DC00D5247F /* ASDKServicePathFactoryTest.m in Sources */,
 				13C0C6991DDDDC3D00C46ED4 /* ASDKAppParserOperationWorkerTest.m in Sources */,
+				130A6FEE1E08063C0086936C /* ASDKAppNetworkServicesTest.m in Sources */,
 				13DD8D441DD4A16A0067337E /* ASDKUserParserOperationWorkerTest.m in Sources */,
 				133070E31DC8C2650089CA95 /* ASDKBasicAuthentificationProviderTest.m in Sources */,
 				1330978F1DE4707B00026035 /* ASDKUserNetworkServicesTest.m in Sources */,
@@ -5685,6 +5692,7 @@
 				13C0C6AB1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m in Sources */,
 				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
 				133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */,
+				132DC47F1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m in Sources */,
 				13C0C6A91DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m in Sources */,
 				13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */,
 				135752E11DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m in Sources */,

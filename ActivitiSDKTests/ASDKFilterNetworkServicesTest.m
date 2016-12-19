@@ -36,9 +36,10 @@
     self.filterNetworkService.parserOperationManager = self.parserOperationManager;
     self.filterNetworkService.servicePathFactory = [ASDKServicePathFactory new];
     self.requestOperationManagerMock = OCMClassMock([ASDKRequestOperationManager class]);
-    ASDKFilterParserOperationWorker *filterParserWork = [ASDKFilterParserOperationWorker new];
-    [self.filterNetworkService.parserOperationManager registerWorker:filterParserWork
-                                                         forServices:[filterParserWork availableServices]];
+    
+    ASDKFilterParserOperationWorker *filterParserWorker = [ASDKFilterParserOperationWorker new];
+    [self.filterNetworkService.parserOperationManager registerWorker:filterParserWorker
+                                                         forServices:[filterParserWorker availableServices]];
 }
 
 - (void)tearDown {
