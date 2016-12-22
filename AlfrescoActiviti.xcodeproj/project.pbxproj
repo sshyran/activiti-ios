@@ -18,6 +18,10 @@
 		130A3FC51D93F878000A41C3 /* ASDKModelAttributable.h in Headers */ = {isa = PBXBuildFile; fileRef = 130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */; };
 		130A3FC61D93F878000A41C3 /* ASDKModelAttributable.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */; };
 		130A6FEE1E08063C0086936C /* ASDKAppNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FED1E08063C0086936C /* ASDKAppNetworkServicesTest.m */; };
+		130A6FF01E08124B0086936C /* ASDKProcessDefinitionNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FEF1E08124B0086936C /* ASDKProcessDefinitionNetworkServicesTest.m */; };
+		130A6FF21E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF11E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m */; };
+		130A6FF41E083F260086936C /* ASDKQuerryNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF31E083F260086936C /* ASDKQuerryNetworkServicesTest.m */; };
+		130A6FF61E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF51E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m */; };
 		130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */; };
 		130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */; };
 		130F06421DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */; };
@@ -641,6 +645,10 @@
 		130A3FC31D93F878000A41C3 /* ASDKModelAttributable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelAttributable.h; path = Model/Attributable/ASDKModelAttributable.h; sourceTree = "<group>"; };
 		130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelAttributable.m; path = Model/Attributable/ASDKModelAttributable.m; sourceTree = "<group>"; };
 		130A6FED1E08063C0086936C /* ASDKAppNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKAppNetworkServicesTest.m; sourceTree = "<group>"; };
+		130A6FEF1E08124B0086936C /* ASDKProcessDefinitionNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessDefinitionNetworkServicesTest.m; sourceTree = "<group>"; };
+		130A6FF11E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessInstanceNetworkServicesTest.m; sourceTree = "<group>"; };
+		130A6FF31E083F260086936C /* ASDKQuerryNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKQuerryNetworkServicesTest.m; sourceTree = "<group>"; };
+		130A6FF51E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKIntegrationNetworkServicesTest.m; sourceTree = "<group>"; };
 		130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKMantleJSONAdapterCustomPolicyTest.m; sourceTree = "<group>"; };
 		130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKParserOperationManagerTest.m; sourceTree = "<group>"; };
 		130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessParserOperationWorkerTest.m; sourceTree = "<group>"; };
@@ -2544,6 +2552,10 @@
 				138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */,
 				132DC47E1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m */,
 				130A6FED1E08063C0086936C /* ASDKAppNetworkServicesTest.m */,
+				130A6FEF1E08124B0086936C /* ASDKProcessDefinitionNetworkServicesTest.m */,
+				130A6FF11E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m */,
+				130A6FF31E083F260086936C /* ASDKQuerryNetworkServicesTest.m */,
+				130A6FF51E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m */,
 				13E8CE511DC74C4C00D5247F /* Resources */,
 				1371948F1B6924DF00D4E1F0 /* Supporting Files */,
 			);
@@ -5686,15 +5698,19 @@
 				13E8CE5B1DC7A61600D5247F /* ASDKCSRFTokenStorageTest.m in Sources */,
 				130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */,
 				130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */,
+				130A6FF21E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m in Sources */,
 				13B16D321DCB93C300F95428 /* NSURLSessionTask_ASDKAdditionsTest.m in Sources */,
 				131AC4E01DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m in Sources */,
 				1380854A1E02C30800455FAE /* ASDKFilterNetworkServicesTest.m in Sources */,
+				130A6FF01E08124B0086936C /* ASDKProcessDefinitionNetworkServicesTest.m in Sources */,
 				13C0C6AB1DE2F37400C46ED4 /* ASDKFilterParserOperationWorkerTest.m in Sources */,
 				133070E91DC9EE100089CA95 /* ASDKNetworkServiceTest.m in Sources */,
 				133B9C631DD0ACB7003C9120 /* ASDKMantleJSONAdapterExcludeZeroNilTest.m in Sources */,
+				130A6FF61E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m in Sources */,
 				132DC47F1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m in Sources */,
 				13C0C6A91DDF32D900C46ED4 /* ASDKIntegrationParserOperationWorkerTest.m in Sources */,
 				13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */,
+				130A6FF41E083F260086936C /* ASDKQuerryNetworkServicesTest.m in Sources */,
 				135752E11DDB0B59000793D4 /* ASDKTaskFormParserOperationWorkerTest.m in Sources */,
 				13E8CE491DC34FF800D5247F /* ASDKDiskServiceTest.m in Sources */,
 				130F06421DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m in Sources */,

@@ -18,36 +18,36 @@
 
 #import "ASDKNetworkProxyBaseTest.h"
 
-@interface ASDKAppNetworkServicesTest : ASDKNetworkProxyBaseTest
+@interface ASDKProcessDefinitionNetworkServicesTest : ASDKNetworkProxyBaseTest
 
-@property (strong, nonatomic) ASDKAppNetworkServices *appNetworkServices;
-@property (strong, nonatomic) id                      requestOperationManagerMock;
+@property (strong, nonatomic) ASDKProcessDefinitionNetworkServices *processDefinitionNetworkServices;
+@property (strong, nonatomic) id                                    requestOperationManagerMock;
 
 @end
 
-@implementation ASDKAppNetworkServicesTest
+@implementation ASDKProcessDefinitionNetworkServicesTest
 
 - (void)setUp {
     [super setUp];
     
-    self.appNetworkServices = [ASDKAppNetworkServices new];
-    self.appNetworkServices.resultsQueue = dispatch_get_main_queue();
-    self.appNetworkServices.parserOperationManager = self.parserOperationManager;
-    self.appNetworkServices.servicePathFactory = [ASDKServicePathFactory new];
+    self.processDefinitionNetworkServices = [ASDKProcessDefinitionNetworkServices new];
+    self.processDefinitionNetworkServices.resultsQueue = dispatch_get_main_queue();
+    self.processDefinitionNetworkServices.parserOperationManager = self.parserOperationManager;
+    self.processDefinitionNetworkServices.servicePathFactory = [ASDKServicePathFactory new];
     self.requestOperationManagerMock = OCMClassMock([ASDKRequestOperationManager class]);
     
-    ASDKAppParserOperationWorker *appParserWorker = [ASDKAppParserOperationWorker new];
-    [self.appNetworkServices.parserOperationManager registerWorker:appParserWorker
-                                                       forServices:[appParserWorker availableServices]];
+    ASDKProcessParserOperationWorker *processParserWorker = [ASDKProcessParserOperationWorker new];
+    [self.processDefinitionNetworkServices.parserOperationManager registerWorker:processParserWorker
+                                                                     forServices:[processParserWorker availableServices]];
 }
 
 - (void)tearDown {
     [super tearDown];
 }
 
-- (void)testThatItFetchesRuntimeAppDefinitions {
+- (void)testThatItFetchesProcessDefinitionForApplication {
     // expect
-    XCTestExpectation *runtimeAppDefinitionsExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    XCTestExpectation *processDefinitionExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestSuccessBlock successBlock;
         NSUInteger successBlockParameterIdxInMethodSignature = 5;
@@ -56,28 +56,31 @@
         NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode200OK];
         [invocation setReturnValue:&dataTask];
         
-        successBlock(dataTask, [self contentDictionaryFromJSON:@"ApplicationListResponse"]);
+        successBlock(dataTask, [self contentDictionaryFromJSON:@"ProcessDefinitionListResponse"]);
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.appNetworkServices.requestOperationManager = self.requestOperationManagerMock;
-    [self.appNetworkServices fetchRuntimeAppDefinitionsWithCompletionBlock:^(NSArray *runtimeAppDefinitions, NSError *error, ASDKModelPaging *paging) {
-        XCTAssertNotNil(runtimeAppDefinitions);
+    ASDKProcessDefinitionListCompletionBlock completionBlock = ^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
+        XCTAssertNotNil(processDefinitions);
         XCTAssertNil(error);
         XCTAssertNotNil(paging);
         
-        XCTAssert(runtimeAppDefinitions.count == 13);
-        
-        [runtimeAppDefinitionsExpectation fulfill];
+        XCTAssert(processDefinitions.count == 1);
+    };
+    
+    self.processDefinitionNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.processDefinitionNetworkServices fetchProcessDefinitionListWithCompletionBlock:^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
+        completionBlock(processDefinitions, error, paging);
+        [processDefinitionExpectation fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:.5f
+    [self waitForExpectationsWithTimeout:1.0f
                                  handler:nil];
 }
 
-- (void)testThatItHandlesRuntimeAppDefinitionsFetchRequestFailure {
+- (void)testThatItHandlesProcessDefinitionForApplicationFetchRequestFailure {
     // expect
-    XCTestExpectation *runtimeAppDefinitionsExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    XCTestExpectation *processDefinitionExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
         ASDKTestRequestFailureBlock failureBlock;
         NSUInteger failureBlockParameterIdxInMethodSignature = 6;
@@ -90,13 +93,13 @@
     }] GET:OCMOCK_ANY parameters:OCMOCK_ANY progress:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
     
     // when
-    self.appNetworkServices.requestOperationManager = self.requestOperationManagerMock;
-    [self.appNetworkServices fetchRuntimeAppDefinitionsWithCompletionBlock:^(NSArray *runtimeAppDefinitions, NSError *error, ASDKModelPaging *paging) {
-        XCTAssertNil(runtimeAppDefinitions);
+    self.processDefinitionNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.processDefinitionNetworkServices fetchProcessDefinitionListWithCompletionBlock:^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
+        XCTAssertNil(processDefinitions);
         XCTAssertNotNil(error);
         XCTAssertNil(paging);
         
-        [runtimeAppDefinitionsExpectation fulfill];
+        [processDefinitionExpectation fulfill];
     }];
     
     [self waitForExpectationsWithTimeout:.5f
