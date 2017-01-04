@@ -19,7 +19,6 @@ abstract_target 'Shared' do
 
 	target 'ActivitiSDK' do
         target 'ActivitiSDKTests' do
-            inherit! :search_paths
             pod 'OCMock'
         end
 	end
