@@ -198,7 +198,7 @@
     // given
     NSString *mimeType = @"image/jpeg";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:nil
+    [userDefaults setObject:[NSString stringWithFormat:kASDKFilenameGeneratorFormat, (long)0]
                      forKey:kASDKFilenameGeneratorLastValueUsed];
     
     // when
