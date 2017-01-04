@@ -72,7 +72,7 @@
     
     // when
     self.formNetworkService.requestOperationManager = self.requestOperationManagerMock;
-    [self.formNetworkService startFormForProcessInstanceID:@"id"
+    [self.formNetworkService startFormForProcessDefinitionID:@"id"
                                            completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
                                                XCTAssertNotNil(formDescription);
                                                XCTAssertNil(error);
