@@ -31,6 +31,7 @@
 // Managers
 #import "AFAServiceRepository.h"
 #import "AFAKeychainWrapper.h"
+#import <Crashlytics/Crashlytics.h>
 
 @import ActivitiSDK;
 

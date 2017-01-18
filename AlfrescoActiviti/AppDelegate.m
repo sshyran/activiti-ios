@@ -23,8 +23,10 @@
 #import "AFAThumbnailManager.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import "AFAKeychainWrapper.h"
+#import "AFABusinessConstants.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () <CrashlyticsDelegate>
 
 @end
 
@@ -39,15 +41,25 @@
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
-    // We're enabling debugger colors if you have installed the XCode colors plugin
-    // More details here: https://github.com/robbiehanson/XcodeColors
-    [[DDTTYLogger sharedInstance] setColorsEnabled:YES];
-    
+    CrashlyticsKit.delegate = self;
     [Fabric with:@[[Crashlytics class]]];
     
     application.delegate.window.backgroundColor = [UIColor windowBackgroundColor];
     
     return YES;
+}
+
+- (void)crashlyticsDidDetectReportForLastExecution:(CLSReport *)report
+                                 completionHandler:(void (^)(BOOL))completionHandler {
+    // As a precaution to keep the users safe from entering a possible crash-loop
+    // if a previous crash was detected disable the auto sign-in function to at least
+    // give time for the crash reports to be delivered
+    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
+    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        completionHandler(YES);
+    }];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
