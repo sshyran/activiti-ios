@@ -25,6 +25,7 @@
 "formDateComponentRemoveButtonText"                             = "Remove";
 "formDateComponentPickDateLabelText"                            = "Pick a date";
 "formDateComponentDoneButtonText"                               = "Done";
+"formDateComponentPickTodayText"                                = "Today";
 "formDropdownComponentPickOptionLabelText"                      = "Pick an option";
 "formAttachFileComponentButtonText"                             = "Select a file";
 "formAttachFilesComponentButtonText"                            = "Select some files";
@@ -36,6 +37,7 @@
 "formDynamicTableRowHeaderText"                                 = "Row %ld";
 "formDynamicTableDeleteRowConfirmationText"                     = "Are you sure you want to delete this dynamic table row?";
 "formValueEmpty"                                                = "(empty)";
+"formOptionClearText"                                           = "Clear";
 
 // Content picker component
 "formContentPickerComponentLocalContentText"                    = "Open from Device";
