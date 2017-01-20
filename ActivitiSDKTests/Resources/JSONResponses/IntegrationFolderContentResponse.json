@@ -1,0 +1,31 @@
+{
+    "size": 5,
+    "data": [{
+             "id": "a7058e6e-3b3b-45dd-b578-bdfe474b20d8",
+             "title": "Videos",
+             "simpleType": "folder",
+             "folder": true
+             }, {
+             "id": "0a4fb00c-e1d4-4242-a7d1-3093b16b8a8a",
+             "title": "Data Sheets",
+             "simpleType": "folder",
+             "folder": true
+             }, {
+             "id": "976f8734-1262-4ab9-9bcc-d4db7a8ede54",
+             "title": "Presentations",
+             "simpleType": "folder",
+             "folder": true
+             }, {
+             "id": "52540a63-8744-4c4d-91b8-aa35b6374e74",
+             "title": "Photographs",
+             "simpleType": "folder",
+             "folder": true
+             }, {
+             "id": "0386e0dc-cf32-40ce-9276-04bca6621385",
+             "title": "Spreadsheets",
+             "simpleType": "folder",
+             "folder": true
+             }],
+    "total": 5,
+    "start": 0
+}

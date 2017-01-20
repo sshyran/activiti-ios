@@ -38,5 +38,6 @@ typedef NS_ENUM(NSInteger, ASDKModelContentAvailabilityType) {
 @property (assign, nonatomic) ASDKModelContentAvailabilityType  thumbnailStatus;
 @property (strong, nonatomic) NSString                          *source;
 @property (strong, nonatomic) NSString                          *sourceID;
+@property (strong, nonatomic) NSDate                            *creationDate;
 
 @end

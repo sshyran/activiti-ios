@@ -50,36 +50,63 @@
     
     if ([CREATE_STRING(ASDKIntegrationParserContentTypeAccountList) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
-        NSArray *accountList = [MTLJSONAdapter modelsOfClass:ASDKModelIntegrationAccount.class
-                                               fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
-                                                       error:&parserError];
+        ASDKModelPaging *paging = nil;
+        NSArray *accountList = nil;
+        Class pagingClass = ASDKModelPaging.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:pagingClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            paging = [MTLJSONAdapter modelOfClass:pagingClass
+                               fromJSONDictionary:contentDictionary
+                                            error:&parserError];
+            accountList = [MTLJSONAdapter modelsOfClass:ASDKModelIntegrationAccount.class
+                                          fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
+                                                  error:&parserError];
+        }
+        
         dispatch_async(completionQueue, ^{
             completionBlock(accountList, parserError, paging);
         });
     }
     if ([CREATE_STRING(ASDKIntegrationParserContentTypeNetworkList) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
-        NSArray *networkList = [MTLJSONAdapter modelsOfClass:ASDKModelNetwork.class
-                                               fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
-                                                       error:&parserError];
+        ASDKModelPaging *paging = nil;
+        NSArray *networkList = nil;
+        Class pagingClass = ASDKModelPaging.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:pagingClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            paging = [MTLJSONAdapter modelOfClass:pagingClass
+                               fromJSONDictionary:contentDictionary
+                                            error:&parserError];
+            networkList = [MTLJSONAdapter modelsOfClass:ASDKModelNetwork.class
+                                          fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
+                                                  error:&parserError];
+        }
+        
         dispatch_async(completionQueue, ^{
             completionBlock(networkList, parserError, paging);
         });
     }
     if ([CREATE_STRING(ASDKIntegrationParserContentTypeSiteList) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
-        NSArray *siteList = [MTLJSONAdapter modelsOfClass:ASDKModelSite.class
-                                               fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
-                                                       error:&parserError];
+        ASDKModelPaging *paging = nil;
+        NSArray *siteList = nil;
+        Class pagingClass = ASDKModelPaging.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:pagingClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            paging = [MTLJSONAdapter modelOfClass:pagingClass
+                               fromJSONDictionary:contentDictionary
+                                            error:&parserError];
+            siteList = [MTLJSONAdapter modelsOfClass:ASDKModelSite.class
+                                       fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
+                                               error:&parserError];
+        }
+        
         dispatch_async(completionQueue, ^{
             completionBlock(siteList, parserError, paging);
         });
@@ -87,21 +114,39 @@
     if ([CREATE_STRING(ASDKIntegrationParserContentTypeSiteContentList) isEqualToString:contentType] ||
         [CREATE_STRING(ASDKIntegrationParserContentTypeFolderContentList) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
-        NSArray *contentList = [MTLJSONAdapter modelsOfClass:ASDKModelIntegrationContent.class
-                                            fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
-                                                    error:&parserError];
+        ASDKModelPaging *paging = nil;
+        NSArray *contentList = nil;
+        Class pagingClass = ASDKModelPaging.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:pagingClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
+                               fromJSONDictionary:contentDictionary
+                                            error:&parserError];
+            
+            contentList = [MTLJSONAdapter modelsOfClass:ASDKModelIntegrationContent.class
+                                          fromJSONArray:contentDictionary[kASDKAPIJSONKeyData]
+                                                  error:&parserError];
+        }
+        
         dispatch_async(completionQueue, ^{
             completionBlock(contentList, parserError, paging);
         });
     }
     if ([CREATE_STRING(ASDKIntegrationParserContentTypeUploadedContent) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelContent *modelContent = [MTLJSONAdapter modelOfClass:ASDKModelContent.class
-                                                   fromJSONDictionary:contentDictionary
-                                                                error:&parserError];
+        ASDKModelContent *modelContent = nil;
+        Class modelClass = ASDKModelContent.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:modelClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            modelContent = [MTLJSONAdapter modelOfClass:ASDKModelContent.class
+                                     fromJSONDictionary:contentDictionary
+                                                  error:&parserError];
+        }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             completionBlock(modelContent, parserError, nil);
         });

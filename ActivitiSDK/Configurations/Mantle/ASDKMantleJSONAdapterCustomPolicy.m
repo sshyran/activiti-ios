@@ -24,7 +24,8 @@
 
 @implementation ASDKMantleJSONAdapterCustomPolicy
 
-- (NSSet *)serializablePropertyKeys:(NSSet *)propertyKeys forModel:(id<MTLJSONSerializing>)model {
+- (NSSet *)serializablePropertyKeys:(NSSet *)propertyKeys
+                           forModel:(id<MTLJSONSerializing>)model {
     // Mandatory property
     NSParameterAssert(self.policyBlock);
     

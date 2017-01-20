@@ -46,7 +46,21 @@
 #import <ActivitiSDK/ASDKModelComment.h>
 #import <ActivitiSDK/ASDKModelFileContent.h>
 #import <ActivitiSDK/ASDKModelFormDescription.h>
+#import <ActivitiSDK/ASDKModelFormFieldOption.h>
 #import <ActivitiSDK/ASDKModelFormField.h>
+#import <ActivitiSDK/ASDKModelAmountFormField.h>
+#import <ActivitiSDK/ASDKModelRestFormField.h>
+#import <ActivitiSDK/ASDKModelPeopleFormField.h>
+#import <ActivitiSDK/ASDKModelHyperlinkFormField.h>
+#import <ActivitiSDK/ASDKModelFormFieldAttachParameter.h>
+#import <ActivitiSDK/ASDKModelFormFieldFileSource.h>
+#import <ActivitiSDK/ASDKModelFormTab.h>
+#import <ActivitiSDK/ASDKModelFormVisibilityCondition.h>
+#import <ActivitiSDK/ASDKModelDynamicTableFormField.h>
+#import <ActivitiSDK/ASDKModelDynamicTableColumnDefinitionFormField.h>
+#import <ActivitiSDK/ASDKModelDynamicTableColumnDefinitionAmountFormField.h>
+#import <ActivitiSDK/ASDKModelDynamicTableColumnDefinitionRestFormField.h>
+#import <ActivitiSDK/ASDKModelFormVariable.h>
 #import <ActivitiSDK/ASDKModelFormOutcome.h>
 #import <ActivitiSDK/ASDKModelProcessInstance.h>
 #import <ActivitiSDK/ASDKModelProcessDefinition.h>
@@ -55,13 +69,18 @@
 #import <ActivitiSDK/ASDKModelProcessInstanceContentField.h>
 #import <ActivitiSDK/ASDKModelGroup.h>
 #import <ActivitiSDK/ASDKModelIntegrationAccount.h>
+#import <ActivitiSDK/ASDKModelNetwork.h>
+#import <ActivitiSDK/ASDKModelSite.h>
+#import <ActivitiSDK/ASDKModelIntegrationContent.h>
+#import <ActivitiSDK/ASDKFormFieldValueRequestRepresentation.h>
 
 #import <ActivitiSDK/ASDKIntegrationNetworksDataSource.h>
 #import <ActivitiSDK/ASDKIntegrationSitesDataSource.h>
 #import <ActivitiSDK/ASDKIntegrationSiteContentDataSource.h>
 #import <ActivitiSDK/ASDKIntegrationFolderContentDataSource.h>
 
-// Network services protocols
+// Network services and protocols
+#import <ActivitiSDK/ASDKRequestOperationManager.h>
 #import <ActivitiSDK/ASDKAppNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKProfileNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKFilterNetworkServiceProtocol.h>
@@ -72,10 +91,31 @@
 #import <ActivitiSDK/ASDKUserNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKQuerryNetworkServiceProtocol.h>
 #import <ActivitiSDK/ASDKIntegrationNetworkServiceProtocol.h>
+#import <ActivitiSDK/ASDKServicePathFactory.h>
+
+// JSON adapters
+#import <ActivitiSDK/ASDKMantleJSONAdapterExcludeZeroNil.h>
+#import <ActivitiSDK/ASDKMantleJSONAdapterCustomPolicy.h>
+
+// Response serializers
+#import <ActivitiSDK/ASDKHTTPResponseSerializer.h>
+#import <ActivitiSDK/ASDKJSONResponseSerializer.h>
+#import <ActivitiSDK/ASDKImageResponseSerializer.h>
 
 // Other service protocols
 #import <ActivitiSDK/ASDKDiskServiceProtocol.h>
 #import <ActivitiSDK/ASDKFormColorSchemeManagerProtocol.h>
+
+// Parser manager and workers
+#import <ActivitiSDK/ASDKParserOperationWorkerProtocol.h>
+#import <ActivitiSDK/ASDKProcessParserOperationWorker.h>
+#import <ActivitiSDK/ASDKUserParserOperationWorker.h>
+#import <ActivitiSDK/ASDKProfileParserOperationWorker.h>
+#import <ActivitiSDK/ASDKTaskDetailsParserOperationWorker.h>
+#import <ActivitiSDK/ASDKTaskFormParserOperationWorker.h>
+#import <ActivitiSDK/ASDKAppParserOperationWorker.h>
+#import <ActivitiSDK/ASDKIntegrationParserOperationWorker.h>
+#import <ActivitiSDK/ASDKFilterParserOperationWorker.h>
 
 // Service locator imports
 #import <ActivitiSDK/ASDKServiceLocator.h>
@@ -92,6 +132,9 @@
 #import <ActivitiSDK/ASDKQuerryNetworkServices.h>
 #import <ActivitiSDK/ASDKDiskServices.h>
 #import <ActivitiSDK/ASDKIntegrationNetworkServices.h>
+
+// Service categories
+#import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>
 
 // Form render engine
 #import <ActivitiSDK/ASDKFormRenderEngine.h>

@@ -19,7 +19,6 @@
 #import "ASDKProfileParserOperationWorker.h"
 #import "ASDKModelProfile.h"
 #import "ASDKModelContent.h"
-@import Mantle;
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -41,9 +40,17 @@
     
     if ([CREATE_STRING(ASDKProfileParserContentTypeProfile) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelProfile *modelProfile = [MTLJSONAdapter modelOfClass:ASDKModelProfile.class
-                                                   fromJSONDictionary:contentDictionary
-                                                                error:&parserError];
+        ASDKModelProfile *modelProfile = nil;
+        Class modelClass = ASDKModelProfile.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:modelClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            modelProfile = [MTLJSONAdapter modelOfClass:ASDKModelProfile.class
+                                     fromJSONDictionary:contentDictionary
+                                                  error:&parserError];
+        }
+        
         dispatch_async(completionQueue, ^{
             completionBlock(modelProfile, parserError, nil);
         });
@@ -51,9 +58,17 @@
     
     if ([CREATE_STRING(ASDKProfileParserContentTypeContent) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelContent *content = [MTLJSONAdapter modelOfClass:ASDKModelContent.class
-                                              fromJSONDictionary:contentDictionary
-                                                           error:&parserError];
+        ASDKModelContent *content = nil;
+        Class modelClass = ASDKModelContent.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:modelClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            content = [MTLJSONAdapter modelOfClass:modelClass
+                                fromJSONDictionary:contentDictionary
+                                             error:&parserError];
+        }
+        
         dispatch_async(completionQueue, ^{
             completionBlock(content, parserError, nil);
         });

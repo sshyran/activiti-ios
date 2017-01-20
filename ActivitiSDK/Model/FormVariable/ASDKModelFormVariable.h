@@ -22,7 +22,8 @@ typedef NS_ENUM(NSInteger, ASDKModelFormVariableType) {
     ASDKModelFormVariableTypeUndefined = -1,
     ASDKModelFormVariableTypeString    = 0,
     ASDKModelFormVariableTypeInteger,
-    ASDKModelFormVariableTypeBoolean
+    ASDKModelFormVariableTypeBoolean,
+    ASDKModelFormVariableTypePeople
 };
 
 @interface ASDKModelFormVariable : ASDKModelBase

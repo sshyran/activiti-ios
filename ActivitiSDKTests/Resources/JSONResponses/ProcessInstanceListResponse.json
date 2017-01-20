@@ -1,0 +1,65 @@
+{
+    "size":2,
+    "data":[
+            {
+            "id":"50259",
+            "processDefinitionId":"VisiblityConditionsProcess:3:37730",
+            "ended":null,
+            "processDefinitionKey":"VisiblityConditionsProcess",
+            "processDefinitionName":"VisiblityConditionsProcess",
+            "graphicalNotationDefined":true,
+            "businessKey":null,
+            "tenantId":"tenant_1",
+            "startedBy":{
+            "firstName":"John",
+            "id":2,
+            "lastName":"Doe",
+            "email":"john.doe@alfresco.com",
+            "company":"Alfresco",
+            "pictureId":6006
+            },
+            "processDefinitionDeploymentId":"37727",
+            "startFormDefined":false,
+            "processDefinitionVersion":3,
+            "started":"2016-10-05T13:54:56.326+0000",
+            "processDefinitionDescription":null,
+            "processDefinitionCategory":"http:\/\/www.activiti.org\/processdef",
+            "variables":[
+            
+            ],
+            "name":"VisiblityConditionsProcess - October 5th 2016",
+            "suspended":false
+            },
+            {
+            "id":"37731",
+            "processDefinitionId":"VisiblityConditionsProcess:3:37730",
+            "ended":null,
+            "processDefinitionKey":"VisiblityConditionsProcess",
+            "processDefinitionName":"VisiblityConditionsProcess",
+            "graphicalNotationDefined":true,
+            "businessKey":null,
+            "tenantId":"tenant_1",
+            "startedBy":{
+            "firstName":"John",
+            "id":2,
+            "lastName":"Doe",
+            "email":"john.doe@alfresco.com",
+            "company":"Alfresco",
+            "pictureId":6006
+            },
+            "processDefinitionDeploymentId":"37727",
+            "startFormDefined":false,
+            "processDefinitionVersion":3,
+            "started":"2016-09-14T08:10:55.063+0000",
+            "processDefinitionDescription":null,
+            "processDefinitionCategory":"http:\/\/www.activiti.org\/processdef",
+            "variables":[
+            
+            ],
+            "name":"VisiblityConditionsProcess - September 14th 2016",
+            "suspended":false
+            }
+            ],
+    "total":2,
+    "start":0
+}

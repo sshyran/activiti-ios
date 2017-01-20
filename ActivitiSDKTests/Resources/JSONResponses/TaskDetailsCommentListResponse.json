@@ -1,0 +1,18 @@
+{
+    "size": 1,
+    "data": [{
+             "id": 8009,
+             "message": "Some text here",
+             "created": "2016-11-14T09:50:09.365+0000",
+             "createdBy": {
+             "firstName": "John",
+             "id": 2,
+             "lastName": "Doe",
+             "email": "john.doe@alfresco.com",
+             "company": "Alfresco",
+             "pictureId": 7007
+             }
+             }],
+    "total": 1,
+    "start": 0
+}

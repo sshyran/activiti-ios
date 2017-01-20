@@ -17,7 +17,7 @@
  ******************************************************************************/
 
 @import Foundation;
-
+@import Mantle;
 @class ASDKModelPaging;
 
 #define CREATE_STRING(varName) @#varName
@@ -33,5 +33,8 @@ typedef void  (^ASDKParserCompletionBlock) (id parsedObject, NSError *error, ASD
 
 @optional
 - (NSArray *)availableServices;
+- (BOOL)validateJSONPropertyMappingOfClass:(Class <MTLJSONSerializing>)modelClass
+                     withContentDictionary:(NSDictionary *)contentDictionary
+                                     error:(NSError **)error;
 
 @end

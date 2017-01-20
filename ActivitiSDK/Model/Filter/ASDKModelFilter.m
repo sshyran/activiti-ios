@@ -35,7 +35,7 @@
                                                       @"sortType"           : @"sort",
                                                       @"state"              : @"state",
                                                       @"assignmentType"     : @"assignment",
-                                                      @"appDefinitionID"    : @"appDefinitionId",
+                                                      @"applicationID"      : @"appId",
                                                       @"processInstanceID"  : @"processInstanceId"}];
     
     return inheretedPropertyKeys;
@@ -63,6 +63,10 @@
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"involved"        : @(ASDKModelFilterAssignmentTypeInvolved),
                                                                            @"assignee"        : @(ASDKModelFilterAssignmentTypeAssignee),
                                                                            @"candidate"       : @(ASDKModelFilterAssignmentTypeCandidate)}];
+}
+
++ (NSValueTransformer *)applicationIDJSONTransformer {
+    return self.valueTransformerForIDs;
 }
 
 

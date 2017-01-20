@@ -44,10 +44,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
         
         // Allow invalid certificates for test environments
 #ifdef DEBUG
-            ASDKLogWarn(@"Invalid SSL certificates are allowed. Configuration available just in DEBUG mode.");
+        ASDKLogWarn(@"Invalid SSL certificates are allowed. Configuration available just in DEBUG mode.");
         // Create a custom security policy where we allow SSLPinning
         AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-            securityPolicy.allowInvalidCertificates = YES;
+        securityPolicy.allowInvalidCertificates = YES;
         securityPolicy.validatesDomainName = NO;
         self.securityPolicy = securityPolicy;
 #endif

@@ -1,0 +1,19 @@
+{
+    "size": 2,
+    "data": [{
+             "firstName": "T1",
+             "id": 3,
+             "lastName": "U1",
+             "email": "t1u1@alfresco.com",
+             "company": "Alfresco",
+             "pictureId": 4008
+             }, {
+             "firstName": "T1",
+             "id": 6,
+             "lastName": "U2",
+             "email": "t1u2@alfresco.com",
+             "company": "Alfresco"
+             }],
+    "total": 2,
+    "start": 0
+}

@@ -1,0 +1,22 @@
+{
+    "id": 10012,
+    "mimeType": null,
+    "link": false,
+    "previewStatus": "queued",
+    "source": "alfresco-cloud",
+    "thumbnailStatus": "queued",
+    "sourceId": "7e038953-2e2e-4506-84b8-3a5193a5b6ca;1.0@john-doe-alfresco-com@alfresco.com",
+    "createdBy": {
+        "firstName": "John",
+        "id": 2,
+        "lastName": "Doe",
+        "email": "john.doe@alfresco.com",
+        "company": "Alfresco",
+        "pictureId": 7007
+    },
+    "created": "2016-11-18T09:30:59.906+0000",
+    "relatedContent": true,
+    "simpleType": "pdf",
+    "contentAvailable": false,
+    "name": "Alfresco Mobile.pdf"
+}

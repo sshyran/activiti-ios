@@ -106,7 +106,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   dispatch_async(strongSelf.resultsQueue, ^{
                                       completionBlock(nil, error, nil);
                                   });
-                                  
                               }];
     
     // Keep network operation reference to be able to cancel it

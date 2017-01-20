@@ -32,7 +32,9 @@
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
                                                       @"editable"               : @"editable",
-                                                      @"visible"                : @"visible"}];
+                                                      @"visible"                : @"visible",
+                                                      @"enableFractions"        : @"amountEnableFractions",
+                                                      @"currency"               : @"amountCurrency"}];
     
     return inheretedPropertyKeys;
 }
@@ -59,6 +61,9 @@
     }
     if ([NSStringFromSelector(@selector(visible)) isEqualToString:key]) {
         _visible = NO;
+    }
+    if ([NSStringFromSelector(@selector(enableFractions)) isEqualToString:key]) {
+        _enableFractions = NO;
     }
 }
 

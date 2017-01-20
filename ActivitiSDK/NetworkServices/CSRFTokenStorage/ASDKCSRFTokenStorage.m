@@ -68,7 +68,7 @@
                     length:1];
             NSString *temp = [[NSString alloc] initWithData:data
                                                    encoding:NSUTF8StringEncoding];
-            if (currentChar > ASCII_START_NUMERS && currentChar < ASCII_END_NUMERS) { // 0 to 0
+            if (currentChar > ASCII_START_NUMERS && currentChar < ASCII_END_NUMERS) { // 0 to 9
                 [result appendString:temp];
                 continue;
             }

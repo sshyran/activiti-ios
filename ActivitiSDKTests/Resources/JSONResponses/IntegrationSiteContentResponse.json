@@ -1,0 +1,11 @@
+{
+    "size": 1,
+    "data": [{
+             "id": "1b0075fd-ba68-480f-9b27-95d015c8be52",
+             "title": "documentLibrary",
+             "simpleType": "folder",
+             "folder": true
+             }],
+    "total": 1,
+    "start": 0
+}

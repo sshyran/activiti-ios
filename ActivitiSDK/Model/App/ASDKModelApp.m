@@ -35,7 +35,8 @@
                                                       @"icon"                   : @"icon",
                                                       @"applicationDescription" : @"description",
                                                       @"theme"                  : @"theme",
-                                                      @"applicationModelID"     : @"modelId"}];
+                                                      @"applicationModelID"     : @"modelId",
+                                                      @"tenantID"               : @"tenantId"}];
     
     return inheretedPropertyKeys;
 }
@@ -59,6 +60,10 @@
                                                                            @"theme-8"  : @(ASDKModelAppThemeTypeEight),
                                                                            @"theme-9"  : @(ASDKModelAppThemeTypeNine),
                                                                            @"theme-10" : @(ASDKModelAppThemeTypeTen)}];
+}
+
++ (NSValueTransformer *)tenantIDJSONTransformer {
+    return self.valueTransformerForIDs;
 }
 
 

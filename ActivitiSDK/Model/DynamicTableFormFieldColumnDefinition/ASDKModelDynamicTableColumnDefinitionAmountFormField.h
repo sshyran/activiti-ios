@@ -16,11 +16,13 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKModelAmountFormField.h"
+#import "ASDKModelFormField.h"
 
-@interface ASDKModelDynamicTableColumnDefinitionAmountFormField : ASDKModelAmountFormField
+@interface ASDKModelDynamicTableColumnDefinitionAmountFormField : ASDKModelFormField
 
-@property (assign, nonatomic) BOOL  editable;
-@property (assign, nonatomic) BOOL  visible;
+@property (assign, nonatomic) BOOL      editable;
+@property (assign, nonatomic) BOOL      visible;
+@property (assign, nonatomic) BOOL      enableFractions;
+@property (strong, nonatomic) NSString  *currency;
 
 @end

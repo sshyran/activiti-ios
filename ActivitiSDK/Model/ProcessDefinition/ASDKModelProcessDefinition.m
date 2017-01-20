@@ -36,8 +36,8 @@
                                                       @"key"                    : @"key",
                                                       @"category"               : @"category",
                                                       @"version"                : @"version",
-                                                      @"deploymentID"           : @"deploymentID",
-                                                      @"tenantID"               : @"tenantID",
+                                                      @"deploymentID"           : @"deploymentId",
+                                                      @"tenantID"               : @"tenantId",
                                                       @"hasStartForm"           : @"hasStartForm"}];
     
     return inheretedPropertyKeys;

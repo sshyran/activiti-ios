@@ -25,7 +25,6 @@
 // Models
 #import "ASDKModelPaging.h"
 #import "ASDKModelFilter.h"
-@import Mantle;
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -45,25 +44,34 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     if ([CREATE_STRING(ASDKFilterParserContentTypeFilterList) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelPaging *paging = [MTLJSONAdapter modelOfClass:ASDKModelPaging.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
+        ASDKModelPaging *paging = nil;
+        NSMutableArray *filterList = nil;
+        Class pagingClass = ASDKModelPaging.class;
         
-        NSMutableArray *filterList = [NSMutableArray array];
-        for (NSDictionary *filterDescription in contentDictionary[kASDKAPIJSONKeyData]) {
-            // Extract nested filter information
-            ASDKModelFilter *filter = [MTLJSONAdapter modelOfClass:ASDKModelFilter.class
-                                                fromJSONDictionary:filterDescription[kASDKAPIJSONKeyFilter]
-                                                             error:&parserError];
-            if (parserError) {
-                ASDKLogError(@"Internal loop parser error for filter model.Reason:%@", parserError.localizedDescription);
+        if ([self validateJSONPropertyMappingOfClass:pagingClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            paging = [MTLJSONAdapter modelOfClass:pagingClass
+                               fromJSONDictionary:contentDictionary
+                                            error:&parserError];
+            
+            filterList = [NSMutableArray array];
+            for (NSDictionary *filterDescription in contentDictionary[kASDKAPIJSONKeyData]) {
+                // Extract nested filter information
+                ASDKModelFilter *filter = [MTLJSONAdapter modelOfClass:ASDKModelFilter.class
+                                                    fromJSONDictionary:filterDescription[kASDKAPIJSONKeyFilter]
+                                                                 error:&parserError];
+                if (parserError) {
+                    ASDKLogError(@"Internal loop parser error for filter model.Reason:%@", parserError.localizedDescription);
+                }
+                
+                // Manualy extract filter general description information and update the converted model
+                filter.name = filterDescription[kASDKAPIJSONKeyName];
+                filter.modelID = [NSString stringWithFormat:@"%@", filterDescription[kASDKAPIJSONKeyID]];
+                filter.applicationID = [NSString stringWithFormat:@"%@", filterDescription[kASDKAPIJSONKeyApplicationID]];
+                
+                [filterList addObject:filter];
             }
-            
-            // Manualy extract filter general description information and update the converted model
-            filter.name = filterDescription[kASDKAPIJSONKeyName];
-            filter.modelID = filterDescription[kASDKAPIJSONKeyID];
-            
-            [filterList addObject:filter];
         }
         
         dispatch_async(completionQueue, ^{
@@ -73,9 +81,16 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     if ([CREATE_STRING(ASDKFilterParserContentTypeFilterDetails) isEqualToString:contentType]) {
         NSError *parserError = nil;
-        ASDKModelFilter *filter = [MTLJSONAdapter modelOfClass:ASDKModelFilter.class
-                                            fromJSONDictionary:contentDictionary
-                                                         error:&parserError];
+        ASDKModelFilter *filter = nil;
+        Class modelClass = ASDKModelFilter.class;
+        
+        if ([self validateJSONPropertyMappingOfClass:modelClass
+                               withContentDictionary:contentDictionary
+                                               error:&parserError]) {
+            filter = [MTLJSONAdapter modelOfClass:modelClass
+                               fromJSONDictionary:contentDictionary
+                                            error:&parserError];
+        }
         
         dispatch_async(completionQueue, ^{
             completionBlock(filter, parserError, nil);

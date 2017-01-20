@@ -40,7 +40,8 @@
                                                       @"previewStatus"           : @"previewStatus",
                                                       @"thumbnailStatus"         : @"thumbnailStatus",
                                                       @"source"                  : @"source",
-                                                      @"sourceID"                : @"sourceId"}];
+                                                      @"sourceID"                : @"sourceId",
+                                                      @"creationDate"            : @"created"}];
     
     return inheretedPropertyKeys;
 }
@@ -60,6 +61,10 @@
 + (NSValueTransformer *)thumbnailStatusJSONTransformer {
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"queued"       : @(ASDKModelContentAvailabilityTypeQueued),
                                                                            @"created"      : @(ASDKModelContentAvailabilityTypeCreated)}];
+}
+
++ (NSValueTransformer *)creationDateJSONTransformer {
+    return self.valueTransformerForDate;
 }
 
 

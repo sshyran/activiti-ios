@@ -1,0 +1,17 @@
+{
+    "size": 1,
+    "data": [{
+             "category": "http:\/\/www.activiti.org\/processdef",
+             "deploymentId": "37727",
+             "id": "VisiblityConditionsProcess:3:37730",
+             "metaDataValues": [],
+             "tenantId": "tenant_1",
+             "key": "VisiblityConditionsProcess",
+             "description": null,
+             "version": 3,
+             "name": "VisiblityConditionsProcess",
+             "hasStartForm": false
+             }],
+    "total": 1,
+    "start": 0
+}

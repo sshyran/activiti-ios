@@ -1,0 +1,31 @@
+{
+    "size": 1,
+    "data": [{
+             "field": {
+             "id": "attachform",
+             "name": "Attach form"
+             },
+             "content": [{
+                         "mimeType": "image/jpeg",
+                         "simpleType": "image",
+                         "thumbnailStatus": "queued",
+                         "id": 9013,
+                         "relatedContent": false,
+                         "contentAvailable": true,
+                         "created": "2016-10-04T07:40:36.005+0000",
+                         "createdBy": {
+                         "firstName": "John",
+                         "id": 2,
+                         "lastName": "Doe",
+                         "email": "john.doe@alfresco.com",
+                         "company": "Alfresco",
+                         "pictureId": 6006
+                         },
+                         "link": false,
+                         "previewStatus": "queued",
+                         "name": "IMG_0003.JPG"
+                         }]
+             }],
+    "total": 1,
+    "start": 0
+}

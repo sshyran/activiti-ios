@@ -406,17 +406,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                 completionBlock:^(BOOL isUserInvolved, NSError *error) {
                                     if (!error && !isUserInvolved) {
                                         AFALogVerbose(@"User %@ had been removed from task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
-                                        
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            completionBlock(isUserInvolved, nil);
-                                        });
                                     } else {
                                         AFALogError(@"An error occured while removing user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
-                                        
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            completionBlock(NO, error);
-                                        });
                                     }
+                                    
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        completionBlock(isUserInvolved, nil);
+                                    });
                                 }];
 }
 

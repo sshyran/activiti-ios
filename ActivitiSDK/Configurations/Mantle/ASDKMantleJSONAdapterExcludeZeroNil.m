@@ -24,7 +24,8 @@
 
 @implementation ASDKMantleJSONAdapterExcludeZeroNil
 
-- (NSSet *)serializablePropertyKeys:(NSSet *)propertyKeys forModel:(id<MTLJSONSerializing>)model {
+- (NSSet *)serializablePropertyKeys:(NSSet *)propertyKeys
+                           forModel:(id<MTLJSONSerializing>)model {
     NSSet *propertyKeysCopy = [propertyKeys copy];
     NSMutableSet *mutablePropertyKeysClone = [propertyKeys mutableCopy];
     NSDictionary *modelDictValue = [model dictionaryValue];
