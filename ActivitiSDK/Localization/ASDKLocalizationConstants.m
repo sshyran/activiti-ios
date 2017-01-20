@@ -32,6 +32,7 @@ NSString *kLocalizationCancelButtonText                          = @"cancelButto
 NSString *kLocalizationFormDateComponentRemoveButtonText         = @"formDateComponentRemoveButtonText";
 NSString *kLocalizationFormDateComponentPickDateLabelText        = @"formDateComponentPickDateLabelText";
 NSString *kLocalizationFormDateComponentDoneButtonText           = @"formDateComponentDoneButtonText";
+NSString *kLocalizationFormDateComponentPickTodayText            = @"formDateComponentPickTodayText";
 NSString *kLocalizationFormDropdownComponentPickOptionLabelText  = @"formDropdownComponentPickOptionLabelText";
 NSString *kLocalizationFormAttachFileComponentButtonText         = @"formAttachFileComponentButtonText";
 NSString *kLocalizationFormAttachFilesComponentButtonText        = @"formAttachFilesComponentButtonText";
@@ -43,6 +44,7 @@ NSString *kLocalizationFormDynamicTableRowAvailableText          = @"formDynamic
 NSString *kLocalizationFormDynamicTableRowHeaderText             = @"formDynamicTableRowHeaderText";
 NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText = @"formDynamicTableDeleteRowConfirmationText";
 NSString *kLocalizationFormValueEmpty                            = @"formValueEmpty";
+NSString *kLocalizationFormOptionClearText                       = @"formOptionClearText";
 
 
 #pragma mark -

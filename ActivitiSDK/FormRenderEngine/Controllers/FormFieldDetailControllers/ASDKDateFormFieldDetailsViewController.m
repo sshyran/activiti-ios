@@ -96,6 +96,29 @@
     }
     
     self.datePicker.userInteractionEnabled = self.currentFormField.isReadOnly ? NO : YES;
+    [self updateRightBarButtonState];
+}
+
+- (void)updateRightBarButtonState {
+    if (self.currentFormField.isReadOnly) {
+        return;
+    }
+    
+    UIBarButtonItem *rightBarButtonItem = nil;
+    if (self.currentFormField.metadataValue) {
+        rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:ASDKLocalizedStringFromTable(kLocalizationFormOptionClearText, ASDKLocalizationTable, @"Clear text")
+                                                              style:UIBarButtonItemStylePlain
+                                                             target:self
+                                                             action:@selector(onCleanCurrentDateOption)];
+    } else {
+        rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:ASDKLocalizedStringFromTable(kLocalizationFormDateComponentPickTodayText, ASDKLocalizationTable, @"Pick today text")
+                                                              style:UIBarButtonItemStylePlain
+                                                             target:self
+                                                             action:@selector(onPickTodayDateOption)];
+    }
+    
+    rightBarButtonItem.tintColor = [UIColor whiteColor];
+    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -110,18 +133,29 @@
     self.currentFormField = formFieldModel;
 }
 
-- (IBAction)datePickerAction:(id)sender {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:kASDKServerShortDateFormat];
 
-    NSString *formatedDate = [dateFormatter stringFromDate:self.datePicker.date];
-    self.selectedDate.text = formatedDate;
+#pragma mark - 
+#pragma mark Actions
+
+- (void)reportDateForCurrentFormField:(NSDate *)date {
+    if (!date) {
+        self.selectedDate.text = ASDKLocalizedStringFromTable(kLocalizationFormDateComponentPickDateLabelText, ASDKLocalizationTable, @"Pick a date");
+        self.currentFormField.metadataValue = nil;
+    } else {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:kASDKServerShortDateFormat];
+        
+        NSString *formatedDate = [dateFormatter stringFromDate:date];
+        self.selectedDate.text = formatedDate;
+        
+        // Propagate the change after the state of the checkbox has changed
+        ASDKModelFormFieldValue *formFieldValue = [ASDKModelFormFieldValue new];
+        formFieldValue.attachedValue = formatedDate;
+        
+        self.currentFormField.metadataValue = formFieldValue;
+    }
     
-    // Propagate the change after the state of the checkbox has changed
-    ASDKModelFormFieldValue *formFieldValue = [ASDKModelFormFieldValue new];
-    formFieldValue.attachedValue = formatedDate;
-    
-    self.currentFormField.metadataValue = formFieldValue;
+    [self updateRightBarButtonState];
     
     // Notify the value transaction delegate there has been a change with the provided form field model
     if ([self.valueTransactionDelegate respondsToSelector:@selector(updatedMetadataValueForFormField:inCell:)]) {
@@ -129,4 +163,20 @@
                                                                  inCell:nil];
     }
 }
+
+- (IBAction)datePickerAction:(id)sender {
+    [self reportDateForCurrentFormField:self.datePicker.date];
+}
+
+- (void)onPickTodayDateOption {
+    NSDate *today = [NSDate date];
+    [self reportDateForCurrentFormField:today];
+    [self.datePicker setDate:today
+                    animated:YES];
+}
+
+- (void)onCleanCurrentDateOption {
+    [self reportDateForCurrentFormField:nil];
+}
+
 @end

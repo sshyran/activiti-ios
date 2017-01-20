@@ -32,6 +32,7 @@ extern NSString *kLocalizationCancelButtonText;
 extern NSString *kLocalizationFormDateComponentRemoveButtonText;
 extern NSString *kLocalizationFormDateComponentPickDateLabelText;
 extern NSString *kLocalizationFormDateComponentDoneButtonText;
+extern NSString *kLocalizationFormDateComponentPickTodayText;
 extern NSString *kLocalizationFormDropdownComponentPickOptionLabelText;
 extern NSString *kLocalizationFormAttachFileComponentButtonText;
 extern NSString *kLocalizationFormAttachFilesComponentButtonText;
@@ -43,6 +44,7 @@ extern NSString *kLocalizationFormDynamicTableRowAvailableText;
 extern NSString *kLocalizationFormDynamicTableRowHeaderText;
 extern NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText;
 extern NSString *kLocalizationFormValueEmpty;
+extern NSString *kLocalizationFormOptionClearText;
 
 // Content picker component
 extern NSString *kLocalizationFormContentPickerComponentLocalContentText;
