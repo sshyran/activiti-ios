@@ -844,7 +844,7 @@
         NSURLSessionDownloadTask *downloadTask = [self downloadTaskWithStatusCode:ASDKHTTPCode200OK];
         [invocation setReturnValue:&downloadTask];
         
-        id response = OCMClassMock([NSURLResponse class]);
+        id response = OCMClassMock([NSHTTPURLResponse class]);
         OCMStub([response statusCode]).andReturn(ASDKHTTPCode200OK);
         completionBlock(response, nil, nil);
     }] downloadTaskWithRequest:OCMOCK_ANY progress:OCMOCK_ANY destination:OCMOCK_ANY completionHandler:OCMOCK_ANY];
@@ -894,7 +894,7 @@
         NSURLSessionDownloadTask *downloadTask = [self downloadTaskWithStatusCode:ASDKHTTPCode400BadRequest];
         [invocation setReturnValue:&downloadTask];
         
-        id response = OCMClassMock([NSURLResponse class]);
+        id response = OCMClassMock([NSHTTPURLResponse class]);
         OCMStub([response statusCode]).andReturn(ASDKHTTPCode200OK);
         completionBlock(response, nil, [self requestGenericError]);
     }] downloadTaskWithRequest:OCMOCK_ANY progress:OCMOCK_ANY destination:OCMOCK_ANY completionHandler:OCMOCK_ANY];
@@ -1327,7 +1327,7 @@
         NSURLSessionDownloadTask *downloadTask = [self downloadTaskWithStatusCode:ASDKHTTPCode200OK];
         [invocation setReturnValue:&downloadTask];
         
-        id response = OCMClassMock([NSURLResponse class]);
+        id response = OCMClassMock([NSHTTPURLResponse class]);
         OCMStub([response statusCode]).andReturn(ASDKHTTPCode200OK);
         completionBlock(response, nil, nil);
     }] downloadTaskWithRequest:OCMOCK_ANY progress:OCMOCK_ANY destination:OCMOCK_ANY completionHandler:OCMOCK_ANY];
@@ -1373,7 +1373,7 @@
         NSURLSessionDownloadTask *downloadTask = [self downloadTaskWithStatusCode:ASDKHTTPCode400BadRequest];
         [invocation setReturnValue:&downloadTask];
         
-        id response = OCMClassMock([NSURLResponse class]);
+        id response = OCMClassMock([NSHTTPURLResponse class]);
         OCMStub([response statusCode]).andReturn(ASDKHTTPCode200OK);
         completionBlock(response, nil, [self requestGenericError]);
     }] downloadTaskWithRequest:OCMOCK_ANY progress:OCMOCK_ANY destination:OCMOCK_ANY completionHandler:OCMOCK_ANY];
