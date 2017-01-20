@@ -40,4 +40,14 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineControllerOperationType) {
  */
 - (void)requestControllerUpdateWithBatchOfOperations:(NSDictionary *)operationsBatch;
 
+@optional
+/**
+ * Data source signals the delegate controller that an incosistence in the 
+ * internal structure occured and it's unsafe to continue
+ *
+ @param error Error object describing the inconsistence that occured with possible means of recovery
+ *            if applicable
+ */
+- (void)reportDataSourceInconsistenceError:(NSError *)error;
+
 @end

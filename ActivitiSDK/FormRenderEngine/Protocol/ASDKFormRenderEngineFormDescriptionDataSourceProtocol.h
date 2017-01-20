@@ -53,7 +53,8 @@ ASDKModelFormField;
 
 /**
  *  Property meant to hold a reference to the data source's delegate which will
- *  be notified about visibility changes in sections or items.
+ *  be notified about visibility changes in sections or items and other updates
+ *  that need to trigger a visual response.
  */
 @property (weak, nonatomic) id<ASDKFormRenderEngineDataSourceDelegate> delegate;
 

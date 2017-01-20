@@ -36,7 +36,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 @interface ASDKFormVisibilityConditionsProcessor ()
 
 /**
- *  Property meant to hold a reference to all the form fields the form engine 
+ *  Property meant to hold a reference to all the form fields the form engine
  *  should render
  */
 @property (strong, nonatomic) NSArray *formFields;
@@ -59,7 +59,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 /**
  *  Property meant to hold a reference to the visible form fields which had
  *  been stored as a result of condition evaluation. The property is to serve
- *  as a reference point to future evaluations and provide information on 
+ *  as a reference point to future evaluations and provide information on
  *  whether an element has been hidden or made visible.
  */
 @property (strong, nonatomic) NSArray *visibleFormFields;
@@ -117,7 +117,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         self.formFields = fieldsArr;
         self.formVariables = formVariables;
-        self.dependencyDict = [self createFormFieldDependencyDictionaryForList:fieldsArr];
+        NSMutableDictionary *dependencyDictionary = [self createFormFieldDependencyDictionaryForList:fieldsArr];
+        if (dependencyDictionary) {
+            self.dependencyDict = dependencyDictionary;
+        } else {
+            ASDKLogError(@"An error occured while generating the form field dependency graph. Reason:%@", [self unsupportedStructureForDependencyDictionaryError]);
+            return nil;
+        }
     }
     
     return self;
@@ -147,12 +153,26 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         while (visibilityCondition) {
             // If left and / or right form field ID properties aren't emtpy then
             // add the coresponding form field in the influential array of form fields
+            ASDKModelFormField *influentialFormField = nil;
             if (visibilityCondition.leftFormFieldID.length) {
-                [influentialFormFieldsForCurrentFormField addObject:[self formFieldForID:visibilityCondition.leftFormFieldID]];
+                influentialFormField = [self formFieldForID:visibilityCondition.leftFormFieldID];
+                
+                if (influentialFormField) {
+                    [influentialFormFieldsForCurrentFormField addObject:influentialFormField];
+                } else {
+                    return nil;
+                }
             }
             
             if (visibilityCondition.rightFormFieldID.length) {
-                [influentialFormFieldsForCurrentFormField addObject:[self formFieldForID:visibilityCondition.rightFormFieldID]];
+                influentialFormField = [self formFieldForID:visibilityCondition.rightFormFieldID];
+                
+                if (influentialFormField) {
+                    [influentialFormFieldsForCurrentFormField addObject:influentialFormField];
+                } else {
+                    nil;
+                }
+                
             }
             
             visibilityCondition = visibilityCondition.nextCondition;
@@ -186,7 +206,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
     }
     
-    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.modelID == %@", formFieldID];
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"modelID == %@", formFieldID];
     NSArray *formFields = [self.formFields filteredArrayUsingPredicate:searchPredicate];
     
     return formFields.firstObject;
@@ -341,7 +361,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                     !sectionFormField) {
                     sectionFormField = formField;
                 } else if ((formField.fieldType == ASDKModelFormFieldTypeContainer ||
-                           formField.fieldType == ASDKModelFormFieldTypeDynamicTableField) &&
+                            formField.fieldType == ASDKModelFormFieldTypeDynamicTableField) &&
                            sectionFormField) {
                     sectionFormField.formFields = [NSArray arrayWithArray:subSectionFields];
                     [subSectionFields removeAllObjects];
@@ -551,7 +571,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             if (kASDKFormFieldLabelParameter.length > visibilityCondition.leftFormFieldID.length) {
                 searchForLabelParameter = NO;
             }
-        
+            
             if (searchForLabelParameter) {
                 NSRange searchRange = NSMakeRange(visibilityCondition.leftFormFieldID.length - kASDKFormFieldLabelParameter.length, kASDKFormFieldLabelParameter.length);
                 NSRange resultRange = [visibilityCondition.leftFormFieldID rangeOfString:kASDKFormFieldLabelParameter
@@ -583,8 +603,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             if (searchForLabelParameter) {
                 NSRange searchRange = NSMakeRange(visibilityCondition.rightFormFieldID.length - kASDKFormFieldLabelParameter.length, kASDKFormFieldLabelParameter.length);
                 NSRange resultRange = [visibilityCondition.rightFormFieldID rangeOfString:kASDKFormFieldLabelParameter
-                                                                                 options:NSLiteralSearch
-                                                                                   range:searchRange];
+                                                                                  options:NSLiteralSearch
+                                                                                    range:searchRange];
                 if (resultRange.location != NSNotFound) {
                     leftValue = [self labelValueForFormField:[self formFieldForID:visibilityCondition.rightFormFieldID]];
                 } else {
@@ -878,9 +898,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     BOOL result = NO;
     
     BOOL firstBoolean = [firstBooleanString isEqualToString:kASDKFormFieldTrueStringValue] ||
-                        [firstBooleanString isEqualToString:@"1"] ? YES : NO;
+    [firstBooleanString isEqualToString:@"1"] ? YES : NO;
     BOOL secondBoolean = [secondBooleanString isEqualToString:kASDKFormFieldTrueStringValue] ||
-                         [secondBooleanString isEqualToString:@"1"]? YES : NO;
+    [secondBooleanString isEqualToString:@"1"]? YES : NO;
     
     switch (operatorType) {
         case ASDKModelFormVisibilityConditionOperatorTypeEqual: {
@@ -1066,10 +1086,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Error reporting and handling
 
 - (NSError *)unsupportedOperatorTypeError {
-    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Unsupported operator type.",
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Unsupported operator type",
                                NSLocalizedFailureReasonErrorKey     : @"The evaluation cannot be perfomed since the operator type is not supported by the compared objects.",
                                NSLocalizedRecoverySuggestionErrorKey: @"Please check the operator type sent to this evaluation method."
                                };
+    return [NSError errorWithDomain:kASDKFormRenderEngineErrorDomain
+                               code:kASDKFormVisibilityConditionProcessorErrorCode
+                           userInfo:userInfo];
+}
+
+- (NSError *)unsupportedStructureForDependencyDictionaryError {
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Unsupported structure for internal condition processor dependency graph",
+                               NSLocalizedFailureReasonErrorKey     : @"Due to missing information needed to be extracted from the form fields, the mandatory dependency graph needed to evaluate visibility conditions could not be generated.",
+                               NSLocalizedRecoverySuggestionErrorKey: @"Please make sure that form field IDs stored in the leftFormFieldID and rightFormFieldID properties actually point to valid form field IDs within the collection"};
     return [NSError errorWithDomain:kASDKFormRenderEngineErrorDomain
                                code:kASDKFormVisibilityConditionProcessorErrorCode
                            userInfo:userInfo];

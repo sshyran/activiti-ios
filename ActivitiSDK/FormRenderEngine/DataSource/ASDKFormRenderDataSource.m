@@ -152,14 +152,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     self.visibilityConditionsProcessor = [[ASDKFormVisibilityConditionsProcessor alloc] initWithFormFields:renderableParsedFormFields
                                                                                              formVariables:formDescription.formVariables];
-    
-    // Run a pre-process operation to evaluate visibility conditions and provide the first set of visible form
-    // fields
-    self.visibleFormFields = [self filterRenderableFormFields:renderableParsedFormFields
-                                         forVisibleFormFields:[self.visibilityConditionsProcessor parseVisibleFormFields]];
-    
-    // Handle value changes for form fields that have a direct impact over visibility conditions
-    [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
+    if (self.visibilityConditionsProcessor) {
+        // Run a pre-process operation to evaluate visibility conditions and provide the first set of visible form
+        // fields
+        self.visibleFormFields = [self filterRenderableFormFields:renderableParsedFormFields
+                                             forVisibleFormFields:[self.visibilityConditionsProcessor parseVisibleFormFields]];
+        
+        // Handle value changes for form fields that have a direct impact over visibility conditions
+        [self registerVisibilityHandlersForInfluencialFormFields:[self.visibilityConditionsProcessor visibilityInfluentialFormFields]];
+    } else {
+        // If the visibility condition processor fails in it's initiation then fall back as a mean of recovery and
+        // display all fields
+        self.visibleFormFields = renderableParsedFormFields;
+    }
     
     // Show the form outcomes only when the data source is in tab view mode or
     // there aren't any defined tabs
@@ -298,7 +303,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                             formFieldForCurrentIndexPath.values = @[formVariable.value];
                         }
                     }
-
+                    
                     formFieldModel = formFieldForCurrentIndexPath;
                 }
         }
