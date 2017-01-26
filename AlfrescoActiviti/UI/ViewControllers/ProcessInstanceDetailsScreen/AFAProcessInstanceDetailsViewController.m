@@ -418,12 +418,15 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     
     dispatch_group_notify(activeAndCompletedTasksGroup, dispatch_get_main_queue(),^{
         __strong typeof(self) strongSelf = weakSelf;
+        AFATableControllerProcessInstanceTasksModel *processInstanceTaskModel = nil;
         
         if (!hadEncounteredAnError) {
             strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = processInstanceTasksModel;
             
             // Update the table controller model and change the cell factory
-            strongSelf.tableController.model = strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)];
+            processInstanceTaskModel = strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)];
+            
+            strongSelf.tableController.model = processInstanceTaskModel;
             strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
             
             [strongSelf.processTableView reloadData];
@@ -442,7 +445,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
         
-        strongSelf.noContentView.hidden = [(AFATableControllerProcessInstanceTasksModel *)strongSelf.tableController.model hasTaskListAvailable];
+        strongSelf.noContentView.hidden = ([processInstanceTaskModel hasTaskListAvailable] || processInstanceTaskModel.isStartFormDefined);
         strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"tasks-large-icon"];
         strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenNoTasksAvailableText, @"No tasks available text");
     });
