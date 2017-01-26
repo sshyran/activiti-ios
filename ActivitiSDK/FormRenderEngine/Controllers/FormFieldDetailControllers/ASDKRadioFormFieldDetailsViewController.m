@@ -76,9 +76,11 @@
             }
         }
         ASDKModelFormFieldOption *formFieldOption = [self.currentFormField.formFieldOptions filteredArrayUsingPredicate:optionPredicate].firstObject;
-        self.currentOptionSelection = [self.currentFormField.formFieldOptions indexOfObject:formFieldOption];
-    } else {
-        self.currentOptionSelection = -1;
+        
+        NSUInteger optionIdx = [self.currentFormField.formFieldOptions indexOfObject:formFieldOption];
+        if (optionIdx != NSNotFound) {
+            self.currentOptionSelection = optionIdx;
+        }
     }
 }
 
@@ -121,7 +123,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ASDKRadioOptionTableViewCell *radioCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldRadioOptionRepresentation];
+    ASDKRadioOptionTableViewCell *radioCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldRadioOptionRepresentation
+                                                                              forIndexPath:indexPath];
     
     NSUInteger formFieldOptionsCount = self.currentFormField.formFieldOptions.count;
     NSString *optionName = nil;
