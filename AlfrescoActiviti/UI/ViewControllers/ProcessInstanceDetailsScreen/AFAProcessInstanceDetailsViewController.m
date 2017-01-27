@@ -140,7 +140,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     self.processTableView.delegate = self.tableController;
     
     // Set up the details table view to adjust it's size automatically
-    self.processTableView.estimatedRowHeight = 55.0f;
+    self.processTableView.estimatedRowHeight = 60.0f;
     self.processTableView.rowHeight = UITableViewAutomaticDimension;
     
     // Update UI for current localization
