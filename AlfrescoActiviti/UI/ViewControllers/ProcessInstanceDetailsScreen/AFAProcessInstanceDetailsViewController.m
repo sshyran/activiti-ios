@@ -582,15 +582,8 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                                             __strong typeof(self) strongSelf = weakSelf;
                                             
                                             if (!error) {
-                                                // To avoid hierarchy complications that cand be encountered when accessing the
-                                                // process instance details via task information listing  we'll always pop back
-                                                // to the first list view controller in the navigation stack
-                                                NSPredicate *listControllerSearchPredicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-                                                    return [evaluatedObject isKindOfClass:[AFAListViewController class]];
-                                                }];
-                                                UIViewController *parentController = [self.navigationController.viewControllers filteredArrayUsingPredicate:listControllerSearchPredicate].firstObject;
-                                                [strongSelf.navigationController popToViewController:parentController
-                                                                                            animated:YES];
+                                                [self performSegueWithIdentifier:kSegueIDProcessInstanceDetailsUnwind
+                                                                          sender:nil];
                                             } else {
                                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
                                             }
