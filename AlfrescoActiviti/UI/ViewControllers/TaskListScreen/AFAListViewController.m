@@ -576,6 +576,8 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 #pragma mark AFAModalTaskDetailsViewControllerDelegate Delegate
 
 - (void)didCreateTask:(ASDKModelTask *)task {
+    [self.listTableView setContentOffset:CGPointZero
+                                       animated:NO];
     [self searchWithTerm:self.searchTextField.text];
 }
 
