@@ -18,8 +18,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ASDKFormCellProtocol.h"
+#import "ASDKFormThemedCollectionViewCell.h"
 
-@interface ASDKFormHyperlinkFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
+@interface ASDKFormHyperlinkFieldCollectionViewCell : ASDKFormThemedCollectionViewCell <ASDKFormCellProtocol>
 
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UIButton *hyperlinkButton;

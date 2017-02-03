@@ -24,7 +24,6 @@
 #import "ASDKLocalizationConstants.h"
 
 // Categories
-#import "UIColor+ASDKFormViewColors.h"
 #import "UIViewController+AFAAlertAddition.h"
 
 // Models
@@ -63,6 +62,7 @@
 @property (strong, nonatomic) NSMutableSet                                          *uploadedContentIDs;
 @property (strong, nonatomic) ASDKModelFormField                                    *currentFormField;
 @property (strong, nonatomic) ASDKIntegrationBrowsingViewController                 *integrationBrowsingController;
+@property (strong, nonatomic) ASDKFormColorSchemeManager                            *colorSchemeManager;
 
 @end
 
@@ -73,6 +73,8 @@
     
     if (self) {
         self.uploadedContentIDs = [NSMutableSet set];
+        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+        self.colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
     }
     
     return self;
@@ -252,7 +254,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     contentFileCell.fileNameLabel.text = [currentContent.contentName stringByDeletingPathExtension];
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
-        contentFileCell.fileNameLabel.textColor = [UIColor formViewCompletedValueColor];
+        contentFileCell.fileNameLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
     }
     
     return contentFileCell;
@@ -319,7 +321,7 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGSize rowActionSize = CGSizeMake([tableView rectForRowAtIndexPath:indexPath].size.width, [tableView rectForRowAtIndexPath:indexPath].size.height);
     UIGraphicsBeginImageContextWithOptions(rowActionSize, YES, [[UIScreen mainScreen] scale]);
     CGContextRef context=UIGraphicsGetCurrentContext();
-    [[UIColor distructiveOperationBackgroundColor] set];
+    [self.colorSchemeManager.formViewBackgroundColorForDistructiveOperation set];
     CGContextFillRect(context, CGRectMake(0, 0, rowActionSize.width, rowActionSize.height));
     
     [trashIcon drawAtPoint:CGPointMake(trashIcon.size.width + trashIcon.size.width / 4.0f, rowActionSize.height / 2.0f - trashIcon.size.height / 2.0f)];

@@ -23,17 +23,14 @@
 #import "ASDKModelConfiguration.h"
 #import "ASDKLocalizationConstants.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
 
 @interface ASDKFormDateFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField            *formField;
+@property (assign, nonatomic) BOOL                          isRequired;
 
 @end
 
@@ -51,7 +48,7 @@
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
-            self.backgroundColor = selected ? [UIColor formFieldCellHighlightColor] : [UIColor whiteColor];
+            self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
     }
 }
@@ -67,7 +64,7 @@
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
         NSString *formFieldValue = [self formattedDateStringForDateStringValue:formField.values.firstObject];
         self.selectedDateLabel.text = formFieldValue ? formFieldValue : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
-        self.selectedDateLabel.textColor = [UIColor formViewCompletedValueColor];
+        self.selectedDateLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
         self.disclosureIndicatorLabel.hidden = YES;
         self.trailingToDisclosureConstraint.priority = UILayoutPriorityFittingSizeLevel;
     } else {
@@ -123,16 +120,16 @@
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.selectedDateLabel.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)cleanInvalidCellValue {

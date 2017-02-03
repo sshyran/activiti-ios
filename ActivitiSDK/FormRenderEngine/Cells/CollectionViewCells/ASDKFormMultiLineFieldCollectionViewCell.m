@@ -18,9 +18,6 @@
 
 #import "ASDKFormMultiLineFieldCollectionViewCell.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
@@ -31,8 +28,8 @@
 
 @interface ASDKFormMultiLineFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField            *formField;
+@property (assign, nonatomic) BOOL                          isRequired;
 
 @end
 
@@ -50,7 +47,7 @@
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
-            self.backgroundColor = selected ? [UIColor formFieldCellHighlightColor] : [UIColor whiteColor];
+            self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
     }
 }
@@ -69,7 +66,7 @@
         
         self.multiLineTextLabel.text = formFieldValue ? formFieldValue : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
         self.disclosureIndicatorLabel.hidden = formFieldValue.length ? NO : YES;
-        self.multiLineTextLabel.textColor = [UIColor formViewCompletedValueColor];
+        self.multiLineTextLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
         if (!formFieldValue.length) {
             self.labelTrailingToDisclosureIndicatorConstraint.priority = UILayoutPriorityFittingSizeLevel;
         }
@@ -89,21 +86,22 @@
     }
 }
 
+
 #pragma mark -
 #pragma mark Cell states & validation
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.multiLineTextLabel.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)validateCellStateForText:(NSString *)text {

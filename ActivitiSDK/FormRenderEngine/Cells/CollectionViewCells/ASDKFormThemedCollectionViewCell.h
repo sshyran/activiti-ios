@@ -17,14 +17,14 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "ASDKFormCellProtocol.h"
-#import "ASDKFormThemedCollectionViewCell.h"
 
-@interface ASDKFormBooleanFieldCollectionViewCell : ASDKFormThemedCollectionViewCell <ASDKFormCellProtocol>
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKServiceLocator.h"
+#import "ASDKFormColorSchemeManager.h"
 
-@property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> delegate;
-@property (weak, nonatomic) IBOutlet UILabel            *descriptionLabel;
-@property (weak, nonatomic) IBOutlet UISwitch           *booleanField;
-- (IBAction)switchToggled:(id)sender;
+@interface ASDKFormThemedCollectionViewCell : UICollectionViewCell
+
+@property (strong, nonatomic) ASDKFormColorSchemeManager *colorSchemeManager;
 
 @end

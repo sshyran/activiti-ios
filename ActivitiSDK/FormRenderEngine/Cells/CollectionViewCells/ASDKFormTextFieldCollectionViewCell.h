@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ASDKFormCellProtocol.h"
+#import "ASDKFormThemedCollectionViewCell.h"
 
 typedef NS_ENUM(NSInteger, ASDKFormTextFieldKeyboardType) {
     ASDKFormTextFieldKeyboardTypeUndefined = -1,
@@ -25,7 +26,7 @@ typedef NS_ENUM(NSInteger, ASDKFormTextFieldKeyboardType) {
     ASDKFormTextFieldKeyboardTypeNumerical
 };
 
-@interface ASDKFormTextFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
+@interface ASDKFormTextFieldCollectionViewCell : ASDKFormThemedCollectionViewCell <ASDKFormCellProtocol>
 
 @property (weak, nonatomic)   id<ASDKFormRenderEngineValueTransactionsProtocol> delegate;
 @property (weak, nonatomic)   IBOutlet UILabel              *descriptionLabel;

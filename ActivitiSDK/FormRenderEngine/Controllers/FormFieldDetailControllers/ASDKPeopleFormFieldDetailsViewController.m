@@ -23,7 +23,6 @@
 #import "NSString+ASDKFontGlyphicons.h"
 #import "UIView+ASDKViewAnimations.h"
 #import "UIViewController+ASDKAlertAddition.h"
-#import "UIColor+ASDKFormViewColors.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -35,6 +34,11 @@
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelUser.h"
+
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKServiceLocator.h"
+#import "ASDKFormColorSchemeManager.h"
 
 // Cells
 #import "ASDKPeopleTableViewCell.h"
@@ -64,14 +68,9 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 
 @implementation ASDKPeopleFormFieldDetailsViewController
 
+
 #pragma mark -
 #pragma mark Life cycle
-
--(instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -240,10 +239,14 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     trashIcon = UIGraphicsGetImageFromCurrentImageContext();
     
     // Draw the image and background
+    
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+    
     CGSize rowActionSize = CGSizeMake([tableView rectForRowAtIndexPath:indexPath].size.width, [tableView rectForRowAtIndexPath:indexPath].size.height);
     UIGraphicsBeginImageContextWithOptions(rowActionSize, YES, [[UIScreen mainScreen] scale]);
     CGContextRef context=UIGraphicsGetCurrentContext();
-    [[UIColor distructiveOperationBackgroundColor] set];
+    [colorSchemeManager.formViewBackgroundColorForDistructiveOperation set];
     CGContextFillRect(context, CGRectMake(0, 0, rowActionSize.width, rowActionSize.height));
     
     [trashIcon drawAtPoint:CGPointMake(trashIcon.size.width + trashIcon.size.width / 4.0f, rowActionSize.height / 2.0f - trashIcon.size.height / 2.0f)];

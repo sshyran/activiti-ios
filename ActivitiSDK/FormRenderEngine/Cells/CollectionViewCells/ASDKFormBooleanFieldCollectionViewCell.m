@@ -17,9 +17,12 @@
  ******************************************************************************/
 
 #import "ASDKFormBooleanFieldCollectionViewCell.h"
+
+// Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
-#import "UIColor+ASDKFormViewColors.h"
+
+// Constants
 #import "ASDKFormRenderEngineConstants.h"
 
 #if ! __has_feature(objc_arc)
@@ -28,8 +31,8 @@
 
 @interface ASDKFormBooleanFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField            *formField;
+@property (assign, nonatomic) BOOL                          isRequired;
 
 @end
 
@@ -94,16 +97,16 @@
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.booleanField.selected = NO;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)validateCellStateForSwitchState:(BOOL)on {

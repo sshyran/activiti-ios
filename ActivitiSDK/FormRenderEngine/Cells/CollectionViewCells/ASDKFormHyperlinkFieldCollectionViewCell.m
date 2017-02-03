@@ -18,9 +18,6 @@
 
 #import "ASDKFormHyperlinkFieldCollectionViewCell.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
@@ -31,7 +28,7 @@
 
 @interface ASDKFormHyperlinkFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelHyperlinkFormField    *formField;
+@property (strong, nonatomic) ASDKModelHyperlinkFormField   *formField;
 
 @end
 
@@ -49,7 +46,7 @@
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
-            self.backgroundColor = selected ? [UIColor formFieldCellHighlightColor] : [UIColor whiteColor];
+            self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
     }
 }

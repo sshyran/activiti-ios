@@ -49,8 +49,8 @@
 		131DCF431DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */; };
 		131DCF471DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF461DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m */; };
 		131DCF4E1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */; };
-		13207D0C1BE251C300116A98 /* UIColor+ASDKFormViewColors.h in Headers */ = {isa = PBXBuildFile; fileRef = 13207D0A1BE251C300116A98 /* UIColor+ASDKFormViewColors.h */; };
-		13207D0D1BE251C300116A98 /* UIColor+ASDKFormViewColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 13207D0B1BE251C300116A98 /* UIColor+ASDKFormViewColors.m */; };
+		1320B2501E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1320B24E1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h */; };
+		1320B2511E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1320B24F1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m */; };
 		132167101B8AF37500B7406B /* AFAAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1321670F1B8AF37500B7406B /* AFAAvatarView.m */; };
 		132167141B8B027000B7406B /* AFAAvatarMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132167131B8B027000B7406B /* AFAAvatarMenuTableViewCell.m */; };
 		1323CFC31B87065000E66D6F /* UIImage+AFAFontGlyphicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 1323CFC21B87065000E66D6F /* UIImage+AFAFontGlyphicons.m */; };
@@ -677,8 +677,8 @@
 		131DCF461DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsCreateTaskAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateTaskAction/AFAModalTaskDetailsCreateTaskAction.m; sourceTree = "<group>"; };
 		131DCF4C1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsUpdateTaskAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsUpdateTaskAction/AFAModalTaskDetailsUpdateTaskAction.h; sourceTree = "<group>"; };
 		131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsUpdateTaskAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsUpdateTaskAction/AFAModalTaskDetailsUpdateTaskAction.m; sourceTree = "<group>"; };
-		13207D0A1BE251C300116A98 /* UIColor+ASDKFormViewColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+ASDKFormViewColors.h"; path = "FormRenderEngine/Categories/UIColor+ASDKFormViewColors.h"; sourceTree = "<group>"; };
-		13207D0B1BE251C300116A98 /* UIColor+ASDKFormViewColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+ASDKFormViewColors.m"; path = "FormRenderEngine/Categories/UIColor+ASDKFormViewColors.m"; sourceTree = "<group>"; };
+		1320B24E1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormThemedCollectionViewCell.h; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormThemedCollectionViewCell.h; sourceTree = "<group>"; };
+		1320B24F1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormThemedCollectionViewCell.m; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormThemedCollectionViewCell.m; sourceTree = "<group>"; };
 		1321670E1B8AF37500B7406B /* AFAAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAvatarView.h; path = UI/Components/AvatarView/AFAAvatarView.h; sourceTree = "<group>"; };
 		1321670F1B8AF37500B7406B /* AFAAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAvatarView.m; path = UI/Components/AvatarView/AFAAvatarView.m; sourceTree = "<group>"; };
 		132167121B8B027000B7406B /* AFAAvatarMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAvatarMenuTableViewCell.h; path = UI/Cells/AvatarMenuCell/AFAAvatarMenuTableViewCell.h; sourceTree = "<group>"; };
@@ -1599,15 +1599,6 @@
 			name = Protocol;
 			sourceTree = "<group>";
 		};
-		1319EF511C157D78003FA6C1 /* UIColor */ = {
-			isa = PBXGroup;
-			children = (
-				13207D0A1BE251C300116A98 /* UIColor+ASDKFormViewColors.h */,
-				13207D0B1BE251C300116A98 /* UIColor+ASDKFormViewColors.m */,
-			);
-			name = UIColor;
-			sourceTree = "<group>";
-		};
 		1319EF571C15827D003FA6C1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1660,11 +1651,19 @@
 				8D8F85F81C8DD3B700356A5B /* UIViewController */,
 				1323CFD21B87634900E66D6F /* NSString */,
 				136737111B86103A00364886 /* UIFont */,
-				1319EF511C157D78003FA6C1 /* UIColor */,
 				8DB399B11C9C351D0089E0AB /* UIView */,
 				133A6BCE1D463C540065F252 /* NSArray */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		1320B24D1E44B65100991B7A /* FormThemedCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				1320B24E1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h */,
+				1320B24F1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m */,
+			);
+			name = FormThemedCollectionView;
 			sourceTree = "<group>";
 		};
 		132167111B8AF37900B7406B /* AvatarView */ = {
@@ -2059,6 +2058,7 @@
 				13BA5C071BE0D0CD0091D6C9 /* FormOutcomeCell */,
 				138F0A431C6CC29400DA9414 /* FormHeaderView */,
 				138F0A481C6CC6CC00DA9414 /* FormFooterView */,
+				1320B24D1E44B65100991B7A /* FormThemedCollectionView */,
 			);
 			name = CollectionViewCells;
 			sourceTree = "<group>";
@@ -4759,6 +4759,7 @@
 				8DEA25311C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.h in Headers */,
 				13E8306A1B6A21DD0028901A /* ASDKBasicAuthentificationProvider.h in Headers */,
 				13CE5C6D1B998711002E5172 /* ASDKModelFilter.h in Headers */,
+				1320B2501E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h in Headers */,
 				8DB399991C9AAC4D0089E0AB /* ASDKModelPeopleFormField.h in Headers */,
 				137B94591BD794FB00134BF1 /* ASDKFormRenderEngine.h in Headers */,
 				8D3A51E41C8089A300FF9A00 /* ASDKModelUser.h in Headers */,
@@ -4892,7 +4893,6 @@
 				8D3A51D01C8084B700FF9A00 /* ASDKProcessDefinitionNetworkServices.h in Headers */,
 				13A578581CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h in Headers */,
 				13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */,
-				13207D0C1BE251C300116A98 /* UIColor+ASDKFormViewColors.h in Headers */,
 				1317C34E1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h in Headers */,
 				137194831B6924DE00D4E1F0 /* ActivitiSDK.h in Headers */,
 				132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */,
@@ -5562,6 +5562,7 @@
 				8D3A51E01C80868500FF9A00 /* ASDKModelProcessDefinition.m in Sources */,
 				138F0A371C6B9D3100DA9414 /* ASDKRadioFieldCollectionViewCell.m in Sources */,
 				13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */,
+				1320B2511E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m in Sources */,
 				137C12331D421E3400B87B34 /* ASDKModelFormTabDescription.m in Sources */,
 				138DEE891D814A700031ED01 /* NSURLSessionTask+ASDKAdditions.m in Sources */,
 				8D6E969C1C74887C00DAECE7 /* ASDKFormAmountFieldCollectionViewCell.m in Sources */,
@@ -5651,7 +5652,6 @@
 				136E114A1CEB113800047E38 /* ASDKIntegrationNetworksDataSource.m in Sources */,
 				136DFF721DA643B300FA40E0 /* ASDKJSONResponseSerializer.m in Sources */,
 				139050E81CB3FE34004FEA89 /* ASDKFormVisibilityConditionsProcessor.m in Sources */,
-				13207D0D1BE251C300116A98 /* UIColor+ASDKFormViewColors.m in Sources */,
 				8D3A51D11C8084B700FF9A00 /* ASDKProcessDefinitionNetworkServices.m in Sources */,
 				8DEA25451C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.m in Sources */,
 				8D6ABE7D1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.m in Sources */,

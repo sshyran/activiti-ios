@@ -18,9 +18,6 @@
 
 #import "ASDKFormDynamicTableFieldCollectionViewCell.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
@@ -32,8 +29,8 @@
 
 @interface ASDKFormDynamicTableFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField            *formField;
+@property (assign, nonatomic) BOOL                          isRequired;
 
 @end
 
@@ -51,7 +48,7 @@
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
-            self.backgroundColor = selected ? [UIColor formFieldCellHighlightColor] : [UIColor whiteColor];
+            self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
     }
 }
@@ -71,7 +68,7 @@
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType &&
         !dynamicTableFormField.isTableEditable) {
         self.dynamicTableLabel.text = [self formatLabelTextWithFormFieldValues:formField.values];
-        self.dynamicTableLabel.textColor = [UIColor formViewCompletedValueColor];
+        self.dynamicTableLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
     } else {
         self.isRequired = formField.isRequired;
         // If a previously selected option is available display it
@@ -105,16 +102,16 @@
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.dynamicTableLabel.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)validateCellStateForFormfieldValues:(NSArray *)formfieldValues {

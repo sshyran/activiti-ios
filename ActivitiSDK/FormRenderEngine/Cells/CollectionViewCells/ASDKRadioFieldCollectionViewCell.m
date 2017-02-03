@@ -18,9 +18,6 @@
 
 #import "ASDKRadioFieldCollectionViewCell.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
@@ -32,8 +29,8 @@
 
 @interface ASDKRadioFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField         *formField;
+@property (assign, nonatomic) BOOL                       isRequired;
 
 - (NSString *)formatSelectedOptionLabelTextWithRestFormField:(ASDKModelRestFormField *)restFormField;
 
@@ -53,7 +50,7 @@
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
-            self.backgroundColor = selected ? [UIColor formFieldCellHighlightColor] : [UIColor whiteColor];
+            self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
     }
 }
@@ -70,7 +67,7 @@
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == restFormField.representationType) {
         self.selectedOptionLabel.text = [self formatSelectedOptionLabelTextWithRestFormField:restFormField];
-        self.selectedOptionLabel.textColor = [UIColor formViewCompletedValueColor];
+        self.selectedOptionLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
         self.disclosureIndicatorLabel.hidden = YES;
         self.trailingToDisclosureConstraint.priority = UILayoutPriorityFittingSizeLevel;
     } else {
@@ -124,21 +121,22 @@
     return descriptionLabelText;
 }
 
+
 #pragma mark -
 #pragma mark Cell states & validation
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.selectedOptionLabel.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)cleanInvalidCellValue {

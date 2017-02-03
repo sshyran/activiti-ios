@@ -132,7 +132,7 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
  *  @param allowCachedResults   Boolean value specifying if results can be provided if already present on the disk
  *  @param progressBlock        Block used to report progress updates for the download operation and an optional error
  *                              reason
- *  @param completionBlock      Completion block providing the URL location of the downloaded content, whether is a local refference
+ *  @param completionBlock      Completion block providing the URL location of the downloaded content, whether is a local reference
  *                              and an optional error reason
  */
 - (void)requestDownloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID

@@ -23,5 +23,14 @@
 
 @property (strong, nonatomic) UIColor *navigationBarThemeColor;
 @property (strong, nonatomic) UIColor *navigationBarTitleAndControlsColor;
+@property (strong, nonatomic) UIColor *formViewInvalidValueColor;
+@property (strong, nonatomic) UIColor *formViewValidValueColor;
+@property (strong, nonatomic) UIColor *formViewOutcomeEnabledColor;
+@property (strong, nonatomic) UIColor *formViewOutcomeDisabledColor;
+@property (strong, nonatomic) UIColor *formViewRadioOptionCheckmarkColor;
+@property (strong, nonatomic) UIColor *formViewHighlightedCellBackgroundColor;
+@property (strong, nonatomic) UIColor *formViewAmountFieldSymbolColor;
+@property (strong, nonatomic) UIColor *formViewBackgroundColorForDistructiveOperation;
+@property (strong, nonatomic) UIColor *formViewFilledInValueColor;
 
 @end

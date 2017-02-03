@@ -16,15 +16,18 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "ASDKFormCellProtocol.h"
 #import "ASDKFormThemedCollectionViewCell.h"
 
-@interface ASDKFormBooleanFieldCollectionViewCell : ASDKFormThemedCollectionViewCell <ASDKFormCellProtocol>
+@implementation ASDKFormThemedCollectionViewCell
 
-@property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> delegate;
-@property (weak, nonatomic) IBOutlet UILabel            *descriptionLabel;
-@property (weak, nonatomic) IBOutlet UISwitch           *booleanField;
-- (IBAction)switchToggled:(id)sender;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+        self.colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+    }
+    
+    return self;
+}
 
 @end

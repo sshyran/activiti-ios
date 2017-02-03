@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, ASDKFormRenderEngineDataSourceViewMode) {
 @property (assign, nonatomic) BOOL formHasUserdefinedOutcomes;
 
 /**
- *  Property meant to hold a refference to the form title.
+ *  Property meant to hold a reference to the form title.
  *
  *  @return String object containing the form title or nil if a title is not defined.
  */

@@ -22,18 +22,20 @@
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
 
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKServiceLocator.h"
+#import "ASDKFormColorSchemeManager.h"
+
 @interface ASDKMultilineFormFieldDetailsViewController () <UITextViewDelegate>
 
-@property (strong, nonatomic) ASDKModelFormField        *currentFormField;
-@property (weak, nonatomic) IBOutlet UITextView         *multilineTextView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *multilineBottomConstraint;
+@property (strong, nonatomic) ASDKModelFormField            *currentFormField;
+@property (weak, nonatomic) IBOutlet UITextView             *multilineTextView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint     *multilineBottomConstraint;
 
 @end
 
@@ -83,8 +85,11 @@
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType ||
         ASDKModelFormFieldRepresentationTypeReadonlyText == self.currentFormField.representationType) {
+        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+        ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+        
         self.multilineTextView.editable = NO;
-        self.multilineTextView.textColor = [UIColor formViewCompletedValueColor];
+        self.multilineTextView.textColor = colorSchemeManager.formViewFilledInValueColor;
     }
 }
 

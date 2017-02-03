@@ -42,7 +42,7 @@ typedef void  (^AFAIntegrationContentUploadCompletionBlock)(ASDKModelContent *co
  *  @param taskID                                     ID of the task for which the content is uploaded
  *  @param uploadIntegrationContentWithRepresentation Request representation object describing the content to be
  *                                                    uploaded like the source and the sourceID
- *  @param completionBlock                            Completion block providing a refference for the uploaded
+ *  @param completionBlock                            Completion block providing a reference for the uploaded
  *                                                    model and an optional error reason.
  */
 - (void)requestUploadIntegrationContentForTaskID:(NSString *)taskID

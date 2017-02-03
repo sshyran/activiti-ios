@@ -18,8 +18,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ASDKFormCellProtocol.h"
+#import "ASDKFormThemedCollectionViewCell.h"
 
-@interface ASDKFormAttachFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
+@interface ASDKFormAttachFieldCollectionViewCell : ASDKFormThemedCollectionViewCell <ASDKFormCellProtocol>
 
 @property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> delegate;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
