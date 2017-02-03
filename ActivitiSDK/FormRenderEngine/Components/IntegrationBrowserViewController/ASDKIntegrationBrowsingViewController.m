@@ -26,7 +26,6 @@
 // Categories
 #import "UIFont+ASDKGlyphicons.h"
 #import "NSString+ASDKFontGlyphicons.h"
-#import "UIColor+ASDKFormViewColors.h"
 
 // Data sources
 #import "ASDKIntegrationNetworksDataSource.h"
@@ -70,12 +69,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 @property (weak, nonatomic) IBOutlet UILabel                                *noContentAvailableLabel;
 @property (weak, nonatomic) IBOutlet UIView                                 *refreshView;
 @property (strong, nonatomic) UIRefreshControl                              *refreshControl;
-@property (weak, nonatomic) IBOutlet UIButton *refreshButton;
+@property (weak, nonatomic) IBOutlet UIButton                               *refreshButton;
 
 // Internal state properties
 @property (strong, nonatomic) id<ASDKIntegrationDataSourceProtocol>         dataSource;
 @property (assign, nonatomic) ASDKIntegrationBrowsingControllerState        controllerState;
 @property (assign, nonatomic) BOOL                                          isPullToRefresh;
+@property (strong, nonatomic) ASDKFormColorSchemeManager                    *colorSchemeManager;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
@@ -89,6 +89,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                              bundle:[NSBundle bundleForClass:[self class]]];
     self = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDIntegrationBrowsingViewController];
     if (self) {
+        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+        self.colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+        
         // Set up state bindings
         self.dataSource = dataSource;
         [self handleBindingsForAppListViewController];
@@ -100,16 +103,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
-    
-    [self.navigationController.navigationBar setBarTintColor:colorSchemeManager.navigationBarThemeColor];
+    [self.navigationController.navigationBar setBarTintColor:self.colorSchemeManager.navigationBarThemeColor];
     [self.navigationController.navigationBar setTranslucent:NO];
     // Force the status bar to be displayed as light content
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     
     self.cancelBarButtonItem.title = ASDKLocalizedStringFromTable(kLocalizationCancelButtonText, ASDKLocalizationTable, @"Cancel");
-    self.cancelBarButtonItem.tintColor = colorSchemeManager.navigationBarTitleAndControlsColor;
+    self.cancelBarButtonItem.tintColor = self.colorSchemeManager.navigationBarTitleAndControlsColor;
     
     // Set up the browsing table view to adjust it's size automatically
     self.browsingTableView.estimatedRowHeight = 64.0f;
@@ -140,7 +140,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     titleLabel.text = self.title;
     titleLabel.font = [UIFont fontWithName:@"Avenir-Book"
                                       size:17];
-    titleLabel.textColor = colorSchemeManager.navigationBarTitleAndControlsColor;
+    titleLabel.textColor = self.colorSchemeManager.navigationBarTitleAndControlsColor;
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
@@ -214,8 +214,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
     ASDKIntegrationBrowsingViewController *childController = nil;
     id<ASDKIntegrationDataSourceProtocol> dataSource = nil;
     
@@ -265,7 +263,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                       target:self
                                                                       action:@selector(popChildController)];
         [backButton setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
-                                             NSForegroundColorAttributeName: colorSchemeManager.navigationBarTitleAndControlsColor}
+                                             NSForegroundColorAttributeName: self.colorSchemeManager.navigationBarTitleAndControlsColor}
                                   forState:UIControlStateNormal];
         [self.navigationItem setBackBarButtonItem:backButton];
         childController.navigationItem.leftBarButtonItem = backButton;

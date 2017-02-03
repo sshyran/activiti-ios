@@ -18,8 +18,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ASDKFormCellProtocol.h"
+#import "ASDKFormThemedCollectionViewCell.h"
 
-@interface ASDKFormDisplayTextFieldCollectionViewCell : UICollectionViewCell <ASDKFormCellProtocol>
+@interface ASDKFormDisplayTextFieldCollectionViewCell : ASDKFormThemedCollectionViewCell <ASDKFormCellProtocol>
 
 @property (weak, nonatomic) IBOutlet UILabel *displayTextLabel;
 @property (weak, nonatomic) IBOutlet UILabel *disclosureIndicatorLabel;

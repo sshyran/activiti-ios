@@ -675,7 +675,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
                                   ASDKLogError(@"Failed to fetch rest field values for request: %@",
@@ -686,7 +686,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:dataTask];
 }
 
@@ -800,7 +800,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  // Remove operation refference
+                                  // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
                                   ASDKLogError(@"Failed to fetch rest field values for request: %@",
@@ -811,7 +811,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
                                   });
                               }];
     
-    // Keep network operation refference to be able to cancel it
+    // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:dataTask];
 }
 

@@ -23,9 +23,6 @@
 #import "ASDKLocalizationConstants.h"
 #import "ASDKModelConfiguration.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldOption.h"

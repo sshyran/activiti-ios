@@ -21,15 +21,11 @@
 // Constants
 #import "ASDKModelConfiguration.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelDynamicTableFormField.h"
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelDynamicTableColumnDefinitionAmountFormField.h"
-
 
 @implementation ASDKDynamicTableColumnTableViewCell
 
@@ -38,13 +34,16 @@
     NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
     self.columnNameLabel.text = columnDefinitionformField.fieldName;
     
+    ASDKBootstrap *sdkBootStrap = [ASDKBootstrap sharedInstance];
+    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootStrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+    
     // If dealing with read-only forms extract the representation type from the attached
     // form field params model
     if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
         !dynamicTableFormField.isTableEditable) {
         representationType = columnDefinitionformField.formFieldParams.representationType;
         // set 'disabled color' for complete forms
-        self.columnValueLabel.textColor = [UIColor formViewCompletedValueColor];
+        self.columnValueLabel.textColor = colorSchemeManager.formViewFilledInValueColor;
     } else if (ASDKModelFormFieldRepresentationTypeReadOnly == columnDefinitionformField.representationType &&
                dynamicTableFormField.isTableEditable) {
         representationType = columnDefinitionformField.formFieldParams.representationType;
@@ -68,7 +67,9 @@
             ASDKModelDynamicTableColumnDefinitionAmountFormField *amountColumnDefinitionFormField = (ASDKModelDynamicTableColumnDefinitionAmountFormField *) columnDefinitionformField;
             NSString *currencySymbol = amountColumnDefinitionFormField.currency.length ? amountColumnDefinitionFormField.currency : @"$";
             NSMutableAttributedString *labelText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)", amountColumnDefinitionFormField.fieldName, currencySymbol]];
-            [labelText addAttribute:NSForegroundColorAttributeName value:[UIColor formViewAmountFieldSymbolColor] range:NSMakeRange((labelText.length) - 3,3)];
+            [labelText addAttribute:NSForegroundColorAttributeName
+                              value:colorSchemeManager.formViewAmountFieldSymbolColor
+                              range:NSMakeRange((labelText.length) - 3,3)];
             self.columnNameLabel.attributedText = labelText;
             
             if (columnDefinitionformField.metadataValue) {

@@ -17,8 +17,10 @@
  ******************************************************************************/
 
 #import "ASDKFormOutcomeCollectionViewCell.h"
+
+// Model
 #import "ASDKModelFormOutcome.h"
-#import "UIColor+ASDKFormViewColors.h"
+
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -26,7 +28,7 @@
 
 @interface ASDKFormOutcomeCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormOutcome *formOutcome;
+@property (strong, nonatomic) ASDKModelFormOutcome          *formOutcome;
 
 @end
 
@@ -77,12 +79,12 @@
                             forState:UIControlStateNormal];
         [self.outcomeButton layoutIfNeeded];
     }];
-    self.outcomeButton.backgroundColor = [UIColor formViewOutcomeEnabledColor];
+    self.outcomeButton.backgroundColor = self.colorSchemeManager.formViewOutcomeEnabledColor;
 }
 
 - (void)enableOutcomeButton:(BOOL)enabled {
     self.outcomeButton.enabled = enabled;
-    self.outcomeButton.backgroundColor = enabled ? [UIColor formViewOutcomeEnabledColor] : [UIColor formViewOutcomeDisabledColor];
+    self.outcomeButton.backgroundColor = enabled ? self.colorSchemeManager.formViewOutcomeEnabledColor : self.colorSchemeManager.formViewOutcomeDisabledColor;
 }
 
 @end

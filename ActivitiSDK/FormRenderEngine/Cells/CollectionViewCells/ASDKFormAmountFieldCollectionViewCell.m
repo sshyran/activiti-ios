@@ -19,7 +19,6 @@
 #import "ASDKFormAmountFieldCollectionViewCell.h"
 
 // Constants
-#import "UIColor+ASDKFormViewColors.h"
 #import "ASDKLocalizationConstants.h"
 
 // Models
@@ -66,7 +65,9 @@
     // adding currency label to field label
     NSString *currencySymbol = (self.currentFormField.currency.length != 0) ? self.currentFormField.currency : @"$";
     NSMutableAttributedString *labelText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)", formField.fieldName, currencySymbol]];
-    [labelText addAttribute:NSForegroundColorAttributeName value:[UIColor formViewAmountFieldSymbolColor] range:NSMakeRange((labelText.length) - 3,3)];
+    [labelText addAttribute:NSForegroundColorAttributeName
+                      value:self.colorSchemeManager.formViewAmountFieldSymbolColor
+                      range:NSMakeRange((labelText.length) - 3,3)];
 
     self.descriptionLabel.attributedText = labelText;
 
@@ -77,7 +78,7 @@
         NSString *formFieldValue = formField.values.firstObject;
         self.amountTextfield.text = formFieldValue ? [NSString stringWithFormat:@"%@", formFieldValue] : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
         self.amountTextfield.enabled = NO;
-        self.amountTextfield.textColor = [UIColor formViewCompletedValueColor];
+        self.amountTextfield.textColor = self.colorSchemeManager.formViewFilledInValueColor;
     } else {
         self.isRequired = formField.isRequired;
         self.amountTextfield.placeholder = formField.placeholer;
@@ -193,16 +194,16 @@ replacementString:(NSString *)string {
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.amountTextfield.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)cleanInvalidCellValue {

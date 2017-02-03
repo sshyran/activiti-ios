@@ -18,13 +18,14 @@
 
 #import "ASDKFormAttachFieldCollectionViewCell.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
 #import "ASDKModelContent.h"
+
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKServiceLocator.h"
 
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
@@ -32,8 +33,8 @@
 
 @interface ASDKFormAttachFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField         *formField;
+@property (assign, nonatomic) BOOL                       isRequired;
 
 - (NSString *)formatDescriptionLabelTextWithFormFieldValues:(NSArray *)formfieldValues;
     
@@ -53,7 +54,7 @@
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
-            self.backgroundColor = selected ? [UIColor formFieldCellHighlightColor] : [UIColor whiteColor];
+            self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
     }
 }
@@ -68,7 +69,7 @@
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
         self.selectedContentLabel.text = [self formatDescriptionLabelTextWithFormFieldValues:formField.values];
-        self.selectedContentLabel.textColor = [UIColor formViewCompletedValueColor];
+        self.selectedContentLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
     } else {
         self.isRequired = formField.isRequired;
 
@@ -108,16 +109,16 @@
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.selectedContentLabel.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)cleanInvalidCellValue {

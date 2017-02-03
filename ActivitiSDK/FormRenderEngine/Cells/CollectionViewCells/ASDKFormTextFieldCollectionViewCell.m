@@ -20,7 +20,6 @@
 
 // Constants
 #import "ASDKLocalizationConstants.h"
-#import "UIColor+ASDKFormViewColors.h"
 
 // Models
 #import "ASDKModelFormField.h"
@@ -32,8 +31,8 @@
 
 @interface ASDKFormTextFieldCollectionViewCell () <UITextFieldDelegate>
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField         *formField;
+@property (assign, nonatomic) BOOL                       isRequired;
 
 @end
 
@@ -71,7 +70,7 @@
         NSString *formFieldValue = formField.values.firstObject;
         self.textfield.text = formFieldValue ? formFieldValue : ASDKLocalizedStringFromTable(kLocalizationFormValueEmpty, ASDKLocalizationTable, @"Empty value text");
         self.textfield.enabled = NO;
-        self.textfield.textColor = [UIColor formViewCompletedValueColor];
+        self.textfield.textColor = self.colorSchemeManager.formViewFilledInValueColor;
     } else {
         self.isRequired = formField.isRequired;
         self.textfield.placeholder = formField.placeholer;
@@ -122,16 +121,16 @@
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.textfield.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)cleanInvalidCellValue {

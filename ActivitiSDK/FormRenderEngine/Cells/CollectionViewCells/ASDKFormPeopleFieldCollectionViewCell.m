@@ -18,9 +18,6 @@
 
 #import "ASDKFormPeopleFieldCollectionViewCell.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
-
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
@@ -32,8 +29,8 @@
 
 @interface ASDKFormPeopleFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField    *formField;
-@property (assign, nonatomic) BOOL                  isRequired;
+@property (strong, nonatomic) ASDKModelFormField            *formField;
+@property (assign, nonatomic) BOOL                          isRequired;
 
 @end
 
@@ -51,7 +48,7 @@
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
-            self.backgroundColor = selected ? [UIColor formFieldCellHighlightColor] : [UIColor whiteColor];
+            self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
     }
 }
@@ -66,7 +63,7 @@
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
         self.selectedPeopleLabel.text = [self formatDescriptionLabelTextWithFormFieldValues:formField.values];
-        self.selectedPeopleLabel.textColor = [UIColor formViewCompletedValueColor];
+        self.selectedPeopleLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
         self.selectedPeopleLabel.enabled = NO;
         self.disclosureIndicatorLabel.hidden = YES;
         self.labelTrailingToDisclosureIndicatorConstraint.priority = UILayoutPriorityFittingSizeLevel;
@@ -113,16 +110,16 @@
 
 - (void)prepareForReuse {
     self.descriptionLabel.text = nil;
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.selectedPeopleLabel.text = nil;
 }
 
 - (void)markCellValueAsInvalid {
-    self.descriptionLabel.textColor = [UIColor formViewInvalidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewInvalidValueColor;
 }
 
 - (void)markCellValueAsValid {
-    self.descriptionLabel.textColor = [UIColor formViewValidValueColor];
+    self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
 }
 
 - (void)cleanInvalidCellValue {

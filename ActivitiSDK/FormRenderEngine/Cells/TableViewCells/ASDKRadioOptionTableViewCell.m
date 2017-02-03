@@ -18,16 +18,22 @@
 
 #import "ASDKRadioOptionTableViewCell.h"
 
-// Categories
-#import "UIColor+ASDKFormViewColors.h"
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKServiceLocator.h"
+#import "ASDKFormColorSchemeManager.h"
+
 
 @implementation ASDKRadioOptionTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    self.checkMarkIconImageView.tintColor = [UIColor generalTintColor];
+    self.checkMarkIconImageView.tintColor = colorSchemeManager.formViewRadioOptionCheckmarkColor;
 }
 
 @end

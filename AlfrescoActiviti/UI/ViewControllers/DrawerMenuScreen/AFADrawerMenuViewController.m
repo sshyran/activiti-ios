@@ -60,6 +60,8 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.currentSelectedMenuCell = AFADrawerMenuCellTypeApplications;
 }
 
 - (void)didReceiveMemoryWarning {
