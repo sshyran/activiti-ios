@@ -34,14 +34,6 @@
 
 @implementation ASDKFormOutcomeCollectionViewCell
 
-- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
-    // Adjust the cell sizing parameters by constraining with a high priority on the horizontal axis
-    // and a lower priority on the vertical axis
-    UICollectionViewLayoutAttributes *attributes = [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
-    attributes.size = CGSizeMake(layoutAttributes.size.width, attributes.size.height);
-    return attributes;
-}
-
 
 #pragma mark -
 #pragma mark ASDKFormCellProtocol

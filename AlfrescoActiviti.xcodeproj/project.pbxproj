@@ -2043,6 +2043,7 @@
 			isa = PBXGroup;
 			children = (
 				13F35D481BDE8CF700FC3F4E /* Protocol */,
+				1320B24D1E44B65100991B7A /* FormThemedCollectionView */,
 				8D6ABE691CBB9A75008FACB4 /* FormDynamicTableFieldCell */,
 				8DB399911C99AD830089E0AB /* FormPeopleFieldCell */,
 				8D8F86011C8ED5EB00356A5B /* FormAttachFieldCell */,
@@ -2058,7 +2059,6 @@
 				13BA5C071BE0D0CD0091D6C9 /* FormOutcomeCell */,
 				138F0A431C6CC29400DA9414 /* FormHeaderView */,
 				138F0A481C6CC6CC00DA9414 /* FormFooterView */,
-				1320B24D1E44B65100991B7A /* FormThemedCollectionView */,
 			);
 			name = CollectionViewCells;
 			sourceTree = "<group>";
