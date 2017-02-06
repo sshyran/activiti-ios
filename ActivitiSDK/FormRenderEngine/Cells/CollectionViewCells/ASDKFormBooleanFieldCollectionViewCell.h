@@ -25,6 +25,7 @@
 @property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> delegate;
 @property (weak, nonatomic) IBOutlet UILabel            *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UISwitch           *booleanField;
+
 - (IBAction)switchToggled:(id)sender;
 
 @end

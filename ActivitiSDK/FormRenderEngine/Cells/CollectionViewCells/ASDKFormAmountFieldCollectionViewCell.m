@@ -46,14 +46,6 @@
     self.amountTextfield.delegate = self;
 }
 
-- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
-    // Adjust the cell sizing parameters by constraining with a high priority on the horizontal axis
-    // and a lower priority on the vertical axis
-    UICollectionViewLayoutAttributes *attributes = [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
-    attributes.size = CGSizeMake(layoutAttributes.size.width, attributes.size.height);
-    return attributes;
-}
-
 
 #pragma mark -
 #pragma mark ASDKFormCellProtocol
@@ -119,11 +111,8 @@
         __strong typeof(self) strongSelf = weakSelf;
         
         if (self.amountTextfield == textField) {
-            
             if (self.isFractionsEnabled) {
-                
                 if (textField.text.length > 0) {
-            
                     NSRange rangeAfterSeperator = [textField.text rangeOfString:@"."];
                 
                     if (rangeAfterSeperator.length != 0) {
@@ -158,11 +147,8 @@
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
     if (self.amountTextfield == textField) {
-        
         if (self.isFractionsEnabled) {
-            
             if ([textField.text containsString:@"."]) {
-                
                 // if . is present no other . allowed
                 if ([string isEqualToString:@"."]) {
                     return NO;
@@ -208,7 +194,6 @@ replacementString:(NSString *)string {
 
 - (void)cleanInvalidCellValue {
     self.amountTextfield.text = nil;
-//    self.decimalTextField.text = nil;
 }
 
 - (void)validateCellStateForText:(NSString *)text {

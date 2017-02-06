@@ -34,15 +34,6 @@
 
 @implementation ASDKFormDisplayTextFieldCollectionViewCell
 
-- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes {
-    // Adjust the cell sizing parameters by constraining with a high priority on the horizontal axis
-    // and a lower priority on the vertical axis
-    UICollectionViewLayoutAttributes *attributes = [super preferredLayoutAttributesFittingAttributes:layoutAttributes];
-    attributes.size = CGSizeMake(layoutAttributes.size.width, attributes.size.height);
-    
-    return attributes;
-}
-
 - (void)setSelected:(BOOL)selected {
     if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
