@@ -28,7 +28,7 @@
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_TRACE;
 
 @interface ASDKServiceLocator () {
-    OSSpinLock _spinLock;
+    NSLock *_lock;
 }
 
 @property (strong, nonatomic) NSMutableDictionary *serviceDictionary;
@@ -42,7 +42,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
     
     if (self) {
         self.serviceDictionary = [NSMutableDictionary dictionary];
-        _spinLock = OS_SPINLOCK_INIT;
+        _lock = [NSLock new];
     }
     
     return self;
@@ -74,10 +74,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
         ASDKLogError(@"Service class:%@ breaking single protocol conformity rule. Make sure sure service class only conform to one service protocol.", NSStringFromClass(serviceClass));
         return;
     } else {
-        OSSpinLockLock(&_spinLock);
+        [_lock lock];
         [self.serviceDictionary setObject:service
                                    forKey:protocolListName.firstObject];
-        OSSpinLockUnlock(&_spinLock);
+        [_lock unlock];
     }
 }
 
@@ -88,12 +88,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
     Class serviceClass = [service class];
     NSArray *protocolListName = [self protocolNameListForClass:serviceClass];
     
-    
+    [_lock lock];
     if (!protocolListName ||
         !self.serviceDictionary[protocolListName.firstObject]) {
-        OSSpinLockUnlock(&_spinLock);
         isServiceRegistered = NO;
     }
+    [_lock unlock];
     
     return isServiceRegistered;
 }
@@ -102,9 +102,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
 - (BOOL)isServiceRegisteredForProtocol:(Protocol *)protocol {
     NSParameterAssert(protocol);
     
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     BOOL isServiceRegistered = self.serviceDictionary[NSStringFromProtocol(protocol)] ? YES : NO;
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     return isServiceRegistered;
 }
@@ -112,9 +112,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
 - (id)serviceConformingToProtocol:(Protocol *)protocol {
     NSParameterAssert(protocol);
 
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     id service = self.serviceDictionary[NSStringFromProtocol(protocol)];
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     return service;
 }
@@ -122,11 +122,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
 - (void)removeServiceConformingToProtocol:(Protocol *)protocol {
     NSParameterAssert(protocol);
     
+    [_lock lock];
     if (self.serviceDictionary.allKeys.count) {
-        OSSpinLockLock(&_spinLock);
         [self.serviceDictionary removeObjectForKey:NSStringFromProtocol(protocol)];
-        OSSpinLockUnlock(&_spinLock);
     }
+    [_lock unlock];
 }
 
 - (void)removeService:(id)service {
@@ -135,11 +135,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
     Class serviceClass = [service class];
     NSArray *protocolListName = [self protocolNameListForClass:serviceClass];
     
+    [_lock lock];
     if (self.serviceDictionary.allKeys.count) {
-        OSSpinLockLock(&_spinLock);
         [self.serviceDictionary removeObjectForKey:protocolListName.firstObject];
-        OSSpinLockUnlock(&_spinLock);
     }
+    [_lock unlock];
 }
 
 #pragma mark -
