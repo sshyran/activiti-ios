@@ -17,16 +17,30 @@
  ******************************************************************************/
 
 #import "AppDelegate.h"
-#import "UIColor+AFATheme.h"
-#import "AFALogFormatter.h"
-#import "AFAServiceRepository.h"
-#import "AFAThumbnailManager.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import "AFAKeychainWrapper.h"
+
+// Constants
 #import "AFABusinessConstants.h"
 
-@interface AppDelegate () <CrashlyticsDelegate>
+// Categories
+#import "UIColor+AFATheme.h"
+
+// Managers
+#import "AFAServiceRepository.h"
+#import "AFAThumbnailManager.h"
+#import "AFAKeychainWrapper.h"
+#import "AFALogFormatter.h"
+
+// Frameworks
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <Buglife/Buglife.h>
+
+
+static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
+
+@interface AppDelegate () <CrashlyticsDelegate, BuglifeDelegate>
+
+@property (strong, nonatomic) DDFileLogger *fileLogger;
 
 @end
 
@@ -41,8 +55,22 @@
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
+    self.fileLogger = [DDFileLogger new];
+    self.fileLogger.maximumFileSize = 3 * 1024 * 1024;
+    self.fileLogger.rollingFrequency = 3600 * 24;
+    self.fileLogger.logFileManager.maximumNumberOfLogFiles = 3;
+    [DDLog addLogger:self.fileLogger];
+    
+    // Crashlyticss integration
     CrashlyticsKit.delegate = self;
     [Fabric with:@[[Crashlytics class]]];
+    
+    // Buglife integration
+    // Add your API key to receive bug reports
+    [[Buglife sharedBuglife] startWithAPIKey:@"YOUR_KEY"];
+    [Buglife sharedBuglife].invocationOptions = LIFEInvocationOptionsShake;
+    [Buglife sharedBuglife].userEmailField.visible = YES;
+    [Buglife sharedBuglife].delegate = self;
     
     application.delegate.window.backgroundColor = [UIColor windowBackgroundColor];
     
@@ -60,6 +88,28 @@
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         completionHandler(YES);
     }];
+}
+
+- (void)buglife:(nonnull Buglife *)buglife handleAttachmentRequestWithCompletionHandler:(nonnull void (^)())completionHandler {
+    for (DDLogFileInfo *fileInfo in [self.fileLogger.logFileManager unsortedLogFileInfos]) {
+        NSData *fileData = [NSData dataWithContentsOfFile:fileInfo.filePath];
+        
+        NSError *error =nil;
+        BOOL success = [buglife addAttachmentWithData:fileData
+                                                 type:LIFEAttachmentTypeIdentifierText
+                                             filename:fileInfo.fileName
+                                                error:&error];
+        
+        if (!success) {
+            AFALogError(@"An error occured while attaching log information to bug report. Reason:%@", error.localizedDescription);
+        }
+    }
+    
+    completionHandler();
+}
+
+- (NSString *)buglife:(Buglife *)buglife titleForPromptWithInvocation:(LIFEInvocationOptions)invocation {
+    return @"Help us make Alfresco Activiti better";
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
