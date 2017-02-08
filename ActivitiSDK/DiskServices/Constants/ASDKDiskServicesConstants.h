@@ -24,3 +24,4 @@ extern NSString *kActivitiSDKDownloadedContentPath;
 extern NSString *kASDKFilenameGeneratorLastValueUsed;
 extern NSString *kASDKFilenameGeneratorFormat;
 extern NSString *kASDKAuditLogFilenameFormat;
+extern NSString *kActivitiSDKLogsPath;

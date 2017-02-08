@@ -24,6 +24,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+## Buglife
+
+See http://www.buglife.com/terms-of-service
+
 ## CocoaLumberjack
 
 Software License Agreement (BSD License)

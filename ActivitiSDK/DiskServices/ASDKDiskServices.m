@@ -183,17 +183,41 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSString *documentsPath = documentsPaths.firstObject;
     NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
                              stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath];
+    
+    // Clear downloaded content
+    NSError *error = nil;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager isDeletableFileAtPath:contentPath]) {
-        NSError *error = nil;
         [fileManager removeItemAtPath:contentPath
                                 error:&error];
         if (error) {
-            ASDKLogError(@"Cannot delete local cached data. Reason:%@", error.localizedDescription);
+            ASDKLogError(@"Cannot delete local content cached data. Reason:%@", error.localizedDescription);
         }
     } else {
         ASDKLogWarn(@"There is no content to be deleted or cannot delete local cached data due to privilege issues.");
     }
+    
+    // Clear cached logs
+    DDFileLogger *fileLogger = nil;
+    error = nil;
+    for (id logger in [DDLog allLoggers]) {
+        if ([logger isKindOfClass:[DDFileLogger class]]) {
+            fileLogger = logger;
+            break;
+        }
+    }
+    
+    [fileLogger rollLogFileWithCompletionBlock:^{
+        NSArray *paths = [fileLogger.logFileManager unsortedLogFileInfos];
+        for( DDLogFileInfo *logFileInfo in paths ){
+            if (logFileInfo.isArchived) {
+                [[NSFileManager defaultManager] removeItemAtPath:logFileInfo.filePath
+                                                           error:nil];
+                [logFileInfo reset];
+                ASDKLogVerbose(@"Deleting log file: %@", logFileInfo.filePath);
+            }
+        }
+    }];
 }
 
 + (NSString *)remainingDiskSpaceOnThisDevice {
