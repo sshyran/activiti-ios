@@ -22,7 +22,7 @@ Alfresco Activiti iOS is still in the development phase and is not yet published
 ## What's the code License ?
 
 ```
-Copyright (C) 2005-2016 Alfresco Software Limited.
+Copyright (C) 2005-2017 Alfresco Software Limited.
 
 This file is part of the Alfresco Activiti Mobile SDK.
 
