@@ -106,6 +106,10 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
     [self.refreshButton setTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRefresh]
                         forState:UIControlStateNormal];
     
+    // Set up the details table view to adjust it's size automatically
+    self.applicationListTableView.estimatedRowHeight = 65.0f;
+    self.applicationListTableView.rowHeight = UITableViewAutomaticDimension;
+    
     // Request the application list
     [self onRefresh:nil];
 }
