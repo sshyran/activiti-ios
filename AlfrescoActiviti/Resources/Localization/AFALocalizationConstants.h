@@ -137,6 +137,7 @@ extern NSString *kLocalizationPeoplePickerControllerInstructionText;
 extern NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat;
 extern NSString *kLocalizationPeoplePickerControllerAssigningUserFormat;
 extern NSString *kLocalizationPeoplePickerControllerRemovingUserFormat;
+extern NSString *kLocalizationPeoplePickerControllerInviteText;
 
 // General use
 extern NSString *kLocalizationGeneralUseLastUpdateTextFormat;

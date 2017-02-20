@@ -44,6 +44,7 @@
 #import "AFAFormServices.h"
 #import "AFAProfileServices.h"
 #import "AFAIntegrationServices.h"
+#import "AFAUserServices.h"
 #import "AFAModalTaskDetailsCreateChecklistAction.h"
 #import "AFAModalTaskDetailsUpdateTaskAction.h"
 @import ActivitiSDK;
@@ -68,6 +69,7 @@
 #import "AFAProcessInstanceDetailsViewController.h"
 #import "AFAAddCommentsViewController.h"
 #import "AFAModalTaskDetailsViewController.h"
+#import "AFAModalPeoplePickerViewController.h"
 
 typedef NS_ENUM(NSInteger, AFATaskDetailsSectionType) {
     AFATaskDetailsSectionTypeTaskDetails = 0,
@@ -89,7 +91,8 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                                             AFATaskFormViewControllerDelegate,
                                             ASDKIntegrationBrowsingDelegate,
                                             AFAConfirmationViewDelegate,
-                                            AFAModalTaskDetailsViewControllerDelegate>
+                                            AFAModalTaskDetailsViewControllerDelegate,
+                                            AFAModalPeoplePickerViewControllerDelegate>
 
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *backBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UITableView                          *taskDetailsTableView;
@@ -498,8 +501,24 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                            animated:YES
                          completion:nil];
     } else if (AFATaskDetailsSectionTypeContributors == self.currentSelectedSection) {
-        [self performSegueWithIdentifier:kSegueIDTaskDetailsAddContributor
-                                  sender:sender];
+        AFAUserServices *userServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
+        if ([userServices isLoggedInOnCloud]) {
+            AFAModalPeoplePickerViewController *addContributorController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalPeoplePickerViewController];
+            addContributorController.alertTitle = NSLocalizedString(kLocalizationPeoplePickerControllerTitleText, @"Add contributor title");
+            addContributorController.appThemeColor = self.navigationBarThemeColor;
+            addContributorController.taskID = self.taskID;
+            addContributorController.delegate = self;
+            
+            addContributorController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+            addContributorController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            
+            [self presentViewController:addContributorController
+                               animated:YES
+                             completion:nil];
+        } else {
+            [self performSegueWithIdentifier:kSegueIDTaskDetailsAddContributor
+                                      sender:sender];
+        }
     } else if (AFATaskDetailsSectionTypeComments == self.currentSelectedSection) {
         [self performSegueWithIdentifier:kSegueIDTaskDetailsAddComments
                                   sender:sender];
@@ -1251,6 +1270,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                                            confirmationBlockAction:^{
                                                ASDKModelUser *userModel = [ASDKModelUser new];
                                                userModel.modelID = contributor.modelID;
+                                               userModel.email = contributor.email;
                                                [weakSelf onRemoveInvolvedUserForCurrentTask:userModel];
                                            }];
             
@@ -1554,13 +1574,21 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 
 
 #pragma mark -
-#pragma mark AFAModalTaskDetailsViewControllerDelegate Delegate
+#pragma mark AFAModalTaskDetailsViewControllerDelegate
 
 - (void)didCreateTask:(ASDKModelTask *)task {
     [self refreshTaskChecklist];
 }
 
 - (void)didUpdateCurrentTask {
+    [self refreshContentForCurrentSection];
+}
+
+
+#pragma mark -
+#pragma mark AFAModalPeoplePickerViewControllerDelegate
+
+- (void)didInvolveUserWithEmailAddress:(NSString *)emailAddress {
     [self refreshContentForCurrentSection];
 }
 

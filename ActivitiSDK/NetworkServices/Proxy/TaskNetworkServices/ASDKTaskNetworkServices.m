@@ -87,7 +87,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    
                                    [strongSelf handleSuccessfulTaskListResponseForTask:task
                                                                         responseObject:responseObject
-                                                                   withCompletionBlock:completionBlock];
+                                                                       completionBlock:completionBlock];
                                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                    __strong typeof(self) strongSelf = weakSelf;
                                    
@@ -96,7 +96,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    
                                    [strongSelf handleFailedTaskListResponseForTask:task
                                                                              error:error
-                                                               withCompletionBlock:completionBlock];
+                                                                   completionBlock:completionBlock];
                                }];
     
     // Keep network operation reference to be able to cancel it
@@ -123,7 +123,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    
                                    [strongSelf handleSuccessfulTaskListResponseForTask:task
                                                                         responseObject:responseObject
-                                                                   withCompletionBlock:completionBlock];
+                                                                       completionBlock:completionBlock];
                                    
                                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                    __strong typeof(self) strongSelf = weakSelf;
@@ -133,7 +133,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                    
                                    [strongSelf handleFailedTaskListResponseForTask:task
                                                                              error:error
-                                                               withCompletionBlock:completionBlock];
+                                                                   completionBlock:completionBlock];
                                }];
     
     // Keep network operation reference to be able to cancel it
@@ -803,10 +803,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:downloadTask];
 }
 
-- (void)involveUser:(ASDKModelUser *)user
-          forTaskID:(NSString *)taskID
-    completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
-    NSParameterAssert(user);
+- (void)involveUserWithID:(NSString *)userID
+                forTaskID:(NSString *)taskID
+          completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
+    NSParameterAssert(userID);
     NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
@@ -814,52 +814,73 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskUserInvolveServicePathFormat], taskID]
-                           parameters:@{kASDKAPIUserIdParameter : user.modelID}
+                           parameters:@{kASDKAPIUserIdParameter : userID}
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  // Check status code
-                                  NSInteger statusCode = [task statusCode];
-                                  if (ASDKHTTPCode200OK == statusCode) {
-                                      ASDKLogVerbose(@"The user was successfully involved for request: %@",
-                                                     [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
-                                      
-                                      dispatch_async(strongSelf.resultsQueue, ^{
-                                          completionBlock(YES, nil);
-                                      });
-                                  } else {
-                                      ASDKLogVerbose(@"The user involvement failed for request: %@",
-                                                     [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
-                                      
-                                      dispatch_async(strongSelf.resultsQueue, ^{
-                                          completionBlock(NO, nil);
-                                      });
-                                  }
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                                                               isRemoveOperation:NO
+                                                                                 completionBlock:completionBlock];
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  ASDKLogError(@"Failed to involve user for request: %@",
-                                               [task stateDescriptionForError:error]);
-                                  
-                                  dispatch_async(strongSelf.resultsQueue, ^{
-                                      completionBlock(NO, error);
-                                  });
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                                                                   error:error
+                                                                       isRemoveOperation:NO
+                                                                         completionBlock:completionBlock];
                               }];
     
     // Keep network operation reference to be able to cancel it
     [self.networkOperations addObject:dataTask];
 }
 
-- (void)removeInvolvedUser:(ASDKModelUser *)user
-                 forTaskID:(NSString *)taskID
-           completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
-    NSParameterAssert(user);
+- (void)involveUserWithEmailAddress:(NSString *)userEmailAddress
+                          forTaskID:(NSString *)taskID
+                    completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
+    NSParameterAssert(userEmailAddress);
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    __weak typeof(self) weakSelf = self;
+    __block NSURLSessionDataTask *dataTask =
+    [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskUserInvolveServicePathFormat], taskID]
+                           parameters:@{kASDKAPIEmailParameter : userEmailAddress}
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:dataTask];
+                                  
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                                                               isRemoveOperation:NO
+                                                                                 completionBlock:completionBlock];
+                              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:dataTask];
+                                  
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                                                                   error:error
+                                                                       isRemoveOperation:NO
+                                                                         completionBlock:completionBlock];
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:dataTask];
+}
+
+- (void)removeInvolvedUserWithID:(NSString *)userID
+                       forTaskID:(NSString *)taskID
+                 completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
+    NSParameterAssert(userID);
     NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
@@ -867,42 +888,63 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =
     [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskUserRemoveInvolvedServicePathFormat], taskID]
-                           parameters:@{kASDKAPIUserIdParameter : user.modelID}
+                           parameters:@{kASDKAPIUserIdParameter : userID}
                               success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  // Check status code
-                                  NSInteger statusCode = [task statusCode];
-                                  if (ASDKHTTPCode200OK == statusCode) {
-                                      ASDKLogVerbose(@"The user's involvement was successfully removed for request: %@",
-                                                     [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
-                                      
-                                      dispatch_async(strongSelf.resultsQueue, ^{
-                                          completionBlock(NO, nil);
-                                      });
-                                  } else {
-                                      ASDKLogVerbose(@"The user's involvement removal failed for request: %@",
-                                                     [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
-                                      
-                                      dispatch_async(strongSelf.resultsQueue, ^{
-                                          completionBlock(YES, nil);
-                                      });
-                                  }
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                                                               isRemoveOperation:YES
+                                                                                 completionBlock:completionBlock];
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  ASDKLogError(@"Failed to remove involvement user for request: %@",
-                                               [task stateDescriptionForError:error]);
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                                                                   error:error
+                                                                       isRemoveOperation:YES
+                                                                         completionBlock:completionBlock];
+                              }];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:dataTask];
+}
+
+- (void)removeInvolvedUserWithEmailAddress:(NSString *)userEmailAddress
+                                 forTaskID:(NSString *)taskID
+                           completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
+    NSParameterAssert(userEmailAddress);
+    NSParameterAssert(taskID);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    __weak typeof(self) weakSelf = self;
+    __block NSURLSessionDataTask *dataTask =
+    [self.requestOperationManager PUT:[NSString stringWithFormat:[self.servicePathFactory taskUserRemoveInvolvedServicePathFormat], taskID]
+                           parameters:@{kASDKAPIEmailParameter : userEmailAddress}
+                              success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                                  __strong typeof(self) strongSelf = weakSelf;
                                   
-                                  dispatch_async(strongSelf.resultsQueue, ^{
-                                      completionBlock(YES, error);
-                                  });
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:dataTask];
+                                  
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                                                               isRemoveOperation:YES
+                                                                                 completionBlock:completionBlock];
+                              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                                  __strong typeof(self) strongSelf = weakSelf;
+                                  
+                                  // Remove operation reference
+                                  [strongSelf.networkOperations removeObject:dataTask];
+                                  
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                                                                   error:error
+                                                                       isRemoveOperation:YES
+                                                                         completionBlock:completionBlock];
                               }];
     
     // Keep network operation reference to be able to cancel it
@@ -1231,7 +1273,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   
                                   [strongSelf handleSuccessfulTaskListResponseForTask:dataTask
                                                                        responseObject:responseObject
-                                                                  withCompletionBlock:completionBlock];
+                                                                      completionBlock:completionBlock];
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   
@@ -1240,7 +1282,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   
                                   [strongSelf handleFailedTaskListResponseForTask:dataTask
                                                                             error:error
-                                                              withCompletionBlock:completionBlock];
+                                                                  completionBlock:completionBlock];
                               }];
     
     // Keep network operation reference to be able to cancel it
@@ -1346,7 +1388,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 - (void)handleSuccessfulTaskListResponseForTask:(NSURLSessionDataTask *)task
                                  responseObject:(id)responseObject
-                            withCompletionBlock:(ASDKTaskListCompletionBlock)completionBlock {
+                                completionBlock:(ASDKTaskListCompletionBlock)completionBlock {
     NSDictionary *responseDictionary = (NSDictionary *)responseObject;
     ASDKLogVerbose(@"Task list fetched successfully for request: %@",
                    [task stateDescriptionForResponse:responseDictionary]);
@@ -1403,9 +1445,45 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                     }];
 }
 
+- (void)handleSuccessfulTaskUserInvolvementResponseForTask:(NSURLSessionTask *)task
+                                         isRemoveOperation:(BOOL)isRemoveOperation
+                                           completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
+    // Check status code
+    NSInteger statusCode = [task statusCode];
+    if (ASDKHTTPCode200OK == statusCode) {
+        if (isRemoveOperation) {
+            ASDKLogVerbose(@"The user's involvement was successfully removed for request: %@",
+                           [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+            dispatch_async(self.resultsQueue, ^{
+                completionBlock(NO, nil);
+            });
+        } else {
+            ASDKLogVerbose(@"The user was successfully involved for request: %@",
+                           [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+            dispatch_async(self.resultsQueue, ^{
+                completionBlock(YES, nil);
+            });
+        }
+    } else {
+        if (isRemoveOperation) {
+            ASDKLogVerbose(@"The user's involvement removal failed for request: %@",
+                           [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+            dispatch_async(self.resultsQueue, ^{
+                completionBlock(YES, nil);
+            });
+        } else {
+            ASDKLogVerbose(@"The user involvement failed for request: %@",
+                           [task stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+            dispatch_async(self.resultsQueue, ^{
+                completionBlock(NO, nil);
+            });
+        }
+    }
+}
+
 - (void)handleFailedTaskListResponseForTask:(NSURLSessionDataTask *)task
                                       error:(NSError *)error
-                        withCompletionBlock:(ASDKTaskListCompletionBlock)completionBlock {
+                            completionBlock:(ASDKTaskListCompletionBlock)completionBlock {
     ASDKLogError(@"Operation failed for request: %@",
                  [task stateDescriptionForError:error]);
     
@@ -1423,6 +1501,27 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     dispatch_async(self.resultsQueue, ^{
         completionBlock(nil, error);
     });
+}
+
+- (void)handleFailedTaskUserInvolveResponseForTask:(NSURLSessionDataTask *)task
+                                             error:(NSError *)error
+                                 isRemoveOperation:(BOOL)isRemoveOperation
+                                   completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock {
+    if (isRemoveOperation) {
+        ASDKLogError(@"Failed to remove involvement user for request: %@",
+                     [task stateDescriptionForError:error]);
+        
+        dispatch_async(self.resultsQueue, ^{
+            completionBlock(YES, error);
+        });
+    } else {
+        ASDKLogError(@"Failed to involve user for request: %@",
+                     [task stateDescriptionForError:error]);
+        
+        dispatch_async(self.resultsQueue, ^{
+            completionBlock(NO, error);
+        });
+    }
 }
 
 @end

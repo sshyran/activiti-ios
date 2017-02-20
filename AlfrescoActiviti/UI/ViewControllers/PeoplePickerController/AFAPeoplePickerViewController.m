@@ -198,13 +198,10 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
     self.controllerState = AFAPeoplePickerControllerStateInProgress;
     
     AFAUserFilterModel *userFilterModel = [AFAUserFilterModel new];
-    
     searchText = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
     // First check if we're dealing with a search by email
-    NSString *laxString = @"^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*$";
-    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", laxString];
-    if ([emailTest evaluateWithObject:searchText]) {
+    if ([searchText isValidEmailAddress]) {
         userFilterModel.email = searchText;
     } else {
         userFilterModel.name = searchText;

@@ -34,6 +34,7 @@ extern NSString *kStoryboardIDEmbeddedCredentialsPageController;
 extern NSString *kStoryboardIDConnectivityViewController;
 extern NSString *kStoryboardIDContentPickerViewController;
 extern NSString *kStoryboardIDModalTaskDetailsViewController;
+extern NSString *kStoryboardIDModalPeoplePickerViewController;
 extern NSString *kStoryboardIDListViewController;
 extern NSString *kStoryboardIDApplicationListViewController;
 extern NSString *kStoryboardIDProfileViewController;

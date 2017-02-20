@@ -48,6 +48,7 @@ NSString *kASDKAPIAssigneeParameter                             = @"assignee";
 NSString *kASDKAPITableEditableParameter                        = @"tableEditable";
 NSString *kASDKAPITypeParameter                                 = @"type";
 NSString *kASDKAPIParametersParameter                           = @"params";
+NSString *kASDKAPIEmailParameter                                = @"email";
 
 
 #pragma mark -

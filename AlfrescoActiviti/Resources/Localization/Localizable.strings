@@ -136,6 +136,7 @@
 "peoplePickerControllerInvolvingUserFormat"              = "%@ is now involved";
 "peoplePickerControllerAssigningUserFormat"              = "%@ is now assigned";
 "peoplePickerControllerRemovingUserFormat"               = "%@ is no longer involved";
+"peoplePickerControllerInviteText"                       = "Invite";
 
 // General use
 "generalUseLastUpdateTextFormat"                         = "Last update: %@";

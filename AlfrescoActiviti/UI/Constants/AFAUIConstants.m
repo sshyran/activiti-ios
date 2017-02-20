@@ -37,6 +37,7 @@ NSString *kStoryboardIDEmbeddedCredentialsPageController        = @"EmbeddedCred
 NSString *kStoryboardIDConnectivityViewController               = @"ConnectivityViewControllerID";
 NSString *kStoryboardIDContentPickerViewController              = @"ContentPickerViewControllerID";
 NSString *kStoryboardIDModalTaskDetailsViewController           = @"ModalTaskDetailsViewControllerID";
+NSString *kStoryboardIDModalPeoplePickerViewController          = @"ModalPeoplePickerViewControllerID";
 NSString *kStoryboardIDListViewController                       = @"ListViewControllerID";
 NSString *kStoryboardIDApplicationListViewController            = @"ApplicationListViewControllerID";
 NSString *kStoryboardIDProfileViewController                    = @"ProfileViewControllerID";
