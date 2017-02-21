@@ -194,28 +194,56 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
         completionBlock:(ASDKTaskContentDownloadCompletionBlock)completionBlock;
 
 /**
- *  Involves a user with the task matching a specified task ID and reports back the result via a completion block.
+ *  Involves a specific user with a certain task, both of the parameters being referenced by their correspondent IDs
+ *  and reports back the result via a completion block.
  *
- *  @param user            User that will be involved with the task
- *  @param taskID          ID of the task for which the user will be involved with
- *  @param completionBlock Completion block providing information on whether the involvement operation finished successfully
- *                         and an optional error reason.
+ *  @param userID           ID of the user that will be involved with the task
+ *  @param taskID           ID of the task for which the user will be involved with
+ *  @param completionBlock  Completion block providing information on whether the involvement operation finished successfully
+ *                          and an optional error reason.
  */
-- (void)involveUser:(ASDKModelUser *)user
-          forTaskID:(NSString *)taskID
-    completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock;
+- (void)involveUserWithID:(NSString *)userID
+                forTaskID:(NSString *)taskID
+          completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock;
+
 
 /**
- *  Removes an involved user from a task matching a specified task ID and reports back the result via
- *  a completion block.
+ *  Involves a user, identified by his email address, with a specific task identified by its ID and reports back the result
+ *  via a completion block.
  *
- *  @param user            User that will be removed from the task contributors list
- *  @param taskID          ID of the task for which the user will be removed
- *  @param completionBlock Completion block providing information on whether the removal operation finished successfully
+ *  @param userEmailAddress Email address of the involved user
+ *  @param taskID           ID of the task for which the user will be involved with
+ *  @param completionBlock  Completion block providing information on whether the involvement operation finished successfully
+ *                          and an optional error reason.
  */
-- (void)removeInvolvedUser:(ASDKModelUser *)user
-                 forTaskID:(NSString *)taskID
-           completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock;
+- (void)involveUserWithEmailAddress:(NSString *)userEmailAddress
+                          forTaskID:(NSString *)taskID
+                    completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock;
+
+/**
+ *  Removes an involved user from a task, both of the parameters being referenced by their correspondent IDs and reports back
+ *  the result via a completion block.
+ *
+ *  @param userID           ID of the user that will be removed from the task contributors list
+ *  @param taskID           ID of the task for which the user will be removed
+ *  @param completionBlock  Completion block providing information on whether the removal operation finished successfully
+ */
+- (void)removeInvolvedUserWithID:(NSString *)userID
+                       forTaskID:(NSString *)taskID
+                 completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock;
+
+
+/**
+ *  Removes an involved user, identified by his email address, from a task matching a specified task ID and reports back the
+ *  result via a completion block.
+ *
+ *  @param userEmailAddress Email address of the user to be removed from the task contributors list
+ *  @param taskID           ID of the task for which the user will be removed
+ *  @param completionBlock  Completion block providing information on whether the removal operation finished successfully
+ */
+- (void)removeInvolvedUserWithEmailAddress:(NSString *)userEmailAddress
+                                 forTaskID:(NSString *)taskID
+                           completionBlock:(ASDKTaskUserInvolvementCompletionBlock)completionBlock;
 
 /**
  *  Creates a standalone task that is not associated with a process instance.

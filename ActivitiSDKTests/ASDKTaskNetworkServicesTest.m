@@ -910,13 +910,13 @@
                                   XCTAssertNotNil(error);
                                   
                                   [downloadTaskContentExpectation fulfill];
-    }];
+                              }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
 }
 
-- (void)testThatItInvolvesUserForTask {
+- (void)testThatItInvolvesUserWithIDForTask {
     // given
     id user = OCMClassMock([ASDKModelUser class]);
     OCMStub([user modelID]).andReturn(@"100");
@@ -936,53 +936,20 @@
     
     //when
     self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
-    [self.taskNetworkServices involveUser:user
-                                forTaskID:@"id"
-                          completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                              XCTAssertNil(error);
-                              XCTAssertTrue(isUserInvolved);
-                              
-                              [involveUserExpectation fulfill];
-    }];
+    [self.taskNetworkServices involveUserWithID:@"id"
+                                      forTaskID:@"id"
+                                completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                    XCTAssertNil(error);
+                                    XCTAssertTrue(isUserInvolved);
+                                    
+                                    [involveUserExpectation fulfill];
+                                }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
 }
 
-- (void)testThatItHandlesUserInvolvementRequestFailure {
-    // given
-    id user = OCMClassMock([ASDKModelUser class]);
-    OCMStub([user modelID]).andReturn(@"100");
-    
-    // expect
-    XCTestExpectation *involveUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
-    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
-        ASDKTestRequestFailureBlock failureBlock;
-        NSUInteger failureBlockParameterIdxInMethodSignature = 5;
-        [invocation getArgument:&failureBlock
-                        atIndex:failureBlockParameterIdxInMethodSignature];
-        NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode400BadRequest];
-        [invocation setReturnValue:&dataTask];
-        
-        failureBlock(dataTask, [self requestGenericError]);
-    }] PUT:OCMOCK_ANY parameters:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
-    
-    //when
-    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
-    [self.taskNetworkServices involveUser:user
-                                forTaskID:@"id"
-                          completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                              XCTAssertNotNil(error);
-                              XCTAssertFalse(isUserInvolved);
-                              
-                              [involveUserExpectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:.5f
-                                 handler:nil];
-}
-
-- (void)testThatItRemovesInvolvedUser {
+- (void)testThatItInvolvesUserWithEmailAddressForTask {
     // given
     id user = OCMClassMock([ASDKModelUser class]);
     OCMStub([user modelID]).andReturn(@"100");
@@ -1002,20 +969,20 @@
     
     //when
     self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
-    [self.taskNetworkServices removeInvolvedUser:user
-                                       forTaskID:@"id"
-                                 completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                                     XCTAssertFalse(isUserInvolved);
-                                     XCTAssertNil(error);
-                                     
-                                     [involveUserExpectation fulfill];
-    }];
+    [self.taskNetworkServices involveUserWithEmailAddress:@"email"
+                                                forTaskID:@"id"
+                                          completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                              XCTAssertNil(error);
+                                              XCTAssertTrue(isUserInvolved);
+                                              
+                                              [involveUserExpectation fulfill];
+                                          }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
 }
 
-- (void)testThatItHandlesRemoveInvolvedUserRequestFailure {
+- (void)testThatItHandlesUserWithIDInvolvementRequestFailure {
     // given
     id user = OCMClassMock([ASDKModelUser class]);
     OCMStub([user modelID]).andReturn(@"100");
@@ -1035,14 +1002,179 @@
     
     //when
     self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
-    [self.taskNetworkServices removeInvolvedUser:user
-                                       forTaskID:@"id"
-                                 completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                                     XCTAssertTrue(isUserInvolved);
-                                     XCTAssertNotNil(error);
-                                     
-                                     [involveUserExpectation fulfill];
-                                 }];
+    [self.taskNetworkServices involveUserWithID:@"id"
+                                      forTaskID:@"id"
+                                completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                    XCTAssertNotNil(error);
+                                    XCTAssertFalse(isUserInvolved);
+                                    
+                                    [involveUserExpectation fulfill];
+                                }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItHandlesUserWithEmailAddressInvolvementRequestFailure {
+    // given
+    id user = OCMClassMock([ASDKModelUser class]);
+    OCMStub([user modelID]).andReturn(@"100");
+    
+    // expect
+    XCTestExpectation *involveUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        ASDKTestRequestFailureBlock failureBlock;
+        NSUInteger failureBlockParameterIdxInMethodSignature = 5;
+        [invocation getArgument:&failureBlock
+                        atIndex:failureBlockParameterIdxInMethodSignature];
+        NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode400BadRequest];
+        [invocation setReturnValue:&dataTask];
+        
+        failureBlock(dataTask, [self requestGenericError]);
+    }] PUT:OCMOCK_ANY parameters:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
+    
+    //when
+    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.taskNetworkServices involveUserWithEmailAddress:@"email"
+                                                forTaskID:@"id"
+                                          completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                              XCTAssertNotNil(error);
+                                              XCTAssertFalse(isUserInvolved);
+                                              
+                                              [involveUserExpectation fulfill];
+                                          }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItRemovesInvolvedUserWithID {
+    // given
+    id user = OCMClassMock([ASDKModelUser class]);
+    OCMStub([user modelID]).andReturn(@"100");
+    
+    // expect
+    XCTestExpectation *involveUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        ASDKTestRequestSuccessBlock successBlock;
+        NSUInteger successBlockParameterIdxInMethodSignature = 4;
+        [invocation getArgument:&successBlock
+                        atIndex:successBlockParameterIdxInMethodSignature];
+        NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode200OK];
+        [invocation setReturnValue:&dataTask];
+        
+        successBlock(dataTask, nil);
+    }] PUT:OCMOCK_ANY parameters:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
+    
+    //when
+    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.taskNetworkServices removeInvolvedUserWithID:@"id"
+                                             forTaskID:@"id"
+                                       completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                           XCTAssertFalse(isUserInvolved);
+                                           XCTAssertNil(error);
+                                           
+                                           [involveUserExpectation fulfill];
+                                       }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItRemovesInvolvedUserWithEmailAddress {
+    // given
+    id user = OCMClassMock([ASDKModelUser class]);
+    OCMStub([user modelID]).andReturn(@"100");
+    
+    // expect
+    XCTestExpectation *involveUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        ASDKTestRequestSuccessBlock successBlock;
+        NSUInteger successBlockParameterIdxInMethodSignature = 4;
+        [invocation getArgument:&successBlock
+                        atIndex:successBlockParameterIdxInMethodSignature];
+        NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode200OK];
+        [invocation setReturnValue:&dataTask];
+        
+        successBlock(dataTask, nil);
+    }] PUT:OCMOCK_ANY parameters:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
+    
+    //when
+    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.taskNetworkServices removeInvolvedUserWithEmailAddress:@"email"
+                                                       forTaskID:@"id"
+                                                 completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                                     XCTAssertFalse(isUserInvolved);
+                                                     XCTAssertNil(error);
+                                                     
+                                                     [involveUserExpectation fulfill];
+                                                 }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItHandlesRemoveInvolvedUserWithIDRequestFailure {
+    // given
+    id user = OCMClassMock([ASDKModelUser class]);
+    OCMStub([user modelID]).andReturn(@"100");
+    
+    // expect
+    XCTestExpectation *involveUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        ASDKTestRequestFailureBlock failureBlock;
+        NSUInteger failureBlockParameterIdxInMethodSignature = 5;
+        [invocation getArgument:&failureBlock
+                        atIndex:failureBlockParameterIdxInMethodSignature];
+        NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode400BadRequest];
+        [invocation setReturnValue:&dataTask];
+        
+        failureBlock(dataTask, [self requestGenericError]);
+    }] PUT:OCMOCK_ANY parameters:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
+    
+    //when
+    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.taskNetworkServices removeInvolvedUserWithID:@"id"
+                                             forTaskID:@"id"
+                                       completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                           XCTAssertTrue(isUserInvolved);
+                                           XCTAssertNotNil(error);
+                                           
+                                           [involveUserExpectation fulfill];
+                                       }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItHandlesRemoveInvolvedUserWithEmailAddressRequestFailure {
+    // given
+    id user = OCMClassMock([ASDKModelUser class]);
+    OCMStub([user modelID]).andReturn(@"100");
+    
+    // expect
+    XCTestExpectation *involveUserExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        ASDKTestRequestFailureBlock failureBlock;
+        NSUInteger failureBlockParameterIdxInMethodSignature = 5;
+        [invocation getArgument:&failureBlock
+                        atIndex:failureBlockParameterIdxInMethodSignature];
+        NSURLSessionDataTask *dataTask = [self dataTaskWithStatusCode:ASDKHTTPCode400BadRequest];
+        [invocation setReturnValue:&dataTask];
+        
+        failureBlock(dataTask, [self requestGenericError]);
+    }] PUT:OCMOCK_ANY parameters:OCMOCK_ANY success:OCMOCK_ANY failure:OCMOCK_ANY];
+    
+    //when
+    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.taskNetworkServices removeInvolvedUserWithEmailAddress:@"email"
+                                                       forTaskID:@"id"
+                                                 completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                                     XCTAssertTrue(isUserInvolved);
+                                                     XCTAssertNotNil(error);
+                                                     
+                                                     [involveUserExpectation fulfill];
+                                                 }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1073,7 +1205,7 @@
                                                XCTAssertNotNil(task);
                                                
                                                [createTaskExpectation fulfill];
-    }];
+                                           }];
     
     
     [self waitForExpectationsWithTimeout:.5f
@@ -1134,7 +1266,7 @@
                                   XCTAssertNil(error);
                                   
                                   [claimTaskExpectation fulfill];
-    }];
+                              }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1190,7 +1322,7 @@
                                     XCTAssertFalse(isTaskClaimed);
                                     
                                     [unclaimTaskExpectation fulfill];
-    }];
+                                }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1251,7 +1383,7 @@
                                    XCTAssertNotNil(task);
                                    
                                    [assignTaskExpectation fulfill];
-    }];
+                               }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1309,7 +1441,7 @@
                                                 XCTAssertNil(error);
                                                 
                                                 [downloadsTaskAuditLogExpectation fulfill];
-    }];
+                                            }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1389,7 +1521,7 @@
                                                 XCTAssertNotNil(error);
                                                 
                                                 [downloadTaskAuditLogExpectation fulfill];
-    }];
+                                            }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1418,7 +1550,7 @@
                                               XCTAssertNotNil(paging);
                                               
                                               [fetchChecklistExpectation fulfill];
-    }];
+                                          }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1479,7 +1611,7 @@
                                                     XCTAssertNotNil(task);
                                                     
                                                     [checklistTaskCreationExpectation fulfill];
-    }];
+                                                }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -1543,7 +1675,7 @@
                                                          XCTAssertTrue(isTaskUpdated);
                                                          
                                                          [checklistTaskOrderExpectation fulfill];
-    }];
+                                                     }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];

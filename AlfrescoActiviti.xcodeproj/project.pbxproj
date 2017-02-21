@@ -22,6 +22,8 @@
 		130A6FF21E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF11E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m */; };
 		130A6FF41E083F260086936C /* ASDKQuerryNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF31E083F260086936C /* ASDKQuerryNetworkServicesTest.m */; };
 		130A6FF61E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF51E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m */; };
+		130D5ED01E5AE95200B77139 /* NSString+ASDKEmailValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = 130D5ECE1E5AE95200B77139 /* NSString+ASDKEmailValidation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		130D5ED11E5AE95200B77139 /* NSString+ASDKEmailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D5ECF1E5AE95200B77139 /* NSString+ASDKEmailValidation.m */; };
 		130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */; };
 		130F06401DD0CE880042E17F /* ASDKParserOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */; };
 		130F06421DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */; };
@@ -252,6 +254,7 @@
 		139E54041C218F1100CE4674 /* ASDKAppParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54021C218F1100CE4674 /* ASDKAppParserOperationWorker.m */; };
 		139E54081C21935500CE4674 /* ASDKModelApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 139E54061C21935500CE4674 /* ASDKModelApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139E54091C21935500CE4674 /* ASDKModelApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54071C21935500CE4674 /* ASDKModelApp.m */; };
+		139F78F81E548D020030EFCD /* AFAModalPeoplePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 139F78F71E548D020030EFCD /* AFAModalPeoplePickerViewController.m */; };
 		139FEC161B720FA600CE6B01 /* ASDKModelGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 139FEC141B720FA600CE6B01 /* ASDKModelGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139FEC171B720FA600CE6B01 /* ASDKModelGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FEC151B720FA600CE6B01 /* ASDKModelGroup.m */; };
 		13A0BCB31BD7BF8E00599661 /* ASDKFormCheckbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A0BCB11BD7BF8E00599661 /* ASDKFormCheckbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -650,6 +653,8 @@
 		130A6FF11E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessInstanceNetworkServicesTest.m; sourceTree = "<group>"; };
 		130A6FF31E083F260086936C /* ASDKQuerryNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKQuerryNetworkServicesTest.m; sourceTree = "<group>"; };
 		130A6FF51E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKIntegrationNetworkServicesTest.m; sourceTree = "<group>"; };
+		130D5ECE1E5AE95200B77139 /* NSString+ASDKEmailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+ASDKEmailValidation.h"; path = "ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKEmailValidation.h"; sourceTree = SOURCE_ROOT; };
+		130D5ECF1E5AE95200B77139 /* NSString+ASDKEmailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+ASDKEmailValidation.m"; path = "ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKEmailValidation.m"; sourceTree = SOURCE_ROOT; };
 		130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKMantleJSONAdapterCustomPolicyTest.m; sourceTree = "<group>"; };
 		130F063F1DD0CE880042E17F /* ASDKParserOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKParserOperationManagerTest.m; sourceTree = "<group>"; };
 		130F06411DD0D1E00042E17F /* ASDKProcessParserOperationWorkerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessParserOperationWorkerTest.m; sourceTree = "<group>"; };
@@ -947,6 +952,8 @@
 		139E54021C218F1100CE4674 /* ASDKAppParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKAppParserOperationWorker.m; path = NetworkServices/ParserOperationManager/AppParserOperationWorker/ASDKAppParserOperationWorker.m; sourceTree = "<group>"; };
 		139E54061C21935500CE4674 /* ASDKModelApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelApp.h; path = Model/App/ASDKModelApp.h; sourceTree = "<group>"; };
 		139E54071C21935500CE4674 /* ASDKModelApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelApp.m; path = Model/App/ASDKModelApp.m; sourceTree = "<group>"; };
+		139F78F61E548D020030EFCD /* AFAModalPeoplePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalPeoplePickerViewController.h; path = UI/ViewControllers/ModalPeoplePickerViewController/AFAModalPeoplePickerViewController.h; sourceTree = "<group>"; };
+		139F78F71E548D020030EFCD /* AFAModalPeoplePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalPeoplePickerViewController.m; path = UI/ViewControllers/ModalPeoplePickerViewController/AFAModalPeoplePickerViewController.m; sourceTree = "<group>"; };
 		139FEC141B720FA600CE6B01 /* ASDKModelGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelGroup.h; path = Model/Group/ASDKModelGroup.h; sourceTree = "<group>"; };
 		139FEC151B720FA600CE6B01 /* ASDKModelGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelGroup.m; path = Model/Group/ASDKModelGroup.m; sourceTree = "<group>"; };
 		13A0BCB11BD7BF8E00599661 /* ASDKFormCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormCheckbox.h; path = FormRenderEngine/Components/FormCheckbox/ASDKFormCheckbox.h; sourceTree = "<group>"; };
@@ -1727,6 +1734,8 @@
 		1323CFD21B87634900E66D6F /* NSString */ = {
 			isa = PBXGroup;
 			children = (
+				130D5ECE1E5AE95200B77139 /* NSString+ASDKEmailValidation.h */,
+				130D5ECF1E5AE95200B77139 /* NSString+ASDKEmailValidation.m */,
 				136737121B86122600364886 /* NSString+ASDKFontGlyphicons.h */,
 				136737131B86122600364886 /* NSString+ASDKFontGlyphicons.m */,
 				13FF67A31CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h */,
@@ -1740,6 +1749,7 @@
 			isa = PBXGroup;
 			children = (
 				8D7C1A7E1C8091AF0092EA81 /* PeoplePickerController */,
+				139F78F91E548D060030EFCD /* ModalPeoplePickerController */,
 				13B811AC1BBE54E700E25CBE /* ContentPickerController */,
 				137B943F1BD654B200134BF1 /* FormController */,
 				132511EF1BA80FB500C4CA64 /* AFATaskDetailsViewController.h */,
@@ -1916,10 +1926,10 @@
 			children = (
 				13C958081B83852F002A08F1 /* Base */,
 				13CE8ED61B85B3310022F17A /* ContainerController */,
+				136DFF821DA7D8DF00FA40E0 /* ModalTaskDetailsController */,
 				133B7FDA1B78DBB400C17D06 /* LoginScreen */,
 				13FFF4111C43A6EB00550747 /* ApplicationScreen */,
 				13CE8ED21B85B2810022F17A /* DrawerMenuScreen */,
-				136DFF821DA7D8DF00FA40E0 /* ModalTaskDetailsController */,
 				13C958031B837D53002A08F1 /* ListScreen */,
 				132511F21BA80FB700C4CA64 /* TaskDetailsScreen */,
 				13EED87B1C56721A00F17105 /* ConnectivityScreen */,
@@ -3039,6 +3049,15 @@
 				139E54071C21935500CE4674 /* ASDKModelApp.m */,
 			);
 			name = App;
+			sourceTree = "<group>";
+		};
+		139F78F91E548D060030EFCD /* ModalPeoplePickerController */ = {
+			isa = PBXGroup;
+			children = (
+				139F78F61E548D020030EFCD /* AFAModalPeoplePickerViewController.h */,
+				139F78F71E548D020030EFCD /* AFAModalPeoplePickerViewController.m */,
+			);
+			name = ModalPeoplePickerController;
 			sourceTree = "<group>";
 		};
 		139FEC181B720FA900CE6B01 /* Group */ = {
@@ -4914,6 +4933,7 @@
 				8D3E354E1C9C50F1009F7766 /* ASDKPushFadeSegueUnwind.h in Headers */,
 				13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */,
 				1363A2411D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h in Headers */,
+				130D5ED01E5AE95200B77139 /* NSString+ASDKEmailValidation.h in Headers */,
 				13C9B57E1B9497B90009BD27 /* ASDKModelPaging.h in Headers */,
 				13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */,
 				132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */,
@@ -5385,6 +5405,7 @@
 				13AAD3B51CDB489800818537 /* AFAProfileViewController.m in Sources */,
 				13CFF33F1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m in Sources */,
 				13CFF3461BBC2B6500D3DEB6 /* AFATaskUpdateModel.m in Sources */,
+				139F78F81E548D020030EFCD /* AFAModalPeoplePickerViewController.m in Sources */,
 				8D7C1A6A1C8090500092EA81 /* AFACompletedDateTableViewCell.m in Sources */,
 				13891CAA1D00258800A61015 /* AFAConfirmationView.m in Sources */,
 				139DF5BA1C5A40C10062D01D /* AFAAppServices.m in Sources */,
@@ -5663,6 +5684,7 @@
 				8D3B50E91C86E258005BEEEB /* ASDKModelRestFormField.m in Sources */,
 				134B92E61BAFEF35000E641F /* ASDKModelContent.m in Sources */,
 				8D6ABE851CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.m in Sources */,
+				130D5ED11E5AE95200B77139 /* NSString+ASDKEmailValidation.m in Sources */,
 				8D25F0541C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.m in Sources */,
 				13B22C541C931CF60043D8A4 /* ASDKModelProcessInstanceContentField.m in Sources */,
 				13B8E6361BD7BC01005E95B6 /* ASDKFormRenderEngineConstants.m in Sources */,

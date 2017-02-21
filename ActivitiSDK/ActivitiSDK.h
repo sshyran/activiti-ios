@@ -135,6 +135,7 @@
 
 // Service categories
 #import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>
+#import <ActivitiSDK/NSString+ASDKEmailValidation.h>
 
 // Form render engine
 #import <ActivitiSDK/ASDKFormRenderEngine.h>

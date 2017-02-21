@@ -164,6 +164,7 @@ NSString *kLocalizationPeoplePickerControllerInstructionText      = @"peoplePick
 NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat  = @"peoplePickerControllerInvolvingUserFormat";
 NSString *kLocalizationPeoplePickerControllerAssigningUserFormat  = @"peoplePickerControllerAssigningUserFormat";
 NSString *kLocalizationPeoplePickerControllerRemovingUserFormat   = @"peoplePickerControllerRemovingUserFormat";
+NSString *kLocalizationPeoplePickerControllerInviteText           = @"peoplePickerControllerInviteText";
 
 
 #pragma mark -

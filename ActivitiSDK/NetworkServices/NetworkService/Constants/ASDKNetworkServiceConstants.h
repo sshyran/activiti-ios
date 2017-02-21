@@ -42,6 +42,7 @@ extern NSString *kASDKAPIAssigneeParameter;
 extern NSString *kASDKAPITableEditableParameter;
 extern NSString *kASDKAPITypeParameter;
 extern NSString *kASDKAPIParametersParameter;
+extern NSString *kASDKAPIEmailParameter;
 
 // Network API parameter values
 extern NSString *kASDKAPIServiceIDAlfrescoCloud;

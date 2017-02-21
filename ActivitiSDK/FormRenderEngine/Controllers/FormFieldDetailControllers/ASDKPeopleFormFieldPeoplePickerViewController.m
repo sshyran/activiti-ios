@@ -21,6 +21,7 @@
 // Categories
 #import "UIFont+ASDKGlyphicons.h"
 #import "NSString+ASDKFontGlyphicons.h"
+#import "NSString+ASDKEmailValidation.h"
 #import "UIView+ASDKViewAnimations.h"
 #import "UIViewController+ASDKAlertAddition.h"
 
@@ -212,13 +213,9 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     self.controllerState = AFAPeoplePickerControllerStateInProgress;
     
     ASDKUserFilterModel *userFilterModel = [ASDKUserFilterModel new];
-    
     searchText = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
-    // First check if we're dealing with a search by email
-    NSString *laxString = @"^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*$";
-    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", laxString];
-    if ([emailTest evaluateWithObject:searchText]) {
+    if ([searchText isValidEmailAddress]) {
         userFilterModel.email = searchText;
     } else {
         userFilterModel.name = searchText;

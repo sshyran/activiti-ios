@@ -27,6 +27,11 @@
 // Configurations
 #import "AFALogConfiguration.h"
 
+// Services
+#import "AFAUserServices.h"
+#import "AFAServiceRepository.h"
+
+
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 @interface AFATaskServices ()
@@ -375,23 +380,33 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService involveUser:user
-                               forTaskID:taskID
-                         completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                             if (!error && isUserInvolved) {
-                                 AFALogVerbose(@"User %@ had been involved with task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
-                                 
-                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                     completionBlock(isUserInvolved, nil);
-                                 });
-                             } else {
-                                 AFALogError(@"An error occured while involving user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
-                                 
-                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                     completionBlock(NO, error);
-                                 });
-                             }
-                         }];
+    ASDKTaskUserInvolvementCompletionBlock involvementCompletionBlock = ^(BOOL isUserInvolved, NSError *error) {
+        if (!error && isUserInvolved) {
+            AFALogVerbose(@"User %@ had been involved with task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock(isUserInvolved, nil);
+            });
+        } else {
+            AFALogError(@"An error occured while involving user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock(NO, error);
+            });
+        }
+    };
+    
+    AFAUserServices *userService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
+    
+    if ([userService isLoggedInOnCloud]) {
+        [self.taskNetworkService involveUserWithEmailAddress:user.email
+                                                   forTaskID:taskID
+                                             completionBlock:involvementCompletionBlock];
+    } else {
+        [self.taskNetworkService involveUserWithID:user.modelID
+                                         forTaskID:taskID
+                                   completionBlock:involvementCompletionBlock];
+    }
 }
 
 - (void)requestToRemoveTaskUserInvolvement:(ASDKModelUser *)user
@@ -401,19 +416,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService removeInvolvedUser:user
-                                      forTaskID:taskID
-                                completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                                    if (!error && !isUserInvolved) {
-                                        AFALogVerbose(@"User %@ had been removed from task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
-                                    } else {
-                                        AFALogError(@"An error occured while removing user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
-                                    }
-                                    
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        completionBlock(isUserInvolved, nil);
-                                    });
-                                }];
+    [self.taskNetworkService removeInvolvedUserWithID:user.modelID
+                                            forTaskID:taskID
+                                      completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                          if (!error && !isUserInvolved) {
+                                              AFALogVerbose(@"User %@ had been removed from task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
+                                          } else {
+                                              AFALogError(@"An error occured while removing user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
+                                          }
+                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                              completionBlock(isUserInvolved, nil);
+                                          });
+                                      }];
 }
 
 - (void)requestCreateComment:(NSString *)comment

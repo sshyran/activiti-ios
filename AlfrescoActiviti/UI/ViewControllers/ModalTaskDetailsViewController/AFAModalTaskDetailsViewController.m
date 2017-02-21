@@ -124,7 +124,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -231,6 +230,7 @@
 - (IBAction)onTaskNameTextFieldChange:(UITextField *)sender {
     [self validateTaskNameFieldForString:sender.text];
 }
+
 
 #pragma mark -
 #pragma mark Progress hud setup
