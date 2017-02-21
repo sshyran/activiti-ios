@@ -821,7 +821,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:task
                                                                                isRemoveOperation:NO
                                                                                  completionBlock:completionBlock];
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -830,7 +830,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:task
                                                                                    error:error
                                                                        isRemoveOperation:NO
                                                                          completionBlock:completionBlock];
@@ -858,7 +858,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:task
                                                                                isRemoveOperation:NO
                                                                                  completionBlock:completionBlock];
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -867,7 +867,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:task
                                                                                    error:error
                                                                        isRemoveOperation:NO
                                                                          completionBlock:completionBlock];
@@ -895,7 +895,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:task
                                                                                isRemoveOperation:YES
                                                                                  completionBlock:completionBlock];
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -904,7 +904,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:task
                                                                                    error:error
                                                                        isRemoveOperation:YES
                                                                          completionBlock:completionBlock];
@@ -932,7 +932,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:dataTask
+                                  [strongSelf handleSuccessfulTaskUserInvolvementResponseForTask:task
                                                                                isRemoveOperation:YES
                                                                                  completionBlock:completionBlock];
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -941,7 +941,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:dataTask
+                                  [strongSelf handleFailedTaskUserInvolveResponseForTask:task
                                                                                    error:error
                                                                        isRemoveOperation:YES
                                                                          completionBlock:completionBlock];
