@@ -67,9 +67,9 @@ AFAAttachFormTableViewCellDelegate>
     if (![currentModel isCompletedTask]) {
         if ([currentModel isFormDefined]) {
             if ([currentModel canBeRequeued]) {
-                cell = [self taskDetailsCellOfClaimableTaskWithDefinedFormForIndexPath:indexPath
-                                                                             tableView:tableView
-                                                                                 model:currentModel];
+                cell = [self taskDetailsCellOfRequeueableTaskWithDefinedFormForIndexPath:indexPath
+                                                                               tableView:tableView
+                                                                                   model:currentModel];
             } else if ([currentModel isClaimableTask]) {
                 cell = [self taskDetailsCellOfTaskWithoutDefinedFormForIndexPath:indexPath
                                                                        tableView:tableView
@@ -84,18 +84,6 @@ AFAAttachFormTableViewCellDelegate>
                                                                    tableView:tableView
                                                                        model:currentModel];
         }
-        
-        //        if (![currentModel isFormDefined] ||
-        //                   ([currentModel isFormDefined] && ![currentModel canBeRequeued]) ||
-        //                   ([currentModel isFormDefined] && !isClaimableTask)) {
-        //            cell = [self taskDetailsCellOfTaskWithoutDefinedFormForIndexPath:indexPath
-        //                                                                   tableView:tableView
-        //                                                                       model:currentModel];
-        //        } else {
-        //            cell = [self taskDetailsCellOfTaskWithDefinedFormForIndexPath:indexPath
-        //                                                                tableView:tableView
-        //                                                                    model:currentModel];
-        //        }
     } else {
         cell = [self completedCellForIndexPath:indexPath
                                      tableView:tableView
@@ -269,10 +257,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
             // There are cases when the user needs to be displayed on the same
             // position as the complete cell with choices regarding claiming
             // and / or completing the task
-            if ((model.currentTask.isMemberOfCandidateGroup ||
-                 model.currentTask.isMemberOfCandidateUsers ||
-                 model.currentTask.isManagerOfCandidateGroup) &&
-                !model.currentTask.assigneeModel) {
+            if ([model isClaimableTask]) {
                 return [self dequeuedClaimCellAtIndexPath:indexPath
                                             fromTableView:tableView];
             } else {
@@ -382,9 +367,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     return nil;
 }
 
-- (UITableViewCell *)taskDetailsCellOfClaimableTaskWithDefinedFormForIndexPath:(NSIndexPath *)indexPath
-                                                                     tableView:(UITableView *)tableView
-                                                                         model:(AFATableControllerTaskDetailsModel *)model {
+- (UITableViewCell *)taskDetailsCellOfRequeueableTaskWithDefinedFormForIndexPath:(NSIndexPath *)indexPath
+                                                                       tableView:(UITableView *)tableView
+                                                                           model:(AFATableControllerTaskDetailsModel *)model {
     switch (indexPath.row) {
         case AFADefinedFormClaimableTaskDetailsCellTypeTaskName: {
             return [self dequeuedNameCellAtIndexPath:indexPath
