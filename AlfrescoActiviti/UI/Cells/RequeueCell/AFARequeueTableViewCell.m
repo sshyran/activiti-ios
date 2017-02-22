@@ -16,11 +16,10 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFACompleteTableViewCell.h"
+#import "AFARequeueTableViewCell.h"
 #import "AFALocalizationConstants.h"
 
-@implementation AFACompleteTableViewCell
-
+@implementation AFARequeueTableViewCell
 
 #pragma mark
 #pragma mark - Life cycle
@@ -28,15 +27,13 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    [self.completeTaskButton setTitle:NSLocalizedString(kLocalizationTaskDetailsScreenCompleteTaskButtonText, @"Complete task text")
-                             forState:UIControlStateNormal];
     [self.requeueTaskButton setTitle:NSLocalizedString(kLocalizationTaskDetailsScreenRequeueTaskButtonText, @"Requeue task text")
                             forState:UIControlStateNormal];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -45,7 +42,6 @@
 #pragma mark Public interface
 
 - (void)setUpWithThemeColor:(UIColor *)themeColor {
-    self.completeTaskRoundedBorderView.fillColor = themeColor;
     self.requeueRoundedBorderView.fillColor = themeColor;
     self.backgroundColor = [themeColor colorWithAlphaComponent:.4f];
 }
@@ -53,12 +49,6 @@
 
 #pragma mark -
 #pragma mark Actions
-
-- (IBAction)onCompleteTask:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(onCompleteTask)]) {
-        [self.delegate onCompleteTask];
-    }
-}
 
 - (IBAction)onRequeue:(id)sender {
     if ([self.delegate respondsToSelector:@selector(onRequeueTask)]) {

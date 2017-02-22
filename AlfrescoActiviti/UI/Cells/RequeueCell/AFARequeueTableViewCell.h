@@ -16,22 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
-@import ActivitiSDK;
+#import <UIKit/UIKit.h>
+#import "AFACompleteTableViewCell.h"
 
-@interface AFATableControllerTaskDetailsModel : AFABaseModel <AFATableViewModelDelegate>
+@interface AFARequeueTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) ASDKModelTask     *currentTask;
-@property (strong, nonatomic) ASDKModelTask     *parentTask;
-@property (strong, nonatomic) ASDKModelProfile  *userProfile;
+@property (weak, nonatomic) id<AFACompleteTableViewCellDelegate> delegate;
+@property (weak, nonatomic) IBOutlet ASDKRoundedBorderView  *requeueRoundedBorderView;
+@property (weak, nonatomic) IBOutlet UIButton               *requeueTaskButton;
 
-- (BOOL)canBeRequeued;
-- (BOOL)isCompletedTask;
-- (BOOL)isAssignedTask;
-- (BOOL)isChecklistTask;
-- (BOOL)isAdhocTask;
-- (BOOL)isFormDefined;
-- (BOOL)isClaimableTask;
+- (void)setUpWithThemeColor:(UIColor *)themeColor;
 
 @end
