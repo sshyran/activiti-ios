@@ -105,9 +105,9 @@
 
 
 #pragma mark -
-#pragma mark Actions
+#pragma mark UIScrollViewDelegate
 
-- (IBAction)onTapGesture:(id)sender {
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self.collectionView endEditing:YES];
 }
 
@@ -311,7 +311,15 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         // If there is controller assigned to the selected form field notify the delegate
         // that it can begin preparing for presentation
         if (detailController) {
+            [self.view endEditing:YES];
             [self.navigationDelegate prepareToPresentDetailController:detailController];
+        } else {
+            // If the cell implements the focus toggle method, notify it so that it can
+            // update its state
+            UICollectionViewCell<ASDKFormCellProtocol> *cell = (UICollectionViewCell<ASDKFormCellProtocol> *)[self.collectionView cellForItemAtIndexPath:indexPath];
+            if ([cell respondsToSelector:@selector(toggleFocusedState)]) {
+                [cell toggleFocusedState];
+            }
         }
     }
 }

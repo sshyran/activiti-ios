@@ -36,5 +36,6 @@ typedef void  (^ASDKFormCellActionHandlerValidationBlock) (ASDKModelFormFieldVal
 - (void)setupCellWithFormTab:(ASDKModelFormTab *)formTab;
 - (void)setupCellWithFormOutcome:(ASDKModelFormOutcome *)formOutcome
                enableFormOutcome:(BOOL)enableFormOutcome;
+- (void)toggleFocusedState;
 
 @end
