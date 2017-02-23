@@ -95,6 +95,14 @@
     }
 }
 
+- (void)toggleFocusedState {
+    if ([self.amountTextfield isEditing]) {
+        [self.amountTextfield resignFirstResponder];
+    } else {
+        [self.amountTextfield becomeFirstResponder];
+    }
+}
+
 
 #pragma mark -
 #pragma mark TextField Delegate methods
