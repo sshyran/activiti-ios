@@ -57,6 +57,7 @@ NSString *kCellIDContentFile                                    = @"ContentFileC
 NSString *kCellIDTaskListStyle                                  = @"TaskListStyleCellID";
 NSString *kCellIDTaskDetailsName                                = @"TaskDetailsNameCellID";
 NSString *kCellIDTaskDetailsComplete                            = @"TaskDetailsCompleteCellID";
+NSString *kCellIDTaskDetailsRequeue                             = @"TaskDetailsRequeueCellID";
 NSString *kCellIDTaskDetailsClaim                               = @"TaskDetailsClaimCellID";
 NSString *kCellIDTaskDetailsAssignee                            = @"TaskDetailsAssigneeCellID";
 NSString *kCellIDTaskDetailsCreated                             = @"TaskDetailsCreatedCellID";

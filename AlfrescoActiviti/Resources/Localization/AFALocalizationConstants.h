@@ -68,6 +68,7 @@ extern NSString *kLocalizationStartProcessInstanceScreenNoResultsText;
 // Task details screen
 extern NSString *kLocalizationTaskDetailsScreenTaskDetailsText;
 extern NSString *kLocalizationTaskDetailsScreenCompleteTaskButtonText;
+extern NSString *kLocalizationTaskDetailsScreenRequeueTaskButtonText;
 extern NSString *kLocalizationTaskDetailsScreenAssignedToText;
 extern NSString *kLocalizationTaskDetailsScreenDueText;
 extern NSString *kLocalizationTaskDetailsScreenNoDueDateText;

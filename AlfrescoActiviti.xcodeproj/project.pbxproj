@@ -452,6 +452,7 @@
 		13F9BA351B739D290068BB8C /* ASDKBaseRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F9BA331B739D290068BB8C /* ASDKBaseRequestRepresentation.m */; };
 		13FB2E641BC53A7500549920 /* ASDKNetworkServiceConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FB2E621BC53A7500549920 /* ASDKNetworkServiceConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13FB2E651BC53A7500549920 /* ASDKNetworkServiceConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FB2E631BC53A7500549920 /* ASDKNetworkServiceConstants.m */; };
+		13FCF6411E5DCFE9002CC3EE /* AFARequeueTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FCF6401E5DCFE9002CC3EE /* AFARequeueTableViewCell.m */; };
 		13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF67971CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h */; };
 		13FF679A1CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FF67981CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m */; };
 		13FF679C1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF679B1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h */; };
@@ -1195,6 +1196,8 @@
 		13F9BA371B73A8200068BB8C /* ASDKHTTPCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKHTTPCodes.h; path = NetworkServices/HTTPCodes/ASDKHTTPCodes.h; sourceTree = "<group>"; };
 		13FB2E621BC53A7500549920 /* ASDKNetworkServiceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKNetworkServiceConstants.h; path = NetworkServices/NetworkService/Constants/ASDKNetworkServiceConstants.h; sourceTree = "<group>"; };
 		13FB2E631BC53A7500549920 /* ASDKNetworkServiceConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKNetworkServiceConstants.m; path = NetworkServices/NetworkService/Constants/ASDKNetworkServiceConstants.m; sourceTree = "<group>"; };
+		13FCF63F1E5DCFE9002CC3EE /* AFARequeueTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFARequeueTableViewCell.h; path = UI/Cells/RequeueCell/AFARequeueTableViewCell.h; sourceTree = "<group>"; };
+		13FCF6401E5DCFE9002CC3EE /* AFARequeueTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFARequeueTableViewCell.m; path = UI/Cells/RequeueCell/AFARequeueTableViewCell.m; sourceTree = "<group>"; };
 		13FF67971CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationBrowsingTableViewCell.h; path = FormRenderEngine/Cells/TableViewCells/ASDKIntegrationBrowsingTableViewCell.h; sourceTree = "<group>"; };
 		13FF67981CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationBrowsingTableViewCell.m; path = FormRenderEngine/Cells/TableViewCells/ASDKIntegrationBrowsingTableViewCell.m; sourceTree = "<group>"; };
 		13FF679B1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationDataSourceProtocol.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/Protocol/ASDKIntegrationDataSourceProtocol.h; sourceTree = "<group>"; };
@@ -1903,6 +1906,7 @@
 				8D7C1A471C808D060092EA81 /* DueCell */,
 				8D7C1A431C808CF40092EA81 /* AssigneeCell */,
 				8D7C1A3F1C808CD90092EA81 /* CompleteCell */,
+				13FCF6421E5DCFEF002CC3EE /* RequeueCell */,
 				8D7C1A3B1C808CC20092EA81 /* NameCell */,
 				13F562C81CA2A3D600F0C7B5 /* ClaimCell */,
 				13EBEC981CF5A74600EC8F96 /* AuditLogCell */,
@@ -4202,6 +4206,15 @@
 			name = Constants;
 			sourceTree = "<group>";
 		};
+		13FCF6421E5DCFEF002CC3EE /* RequeueCell */ = {
+			isa = PBXGroup;
+			children = (
+				13FCF63F1E5DCFE9002CC3EE /* AFARequeueTableViewCell.h */,
+				13FCF6401E5DCFE9002CC3EE /* AFARequeueTableViewCell.m */,
+			);
+			name = RequeueCell;
+			sourceTree = "<group>";
+		};
 		13FFF4111C43A6EB00550747 /* ApplicationScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -5429,6 +5442,7 @@
 				13C711EB1D0996F700E8550D /* AFACredentialSectionTableViewCell.m in Sources */,
 				13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */,
 				13BDA7431B7B733400A2CE40 /* AFALocalizationConstants.m in Sources */,
+				13FCF6411E5DCFE9002CC3EE /* AFARequeueTableViewCell.m in Sources */,
 				13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */,
 				13ACE37C1C9996B900693A29 /* AFAAddCommentsViewController.m in Sources */,
 				13C957FA1B836713002A08F1 /* AFAModalReplaceSegue.m in Sources */,

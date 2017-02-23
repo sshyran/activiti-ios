@@ -749,7 +749,17 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
               strongSelf.sectionContentDict[@(AFATaskDetailsSectionTypeTaskDetails)] = taskDetailsModel;
               
               // Enable the task form button if the task has a form key defined
-              strongSelf.taskFormButton.enabled = taskDetailsModel.currentTask.formKey ? YES : NO;
+              // and if it's the case, the task has been claimed in advance
+              BOOL isFormSectionEnabled = YES;
+              if (![taskDetailsModel isFormDefined]) {
+                  isFormSectionEnabled = NO;
+              } else {
+                  if (![taskDetailsModel isCompletedTask] && [taskDetailsModel isClaimableTask]) {
+                      isFormSectionEnabled = NO;
+                  }
+              }
+              
+              strongSelf.taskFormButton.enabled = isFormSectionEnabled;
               
               // If the current task is claimable and has an assignee then fetch the
               // current user profile to also check if the task is already claimed and

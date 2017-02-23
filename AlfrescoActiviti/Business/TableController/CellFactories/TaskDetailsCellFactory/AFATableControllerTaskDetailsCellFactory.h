@@ -28,7 +28,6 @@ typedef NS_ENUM(NSInteger, AFATaskDetailsCellType) {
     AFATaskDetailsCellTypeDue,
     AFATaskDetailsCellTypePartOf,
     AFATaskDetailsCellTypeDescription,
-    AFATaskDetailsCellTypeAttachedForm,
     // By default the enum count used to describe the number of cells for a
     // finite section, but since we're swizzling around in some scenarios
     // different cell types we moved down the position of the enum count
@@ -37,6 +36,29 @@ typedef NS_ENUM(NSInteger, AFATaskDetailsCellType) {
     AFATaskDetailsCellTypeClaim,
     AFATaskDetailsCellTypeRequeue,
     AFATaskDetailsCellTypeReAssign
+};
+
+typedef NS_ENUM(NSInteger, AFADefinedFormTaskDetailsCellType) {
+    AFADefinedFormTaskDetailsCellTypeTaskName = 0,
+    AFADefinedFormTaskDetailsCellTypeAssignee,
+    AFADefinedFormTaskDetailsCellTypeCreated,
+    AFADefinedFormTaskDetailsCellTypeDue,
+    AFADefinedFormTaskDetailsCellTypePartOf,
+    AFADefinedFormTaskDetailsCellTypeDescription,
+    AFADefinedFormTaskDetailsCellTypeAttachedForm,
+    AFADefinedFormTaskDetailsCellTypeEnumCount
+};
+
+typedef NS_ENUM(NSInteger, AFADefinedFormClaimableTaskDetailsCellType) {
+    AFADefinedFormClaimableTaskDetailsCellTypeTaskName = 0,
+    AFADefinedFormClaimableTaskDetailsCellTypeRequeue,
+    AFADefinedFormClaimableTaskDetailsCellTypeAssignee,
+    AFADefinedFormClaimableTaskDetailsCellTypeCreated,
+    AFADefinedFormClaimableTaskDetailsCellTypeDue,
+    AFADefinedFormClaimableTaskDetailsCellTypePartOf,
+    AFADefinedFormClaimableTaskDetailsCellTypeDescription,
+    AFADefinedFormClaimableTaskDetailsCellTypeAttachedForm,
+    AFADefinedFormClaimableTaskDetailsCellTypeEnumCount
 };
 
 typedef NS_ENUM(NSInteger, AFACompletedTaskDetailsCellType) {
@@ -51,17 +73,6 @@ typedef NS_ENUM(NSInteger, AFACompletedTaskDetailsCellType) {
     AFACompletedTaskDetailsCellTypeAttachedForm,
     AFACompletedTaskDetailsCellTypeEnumCount,
     AFACompletedTaskDetailsCellTypeAuditLog // Audit log download function is temporary disabled 
-};
-
-typedef NS_ENUM(NSInteger, AFAInvolvedTaskDetailsCellType) {
-    AFAInvolvedTaskDetailsCellTypeName = 0,
-    AFAInvolvedTaskDetailsCellTypeAssignee,
-    AFAInvolvedTaskDetailsCellTypeCreated,
-    AFAInvolvedTaskDetailsCellTypeDue,
-    AFAInvolvedTaskDetailsCellTypePartOf,
-    AFAInvolvedTaskDetailsCellTypeDescription,
-    AFAInvolvedTaskDetailsCellTypeAttachedForm,
-    AFAInvolvedTaskDetailsCellTypeEnumCount
 };
 
 typedef NS_ENUM(NSInteger, AFATaskDetailsPartOfCellType) {

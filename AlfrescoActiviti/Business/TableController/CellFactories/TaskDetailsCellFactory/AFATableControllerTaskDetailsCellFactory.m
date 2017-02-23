@@ -21,6 +21,7 @@
 // Cells
 #import "AFANameTableViewCell.h"
 #import "AFACompleteTableViewCell.h"
+#import "AFARequeueTableViewCell.h"
 #import "AFAAssigneeTableViewCell.h"
 #import "AFADueTableViewCell.h"
 #import "AFADescriptionTableViewCell.h"
@@ -41,17 +42,18 @@
 #import "AFATableControllerTaskDetailsModel.h"
 
 @interface AFATableControllerTaskDetailsCellFactory () <AFADueTableViewCellDelegate,
-                                                        AFACompleteTableViewCellDelegate,
-                                                        AFAProcessMembershipTableViewCellDelegate,
-                                                        AFATaskMembershipTableViewCellDelegate,
-                                                        AFAClaimTableViewCellDelegate,
-                                                        AFAAssigneeTableViewCellDelegate,
-                                                        AFAAuditLogTableViewCellDelegate,
-                                                        AFAAttachFormTableViewCellDelegate>
+AFACompleteTableViewCellDelegate,
+AFAProcessMembershipTableViewCellDelegate,
+AFATaskMembershipTableViewCellDelegate,
+AFAClaimTableViewCellDelegate,
+AFAAssigneeTableViewCellDelegate,
+AFAAuditLogTableViewCellDelegate,
+AFAAttachFormTableViewCellDelegate>
 
 @end
 
 @implementation AFATableControllerTaskDetailsCellFactory
+
 
 #pragma mark -
 #pragma mark AFATableViewCellFactoryDelegate
@@ -60,234 +62,32 @@
               cellForIndexPath:(NSIndexPath *)indexPath
                       forModel:(id<AFATableViewModelDelegate>)model {
     UITableViewCell *cell = nil;
-
     AFATableControllerTaskDetailsModel *currentModel = (AFATableControllerTaskDetailsModel *)model;
     
     if (![currentModel isCompletedTask]) {
-        if ([currentModel isAssignedTask] ||
-            currentModel.currentTask.isMemberOfCandidateUsers ||
-            currentModel.currentTask.isManagerOfCandidateGroup ||
-            currentModel.currentTask.isMemberOfCandidateGroup) {
-            // Handle task details cell section rows
-            switch (indexPath.row) {
-                case AFATaskDetailsCellTypeTaskName: {
-                    cell = [self dequeuedNameCellAtIndexPath:indexPath
-                                               fromTableView:tableView
-                                                   withModel:model];
-                }
-                    break;
-                    
-                case AFATaskDetailsCellTypeComplete: {
-                    // There are cases when the user needs to be displayed on the same
-                    // position as the complete cell with choices regarding claiming
-                    // and / or completing the task
-                    if ((currentModel.currentTask.isMemberOfCandidateGroup ||
-                         currentModel.currentTask.isMemberOfCandidateUsers ||
-                         currentModel.currentTask.isManagerOfCandidateGroup) &&
-                        !currentModel.currentTask.assigneeModel) {
-                        cell = [self dequeuedClaimCellAtIndexPath:indexPath
-                                                    fromTableView:tableView];
-                    } else {
-                        cell = [self dequeuedCompleteCellAtIndexPath:indexPath
-                                                       fromTableView:tableView
-                                                           withModel:model];
-                    }
-                }
-                    break;
-                    
-                case AFATaskDetailsCellTypeAssignee: {
-                    cell = [self dequeuedAssigneeCellAtIndexPath:indexPath
-                                                   fromTableView:tableView
-                                                       withModel:model];
-                }
-                    break;
-                    
-                case AFATaskDetailsCellTypeCreated: {
-                    cell = [self dequeuedCreatedDateCellAtIndexPath:indexPath
-                                                      fromTableView:tableView
-                                                          withModel:model];
-                }
-                    break;
-                    
-                case AFATaskDetailsCellTypeDue: {
-                    cell = [self dequeuedDueCellAtIndexPath:indexPath
-                                              fromTableView:tableView
-                                                  withModel:model];
-                }
-                    break;
-                    
-                case AFATaskDetailsCellTypePartOf: {
-                    if ([currentModel isChecklistTask]) {
-                        cell = [self dequeuedTaskMembershipCellAtIndexPath:indexPath
-                                                             fromTableView:tableView
-                                                                 withModel:model];
-                    } else {
-                        cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
-                                                                fromTableView:tableView
-                                                                    withModel:model];
-                    }
-                }
-                    break;
-                    
-                case AFATaskDetailsCellTypeDescription: {
-                    cell = [self dequeuedDescriptionCellAtIndexPath:indexPath
-                                                      fromTableView:tableView
-                                                          withModel:model];
-                }
-                    break;
-                    
-                case AFATaskDetailsCellTypeAttachedForm: {
-                    cell = [self dequeuedAttachedFormCellAtIndexPath:indexPath
-                                                       fromTableView:tableView
-                                                           withModel:model];
-                }
-                    break;
-                    
-                default: break;
+        if ([currentModel isFormDefined]) {
+            if ([currentModel canBeRequeued]) {
+                cell = [self taskDetailsCellOfRequeueableTaskWithDefinedFormForIndexPath:indexPath
+                                                                               tableView:tableView
+                                                                                   model:currentModel];
+            } else if ([currentModel isClaimableTask]) {
+                cell = [self taskDetailsCellOfTaskWithoutDefinedFormForIndexPath:indexPath
+                                                                       tableView:tableView
+                                                                           model:currentModel];
+            } else {
+                cell = [self taskDetailsCellOfTaskWithDefinedFormForIndexPath:indexPath
+                                                                    tableView:tableView
+                                                                        model:currentModel];
             }
         } else {
-            // Handle involved task details cells
-            switch (indexPath.row) {
-                case AFAInvolvedTaskDetailsCellTypeName: {
-                    cell = [self dequeuedNameCellAtIndexPath:indexPath
-                                               fromTableView:tableView
-                                                   withModel:model];
-                }
-                    break;
-                    
-                case AFAInvolvedTaskDetailsCellTypeAssignee: {
-                    cell = [self dequeuedAssigneeCellAtIndexPath:indexPath
-                                                   fromTableView:tableView
-                                                       withModel:model];
-                }
-                    break;
-                    
-                case AFAInvolvedTaskDetailsCellTypeCreated: {
-                    cell = [self dequeuedCreatedDateCellAtIndexPath:indexPath
-                                                      fromTableView:tableView
-                                                          withModel:model];
-                }
-                    break;
-                    
-                case AFAInvolvedTaskDetailsCellTypeDue: {
-                    cell = [self dequeuedDueCellAtIndexPath:indexPath
-                                              fromTableView:tableView
-                                                  withModel:model];
-                }
-                    break;
-                    
-                case AFAInvolvedTaskDetailsCellTypePartOf: {
-                    if ([currentModel isChecklistTask]) {
-                        cell = [self dequeuedTaskMembershipCellAtIndexPath:indexPath
-                                                             fromTableView:tableView
-                                                                 withModel:model];
-                    } else {
-                        cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
-                                                                fromTableView:tableView
-                                                                    withModel:model];
-                    }
-                }
-                    break;
-                    
-                case AFAInvolvedTaskDetailsCellTypeDescription: {
-                    cell = [self dequeuedDescriptionCellAtIndexPath:indexPath
-                                                      fromTableView:tableView
-                                                          withModel:model];
-                }
-                    break;
-                    
-                case AFAInvolvedTaskDetailsCellTypeAttachedForm: {
-                    cell = [self dequeuedAttachedFormCellAtIndexPath:indexPath
-                                                              fromTableView:tableView
-                                                                  withModel:model];
-                }
-                    break;
-                    
-                default:
-                    break;
-            }
+            cell = [self taskDetailsCellOfTaskWithoutDefinedFormForIndexPath:indexPath
+                                                                   tableView:tableView
+                                                                       model:currentModel];
         }
     } else {
-        // Handle completed task details cell section rows
-        switch (indexPath.row) {
-            case AFACompletedTaskDetailsCellTypeTaskName: {
-                cell = [self dequeuedNameCellAtIndexPath:indexPath
-                                           fromTableView:tableView
-                                               withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeAssignee: {
-                cell = [self dequeuedAssigneeCellAtIndexPath:indexPath
-                                               fromTableView:tableView
-                                                   withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeCreated: {
-                cell = [self dequeuedCreatedDateCellAtIndexPath:indexPath
-                                                  fromTableView:tableView
-                                                      withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeDue: {
-                cell = [self dequeuedDueCellAtIndexPath:indexPath
-                                          fromTableView:tableView
-                                              withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeEnd: {
-                cell = [self dequeuedEndDateCellAtIndexPath:indexPath
-                                              fromTableView:tableView
-                                                  withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeDuration: {
-                cell = [self dequeuedDurationCellAtIndexPath:indexPath
-                                               fromTableView:tableView
-                                                   withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypePartOf: {
-                if ([currentModel isChecklistTask]) {
-                    cell = [self dequeuedTaskMembershipCellAtIndexPath:indexPath
-                                                         fromTableView:tableView
-                                                             withModel:model];
-                } else {
-                    cell = [self dequeuedProcessMembershipCellAtIndexPath:indexPath
-                                                            fromTableView:tableView
-                                                                withModel:model];
-                }
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeAuditLog: {
-                cell = [self dequeueAuditLogCellAtIndexPath:indexPath
-                                              fromTableView:tableView
-                                                  withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeDescription: {
-                cell = [self dequeuedDescriptionCellAtIndexPath:indexPath
-                                                  fromTableView:tableView
-                                                      withModel:model];
-            }
-                break;
-                
-            case AFACompletedTaskDetailsCellTypeAttachedForm: {
-                cell = [self dequeuedAttachedFormCellAtIndexPath:indexPath
-                                                   fromTableView:tableView
-                                                       withModel:model];
-            }
-                break;
-                
-            default: break;
-        }
+        cell = [self completedCellForIndexPath:indexPath
+                                     tableView:tableView
+                                         model:currentModel];
     }
     
     return cell;
@@ -397,7 +197,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 #pragma mark AFAAttachFormTableViewCellDelegate
 
 - (void)onViewAttachedFormTap {
-    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFATaskDetailsCellTypeAttachedForm];
+    AFATableControllerCellActionBlock actionBlock = [self actionForCellOfType:AFADefinedFormTaskDetailsCellTypeAttachedForm];
     if (actionBlock) {
         actionBlock(nil);
     }
@@ -436,12 +236,277 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (NSInteger)cellTypeForAttachedFormCell {
-    return AFATaskDetailsCellTypeAttachedForm;
+    return AFADefinedFormTaskDetailsCellTypeAttachedForm;
 }
 
 
 #pragma mark -
 #pragma mark Convenience methods
+
+- (UITableViewCell *)taskDetailsCellOfTaskWithoutDefinedFormForIndexPath:(NSIndexPath *)indexPath
+                                                               tableView:(UITableView *)tableView
+                                                                   model:(AFATableControllerTaskDetailsModel *)model {
+    switch (indexPath.row) {
+        case AFATaskDetailsCellTypeTaskName: {
+            return [self dequeuedNameCellAtIndexPath:indexPath
+                                       fromTableView:tableView
+                                           withModel:model];
+        }
+            
+        case AFATaskDetailsCellTypeComplete: {
+            // There are cases when the user needs to be displayed on the same
+            // position as the complete cell with choices regarding claiming
+            // and / or completing the task
+            if ([model isClaimableTask]) {
+                return [self dequeuedClaimCellAtIndexPath:indexPath
+                                            fromTableView:tableView];
+            } else {
+                return [self dequeuedCompleteCellAtIndexPath:indexPath
+                                               fromTableView:tableView
+                                                   withModel:model];
+            }
+        }
+            
+        case AFATaskDetailsCellTypeAssignee: {
+            return [self dequeuedAssigneeCellAtIndexPath:indexPath
+                                           fromTableView:tableView
+                                               withModel:model];
+        }
+            
+        case AFATaskDetailsCellTypeCreated: {
+            return [self dequeuedCreatedDateCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        case AFATaskDetailsCellTypeDue: {
+            return [self dequeuedDueCellAtIndexPath:indexPath
+                                      fromTableView:tableView
+                                          withModel:model];
+        }
+            
+        case AFATaskDetailsCellTypePartOf: {
+            if ([model isChecklistTask]) {
+                return [self dequeuedTaskMembershipCellAtIndexPath:indexPath
+                                                     fromTableView:tableView
+                                                         withModel:model];
+            } else {
+                return [self dequeuedProcessMembershipCellAtIndexPath:indexPath
+                                                        fromTableView:tableView
+                                                            withModel:model];
+            }
+        }
+            
+        case AFATaskDetailsCellTypeDescription: {
+            return [self dequeuedDescriptionCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        default: break;
+    }
+    
+    return nil;
+}
+
+- (UITableViewCell *)taskDetailsCellOfTaskWithDefinedFormForIndexPath:(NSIndexPath *)indexPath
+                                                            tableView:(UITableView *)tableView
+                                                                model:(AFATableControllerTaskDetailsModel *)model {
+    switch (indexPath.row) {
+        case AFADefinedFormTaskDetailsCellTypeTaskName: {
+            return [self dequeuedNameCellAtIndexPath:indexPath
+                                       fromTableView:tableView
+                                           withModel:model];
+        }
+            
+        case AFADefinedFormTaskDetailsCellTypeAssignee: {
+            return [self dequeuedAssigneeCellAtIndexPath:indexPath
+                                           fromTableView:tableView
+                                               withModel:model];
+        }
+            
+        case AFADefinedFormTaskDetailsCellTypeCreated: {
+            return [self dequeuedCreatedDateCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        case AFADefinedFormTaskDetailsCellTypeDue: {
+            return [self dequeuedDueCellAtIndexPath:indexPath
+                                      fromTableView:tableView
+                                          withModel:model];
+        }
+            
+        case AFADefinedFormTaskDetailsCellTypePartOf: {
+            if ([model isChecklistTask]) {
+                return [self dequeuedTaskMembershipCellAtIndexPath:indexPath
+                                                     fromTableView:tableView
+                                                         withModel:model];
+            } else {
+                return [self dequeuedProcessMembershipCellAtIndexPath:indexPath
+                                                        fromTableView:tableView
+                                                            withModel:model];
+            }
+        }
+            
+        case AFADefinedFormTaskDetailsCellTypeDescription: {
+            return [self dequeuedDescriptionCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        case AFADefinedFormTaskDetailsCellTypeAttachedForm: {
+            return [self dequeuedAttachedFormCellAtIndexPath:indexPath
+                                               fromTableView:tableView
+                                                   withModel:model];
+        }
+            
+        default: break;
+    }
+    
+    return nil;
+}
+
+- (UITableViewCell *)taskDetailsCellOfRequeueableTaskWithDefinedFormForIndexPath:(NSIndexPath *)indexPath
+                                                                       tableView:(UITableView *)tableView
+                                                                           model:(AFATableControllerTaskDetailsModel *)model {
+    switch (indexPath.row) {
+        case AFADefinedFormClaimableTaskDetailsCellTypeTaskName: {
+            return [self dequeuedNameCellAtIndexPath:indexPath
+                                       fromTableView:tableView
+                                           withModel:model];
+        }
+            
+        case AFADefinedFormClaimableTaskDetailsCellTypeRequeue: {
+            return [self dequeuedRequeueCellAtIndexPath:indexPath
+                                          fromTableView:tableView
+                                              withModel:model];
+        }
+            
+        case AFADefinedFormClaimableTaskDetailsCellTypeAssignee: {
+            return [self dequeuedAssigneeCellAtIndexPath:indexPath
+                                           fromTableView:tableView
+                                               withModel:model];
+        }
+            
+        case AFADefinedFormClaimableTaskDetailsCellTypeCreated: {
+            return [self dequeuedCreatedDateCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        case AFADefinedFormClaimableTaskDetailsCellTypeDue: {
+            return [self dequeuedDueCellAtIndexPath:indexPath
+                                      fromTableView:tableView
+                                          withModel:model];
+        }
+            
+        case AFADefinedFormClaimableTaskDetailsCellTypePartOf: {
+            if ([model isChecklistTask]) {
+                return [self dequeuedTaskMembershipCellAtIndexPath:indexPath
+                                                     fromTableView:tableView
+                                                         withModel:model];
+            } else {
+                return [self dequeuedProcessMembershipCellAtIndexPath:indexPath
+                                                        fromTableView:tableView
+                                                            withModel:model];
+            }
+        }
+            
+        case AFADefinedFormClaimableTaskDetailsCellTypeDescription: {
+            return [self dequeuedDescriptionCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        case AFADefinedFormClaimableTaskDetailsCellTypeAttachedForm: {
+            return [self dequeuedAttachedFormCellAtIndexPath:indexPath
+                                               fromTableView:tableView
+                                                   withModel:model];
+        }
+            
+        default: break;
+    }
+    
+    return nil;
+}
+
+- (UITableViewCell *)completedCellForIndexPath:(NSIndexPath *)indexPath
+                                     tableView:(UITableView *)tableView
+                                         model:(AFATableControllerTaskDetailsModel *)model {
+    switch (indexPath.row) {
+        case AFACompletedTaskDetailsCellTypeTaskName: {
+            return [self dequeuedNameCellAtIndexPath:indexPath
+                                       fromTableView:tableView
+                                           withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypeAssignee: {
+            return [self dequeuedAssigneeCellAtIndexPath:indexPath
+                                           fromTableView:tableView
+                                               withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypeCreated: {
+            return [self dequeuedCreatedDateCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypeDue: {
+            return [self dequeuedDueCellAtIndexPath:indexPath
+                                      fromTableView:tableView
+                                          withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypeEnd: {
+            return [self dequeuedEndDateCellAtIndexPath:indexPath
+                                          fromTableView:tableView
+                                              withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypeDuration: {
+            return [self dequeuedDurationCellAtIndexPath:indexPath
+                                           fromTableView:tableView
+                                               withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypePartOf: {
+            if ([model isChecklistTask]) {
+                return [self dequeuedTaskMembershipCellAtIndexPath:indexPath
+                                                     fromTableView:tableView
+                                                         withModel:model];
+            } else {
+                return [self dequeuedProcessMembershipCellAtIndexPath:indexPath
+                                                        fromTableView:tableView
+                                                            withModel:model];
+            }
+        }
+            
+        case AFACompletedTaskDetailsCellTypeAuditLog: {
+            return [self dequeueAuditLogCellAtIndexPath:indexPath
+                                          fromTableView:tableView
+                                              withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypeDescription: {
+            return [self dequeuedDescriptionCellAtIndexPath:indexPath
+                                              fromTableView:tableView
+                                                  withModel:model];
+        }
+            
+        case AFACompletedTaskDetailsCellTypeAttachedForm: {
+            return [self dequeuedAttachedFormCellAtIndexPath:indexPath
+                                               fromTableView:tableView
+                                                   withModel:model];
+        }
+            
+        default: break;
+    }
+    
+    return nil;
+}
+
 
 - (UITableViewCell *)dequeuedNameCellAtIndexPath:(NSIndexPath *)indexPath
                                    fromTableView:(UITableView *)tableView
@@ -469,6 +534,17 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     return completeCell;
 }
 
+- (UITableViewCell *)dequeuedRequeueCellAtIndexPath:(NSIndexPath *)indexPath
+                                      fromTableView:(UITableView *)tableView
+                                          withModel:(id<AFATableViewModelDelegate>)model {
+    AFARequeueTableViewCell *requeueCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsRequeue
+                                                                           forIndexPath:indexPath];
+    requeueCell.delegate = self;
+    [requeueCell setUpWithThemeColor:self.appThemeColor];
+    
+    return requeueCell;
+}
+
 - (UITableViewCell *)dequeuedClaimCellAtIndexPath:(NSIndexPath *)indexPath
                                     fromTableView:(UITableView *)tableView {
     AFAClaimTableViewCell *claimCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsClaim
@@ -491,8 +567,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (UITableViewCell *)dequeuedCreatedDateCellAtIndexPath:(NSIndexPath *)indexPath
-                                       fromTableView:(UITableView *)tableView
-                                           withModel:(id<AFATableViewModelDelegate>)model {
+                                          fromTableView:(UITableView *)tableView
+                                              withModel:(id<AFATableViewModelDelegate>)model {
     AFACreatedDateTableViewCell *createdDateCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsCreated
                                                                                    forIndexPath:indexPath];
     [createdDateCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
@@ -501,8 +577,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (UITableViewCell *)dequeuedDueCellAtIndexPath:(NSIndexPath *)indexPath
-                                          fromTableView:(UITableView *)tableView
-                                              withModel:(id<AFATableViewModelDelegate>)model {
+                                  fromTableView:(UITableView *)tableView
+                                      withModel:(id<AFATableViewModelDelegate>)model {
     AFADueTableViewCell *dueCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsDue
                                                                    forIndexPath:indexPath];
     [dueCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
@@ -544,8 +620,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 - (UITableViewCell *)dequeuedEndDateCellAtIndexPath:(NSIndexPath *)indexPath
-                                    fromTableView:(UITableView *)tableView
-                                        withModel:(id<AFATableViewModelDelegate>)model {
+                                      fromTableView:(UITableView *)tableView
+                                          withModel:(id<AFATableViewModelDelegate>)model {
     AFACompletedDateTableViewCell *completedDateCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsCompletedDate
                                                                                        forIndexPath:indexPath];
     [completedDateCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
@@ -568,7 +644,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     AFAAuditLogTableViewCell *auditCell = [tableView dequeueReusableCellWithIdentifier:kCellIDAuditLog
                                                                           forIndexPath:indexPath];
     auditCell.delegate = self;
-
+    
     return auditCell;
 }
 

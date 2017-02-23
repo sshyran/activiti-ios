@@ -67,6 +67,7 @@
 // Task details screen
 "taskDetailsScreenTaskDetailsText"                       = "Task Details";
 "taskDetailsScreenCompleteTaskButtonText"                = "Complete";
+"taskDetailsScreenRequeueTaskButtonText"                 = "Requeue";
 "taskDetailsScreenAssignedToText"                        = "Assigned to";
 "taskDetailsScreenDueText"                               = "Due";
 "taskDetailsScreenNoDueDateText"                         = "No due date";

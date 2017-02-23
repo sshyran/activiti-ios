@@ -86,6 +86,7 @@ NSString *kLocalizationStartProcessInstanceScreenNoResultsText   = @"startProces
 
 NSString *kLocalizationTaskDetailsScreenTaskDetailsText          = @"taskDetailsScreenTaskDetailsText";
 NSString *kLocalizationTaskDetailsScreenCompleteTaskButtonText   = @"taskDetailsScreenCompleteTaskButtonText";
+NSString *kLocalizationTaskDetailsScreenRequeueTaskButtonText    = @"taskDetailsScreenRequeueTaskButtonText";
 NSString *kLocalizationTaskDetailsScreenAssignedToText           = @"taskDetailsScreenAssignedToText";
 NSString *kLocalizationTaskDetailsScreenDueText                  = @"taskDetailsScreenDueText";
 NSString *kLocalizationTaskDetailsScreenNoDueDateText            = @"taskDetailsScreenNoDueDateText";
