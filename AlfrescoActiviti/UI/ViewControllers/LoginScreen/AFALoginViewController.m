@@ -17,17 +17,31 @@
  ******************************************************************************/
 
 #import "AFALoginViewController.h"
-#import "UIView+AFAViewAnimations.h"
+
+// Constants
 #import "AFAUIConstants.h"
 #import "AFABusinessConstants.h"
-#import "AFACredentialsPageViewController.h"
+#import "AFALocalizationConstants.h"
+
+// Categories
+#import "UIView+AFAViewAnimations.h"
+
+// Models
 #import "AFALoginModel.h"
-#import "AFAActivityView.h"
-#import "AFAModalReplaceSegueUnwind.h"
+
+// View controllers
+#import "AFACredentialsPageViewController.h"
+#import "AFAContainerViewController.h"
+
+// Managers
 #import "AFAKeychainWrapper.h"
 #import "AFALogConfiguration.h"
-#import "AFAContainerViewController.h"
 @import ActivitiSDK;
+
+// Views
+#import "AFAActivityView.h"
+#import "AFAModalReplaceSegueUnwind.h"
+
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
@@ -41,6 +55,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (weak, nonatomic) IBOutlet UIView                     *embeddedViewContainer;
 @property (weak, nonatomic) IBOutlet UIToolbar                  *buttonToolbar;
 @property (weak, nonatomic) IBOutlet AFAActivityView            *activityView;
+@property (weak, nonatomic) IBOutlet UIButton                   *cloudLoginButton;
+@property (weak, nonatomic) IBOutlet UIButton                   *premiseLoginButton;
 
 // Constraints
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint         *activitiLogoCenterConstraint;
@@ -83,8 +99,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    // Set up localization
+    [self.cloudLoginButton setTitle:NSLocalizedString(kLocalizationLoginCloudLoginButtonText, @"Cloud login text")
+                           forState:UIControlStateNormal];
+    [self.premiseLoginButton setTitle:NSLocalizedString(kLocalizationLoginPremiseLoginButtonText, @"Premise login text")
+                             forState:UIControlStateNormal];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

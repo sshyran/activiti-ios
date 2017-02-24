@@ -36,6 +36,8 @@ NSString *kLocalizationLoginInvalidCredentialsText               = @"loginScreen
 NSString *kLocalizationLoginUnreachableHostText                  = @"loginScreenUnreachableHostText";
 NSString *kLocalizationLoginTimedOutText                         = @"loginScreenRequestTimedOutText";
 NSString *kLocalizationLoginUnauthorizedRequestErrorText         = @"loginScreenUnauthorizedRequestErrorText";
+NSString *kLocalizationLoginCloudLoginButtonText                 = @"loginScreenCloudLoginButtonText";
+NSString *kLocalizationLoginPremiseLoginButtonText               = @"loginScreenPremiseLoginButtonText";
 
 
 #pragma mark -
