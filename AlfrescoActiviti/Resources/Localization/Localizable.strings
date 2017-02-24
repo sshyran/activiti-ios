@@ -32,6 +32,8 @@
 "loginScreenUnreachableHostText"                         = "The host your are trying to connect to is unreachable.";
 "loginScreenRequestTimedOutText"                         = "The login request timed out.";
 "loginScreenUnauthorizedRequestErrorText"                = "Invalid credentials, you will be redirected to the login screen";
+"loginScreenCloudLoginButtonText"                        = "Activiti Cloud";
+"loginScreenPremiseLoginButtonText"                      = "Process Services On Premise";
 
 // Applications screen
 "appScreenTitleText"                                     = "Applications";
@@ -152,7 +154,7 @@
 "alertDialogOkButtonText"                                = "OK";
 "alertDialogYesButtonText"                               = "Yes";
 "alertDialogCancelButtonText"                            = "Cancel";
-"alertDialogSignOutDescriptionText"                       = "Are you sure you want to sign out of Activiti mobile?";
+"alertDialogSignOutDescriptionText"                       = "Are you sure you want to sign out of Alfresco Process Services mobile?";
 "alertDialogTaskContentFetchErrorText"                   = "We've encountered an issue while fetching the content associated with this task.\nPlease try again...";
 "alertDialogTaskContentUploadErrorText"                  = "We've encountered an issue while uploading your content.\nPlease try again...";
 "alertDialogTaskContentDownloadErrorText"                = "We've encountered an issue while downloading your content.\nPlase try again...";
@@ -223,7 +225,7 @@
 "profileScreenCleanCacheAlertText"                       = "By cleaning the local content cache any documents that you've downloaded so far will have to be downloaded again, are you sure you want to continue?";
 "profileScreenDiskUsageText"                             = "Disk usage";
 "profileScreenDiskUsageAvailableText"                    = "Available";
-"profileScreenActivitiDataText"                          = "Activiti data";
+"profileScreenActivitiDataText"                          = "Alfresco Process Services data";
 
 // Default filter names
 "defaultFilterInvolvedTasksText"                         = "Involved tasks";

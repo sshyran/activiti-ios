@@ -173,7 +173,7 @@
                                                 <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bRS-pD-ZXA" userLabel="Server Buttons Container">
                                                     <rect key="frame" x="37.5" y="324.5" width="300" height="160"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kqb-ea-oci">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kqb-ea-oci">
                                                             <rect key="frame" x="37.5" y="25" width="225" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="225" id="nWU-Fb-ow8"/>
@@ -186,7 +186,7 @@
                                                                 <action selector="onActivitiCloud:" destination="rZo-lR-2Yl" eventType="touchUpInside" id="Gag-90-tpy"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VgT-Hp-Agn">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VgT-Hp-Agn">
                                                             <rect key="frame" x="37.5" y="105" width="225" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="225" id="Sd5-hO-p02"/>
@@ -298,10 +298,12 @@
                         <outlet property="activitiLogoTopConstraint" destination="r2A-PL-MgL" id="ogA-lC-CdQ"/>
                         <outlet property="activityView" destination="FfB-Lk-Z5o" id="Cbx-gD-jfZ"/>
                         <outlet property="buttonToolbar" destination="hLp-bM-3FS" id="CkI-Xv-oQd"/>
+                        <outlet property="cloudLoginButton" destination="kqb-ea-oci" id="Vqd-fk-9Rx"/>
                         <outlet property="containerViewCenterConstraint" destination="8th-C1-2TX" id="jWD-VN-Jfy"/>
                         <outlet property="containerViewTopAlignment" destination="g6H-8H-hw5" id="YN0-64-lZT"/>
                         <outlet property="effectViewContainer" destination="bS4-Sl-sXY" id="ZBP-aL-tpV"/>
                         <outlet property="embeddedViewContainer" destination="0YR-MT-jHW" id="E9V-0N-wUK"/>
+                        <outlet property="premiseLoginButton" destination="VgT-Hp-Agn" id="ECz-iT-TGb"/>
                         <outlet property="roundedViewsCenterConstraint" destination="S21-xf-mIC" id="c3E-aM-F4V"/>
                         <outlet property="roundedViewsContainer" destination="hpb-W4-LyP" id="aD8-cC-Jha"/>
                         <outlet property="roundedViewsPaddedConstraint" destination="34c-e8-KJY" id="hia-eq-D8p"/>

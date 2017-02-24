@@ -67,10 +67,12 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     // Buglife integration
     // Add your API key to receive bug reports
+    /* Disabled for AppStore release
     [[Buglife sharedBuglife] startWithAPIKey:@"YOUR_KEY"];
     [Buglife sharedBuglife].invocationOptions = LIFEInvocationOptionsShake;
     [Buglife sharedBuglife].userEmailField.visible = YES;
     [Buglife sharedBuglife].delegate = self;
+     */
     
     application.delegate.window.backgroundColor = [UIColor windowBackgroundColor];
     
