@@ -163,6 +163,21 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
                            withProgressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
                          withCompletionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock;
 
+
+/**
+ *  Performs a request to download the thumbnail for the mentioned content
+ *
+ *  @param content              Content for which the thumbnail should be downloaded
+ *  @param allowCachedResults   Boolean value specifying if results can be provided if already present on the disk
+ *  @param progressBlock        Block used to report progress updates for the download operation and an optional error reason
+ *  @param completionBlock      Completion block providing whether the content was successfully downloaded or not and an
+ *                              optional error reason
+ */
+- (void)requestTaskContentThumbnailDownloadForContent:(ASDKModelContent *)content
+                                   allowCachedResults:(BOOL)allowCachedResults
+                                    withProgressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
+                                  withCompletionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock;
+
 /**
  *  Performs a request to involve the provided user in a task corresponding to the passed task ID
  *

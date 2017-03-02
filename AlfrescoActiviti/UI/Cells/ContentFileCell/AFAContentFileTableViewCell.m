@@ -36,8 +36,8 @@
 #pragma mark Public interface
 
 - (void)setUpCellWithContent:(ASDKModelContent *)content {
-    self.fileTypeLabel.text = content.contentName.pathExtension;
-    self.fileNameLabel.text = [content.contentName stringByDeletingPathExtension];
+    self.fileThumbnailImageView.image = [UIImage imageNamed:@"image-placeholder-icon"];
+    self.fileNameLabel.text = content.contentName;
 }
 
 @end

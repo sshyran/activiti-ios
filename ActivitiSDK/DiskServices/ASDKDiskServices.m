@@ -38,10 +38,22 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (NSString *)downloadPathForContent:(ASDKModelContent *)content {
     NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = documentsPaths.firstObject;
-    NSString *contentPath = [[[[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
-                              stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath]
+    NSString *contentPath = [[[[documentsPath stringByAppendingPathComponent:kASDKNamePath]
+                               stringByAppendingPathComponent:kASDKDownloadedContentPath]
                               stringByAppendingPathComponent:content.modelID]
-                              stringByAppendingPathComponent:content.contentName];
+                             stringByAppendingPathComponent:content.contentName];
+    
+    return contentPath;
+}
+
+- (NSString *)downloadPathForContentThumbnail:(ASDKModelContent *)content {
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = documentsPaths.firstObject;
+    NSString *contentPath = [[[[[documentsPath stringByAppendingPathComponent:kASDKNamePath]
+                                stringByAppendingPathComponent:kASDKDownloadedContentPath]
+                               stringByAppendingPathComponent:content.modelID]
+                              stringByAppendingPathComponent:kASDKDownloadedThumbnailContentPath]
+                             stringByAppendingPathComponent:[content.contentName stringByDeletingPathExtension]];
     
     return contentPath;
 }
@@ -50,8 +62,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                            filename:(NSString *)filename {
     NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = documentsPaths.firstObject;
-    NSString *contentPath = [[[[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
-                               stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath]
+    NSString *contentPath = [[[[documentsPath stringByAppendingPathComponent:kASDKNamePath]
+                               stringByAppendingPathComponent:kASDKDownloadedContentPath]
                               stringByAppendingPathComponent:resourceID]
                              stringByAppendingPathComponent:filename];
     
@@ -62,16 +74,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSString *downloadPathForContent = [self downloadPathForContent:content];
     BOOL doesFileExist = [[NSFileManager defaultManager] fileExistsAtPath:downloadPathForContent];
     
-    // Make sure we create the directory structure needed for the download
     if (!doesFileExist) {
-        NSError *error = nil;
-        [[NSFileManager defaultManager] createDirectoryAtPath:[downloadPathForContent stringByDeletingLastPathComponent]
-                                  withIntermediateDirectories:YES
-                                                   attributes:nil
-                                                        error:&error];
-        if (error) {
-            ASDKLogError(@"Encountered an error while generating the folder structure for content with path :%@. Reason:%@", downloadPathForContent, error.localizedDescription);
-        }
+        [self createIntermediateDirectoryStructureForPath:downloadPathForContent];
+    }
+    
+    return doesFileExist;
+}
+
+- (BOOL)doesThumbnailAlreadyExistsForContent:(ASDKModelContent *)content {
+    NSString *downloadPathForThumbnail = [self downloadPathForContentThumbnail:content];
+    BOOL doesFileExist = [[NSFileManager defaultManager] fileExistsAtPath:downloadPathForThumbnail];
+    
+    if (!doesFileExist) {
+        [self createIntermediateDirectoryStructureForPath:downloadPathForThumbnail];
     }
     
     return doesFileExist;
@@ -181,8 +196,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 + (void)deleteLocalData {
     NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = documentsPaths.firstObject;
-    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
-                             stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath];
+    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kASDKNamePath]
+                             stringByAppendingPathComponent:kASDKDownloadedContentPath];
     
     // Clear downloaded content
     NSError *error = nil;
@@ -243,8 +258,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = documentsPaths.firstObject;
-    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
-                             stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath];
+    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kASDKNamePath]
+                             stringByAppendingPathComponent:kASDKDownloadedContentPath];
     
     NSArray *folderContents = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:contentPath
                                                                                   error:&error];
@@ -255,11 +270,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                         error:nil];
         folderSize += [[fileAttributes objectForKey:NSFileSize] intValue];
     }];
-
+    
     if (error) {
         ASDKLogWarn(@"Unable to retrieve attributes for downloads file path for computing the used disk space. Reason:%@", error.localizedDescription);
     }
-
+    
     usedSpace = [NSByteCountFormatter stringFromByteCount:folderSize
                                                countStyle:NSByteCountFormatterCountStyleFile];
     
@@ -288,6 +303,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [userDefaults synchronize];
     
     return lastFileNameUsed;
+}
+
+- (void)createIntermediateDirectoryStructureForPath:(NSString *)path {
+    NSError *error = nil;
+    [[NSFileManager defaultManager] createDirectoryAtPath:[path stringByDeletingLastPathComponent]
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:&error];
+    if (error) {
+        ASDKLogError(@"Encountered an error while generating the folder structure for content with path :%@. Reason:%@", path, error.localizedDescription);
+    }
 }
 
 @end

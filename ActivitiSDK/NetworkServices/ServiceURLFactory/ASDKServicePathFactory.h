@@ -66,6 +66,7 @@
 - (NSString *)taskActionCompleteServicePathFormat;
 - (NSString *)taskContentUploadServicePathFormat;
 - (NSString *)taskContentDownloadServicePathFormat;
+- (NSString *)taskContentThumbnailServicePathFormat;
 - (NSString *)taskUserInvolveServicePathFormat;
 - (NSString *)taskUserRemoveInvolvedServicePathFormat;
 - (NSString *)taskCreationServicePath;

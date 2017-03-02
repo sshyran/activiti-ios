@@ -19,9 +19,10 @@
 #import <Foundation/Foundation.h>
 
 // Path constants
-extern NSString *kActivitiSDKNamePath;
-extern NSString *kActivitiSDKDownloadedContentPath;
+extern NSString *kASDKNamePath;
+extern NSString *kASDKDownloadedContentPath;
 extern NSString *kASDKFilenameGeneratorLastValueUsed;
 extern NSString *kASDKFilenameGeneratorFormat;
 extern NSString *kASDKAuditLogFilenameFormat;
-extern NSString *kActivitiSDKLogsPath;
+extern NSString *kASDKLogsPath;
+extern NSString *kASDKDownloadedThumbnailContentPath;

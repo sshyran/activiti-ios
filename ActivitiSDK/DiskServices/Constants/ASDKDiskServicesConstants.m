@@ -22,9 +22,10 @@
 #pragma mark -
 #pragma mark Path constants
 
-NSString *kActivitiSDKNamePath                         = @"ActivitiSDK";
-NSString *kActivitiSDKDownloadedContentPath            = @"DownloadedContent";
-NSString *kASDKFilenameGeneratorLastValueUsed          = @"kASDKFilenameGeneratorLastValueUsed";
-NSString *kASDKFilenameGeneratorFormat                 = @"File_%03ld";
-NSString *kASDKAuditLogFilenameFormat                  = @"AuditLog_%@.pdf";
-NSString *kActivitiSDKLogsPath                         = @"Logs";
+NSString *kASDKNamePath                         = @"ActivitiSDK";
+NSString *kASDKDownloadedContentPath            = @"DownloadedContent";
+NSString *kASDKFilenameGeneratorLastValueUsed   = @"kASDKFilenameGeneratorLastValueUsed";
+NSString *kASDKFilenameGeneratorFormat          = @"File_%03ld";
+NSString *kASDKAuditLogFilenameFormat           = @"AuditLog_%@.pdf";
+NSString *kASDKLogsPath                         = @"Logs";
+NSString *kASDKDownloadedThumbnailContentPath   = @"thumbnails";

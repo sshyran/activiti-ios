@@ -21,19 +21,41 @@
 // Constants
 #import "AFAUIConstants.h"
 #import "AFABusinessConstants.h"
+#import "AFALogConfiguration.h"
+
+// Categories
+#import "UIColor+AFATheme.h"
+
+// Managers
+#import "AFAThumbnailManager.h"
+#import "AFAServiceRepository.h"
+#import "AFATaskServices.h"
 
 // Cells
 #import "AFAContentFileTableViewCell.h"
 #import "AFASimpleSectionHeaderCell.h"
 
-// Categories
-#import "UIColor+AFATheme.h"
+static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 @interface AFATableControllerContentCellFactory ()
+
+@property (strong, nonatomic) NSMutableDictionary *thumbnailOperationsDict;
+@property (strong, nonatomic) AFAThumbnailManager *thumbnailManager;
 
 @end
 
 @implementation AFATableControllerContentCellFactory
+
+- (instancetype)init {
+    self = [super init];
+    
+    if (self) {
+        self.thumbnailOperationsDict = [NSMutableDictionary new];
+        self.thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
@@ -47,9 +69,51 @@ shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
 - (UITableViewCell *)tableView:(UITableView *)tableView
               cellForIndexPath:(NSIndexPath *)indexPath
                       forModel:(id<AFATableViewModelDelegate>)model {
+    ASDKModelContent *content = [model itemAtIndexPath:indexPath];
     AFAContentFileTableViewCell *contentFileCell = [tableView dequeueReusableCellWithIdentifier:kCellIDContentFile
                                                                                    forIndexPath:indexPath];
-    [contentFileCell setUpCellWithContent:[model itemAtIndexPath:indexPath]];
+    [contentFileCell setUpCellWithContent:content];
+    
+    // First, check the thumbnail manager for cached images
+    UIImage *thumbnailImage = nil;
+    thumbnailImage = [self.thumbnailManager thumbnailImageForIdentifier:content.modelID];
+    if (thumbnailImage != [self.thumbnailManager placeholderThumbnailImage]) {
+        contentFileCell.fileThumbnailImageView.image = thumbnailImage;
+    } else {
+        // Only start a thumbnail download operation for those cells that don't have already an operation in progress
+        if (!self.thumbnailOperationsDict[indexPath]) {
+            self.thumbnailOperationsDict[indexPath] = content.modelID;
+            
+            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+            __weak typeof(self) weakSelf = self;
+            [taskServices
+             requestTaskContentThumbnailDownloadForContent:content
+             allowCachedResults:YES
+             withProgressBlock:nil
+             withCompletionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                 __strong typeof(self) strongSelf = weakSelf;
+                 
+                 // Remove operation reference for the current indexpath once it has completed
+                 strongSelf.thumbnailOperationsDict[indexPath] = nil;
+                 
+                 if (!error) {
+                     UIImage *downloadedThumbnailImage = [[UIImage alloc] initWithContentsOfFile:downloadedContentURL.path];
+                     
+                     [strongSelf.thumbnailManager thumbnailForImage:downloadedThumbnailImage
+                                                     withIdentifier:content.modelID
+                                                           withSize:CGRectGetHeight(contentFileCell.fileThumbnailImageView.frame) * [UIScreen mainScreen].scale
+                                          processingCompletionBlock:^(UIImage *processedThumbnailImage) {
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  AFAContentFileTableViewCell *cellToUpdate = [tableView cellForRowAtIndexPath:indexPath];
+                                                  cellToUpdate.fileThumbnailImageView.image = processedThumbnailImage;
+                                              });
+                                          }];
+                 } else {
+                     AFALogError(@"Unable to retrieve thumbnail image for content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
+                 }
+             }];
+        }
+    }
     
     return contentFileCell;
 }
@@ -133,7 +197,7 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                                          if (actionBlock) {
                                              actionBlock(@{kCellFactoryCellParameterCellIdx : @(indexPath.row)});
                                          }
-                                    }];
+                                     }];
     
     // Tint the image with white
     UIImage *trashIcon = [UIImage imageNamed:@"trash-icon"];

@@ -55,12 +55,14 @@
 
 + (NSValueTransformer *)previewStatusJSONTransformer {
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"queued"       : @(ASDKModelContentAvailabilityTypeQueued),
-                                                                           @"created"      : @(ASDKModelContentAvailabilityTypeCreated)}];
+                                                                           @"created"      : @(ASDKModelContentAvailabilityTypeCreated),
+                                                                           @"unsupported"  : @(ASDKModelContentAvailabilityTypeUnsupported)}];
 }
 
 + (NSValueTransformer *)thumbnailStatusJSONTransformer {
     return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{@"queued"       : @(ASDKModelContentAvailabilityTypeQueued),
-                                                                           @"created"      : @(ASDKModelContentAvailabilityTypeCreated)}];
+                                                                           @"created"      : @(ASDKModelContentAvailabilityTypeCreated),
+                                                                           @"unsupported"  : @(ASDKModelContentAvailabilityTypeUnsupported)}];
 }
 
 + (NSValueTransformer *)creationDateJSONTransformer {
