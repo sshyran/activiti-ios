@@ -36,8 +36,16 @@
 #pragma mark Public interface
 
 - (void)setUpCellWithContent:(ASDKModelContent *)content {
-    self.fileTypeLabel.text = content.contentName.pathExtension;
-    self.fileNameLabel.text = [content.contentName stringByDeletingPathExtension];
+    self.fileNameLabel.text = content.contentName;
+    
+    ASDKGlyphIconFileType fileIconType = [NSString fileTypeIconForIcontDescription:content.contentName.pathExtension];
+    if (ASDKGlyphIconFileTypeUndefined == fileIconType) {
+        self.fileIconLabel.font = [UIFont glyphiconFontWithSize:24];
+        self.fileIconLabel.text = [NSString iconStringForIconType:ASDKGlyphIconTypeFile];
+    } else {
+        self.fileIconLabel.font = [UIFont glyphiconFiletypesFontWithSize:24];
+        self.fileIconLabel.text = [NSString fileTypeIconStringForIconType:fileIconType];
+    }
 }
 
 @end

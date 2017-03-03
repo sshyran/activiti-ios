@@ -33,9 +33,19 @@
  *
  *  @param content  Content object containing information about the destination path
  *
- *  @return         Full download path string for the provided file name
+ *  @return         Full download path string for the provided content object
  */
 - (NSString *)downloadPathForContent:(ASDKModelContent *)content;
+
+
+/**
+ *  Returns a thumbnail download path for a given content object.
+ *
+ *  @param content  Content object containing information about the destination path
+ *
+ *  @return         Full download path string for the provided content object
+ */
+- (NSString *)downloadPathForContentThumbnail:(ASDKModelContent *)content;
 
 /**
  *  Returns a generic download path for a resouce given it's identifier.
@@ -57,6 +67,14 @@
  *  @return         Whether there is a file at the download path or not
  */
 - (BOOL)doesFileAlreadyExistsForContent:(ASDKModelContent *)content;
+
+/**
+ *  Returns whether a thumbnail for the specified content is present at the download path
+ *
+ *  @param content  Content object containing information about the destination path
+ *  @return         Whether there is a file at the download path or not
+ */
+- (BOOL)doesThumbnailAlreadyExistsForContent:(ASDKModelContent *)content;
 
 /**
  *  Returns whether content is present at the download path for the mentioned 

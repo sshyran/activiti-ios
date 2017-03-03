@@ -194,6 +194,20 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
         completionBlock:(ASDKTaskContentDownloadCompletionBlock)completionBlock;
 
 /**
+ *  Downloads a preview thumbnail for the mentioned content object and reports back via a completion and progress blocks
+ *  the status of the download, whether the operation was successfull and optional errors that might have occured.
+ *
+ *  @param content             SDK content object containing download information
+ *  @param allowCachedResults  Boolean value specifying if results can be provided if already present on the disk
+ *  @param progressBlock       Block providing information on the download progress and an optional error reason
+ *  @param completionBlock     Completion block providing informaton on whether the download finished successfully and an optional error reason.
+ */
+- (void)downloadThumbnailForContent:(ASDKModelContent *)content
+                 allowCachedResults:(BOOL)allowCachedResults
+                      progressBlock:(ASDKTaskContentDownloadProgressBlock)progressBlock
+                    completionBlock:(ASDKTaskContentDownloadCompletionBlock)completionBlock;
+
+/**
  *  Involves a specific user with a certain task, both of the parameters being referenced by their correspondent IDs
  *  and reports back the result via a completion block.
  *

@@ -260,9 +260,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                       progressBlock:^(NSUInteger progress, NSError *error) {
                                           AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
                                           
-                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                              progressBlock (progress, error);
-                                          });
+                                          if (progressBlock) {
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  progressBlock (progress, error);
+                                              });
+                                          }
                                       } completionBlock:^(BOOL isContentUploaded, NSError *error) {
                                           if (!error && isContentUploaded) {
                                               AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
@@ -299,9 +301,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                       progressBlock:^(NSUInteger progress, NSError *error) {
                                           AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
                                           
-                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                              progressBlock (progress, error);
-                                          });
+                                          if (progressBlock) {
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  progressBlock (progress, error);
+                                              });
+                                          }
                                       } completionBlock:^(BOOL isContentUploaded, NSError *error) {
                                           if (!error && isContentUploaded) {
                                               AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
@@ -353,9 +357,12 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                           allowCachedResults:allowCachedResults
                                progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
                                    AFALogVerbose(@"Downloaded %@ of content for task with ID:%@ ", formattedReceivedBytesString, content.modelID);
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       progressBlock (formattedReceivedBytesString, error);
-                                   });
+                                   
+                                   if (progressBlock) {
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           progressBlock (formattedReceivedBytesString, error);
+                                       });
+                                   }
                                } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
                                    if (!error && downloadedContentURL) {
                                        AFALogVerbose(@"Content with ID:%@ was downloaded successfully.", content.modelID);
@@ -371,6 +378,41 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                        });
                                    }
                                }];
+}
+
+- (void)requestTaskContentThumbnailDownloadForContent:(ASDKModelContent *)content
+                                   allowCachedResults:(BOOL)allowCachedResults
+                                    withProgressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
+                                  withCompletionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock {
+    NSParameterAssert(content);
+    NSParameterAssert(completionBlock);
+    
+    [self.taskNetworkService downloadThumbnailForContent:content
+                                      allowCachedResults:allowCachedResults
+                                           progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                               AFALogVerbose(@"Downloaded %@ of content thumbnail for task with ID:%@ ", formattedReceivedBytesString, content.modelID);
+                                               
+                                               if (progressBlock) {
+                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                       progressBlock (formattedReceivedBytesString, error);
+                                                   });
+                                               }
+                                           }
+                                         completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                             if (!error && downloadedContentURL) {
+                                                 AFALogVerbose(@"Thumbnail for content with ID:%@ was downloaded successfully.", content.modelID);
+                                                 
+                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                     completionBlock(downloadedContentURL, isLocalContent,nil);
+                                                 });
+                                             } else {
+                                                 AFALogError(@"An error occured while downloading thumbnail for content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
+                                                 
+                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                     completionBlock(nil, NO, error);
+                                                 });
+                                             }
+                                         }];
 }
 
 - (void)requestTaskUserInvolvement:(ASDKModelUser *)user
@@ -609,7 +651,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                      completionBlock(nil, error, nil);
                                                  });
                                              }
-    }];
+                                         }];
     
 }
 
@@ -643,7 +685,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                            completionBlock(nil, error);
                                                        });
                                                    }
-    }];
+                                               }];
 }
 
 - (void)requestChecklistOrderUpdateWithOrderArrat:(NSArray *)orderArray
@@ -668,7 +710,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                         } else {
                                                             AFALogError(@"An error occured while updating the checklist order for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
                                                         }
-    }];
+                                                    }];
 }
 
 @end

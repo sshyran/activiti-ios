@@ -22,8 +22,9 @@
 
 @interface AFAContentFileTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel    *fileTypeLabel;
-@property (weak, nonatomic) IBOutlet UILabel    *fileNameLabel;
+@property (weak, nonatomic) IBOutlet UIImageView    *fileThumbnailImageView;
+@property (weak, nonatomic) IBOutlet UILabel        *fileNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel        *fileIconLabel;
 
 - (void)setUpCellWithContent:(ASDKModelContent *)content;
 

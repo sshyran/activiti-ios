@@ -160,6 +160,8 @@
 // UI Categories
 #import <ActivitiSDK/NSString+ASDKFontGlyphicons.h>
 #import <ActivitiSDK/UIFont+ASDKGlyphicons.h>
+#import <ActivitiSDK/NSString+ASDKFontGlyphiconsFiletypes.h>
+#import <ActivitiSDK/UIFont+ASDKGlyphiconsFiletypes.h>
 
 // Constants
 #import <ActivitiSDK/ASDKNetworkServiceConstants.h>

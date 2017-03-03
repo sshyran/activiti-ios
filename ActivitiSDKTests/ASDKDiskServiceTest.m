@@ -165,8 +165,8 @@
     // given
     NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = documentsPaths.firstObject;
-    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
-                             stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath];
+    NSString *contentPath = [[documentsPath stringByAppendingPathComponent:kASDKNamePath]
+                             stringByAppendingPathComponent:kASDKDownloadedContentPath];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     // when
@@ -215,8 +215,8 @@
                                            contentName:(NSString *)contentName {
     NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = documentsPaths.firstObject;
-    return [[[[documentsPath stringByAppendingPathComponent:kActivitiSDKNamePath]
-              stringByAppendingPathComponent:kActivitiSDKDownloadedContentPath]
+    return [[[[documentsPath stringByAppendingPathComponent:kASDKNamePath]
+              stringByAppendingPathComponent:kASDKDownloadedContentPath]
              stringByAppendingPathComponent:contentID]
             stringByAppendingPathComponent:contentName];
 }

@@ -713,8 +713,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     NSString *downloadPathForContent = [self.diskServices downloadPathForContent:content];
     
-    // If content already exists return the URL to it to the caller and the caller
-    // explicitly mentioned cached results are expected return the existing data
+    // If content already exists and the caller is expecting cached results return the resource URL
     if (allowCachedResults && [self.diskServices doesFileAlreadyExistsForContent:content]) {
         ASDKLogVerbose(@"Didn't performed content request. Providing cached result for content with ID: %@", content.modelID);
         dispatch_async(self.resultsQueue, ^{
@@ -773,6 +772,107 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                       }
                                                   } else {
                                                       ASDKLogError(@"Failed to download content for task with request: %@ - %@.\nBody:%@.\nReason:%@",
+                                                                   downloadRequest.HTTPMethod,
+                                                                   downloadRequest.URL.absoluteString,
+                                                                   [[NSString alloc] initWithData:downloadRequest.HTTPBody encoding:NSUTF8StringEncoding],
+                                                                   error.localizedDescription);
+                                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                                          completionBlock(nil, NO, error);
+                                                      });
+                                                  }
+                                              }];
+    // If a progress block is provided report transfer progress information
+    if (progressBlock) {
+        [self.requestOperationManager setDownloadTaskDidWriteDataBlock:^(NSURLSession * _Nonnull session,
+                                                                         NSURLSessionDownloadTask * _Nonnull downloadTask,
+                                                                         int64_t bytesWritten,
+                                                                         int64_t totalBytesWritten,
+                                                                         int64_t totalBytesExpectedToWrite) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            dispatch_async(strongSelf.resultsQueue, ^{
+                progressBlock([weakSelf.diskServices sizeStringForByteCount:totalBytesWritten] , nil);
+            });
+        }];
+    }
+    
+    [downloadTask resume];
+    
+    // Keep network operation reference to be able to cancel it
+    [self.networkOperations addObject:downloadTask];
+}
+
+- (void)downloadThumbnailForContent:(ASDKModelContent *)content
+                 allowCachedResults:(BOOL)allowCachedResults
+                      progressBlock:(ASDKTaskContentDownloadProgressBlock)progressBlock
+                    completionBlock:(ASDKTaskContentDownloadCompletionBlock)completionBlock {
+    // Check mandatory properties
+    NSParameterAssert(content);
+    NSParameterAssert(completionBlock);
+    NSParameterAssert(self.resultsQueue);
+    
+    NSString *downloadPathForThumbnail = [self.diskServices downloadPathForContentThumbnail:content];
+    
+    // If content already exists and the caller is expecting cached results return the resource URL
+    if (allowCachedResults && [self.diskServices doesThumbnailAlreadyExistsForContent:content]) {
+        ASDKLogVerbose(@"Didn't performed content request. Providing cached thumbnail result for content with ID: %@", content.modelID);
+        dispatch_async(self.resultsQueue, ^{
+            NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForThumbnail];
+            completionBlock(downloadURL, YES, nil);
+        });
+        
+        return;
+    }
+    
+    NSString *urlString = [[NSURL URLWithString:[NSString stringWithFormat:[self.servicePathFactory taskContentThumbnailServicePathFormat], content.modelID] relativeToURL:self.requestOperationManager.baseURL] absoluteString];
+    NSError *downloadRequestError = nil;
+    NSURLRequest *downloadRequest =
+    [self.requestOperationManager.requestSerializer requestWithMethod:@"GET"
+                                                            URLString:urlString
+                                                           parameters:nil
+                                                                error:&downloadRequestError];
+    
+    if (downloadRequestError) {
+        ASDKLogError(@"Cannot create request to download content thumbnail. Reason:%@", downloadRequestError.localizedDescription);
+        dispatch_async(self.resultsQueue, ^{
+            completionBlock(nil, NO, downloadRequestError);
+        });
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    NSURLSessionDownloadTask *downloadTask =
+    [self.requestOperationManager downloadTaskWithRequest:downloadRequest
+                                                 progress:nil
+                                              destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+                                                  return [NSURL fileURLWithPath:downloadPathForThumbnail];
+                                              } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                                                  __strong typeof(self) strongSelf = weakSelf;
+                                                  
+                                                  // Remove operation reference
+                                                  [strongSelf.networkOperations removeObject:downloadTask];
+                                                  
+                                                  if (!error) {
+                                                      // Check status code
+                                                      NSInteger statusCode = ((NSHTTPURLResponse *)response).statusCode;
+                                                      if (ASDKHTTPCode200OK == statusCode) {
+                                                          ASDKLogVerbose(@"The task content thumbnail was successfully downloaded with request: %@",
+                                                                         [downloadTask stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+                                                          
+                                                          dispatch_async(strongSelf.resultsQueue, ^{
+                                                              NSURL *downloadURL = [NSURL fileURLWithPath:downloadPathForThumbnail];
+                                                              completionBlock(downloadURL, NO, nil);
+                                                          });
+                                                      } else {
+                                                          ASDKLogVerbose(@"The task content thumbnail failed to download with request: %@",
+                                                                         [downloadTask stateDescriptionForResponse:[NSHTTPURLResponse localizedStringForStatusCode:statusCode]]);
+                                                          
+                                                          dispatch_async(strongSelf.resultsQueue, ^{
+                                                              completionBlock(nil, NO, nil);
+                                                          });
+                                                      }
+                                                  } else {
+                                                      ASDKLogError(@"Failed to download content thumbnail for task with request: %@ - %@.\nBody:%@.\nReason:%@",
                                                                    downloadRequest.HTTPMethod,
                                                                    downloadRequest.URL.absoluteString,
                                                                    [[NSString alloc] initWithData:downloadRequest.HTTPBody encoding:NSUTF8StringEncoding],
@@ -1159,8 +1259,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     NSParameterAssert(completionBlock);
     NSParameterAssert(self.resultsQueue);
     
-    // If content already exists return the URL to it to the caller and the caller
-    // explicitly mentioned cached results are expected return the existing data
+    // If content already exists and the caller is expecting cached results return the resource URL
     NSString *auditLogFileName = [NSString stringWithFormat:kASDKAuditLogFilenameFormat, taskID];
     NSString *downloadPathForContent = [self.diskServices downloadPathForResourceWithIdentifier:taskID
                                                                                        filename:auditLogFileName];

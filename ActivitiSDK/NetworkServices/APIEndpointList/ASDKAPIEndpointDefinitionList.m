@@ -95,6 +95,8 @@ NSString * const kASDKAPITaskContentUploadPath       = @"raw-content";
 NSString * const kASDKAPIContentRawPath              = @"raw";
 NSString * const kASDKAPIProcessContentPath          = @"field-content";
 NSString * const kASDKAPIAuditPath                   = @"audit";
+NSString * const kASDKAPIRenditionPath               = @"rendition";
+NSString * const kASDKAPIThumbnailPath               = @"thumbnail";
 
 
 #pragma mark -

@@ -23,7 +23,8 @@
 typedef NS_ENUM(NSInteger, ASDKModelContentAvailabilityType) {
     ASDKModelContentAvailabilityTypeUndefined   = -1,
     ASDKModelContentAvailabilityTypeQueued      = 0,
-    ASDKModelContentAvailabilityTypeCreated
+    ASDKModelContentAvailabilityTypeCreated,
+    ASDKModelContentAvailabilityTypeUnsupported
 };
 
 @interface ASDKModelContent : ASDKModelAttributable

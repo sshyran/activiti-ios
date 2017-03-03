@@ -457,9 +457,9 @@
 		13FF679A1CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FF67981CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.m */; };
 		13FF679C1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF679B1CEB3A4600A8C95F /* ASDKIntegrationDataSourceProtocol.h */; };
 		13FF679E1CEC4DC300A8C95F /* glyphicons-filetypes.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13FF679D1CEC4DC300A8C95F /* glyphicons-filetypes.otf */; };
-		13FF67A11CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF679F1CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h */; };
+		13FF67A11CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF679F1CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13FF67A21CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FF67A01CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m */; };
-		13FF67A51CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF67A31CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h */; };
+		13FF67A51CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FF67A31CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13FF67A61CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FF67A41CEC52F300A8C95F /* NSString+ASDKFontGlyphiconsFiletypes.m */; };
 		13FFF4101C43A6E600550747 /* AFAApplicationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13FFF40F1C43A6E600550747 /* AFAApplicationListViewController.m */; };
 		4934FD4AFB6057B7D78C1F06 /* Pods_Shared_AlfrescoActiviti.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B3E20A3E70D86D0A041EC8A /* Pods_Shared_AlfrescoActiviti.framework */; };
