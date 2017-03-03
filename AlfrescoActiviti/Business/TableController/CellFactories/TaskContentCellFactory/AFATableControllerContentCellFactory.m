@@ -80,8 +80,10 @@ shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     if (thumbnailImage != [self.thumbnailManager placeholderThumbnailImage]) {
         contentFileCell.fileThumbnailImageView.image = thumbnailImage;
     } else {
-        // Only start a thumbnail download operation for those cells that don't have already an operation in progress
-        if (!self.thumbnailOperationsDict[indexPath]) {
+        // Only start a thumbnail download operation for those cells that don't have
+        // already an operation in progress and the thumbnail status permits it
+        if (!self.thumbnailOperationsDict[indexPath] &&
+            content.thumbnailStatus == ASDKModelContentAvailabilityTypeCreated) {
             self.thumbnailOperationsDict[indexPath] = content.modelID;
             
             AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
