@@ -881,7 +881,7 @@
                                  handler:nil];
 }
 
-- (void)testThatItHandlesTaskDownloadRequestFailure {
+- (void)testThatItHandlesTaskContentDownloadRequestFailure {
     // given
     id fileContent = OCMClassMock([ASDKModelContent class]);
     
@@ -911,6 +911,120 @@
                                   
                                   [downloadTaskContentExpectation fulfill];
                               }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItDownloadsThumbnailForContentAndReturnsCachedResults {
+    // given
+    id fileContent = OCMClassMock([ASDKModelContent class]);
+    id diskServices = OCMPartialMock(self.taskNetworkServices.diskServices);
+    OCMStub([fileContent modelID]).andReturn(@"100");
+    OCMStub([fileContent contentName]).andReturn(@"IMG_001");
+    
+    // expect
+    XCTestExpectation *downloadsTaskContentThumbnailExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    OCMStub([diskServices doesThumbnailAlreadyExistsForContent:OCMOCK_ANY]).andReturn(YES);
+    
+    // when
+    self.taskNetworkServices.diskServices = diskServices;
+    [self.taskNetworkServices downloadThumbnailForContent:fileContent
+                                       allowCachedResults:YES
+                                            progressBlock:nil
+                                          completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                              XCTAssertNotNil(downloadedContentURL);
+                                              XCTAssertTrue(isLocalContent);
+                                              XCTAssertNil(error);
+                                              
+                                              [downloadsTaskContentThumbnailExpectation fulfill];
+                                          }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItDownloadsTaskContentThumbnailAndReportsProgress {
+    // given
+    id fileContent = OCMClassMock([ASDKModelContent class]);
+    
+    // expect
+    XCTestExpectation *downloadTaskContentThumbnailExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.downloadContentCompletion", NSStringFromSelector(_cmd)]];
+    XCTestExpectation *downloadTaskContentThumbnailProgressExpectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@.downloadContentProgress", NSStringFromSelector(_cmd)]];
+    
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        void (^completionBlock)(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error);
+        [invocation getArgument:&completionBlock
+                        atIndex:5];
+        NSURLSessionDownloadTask *downloadTask = [self downloadTaskWithStatusCode:ASDKHTTPCode200OK];
+        [invocation setReturnValue:&downloadTask];
+        
+        id response = OCMClassMock([NSHTTPURLResponse class]);
+        OCMStub([response statusCode]).andReturn(ASDKHTTPCode200OK);
+        completionBlock(response, nil, nil);
+    }] downloadTaskWithRequest:OCMOCK_ANY progress:OCMOCK_ANY destination:OCMOCK_ANY completionHandler:OCMOCK_ANY];
+    
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        void (^fileWritingProgressBlock) (NSURLSession * _Nonnull session, NSURLSessionDownloadTask * _Nonnull downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
+        [invocation getArgument:&fileWritingProgressBlock
+                        atIndex:2];
+        NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        NSURLSessionDownloadTask *downloadTask = [self downloadTaskWithStatusCode:ASDKHTTPCode200OK];
+        
+        fileWritingProgressBlock (defaultSession, downloadTask, 0, 200, 0);
+    }] setDownloadTaskDidWriteDataBlock:OCMOCK_ANY];
+    
+    // when
+    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.taskNetworkServices downloadThumbnailForContent:fileContent
+                                       allowCachedResults:NO
+                                            progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                                XCTAssert([formattedReceivedBytesString isEqualToString:@"200.00 bytes"]);
+                                                XCTAssertNil(error);
+                                                
+                                                [downloadTaskContentThumbnailProgressExpectation fulfill];
+                                            } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                                XCTAssertNotNil(downloadedContentURL);
+                                                XCTAssertFalse(isLocalContent);
+                                                XCTAssertNil(error);
+                                                
+                                                [downloadTaskContentThumbnailExpectation fulfill];
+                                            }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
+- (void)testThatItHandlesTaskContentThumbnailDownloadRequestFailure {
+    // given
+    id fileContent = OCMClassMock([ASDKModelContent class]);
+    
+    // expect
+    XCTestExpectation *downloadTaskContentThumbnailExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    [[[self.requestOperationManagerMock expect] andDo:^(NSInvocation *invocation) {
+        void (^completionBlock)(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error);
+        [invocation getArgument:&completionBlock
+                        atIndex:5];
+        NSURLSessionDownloadTask *downloadTask = [self downloadTaskWithStatusCode:ASDKHTTPCode400BadRequest];
+        [invocation setReturnValue:&downloadTask];
+        
+        id response = OCMClassMock([NSHTTPURLResponse class]);
+        OCMStub([response statusCode]).andReturn(ASDKHTTPCode200OK);
+        completionBlock(response, nil, [self requestGenericError]);
+    }] downloadTaskWithRequest:OCMOCK_ANY progress:OCMOCK_ANY destination:OCMOCK_ANY completionHandler:OCMOCK_ANY];
+    
+    // when
+    self.taskNetworkServices.requestOperationManager = self.requestOperationManagerMock;
+    [self.taskNetworkServices downloadThumbnailForContent:fileContent
+                                       allowCachedResults:NO
+                                            progressBlock:nil
+                                          completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                              XCTAssertNil(downloadedContentURL);
+                                              XCTAssertFalse(isLocalContent);
+                                              XCTAssertNotNil(error);
+                                              
+                                              [downloadTaskContentThumbnailExpectation fulfill];
+    }];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
