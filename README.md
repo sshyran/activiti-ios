@@ -8,11 +8,10 @@ The Alfresco Activiti iOS app is build on top of the Alfresco Activiti iOS SDK.
 The app is a reference implementation of the most common mobile use cases within the BPM and workflow domain. 
 The SDK can be used seperatly to create your own tailormade iOS client for the Alfresco Activiti BPM suite.
 
-*NB: Alfresco Activiti iOS is currently still being developed.
-
 ## Where can I find it ?
 
-Alfresco Activiti iOS is still in the development phase and is not yet published to the Apple iOS app store.
+On the Apple App Store ... [Alfresco Process Services powered by Activiti]
+(https://itunes.apple.com/us/app/alfresco-process-services-powered-by-activiti/id1129144376?mt=8)
 
 ## Contributors
 
