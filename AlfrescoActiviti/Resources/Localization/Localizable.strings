@@ -147,6 +147,7 @@
 "successText"                                            = "Success";
 "auditLogText"                                           = "Audit log";
 "signOutText"                                            = "Sign out";
+"settingsText"                                           = "Settings";
 
 // Alert dialogs use
 "alertDialogOopsTitleText"                               = "Oops...";
@@ -226,6 +227,10 @@
 "profileScreenDiskUsageText"                             = "Disk usage";
 "profileScreenDiskUsageAvailableText"                    = "Available";
 "profileScreenActivitiDataText"                          = "Alfresco Process Services data";
+
+// Settings screen
+"profileScreenReportToolText"                            = "Report a bug overlay";
+"settingsScreenBugReportingText"                         = "Problem reporting";
 
 // Default filter names
 "defaultFilterInvolvedTasksText"                         = "Involved tasks";

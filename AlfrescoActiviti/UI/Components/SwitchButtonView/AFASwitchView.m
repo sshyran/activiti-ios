@@ -25,89 +25,132 @@
 @property (strong, nonatomic) UIButton  *offButton;
 @property (strong, nonatomic) UILabel   *onLabel;
 @property (strong, nonatomic) UILabel   *offLabel;
+@property (strong, nonatomic) UIView    *backgroundView;
+@property (strong, nonatomic) UILabel   *descriptionLabel;
 
 @end
 
 @implementation AFASwitchView
 
-- (void)drawRect:(CGRect)rect {
-    // Setup background view
-    UIView *backgroundView = [[UIView alloc] initWithFrame:self.bounds];
-    backgroundView.backgroundColor = self.backgroundViewColor;
-    backgroundView.layer.cornerRadius = 4.0;
-    [self addSubview:backgroundView];
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     
-    // Setup button view
-    self.buttonView = [[UIView alloc] initWithFrame:CGRectMake(.0f, .0f, self.bounds.size.width / 2.0f, self.bounds.size.height)];
-    self.buttonView.backgroundColor = self.buttonViewColor;
-    self.buttonView.layer.cornerRadius = self.buttonViewCornerRadius;
-    [self addSubview:self.buttonView];
-    
-    // Setup toggle buttons
-    self.onButton = [[UIButton alloc] initWithFrame:CGRectMake(.0f, .0f, self.bounds.size.width / 2.0f, self.bounds.size.height)];
-    self.onButton.backgroundColor = [UIColor clearColor];
-    self.onButton.enabled = NO;
-    [self.onButton addTarget:self
+    if (self) {
+        // Setup background view
+        _backgroundView = [[UIView alloc] init];
+        _backgroundView.layer.cornerRadius = 4.0;
+        [self addSubview:_backgroundView];
+        
+        // Setup button view
+        _buttonView = [[UIView alloc] init];
+        [self addSubview:_buttonView];
+        
+        // Setup toggle buttons
+        _onButton = [[UIButton alloc] init];
+        _onButton.backgroundColor = [UIColor clearColor];
+        _onButton.enabled = YES;
+        [_onButton addTarget:self
                       action:@selector(onToggle:)
             forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.onButton];
-    
-    self.offButton = [[UIButton alloc] initWithFrame:CGRectMake(self.bounds.size.width / 2.0f, .0f, self.bounds.size.width / 2.0f, self.bounds.size.height)];
-    self.offButton.backgroundColor = [UIColor clearColor];
-    self.offButton.enabled = YES;
-    [self.offButton addTarget:self
+        [self addSubview:_onButton];
+        
+        _offButton = [[UIButton alloc] init];
+        _offButton.backgroundColor = [UIColor clearColor];
+        _offButton.enabled = NO;
+        [_offButton addTarget:self
                        action:@selector(onToggle:)
              forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.offButton];
-    
-    // Setup ON / OFF labels
-    CGFloat marginPadding = (AFASwitchViewOnOffLabelPositionMargin == self.onOffLabelPosition) ? 10.0f : .0f;
-    NSTextAlignment onTextAlignment = (AFASwitchViewOnOffLabelPositionMargin == self.onOffLabelPosition) ? NSTextAlignmentLeft : NSTextAlignmentCenter;
-    NSTextAlignment offTextAlignment = (AFASwitchViewOnOffLabelPositionMargin == self.onOffLabelPosition) ? NSTextAlignmentRight : NSTextAlignmentCenter;
-    
-    self.onLabel = [[UILabel alloc] initWithFrame:CGRectMake(marginPadding, (self.bounds.size.height / 2.0f) - 25, self.bounds.size.width / 2.0f, 50)];
-#if TARGET_INTERFACE_BUILDER
-    self.onLabel.text = @"ON";
-#else
-    self.onLabel.text = self.onLabelText;
-#endif
-    self.onLabel.textAlignment = onTextAlignment;
-    self.onLabel.textColor = self.onLabelTextColor;
-    self.onLabel.font = [UIFont boldSystemFontOfSize:15];
-    [self.onButton addSubview:self.onLabel];
-    
-    self.offLabel = [[UILabel alloc] initWithFrame:CGRectMake(-marginPadding / 2.0f, (self.bounds.size.height / 2.0f) - 25, self.bounds.size.width / 2.0f, 50)];
-#if TARGET_INTERFACE_BUILDER
-    self.offLabel.text = @"OFF";
-#else
-    self.offLabel.text = self.offLabelText;
-#endif
-    self.offLabel.textAlignment = offTextAlignment;
-    self.offLabel.textColor = self.offLabelTextColor;
-    self.offLabel.font = [UIFont boldSystemFontOfSize:15];
-    [self.offButton addSubview:self.offLabel];
-    
-    // Setup description label
-    if (self.switchDescriptionText) {
-        UIFont *descriptionTextFont = [UIFont systemFontOfSize:10];
-        CGFloat widthOfDescriptionText = [self widthOfString:self.switchDescriptionText
-                                                  withFont:descriptionTextFont];
-        // Add extra padding
-        widthOfDescriptionText += 10;
+        [self addSubview:_offButton];
         
-        UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake((self.bounds.size.width / 2.0f) - (widthOfDescriptionText / 2.0f), (self.bounds.size.height / 2.0) - 10, widthOfDescriptionText, 20)];
-        descriptionLabel.text = self.switchDescriptionText;
-        descriptionLabel.textAlignment = NSTextAlignmentCenter;
-        descriptionLabel.textColor = self.descriptionTextColor;
-        descriptionLabel.font = descriptionTextFont;
-        descriptionLabel.backgroundColor = self.descriptionBackgroundColor;
-        descriptionLabel.layer.cornerRadius = 5.0f;
-        descriptionLabel.clipsToBounds = YES;
-        [self addSubview:descriptionLabel];
+        // Setup ON / OFF labels
+        NSTextAlignment onTextAlignment = (AFASwitchViewOnOffLabelPositionMargin == _onOffLabelPosition) ? NSTextAlignmentLeft : NSTextAlignmentCenter;
+        NSTextAlignment offTextAlignment = (AFASwitchViewOnOffLabelPositionMargin == _onOffLabelPosition) ? NSTextAlignmentRight : NSTextAlignmentCenter;
+        
+        _onLabel = [[UILabel alloc] init];
+        _onLabel.textAlignment = onTextAlignment;
+        _onLabel.font = [UIFont boldSystemFontOfSize:15];
+        [_onButton addSubview:_onLabel];
+        
+        _offLabel = [[UILabel alloc] init];
+        _offLabel.textAlignment = offTextAlignment;
+        _offLabel.font = [UIFont boldSystemFontOfSize:15];
+        [_offButton addSubview:_offLabel];
+        
+        // Setup description label
+        UIFont *descriptionTextFont = [UIFont systemFontOfSize:10];
+        
+        _descriptionLabel = [[UILabel alloc] init];
+        _descriptionLabel.textAlignment = NSTextAlignmentCenter;
+        _descriptionLabel.font = descriptionTextFont;
+        _descriptionLabel.layer.cornerRadius = 5.0f;
+        _descriptionLabel.clipsToBounds = YES;
+        [self addSubview:_descriptionLabel];
     }
     
-    // Perform a refresh for the initial state of the switch
-    [self switchFromCurrentState:_isOn];
+    return self;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+    _backgroundView.backgroundColor = _backgroundViewColor;
+    _buttonView.backgroundColor = _buttonViewColor;
+    _onLabel.textColor = _onLabelTextColor;
+    _offLabel.textColor = _offLabelTextColor;
+    _descriptionLabel.textColor = _descriptionTextColor;
+    _descriptionLabel.backgroundColor = _descriptionBackgroundColor;
+    _buttonView.layer.cornerRadius = _buttonViewCornerRadius;
+    
+#if TARGET_INTERFACE_BUILDER
+    _onLabel.text = @"ON";
+    _offLabel.text = @"OFF";
+#else
+    _onLabel.text = _onLabelText;
+    _offLabel.text = _offLabelText;
+    _descriptionLabel.text = _switchDescriptionText;
+#endif
+}
+
+- (void)layoutSubviews {
+    if (CGRectIsEmpty(_backgroundView.frame)) {
+        _backgroundView.frame = self.bounds;
+    }
+    
+    if (CGRectIsEmpty(_buttonView.frame)) {
+        _buttonView.frame = CGRectMake(.0f, .0f, self.bounds.size.width / 2.0f, self.bounds.size.height);
+    }
+    
+    if (CGRectIsEmpty(_onButton.frame)) {
+        _onButton.frame = CGRectMake(self.bounds.size.width / 2.0f, .0f, self.bounds.size.width / 2.0f, self.bounds.size.height);
+    }
+    
+    if (CGRectIsEmpty(_offButton.frame)) {
+        _offButton.frame = CGRectMake(.0f, .0f, self.bounds.size.width / 2.0f, self.bounds.size.height);
+    }
+    
+    CGFloat marginPadding = (AFASwitchViewOnOffLabelPositionMargin == self.onOffLabelPosition) ? 10.0f : .0f;
+    if (CGRectIsEmpty(_onLabel.frame)) {
+        _onLabel.frame = CGRectMake(marginPadding, (self.bounds.size.height / 2.0f) - 25, self.bounds.size.width / 2.0f, 50);
+    }
+    
+    if (CGRectIsEmpty(_offLabel.frame)) {
+        _offLabel.frame = CGRectMake(-marginPadding / 2.0f, (self.bounds.size.height / 2.0f) - 25, self.bounds.size.width / 2.0f, 50);
+    }
+    
+    if (self.switchDescriptionText) {
+        if (CGRectIsEmpty(_descriptionLabel.frame)) {
+            CGFloat widthOfDescriptionText = [self widthOfString:_switchDescriptionText
+                                                        withFont:_descriptionLabel.font];
+            // Add extra padding
+            widthOfDescriptionText += 10;
+            _descriptionLabel.frame = CGRectMake((self.bounds.size.width / 2.0f) - (widthOfDescriptionText / 2.0f), (self.bounds.size.height / 2.0) - 10, widthOfDescriptionText, 20);
+        }
+    }
+    
+    if (_isOn) {
+        // Perform a refresh for the initial state of the switch
+        [self switchFromCurrentState:_isOn];
+    }
 }
 
 
@@ -141,13 +184,13 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          CGRect adjustedButtonViewFrame = self.buttonView.frame;
-                         adjustedButtonViewFrame.origin.x += self.frame.size.width / 2.0f * (on ? -1 : 1);
+                         adjustedButtonViewFrame.origin.x += self.frame.size.width / 2.0f * (on ? 1 : -1);
                          
                          if (on) {
-                             adjustedButtonViewFrame.origin.x -= 1;
+                             adjustedButtonViewFrame.origin.x += 1;
                              
                          }else {
-                             adjustedButtonViewFrame.origin.x += 1;
+                             adjustedButtonViewFrame.origin.x -= 1;
                          }
                          
                          self.buttonView.frame = adjustedButtonViewFrame;
@@ -158,8 +201,8 @@
     [self animateLabelText:self.onLabel
                    toColor:(on ? self.offLabelTextColor : self.onLabelTextColor)];
     
-    self.onButton.enabled = !self.onButton.enabled;
-    self.offButton.enabled = !self.offButton.enabled;
+    self.onButton.enabled = !on;
+    self.offButton.enabled = on;
 }
 
 - (void)animateLabelText:(UILabel *)label
@@ -167,8 +210,8 @@
     [UIView transitionWithView:label
                       duration:.4f
                        options:UIViewAnimationOptionCurveEaseOut |
-                               UIViewAnimationOptionTransitionCrossDissolve |
-                               UIViewAnimationOptionBeginFromCurrentState
+     UIViewAnimationOptionTransitionCrossDissolve |
+     UIViewAnimationOptionBeginFromCurrentState
                     animations:^{
                         label.textColor = color;
                     } completion:nil];
@@ -176,7 +219,7 @@
 }
 
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Utilities
 
 - (CGFloat)widthOfString:(NSString *)string

@@ -67,12 +67,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     // Buglife integration
     // Add your API key to receive bug reports
-    /* Disabled for AppStore release
     [[Buglife sharedBuglife] startWithAPIKey:@"YOUR_KEY"];
     [Buglife sharedBuglife].invocationOptions = LIFEInvocationOptionsShake;
     [Buglife sharedBuglife].userEmailField.visible = YES;
     [Buglife sharedBuglife].delegate = self;
-     */
     
     application.delegate.window.backgroundColor = [UIColor windowBackgroundColor];
     
@@ -120,22 +118,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [thumbnailsManager cleanupMemoryCache];
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    // Saves changes in the application's managed object context before the application terminates.
 }
 
 @end

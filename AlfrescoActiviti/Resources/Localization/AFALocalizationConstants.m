@@ -178,6 +178,7 @@ NSString *kLocalizationGeneralUseNoneText                        = @"generalUseN
 NSString *kLocalizationSuccessText                               = @"successText";
 NSString *kLocalizationAuditLogText                              = @"auditLogText";
 NSString *kLocalizationSignOutText                               = @"signOutText";
+NSString *kLocalizationSettingsText                              = @"settingsText";
 
 
 #pragma mark -
@@ -274,6 +275,13 @@ NSString *kLocalizationProfileScreenCleanCacheAlertText          = @"profileScre
 NSString *kLocalizationProfileScreenDiskUsageText                = @"profileScreenDiskUsageText";
 NSString *kLocalizationProfileScreenDiskUsageAvailableText       = @"profileScreenDiskUsageAvailableText";
 NSString *kLocalizationProfileScreenActivitiDataText             = @"profileScreenActivitiDataText";
+NSString *kLocalizationProfileScreenReportToolText               = @"profileScreenReportToolText";
+
+
+#pragma mark -
+#pragma mark Settings screen
+
+NSString *kLocalizationSettingsScreenBugReportingText            = @"settingsScreenBugReportingText";
 
 
 #pragma mark -

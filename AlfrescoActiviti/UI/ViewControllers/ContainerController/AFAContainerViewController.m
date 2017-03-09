@@ -23,6 +23,7 @@
 #import "AFANavigationController.h"
 #import "AFAListViewController.h"
 #import "AFAProfileViewController.h"
+#import "AFASettingsViewController.h"
 
 // Constants
 #import "AFAUIConstants.h"
@@ -275,6 +276,23 @@
     profileViewController.navigationItem.leftBarButtonItem = menuItem;
     
     [self.detailsNavigationController setViewControllers:@[profileViewController]
+                                                animated:NO];
+}
+
+- (void)showSettings {
+    [self toggleDrawerMenu];
+    
+    AFASettingsViewController *settingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDSettingsViewController];
+    settingsViewController.delegate = self;
+    
+    UIBarButtonItem *menuItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu-dots-icon"]
+                                                                 style:UIBarButtonItemStylePlain
+                                                                target:settingsViewController
+                                                                action:@selector(toggleMenu:)];
+    menuItem.tintColor = [UIColor whiteColor];
+    settingsViewController.navigationItem.leftBarButtonItem = menuItem;
+    
+    [self.detailsNavigationController setViewControllers:@[settingsViewController]
                                                 animated:NO];
 }
 

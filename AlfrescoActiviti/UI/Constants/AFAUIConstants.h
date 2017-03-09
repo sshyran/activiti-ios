@@ -38,6 +38,7 @@ extern NSString *kStoryboardIDModalPeoplePickerViewController;
 extern NSString *kStoryboardIDListViewController;
 extern NSString *kStoryboardIDApplicationListViewController;
 extern NSString *kStoryboardIDProfileViewController;
+extern NSString *kStoryboardIDSettingsViewController;
 
 // Cell IDs
 
@@ -81,10 +82,11 @@ extern NSString *kCellIDProfileSectionTitle;
 extern NSString *kCellIDProfileCategory;
 extern NSString *kCellIDProfileOption;
 extern NSString *kCellIDProfileAction;
+extern NSString *kCellIDSettingsSwitch;
 extern NSString *kCellIDAuditLog;
 extern NSString *kCellIDStartForm;
 extern NSString *kCellIDTaskChecklist;
-extern NSString *kCellIDProfileUsage;
+extern NSString *kCellIDSettingsUsage;
 extern NSString *kCellIDLoginSection;
 
 // Segue IDs
