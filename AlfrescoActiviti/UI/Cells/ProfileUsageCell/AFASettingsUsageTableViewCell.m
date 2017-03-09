@@ -16,23 +16,19 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "AFASettingsUsageTableViewCell.h"
 
-@class AFALoginModel;
-@protocol AFAContainerViewControllerDelegate <NSObject>
+@implementation AFASettingsUsageTableViewCell
 
-- (BOOL)isDrawerMenuOpen;
-- (void)toggleDrawerMenu;
-- (void)logoutUser;
-- (void)showAdhocTasks;
-- (void)showApplications;
-- (void)showUserProfile;
-- (void)showSettings;
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
 
-@end
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
 
-@interface AFAContainerViewController : UIViewController
-
-@property (strong, nonatomic) AFALoginModel *loginModel;
+    // Configure the view for the selected state
+}
 
 @end

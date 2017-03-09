@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AFAProfileUsageTableViewCell : UITableViewCell
+@interface AFASettingsUsageTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *usageLabel;

@@ -148,6 +148,7 @@ extern NSString *kLocalizationGeneralUseNoneText;
 extern NSString *kLocalizationSuccessText;
 extern NSString *kLocalizationAuditLogText;
 extern NSString *kLocalizationSignOutText;
+extern NSString *kLocalizationSettingsText;
 
 // Alert dialogs use
 extern NSString *kLocalizationAlertDialogOopsTitleText;
@@ -227,6 +228,10 @@ extern NSString *kLocalizationProfileScreenCleanCacheAlertText;
 extern NSString *kLocalizationProfileScreenDiskUsageText;
 extern NSString *kLocalizationProfileScreenDiskUsageAvailableText;
 extern NSString *kLocalizationProfileScreenActivitiDataText;
+extern NSString *kLocalizationProfileScreenReportToolText;
+
+// Settings screen
+extern NSString *kLocalizationSettingsScreenBugReportingText;
 
 // Default filter names
 extern NSString *kLocalizationDefaultFilterInvolvedTasksText;

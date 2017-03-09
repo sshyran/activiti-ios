@@ -41,6 +41,7 @@ NSString *kStoryboardIDModalPeoplePickerViewController          = @"ModalPeopleP
 NSString *kStoryboardIDListViewController                       = @"ListViewControllerID";
 NSString *kStoryboardIDApplicationListViewController            = @"ApplicationListViewControllerID";
 NSString *kStoryboardIDProfileViewController                    = @"ProfileViewControllerID";
+NSString *kStoryboardIDSettingsViewController                   = @"SettingsViewControllerID";
 
 
 #pragma mark -
@@ -86,7 +87,8 @@ NSString *kCellIDProfileSectionTitle                            = @"ProfileSecti
 NSString *kCellIDProfileCategory                                = @"ProfileCategoryCellID";
 NSString *kCellIDProfileOption                                  = @"ProfileOptionCellID";
 NSString *kCellIDProfileAction                                  = @"ProfileActionCellID";
-NSString *kCellIDProfileUsage                                   = @"ProfileUsageCellID";
+NSString *kCellIDSettingsUsage                                  = @"SettingsUsageCellID";
+NSString *kCellIDSettingsSwitch                                 = @"SettingsSwitchCellID";
 NSString *kCellIDAuditLog                                       = @"AuditLogCellID";
 NSString *kCellIDStartForm                                      = @"StartFormCellID";
 NSString *kCellIDTaskChecklist                                  = @"TaskChecklistCellID";

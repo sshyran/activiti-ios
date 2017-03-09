@@ -40,6 +40,7 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
     AFADrawerMenuCellTypeAvatar = 0,
     AFADrawerMenuCellTypeApplications,
     AFADrawerMenuCellTypeTasks,
+    AFADrawerMenuCellTypeSettings,
     AFADrawerMenuCellTypeLogout,
     AFADrawerMenuCellTypeEnumCount
 };
@@ -118,6 +119,15 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
         }
             break;
             
+        case AFADrawerMenuCellTypeSettings: {
+            if ([self.delegate respondsToSelector:@selector(showSettings)]) {
+                [self.delegate showSettings];
+            }
+            
+            self.currentSelectedMenuCell = cellType;
+        }
+            break;
+            
         case AFADrawerMenuCellTypeLogout: {
             if ([self.delegate respondsToSelector:@selector(logoutUser)]) {
                 [self.delegate logoutUser];
@@ -180,7 +190,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     switch (indexPath.row) {
         case AFADrawerMenuCellTypeAvatar: {
-            AFAAvatarMenuTableViewCell *avatarCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuAvatar];
+            AFAAvatarMenuTableViewCell *avatarCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuAvatar
+                                                                                     forIndexPath:indexPath];
             
             // If we don't have loaded a thumbnail image use a placeholder instead
             // otherwise look in the cache or compute the image and set it once
@@ -199,7 +210,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             break;
             
         case AFADrawerMenuCellTypeApplications: {
-            AFAMenuButtonCell *taskButtonCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuButton];
+            AFAMenuButtonCell *taskButtonCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuButton
+                                                                                forIndexPath:indexPath];
             taskButtonCell.delegate = self;
             [taskButtonCell.menuButton setImage:[UIImage imageNamed:@"application-icon"]
                                        forState:UIControlStateNormal];
@@ -211,7 +223,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             break;
             
         case AFADrawerMenuCellTypeTasks: {
-            AFAMenuButtonCell *taskButtonCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuButton];
+            AFAMenuButtonCell *taskButtonCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuButton
+                                                                                forIndexPath:indexPath];
             taskButtonCell.delegate = self;
             [taskButtonCell.menuButton setImage:[UIImage imageNamed:@"adhoc-icon"]
                                        forState:UIControlStateNormal];
@@ -222,8 +235,22 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }
             break;
             
+        case AFADrawerMenuCellTypeSettings: {
+            AFAMenuButtonCell *settingsButtonCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuButton
+                                                                                    forIndexPath:indexPath];
+            settingsButtonCell.delegate = self;
+            [settingsButtonCell.menuButton setImage:[UIImage imageNamed:@"settings-icon"]
+                                           forState:UIControlStateNormal];
+            settingsButtonCell.menuButton.tintColor = [[UIColor whiteColor] colorWithAlphaComponent:.7f];
+            settingsButtonCell.menuItemTitleLabel.text = NSLocalizedString(kLocalizationSettingsText, @"Settings title");
+            
+            cell = settingsButtonCell;
+        }
+            break;
+            
         case AFADrawerMenuCellTypeLogout: {
-            AFAMenuButtonCell *logoutButtonCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuButton];
+            AFAMenuButtonCell *logoutButtonCell = [tableView dequeueReusableCellWithIdentifier:kCellIDDrawerMenuButton
+                                                                                  forIndexPath:indexPath];
             logoutButtonCell.delegate = self;
             [logoutButtonCell.menuButton setImage:[UIImage imageNamed:@"logout-icon"]
                                          forState:UIControlStateNormal];

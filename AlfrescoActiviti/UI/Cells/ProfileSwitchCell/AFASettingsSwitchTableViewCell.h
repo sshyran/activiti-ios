@@ -17,22 +17,18 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "AFASwitchView.h"
 
-@class AFALoginModel;
-@protocol AFAContainerViewControllerDelegate <NSObject>
+@protocol AFASettingsSwitchTableViewCellDelegate <NSObject>
 
-- (BOOL)isDrawerMenuOpen;
-- (void)toggleDrawerMenu;
-- (void)logoutUser;
-- (void)showAdhocTasks;
-- (void)showApplications;
-- (void)showUserProfile;
-- (void)showSettings;
+- (void)didUpdateSwitchStateTo:(BOOL)isOn;
 
 @end
 
-@interface AFAContainerViewController : UIViewController
+@interface AFASettingsSwitchTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) AFALoginModel *loginModel;
+@property (weak, nonatomic) IBOutlet UILabel        *descriptionLabel;
+@property (weak, nonatomic) IBOutlet AFASwitchView  *switchControl;
+@property (weak, nonatomic) id<AFASettingsSwitchTableViewCellDelegate> delegate;
 
 @end
