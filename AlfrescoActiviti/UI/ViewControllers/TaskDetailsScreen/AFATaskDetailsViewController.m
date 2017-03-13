@@ -646,6 +646,10 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
 }
 
 - (void)refreshContentForCurrentSection {
+    if ([self isDueDatePickerVisible]) {
+        [self toggleDatePickerComponent];
+    }
+    
     self.tableController.model = [self reusableTableControllerModelForSectionType:self.currentSelectedSection];
     self.tableController.cellFactory = [self dequeueCellFactoryForSectionType:self.currentSelectedSection];
     
@@ -1449,6 +1453,10 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     }
     
     return reusableObject;
+}
+
+- (BOOL)isDueDatePickerVisible {
+    return !self.datePickerBottomConstraint.constant ? YES : NO;
 }
 
 
