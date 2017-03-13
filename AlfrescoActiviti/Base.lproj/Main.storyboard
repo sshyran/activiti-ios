@@ -22,7 +22,7 @@
             <objects>
                 <navigationController storyboardIdentifier="Navigation" navigationBarHidden="YES" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="v9Y-ro-k4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="v9Y-ro-k4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -38,7 +38,7 @@
         <scene sceneID="5ZC-YG-evy">
             <objects>
                 <navigationController id="Xjc-tR-raA" customClass="AFANavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="IqS-JF-Kuz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="IqS-JF-Kuz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.19215686274509802" green="0.26666666666666666" blue="0.29411764705882354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -483,7 +483,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="left" text="*" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AiT-aw-wck">
-                                                    <rect key="frame" x="317" y="-2" width="50" height="61"/>
+                                                    <rect key="frame" x="317" y="-1.5" width="50" height="60"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="60" id="2al-i9-6Ls"/>
                                                         <constraint firstAttribute="width" constant="50" id="iwg-lb-gqI"/>
@@ -3277,8 +3277,9 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D00-yq-Hig">
+                            <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D00-yq-Hig">
                                 <rect key="frame" x="0.0" y="946" width="600" height="44"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <items>
                                     <barButtonItem title="Remove" id="Spc-Zy-UHA">
                                         <color key="tintColor" red="0.058823529409999999" green="0.062745098040000002" blue="0.066666666669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -3315,7 +3316,7 @@
                                         </connections>
                                     </barButtonItem>
                                 </items>
-                                <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </toolbar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fsh-0u-U1X" userLabel="Date Picker Container">
                                 <rect key="frame" x="0.0" y="990" width="600" height="216"/>
@@ -3962,7 +3963,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember credentials" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xLH-sQ-Te6">
-                                                    <rect key="frame" x="8" y="11" width="171.5" height="20"/>
+                                                    <rect key="frame" x="8" y="11" width="172" height="20"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                     <color key="textColor" red="0.69803921570000005" green="0.69411764710000001" blue="0.70196078429999997" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -4093,7 +4094,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No internet connection available. Check your internet connection and try again." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3MP-b4-4aQ">
-                                <rect key="frame" x="38" y="353" width="300" height="39"/>
+                                <rect key="frame" x="38" y="353" width="300" height="38.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="gic-Yq-c6y"/>
                                 </constraints>
@@ -6038,7 +6039,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9TK-fc-9Jv" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ASR-AJ-PlD" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3494" y="239"/>
+            <point key="canvasLocation" x="3494" y="210"/>
         </scene>
         <!--Content Picker View Controller-->
         <scene sceneID="ZF9-AF-YjD">
@@ -6249,10 +6250,10 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8xE-qE-G6q"/>
-        <segue reference="KJK-Sb-lGO"/>
         <segue reference="RN3-5C-FKi"/>
         <segue reference="dAG-4I-soh"/>
+        <segue reference="Rct-bP-63w"/>
+        <segue reference="XZ3-C5-Oig"/>
         <segue reference="Axm-Tn-V6n"/>
     </inferredMetricsTieBreakers>
 </document>

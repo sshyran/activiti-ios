@@ -570,7 +570,9 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     if (!self.datePickerBottomConstraint.constant) {
         datePickerConstant = -(CGRectGetHeight(self.datePicker.frame) + CGRectGetHeight(self.datePickerToolbar.frame) + 10);
     } else {
-        taskDetailsTableViewTopConstant = -CGRectGetHeight(self.datePicker.frame) / 2;
+        if (self.taskDetailsTableView.contentSize.height + CGRectGetHeight(self.datePicker.frame) + CGRectGetHeight(self.datePickerToolbar.frame) - 10 > CGRectGetHeight(self.view.frame)) {
+            taskDetailsTableViewTopConstant = -CGRectGetHeight(self.datePicker.frame) / 2;
+        }
     }
     
     [self.view layoutIfNeeded];
