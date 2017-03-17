@@ -22,7 +22,7 @@
             <objects>
                 <navigationController storyboardIdentifier="Navigation" navigationBarHidden="YES" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="v9Y-ro-k4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="v9Y-ro-k4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -38,7 +38,7 @@
         <scene sceneID="5ZC-YG-evy">
             <objects>
                 <navigationController id="Xjc-tR-raA" customClass="AFANavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="IqS-JF-Kuz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="IqS-JF-Kuz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.19215686274509802" green="0.26666666666666666" blue="0.29411764705882354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -483,7 +483,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="left" text="*" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AiT-aw-wck">
-                                                    <rect key="frame" x="317" y="-1.5" width="50" height="60"/>
+                                                    <rect key="frame" x="317" y="-2" width="50" height="61"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="60" id="2al-i9-6Ls"/>
                                                         <constraint firstAttribute="width" constant="50" id="iwg-lb-gqI"/>
@@ -4038,8 +4038,6 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
-                                    <outlet property="dataSource" destination="QG4-6w-H2D" id="n6b-pS-hPu"/>
-                                    <outlet property="delegate" destination="QG4-6w-H2D" id="YaZ-rZ-wXi"/>
                                     <outletCollection property="gestureRecognizers" destination="DtN-7W-JHp" appends="YES" id="upQ-1c-4Kv"/>
                                 </connections>
                             </tableView>
@@ -4094,7 +4092,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No internet connection available. Check your internet connection and try again." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3MP-b4-4aQ">
-                                <rect key="frame" x="38" y="353" width="300" height="38.5"/>
+                                <rect key="frame" x="38" y="353" width="300" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="gic-Yq-c6y"/>
                                 </constraints>

@@ -17,70 +17,10 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-
-@class AFALoginModel;
-
-// Enumerations
-typedef NS_ENUM(NSInteger, AFALoginCredentialsType) {
-    AFALoginCredentialsTypeCloud,
-    AFALoginCredentialsTypePremise
-};
-
-typedef NS_ENUM(NSInteger, AFACloudLoginSectionType) {
-    AFACloudLoginSectionTypeAccountDetails,
-    AFACloudLoginSectionTypeSignIn,
-    AFACloudLoginSectionTypeEnumCount
-};
-
-typedef NS_ENUM(NSInteger, AFAPremiseLoginSectionType) {
-    AFAPremiseLoginSectionTypeAccountDetails = 0,
-    AFAPremiseLoginSectionTypeAdvanced,
-    AFAPremiseLoginSectionTypeSignIn,
-    AFAPremiseLoginSectionTypeEnumCount
-};
-
-typedef NS_ENUM(NSInteger, AFACloudLoginCredentialsCellType) {
-    AFACloudLoginCredentialsCellTypeEmail = 0,
-    AFACloudLoginCredentialsCellTypePassword,
-    AFACloudLoginCredentialsCellTypeEnumCount
-};
-
-typedef NS_ENUM(NSInteger, AFAPremiseLoginCredentialsCellType) {
-    AFAPremiseLoginCredentialsCellTypeEmail = 0,
-    AFAPremiseLoginCredentialsCellTypePassword,
-    AFAPremiseLoginCredentialsCellTypeHostname,
-    AFAPremiseLoginCredentialsCellTypeEnumCount
-};
-
-typedef NS_ENUM(NSInteger, AFAPremiseLoginAdvancedCredentialsCellType) {
-    AFAPremiseLoginAdvancedCredentialsCellTypeSecurityLayer = 0,
-    AFAPremiseLoginAdvancedCredentialsCellTypePort,
-    AFAPremiseLoginAdvancedCredentialsCellTypeServiceDocument,
-    AFAPremiseLoginAdvancedCredentialsCellTypeEnumCount
-};
-
-typedef NS_ENUM(NSInteger, AFASignInSectionCellType) {
-    AFASignInSectionCellTypeRememberCredentials = 0,
-    AFASignInSectionCellTypeSignIn,
-    AFASignInSectionCellTypeEnumCount
-};
-
-typedef NS_OPTIONS(NSUInteger, AFALoginCredentialEditing) {
-    AFALoginCredentialEditingFirstField  = 1<<0,
-    AFALoginCredentialEditingSecondField = 1<<1,
-};
-
-typedef NS_ENUM(NSInteger, AFALoginCredentialsFocusFieldOrder) {
-    AFALoginCredentialsFocusFieldOrderUsername = 0,
-    AFALoginCredentialsFocusFieldOrderPassword,
-    AFALoginCredentialsFocusFieldOrderHostname,
-    AFALoginCredentialsFocusFieldOrderPort,
-    AFALoginCredentialsFocusFieldOrderServiceDocument
-};
+#import "AFALoginCredentialsViewControllerDataSource.h"
 
 @interface AFALoginCredentialsViewController : UIViewController
 
-@property (assign, nonatomic) AFALoginCredentialsType        loginType;
-@property (strong, nonatomic) AFALoginModel                  *loginModel;
+@property (strong, nonatomic) id<AFALoginCredentialsViewControllerDataSource> dataSource;
 
 @end

@@ -27,7 +27,7 @@
 #import "UIView+AFAViewAnimations.h"
 
 // Models
-#import "AFALoginModel.h"
+#import "AFALoginViewModel.h"
 
 // View controllers
 #import "AFACredentialsPageViewController.h"
@@ -74,10 +74,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (strong, nonatomic) AFACredentialsPageViewController  *credentialsPageViewController;
 
 // Models
-@property (strong, nonatomic) AFALoginModel                     *loginModel;
+@property (strong, nonatomic) AFALoginViewModel                 *loginViewModel;
 
 // KVO
-@property (strong, nonatomic) ASDKKVOManager                     *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                    *kvoManager;
 
 @end
 
@@ -87,13 +87,15 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.loginModel = [AFALoginModel new];
+        _loginViewModel = [AFALoginViewModel new];
+        _kvoManager = [ASDKKVOManager managerWithObserver:self];
     }
     
     return self;
 }
 
 - (void)dealloc {
+#warning Investigate on whether to use the NSNotificationCenter approach of KVOManager one
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -116,7 +118,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *authenticationIdentifier = [userDefaults objectForKey:kAuthentificationTypeCredentialIdentifier];
-    AFALoginViewModelAuthentificationType lastAuthetificationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginViewModelAuthentificationTypeCloud : AFALoginViewModelAuthentificationTypePremise;
+    AFALoginAuthenticationType lastAuthetificationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginAuthenticationTypeCloud : AFALoginAuthenticationTypePremise;
     
     // Check if we have registered credentials and if so login the user
     // without showing the menu
@@ -124,35 +126,36 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // this means the app is freshly installed and even if credentials are registered with
     // the keychain do not fetch them
     if (authenticationIdentifier.length) {
-        [self.loginModel updateUserNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]];
-        [self.loginModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]];
+        [self.loginViewModel updateUserNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]];
+        [self.loginViewModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]];
     }
     
-    BOOL areCredentialsAvailableFromKeychain = self.loginModel.username.length && self.loginModel.password.length;
+    BOOL areCredentialsAvailableFromKeychain = self.loginViewModel.username.length && self.loginViewModel.password.length;
     
-    if (AFALoginViewModelAuthentificationTypeCloud == lastAuthetificationType &&
+    if (AFALoginAuthenticationTypeCloud == lastAuthetificationType &&
         areCredentialsAvailableFromKeychain) {
-        [self.loginModel updateHostNameEntry:[userDefaults objectForKey:kCloudHostNameCredentialIdentifier]];
-        [self.loginModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kCloudSecureLayerCredentialIdentifier]];
+        [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kCloudHostNameCredentialIdentifier]];
+        [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kCloudSecureLayerCredentialIdentifier]];
     } else {
-        [self.loginModel updateHostNameEntry:[userDefaults objectForKey:kPremiseHostNameCredentialIdentifier]];
-        [self.loginModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kPremiseSecureLayerCredentialIdentifier]];
+        [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kPremiseHostNameCredentialIdentifier]];
+        [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kPremiseSecureLayerCredentialIdentifier]];
         NSString *cachedPortString = [userDefaults objectForKey:kPremisePortCredentialIdentifier];
         if (!cachedPortString.length) {
             cachedPortString = [@(kDefaultLoginUnsecuredPort) stringValue];
         }
-        [self.loginModel updatePortEntry:cachedPortString];
+        [self.loginViewModel updatePortEntry:cachedPortString];
         
         // If there is no stored value for the service document key, then fallback to the one provided inside the login model
         // at initialization time
         NSString *serviceDocumentValue = [userDefaults objectForKey:kPremiseServiceDocumentCredentialIdentifier];
         if (serviceDocumentValue.length) {
-            [self.loginModel updateServiceDocument:serviceDocumentValue];
+            [self.loginViewModel updateServiceDocument:serviceDocumentValue];
         }
     }
     
-    if ([self.loginModel canUserSignIn]) {
-        [self.loginModel requestLoginWithCompletionBlock:^(BOOL isLoggedIn, NSError *error) {
+    if ([self.loginViewModel canUserSignIn]) {
+        [self handleBindingsForLoginViewModel:self.loginViewModel];
+        [self.loginViewModel requestLoginWithCompletionBlock:^(BOOL isLoggedIn, NSError *error) {
             BOOL displayEnvironmentMenu = NO;
             if (!error) {
                 if (!isLoggedIn) {
@@ -174,7 +177,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                 });
             }
         }];
-        
     } else { // Show the enviroment menu options
         [UIView animateViewsFromArray:@[self.roundedViewsContainer, self.serverButtonsContainerView]
                             withAlpha:1.0f
@@ -199,13 +201,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // Get a hold of the reference for the embedded page view controller
     if ([kStoryboardIDEmbeddedCredentialsPageController isEqualToString:segue.identifier]) {
         self.credentialsPageViewController = segue.destinationViewController;
-        self.credentialsPageViewController.loginModel = self.loginModel;
-        [self handleBindingsForLoginViewController];
+        [self handleBindingsForLoginViewModel:self.credentialsPageViewController.cloudLoginViewModel];
+        [self handleBindingsForLoginViewModel:self.credentialsPageViewController.premiseLoginViewModel];
     }
     
     if ([kSegueIDLoginAuthorized isEqualToString:segue.identifier]) {
         AFAContainerViewController *containerViewController = segue.destinationViewController;
-        containerViewController.loginModel = self.loginModel;
+        containerViewController.loginViewModel = self.loginViewModel;
     }
 }
 
@@ -249,11 +251,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (IBAction)onEnvironment:(id)sender {
     // Cancel possible ongoing login request
-    [self.loginModel cancelLoginRequest];
+    [self.loginViewModel cancelLoginRequest];
     
     // Clear credential information
-    [self.loginModel updateUserNameEntry:nil];
-    [self.loginModel updatePasswordEntry:nil];
+    [self.loginViewModel updateUserNameEntry:nil];
+    [self.loginViewModel updatePasswordEntry:nil];
     
     [self showEnvironmentPageAnimation];
 }
@@ -362,11 +364,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark -
 #pragma mark KVO bindings
 
-- (void)handleBindingsForLoginViewController {
-    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
-    
+- (void)handleBindingsForLoginViewModel:(AFALoginViewModel *)loginViewModel {
     __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:self.loginModel
+    [self.kvoManager observeObject:loginViewModel
                         forKeyPath:NSStringFromSelector(@selector(isCredentialInputInProgress))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
@@ -377,24 +377,24 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                  });
                              }];
     
-    [self.kvoManager observeObject:self.loginModel
+    [self.kvoManager observeObject:loginViewModel
                         forKeyPath:NSStringFromSelector(@selector(authState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 AFALoginViewModelAuthentificationState authState = [change[NSKeyValueChangeNewKey] unsignedIntegerValue];
+                                 AFALoginAuthenticationState authState = [change[NSKeyValueChangeNewKey] unsignedIntegerValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     if (AFALoginViewModelAuthentificationStateLoggedOut == authState) {
+                                     if (AFALoginAuthenticationStateLoggedOut == authState) {
                                          [weakSelf showEnvironmentPageAnimation];
                                          return ;
                                      }
                                      
                                      // If the user performed an action asses whether an animation is needed
-                                     if (AFALoginViewModelAuthentificationStatePreparing != authState) {
-                                         [weakSelf performActivityAnimationInReverse:(AFALoginViewModelAuthentificationStateInProgress == authState) ? NO : YES];
+                                     if (AFALoginAuthenticationStatePreparing != authState) {
+                                         [weakSelf performActivityAnimationInReverse:(AFALoginAuthenticationStateInProgress == authState) ? NO : YES];
                                      }
                                      
-                                     if (AFALoginViewModelAuthentificationStateAuthorized == authState) {
+                                     if (AFALoginAuthenticationStateAuthorized == authState) {
                                          [weakSelf performSegueWithIdentifier:kSegueIDLoginAuthorized
                                                                    sender:nil];
                                      }

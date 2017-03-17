@@ -43,7 +43,7 @@
 @import ActivitiSDK;
 
 // Models
-#import "AFALoginModel.h"
+#import "AFALoginViewModel.h"
 
 // Categories
 #import "UIViewController+AFAAlertAddition.h"
@@ -238,7 +238,7 @@
 }
 
 - (void)requestUserLogout {
-    [self.loginModel requestLogout];
+    [self.loginViewModel requestLogout];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
                                   sender:nil];

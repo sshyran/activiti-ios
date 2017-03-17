@@ -254,6 +254,7 @@
 		139E54041C218F1100CE4674 /* ASDKAppParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54021C218F1100CE4674 /* ASDKAppParserOperationWorker.m */; };
 		139E54081C21935500CE4674 /* ASDKModelApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 139E54061C21935500CE4674 /* ASDKModelApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139E54091C21935500CE4674 /* ASDKModelApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 139E54071C21935500CE4674 /* ASDKModelApp.m */; };
+		139F78F41E4DEC3D0030EFCD /* AFALoginCredentialsViewControllerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 139F78F31E4DEC3D0030EFCD /* AFALoginCredentialsViewControllerDataSource.m */; };
 		139F78F81E548D020030EFCD /* AFAModalPeoplePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 139F78F71E548D020030EFCD /* AFAModalPeoplePickerViewController.m */; };
 		139FEC161B720FA600CE6B01 /* ASDKModelGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 139FEC141B720FA600CE6B01 /* ASDKModelGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139FEC171B720FA600CE6B01 /* ASDKModelGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 139FEC151B720FA600CE6B01 /* ASDKModelGroup.m */; };
@@ -372,7 +373,7 @@
 		13CE5C6E1B998711002E5172 /* ASDKModelFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CE5C6C1B998711002E5172 /* ASDKModelFilter.m */; };
 		13CE8ED11B85B27B0022F17A /* AFADrawerMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CE8ED01B85B27B0022F17A /* AFADrawerMenuViewController.m */; };
 		13CE8ED51B85B32E0022F17A /* AFAContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CE8ED41B85B32E0022F17A /* AFAContainerViewController.m */; };
-		13CF5C351B8CAD7200678C28 /* AFALoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CF5C341B8CAD7200678C28 /* AFALoginModel.m */; };
+		13CF5C351B8CAD7200678C28 /* AFALoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CF5C341B8CAD7200678C28 /* AFALoginViewModel.m */; };
 		13CF72001BCCDA3E0048C322 /* ASDKDiskServicesConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CF71FE1BCCDA3E0048C322 /* ASDKDiskServicesConstants.h */; };
 		13CF72011BCCDA3E0048C322 /* ASDKDiskServicesConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CF71FF1BCCDA3E0048C322 /* ASDKDiskServicesConstants.m */; };
 		13CFF33F1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CFF33E1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.m */; };
@@ -956,6 +957,8 @@
 		139E54021C218F1100CE4674 /* ASDKAppParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKAppParserOperationWorker.m; path = NetworkServices/ParserOperationManager/AppParserOperationWorker/ASDKAppParserOperationWorker.m; sourceTree = "<group>"; };
 		139E54061C21935500CE4674 /* ASDKModelApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelApp.h; path = Model/App/ASDKModelApp.h; sourceTree = "<group>"; };
 		139E54071C21935500CE4674 /* ASDKModelApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelApp.m; path = Model/App/ASDKModelApp.m; sourceTree = "<group>"; };
+		139F78F21E4DEC3D0030EFCD /* AFALoginCredentialsViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFALoginCredentialsViewControllerDataSource.h; path = UI/ViewControllers/LoginScreen/DataSource/AFALoginCredentialsViewControllerDataSource.h; sourceTree = "<group>"; };
+		139F78F31E4DEC3D0030EFCD /* AFALoginCredentialsViewControllerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFALoginCredentialsViewControllerDataSource.m; path = UI/ViewControllers/LoginScreen/DataSource/AFALoginCredentialsViewControllerDataSource.m; sourceTree = "<group>"; };
 		139F78F61E548D020030EFCD /* AFAModalPeoplePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalPeoplePickerViewController.h; path = UI/ViewControllers/ModalPeoplePickerViewController/AFAModalPeoplePickerViewController.h; sourceTree = "<group>"; };
 		139F78F71E548D020030EFCD /* AFAModalPeoplePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalPeoplePickerViewController.m; path = UI/ViewControllers/ModalPeoplePickerViewController/AFAModalPeoplePickerViewController.m; sourceTree = "<group>"; };
 		139FEC141B720FA600CE6B01 /* ASDKModelGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelGroup.h; path = Model/Group/ASDKModelGroup.h; sourceTree = "<group>"; };
@@ -1105,8 +1108,8 @@
 		13CE8ED01B85B27B0022F17A /* AFADrawerMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFADrawerMenuViewController.m; path = UI/ViewControllers/DrawerMenuScreen/AFADrawerMenuViewController.m; sourceTree = "<group>"; };
 		13CE8ED31B85B32E0022F17A /* AFAContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContainerViewController.h; path = UI/ViewControllers/ContainerController/AFAContainerViewController.h; sourceTree = "<group>"; };
 		13CE8ED41B85B32E0022F17A /* AFAContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContainerViewController.m; path = UI/ViewControllers/ContainerController/AFAContainerViewController.m; sourceTree = "<group>"; };
-		13CF5C331B8CAD7200678C28 /* AFALoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFALoginModel.h; path = Model/LoginModel/AFALoginModel.h; sourceTree = "<group>"; };
-		13CF5C341B8CAD7200678C28 /* AFALoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFALoginModel.m; path = Model/LoginModel/AFALoginModel.m; sourceTree = "<group>"; };
+		13CF5C331B8CAD7200678C28 /* AFALoginViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFALoginViewModel.h; path = Model/LoginModel/AFALoginViewModel.h; sourceTree = "<group>"; };
+		13CF5C341B8CAD7200678C28 /* AFALoginViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFALoginViewModel.m; path = Model/LoginModel/AFALoginViewModel.m; sourceTree = "<group>"; };
 		13CF71FE1BCCDA3E0048C322 /* ASDKDiskServicesConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDiskServicesConstants.h; path = DiskServices/Constants/ASDKDiskServicesConstants.h; sourceTree = "<group>"; };
 		13CF71FF1BCCDA3E0048C322 /* ASDKDiskServicesConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKDiskServicesConstants.m; path = DiskServices/Constants/ASDKDiskServicesConstants.m; sourceTree = "<group>"; };
 		13CFF33D1BBBBD5300D3DEB6 /* NSDate+AFADateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+AFADateAdditions.h"; path = "Business/Categories/NSDate+AFADateAdditions.h"; sourceTree = "<group>"; };
@@ -2385,13 +2388,13 @@
 			name = Storyboards;
 			sourceTree = "<group>";
 		};
-		136E11321CE4AE1800047E38 /* AFAIntegrationServices */ = {
+		136E11321CE4AE1800047E38 /* IntegrationServices */ = {
 			isa = PBXGroup;
 			children = (
 				136E112F1CE4AE1400047E38 /* AFAIntegrationServices.h */,
 				136E11301CE4AE1400047E38 /* AFAIntegrationServices.m */,
 			);
-			name = AFAIntegrationServices;
+			name = IntegrationServices;
 			sourceTree = "<group>";
 		};
 		136E11371CE5BE0B00047E38 /* IntegrationLoginWebViewController */ = {
@@ -2758,6 +2761,7 @@
 		138D3D801C3FBAB400266A7C /* LoginCredentialsViewController */ = {
 			isa = PBXGroup;
 			children = (
+				139F78F51E4DEC420030EFCD /* DataSource */,
 				138D3D7D1C3FBAAE00266A7C /* AFALoginCredentialsViewController.h */,
 				138D3D7E1C3FBAAE00266A7C /* AFALoginCredentialsViewController.m */,
 			);
@@ -2989,7 +2993,7 @@
 				139DF5CB1C5F409B0062D01D /* FilterServices */,
 				139DF5CF1C5F4CE50062D01D /* FormServices */,
 				136680081C89AEFD005E4AEA /* QueryServices */,
-				136E11321CE4AE1800047E38 /* AFAIntegrationServices */,
+				136E11321CE4AE1800047E38 /* IntegrationServices */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -3064,6 +3068,15 @@
 				139E54071C21935500CE4674 /* ASDKModelApp.m */,
 			);
 			name = App;
+			sourceTree = "<group>";
+		};
+		139F78F51E4DEC420030EFCD /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				139F78F21E4DEC3D0030EFCD /* AFALoginCredentialsViewControllerDataSource.h */,
+				139F78F31E4DEC3D0030EFCD /* AFALoginCredentialsViewControllerDataSource.m */,
+			);
+			name = DataSource;
 			sourceTree = "<group>";
 		};
 		139F78F91E548D060030EFCD /* ModalPeoplePickerController */ = {
@@ -3755,13 +3768,13 @@
 			name = ContainerController;
 			sourceTree = "<group>";
 		};
-		13CF5C361B8CAD7500678C28 /* LoginModel */ = {
+		13CF5C361B8CAD7500678C28 /* LoginViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				13CF5C331B8CAD7200678C28 /* AFALoginModel.h */,
-				13CF5C341B8CAD7200678C28 /* AFALoginModel.m */,
+				13CF5C331B8CAD7200678C28 /* AFALoginViewModel.h */,
+				13CF5C341B8CAD7200678C28 /* AFALoginViewModel.m */,
 			);
-			name = LoginModel;
+			name = LoginViewModel;
 			sourceTree = "<group>";
 		};
 		13CF72021BCCDA420048C322 /* Constants */ = {
@@ -4311,7 +4324,7 @@
 				8D7C1A6F1C8090B20092EA81 /* FilterModels */,
 				13A1B2821B989B2A00C4B6CE /* BaseModel */,
 				7597AEEE1B82426200F8B5DE /* CredentialModel */,
-				13CF5C361B8CAD7500678C28 /* LoginModel */,
+				13CF5C361B8CAD7500678C28 /* LoginViewModel */,
 				1323CFCC1B875FBC00E66D6F /* ImageContainerModel */,
 				13CFF3471BBC2B9500D3DEB6 /* TaskUpdateModel */,
 				13A5D6041CA046D300EFA760 /* TaskCreateModel */,
@@ -5477,6 +5490,7 @@
 				13C711EB1D0996F700E8550D /* AFACredentialSectionTableViewCell.m in Sources */,
 				13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */,
 				13BDA7431B7B733400A2CE40 /* AFALocalizationConstants.m in Sources */,
+				139F78F41E4DEC3D0030EFCD /* AFALoginCredentialsViewControllerDataSource.m in Sources */,
 				13FCF6411E5DCFE9002CC3EE /* AFARequeueTableViewCell.m in Sources */,
 				13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */,
 				13ACE37C1C9996B900693A29 /* AFAAddCommentsViewController.m in Sources */,
@@ -5562,7 +5576,7 @@
 				136D035B1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m in Sources */,
 				135443EC1B970D600044157B /* AFASliderButtonView.m in Sources */,
 				1328D34D1BB91CAC0010757C /* AFATableController.m in Sources */,
-				13CF5C351B8CAD7200678C28 /* AFALoginModel.m in Sources */,
+				13CF5C351B8CAD7200678C28 /* AFALoginViewModel.m in Sources */,
 				13C9B57A1B9451B10009BD27 /* AFAFilterViewController.m in Sources */,
 				7597AEED1B82425E00F8B5DE /* AFACredentialModel.m in Sources */,
 				13A8CABC1B8B49B400B7A25E /* AFAServiceRepository.m in Sources */,

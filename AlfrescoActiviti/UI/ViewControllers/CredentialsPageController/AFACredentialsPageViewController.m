@@ -19,6 +19,8 @@
 #import "AFACredentialsPageViewController.h"
 #import "AFALoginCredentialsViewController.h"
 #import "AFAUIConstants.h"
+#import "AFALoginCredentialsViewControllerDataSource.h"
+#import "AFALoginViewModel.h"
 
 typedef NS_ENUM(NSInteger, AFACredentialsPageType) {
     AFACredentialsPageTypeEmptyPlaceholder = 0,
@@ -34,16 +36,35 @@ typedef NS_ENUM(NSInteger, AFACredentialsPageType) {
 
 @implementation AFACredentialsPageViewController
 
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    
+    if (self) {
+        _cloudLoginViewModel = [AFALoginViewModel new];
+        _cloudLoginViewModel.authentificationType = AFALoginAuthenticationTypeCloud;
+        _premiseLoginViewModel = [AFALoginViewModel new];
+        _premiseLoginViewModel.authentificationType = AFALoginAuthenticationTypePremise;
+    }
+    
+    return self;
+}
+
+
+#pragma mark - 
+#pragma View lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Cloud setup
+    AFALoginCredentialsViewControllerDataSource *cloudDataSource = [[AFALoginCredentialsViewControllerDataSource alloc] initWithLoginModel:self.cloudLoginViewModel];
     AFALoginCredentialsViewController *loginCloudCredentialsViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDLoginCredentialsViewController];
-    loginCloudCredentialsViewController.loginModel = self.loginModel;
-    loginCloudCredentialsViewController.loginType = AFALoginCredentialsTypeCloud;
+    loginCloudCredentialsViewController.dataSource = cloudDataSource;
     
+    // Premise setup
+    AFALoginCredentialsViewControllerDataSource *premiseDataSource = [[AFALoginCredentialsViewControllerDataSource alloc] initWithLoginModel:self.premiseLoginViewModel];
     AFALoginCredentialsViewController *loginPremiseCredentialsViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDLoginCredentialsViewController];
-    loginPremiseCredentialsViewController.loginModel = self.loginModel;
-    loginPremiseCredentialsViewController.loginType = AFALoginCredentialsTypePremise;
+    loginPremiseCredentialsViewController.dataSource = premiseDataSource;
     
     UIViewController *emptyPlaceholderViewController = [UIViewController new];
     
@@ -54,16 +75,11 @@ typedef NS_ENUM(NSInteger, AFACredentialsPageType) {
                   completion:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 
 #pragma mark -
 #pragma mark UIPageViewController DataSource
 
--(UIViewController *)pageViewController:(UIPageViewController *)pageViewController
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
      viewControllerBeforeViewController:(UIViewController *)viewController {
     NSUInteger currentIndex = [self.viewControllersList indexOfObject:viewController];
     
@@ -72,7 +88,7 @@ typedef NS_ENUM(NSInteger, AFACredentialsPageType) {
     return [self.viewControllersList objectAtIndex:currentIndex];
 }
 
--(UIViewController *)pageViewController:(UIPageViewController *)pageViewController
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
       viewControllerAfterViewController:(UIViewController *)viewController {
     NSUInteger currentIndex = [self.viewControllersList indexOfObject:viewController];
     

@@ -17,12 +17,12 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-
-@class AFALoginModel;
+@class AFALoginViewModel;
 
 @interface AFACredentialsPageViewController : UIPageViewController <UIPageViewControllerDataSource>
 
-@property (strong, nonatomic) AFALoginModel *loginModel;
+@property (strong, nonatomic, readonly) AFALoginViewModel *cloudLoginViewModel;
+@property (strong, nonatomic, readonly) AFALoginViewModel *premiseLoginViewModel;
 
 - (void)showCloudLoginCredentials;
 - (void)showPremiseLoginCredentials;
