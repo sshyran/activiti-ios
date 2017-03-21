@@ -95,8 +95,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)dealloc {
-#warning Investigate on whether to use the NSNotificationCenter approach of KVOManager one
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.kvoManager removeObserver:self
+                         forKeyPath:NSStringFromSelector(@selector(isCredentialInputInProgress))];
+    [self.kvoManager removeObserver:self
+                         forKeyPath:NSStringFromSelector(@selector(authState))];
 }
 
 - (void)viewDidLoad {
@@ -228,7 +230,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (IBAction)unwindToLoginController:(UIStoryboardSegue *)segue {
-    
+    [self onEnvironment:nil];
 }
 
 
@@ -250,12 +252,28 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (IBAction)onEnvironment:(id)sender {
+    NSMutableArray *loginViewModels = [NSMutableArray new];
+    
+    
+    
+    if (self.loginViewModel) {
+        [loginViewModels addObject:self.loginViewModel];
+    }
+    if (self.credentialsPageViewController.cloudLoginViewModel) {
+        [loginViewModels addObject:self.credentialsPageViewController.cloudLoginViewModel];
+    }
+    if (self.credentialsPageViewController.premiseLoginViewModel) {
+        [loginViewModels addObject:self.credentialsPageViewController.premiseLoginViewModel];
+    }
+    
     // Cancel possible ongoing login request
-    [self.loginViewModel cancelLoginRequest];
+    [loginViewModels makeObjectsPerformSelector:@selector(cancelLoginRequest)];
     
     // Clear credential information
-    [self.loginViewModel updateUserNameEntry:nil];
-    [self.loginViewModel updatePasswordEntry:nil];
+    [loginViewModels makeObjectsPerformSelector:@selector(updateUserNameEntry:)
+                                     withObject:nil];
+    [loginViewModels makeObjectsPerformSelector:@selector(updatePasswordEntry:)
+                                     withObject:nil];
     
     [self showEnvironmentPageAnimation];
 }
