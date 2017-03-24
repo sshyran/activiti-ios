@@ -17,7 +17,10 @@
  ******************************************************************************/
 
 #import "AFABaseSliderViewController.h"
+#import "AFAProfileViewControllerDataSource.h"
 
 @interface AFAProfileViewController : AFABaseSliderViewController
+
+@property (strong, nonatomic) AFAProfileViewControllerDataSource *dataSource;
 
 @end

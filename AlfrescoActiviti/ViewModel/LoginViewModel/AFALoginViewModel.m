@@ -239,6 +239,8 @@
     // Logout is successful - remove also any remembered credentials from the keychain
     [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
     [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
+    [self updateUserNameEntry:nil];
+    [self updatePasswordEntry:nil];
     
     self.authState = AFALoginAuthenticationStateLoggedOut;
 }
