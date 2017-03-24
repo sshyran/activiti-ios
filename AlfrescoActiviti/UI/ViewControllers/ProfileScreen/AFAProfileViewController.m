@@ -27,16 +27,13 @@
 #import "UIViewController+AFAAlertAddition.h"
 #import "UIColor+AFATheme.h"
 
-// Cells
-#import "AFAProfileSectionTableViewCell.h"
-#import "AFAProfileDetailTableViewCell.h"
-#import "AFAProfileSimpleTableViewCell.h"
-#import "AFAProfileActionTableViewCell.h"
-
 // Views
 #import "AFAAvatarView.h"
 #import "AFAActivityView.h"
 #import <JGProgressHUD/JGProgressHUD.h>
+
+// Cells
+#import "AFAProfileSectionTableViewCell.h"
 
 // View controllers
 #import "AFAContentPickerViewController.h"
@@ -52,25 +49,12 @@ typedef NS_ENUM(NSInteger, AFAProfileControllerState) {
     AFAProfileControllerStateRefreshInProgress,
 };
 
-typedef NS_ENUM(NSInteger, AFAProfileControllerSectionType) {
-    AFAProfileControllerSectionTypeContactInformation = 0,
-    AFAProfileControllerSectionTypeGroups,
-    AFAProfileControllerSectionTypeChangePassord,
-    AFAProfileControllerSectionTypeEnumCount
-};
-
-typedef NS_ENUM(NSInteger, AFAProfileControllerContactInformationType) {
-    AFAProfileControllerContactInformationTypeEmail = 0,
-    AFAProfileControllerContactInformationTypeCompany,
-    AFAProfileControllerContactInformationTypeEnumCount
-};
-
 static const CGFloat kProfileControllerSectionHeight = 40.0f;
 
-@interface AFAProfileViewController () <AFAProfileActionTableViewCellDelegate,
-AFAProfileDetailTableViewCellDelegate,
-AFAContentPickerViewControllerDelegate,
-UITextFieldDelegate>
+@interface AFAProfileViewController () <AFAProfileViewControllerDataSourceDelegate,
+                                        AFAContentPickerViewControllerDelegate,
+                                        UITextFieldDelegate,
+                                        UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView                *profileTableView;
 @property (weak, nonatomic) IBOutlet AFAAvatarView              *avatarView;
@@ -89,7 +73,6 @@ UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIButton                   *refreshButton;
 
 // Internal state properties
-@property (strong, nonatomic) ASDKModelProfile                  *currentProfile;
 @property (assign, nonatomic) AFAProfileControllerState         controllerState;
 @property (strong, nonatomic) UIImage                           *profileImage;
 
@@ -108,8 +91,8 @@ UITextFieldDelegate>
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.controllerState = AFAProfileControllerStateIdle;
-        self.progressHUD = [self configureProgressHUD];
+        _controllerState = AFAProfileControllerStateIdle;
+        _progressHUD = [self configureProgressHUD];
         
         // Set up state bindings
         [self handleBindingsForAppListViewController];
@@ -143,6 +126,7 @@ UITextFieldDelegate>
     self.profileTableView.estimatedRowHeight = 40.0f;
     self.profileTableView.rowHeight = UITableViewAutomaticDimension;
     self.profileTableView.contentInset = UIEdgeInsetsMake(.0f, .0f, 20.0f, .0f);
+    self.profileTableView.delegate = self;
     
     // Set name fields delegate
     self.firstNameTextField.delegate = self;
@@ -159,11 +143,6 @@ UITextFieldDelegate>
     // Request the user profile
     self.controllerState = AFAProfileControllerStateRefreshInProgress;
     [self onRefresh:nil];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -265,7 +244,9 @@ UITextFieldDelegate>
             }
             
             // Store the fetched profile
-            strongSelf.currentProfile = profile;
+            strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
+            strongSelf.dataSource.delegate = self;
+            strongSelf.profileTableView.dataSource = strongSelf.dataSource;
             
             // Update the table header with the name and registration date
             strongSelf.firstNameTextField.text = profile.userFirstName;
@@ -275,7 +256,7 @@ UITextFieldDelegate>
             // Reload table data
             [strongSelf.profileTableView reloadData];
         } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+            [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
         
         BOOL isInformationAvailable = error ? NO : YES;
@@ -315,190 +296,6 @@ UITextFieldDelegate>
     }];
 }
 
-- (void)updateProfileInformationForProfile:(ASDKModelProfile *)profile {
-    [self showFormSaveIndicatorView];
-    
-    __weak typeof(self) weakSelf = self;
-    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices requestProfileUpdateWithModel:profile
-                                   completionBlock:^(ASDKModelProfile *profile, NSError *error) {
-                                       __strong typeof(self) strongSelf = weakSelf;
-                                       
-                                       if (!error) {
-                                           // Display the last update date
-                                           if (strongSelf.refreshControl) {
-                                               strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-                                           }
-                                           
-                                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                               weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenProfileInformationUpdatedText, "Profile updated text");
-                                               weakSelf.progressHUD.detailTextLabel.text = nil;
-                                               weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                               weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                           });
-                                           
-                                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                               [weakSelf.progressHUD dismiss];
-                                           });
-                                           
-                                           // Store the fetched profile
-                                           profile.groups = strongSelf.currentProfile.groups;
-                                           strongSelf.currentProfile = profile;
-                                           
-                                           // Update the table header with the name and registration date
-                                           strongSelf.firstNameTextField.text = profile.userFirstName;
-                                           strongSelf.lastNameTextField.text = profile.userLastName;
-                                           
-                                           // Reload table data
-                                           [strongSelf.profileTableView reloadData];
-                                       } else {
-                                           [strongSelf.progressHUD dismiss];
-                                           [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                           
-                                           // If an error occured, roll back to the previous valid state of the user profile
-                                           // Update the table header with the name and registration date
-                                           strongSelf.firstNameTextField.text = strongSelf.currentProfile.userFirstName;
-                                           strongSelf.lastNameTextField.text = strongSelf.currentProfile.userLastName;
-                                           
-                                           // Reload table data
-                                           [strongSelf.profileTableView reloadData];
-                                       }
-                                   }];
-}
-
-- (void)updateProfilePasswordWithNewPassword:(NSString *)updatedPassword
-                                 oldPassword:(NSString *)oldPassword {
-    [self showFormSaveIndicatorView];
-    
-    __weak typeof(self) weakSelf = self;
-    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices requestProfilePasswordUpdatedWithNewPassword:updatedPassword
-                                                      oldPassword:oldPassword
-                                                  completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
-                                                      __strong typeof(self) strongSelf = weakSelf;
-                                                      
-                                                      if (!error) {
-                                                          // Display the last update date
-                                                          if (strongSelf.refreshControl) {
-                                                              strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-                                                          }
-                                                          
-                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                              weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenPasswordUpdatedText, "Password updated text");
-                                                              weakSelf.progressHUD.detailTextLabel.text = nil;
-                                                              weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                                              weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                                          });
-                                                          
-                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                              [weakSelf.progressHUD dismiss];
-                                                          });
-                                                      } else {
-                                                          [strongSelf.progressHUD dismiss];
-                                                          [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                                      }
-                                                  }];
-}
-
-
-#pragma mark -
-#pragma mark AFAProfileActionTableViewCellDelegate
-
-- (void)profileActionChosenForCell:(UITableViewCell *)cell {
-    NSIndexPath *indexPath = [self.profileTableView indexPathForCell:cell];
-    
-    if (AFAProfileControllerSectionTypeChangePassord == indexPath.section) {
-        UIAlertController *changePasswordAlertController = [UIAlertController
-                                                            alertControllerWithTitle:NSLocalizedString(kLocalizationProfileScreenPasswordButtonText, @"Change password")
-                                                            message:nil
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-        [changePasswordAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-            textField.placeholder = NSLocalizedString(kLocalizationProfileScreenOriginalPasswordText, @"Original password");
-            textField.secureTextEntry = YES;
-        }];
-        [changePasswordAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-            textField.placeholder = NSLocalizedString(kLocalizationProfileScreenNewPasswordText, @"New password");
-            textField.secureTextEntry = YES;
-        }];
-        [changePasswordAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-            textField.placeholder = NSLocalizedString(kLocalizationProfileScreenRepeatPasswordText, @"Repeat password");
-            textField.secureTextEntry = YES;
-        }];
-        
-        __weak typeof(self) weakSelf = self;
-        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogConfirmText, @"Confirm")
-                                                                style:UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction * _Nonnull action) {
-                                                                  __strong typeof(self) strongSelf = weakSelf;
-                                                                  
-                                                                  UITextField *oldPasswordField = changePasswordAlertController.textFields.firstObject;
-                                                                  UITextField *newPasswordField = changePasswordAlertController.textFields[1];
-                                                                  UITextField *confirmPasswordField = changePasswordAlertController.textFields.lastObject;
-                                                                  
-                                                                  if (oldPasswordField.text.length &&
-                                                                      newPasswordField.text.length &&
-                                                                      [newPasswordField.text isEqualToString:confirmPasswordField.text]) {
-                                                                      [strongSelf updateProfilePasswordWithNewPassword:newPasswordField.text
-                                                                                                           oldPassword:oldPasswordField.text];
-                                                                  } else {
-                                                                      [strongSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationProfileScreenPasswordMismatchText, @"Password missmatch")];
-                                                                  }
-                                                              }];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogCancelButtonText, @"Cancel")
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:nil];
-        
-        [changePasswordAlertController addAction:cancelAction];
-        [changePasswordAlertController addAction:confirmAction];
-        
-        [self presentViewController:changePasswordAlertController
-                           animated:YES
-                         completion:nil];
-    }
-}
-
-
-#pragma mark -
-#pragma mark AFAProfileDetailTableViewCellDelegate
-
-- (void)updatedModelPropertyWithValue:(NSString *)value
-                              forCell:(UITableViewCell *)cell {
-    // Check which property of the profile is affected by this cell
-    NSIndexPath *indexPath = [self.profileTableView indexPathForCell:cell];
-    BOOL isProfileUpdated = NO;
-    
-    // Deep copy the profile object so that it remains untouched by future mutations
-    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.currentProfile];
-    ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
-    
-    if (AFAProfileControllerSectionTypeContactInformation == indexPath.section) {
-        switch (indexPath.row) {
-            case AFAProfileControllerContactInformationTypeEmail: {
-                if (![profileCopy.email isEqualToString:value]) {
-                    isProfileUpdated = YES;
-                    profileCopy.email = value;
-                }
-            }
-                break;
-                
-            case AFAProfileControllerContactInformationTypeCompany: {
-                if (![profileCopy.companyName isEqualToString:value]) {
-                    isProfileUpdated = YES;
-                    profileCopy.companyName = value;
-                }
-            }
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-    if (isProfileUpdated) {
-        [self updateProfileInformationForProfile:profileCopy];
-    }
-}
-
 
 #pragma mark -
 #pragma mark UITextField Delegate
@@ -507,7 +304,7 @@ UITextFieldDelegate>
     BOOL isProfileUpdated = NO;
     
     // Deep copy the profile object so that it remains untouched by future mutations
-    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.currentProfile];
+    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.dataSource.currentProfile];
     ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
     
     // Check for changes made to the profile
@@ -527,7 +324,7 @@ UITextFieldDelegate>
     
     // If changes were made to the profile, update the server values
     if (isProfileUpdated) {
-        [self updateProfileInformationForProfile:profileCopy];
+        [self updateInformationForProfile:profileCopy];
     }
 }
 
@@ -585,36 +382,125 @@ UITextFieldDelegate>
 
 
 #pragma mark -
-#pragma mark Tableview Delegate & Datasource
+#pragma mark AFAProfileViewControllerDataSourceDelegate
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return REPORT_TOOL ? AFAProfileControllerSectionTypeEnumCount : AFAProfileControllerSectionTypeEnumCount-1 ;
+- (void)handleNetworkErrorWithMessage:(NSString *)errorMessage {
+    [self showGenericNetworkErrorAlertControllerWithMessage:errorMessage];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section {
-    NSInteger rowCount = 0;
+- (void)presentAlertController:(UIAlertController *)alertController {
+    [self presentViewController:alertController
+                       animated:YES
+                     completion:nil];
+}
+
+- (void)updateInformationForProfile:(ASDKModelProfile *)profile {
+    [self showFormSaveIndicatorView];
+    
+    __weak typeof(self) weakSelf = self;
+    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
+    [profileServices requestProfileUpdateWithModel:profile
+                                   completionBlock:^(ASDKModelProfile *profile, NSError *error) {
+                                       __strong typeof(self) strongSelf = weakSelf;
+                                       
+                                       if (!error) {
+                                           // Display the last update date
+                                           if (strongSelf.refreshControl) {
+                                               strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+                                           }
+                                           
+                                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                               weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenProfileInformationUpdatedText, "Profile updated text");
+                                               weakSelf.progressHUD.detailTextLabel.text = nil;
+                                               weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                               weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                           });
+                                           
+                                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                               [weakSelf.progressHUD dismiss];
+                                           });
+                                           
+                                           // Store the fetched profile
+                                           profile.groups = strongSelf.dataSource.currentProfile.groups;
+                                           strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
+                                           strongSelf.dataSource.delegate = self;
+                                           strongSelf.profileTableView.dataSource = strongSelf.dataSource;
+                                           
+                                           // Update the table header with the name and registration date
+                                           strongSelf.firstNameTextField.text = profile.userFirstName;
+                                           strongSelf.lastNameTextField.text = profile.userLastName;
+                                           
+                                           // Reload table data
+                                           [strongSelf.profileTableView reloadData];
+                                       } else {
+                                           [strongSelf.progressHUD dismiss];
+                                           [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                           
+                                           // If an error occured, roll back to the previous valid state of the user profile
+                                           // Update the table header with the name and registration date
+                                           strongSelf.firstNameTextField.text = strongSelf.dataSource.currentProfile.userFirstName;
+                                           strongSelf.lastNameTextField.text = strongSelf.dataSource.currentProfile.userLastName;
+                                           
+                                           // Reload table data
+                                           [strongSelf.profileTableView reloadData];
+                                       }
+                                   }];
+}
+
+- (void)updateProfilePasswordWithNewPassword:(NSString *)updatedPassword
+                                 oldPassword:(NSString *)oldPassword {
+    [self showFormSaveIndicatorView];
+    
+    __weak typeof(self) weakSelf = self;
+    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
+    [profileServices requestProfilePasswordUpdatedWithNewPassword:updatedPassword
+                                                      oldPassword:oldPassword
+                                                  completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
+                                                      __strong typeof(self) strongSelf = weakSelf;
+                                                      
+                                                      if (!error) {
+                                                          // Display the last update date
+                                                          if (strongSelf.refreshControl) {
+                                                              strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+                                                          }
+                                                          
+                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                              weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenPasswordUpdatedText, "Password updated text");
+                                                              weakSelf.progressHUD.detailTextLabel.text = nil;
+                                                              weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                                              weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                                          });
+                                                          
+                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                              [weakSelf.progressHUD dismiss];
+                                                          });
+                                                      } else {
+                                                          [strongSelf.progressHUD dismiss];
+                                                          [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                                      }
+                                                  }];
+}
+
+
+#pragma mark -
+#pragma mark UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView
+heightForHeaderInSection:(NSInteger)section {
+    CGFloat headerHeight = .0f;
     
     switch (section) {
-        case AFAProfileControllerSectionTypeContactInformation: {
-            rowCount = AFAProfileControllerContactInformationTypeEnumCount;
-        }
-            break;
-            
+        case AFAProfileControllerSectionTypeContactInformation:
         case AFAProfileControllerSectionTypeGroups: {
-            rowCount = self.currentProfile.groups.count;
+            headerHeight = kProfileControllerSectionHeight;
         }
             break;
             
-        case AFAProfileControllerSectionTypeChangePassord: {
-            rowCount = 1;
-        }
+        default:
             break;
-            
-        default: break;
     }
     
-    return rowCount;
+    return headerHeight;
 }
 
 - (UIView *)tableView:(UITableView *)tableView
@@ -642,73 +528,8 @@ viewForHeaderInSection:(NSInteger)section {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView
-heightForHeaderInSection:(NSInteger)section {
-    CGFloat headerHeight = .0f;
-    
-    switch (section) {
-        case AFAProfileControllerSectionTypeContactInformation:
-        case AFAProfileControllerSectionTypeGroups: {
-            headerHeight = kProfileControllerSectionHeight;
-        }
-            break;
-            
-        default:
-            break;
-    }
-    
-    return headerHeight;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView
 heightForFooterInSection:(NSInteger)section {
     return 1.0f;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = nil;
-    
-    switch (indexPath.section) {
-        case AFAProfileControllerSectionTypeContactInformation: {
-            AFAProfileDetailTableViewCell *contactInformationCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProfileCategory
-                                                                                                    forIndexPath:indexPath];
-            contactInformationCell.delegate = self;
-            if (AFAProfileControllerContactInformationTypeEmail == indexPath.row) {
-                contactInformationCell.categoryTitleLabel.text =  NSLocalizedString(kLocalizationProfileScreenEmailText, @"Email text");
-                contactInformationCell.categoryDescriptionTextField.text = self.currentProfile.email;
-            } else {
-                contactInformationCell.categoryTitleLabel.text = NSLocalizedString(kLocalizationProfileScreenCompanyText, @"Company text");
-                contactInformationCell.categoryDescriptionTextField.text = self.currentProfile.companyName;
-            }
-            
-            cell = contactInformationCell;
-        }
-            break;
-            
-        case AFAProfileControllerSectionTypeGroups: {
-            AFAProfileSimpleTableViewCell *groupCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProfileOption
-                                                                                       forIndexPath:indexPath];
-            groupCell.titleLabel.text = ((ASDKModelGroup *)self.currentProfile.groups[indexPath.row]).name;
-            cell = groupCell;
-        }
-            break;
-            
-        case AFAProfileControllerSectionTypeChangePassord: {
-            AFAProfileActionTableViewCell *changePasswordCell = [tableView dequeueReusableCellWithIdentifier:kCellIDProfileAction
-                                                                                                forIndexPath:indexPath];
-            changePasswordCell.delegate = self;
-            [changePasswordCell.actionButton setTitle:NSLocalizedString(kLocalizationProfileScreenPasswordButtonText, @"Change password button")
-                                             forState:UIControlStateNormal];
-            
-            cell = changePasswordCell;
-        }
-            break;
-            
-        default:
-            break;
-    }
-    
-    return cell;
 }
 
 
