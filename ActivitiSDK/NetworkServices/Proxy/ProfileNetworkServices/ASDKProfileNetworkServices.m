@@ -278,13 +278,26 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                   // Remove operation reference
                                   [strongSelf.networkOperations removeObject:dataTask];
                                   
-                                  UIImage *profileImage = (UIImage *)responseObject;
-                                  ASDKLogVerbose(@"Profile picture fetched successfully for request: %@.",
-                                                 [task stateDescriptionForResponse:nil]);
-                                  
-                                  dispatch_async(strongSelf.resultsQueue, ^{
-                                      completionBlock(profileImage, nil);
-                                  });
+                                  UIImage *profileImage = nil;
+                                  if ([responseObject isKindOfClass:[UIImage class]]) {
+                                      ASDKLogVerbose(@"Profile picture fetched successfully for request: %@.",
+                                                     [task stateDescriptionForResponse:nil]);
+                                      profileImage = (UIImage *)responseObject;
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          completionBlock(profileImage, nil);
+                                      });
+                                  } else {
+                                      NSDictionary *userInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Invalid image format received", @""),
+                                                                 NSLocalizedFailureReasonErrorKey: [NSString stringWithFormat:@"Image cannot be parsed from response because a different format than expected was received:%@", NSStringFromClass([responseObject class])]};
+                                      NSError *imageFormatError = [NSError errorWithDomain:ASDKNetworkServiceErrorDomain
+                                                                                      code:ASDKNetworkServiceErrorInvalidResponseFormat
+                                                                                  userInfo:userInfo];
+                                      
+                                      dispatch_async(strongSelf.resultsQueue, ^{
+                                          completionBlock(nil, imageFormatError);
+                                      });
+                                  }
                               } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                                   __strong typeof(self) strongSelf = weakSelf;
                                   

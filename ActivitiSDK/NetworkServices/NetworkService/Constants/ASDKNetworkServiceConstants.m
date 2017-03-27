@@ -106,3 +106,10 @@ NSString * const kASDKAPIJSONKeyApplicationID                   = @"appId";
 #pragma mark Notification keys
 
 NSString * const kADSKAPIUnauthorizedRequestNotification        = @"com.alfresco.activiti.ActivitiSDK.networkService.responseSerializer";
+
+
+#pragma mark -
+#pragma mark Error domain
+
+NSString * const ASDKNetworkServiceErrorDomain = @"ASDKNetworkServiceErrorDomain";
+const NSInteger ASDKNetworkServiceErrorInvalidResponseFormat = 1;

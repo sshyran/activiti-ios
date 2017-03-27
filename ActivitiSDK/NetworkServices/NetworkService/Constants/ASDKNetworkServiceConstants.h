@@ -81,3 +81,7 @@ extern NSString * const kASDKAPIJSONKeyApplicationID;
 // Notification keys
 extern NSString * const kADSKAPIUnauthorizedRequestNotification;
 
+// Error doomain
+extern NSString * const ASDKNetworkServiceErrorDomain;
+extern const NSInteger ASDKNetworkServiceErrorInvalidResponseFormat;
+
