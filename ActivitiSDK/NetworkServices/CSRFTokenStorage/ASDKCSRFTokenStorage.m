@@ -42,16 +42,16 @@
 #pragma mark Public API
 
 - (NSString *)csrfTokenString {
-    if (!self.cachedCSRFToken.length) {
-        self.cachedCSRFToken = [self secureRandomTokenForLength:CSRF_TOKEN_LENGTH];
+    if (!_cachedCSRFToken) {
+        _cachedCSRFToken = [self secureRandomTokenForLength:CSRF_TOKEN_LENGTH];
     }
     
     return self.cachedCSRFToken;
 }
 
 - (NSString *)randomizeCSRFToken {
-    self.cachedCSRFToken = [self secureRandomTokenForLength:CSRF_TOKEN_LENGTH];
-    return self.cachedCSRFToken;
+    _cachedCSRFToken = [self secureRandomTokenForLength:CSRF_TOKEN_LENGTH];
+    return _cachedCSRFToken;
 }
 
 
