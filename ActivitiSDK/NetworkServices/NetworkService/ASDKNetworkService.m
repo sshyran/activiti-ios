@@ -79,6 +79,8 @@
 }
 
 - (void)configureWithCSRFTokenStorage:(ASDKCSRFTokenStorage *)tokenStorage {
+    NSParameterAssert(tokenStorage);
+    
     AFHTTPRequestSerializer *httpWithCSRFRequestSerializer = [AFHTTPRequestSerializer serializer];
     [httpWithCSRFRequestSerializer setValue:[tokenStorage csrfTokenString]
                          forHTTPHeaderField:kASDKAPICSRFHeaderFieldParameter];
