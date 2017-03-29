@@ -820,7 +820,7 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
                       weakSelf.tableController.cellFactory = [weakSelf dequeueCellFactoryForSectionType:AFATaskDetailsSectionTypeTaskDetails];
                       
                       // For ad-hoc tasks expose an edit button option
-                      if ([taskDetailsModel isAdhocTask]) {
+                      if ([taskDetailsModel isAdhocTask] && ![taskDetailsModel isCompletedTask]) {
                           weakSelf.navigationItem.rightBarButtonItem = weakSelf.editBarButtonItem;
                       }
                   } else if (AFATaskDetailsSectionTypeContributors == weakSelf.currentSelectedSection) {
