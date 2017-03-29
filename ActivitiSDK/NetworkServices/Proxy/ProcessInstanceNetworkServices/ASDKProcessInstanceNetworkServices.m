@@ -508,7 +508,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDownloadTask *downloadTask =
+    __block NSURLSessionDownloadTask *downloadTask =
     [self.requestOperationManager downloadTaskWithRequest:downloadRequest
                                                  progress:nil
                                               destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
