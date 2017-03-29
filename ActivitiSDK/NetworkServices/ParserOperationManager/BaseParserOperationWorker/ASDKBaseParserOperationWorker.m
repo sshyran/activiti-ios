@@ -30,6 +30,11 @@
 - (BOOL)validateJSONPropertyMappingOfClass:(Class <MTLJSONSerializing>)modelClass
                      withContentDictionary:(NSDictionary *)contentDictionary
                                      error:(NSError **)error {
+    if (![contentDictionary isKindOfClass:[NSDictionary class]]) {
+        if (error != NULL) *error = [self unexpectedContentDictionaryError:modelClass];
+        return NO;
+    }
+    
     NSDictionary *jsonMappingDictionary = [modelClass JSONKeyPathsByPropertyKey];
     NSSet *modelKeyPathsSet = [NSSet setWithArray:[jsonMappingDictionary allValues]];
     NSSet *jsonKeyPathsSet = [NSSet setWithArray:[contentDictionary allKeys]];
@@ -37,17 +42,25 @@
     BOOL propertiesAreMappedFromJSON = [jsonKeyPathsSet intersectsSet:modelKeyPathsSet];
     
     if (!propertiesAreMappedFromJSON) {
-        *error = [self invalidJSONMappingErrorForModelClass:modelClass];
+        if (error != NULL) *error = [self invalidJSONMappingErrorForModelClass:modelClass];
     }
     
     return propertiesAreMappedFromJSON;
 }
 
 - (NSError *)invalidJSONMappingErrorForModelClass:(Class)modelClass {
-    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Invalid JSON keypath mapping", @""),
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Invalid JSON keypath mapping",
                                NSLocalizedFailureReasonErrorKey: [NSString stringWithFormat:@"Model could not be created because an invalid JSON was provided for model class: %@", NSStringFromClass(modelClass)]};
     return [NSError errorWithDomain:MTLJSONAdapterErrorDomain
                                code:MTLJSONAdapterErrorInvalidJSONMapping
+                           userInfo:userInfo];
+}
+
+- (NSError *)unexpectedContentDictionaryError:(Class)modelClass {
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"Unexpected data structure instead of JSON dictionary.",
+                               NSLocalizedFailureReasonErrorKey: [NSString stringWithFormat:@"Parsing operation cannot proceed because an invalid data structure was provided for model class: %@", NSStringFromClass(modelClass)]};
+    return [NSError errorWithDomain:MTLJSONAdapterErrorDomain
+                               code:MTLJSONAdapterErrorInvalidJSONDictionary
                            userInfo:userInfo];
 }
 
