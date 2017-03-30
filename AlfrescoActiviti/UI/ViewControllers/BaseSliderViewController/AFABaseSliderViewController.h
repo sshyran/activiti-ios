@@ -23,6 +23,7 @@
 @interface AFABaseSliderViewController : AFABaseThemedViewController
 
 @property (strong, nonatomic) id<AFAContainerViewControllerDelegate> delegate;
+@property (assign, nonatomic) BOOL isSlided;
 
 - (void)toggleMenu:(id)sender;
 

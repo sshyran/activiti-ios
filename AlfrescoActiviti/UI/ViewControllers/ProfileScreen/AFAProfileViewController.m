@@ -248,13 +248,7 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
             strongSelf.dataSource.delegate = self;
             strongSelf.profileTableView.dataSource = strongSelf.dataSource;
             
-            // Update the table header with the name and registration date
-            strongSelf.firstNameTextField.text = profile.userFirstName;
-            strongSelf.lastNameTextField.text = profile.userLastName;
-            strongSelf.registeredDateLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationProfileScreenRegisteredFormat, @"Registered since date"), [profile.creationDate listCreationDate]];
-            
-            // Reload table data
-            [strongSelf.profileTableView reloadData];
+            [self updateUIForProfileContent:profile];
         } else {
             [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
@@ -301,30 +295,35 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 #pragma mark UITextField Delegate
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    BOOL isProfileUpdated = NO;
-    
-    // Deep copy the profile object so that it remains untouched by future mutations
-    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.dataSource.currentProfile];
-    ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
-    
-    // Check for changes made to the profile
-    if (self.firstNameTextField == textField) {
-        if (![profileCopy.userFirstName isEqualToString:textField.text]) {
-            isProfileUpdated = YES;
-            profileCopy.userFirstName = textField.text;
+    if (self.isSlided) {
+        // If the user chose to slide the drawer menu rollback changes he made to the fields
+        [self updateUIForProfileContent:self.dataSource.currentProfile];
+    } else {
+        BOOL isProfileUpdated = NO;
+        
+        // Deep copy the profile object so that it remains untouched by future mutations
+        NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.dataSource.currentProfile];
+        ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
+        
+        // Check for changes made to the profile
+        if (self.firstNameTextField == textField) {
+            if (![profileCopy.userFirstName isEqualToString:textField.text]) {
+                isProfileUpdated = YES;
+                profileCopy.userFirstName = textField.text;
+            }
         }
-    }
-    
-    if (self.lastNameTextField == textField) {
-        if (![profileCopy.userLastName isEqualToString:textField.text]) {
-            isProfileUpdated = YES;
-            profileCopy.userLastName = textField.text;
+        
+        if (self.lastNameTextField == textField) {
+            if (![profileCopy.userLastName isEqualToString:textField.text]) {
+                isProfileUpdated = YES;
+                profileCopy.userLastName = textField.text;
+            }
         }
-    }
-    
-    // If changes were made to the profile, update the server values
-    if (isProfileUpdated) {
-        [self updateInformationForProfile:profileCopy];
+        
+        // If changes were made to the profile, update the server values
+        if (isProfileUpdated) {
+            [self updateInformationForProfile:profileCopy];
+        }
     }
 }
 
@@ -358,8 +357,8 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 }
 
 
-#pragma mark
-#pragma mark - Progress hud setup
+#pragma mark -
+#pragma mark Progress hud setup
 
 - (JGProgressHUD *)configureProgressHUD {
     JGProgressHUD *hud = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
@@ -395,6 +394,13 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 }
 
 - (void)updateInformationForProfile:(ASDKModelProfile *)profile {
+    // Ignore profile information updates when the screen is slided
+    if (self.isSlided) {
+        // If the user chose to slide the drawer menu rollback changes he made to the fields
+        [self updateUIForProfileContent:self.dataSource.currentProfile];
+        return;
+    }
+    
     [self showFormSaveIndicatorView];
     
     __weak typeof(self) weakSelf = self;
@@ -426,23 +432,13 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                            strongSelf.dataSource.delegate = self;
                                            strongSelf.profileTableView.dataSource = strongSelf.dataSource;
                                            
-                                           // Update the table header with the name and registration date
-                                           strongSelf.firstNameTextField.text = profile.userFirstName;
-                                           strongSelf.lastNameTextField.text = profile.userLastName;
-                                           
-                                           // Reload table data
-                                           [strongSelf.profileTableView reloadData];
+                                           [strongSelf updateUIForProfileContent:profile];
                                        } else {
                                            [strongSelf.progressHUD dismiss];
                                            [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
                                            
                                            // If an error occured, roll back to the previous valid state of the user profile
-                                           // Update the table header with the name and registration date
-                                           strongSelf.firstNameTextField.text = strongSelf.dataSource.currentProfile.userFirstName;
-                                           strongSelf.lastNameTextField.text = strongSelf.dataSource.currentProfile.userLastName;
-                                           
-                                           // Reload table data
-                                           [strongSelf.profileTableView reloadData];
+                                           [strongSelf updateUIForProfileContent:strongSelf.dataSource.currentProfile];
                                        }
                                    }];
 }
@@ -533,6 +529,19 @@ heightForFooterInSection:(NSInteger)section {
 }
 
 
+#pragma mark - 
+#pragma mark Utils
+
+- (void)updateUIForProfileContent:(ASDKModelProfile *)profile {
+    // Update the table header with the name and registration date
+    self.firstNameTextField.text = profile.userFirstName;
+    self.lastNameTextField.text = profile.userLastName;
+    self.registeredDateLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationProfileScreenRegisteredFormat, @"Registered since date"), [profile.creationDate listCreationDate]];
+    
+    [self.profileTableView reloadData];
+}
+
+
 #pragma mark -
 #pragma mark KVO bindings
 
@@ -544,7 +553,7 @@ heightForFooterInSection:(NSInteger)section {
                         forKeyPath:NSStringFromSelector(@selector(controllerState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 AFAProfileControllerState controllerState = [change[NSKeyValueChangeNewKey] boolValue];
+                                 AFAProfileControllerState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
                                      weakSelf.activityView.hidden = (AFAProfileControllerStateRefreshInProgress == controllerState) ? NO : YES;
@@ -552,6 +561,13 @@ heightForFooterInSection:(NSInteger)section {
                                      weakSelf.profileTableView.hidden = (AFAProfileControllerStateRefreshInProgress == controllerState) ? YES : NO;
                                  });
                              }];
+    
+    [self.kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(isSlided))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 [self.view endEditing:YES];
+    }];
 }
 
 @end
