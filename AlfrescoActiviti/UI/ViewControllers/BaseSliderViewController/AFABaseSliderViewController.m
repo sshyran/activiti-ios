@@ -101,6 +101,7 @@
     }
     
     self.menuBlurImageView.image = [self.view blurredSnapshot];
+    self.isSlided = self.menuBlurImageView.superview ? NO : YES;
     
     if (!self.menuBlurImageView.superview) {
         [self.view addSubview:self.menuBlurImageView];
