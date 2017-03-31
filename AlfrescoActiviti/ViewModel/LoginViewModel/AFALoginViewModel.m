@@ -242,6 +242,10 @@
     [self updateUserNameEntry:nil];
     [self updatePasswordEntry:nil];
     
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+    }
+    
     self.authState = AFALoginAuthenticationStateLoggedOut;
 }
 
