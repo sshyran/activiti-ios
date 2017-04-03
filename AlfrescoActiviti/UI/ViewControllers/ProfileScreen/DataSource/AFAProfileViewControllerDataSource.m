@@ -129,14 +129,24 @@ AFAProfileActionTableViewCellDelegate>
                                    UITextField *newPasswordField = changePasswordAlertController.textFields[1];
                                    UITextField *confirmPasswordField = changePasswordAlertController.textFields.lastObject;
                                    
+                                   BOOL isPasswordInvalid = NO;
+                                   
                                    if (oldPasswordField.text.length &&
                                        newPasswordField.text.length &&
                                        [newPasswordField.text isEqualToString:confirmPasswordField.text]) {
-                                       if ([strongSelf.delegate respondsToSelector:@selector(updateProfilePasswordWithNewPassword:oldPassword:)]) {
-                                           [strongSelf.delegate updateProfilePasswordWithNewPassword:newPasswordField.text
-                                                                                         oldPassword:oldPasswordField.text];
+                                       if (![newPasswordField.text isEqualToString:oldPasswordField.text]) {
+                                           if ([strongSelf.delegate respondsToSelector:@selector(updateProfilePasswordWithNewPassword:oldPassword:)]) {
+                                               [strongSelf.delegate updateProfilePasswordWithNewPassword:newPasswordField.text
+                                                                                             oldPassword:oldPasswordField.text];
+                                           }
+                                       } else {
+                                           isPasswordInvalid = YES;
                                        }
                                    } else {
+                                       isPasswordInvalid = YES;
+                                   }
+                                   
+                                   if (isPasswordInvalid) {
                                        if ([strongSelf.delegate respondsToSelector:@selector(handleNetworkErrorWithMessage:)]) {
                                            [strongSelf.delegate handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationProfileScreenPasswordMismatchText, @"Password missmatch")];
                                        }
