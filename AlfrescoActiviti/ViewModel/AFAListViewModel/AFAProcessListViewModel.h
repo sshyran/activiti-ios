@@ -16,14 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "AFABaseSliderViewController.h"
+#import "AFAListBaseViewModel.h"
 
-@class AFATaskListViewModel, AFAProcessListViewModel;
-
-@interface AFAListViewController : AFABaseSliderViewController
-
-@property (strong, nonatomic) AFATaskListViewModel      *taskListViewModel;
-@property (strong, nonatomic) AFAProcessListViewModel   *processListViewModel;
+@interface AFAProcessListViewModel : AFAListBaseViewModel
 
 @end

@@ -261,6 +261,11 @@
 		13A0BCB31BD7BF8E00599661 /* ASDKFormCheckbox.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A0BCB11BD7BF8E00599661 /* ASDKFormCheckbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13A0BCB41BD7BF8E00599661 /* ASDKFormCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A0BCB21BD7BF8E00599661 /* ASDKFormCheckbox.m */; };
 		13A0BCB81BD7CB8600599661 /* ASDKFormRenderEngineProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A0BCB71BD7CB8600599661 /* ASDKFormRenderEngineProtocol.h */; };
+		13A106911E92822300506871 /* AFATaskListViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A106901E92822300506871 /* AFATaskListViewDataSource.m */; };
+		13A106951E93884D00506871 /* AFAProcessListViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A106941E93884D00506871 /* AFAProcessListViewDataSource.m */; };
+		13A106981E93BB3500506871 /* AFATaskListViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A106971E93BB3500506871 /* AFATaskListViewModel.m */; };
+		13A106A01E94DC4B00506871 /* AFAProcessListViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A1069F1E94DC4B00506871 /* AFAProcessListViewModel.m */; };
+		13A106A31E94DEC400506871 /* AFAListBaseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A106A21E94DEC400506871 /* AFAListBaseViewModel.m */; };
 		13A1B2811B989B2700C4B6CE /* AFABaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13A1B2801B989B2700C4B6CE /* AFABaseModel.m */; };
 		13A578541CEC677C0014B6FD /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
 		13A578581CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -331,6 +336,7 @@
 		13BA5C0B1BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5C091BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.m */; };
 		13BA5C0F1BE11C250091D6C9 /* ASDKModelFormFieldValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BA5C0D1BE11C250091D6C9 /* ASDKModelFormFieldValue.h */; };
 		13BA5C101BE11C250091D6C9 /* ASDKModelFormFieldValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5C0E1BE11C250091D6C9 /* ASDKModelFormFieldValue.m */; };
+		13BB57B11E9665DE0057B687 /* AFABaseListViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BB57B01E9665DE0057B687 /* AFABaseListViewDataSource.m */; };
 		13BDA7371B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA7361B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m */; };
 		13BDA73C1B7B4CFC00A2CE40 /* UIColor+AFATheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA73B1B7B4CFC00A2CE40 /* UIColor+AFATheme.m */; };
 		13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 13BDA73E1B7B632100A2CE40 /* Localizable.strings */; };
@@ -967,6 +973,18 @@
 		13A0BCB11BD7BF8E00599661 /* ASDKFormCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormCheckbox.h; path = FormRenderEngine/Components/FormCheckbox/ASDKFormCheckbox.h; sourceTree = "<group>"; };
 		13A0BCB21BD7BF8E00599661 /* ASDKFormCheckbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormCheckbox.m; path = FormRenderEngine/Components/FormCheckbox/ASDKFormCheckbox.m; sourceTree = "<group>"; };
 		13A0BCB71BD7CB8600599661 /* ASDKFormRenderEngineProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineProtocol.h; sourceTree = "<group>"; };
+		13A1068F1E92822300506871 /* AFATaskListViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListViewDataSource.h; path = UI/ViewControllers/TaskListScreen/DataSource/AFATaskListViewDataSource.h; sourceTree = "<group>"; };
+		13A106901E92822300506871 /* AFATaskListViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskListViewDataSource.m; path = UI/ViewControllers/TaskListScreen/DataSource/AFATaskListViewDataSource.m; sourceTree = "<group>"; };
+		13A106931E93884D00506871 /* AFAProcessListViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessListViewDataSource.h; path = UI/ViewControllers/TaskListScreen/DataSource/AFAProcessListViewDataSource.h; sourceTree = "<group>"; };
+		13A106941E93884D00506871 /* AFAProcessListViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessListViewDataSource.m; path = UI/ViewControllers/TaskListScreen/DataSource/AFAProcessListViewDataSource.m; sourceTree = "<group>"; };
+		13A106961E93BB3500506871 /* AFATaskListViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListViewModel.h; path = ViewModel/AFAListViewModel/AFATaskListViewModel.h; sourceTree = "<group>"; };
+		13A106971E93BB3500506871 /* AFATaskListViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskListViewModel.m; path = ViewModel/AFAListViewModel/AFATaskListViewModel.m; sourceTree = "<group>"; };
+		13A1069A1E93DA7600506871 /* AFAListDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAListDataSourceProtocol.h; path = UI/ViewControllers/TaskListScreen/DataSource/Protocol/AFAListDataSourceProtocol.h; sourceTree = "<group>"; };
+		13A1069C1E94DB1B00506871 /* AFAListViewModelProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAListViewModelProtocol.h; path = ViewModel/AFAListViewModel/Protocol/AFAListViewModelProtocol.h; sourceTree = "<group>"; };
+		13A1069E1E94DC4B00506871 /* AFAProcessListViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessListViewModel.h; path = ViewModel/AFAListViewModel/AFAProcessListViewModel.h; sourceTree = "<group>"; };
+		13A1069F1E94DC4B00506871 /* AFAProcessListViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessListViewModel.m; path = ViewModel/AFAListViewModel/AFAProcessListViewModel.m; sourceTree = "<group>"; };
+		13A106A11E94DEC400506871 /* AFAListBaseViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAListBaseViewModel.h; path = ViewModel/AFAListViewModel/AFAListBaseViewModel.h; sourceTree = "<group>"; };
+		13A106A21E94DEC400506871 /* AFAListBaseViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAListBaseViewModel.m; path = ViewModel/AFAListViewModel/AFAListBaseViewModel.m; sourceTree = "<group>"; };
 		13A1B27F1B989B2700C4B6CE /* AFABaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABaseModel.h; path = Model/BaseModel/AFABaseModel.h; sourceTree = "<group>"; };
 		13A1B2801B989B2700C4B6CE /* AFABaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABaseModel.m; path = Model/BaseModel/AFABaseModel.m; sourceTree = "<group>"; };
 		13A578561CEC9BB30014B6FD /* ASDKIntegrationSitesDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationSitesDataSource.h; path = FormRenderEngine/Components/IntegrationBrowserViewController/DataSource/ASDKIntegrationSitesDataSource.h; sourceTree = "<group>"; };
@@ -1052,6 +1070,8 @@
 		13BA5C091BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormFieldValueRequestRepresentation.m; path = NetworkServices/RequestRepresentations/FormInformation/ASDKFormFieldValueRequestRepresentation.m; sourceTree = "<group>"; };
 		13BA5C0D1BE11C250091D6C9 /* ASDKModelFormFieldValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldValue.h; path = Model/FormFieldValue/ASDKModelFormFieldValue.h; sourceTree = "<group>"; };
 		13BA5C0E1BE11C250091D6C9 /* ASDKModelFormFieldValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldValue.m; path = Model/FormFieldValue/ASDKModelFormFieldValue.m; sourceTree = "<group>"; };
+		13BB57AF1E9665DE0057B687 /* AFABaseListViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABaseListViewDataSource.h; path = UI/ViewControllers/TaskListScreen/DataSource/AFABaseListViewDataSource.h; sourceTree = "<group>"; };
+		13BB57B01E9665DE0057B687 /* AFABaseListViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABaseListViewDataSource.m; path = UI/ViewControllers/TaskListScreen/DataSource/AFABaseListViewDataSource.m; sourceTree = "<group>"; };
 		13BDA7351B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFACredentialTextFieldTableViewCell.h; path = UI/Cells/CredentialTextfieldCell/AFACredentialTextFieldTableViewCell.h; sourceTree = "<group>"; };
 		13BDA7361B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFACredentialTextFieldTableViewCell.m; path = UI/Cells/CredentialTextfieldCell/AFACredentialTextFieldTableViewCell.m; sourceTree = "<group>"; };
 		13BDA73A1B7B4CFC00A2CE40 /* UIColor+AFATheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+AFATheme.h"; path = "UI/Categories/UIColor+AFATheme.h"; sourceTree = "<group>"; };
@@ -3138,6 +3158,50 @@
 			name = Protocol;
 			sourceTree = "<group>";
 		};
+		13A106921E92822600506871 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				13A1069B1E93DA7B00506871 /* Protocol */,
+				13BB57AF1E9665DE0057B687 /* AFABaseListViewDataSource.h */,
+				13BB57B01E9665DE0057B687 /* AFABaseListViewDataSource.m */,
+				13A1068F1E92822300506871 /* AFATaskListViewDataSource.h */,
+				13A106901E92822300506871 /* AFATaskListViewDataSource.m */,
+				13A106931E93884D00506871 /* AFAProcessListViewDataSource.h */,
+				13A106941E93884D00506871 /* AFAProcessListViewDataSource.m */,
+			);
+			name = DataSource;
+			sourceTree = "<group>";
+		};
+		13A106991E93BB3900506871 /* ListViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				13A1069D1E94DB1E00506871 /* Protocol */,
+				13A106A11E94DEC400506871 /* AFAListBaseViewModel.h */,
+				13A106A21E94DEC400506871 /* AFAListBaseViewModel.m */,
+				13A106961E93BB3500506871 /* AFATaskListViewModel.h */,
+				13A106971E93BB3500506871 /* AFATaskListViewModel.m */,
+				13A1069E1E94DC4B00506871 /* AFAProcessListViewModel.h */,
+				13A1069F1E94DC4B00506871 /* AFAProcessListViewModel.m */,
+			);
+			name = ListViewModel;
+			sourceTree = "<group>";
+		};
+		13A1069B1E93DA7B00506871 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13A1069A1E93DA7600506871 /* AFAListDataSourceProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
+		13A1069D1E94DB1E00506871 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13A1069C1E94DB1B00506871 /* AFAListViewModelProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
 		13A1B2821B989B2A00C4B6CE /* BaseModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -3674,6 +3738,7 @@
 			isa = PBXGroup;
 			children = (
 				13C9B57B1B9451C40009BD27 /* FilterController */,
+				13A106921E92822600506871 /* DataSource */,
 				13C958001B837D48002A08F1 /* AFAListViewController.h */,
 				13C958011B837D48002A08F1 /* AFAListViewController.m */,
 			);
@@ -4276,6 +4341,7 @@
 			isa = PBXGroup;
 			children = (
 				13FEE5571E81402400FF30DB /* LoginViewModel */,
+				13A106991E93BB3900506871 /* ListViewModel */,
 			);
 			name = ViewModel;
 			sourceTree = "<group>";
@@ -5481,6 +5547,7 @@
 				13667FF21C887CEA005E4AEA /* AFATableControllerProcessInstanceTasksCellFactory.m in Sources */,
 				132511F91BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m in Sources */,
 				13A1B2811B989B2700C4B6CE /* AFABaseModel.m in Sources */,
+				13BB57B11E9665DE0057B687 /* AFABaseListViewDataSource.m in Sources */,
 				13E6E28B1B7E0EE1001F5737 /* AFAFadingTableView.m in Sources */,
 				132BB76B1D4F3ABD00757493 /* AFAAttachFormTableViewCell.m in Sources */,
 				13AAD3B51CDB489800818537 /* AFAProfileViewController.m in Sources */,
@@ -5494,6 +5561,7 @@
 				137B8DDC1BB9979000F1A6DC /* AFATableControllerContentModel.m in Sources */,
 				137B8DD81BB983F400F1A6DC /* AFATableControllerTaskContributorsCellFactory.m in Sources */,
 				1323CFC71B87481E00E66D6F /* AFAThumbnailManager.m in Sources */,
+				13A106951E93884D00506871 /* AFAProcessListViewDataSource.m in Sources */,
 				13C444171BBA744400868904 /* AFATableControllerCommentCellFactory.m in Sources */,
 				137B8DD41BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m in Sources */,
 				139DF5C61C5BB4600062D01D /* AFAProcessServices.m in Sources */,
@@ -5541,6 +5609,7 @@
 				13EED87A1C56721500F17105 /* AFAConnectivityViewController.m in Sources */,
 				13667FEA1C87355E005E4AEA /* AFAShowDiagramTableViewCell.m in Sources */,
 				137B8DE01BB99B1200F1A6DC /* AFATableControllerContentCellFactory.m in Sources */,
+				13A106A31E94DEC400506871 /* AFAListBaseViewModel.m in Sources */,
 				8D7C1A461C808D010092EA81 /* AFAAssigneeTableViewCell.m in Sources */,
 				132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */,
 				13F562C71CA2A3D300F0C7B5 /* AFAClaimTableViewCell.m in Sources */,
@@ -5576,6 +5645,7 @@
 				139DF5C21C5B6BB00062D01D /* AFATaskServices.m in Sources */,
 				1323CFC31B87065000E66D6F /* UIImage+AFAFontGlyphicons.m in Sources */,
 				13CE8ED51B85B32E0022F17A /* AFAContainerViewController.m in Sources */,
+				13A106A01E94DC4B00506871 /* AFAProcessListViewModel.m in Sources */,
 				13FFF4101C43A6E600550747 /* AFAApplicationListViewController.m in Sources */,
 				75CFBC711B81E7860018DADE /* AFARememberCredentialsTableViewCell.m in Sources */,
 				138D3D7F1C3FBAAE00266A7C /* AFALoginCredentialsViewController.m in Sources */,
@@ -5600,6 +5670,7 @@
 				135443EC1B970D600044157B /* AFASliderButtonView.m in Sources */,
 				1328D34D1BB91CAC0010757C /* AFATableController.m in Sources */,
 				13C9B57A1B9451B10009BD27 /* AFAFilterViewController.m in Sources */,
+				13A106911E92822300506871 /* AFATaskListViewDataSource.m in Sources */,
 				7597AEED1B82425E00F8B5DE /* AFACredentialModel.m in Sources */,
 				13A8CABC1B8B49B400B7A25E /* AFAServiceRepository.m in Sources */,
 				13BDA7371B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m in Sources */,
@@ -5611,6 +5682,7 @@
 				132511F51BA811F700C4CA64 /* AFAPushFadeSegue.m in Sources */,
 				8D7C1A3E1C808CD30092EA81 /* AFANameTableViewCell.m in Sources */,
 				8D7C1A5A1C808D7F0092EA81 /* AFACommentTableViewCell.m in Sources */,
+				13A106981E93BB3500506871 /* AFATaskListViewModel.m in Sources */,
 				135443EF1B97409C0044157B /* AFASliderTitleView.m in Sources */,
 				8D7C1A851C80921E0092EA81 /* AFAUserServices.m in Sources */,
 			);
