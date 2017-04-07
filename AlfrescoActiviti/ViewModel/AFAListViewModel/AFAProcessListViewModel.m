@@ -16,14 +16,23 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "AFABaseSliderViewController.h"
+#import "AFAProcessListViewModel.h"
 
-@class AFATaskListViewModel, AFAProcessListViewModel;
+// Constants
+#import "AFALocalizationConstants.h"
 
-@interface AFAListViewController : AFABaseSliderViewController
+@implementation AFAProcessListViewModel
 
-@property (strong, nonatomic) AFATaskListViewModel      *taskListViewModel;
-@property (strong, nonatomic) AFAProcessListViewModel   *processListViewModel;
+
+#pragma mark -
+#pragma mark Public interface
+
+- (NSString *)noRecordsLabelText {
+    return NSLocalizedString(kLocalizationProcessInstanceScreenNoProcessInstancesText, @"No process instances text");
+}
+
+- (NSString *)searchTextFieldPlacholderText {
+    return [NSString stringWithFormat:NSLocalizedString(kLocalizationListScreenSearchFieldPlaceholderFormat, @"Search bar format"), NSLocalizedString(kLocalizationListScreenProcessInstancesText, @"process instances text")];
+}
 
 @end

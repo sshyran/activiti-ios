@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2sj-96-gBg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2sj-96-gBg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -22,7 +22,7 @@
             <objects>
                 <navigationController storyboardIdentifier="Navigation" navigationBarHidden="YES" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="v9Y-ro-k4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="v9Y-ro-k4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -38,7 +38,7 @@
         <scene sceneID="5ZC-YG-evy">
             <objects>
                 <navigationController id="Xjc-tR-raA" customClass="AFANavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="IqS-JF-Kuz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="IqS-JF-Kuz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.19215686274509802" green="0.26666666666666666" blue="0.29411764705882354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1269,10 +1269,6 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="ACk-DD-jpo" id="0MF-yX-4cT"/>
-                                    <outlet property="delegate" destination="ACk-DD-jpo" id="W9D-dy-Dei"/>
-                                </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eCh-PV-neH" userLabel="Tab bar view" customClass="ASDKRoundedBorderView">
                                 <rect key="frame" x="-1" y="520" width="377" height="40"/>
@@ -6247,8 +6243,8 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="RN3-5C-FKi"/>
-        <segue reference="dAG-4I-soh"/>
-        <segue reference="Rct-bP-63w"/>
+        <segue reference="RF7-69-ZNi"/>
+        <segue reference="OCj-p8-qSZ"/>
         <segue reference="XZ3-C5-Oig"/>
         <segue reference="Axm-Tn-V6n"/>
     </inferredMetricsTieBreakers>

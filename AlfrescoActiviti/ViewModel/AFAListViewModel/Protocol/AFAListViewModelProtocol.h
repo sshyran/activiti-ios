@@ -16,14 +16,19 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "AFABaseSliderViewController.h"
+#import <Foundation/Foundation.h>
+@import ActivitiSDK;
 
-@class AFATaskListViewModel, AFAProcessListViewModel;
+@protocol AFAListViewModelProtocol <NSObject>
 
-@interface AFAListViewController : AFABaseSliderViewController
+@property (strong, nonatomic, readonly) ASDKModelApp *application;
 
-@property (strong, nonatomic) AFATaskListViewModel      *taskListViewModel;
-@property (strong, nonatomic) AFAProcessListViewModel   *processListViewModel;
+- (instancetype)initWithApplication:(ASDKModelApp *)application;
+- (NSString *)navigationBarTitle;
+- (UIColor *)navigationBarThemeColor;
+
+@optional
+- (NSString *)noRecordsLabelText;
+- (NSString *)searchTextFieldPlacholderText;
 
 @end

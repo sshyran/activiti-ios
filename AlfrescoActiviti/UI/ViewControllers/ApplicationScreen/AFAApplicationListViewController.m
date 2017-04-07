@@ -28,6 +28,10 @@
 #import "NSDate+AFAStringTransformation.h"
 #import "UIColor+AFATheme.h"
 
+// View models
+#import "AFATaskListViewModel.h"
+#import "AFAProcessListViewModel.h"
+
 // Views
 #import "AFAActivityView.h"
 
@@ -165,8 +169,13 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
     if ([kSegueIDList isEqualToString:segue.identifier]) {
-        AFAListViewController *taskListViewController = (AFAListViewController *)segue.destinationViewController;
-        taskListViewController.currentApp = self.applicationListArr[[self.applicationListTableView indexPathForCell:(UITableViewCell *)sender].row];
+        AFAListViewController *listViewController = (AFAListViewController *)segue.destinationViewController;
+        
+        ASDKModelApp *application = self.applicationListArr[[self.applicationListTableView indexPathForCell:(UITableViewCell *)sender].row];
+        AFATaskListViewModel *taskListViewModel = [[AFATaskListViewModel alloc] initWithApplication:application];
+        AFAProcessListViewModel *processListViewModel = [[AFAProcessListViewModel alloc] initWithApplication:application];
+        listViewController.taskListViewModel = taskListViewModel;
+        listViewController.processListViewModel = processListViewModel;
     }
 }
 

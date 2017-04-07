@@ -29,12 +29,24 @@
 #import "AFABusinessConstants.h"
 #import "AFALocalizationConstants.h"
 
-// Cells
-#import "AFATaskListStyleCell.h"
+// Categories
+#import "UIColor+AFATheme.h"
+#import "NSDate+AFAStringTransformation.h"
+#import "UIView+AFAViewAnimations.h"
+#import "UIViewController+AFAAlertAddition.h"
+#import "UIView+AFAImageEffects.h"
 
 // Models
 #import "AFAGenericFilterModel.h"
 #import "ASDKModelTask.h"
+
+// View models
+#import "AFATaskListViewModel.h"
+#import "AFAProcessListViewModel.h"
+
+// Data sources
+#import "AFATaskListViewDataSource.h"
+#import "AFAProcessListViewDataSource.h"
 
 // Managers
 #import "AFATaskServices.h"
@@ -43,13 +55,6 @@
 #import "AFAModalTaskDetailsCreateTaskAction.h"
 @import ActivitiSDK;
 
-// Categories
-#import "UIColor+AFATheme.h"
-#import "NSDate+AFAStringTransformation.h"
-#import "UIView+AFAViewAnimations.h"
-#import "UIViewController+AFAAlertAddition.h"
-#import "UIView+AFAImageEffects.h"
-
 // Views
 #import "ASDKRoundedBorderView.h"
 #import "AFAActivityView.h"
@@ -57,15 +62,22 @@
 // Segues
 #import "AFAPushFadeSegueUnwind.h"
 
-
 typedef NS_ENUM(NSInteger, AFAListControllerState) {
     AFAListControllerStateIdle,
     AFAListControllerStateRefreshInProgress,
 };
 
-typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *error, ASDKModelPaging *paging);
+typedef NS_ENUM(NSInteger, AFAListButtonType) {
+    AFAListButtonTypeUndefined          = -1,
+    AFAListButtonTypeTasks              = 0,
+    AFAListButtonTypeProcessInstances
+};
 
-@interface AFAListViewController () <AFAFilterViewControllerDelegate, UITextFieldDelegate, AFAModalTaskDetailsViewControllerDelegate>
+
+@interface AFAListViewController () <AFAFilterViewControllerDelegate,
+AFAModalTaskDetailsViewControllerDelegate,
+UITextFieldDelegate,
+UITableViewDelegate>
 
 // Task list related
 @property (weak, nonatomic)   IBOutlet UITableView                          *listTableView;
@@ -94,18 +106,17 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *advancedSearchContainerHeightConstraint;
 
 // Internal state properties
-@property (strong, nonatomic) NSArray                                       *taskListArr;
-@property (strong, nonatomic) NSArray                                       *processListArr;
 @property (assign, nonatomic) NSInteger                                     preloadCellIdx;
 @property (assign, nonatomic) NSInteger                                     totalTaskPages;
 @property (strong, nonatomic) AFAGenericFilterModel                         *currentFilter;
 @property (strong, nonatomic) AFAListHandleCompletionBlock                  listResponseCompletionBlock;
 @property (assign, nonatomic) AFAListControllerState                        controllerState;
 @property (assign, nonatomic) BOOL                                          isAdvancedSearchInProgress;
-@property (assign, nonatomic) AFAListContentType                            listContentType;
+@property (strong, nonatomic) id<AFAListDataSourceProtocol>                 dataSource;
+@property (strong, nonatomic) AFAListBaseViewModel                          *currentListViewModel;
 
 // KVO
-@property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
+@property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
 
 @end
 
@@ -115,13 +126,11 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 #pragma mark -
 #pragma mark Life cycle
 
--(instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.taskListArr = [NSMutableArray array];
-        self.processListArr = [NSMutableArray array];
-        self.controllerState = AFAListControllerStateIdle;
+        _controllerState = AFAListControllerStateIdle;
         
         // Set up state bindings
         [self handleBindingsForTaskListViewController];
@@ -133,22 +142,66 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // The default view is showing the task list
-    self.listContentType = AFAListContentTypeTasks;
-
     // Prepare the layout for the set content type
-    [self prepareViewLayoutForListContentType:self.listContentType];
-    [self updateSceneForListContentType:self.listContentType];
+    self.navigationBarTitle = [self.currentListViewModel navigationBarTitle];
+    self.navigationBarThemeColor = [self.currentListViewModel navigationBarThemeColor];
+    
+    // Register the application color with the SDK color scheme
+    ASDKBootstrap *sdkBootStrap = [ASDKBootstrap sharedInstance];
+    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootStrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+    colorSchemeManager.navigationBarThemeColor = self.navigationBarThemeColor;
+    colorSchemeManager.navigationBarTitleAndControlsColor = [UIColor whiteColor];
+    
+    // Set up the refresh control
+    UITableViewController *tableViewController = [[UITableViewController alloc] init];
+    [self addChildViewController:tableViewController];
+    tableViewController.tableView = self.listTableView;
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self
+                            action:@selector(refreshContentList)
+                  forControlEvents:UIControlEventValueChanged];
+    tableViewController.refreshControl = self.refreshControl;
+    
+    // Hide the filter view when not visible
+    self.advancedFilterContainerView.hidden = YES;
+    
+    // Set up the task list table view to adjust it's size automatically
+    self.listTableView.estimatedRowHeight = 78.0f;
+    self.listTableView.rowHeight = UITableViewAutomaticDimension;
+    self.listTableView.tableFooterView = nil;
+    
+    // Set up list table view delegates and data source
+    self.dataSource = [[AFATaskListViewDataSource alloc] initWithDataEntries:nil
+                                                                  themeColor:self.navigationBarThemeColor];
+    self.listTableView.dataSource = self.dataSource;
+    self.listTableView.delegate = self;
+    
+    [self.backBarButtonItem setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
+                                                     NSForegroundColorAttributeName: [UIColor whiteColor]}
+                                          forState:UIControlStateNormal];
+    self.backBarButtonItem.title = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft];
+    self.refreshButton.titleLabel.font = [UIFont glyphiconFontWithSize:15];
+    [self.refreshButton setTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRefresh]
+                        forState:UIControlStateNormal];
+    
+    self.taskListButton.tag = AFAListButtonTypeTasks;
+    self.processListButton.tag = AFAListButtonTypeProcessInstances;
     
     // Update the controller's state - Waiting for input from the filter controller
+    [self updateSceneForCurrentViewModel];
     self.controllerState = AFAListControllerStateRefreshInProgress;
     
     // Define the handler for task and process requests
     __weak typeof(self) weakSelf = self;
-    self.listResponseCompletionBlock = ^(NSArray *objectList, NSError *error, ASDKModelPaging *paging) {
+    self.listResponseCompletionBlock = ^(id<AFAListDataSourceProtocol>dataSource, NSArray *objectList, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         
         strongSelf.controllerState = AFAListControllerStateIdle;
+        
+        // Make sure the handling is performed for the current active data source
+        if ([dataSource class] != [strongSelf.dataSource class]) {
+                return;
+            }
         
         if (!error) {
             // Display the last update date
@@ -156,12 +209,9 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
                 strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
             }
             
-            [strongSelf updateCurrentObjectListWithObjectList:objectList
-                                           forListContentType:strongSelf.listContentType
-                                                       paging:paging];
-            
-            
-            NSArray *objectListForCurrentContentType = [strongSelf objectListForListContentType:strongSelf.listContentType];
+            [strongSelf.dataSource processAdditionalEntries:objectList
+                                                  forPaging:paging];
+            NSArray *objectListForCurrentContentType = strongSelf.dataSource.dataEntries;
             
             // Extract the total number task pages expected to be displayed
             strongSelf.totalTaskPages = ceilf((float) (paging).pageCount / objectListForCurrentContentType.count);
@@ -185,9 +235,8 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
             strongSelf.listTableView.hidden = YES;
             strongSelf.refreshView.hidden = NO;
             
-            [strongSelf updateCurrentObjectListWithObjectList:nil
-                                           forListContentType:strongSelf.listContentType
-                                                       paging:nil];
+            [strongSelf.dataSource processAdditionalEntries:nil
+                                                  forPaging:nil];
             [strongSelf.listTableView reloadData];
             
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
@@ -210,72 +259,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     [self searchWithTerm:self.searchTextField.text];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-
-#pragma mark -
-#pragma mark Controller wiring and setup methods
-
-- (void)prepareViewLayoutForListContentType:(AFAListContentType)contentType {
-    // Update navigation bar title and theme color according to the description of the app
-    // if there's a defined one, otherwise this means we're displaying adhoc tasks
-    if (!self.currentApp) {
-        self.navigationBarTitle = NSLocalizedString(kLocalizationListScreenTaskAppText, @"Adhoc tasks title");
-        self.navigationBarThemeColor = [UIColor applicationThemeDefaultColor];
-    } else {
-        self.navigationBarTitle = self.currentApp.name;
-        self.navigationBarThemeColor = [UIColor applicationColorForTheme:self.currentApp.theme];
-    }
-    
-    // Register the application color with the SDK color scheme
-    ASDKBootstrap *sdkBootStrap = [ASDKBootstrap sharedInstance];
-    ASDKFormColorSchemeManager *colorSchemeManager = [sdkBootStrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
-    colorSchemeManager.navigationBarThemeColor = self.navigationBarThemeColor;
-    colorSchemeManager.navigationBarTitleAndControlsColor = [UIColor whiteColor];
-    
-    // Set up the refresh control
-    UITableViewController *tableViewController = [[UITableViewController alloc] init];
-    [self addChildViewController:tableViewController];
-    tableViewController.tableView = self.listTableView;
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self
-                            action:@selector(refreshContentList)
-                  forControlEvents:UIControlEventValueChanged];
-    tableViewController.refreshControl = self.refreshControl;
-    
-    // Hide the filter view when not visible
-    self.advancedFilterContainerView.hidden = YES;
-    
-    // Remove existing activiti footer view
-    self.listTableView.tableFooterView = nil;
-    
-    // Set up the task list table view to adjust it's size automatically
-    self.listTableView.estimatedRowHeight = 78.0f;
-    self.listTableView.rowHeight = UITableViewAutomaticDimension;
-    
-    [self.backBarButtonItem setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
-                                                     NSForegroundColorAttributeName: [UIColor whiteColor]}
-                                          forState:UIControlStateNormal];
-    self.backBarButtonItem.title = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft];
-    self.refreshButton.titleLabel.font = [UIFont glyphiconFontWithSize:15];
-    [self.refreshButton setTitle:[NSString iconStringForIconType:ASDKGlyphIconTypeRefresh]
-                        forState:UIControlStateNormal];
-    
-    self.taskListButton.tag = AFAListContentTypeTasks;
-    self.processListButton.tag = AFAListContentTypeProcessInstances;
-}
-
-- (void)updateSceneForListContentType:(AFAListContentType)contentType {
-    // Set up localization support
-    self.noRecordsLabel.text = (AFAListContentTypeTasks == contentType) ? NSLocalizedString(kLocalizationListScreenNoTasksAvailableText, @"No tasks available text") : NSLocalizedString(kLocalizationProcessInstanceScreenNoProcessInstancesText, @"No process instances text");
-    NSString *sectionName = (AFAListContentTypeTasks == contentType) ? NSLocalizedString(kLocalizationListScreenTasksText, @"tasks text") : NSLocalizedString(kLocalizationListScreenProcessInstancesText, @"process instances text");
-    self.searchTextField.placeholder = [NSString stringWithFormat:NSLocalizedString(kLocalizationListScreenSearchFieldPlaceholderFormat, @"Search bar format"), sectionName];
 }
 
 
@@ -287,7 +271,10 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
                  sender:(id)sender {
     if ([kSegueIDAdvancedSearchMenuEmbedding isEqualToString:segue.identifier]) {
         self.filterViewController = (AFAFilterViewController *)segue.destinationViewController;
-        self.filterViewController.currentApp = self.currentApp;
+        if (!self.currentListViewModel) {
+            self.currentListViewModel = self.taskListViewModel;
+        }
+        self.filterViewController.currentApp = self.currentListViewModel.application;
         self.filterViewController.delegate = self;
     }
     
@@ -295,19 +282,19 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
         AFATaskDetailsViewController *detailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         detailsViewController.navigationBarThemeColor = self.navigationBarThemeColor;
         
-        ASDKModelTask *currentSelectedTask = self.taskListArr[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
+        ASDKModelTask *currentSelectedTask = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
         detailsViewController.taskID = currentSelectedTask.modelID;
     }
     
     if ([kSegueIDStartProcessInstance isEqualToString:segue.identifier]) {
         AFAStartProcessInstanceViewController *startProcessInstanceViewController = (AFAStartProcessInstanceViewController *)segue.destinationViewController;
-        startProcessInstanceViewController.appID = self.currentApp.modelID;
+        startProcessInstanceViewController.appID = self.currentListViewModel.application.modelID;
         startProcessInstanceViewController.navigationBarThemeColor = self.navigationBarThemeColor;
     }
     
     if ([kSegueIDProcessInstanceDetails isEqualToString:segue.identifier]) {
         AFAProcessInstanceDetailsViewController *processInstanceDetailsController = (AFAProcessInstanceDetailsViewController *)segue.destinationViewController;
-        ASDKModelProcessInstance *currentSelectedProcessInstance = self.processListArr[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
+        ASDKModelProcessInstance *currentSelectedProcessInstance = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
         processInstanceDetailsController.processInstanceID = currentSelectedProcessInstance.modelID;
         processInstanceDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeProcessList;
@@ -373,34 +360,42 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 }
 
 - (IBAction)onSectionChange:(UIButton *)sender {
-    if (sender.tag != self.listContentType) {
+    AFAListBaseViewModel *viewModelToLoad = nil;
+    if (AFAListButtonTypeTasks == sender.tag) {
+        viewModelToLoad = self.taskListViewModel;
+        self.dataSource = [[AFATaskListViewDataSource alloc] initWithDataEntries:nil
+                                                                      themeColor:self.navigationBarThemeColor];
+    } else {
+        viewModelToLoad = self.processListViewModel;
+        self.dataSource = [[AFAProcessListViewDataSource alloc] initWithDataEntries:nil
+                                                                         themeColor:self.navigationBarThemeColor];
+    }
+    
+    if (viewModelToLoad != self.currentListViewModel) {
+        self.currentListViewModel = viewModelToLoad;
+        self.listTableView.dataSource = self.dataSource;
+        
+        self.controllerState = AFAListControllerStateRefreshInProgress;
+        [self updateSceneForCurrentViewModel];
+        
         self.listTableView.contentOffset = CGPointZero;
-        // Perform the underline section animation before setting the new list content type
-        // as the layout of subviews triggered by the animation will call the table view
-        // delegate methods with the correct index but for the wrong collection of elements
+        self.searchTextField.text = nil;
         [self animateUnderlineContentSectionForType:sender.tag];
         
-        // Remove any pre-filled search text when switching the category
-        self.searchTextField.text = nil;
-        
         // Fetch the filter list according to what section the user selected
-        self.controllerState = AFAListControllerStateRefreshInProgress;
-        self.listContentType = sender.tag;
-        
-        (AFAListContentTypeTasks == self.listContentType) ? [self.filterViewController loadTaskFilterList] : [self.filterViewController loadProcessInstanceFilterList];
-        [self updateSceneForListContentType:self.listContentType];
+        [self.dataSource loadFilterListForController:self.filterViewController];
     }
 }
 
 - (IBAction)onAdd:(UIBarButtonItem *)sender {
-    if (AFAListContentTypeProcessInstances == self.listContentType) {
+    if (self.processListViewModel == self.currentListViewModel) {
         [self performSegueWithIdentifier:kSegueIDStartProcessInstance
                                   sender:sender];
-    } else if(AFAListContentTypeTasks == self.listContentType) {
+    } else {
         AFAModalTaskDetailsViewController *addTaskController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalTaskDetailsViewController];
         addTaskController.alertTitle = NSLocalizedString(kLocalizationAddTaskScreenTitleText, @"New task title");
         addTaskController.confirmButtonTitle = NSLocalizedString(kLocalizationAddTaskScreenCreateButtonText, @"Confirm button");
-        addTaskController.applicationID = self.currentApp.modelID;
+        addTaskController.applicationID = self.currentListViewModel.application.modelID;
         addTaskController.appThemeColor = self.navigationBarThemeColor;
         addTaskController.delegate = self;
         
@@ -418,55 +413,14 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 
 
 #pragma mark -
-#pragma mark Service integration
+#pragma mark Content handling
 
 - (void)fetchContentListWithCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
     // Based on the chosen list content type fetch the list of tasks or the process
     // instance list with the default filter provided by the filter controller
-    switch (self.listContentType) {
-        case AFAListContentTypeTasks: {
-            [self fetchTaskListWithCompletionBlock:completionBlock];
-        }
-            break;
-            
-        case AFAListContentTypeProcessInstances: {
-            [self fetchProcessInstanceListWithCompletionBlock:completionBlock];
-        }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (void)fetchTaskListWithCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     self.currentFilter.size = kDefaultTaskListFetchSize;
-    
-    __weak typeof(self) weakSelf = self;
-    [taskService requestTaskListWithFilter:self.currentFilter
-                       withCompletionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                           __strong typeof(self) strongSelf = weakSelf;
-                           
-                           if (AFAListContentTypeTasks == strongSelf.listContentType) {
-                               completionBlock (taskList, error, paging);
-                           }
-    }];
-}
-
-- (void)fetchProcessInstanceListWithCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    self.currentFilter.size = kDefaultTaskListFetchSize;
-    
-    __weak typeof(self) weakSelf = self;
-    [processServices requestProcessInstanceListWithFilter:self.currentFilter
-                                      withCompletionBlock:^(NSArray *processInstanceList, NSError *error, ASDKModelPaging *paging) {
-                                          __strong typeof(self) strongSelf = weakSelf;
-                                          
-                                          if (AFAListContentTypeProcessInstances == strongSelf.listContentType) {
-                                              completionBlock(processInstanceList, error, paging);
-                                          }
-    }];
+    [self.dataSource loadContentListForFilter:self.currentFilter
+                          withCompletionBlock:completionBlock];
 }
 
 - (void)fetchListForSearchTerm:(NSString *)searchTerm
@@ -474,7 +428,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     // Pass the existing defined filter
     self.currentFilter.text = searchTerm;
     self.currentFilter.page = 0;
-    self.currentFilter.appDefinitionID = self.currentApp.modelID;
+    self.currentFilter.appDefinitionID = self.currentListViewModel.application.modelID;
     
     [self fetchContentListWithCompletionBlock:completionBlock];
 }
@@ -484,48 +438,12 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
     [self fetchContentListWithCompletionBlock:completionBlock];
 }
 
-- (NSArray *)objectListForListContentType:(AFAListContentType)contentType {
-    if (AFAListContentTypeTasks == self.listContentType) {
-        return self.taskListArr;
-    } else {
-        return self.processListArr;
-    }
-}
-
-- (void)updateCurrentObjectListWithObjectList:(NSArray *)objectList
-                           forListContentType:(AFAListContentType)contentType
-                                       paging:(ASDKModelPaging *)paging {
-    if (paging.start) {
-        NSArray *existingEntriesArr = (AFAListContentTypeTasks == self.listContentType) ? self.taskListArr : self.processListArr;
-        NSSet *existingEntriesSet = [[NSSet alloc] initWithArray:existingEntriesArr];
-        NSSet *serverEntriesSet = [[NSSet alloc] initWithArray:objectList];
-        
-        // Make sure that the incoming data is not a subset of the existing collection
-        if (![serverEntriesSet isSubsetOfSet:existingEntriesSet]) {
-            NSMutableArray *serverEntriesArr = [NSMutableArray arrayWithArray:objectList];
-            [serverEntriesArr removeObjectsInArray:existingEntriesArr];
-            
-            // If so, add it to the already existing content and return the updated collection
-            NSMutableArray *additionedEntries = [NSMutableArray arrayWithArray:existingEntriesArr];
-            [additionedEntries addObjectsFromArray:serverEntriesArr];
-            
-            objectList = additionedEntries;
-        }
-    }
-    
-    if (AFAListContentTypeTasks == self.listContentType) {
-        self.taskListArr = objectList;
-    } else {
-        self.processListArr = objectList;
-    }
-}
-
 
 #pragma mark -
 #pragma mark AFAFilterViewController Delegate
 
 - (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel
-                                  filterType:(AFAFilterType)filterType{
+                                  filterType:(AFAFilterType)filterType {
     // If no filter information is found don't continue with further requests
     if (!filterModel) {
         self.noRecordsLabel.hidden = NO;
@@ -536,14 +454,13 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
         [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
     } else {
         if ((AFAFilterTypeTask == filterType &&
-            AFAListContentTypeTasks == self.listContentType) ||
+             [self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) ||
             (AFAFilterTypeProcessInstance == filterType &&
-             AFAListContentTypeProcessInstances == self.listContentType)) {
+             [self.dataSource isKindOfClass:[AFAProcessListViewDataSource class]])) {
                 // Store the filter reference for further reuse
                 self.currentFilter = filterModel;
-                
                 [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
-        }
+            }
     }
 }
 
@@ -577,7 +494,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 
 - (void)didCreateTask:(ASDKModelTask *)task {
     [self.listTableView setContentOffset:CGPointZero
-                                       animated:NO];
+                                animated:NO];
     [self searchWithTerm:self.searchTextField.text];
 }
 
@@ -645,26 +562,25 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
                              withCompletionBlock:nil];
 }
 
-- (void)animateUnderlineContentSectionForType:(AFAListContentType)contentType {
+- (void)animateUnderlineContentSectionForType:(AFAListButtonType)buttonType {
     // The order of enabling, disabling the constraints matter so we are obliged
     // to write the longer version for these checks
-    switch (contentType) {
-        case AFAListContentTypeTasks: {
+    switch (buttonType) {
+        case AFAListButtonTypeTasks: {
             self.underlineTaskListButtonConstraint.priority = UILayoutPriorityDefaultHigh;
         }
             break;
             
-        case AFAListContentTypeProcessInstances: {
+        case AFAListButtonTypeProcessInstances: {
             self.underlineTaskListButtonConstraint.priority = UILayoutPriorityFittingSizeLevel;
         }
             break;
             
-        default:
-            break;
+        default: break;
     }
     
-    self.processListButton.tintColor = (AFAListContentTypeProcessInstances == contentType) ? [UIColor enabledControlColor] : [UIColor disabledControlColor];
-    self.taskListButton.tintColor = (AFAListContentTypeTasks == contentType) ? [UIColor enabledControlColor] : [UIColor disabledControlColor];
+    self.processListButton.tintColor = (AFAListButtonTypeProcessInstances == buttonType) ? [UIColor enabledControlColor] : [UIColor disabledControlColor];
+    self.taskListButton.tintColor = (AFAListButtonTypeTasks == buttonType) ? [UIColor enabledControlColor] : [UIColor disabledControlColor];
     
     [UIView animateWithDuration:kDefaultAnimationTime
                           delay:.0f
@@ -695,20 +611,7 @@ typedef void (^AFAListHandleCompletionBlock) (NSArray *objectList, NSError *erro
 
 
 #pragma mark -
-#pragma mark Tableview Delegate & Datasource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section {
-    if (AFAListContentTypeTasks == self.listContentType) {
-        return self.taskListArr.count;
-    } else {
-        return self.processListArr.count;
-    }
-}
+#pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView
   willDisplayCell:(UITableViewCell *)cell
@@ -744,31 +647,26 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    return [UIView new];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    AFATaskListStyleCell *listCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskListStyle];
-    // Set up the cell with task details or process isntance details
-    if (AFAListContentTypeTasks == self.listContentType) {
-        [listCell setupWithTask:self.taskListArr[indexPath.row]];
-    } else {
-        [listCell setupWithProcessInstance:self.processListArr[indexPath.row]];
-    }
-    listCell.applicationThemeColor = self.navigationBarThemeColor;
-    
-    return listCell;
+    return [[UIView alloc] init];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (AFAListContentTypeTasks == self.listContentType) {
+    if ([self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) {
         [self performSegueWithIdentifier:kSegueIDTaskDetails
                                   sender:[tableView cellForRowAtIndexPath:indexPath]];
     } else {
         [self performSegueWithIdentifier:kSegueIDProcessInstanceDetails
                                   sender:[tableView cellForRowAtIndexPath:indexPath]];
     }
+}
+
+
+#pragma mark -
+#pragma mark View model related
+
+- (void)updateSceneForCurrentViewModel {
+    self.noRecordsLabel.text = [self.currentListViewModel noRecordsLabelText];
+    self.searchTextField.placeholder = [self.currentListViewModel searchTextFieldPlacholderText];
 }
 
 
@@ -794,7 +692,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                          strongSelf.noRecordsLabel.hidden = YES;
                                      } else {
                                          // Check if there are any results to show before showing the task list tableview
-                                         strongSelf.listTableView.hidden = [strongSelf objectListForListContentType:strongSelf.listContentType].count ? NO : YES;
+                                         strongSelf.listTableView.hidden = strongSelf.dataSource.dataEntries.count ? NO : YES;
                                      }
                                      strongSelf.loadingActivityView.hidden = (AFAListControllerStateRefreshInProgress == controllerState) ? NO : YES;
                                      strongSelf.loadingActivityView.animating = (AFAListControllerStateRefreshInProgress == controllerState) ? YES : NO;
