@@ -25,5 +25,9 @@
 - (NSArray *)processAdditionalEntries:(NSArray *)additionalEntriesArr
                    forExistingEntries:(NSArray *)existingEntriesArr
                                paging:(ASDKModelPaging *)paging;
+- (NSInteger)totalPagesForPaging:(ASDKModelPaging *)paging
+                      dataEntries:(NSArray *)dataEntries;
+- (NSInteger)preloadCellIndexForPaging:(ASDKModelPaging *)paging
+                           dataEntries:(NSArray *)dataEntries;
 
 @end

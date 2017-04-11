@@ -27,6 +27,9 @@ typedef void (^AFAListHandleCompletionBlock) (id<AFAListDataSourceProtocol>dataS
 @protocol AFAListDataSourceProtocol <NSObject, UITableViewDataSource>
 
 @property (strong, nonatomic, readonly) NSArray *dataEntries;
+@property (assign, nonatomic, readonly) NSInteger preloadCellIdx;
+@property (assign, nonatomic, readonly) NSInteger totalPages;
+
 
 - (instancetype)initWithDataEntries:(NSArray *)dataEntries
                          themeColor:(UIColor *)themeColor;

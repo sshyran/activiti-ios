@@ -16,6 +16,14 @@
  *  limitations under the License.
  ******************************************************************************/
 
+// Constants
+#import "AFAUIConstants.h"
+#import "AFALocalizationConstants.h"
+
+// View models
+#import "AFATaskListViewModel.h"
+#import "AFAProcessListViewModel.h"
+
 // Controllers
 #import "AFAContainerViewController.h"
 #import "AFAApplicationListViewController.h"
@@ -24,10 +32,6 @@
 #import "AFAListViewController.h"
 #import "AFAProfileViewController.h"
 #import "AFASettingsViewController.h"
-
-// Constants
-#import "AFAUIConstants.h"
-#import "AFALocalizationConstants.h"
 
 // Managers
 #import "AFAServiceRepository.h"
@@ -188,7 +192,7 @@
     [self toggleDrawerMenu];
     
     AFAApplicationListViewController *applicationListViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDApplicationListViewController];
-    applicationListViewController.delegate = self;
+    applicationListViewController.delegate = self;  
     
     [self.detailsNavigationController setViewControllers:@[applicationListViewController]
                                                 animated:NO];
@@ -198,7 +202,12 @@
     [self toggleDrawerMenu];
     
     AFAListViewController *listViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDListViewController];
+    AFATaskListViewModel *taskListViewModel = [AFATaskListViewModel new];
+    AFAProcessListViewModel *processListViewModel = [AFAProcessListViewModel new];
+    listViewController.taskListViewModel = taskListViewModel;
+    listViewController.processListViewModel = processListViewModel;
     listViewController.delegate = self;
+    
     UIBarButtonItem *menuItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu-dots-icon"]
                                                                  style:UIBarButtonItemStylePlain
                                                                 target:listViewController

@@ -52,7 +52,7 @@
 }
 
 - (NSArray *)dataEntries {
-    return self.processInstances;
+    return _processInstances;
 }
 
 - (void)loadFilterListForController:(AFAFilterViewController *)filterController {
@@ -75,6 +75,11 @@
     _processInstances = [self processAdditionalEntries:additionalEntriesArr
                                     forExistingEntries:self.processInstances
                                                 paging:paging];
+    _totalPages = [self totalPagesForPaging:paging
+                                dataEntries:_processInstances];
+    _preloadCellIdx = [self preloadCellIndexForPaging:paging
+                                          dataEntries:_processInstances];
+    
 }
 
 

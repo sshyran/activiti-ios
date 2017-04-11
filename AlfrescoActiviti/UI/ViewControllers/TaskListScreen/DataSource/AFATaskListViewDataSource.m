@@ -72,6 +72,10 @@
     _tasks = [self processAdditionalEntries:additionalEntriesArr
                         forExistingEntries:self.tasks
                                     paging:paging];
+    _totalPages = [self totalPagesForPaging:paging
+                                dataEntries:_tasks];
+    _preloadCellIdx = [self preloadCellIndexForPaging:paging
+                                          dataEntries:_tasks];
 }
 
 

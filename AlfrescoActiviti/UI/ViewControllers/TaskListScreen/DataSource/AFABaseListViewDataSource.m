@@ -19,6 +19,10 @@
 #import "AFABaseListViewDataSource.h"
 @import ActivitiSDK;
 
+// Constants
+#import "AFABusinessConstants.h"
+
+
 @implementation AFABaseListViewDataSource
 
 
@@ -53,6 +57,20 @@
     }
     
     return additionalEntriesArr;
+}
+
+- (NSInteger)totalPagesForPaging:(ASDKModelPaging *)paging
+                     dataEntries:(NSArray *)dataEntries {
+    return ceilf((float) paging.pageCount / dataEntries.count);
+}
+- (NSInteger)preloadCellIndexForPaging:(ASDKModelPaging *)paging
+                           dataEntries:(NSArray *)dataEntries {
+    // Compute the preload index that will trigger a new request
+    if ([self totalPagesForPaging:paging dataEntries:dataEntries] > 1) {
+        return dataEntries.count - kTaskPreloadCellThreshold;
+    } else {
+        return 0;
+    }
 }
 
 @end

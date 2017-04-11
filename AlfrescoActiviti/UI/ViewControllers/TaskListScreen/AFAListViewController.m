@@ -106,8 +106,6 @@ UITableViewDelegate>
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *advancedSearchContainerHeightConstraint;
 
 // Internal state properties
-@property (assign, nonatomic) NSInteger                                     preloadCellIdx;
-@property (assign, nonatomic) NSInteger                                     totalTaskPages;
 @property (strong, nonatomic) AFAGenericFilterModel                         *currentFilter;
 @property (strong, nonatomic) AFAListHandleCompletionBlock                  listResponseCompletionBlock;
 @property (assign, nonatomic) AFAListControllerState                        controllerState;
@@ -162,10 +160,6 @@ UITableViewDelegate>
                   forControlEvents:UIControlEventValueChanged];
     tableViewController.refreshControl = self.refreshControl;
     
-    // Hide the filter view when not visible
-    self.advancedFilterContainerView.hidden = YES;
-    
-    // Set up the task list table view to adjust it's size automatically
     self.listTableView.estimatedRowHeight = 78.0f;
     self.listTableView.rowHeight = UITableViewAutomaticDimension;
     self.listTableView.tableFooterView = nil;
@@ -175,6 +169,8 @@ UITableViewDelegate>
                                                                   themeColor:self.navigationBarThemeColor];
     self.listTableView.dataSource = self.dataSource;
     self.listTableView.delegate = self;
+    
+    self.advancedFilterContainerView.hidden = YES;
     
     [self.backBarButtonItem setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
                                                      NSForegroundColorAttributeName: [UIColor whiteColor]}
@@ -213,22 +209,11 @@ UITableViewDelegate>
                                                   forPaging:paging];
             NSArray *objectListForCurrentContentType = strongSelf.dataSource.dataEntries;
             
-            // Extract the total number task pages expected to be displayed
-            strongSelf.totalTaskPages = ceilf((float) (paging).pageCount / objectListForCurrentContentType.count);
-            
-            // Compute the preload index that will trigger a new request
-            if (strongSelf.totalTaskPages > 1) {
-                strongSelf.preloadCellIdx = objectListForCurrentContentType.count - kTaskPreloadCellThreshold;
-            } else {
-                strongSelf.preloadCellIdx = 0;
-            }
-            
             // Check if we got an empty list
             strongSelf.noRecordsLabel.hidden = objectListForCurrentContentType.count;
             strongSelf.listTableView.hidden = objectListForCurrentContentType.count ? NO : YES;
             strongSelf.refreshView.hidden = objectListForCurrentContentType.count;
             
-            // Reload table data
             [strongSelf.listTableView reloadData];
         } else {
             strongSelf.noRecordsLabel.hidden = NO;
@@ -372,14 +357,13 @@ UITableViewDelegate>
     }
     
     if (viewModelToLoad != self.currentListViewModel) {
-        self.currentListViewModel = viewModelToLoad;
-        self.listTableView.dataSource = self.dataSource;
-        
         self.controllerState = AFAListControllerStateRefreshInProgress;
-        [self updateSceneForCurrentViewModel];
-        
         self.listTableView.contentOffset = CGPointZero;
         self.searchTextField.text = nil;
+        
+        self.currentListViewModel = viewModelToLoad;
+        self.listTableView.dataSource = self.dataSource;
+        [self updateSceneForCurrentViewModel];
         [self animateUnderlineContentSectionForType:sender.tag];
         
         // Fetch the filter list according to what section the user selected
@@ -446,10 +430,10 @@ UITableViewDelegate>
                                   filterType:(AFAFilterType)filterType {
     // If no filter information is found don't continue with further requests
     if (!filterModel) {
+        self.controllerState = AFAListControllerStateIdle;
         self.noRecordsLabel.hidden = NO;
         self.listTableView.hidden = YES;
         self.refreshView.hidden = NO;
-        self.controllerState = AFAListControllerStateIdle;
         
         [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
     } else {
@@ -629,14 +613,12 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     }
     
     // If we've reached the preload cell trigger a request for the new page
-    if (self.preloadCellIdx &&
-        self.preloadCellIdx == indexPath.row &&
-        self.currentFilter.page < self.totalTaskPages) {
+    if (self.dataSource.preloadCellIdx &&
+        self.dataSource.preloadCellIdx == indexPath.row &&
+        self.currentFilter.page < self.dataSource.totalPages) {
         // Display the activity view at the end of the table while content is fetched
         tableView.tableFooterView = self.loadingFooterView;
-        
         self.preloadingActivityView.animating = YES;
-        
         [self fetchNextPageForCurrentListWithCompletionBlock:self.listResponseCompletionBlock];
     }
 }
