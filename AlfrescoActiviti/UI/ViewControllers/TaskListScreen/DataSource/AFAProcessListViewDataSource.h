@@ -22,7 +22,9 @@
 
 @interface AFAProcessListViewDataSource : AFABaseListViewDataSource <AFAListDataSourceProtocol>
 
-@property (strong, nonatomic, readonly) NSArray *processInstances;
-@property (strong, nonatomic, readonly) UIColor *themeColor;
+@property (strong, nonatomic, readonly) NSArray     *processInstances;
+@property (strong, nonatomic, readonly) UIColor     *themeColor;
+@property (assign, nonatomic, readonly) NSInteger   preloadCellIdx;
+@property (assign, nonatomic, readonly) NSInteger   totalPages;
 
 @end

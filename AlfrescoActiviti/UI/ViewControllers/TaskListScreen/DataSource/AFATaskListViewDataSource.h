@@ -22,7 +22,9 @@
 
 @interface AFATaskListViewDataSource : AFABaseListViewDataSource <AFAListDataSourceProtocol>
 
-@property (strong, nonatomic, readonly) NSArray *tasks;
-@property (strong, nonatomic, readonly) UIColor *themeColor;
+@property (strong, nonatomic, readonly) NSArray     *tasks;
+@property (strong, nonatomic, readonly) UIColor     *themeColor;
+@property (assign, nonatomic, readonly) NSInteger   preloadCellIdx;
+@property (assign, nonatomic, readonly) NSInteger   totalPages;
 
 @end
