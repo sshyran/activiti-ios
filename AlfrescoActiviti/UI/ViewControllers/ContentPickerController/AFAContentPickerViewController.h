@@ -16,15 +16,10 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+#import "AFAContentPickerDataSourceProtocol.h"
+
 @class ASDKModelContent,
 ASDKModelIntegrationAccount;
-
-typedef NS_ENUM(NSInteger, AFAContentPickerViewControllerType) {
-    AFAContentPickerViewControllerTypeUndefined         = -1,
-    AFAContentPickerViewControllerTypeTaskRelated       = 0,
-    AFAContentPickerViewControllerTypeProfileRelated
-};
 
 @protocol AFAContentPickerViewControllerDelegate <NSObject>
 
@@ -43,9 +38,9 @@ typedef NS_ENUM(NSInteger, AFAContentPickerViewControllerType) {
 
 @interface AFAContentPickerViewController : UIViewController
 
-@property (weak, nonatomic)   id<AFAContentPickerViewControllerDelegate> delegate;
-@property (strong, nonatomic) NSString                                   *taskID;
-@property (assign, nonatomic) AFAContentPickerViewControllerType         pickerType;
+@property (strong, nonatomic) id<AFAContentPickerDataSourceProtocol>        dataSource;
+@property (weak, nonatomic)   id<AFAContentPickerViewControllerDelegate>    delegate;
+@property (strong, nonatomic) NSString                                      *taskID;
 
 - (void)dowloadContent:(ASDKModelContent *)content
     allowCachedContent:(BOOL)allowCachedContent;

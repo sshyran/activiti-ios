@@ -29,6 +29,10 @@
 #import "NSDate+AFADateAdditions.h"
 #import "UIColor+AFATheme.h"
 
+// Data source
+#import "AFAContentPickerDataSource.h"
+#import "AFAContentPickerTaskUploadBehavior.h"
+
 // Segues
 #import "AFAPushFadeSegueUnwind.h"
 
@@ -240,8 +244,13 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     if ([kSegueIDContentPickerComponentEmbedding isEqualToString:segue.identifier]) {
         self.contentPickerViewController = (AFAContentPickerViewController *)segue.destinationViewController;
         self.contentPickerViewController.delegate = self;
-        self.contentPickerViewController.pickerType = AFAContentPickerViewControllerTypeTaskRelated;
         self.contentPickerViewController.taskID = self.taskID;
+        
+        AFAContentPickerTaskUploadBehavior *taskUploadBehavior = [AFAContentPickerTaskUploadBehavior new];
+        AFAContentPickerDataSource *contentPickerDataSource = [AFAContentPickerDataSource new];
+        contentPickerDataSource.uploadBehavior = taskUploadBehavior;
+        self.contentPickerViewController.dataSource = contentPickerDataSource;
+        
     } else if ([kSegueIDFormComponent isEqualToString:segue.identifier]) {
         self.taskFormViewController = (AFATaskFormViewController *)segue.destinationViewController;
         self.taskFormViewController.delegate = self;

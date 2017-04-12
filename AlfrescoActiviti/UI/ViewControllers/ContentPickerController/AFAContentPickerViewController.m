@@ -26,6 +26,12 @@
 // Categories
 #import "UIViewController+AFAAlertAddition.h"
 
+// Datasource
+#import "AFAContentPickerDataSource.h"
+#import "AFAContentPickerTaskUploadBehavior.h"
+#import "AFAContentPickerTaskAuditLogDownloadBehavior.h"
+#import "AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h"
+
 // Managers
 #import "AFAServiceRepository.h"
 #import "AFATaskServices.h"
@@ -42,12 +48,6 @@
 // Views
 #import <JGProgressHUD/JGProgressHUD.h>
 
-typedef NS_ENUM(NSInteger, AFAContentPickerCellType) {
-    AFAContentPickerCellTypeLocalContent = 0,
-    AFAContentPickerCellTypeCamera,
-    AFAContentPickerCellTypeEnumCount
-};
-
 typedef NS_ENUM(NSInteger, AFAContentPickerResourceType) {
     AFAContentPickerResourceTypeTaskAuditLog,
     AFAContentPickerResourceTypeProcessInstanceAuditLog
@@ -56,7 +56,8 @@ typedef NS_ENUM(NSInteger, AFAContentPickerResourceType) {
 @interface AFAContentPickerViewController () <UINavigationControllerDelegate,
 UIImagePickerControllerDelegate,
 QLPreviewControllerDataSource,
-QLPreviewControllerDelegate>
+QLPreviewControllerDelegate,
+UITableViewDelegate>
 
 @property (weak, nonatomic)   IBOutlet UITableView                          *actionsTableView;
 @property (strong, nonatomic) JGProgressHUD                                 *progressHUD;
@@ -67,7 +68,6 @@ QLPreviewControllerDelegate>
 @property (strong, nonatomic) NSURL                                         *currentSelectedUploadResourceURL;
 @property (strong, nonatomic) NSURL                                         *currentSelectedDownloadResourceURL;
 @property (strong, nonatomic) NSData                                        *currentSelectedResourceData;
-@property (strong, nonatomic) NSArray                                       *integrationAccounts;
 @property (strong, nonatomic) ASDKIntegrationLoginWebViewViewController     *integrationLoginController;
 
 @end
@@ -84,28 +84,16 @@ QLPreviewControllerDelegate>
     return self;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    if (AFAContentPickerViewControllerTypeProfileRelated != self.pickerType) {
+    self.actionsTableView.delegate = self;
+    self.actionsTableView.dataSource = self.dataSource;
+    
+    if ([self.dataSource.uploadBehavior isKindOfClass:[AFAContentPickerTaskUploadBehavior class]]) {
         [self fetchIntegrationAccounts];
     }
 }
-
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
 
 
 #pragma mark -
@@ -150,72 +138,73 @@ QLPreviewControllerDelegate>
     // Check if the content that's about to be downloaded is available
     if (content.isModelContentAvailable) {
         [self showDownloadProgressHUD];
-        [taskServices requestTaskContentDownloadForContent:content
-                                        allowCachedResults:allowCachedContent
-                                         withProgressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                             __strong typeof(self) strongSelf = weakSelf;
-                                             
-                                             if (!error) {
-                                                 strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentDownloadProgressFormat, @"Download progress format"), formattedReceivedBytesString];
-                                             } else {
-                                                 [strongSelf.progressHUD dismiss];
-                                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
-                                             }
-                                         } withCompletionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                             __strong typeof(self) strongSelf = weakSelf;
-                                             
-                                             [strongSelf.progressHUD dismiss];
-                                             
-                                             if (!error) {
-                                                 // If local content is available ask the user how he would like to preview it
-                                                 if (isLocalContent) {
-                                                     [strongSelf showMultipleChoiceAlertControllerWithTitle:nil
-                                                                                                    message:NSLocalizedString(kLocalizationContentPickerComponentLocalVersionAvailableText, @"Local content available")
-                                                                                choiceButtonTitlesAndBlocks:NSLocalizedString(kLocalizationContentPickerComponentPreviewLocalVersionText, @"Preview local content"),
-                                                      // Preview local content option
-                                                      ^(UIAlertAction *action) {
-                                                          weakSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
-                                                          [weakSelf previewDownloadedContent];
-                                                      },
-                                                      NSLocalizedString(kLocalizationContentPickerComponentGetLatestVersionText, @"Get latest version"),
-                                                      // Get latest version from the server
-                                                      ^(UIAlertAction *action) {
-                                                          [weakSelf dowloadContent:content
-                                                                allowCachedContent:NO];
-                                                      }, nil];
-                                                     
-                                                     return;
-                                                 }
-                                                 
-                                                 if (downloadedContentURL &&
-                                                     content) {
-                                                     strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
-                                                     
-                                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                         weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                                                         weakSelf.progressHUD.detailTextLabel.text = nil;
-                                                         
-                                                         weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                                         weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                                     });
-                                                     
-                                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                         [weakSelf.progressHUD dismiss];
-                                                         
-                                                         if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedDownloadingAtURL:)]) {
-                                                             [weakSelf.delegate pickedContentHasFinishedDownloadingAtURL:downloadedContentURL];
-                                                         }
-                                                         
-                                                         // Present the quick look controller
-                                                         [weakSelf previewDownloadedContent];
-                                                     });
-                                                 } else {
-                                                     [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
-                                                 }
-                                             } else {
-                                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
-                                             }
-                                         }];
+        [taskServices
+         requestTaskContentDownloadForContent:content
+         allowCachedResults:allowCachedContent
+         withProgressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+             __strong typeof(self) strongSelf = weakSelf;
+             
+             if (!error) {
+                 strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentDownloadProgressFormat, @"Download progress format"), formattedReceivedBytesString];
+             } else {
+                 [strongSelf.progressHUD dismiss];
+                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+             }
+         } withCompletionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+             __strong typeof(self) strongSelf = weakSelf;
+             
+             [strongSelf.progressHUD dismiss];
+             
+             if (!error) {
+                 // If local content is available ask the user how he would like to preview it
+                 if (isLocalContent) {
+                     [strongSelf showMultipleChoiceAlertControllerWithTitle:nil
+                                                                    message:NSLocalizedString(kLocalizationContentPickerComponentLocalVersionAvailableText, @"Local content available")
+                                                choiceButtonTitlesAndBlocks:NSLocalizedString(kLocalizationContentPickerComponentPreviewLocalVersionText, @"Preview local content"),
+                      // Preview local content option
+                      ^(UIAlertAction *action) {
+                          weakSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
+                          [weakSelf previewDownloadedContent];
+                      },
+                      NSLocalizedString(kLocalizationContentPickerComponentGetLatestVersionText, @"Get latest version"),
+                      // Get latest version from the server
+                      ^(UIAlertAction *action) {
+                          [weakSelf dowloadContent:content
+                                allowCachedContent:NO];
+                      }, nil];
+                     
+                     return;
+                 }
+                 
+                 if (downloadedContentURL &&
+                     content) {
+                     strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
+                     
+                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                         weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                         weakSelf.progressHUD.detailTextLabel.text = nil;
+                         
+                         weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                         weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                     });
+                     
+                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                         [weakSelf.progressHUD dismiss];
+                         
+                         if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedDownloadingAtURL:)]) {
+                             [weakSelf.delegate pickedContentHasFinishedDownloadingAtURL:downloadedContentURL];
+                         }
+                         
+                         // Present the quick look controller
+                         [weakSelf previewDownloadedContent];
+                     });
+                 } else {
+                     [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+                 }
+             } else {
+                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDownloadErrorText, @"Content download error")];
+             }
+         }];
     } else {
         [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationContentPickerComponentContentNotAvailableErrorText, @"Content not available error")];
     }
@@ -223,20 +212,20 @@ QLPreviewControllerDelegate>
 
 - (void)downloadAuditLogForTaskWithID:(NSString *)taskID
                    allowCachedResults:(BOOL)allowCachedResults {
-    [self downloadResourceType:AFAContentPickerResourceTypeTaskAuditLog
-                    resourceID:taskID
-            allowCachedResults:allowCachedResults];
+    
+    self.dataSource.downloadBehavior = [AFAContentPickerTaskAuditLogDownloadBehavior new];
+    [self downloadResourceWithID:taskID
+              allowCachedResults:allowCachedResults];
 }
 
 - (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
                               allowCachedResults:(BOOL)allowCachedResults {
-    [self downloadResourceType:AFAContentPickerResourceTypeProcessInstanceAuditLog
-                    resourceID:processInstanceID 
-            allowCachedResults:allowCachedResults];
+    self.dataSource.downloadBehavior = [AFAContentPickerProcessInstanceAuditLogDownloadBehavior new];
+    [self downloadResourceWithID:processInstanceID
+              allowCachedResults:allowCachedResults];
 }
 
-- (void)downloadResourceType:(AFAContentPickerResourceType)resourceType
-                  resourceID:(NSString *)resourceID
+- (void)downloadResourceWithID:(NSString *)resourceID
           allowCachedResults:(BOOL)allowCachedResults {
     [self showDownloadProgressHUD];
     
@@ -283,28 +272,10 @@ QLPreviewControllerDelegate>
         }
     };
     
-    switch (resourceType) {
-        case AFAContentPickerResourceTypeTaskAuditLog: {
-            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-            [taskServices requestDownloadAuditLogForTaskWithID:resourceID
-                                            allowCachedResults:allowCachedResults
-                                                 progressBlock:progressBlock
-                                               completionBlock:completionBlock];
-        }
-            break;
-            
-        case AFAContentPickerResourceTypeProcessInstanceAuditLog: {
-            AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-            [processServices requestDownloadAuditLogForProcessInstanceWithID:resourceID
-                                                          allowCachedResults:allowCachedResults
-                                                               progressBlock:progressBlock 
-                                                             completionBlock:completionBlock];
-        }
-            break;
-            
-        default:
-            break;
-    }
+    [self.dataSource.downloadBehavior downloadResourceWithID:resourceID
+                                          allowCachedResults:allowCachedResults
+                                           withProgressBlock:progressBlock
+                                             completionBlock:completionBlock];
 }
 
 
@@ -408,22 +379,15 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 
 #pragma mark -
-#pragma mark Service integration
+#pragma mark Content handling
 
 - (void)fetchIntegrationAccounts {
     __weak typeof(self) weakSelf = self;
-    AFAIntegrationServices *integrationServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:(AFAServiceObjectTypeIntegrationServices)];
-    [integrationServices requestIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
+    [self.dataSource fetchIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
-        
         if (!error) {
-            // Filter out all but the Alfresco cloud services - development in progress
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
-            NSArray *filtereAccountsdArr = [accounts filteredArrayUsingPredicate:searchPredicate];
-            strongSelf.integrationAccounts = filtereAccountsdArr;
-            
             if ([strongSelf.delegate respondsToSelector:@selector(contentPickerHasBeenPresentedWithNumberOfOptions:cellHeight:)]) {
-                [strongSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:AFAContentPickerCellTypeEnumCount + filtereAccountsdArr.count
+                [strongSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:AFAContentPickerCellTypeEnumCount + accounts.count
                                                                            cellHeight:strongSelf.actionsTableView.rowHeight];
             }
             
@@ -473,31 +437,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         }
     };
     
-    switch (self.pickerType) {
-        case AFAContentPickerViewControllerTypeTaskRelated: {
-            AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-            
-            [taskService requestContentUploadAtFileURL:self.currentSelectedUploadResourceURL
-                                       withContentData:self.currentSelectedResourceData
-                                             forTaskID:self.taskID
-                                     withProgressBlock:progressBlock
-                                       completionBlock:uploadCompletionBlock];
-        }
-            break;
-            
-        case AFAContentPickerViewControllerTypeProfileRelated: {
-            AFAProfileServices *profileService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-            
-            [profileService requestUploadProfileImageAtFileURL:self.currentSelectedUploadResourceURL
-                                                   contentData:self.currentSelectedResourceData
-                                                 progressBlock:progressBlock
-                                               completionBlock:uploadCompletionBlock];
-        }
-            break;
-            
-        default:
-            break;
-    }
+    [self.dataSource.uploadBehavior uploadContentAtFileURL:self.currentSelectedUploadResourceURL
+                                           withContentData:self.currentSelectedResourceData
+                                            additionalData:self.taskID
+                                         withProgressBlock:progressBlock
+                                           completionBlock:uploadCompletionBlock];
 }
 
 
@@ -549,54 +493,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 
 #pragma mark -
-#pragma mark Tableview Delegate & Datasource
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section {
-    return AFAContentPickerCellTypeEnumCount + self.integrationAccounts.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    AFAAddContentTableViewCell *taskCell = [tableView dequeueReusableCellWithIdentifier:kCellIDAddContent];
-    
-    switch (indexPath.row) {
-        case AFAContentPickerCellTypeLocalContent: {
-            taskCell.iconImageView.image = [UIImage imageNamed:@"phone-icon"];
-            taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentLocalContent, @"Local content text");
-        }
-            break;
-            
-        case AFAContentPickerCellTypeCamera: {
-            taskCell.iconImageView.image = [UIImage imageNamed:@"camera-icon"];
-            taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentCameraContent, @"Camera content text");
-        }
-            break;
-            
-        default:
-        { // Handle the integration cells
-            ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - AFAContentPickerCellTypeEnumCount];
-            
-            if ([kASDKAPIServiceIDAlfrescoCloud isEqualToString:account.integrationServiceID]) {
-                taskCell.iconImageView.image = [UIImage imageNamed:@"alfresco-icon"];
-                taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentAlfrescoContentText, @"Alfresco cloud text");
-            } else if ([kASDKAPIServiceIDBox isEqualToString:account.integrationServiceID]) {
-                taskCell.iconImageView.image = [UIImage imageNamed:@"box-icon"];
-                taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentBoxContentText, @"Box text");
-            } else if ([kASDKAPIServiceIDGoogleDrive isEqualToString:account.integrationServiceID]) {
-                taskCell.iconImageView.image = [UIImage imageNamed:@"drive-icon"];
-                taskCell.actionDescriptionLabel.text = NSLocalizedString(kLocalizationContentPickerComponentDriveContentText, @"Google drive text");
-            }
-        }
-            break;
-    }
-    
-    return taskCell;
-}
+#pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath
@@ -618,7 +515,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             break;
             
         default: { // Handle integration services cell behaviour
-            ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - AFAContentPickerCellTypeEnumCount];
+            ASDKModelIntegrationAccount *account = self.dataSource.integrationAccounts[indexPath.row - AFAContentPickerCellTypeEnumCount];
             
             if (!account.isAccountAuthorized) {
                 __weak typeof(self) weakSelf = self;

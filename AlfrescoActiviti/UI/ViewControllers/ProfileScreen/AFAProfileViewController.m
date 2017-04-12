@@ -27,6 +27,10 @@
 #import "UIViewController+AFAAlertAddition.h"
 #import "UIColor+AFATheme.h"
 
+// Data source
+#import "AFAContentPickerDataSource.h"
+#import "AFAContentPickerProfileUploadBehavior.h"
+
 // Views
 #import "AFAAvatarView.h"
 #import "AFAActivityView.h"
@@ -154,7 +158,11 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     if ([kSegueIDProfileContentPickerComponentEmbedding isEqualToString:segue.identifier]) {
         self.contentPickerViewController = (AFAContentPickerViewController *)segue.destinationViewController;
         self.contentPickerViewController.delegate = self;
-        self.contentPickerViewController.pickerType = AFAContentPickerViewControllerTypeProfileRelated;
+        
+        AFAContentPickerProfileUploadBehavior *profileUploadBehavior = [AFAContentPickerProfileUploadBehavior new];
+        AFAContentPickerDataSource *contentPickerDataSource = [AFAContentPickerDataSource new];
+        contentPickerDataSource.uploadBehavior = profileUploadBehavior;
+        self.contentPickerViewController.dataSource = contentPickerDataSource;
     }
 }
 
