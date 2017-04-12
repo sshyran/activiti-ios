@@ -82,6 +82,8 @@
 		1330978F1DE4707B00026035 /* ASDKUserNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1330978E1DE4707B00026035 /* ASDKUserNetworkServicesTest.m */; };
 		1330979C1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1330979B1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m */; };
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
+		13323B5E1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */; };
+		13323B611E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */; };
 		133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */; };
 		133A6BCD1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */; };
 		133B7FDD1B78DBFE00C17D06 /* AFALoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B7FDC1B78DBFE00C17D06 /* AFALoginViewController.m */; };
@@ -337,6 +339,9 @@
 		13BA5C0F1BE11C250091D6C9 /* ASDKModelFormFieldValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BA5C0D1BE11C250091D6C9 /* ASDKModelFormFieldValue.h */; };
 		13BA5C101BE11C250091D6C9 /* ASDKModelFormFieldValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BA5C0E1BE11C250091D6C9 /* ASDKModelFormFieldValue.m */; };
 		13BB57B11E9665DE0057B687 /* AFABaseListViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BB57B01E9665DE0057B687 /* AFABaseListViewDataSource.m */; };
+		13BBAB091E9CF761009B2D43 /* AFAContentPickerDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BBAB081E9CF761009B2D43 /* AFAContentPickerDataSource.m */; };
+		13BBAB0F1E9D1670009B2D43 /* AFAContentPickerProfileUploadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BBAB0E1E9D1670009B2D43 /* AFAContentPickerProfileUploadBehavior.m */; };
+		13BBAB131E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BBAB121E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.m */; };
 		13BDA7371B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA7361B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m */; };
 		13BDA73C1B7B4CFC00A2CE40 /* UIColor+AFATheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA73B1B7B4CFC00A2CE40 /* UIColor+AFATheme.m */; };
 		13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 13BDA73E1B7B632100A2CE40 /* Localizable.strings */; };
@@ -743,6 +748,10 @@
 		1330979B1DE5951D00026035 /* ASDKNetworkProxyBaseTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKNetworkProxyBaseTest.m; sourceTree = "<group>"; };
 		133213B91B8EFF8A00BF36DC /* AFATaskListStyleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskListStyleCell.h; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.h; sourceTree = "<group>"; };
 		133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFATaskListStyleCell.m; path = UI/Cells/TaskListyStyleCell/AFATaskListStyleCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		13323B5C1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerTaskAuditLogDownloadBehavior.h; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerTaskAuditLogDownloadBehavior.h; sourceTree = "<group>"; };
+		13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerTaskAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerTaskAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
+		13323B5F1E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; sourceTree = "<group>"; };
+		13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
 		133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ASDKFormRenderDataSourceArrayAddition.h"; path = "FormRenderEngine/Categories/NSArray+ASDKFormRenderDataSourceArrayAddition.h"; sourceTree = "<group>"; };
 		133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+ASDKFormRenderDataSourceArrayAddition.m"; path = "FormRenderEngine/Categories/NSArray+ASDKFormRenderDataSourceArrayAddition.m"; sourceTree = "<group>"; };
 		133B7FDB1B78DBFE00C17D06 /* AFALoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFALoginViewController.h; path = UI/ViewControllers/LoginScreen/AFALoginViewController.h; sourceTree = "<group>"; };
@@ -1072,6 +1081,13 @@
 		13BA5C0E1BE11C250091D6C9 /* ASDKModelFormFieldValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldValue.m; path = Model/FormFieldValue/ASDKModelFormFieldValue.m; sourceTree = "<group>"; };
 		13BB57AF1E9665DE0057B687 /* AFABaseListViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABaseListViewDataSource.h; path = UI/ViewControllers/TaskListScreen/DataSource/AFABaseListViewDataSource.h; sourceTree = "<group>"; };
 		13BB57B01E9665DE0057B687 /* AFABaseListViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABaseListViewDataSource.m; path = UI/ViewControllers/TaskListScreen/DataSource/AFABaseListViewDataSource.m; sourceTree = "<group>"; };
+		13BBAB071E9CF761009B2D43 /* AFAContentPickerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerDataSource.h; path = UI/ViewControllers/ContentPickerController/DataSource/AFAContentPickerDataSource.h; sourceTree = "<group>"; };
+		13BBAB081E9CF761009B2D43 /* AFAContentPickerDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerDataSource.m; path = UI/ViewControllers/ContentPickerController/DataSource/AFAContentPickerDataSource.m; sourceTree = "<group>"; };
+		13BBAB0B1E9CFF0F009B2D43 /* AFAContentPickerDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerDataSourceProtocol.h; path = UI/ViewControllers/ContentPickerController/DataSource/Protocol/AFAContentPickerDataSourceProtocol.h; sourceTree = "<group>"; };
+		13BBAB0D1E9D1670009B2D43 /* AFAContentPickerProfileUploadBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerProfileUploadBehavior.h; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProfileUploadBehavior.h; sourceTree = "<group>"; };
+		13BBAB0E1E9D1670009B2D43 /* AFAContentPickerProfileUploadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerProfileUploadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProfileUploadBehavior.m; sourceTree = "<group>"; };
+		13BBAB111E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerTaskUploadBehavior.h; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerTaskUploadBehavior.h; sourceTree = "<group>"; };
+		13BBAB121E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerTaskUploadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerTaskUploadBehavior.m; sourceTree = "<group>"; };
 		13BDA7351B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFACredentialTextFieldTableViewCell.h; path = UI/Cells/CredentialTextfieldCell/AFACredentialTextFieldTableViewCell.h; sourceTree = "<group>"; };
 		13BDA7361B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFACredentialTextFieldTableViewCell.m; path = UI/Cells/CredentialTextfieldCell/AFACredentialTextFieldTableViewCell.m; sourceTree = "<group>"; };
 		13BDA73A1B7B4CFC00A2CE40 /* UIColor+AFATheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+AFATheme.h"; path = "UI/Categories/UIColor+AFATheme.h"; sourceTree = "<group>"; };
@@ -1789,7 +1805,6 @@
 			children = (
 				8D7C1A7E1C8091AF0092EA81 /* PeoplePickerController */,
 				139F78F91E548D060030EFCD /* ModalPeoplePickerController */,
-				13B811AC1BBE54E700E25CBE /* ContentPickerController */,
 				137B943F1BD654B200134BF1 /* FormController */,
 				132511EF1BA80FB500C4CA64 /* AFATaskDetailsViewController.h */,
 				132511F01BA80FB500C4CA64 /* AFATaskDetailsViewController.m */,
@@ -1967,6 +1982,7 @@
 				13C958081B83852F002A08F1 /* Base */,
 				13CE8ED61B85B3310022F17A /* ContainerController */,
 				136DFF821DA7D8DF00FA40E0 /* ModalTaskDetailsController */,
+				13B811AC1BBE54E700E25CBE /* ContentPickerController */,
 				133B7FDA1B78DBB400C17D06 /* LoginScreen */,
 				13FFF4111C43A6EB00550747 /* ApplicationScreen */,
 				13CE8ED21B85B2810022F17A /* DrawerMenuScreen */,
@@ -3553,6 +3569,7 @@
 		13B811AC1BBE54E700E25CBE /* ContentPickerController */ = {
 			isa = PBXGroup;
 			children = (
+				13BBAB0A1E9CF768009B2D43 /* DataSource */,
 				13B811AD1BBE558B00E25CBE /* AFAContentPickerViewController.h */,
 				13B811AE1BBE558B00E25CBE /* AFAContentPickerViewController.m */,
 			);
@@ -3611,6 +3628,40 @@
 				138F0A3C1C6C835700DA9414 /* TableViewCells */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		13BBAB0A1E9CF768009B2D43 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				13BBAB0C1E9CFF14009B2D43 /* Protocol */,
+				13BBAB101E9D1674009B2D43 /* Behaviors */,
+				13BBAB071E9CF761009B2D43 /* AFAContentPickerDataSource.h */,
+				13BBAB081E9CF761009B2D43 /* AFAContentPickerDataSource.m */,
+			);
+			name = DataSource;
+			sourceTree = "<group>";
+		};
+		13BBAB0C1E9CFF14009B2D43 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13BBAB0B1E9CFF0F009B2D43 /* AFAContentPickerDataSourceProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
+		13BBAB101E9D1674009B2D43 /* Behaviors */ = {
+			isa = PBXGroup;
+			children = (
+				13BBAB0D1E9D1670009B2D43 /* AFAContentPickerProfileUploadBehavior.h */,
+				13BBAB0E1E9D1670009B2D43 /* AFAContentPickerProfileUploadBehavior.m */,
+				13BBAB111E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.h */,
+				13BBAB121E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.m */,
+				13323B5C1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.h */,
+				13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */,
+				13323B5F1E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h */,
+				13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */,
+			);
+			name = Behaviors;
 			sourceTree = "<group>";
 		};
 		13BDA7381B7B4B7200A2CE40 /* CredentialTextFieldCell */ = {
@@ -5571,6 +5622,7 @@
 				13EBECAF1CFC59ED00EC8F96 /* AFATableControllerChecklistModel.m in Sources */,
 				13667FE51C8725DC005E4AEA /* AFATableControllerProcessInstanceDetailsModel.m in Sources */,
 				13DBF3531B79DE9A003E6938 /* UIView+AFAViewAnimations.m in Sources */,
+				13323B5E1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m in Sources */,
 				8D7C1A741C8090D10092EA81 /* AFAGenericFilterModel.m in Sources */,
 				75CFBC6D1B81CB900018DADE /* AFASecurityLayerTableViewCell.m in Sources */,
 				136DFF811DA7D8D800FA40E0 /* AFAModalTaskDetailsViewController.m in Sources */,
@@ -5609,6 +5661,7 @@
 				13EED87A1C56721500F17105 /* AFAConnectivityViewController.m in Sources */,
 				13667FEA1C87355E005E4AEA /* AFAShowDiagramTableViewCell.m in Sources */,
 				137B8DE01BB99B1200F1A6DC /* AFATableControllerContentCellFactory.m in Sources */,
+				13BBAB091E9CF761009B2D43 /* AFAContentPickerDataSource.m in Sources */,
 				13A106A31E94DEC400506871 /* AFAListBaseViewModel.m in Sources */,
 				8D7C1A461C808D010092EA81 /* AFAAssigneeTableViewCell.m in Sources */,
 				132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */,
@@ -5637,6 +5690,7 @@
 				13481F2F1B95C4B4005D3149 /* AFAKeychainWrapper.m in Sources */,
 				13AE35821C46860800BEB477 /* AFABaseSliderViewController.m in Sources */,
 				13B811AF1BBE558B00E25CBE /* AFAContentPickerViewController.m in Sources */,
+				13BBAB0F1E9D1670009B2D43 /* AFAContentPickerProfileUploadBehavior.m in Sources */,
 				135443E51B96DF770044157B /* AFASliderView.m in Sources */,
 				13AE35571C43BA9700BEB477 /* AFAApplicationListStyleCell.m in Sources */,
 				8D7C1A6E1C8090640092EA81 /* AFADurationTableViewCell.m in Sources */,
@@ -5645,6 +5699,7 @@
 				139DF5C21C5B6BB00062D01D /* AFATaskServices.m in Sources */,
 				1323CFC31B87065000E66D6F /* UIImage+AFAFontGlyphicons.m in Sources */,
 				13CE8ED51B85B32E0022F17A /* AFAContainerViewController.m in Sources */,
+				13323B611E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m in Sources */,
 				13A106A01E94DC4B00506871 /* AFAProcessListViewModel.m in Sources */,
 				13FFF4101C43A6E600550747 /* AFAApplicationListViewController.m in Sources */,
 				75CFBC711B81E7860018DADE /* AFARememberCredentialsTableViewCell.m in Sources */,
@@ -5662,6 +5717,7 @@
 				13AAD3C31CDB82A900818537 /* AFAProfileSimpleTableViewCell.m in Sources */,
 				1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */,
 				136E11311CE4AE1400047E38 /* AFAIntegrationServices.m in Sources */,
+				13BBAB131E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.m in Sources */,
 				75E868071B7E75E500862D51 /* AFASwitchView.m in Sources */,
 				13CE8ED11B85B27B0022F17A /* AFADrawerMenuViewController.m in Sources */,
 				13C957FF1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m in Sources */,
