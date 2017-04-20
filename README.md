@@ -10,7 +10,8 @@ The SDK can be used seperatly to create your own tailormade iOS client for the A
 
 ## Where can I find it ?
 
-On the Apple App Store ... [Alfresco Process Services powered by Activiti](https://itunes.apple.com/us/app/alfresco-process-services-powered-by-activiti/id1129144376?mt=8)
+<a href="https://itunes.apple.com/us/app/alfresco-process-services-powered-by-activiti/id1129144376?mt=8" style="display:inline-block;overflow:hidden;background:url(//linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg) no-repeat;width:135px;height:40px;background-size:contain;">
+</a>
 
 ## Contributors
 
