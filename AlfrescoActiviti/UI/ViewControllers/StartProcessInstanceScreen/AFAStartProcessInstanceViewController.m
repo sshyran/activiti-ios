@@ -27,6 +27,9 @@
 #import "UIViewController+AFAAlertAddition.h"
 #import "NSDate+AFAStringTransformation.h"
 
+// Data Sources
+#import "AFAProcessInstanceDetailsDataSource.h"
+
 // Managers
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
@@ -177,8 +180,11 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
     
     if ([kSegueIDProcessInstanceStartForm isEqualToString:segue.identifier]) {
         AFAProcessInstanceDetailsViewController *processInstanceDetailsController = (AFAProcessInstanceDetailsViewController *)segue.destinationViewController;
-        processInstanceDetailsController.processInstanceID = [(ASDKModelProcessInstance *)sender modelID];
-        processInstanceDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
+        AFAProcessInstanceDetailsDataSource *processInstanceDetailsDataSource =
+        [[AFAProcessInstanceDetailsDataSource alloc] initWithProcessInstanceID:[(ASDKModelProcessInstance *)sender modelID]
+                                                                    themeColor:self.navigationBarThemeColor];
+        
+        processInstanceDetailsController.dataSource = processInstanceDetailsDataSource;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeStartForm;
     }
 }

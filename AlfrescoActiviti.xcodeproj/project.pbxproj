@@ -84,6 +84,7 @@
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
 		13323B5E1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */; };
 		13323B611E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */; };
+		133A23A41EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A23A31EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m */; };
 		133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */; };
 		133A6BCD1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */; };
 		133B7FDD1B78DBFE00C17D06 /* AFALoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B7FDC1B78DBFE00C17D06 /* AFALoginViewController.m */; };
@@ -752,6 +753,9 @@
 		13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerTaskAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerTaskAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
 		13323B5F1E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; sourceTree = "<group>"; };
 		13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
+		133A23A21EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessInstanceDetailsDataSource.h; path = UI/ViewControllers/ProcessInstanceDetailsScreen/DataSource/AFAProcessInstanceDetailsDataSource.h; sourceTree = "<group>"; };
+		133A23A31EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessInstanceDetailsDataSource.m; path = UI/ViewControllers/ProcessInstanceDetailsScreen/DataSource/AFAProcessInstanceDetailsDataSource.m; sourceTree = "<group>"; };
+		133A23A61EA5FFF5008E79C7 /* AFAProcessInstanceDetailsDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessInstanceDetailsDataSourceProtocol.h; path = UI/ViewControllers/ProcessInstanceDetailsScreen/DataSource/Protocol/AFAProcessInstanceDetailsDataSourceProtocol.h; sourceTree = "<group>"; };
 		133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ASDKFormRenderDataSourceArrayAddition.h"; path = "FormRenderEngine/Categories/NSArray+ASDKFormRenderDataSourceArrayAddition.h"; sourceTree = "<group>"; };
 		133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+ASDKFormRenderDataSourceArrayAddition.m"; path = "FormRenderEngine/Categories/NSArray+ASDKFormRenderDataSourceArrayAddition.m"; sourceTree = "<group>"; };
 		133B7FDB1B78DBFE00C17D06 /* AFALoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFALoginViewController.h; path = UI/ViewControllers/LoginScreen/AFALoginViewController.h; sourceTree = "<group>"; };
@@ -1967,6 +1971,24 @@
 			name = ListDetailsScreen;
 			sourceTree = "<group>";
 		};
+		133A23A51EA5F990008E79C7 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				133A23A71EA60008008E79C7 /* Protocol */,
+				133A23A21EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.h */,
+				133A23A31EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m */,
+			);
+			name = DataSource;
+			sourceTree = "<group>";
+		};
+		133A23A71EA60008008E79C7 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				133A23A61EA5FFF5008E79C7 /* AFAProcessInstanceDetailsDataSourceProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
 		133A6BCE1D463C540065F252 /* NSArray */ = {
 			isa = PBXGroup;
 			children = (
@@ -2381,6 +2403,7 @@
 		136D035C1C844F5100DC94B7 /* ProcessInstanceDetailsScreen */ = {
 			isa = PBXGroup;
 			children = (
+				133A23A51EA5F990008E79C7 /* DataSource */,
 				136D03591C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.h */,
 				136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */,
 			);
@@ -5654,6 +5677,7 @@
 				13FEE5521E813F3F00FF30DB /* AFAProfileViewControllerDataSource.m in Sources */,
 				13EC7A1A1E6D97FC0073CB5E /* AFASettingsSwitchTableViewCell.m in Sources */,
 				137B94421BD656E700134BF1 /* AFATaskFormViewController.m in Sources */,
+				133A23A41EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m in Sources */,
 				131DCF471DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m in Sources */,
 				1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */,
 				136680071C89AEF9005E4AEA /* AFAQueryServices.m in Sources */,

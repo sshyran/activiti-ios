@@ -47,6 +47,7 @@
 // Data sources
 #import "AFATaskListViewDataSource.h"
 #import "AFAProcessListViewDataSource.h"
+#import "AFAProcessInstanceDetailsDataSource.h"
 
 // Managers
 #import "AFATaskServices.h"
@@ -280,8 +281,11 @@ UITableViewDelegate>
     if ([kSegueIDProcessInstanceDetails isEqualToString:segue.identifier]) {
         AFAProcessInstanceDetailsViewController *processInstanceDetailsController = (AFAProcessInstanceDetailsViewController *)segue.destinationViewController;
         ASDKModelProcessInstance *currentSelectedProcessInstance = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
-        processInstanceDetailsController.processInstanceID = currentSelectedProcessInstance.modelID;
-        processInstanceDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
+        AFAProcessInstanceDetailsDataSource *processInstanceDetailsDataSource =
+        [[AFAProcessInstanceDetailsDataSource alloc] initWithProcessInstanceID:currentSelectedProcessInstance.modelID
+                                                                    themeColor:self.navigationBarThemeColor];
+        
+        processInstanceDetailsController.dataSource = processInstanceDetailsDataSource;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeProcessList;
     }
 }
