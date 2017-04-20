@@ -16,20 +16,14 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "AFABaseThemedViewController.h"
+#import <Foundation/Foundation.h>
 #import "AFAProcessInstanceDetailsDataSourceProtocol.h"
 
-typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsUnwindActionType) {
-    AFAProcessInstanceDetailsUnwindActionTypeProcessList,
-    AFAProcessInstanceDetailsUnwindActionTypeStartForm,
-    AFAProcessInstanceDetailsUnwindActionTypeTaskDetails
-};
+@interface AFAProcessInstanceDetailsDataSource : NSObject <AFAProcessInstanceDetailsDataSourceProtocol>
 
-
-@interface AFAProcessInstanceDetailsViewController : AFABaseThemedViewController
-
-@property (strong, nonatomic) id<AFAProcessInstanceDetailsDataSourceProtocol>   dataSource;
-@property (assign, nonatomic) AFAProcessInstanceDetailsUnwindActionType         unwindActionType;
+@property (strong, nonatomic, readonly) NSString  *processInstanceID;
+@property (strong, nonatomic) NSMutableDictionary *sectionModels;
+@property (strong, nonatomic) NSMutableDictionary *cellFactories;
+@property (strong, nonatomic) AFATableController  *tableController;
 
 @end

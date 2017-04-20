@@ -27,6 +27,9 @@
 #import "NSDate+AFAStringTransformation.h"
 #import "UIViewController+AFAAlertAddition.h"
 
+// Data source
+#import "AFAProcessInstanceDetailsDataSource.h"
+
 // Models
 #import "AFATableControllerProcessInstanceDetailsModel.h"
 #import "AFATableControllerProcessInstanceTasksModel.h"
@@ -36,9 +39,6 @@
 
 // Managers
 #import "AFATableController.h"
-#import "AFAProcessServices.h"
-#import "AFAServiceRepository.h"
-#import "AFAQueryServices.h"
 @import ActivitiSDK;
 
 // Cell factories
@@ -61,14 +61,6 @@
 #import "AFAActivityView.h"
 #import "AFANoContentView.h"
 
-typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsSectionType) {
-    AFAProcessInstanceDetailsSectionTypeDetails,
-    AFAProcessInstanceDetailsSectionTypeTaskStatus,
-    AFAProcessInstanceDetailsSectionTypeContent,
-    AFAProcessInstanceDetailsSectionTypeComments,
-    AFAProcessInstanceDetailsSectionTypeEnumCount
-};
-
 typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     AFAProcessInstanceDetailsLoadingStateIdle                          = 1<<0,
     AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress       = 1<<1,
@@ -90,13 +82,9 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 @property (strong, nonatomic) AFAContentPickerViewController                *contentPickerViewController;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                      *addBarButtonItem;
 
-
 // Internal state properties
 @property (assign, nonatomic) AFAProcessInstanceDetailsLoadingState         controllerState;
-@property (strong, nonatomic) NSMutableDictionary                           *sectionContentDict;
 @property (assign, nonatomic) NSInteger                                     currentSelectedSection;
-@property (strong, nonatomic) AFATableController                            *tableController;
-@property (strong, nonatomic) NSMutableDictionary                           *cellFactoryDict;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
@@ -109,16 +97,11 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 #pragma mark -
 #pragma mark Life cycle
 
--(instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
         self.controllerState |= AFAProcessInstanceDetailsLoadingStateIdle;
-        
-        self.sectionContentDict = [NSMutableDictionary dictionary];
-        self.cellFactoryDict = [NSMutableDictionary dictionary];
-        
-        // Set up state bindings
         [self handleBindingsForTaskListViewController];
     }
     
@@ -128,16 +111,9 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Set up table controller and cells factories
-    self.tableController = [AFATableController new];
-    [self setUpCellFactories];
-    
-    // Set the default cell factory to task details
-    self.tableController.cellFactory = [self dequeueCellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-    
     // Bind table view's delegates to table controller
-    self.processTableView.dataSource = self.tableController;
-    self.processTableView.delegate = self.tableController;
+    self.processTableView.dataSource = self.dataSource.tableController;
+    self.processTableView.delegate = self.dataSource.tableController;
     
     // Set up the details table view to adjust it's size automatically
     self.processTableView.estimatedRowHeight = 60.0f;
@@ -166,13 +142,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     [self refreshContentForCurrentSection];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -189,10 +159,9 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         self.contentPickerViewController = (AFAContentPickerViewController *)segue.destinationViewController;
     } else if ([kSegueIDProcessInstanceDetailsAddComments isEqualToString:segue.identifier]) {
         AFAAddCommentsViewController *addComentsController = (AFAAddCommentsViewController *)segue.destinationViewController;
-        addComentsController.processInstanceID = self.processInstanceID;
+        addComentsController.processInstanceID = self.dataSource.processInstanceID;
     } else if ([kSegueIDProcessInstanceViewCompletedStartForm isEqualToString:segue.identifier]) {
-        AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-        
+        AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
         AFAProcessStartFormViewController *startFormViewController = (AFAProcessStartFormViewController *)segue.destinationViewController;
         [startFormViewController setupStartFormForProcessInstanceObject:processInstanceDetailsModel.currentProcessInstance];
     }
@@ -279,8 +248,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 }
 
 - (void)refreshContentForCurrentSection {
-    self.tableController.model = [self reusableTableControllerModelForSectionType:self.currentSelectedSection];
-    self.tableController.cellFactory = [self dequeueCellFactoryForSectionType:self.currentSelectedSection];
+    [self.dataSource updateTableControllerForSectionType:self.currentSelectedSection];
     self.noContentView.hidden = YES;
     self.navigationItem.rightBarButtonItem = nil;
     
@@ -322,46 +290,30 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         self.controllerState |= AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
     }
     
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    
     __weak typeof(self) weakSelf = self;
-    [processServices requestProcessInstanceDetailsForID:self.processInstanceID
-                                        completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
-                                            __strong typeof(self) strongSelf = weakSelf;
-                                            
-                                            if (!error) {
-                                                AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [AFATableControllerProcessInstanceDetailsModel new];
-                                                processInstanceDetailsModel.currentProcessInstance = processInstance;
-                                                
-                                                if (!strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)]) {
-                                                    // Cell actions for all the cell factories are registered after the initial
-                                                    // process instance details are loaded
-                                                    strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsModel;
-                                                    [strongSelf registerCellActions];
-                                                }
-                                                strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsModel;
-                                                
-                                                // Update the table controller model and change the cell factory
-                                                strongSelf.tableController.model = strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)];
-                                                strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-                                                
-                                                [strongSelf.processTableView reloadData];
-                                                
-                                                // Display the last update date
-                                                if (strongSelf.refreshControl) {
-                                                    strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-                                                }
-                                            } else {
-                                                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                            }
-                                            
-                                            [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-                                                [weakSelf.refreshControl endRefreshing];
-                                            }];
-                                            
-                                            // Mark that the refresh operation has ended
-                                            strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
-                                            strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
+    [self.dataSource processInstanceDetailsWithCompletionBlock:^(NSError *error, BOOL registerCellActions) {
+        __strong typeof(self) strongSelf = weakSelf;
+        if (!error) {
+            if (registerCellActions) {
+                [strongSelf registerCellActions];
+            }
+            [strongSelf.processTableView reloadData];
+            
+            // Display the last update date
+            if (strongSelf.refreshControl) {
+                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+            }
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+        
+        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+            [weakSelf.refreshControl endRefreshing];
+        }];
+        
+        // Mark that the refresh operation has ended
+        strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
+        strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
     }];
 }
 
@@ -370,65 +322,13 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         self.controllerState |= AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
     }
     
-    AFAQueryServices *queryServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeQueryServices];
-    
-    dispatch_group_t activeAndCompletedTasksGroup = dispatch_group_create();
-    
-    AFAGenericFilterModel *activeTasksFilter = [AFAGenericFilterModel new];
-    activeTasksFilter.processInstanceID = self.processInstanceID;
-    
-    AFATableControllerProcessInstanceTasksModel *processInstanceTasksModel = [AFATableControllerProcessInstanceTasksModel new];
-    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-    processInstanceTasksModel.isStartFormDefined = processInstanceDetailsModel.currentProcessInstance.isStartFormDefined;
-    
-    __block BOOL hadEncounteredAnError = NO;
     __weak typeof(self) weakSelf = self;
-    dispatch_group_enter(activeAndCompletedTasksGroup);
-    [queryServices requestTaskListWithFilter:activeTasksFilter
-                             completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 hadEncounteredAnError = error ? YES : NO;
-                                 if (!hadEncounteredAnError) {
-                                     processInstanceTasksModel.activeTasks = taskList;
-                                 } else {
-                                     [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                 }
-                                 
-                                 dispatch_group_leave(activeAndCompletedTasksGroup);
-                             }];
-    
-    dispatch_group_enter(activeAndCompletedTasksGroup);
-    
-    AFAGenericFilterModel *completedTasksFilter = [AFAGenericFilterModel new];
-    completedTasksFilter.processInstanceID = self.processInstanceID;
-    completedTasksFilter.state = AFAGenericFilterStateTypeCompleted;
-    
-    [queryServices requestTaskListWithFilter:completedTasksFilter
-                             completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 hadEncounteredAnError = error ? YES : NO;
-                                 if (!hadEncounteredAnError) {
-                                     processInstanceTasksModel.completedTasks = taskList;
-                                 } else {
-                                     [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                 }
-                                 
-                                 dispatch_group_leave(activeAndCompletedTasksGroup);
-                             }];
-    
-    dispatch_group_notify(activeAndCompletedTasksGroup, dispatch_get_main_queue(),^{
+    [self.dataSource processInstanceActiveAndCompletedTasksWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        AFATableControllerProcessInstanceTasksModel *processInstanceTaskModel = nil;
         
-        if (!hadEncounteredAnError) {
-            strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = processInstanceTasksModel;
-            
-            // Update the table controller model and change the cell factory
-            processInstanceTaskModel = strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)];
-            
-            strongSelf.tableController.model = processInstanceTaskModel;
-            strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
-            
+        if (error) {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        } else {
             [strongSelf.processTableView reloadData];
             
             // Display the last update date
@@ -445,10 +345,11 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
         
+        AFATableControllerProcessInstanceTasksModel *processInstanceTaskModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
         strongSelf.noContentView.hidden = ([processInstanceTaskModel hasTaskListAvailable] || processInstanceTaskModel.isStartFormDefined);
         strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"tasks-large-icon"];
         strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenNoTasksAvailableText, @"No tasks available text");
-    });
+    }];
 }
 
 - (void)refreshProcessInstanceContent {
@@ -456,51 +357,35 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         self.controllerState |= AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
     }
     
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    
     __weak typeof(self) weakSelf = self;
-    [processServices requestProcessInstanceContentForProcessInstanceID:self.processInstanceID
-                                                       completionBlock:^(NSArray *contentList, NSError *error) {
-           __strong typeof(self) strongSelf = weakSelf;
-           
-           if (!error) {
-               AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [AFATableControllerProcessInstanceContentModel new];
-               processInstanceContentModel.attachedContentArr = contentList;
-               strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentModel;
-               
-               if (AFAProcessInstanceDetailsSectionTypeContent == strongSelf.currentSelectedSection) {
-                   strongSelf.tableController.model = strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeContent)];
-                   
-                   // Change the cell factory
-                   strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
-                   strongSelf.tableController.isEditable = NO;
-               }
-               
-               // Because we're displaying a loading cell we need to refresh
-               // the table view even when there are no collection changes
-               // to remove the loading cell
-               [strongSelf.processTableView reloadData];
-               
-               // Display the no content view if appropiate
-               strongSelf.noContentView.hidden = !contentList.count ? NO : YES;
-               strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
-               strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable");
-               
-               // Display the last update date
-               if (strongSelf.refreshControl) {
-                   strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-               }
-           } else {
-               [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
-           }
-           
-           [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-               [weakSelf.refreshControl endRefreshing];
-           }];
-           
-           // Mark that the refresh operation has ended
-           strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
-           strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
+    [self.dataSource processInstanceContentWithCompletionBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            [strongSelf.processTableView reloadData];
+            
+            // Display the no content view if appropiate
+            AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
+            
+            strongSelf.noContentView.hidden = !processInstanceContentModel.attachedContentArr.count ? NO : YES;
+            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
+            strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable");
+            
+            // Display the last update date
+            if (strongSelf.refreshControl) {
+                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+            }
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+        }
+        
+        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+            [weakSelf.refreshControl endRefreshing];
+        }];
+        
+        // Mark that the refresh operation has ended
+        strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
+        strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
     }];
 }
 
@@ -508,61 +393,41 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     if (!(AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
         self.controllerState |= AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
     }
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
     
     __weak typeof(self) weakSelf = self;
-    [processServices
-     requestProcessInstanceCommentsForID:self.processInstanceID
-     withCompletionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         if (!error) {
-             // Extract the updated result
-             AFATableControllerCommentModel *processInstanceCommentModel = [AFATableControllerCommentModel new];
-             
-             NSSortDescriptor *newestCommentsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(creationDate))
-                                                                                            ascending:NO];
-             processInstanceCommentModel.commentListArr = [commentList sortedArrayUsingDescriptors:@[newestCommentsSortDescriptor]];
-             processInstanceCommentModel.paging = paging;
-             
-             strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeComments)] = processInstanceCommentModel;
-             
-             if (AFAProcessInstanceDetailsSectionTypeComments == strongSelf.currentSelectedSection) {
-                 strongSelf.tableController.model = strongSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeComments)];
-                 
-                 // Change the cell factory
-                 strongSelf.tableController.cellFactory = [strongSelf dequeueCellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeComments];
-             }
-             
-             // Because we're displaying a loading cell we need to refresh
-             // the table view even when there are no collection changes
-             // to remove the loading cell
-             [strongSelf.processTableView reloadData];
-             
-             AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-             BOOL isTaskCompleted = processInstanceDetailsModel.currentProcessInstance.endDate ? YES : NO;
-             
-             // Display the no content view if appropiate
-             strongSelf.noContentView.hidden = !commentList.count ? NO : YES;
-             strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
-             strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
-             
-             // Display the last update date
-             if (strongSelf.refreshControl) {
-                 strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-             }
-         } else {
-             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
-         }
-         
-         [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-             [weakSelf.refreshControl endRefreshing];
-         }];
-         
-         // Mark that the refresh operation has ended
-         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
-         strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
-     }];
+    [self.dataSource processInstanceCommentsWithCompletionBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            [strongSelf.processTableView reloadData];
+            
+            AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+            AFATableControllerCommentModel *processInstanceCommentModel = [self.dataSource reusableTableControllerModelForSectionType:
+                                                                           AFAProcessInstanceDetailsSectionTypeComments];
+            
+            BOOL isTaskCompleted = processInstanceDetailsModel.currentProcessInstance.endDate ? YES : NO;
+            
+            // Display the no content view if appropiate
+            strongSelf.noContentView.hidden = !processInstanceCommentModel.commentListArr.count ? NO : YES;
+            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
+            strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
+            
+            // Display the last update date
+            if (strongSelf.refreshControl) {
+                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+            }
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+        }
+        
+        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+            [weakSelf.refreshControl endRefreshing];
+        }];
+        
+        // Mark that the refresh operation has ended
+        strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
+        strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
+    }];
 }
 
 - (IBAction)onAdd:(UIBarButtonItem *)sender {
@@ -574,21 +439,19 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 
 - (void)deleteCurrentProcessInstance {
     self.controllerState |= AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
-
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
+    
     __weak typeof(self) weakSelf = self;
-    [processServices requestDeleteProcessInstanceWithID:self.processInstanceID
-                                        completionBlock:^(BOOL isProcessInstanceDeleted, NSError *error) {
-                                            __strong typeof(self) strongSelf = weakSelf;
-                                            
-                                            if (!error) {
-                                                [self performSegueWithIdentifier:kSegueIDProcessInstanceDetailsUnwind
-                                                                          sender:nil];
-                                            } else {
-                                                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
-                                            }
-                                            // Mark that the delete operation has ended
-                                            strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
+    [self.dataSource deleteCurrentProcessInstanceWithCompletionBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            [self performSegueWithIdentifier:kSegueIDProcessInstanceDetailsUnwind
+                                      sender:nil];
+        } else {
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+        }
+        // Mark that the delete operation has ended
+        strongSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
     }];
 }
 
@@ -627,84 +490,25 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         }
             break;
             
-        default: {
-            return nil;
-        }
+        default: return nil;
             break;
     }
 }
 
-- (id)reusableTableControllerModelForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType {
-    id reusableObject = nil;
-    
-    reusableObject = self.sectionContentDict[@(sectionType)];
-    if (!reusableObject) {
-        switch (sectionType) {
-            case AFAProcessInstanceDetailsSectionTypeDetails: {
-                reusableObject = [AFATableControllerProcessInstanceDetailsModel new];
-            }
-                break;
-            case AFAProcessInstanceDetailsSectionTypeTaskStatus: {
-                reusableObject = [AFATableControllerProcessInstanceTasksModel new];
-            }
-                break;
-                
-            case AFAProcessInstanceDetailsSectionTypeContent: {
-                reusableObject = [AFATableControllerProcessInstanceContentModel new];
-            }
-                break;
-                
-            case AFAProcessInstanceDetailsSectionTypeComments: {
-                reusableObject = [AFATableControllerCommentModel new];
-            }
-                
-            default:
-                break;
-        }
-    }
-    
-    return reusableObject;
-}
-
 
 #pragma mark -
-#pragma mark Cell factories and cell actions
-
-- (void)setUpCellFactories {
-    // Register process instance details cell factory
-    AFATableControllerProcessInstanceDetailsCellFactory *processInstanceDetailsCellFactory = [AFATableControllerProcessInstanceDetailsCellFactory new];
-    processInstanceDetailsCellFactory.appThemeColor = self.navigationBarThemeColor;
-    
-    // Register process instance task status cell factory
-    AFATableControllerProcessInstanceTasksCellFactory *processInstanceTasksCellFactory = [AFATableControllerProcessInstanceTasksCellFactory new];
-    processInstanceTasksCellFactory.appThemeColor = self.navigationBarThemeColor;
-    
-    // Register process instance content cell factory
-    AFATableControllerContentCellFactory *processInstanceContentCellFactory = [AFATableControllerContentCellFactory new];
-    processInstanceContentCellFactory.appThemeColor = self.navigationBarThemeColor;
-    
-    // Register process instance comments cell factory
-    AFATableControllerCommentCellFactory *processInstanceDetailsCommentCellFactory = [AFATableControllerCommentCellFactory new];
-    
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsCellFactory;
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = processInstanceTasksCellFactory;
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentCellFactory;
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeComments)] = processInstanceDetailsCommentCellFactory;
-}
+#pragma mark Cell actions
 
 - (void)registerCellActions {
-    AFATableControllerProcessInstanceDetailsCellFactory *processInstanceDetailsCellFactory =
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeDetails)];
-    AFATableControllerProcessInstanceTasksCellFactory *processInstanceTasksCellFactory =
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)];
-    AFATableControllerContentCellFactory *processInstanceContentCellFactory =
-    self.cellFactoryDict[@(AFAProcessInstanceDetailsSectionTypeContent)];
+    AFATableControllerProcessInstanceDetailsCellFactory *processInstanceDetailsCellFactory = [self.dataSource cellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+    AFATableControllerProcessInstanceTasksCellFactory *processInstanceTasksCellFactory = [self.dataSource cellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
+    AFATableControllerContentCellFactory *processInstanceContentCellFactory = [self.dataSource cellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
     
     __weak typeof(self) weakSelf = self;
     [processInstanceDetailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [strongSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+        AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
         BOOL isCompletedProcessInstance = processInstanceDetailsModel.currentProcessInstance.endDate ? YES : NO;
         
         NSString *alertMessage = nil;
@@ -725,7 +529,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         __strong typeof(self) strongSelf = weakSelf;
         
         NSIndexPath *taskIndexpath = changeParameters[kCellFactoryCellParameterCellIndexpath];
-        AFATableControllerProcessInstanceTasksModel *processInstanceTasks = [strongSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
+        AFATableControllerProcessInstanceTasksModel *processInstanceTasks = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
         ASDKModelTask *currentTask = [processInstanceTasks itemAtIndexPath:taskIndexpath];
         
         if (currentTask) {
@@ -747,45 +551,28 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
             strongSelf.controllerState |= AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
         }
         
-        AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-        [processServices requestProcessInstanceContentForProcessInstanceID:strongSelf.processInstanceID
-                                                           completionBlock:^(NSArray *contentList, NSError *error) {
-                                                               // Mark that the refresh operation has ended
-                                                               weakSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStateGeneralRefreshInProgress;
-                                                               weakSelf.controllerState &= ~AFAProcessInstanceDetailsLoadingStatePullToRefreshInProgress;
-                                                               
-                                                               if (!error) {
-                                                                   AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [AFATableControllerProcessInstanceContentModel new];
-                                                                   processInstanceContentModel.attachedContentArr = contentList;
-                                                                   weakSelf.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentModel;
-                                                               }
-                                                               
-                                                               NSIndexPath *contentToDownloadIndexPath = changeParameters[kCellFactoryCellParameterCellIndexpath];
-                                                               AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [weakSelf reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
-                                                               ASDKModelContent *contentToDownload = ((ASDKModelProcessInstanceContent *)processInstanceContentModel.attachedContentArr[contentToDownloadIndexPath.section]).contentArr[contentToDownloadIndexPath.row];
-                                                               
-                                                               [strongSelf.contentPickerViewController dowloadContent:contentToDownload
-                                                                                                   allowCachedContent:YES];
-                                                           }];
+        [self.dataSource processInstanceContentWithCompletionBlock:^(NSError *error) {
+            NSIndexPath *contentToDownloadIndexPath = changeParameters[kCellFactoryCellParameterCellIndexpath];
+            AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [weakSelf.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
+            ASDKModelContent *contentToDownload = ((ASDKModelProcessInstanceContent *)processInstanceContentModel.attachedContentArr[contentToDownloadIndexPath.section]).contentArr[contentToDownloadIndexPath.row];
+            
+            [weakSelf.contentPickerViewController dowloadContent:contentToDownload
+                                              allowCachedContent:YES];
+        }];
     } forCellType:[processInstanceContentCellFactory cellTypeForDownloadContent]];
     
     // Certain actions are performed for completed or ongoing process instances so there is
     // no reason to register all of them at all times
-    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = self.sectionContentDict[@(AFAProcessInstanceDetailsSectionTypeDetails)];
+    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
     
     if ([processInstanceDetailsModel isCompletedProcessInstance]) {
         [processInstanceDetailsCellFactory registerCellAction:^(NSDictionary *changeParameters) {
             __strong typeof(self) strongSelf = weakSelf;
             
-            [strongSelf.contentPickerViewController downloadAuditLogForProcessInstanceWithID:strongSelf.processInstanceID
+            [strongSelf.contentPickerViewController downloadAuditLogForProcessInstanceWithID:strongSelf.dataSource.processInstanceID
                                                                           allowCachedResults:YES];
-            
         } forCellType:[processInstanceDetailsCellFactory cellTypeForAuditLogCell]];
     }
-}
-
-- (id)dequeueCellFactoryForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType {
-    return self.cellFactoryDict[@(sectionType)];
 }
 
 

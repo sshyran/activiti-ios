@@ -32,6 +32,7 @@
 // Data source
 #import "AFAContentPickerDataSource.h"
 #import "AFAContentPickerTaskUploadBehavior.h"
+#import "AFAProcessInstanceDetailsDataSource.h"
 
 // Segues
 #import "AFAPushFadeSegueUnwind.h"
@@ -268,9 +269,11 @@ typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
     } else if ([kSegueIDTaskDetailsViewProcess isEqualToString:segue.identifier]) {
         AFAProcessInstanceDetailsViewController *processInstanceDetailsController = (AFAProcessInstanceDetailsViewController *)segue.destinationViewController;
         AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-        processInstanceDetailsController.processInstanceID = taskDetailsModel.currentTask.processInstanceID;
+        AFAProcessInstanceDetailsDataSource *processInstanceDetailsDataSource =
+        [[AFAProcessInstanceDetailsDataSource alloc] initWithProcessInstanceID:taskDetailsModel.currentTask.processInstanceID
+                                                                    themeColor:self.navigationBarThemeColor];
+        processInstanceDetailsController.dataSource = processInstanceDetailsDataSource;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeTaskDetails;
-        processInstanceDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
     } else if ([kSegueIDTaskDetailsAddComments isEqualToString:segue.identifier]) {
         AFAAddCommentsViewController *addCommentsViewController = (AFAAddCommentsViewController *)segue.destinationViewController;
         addCommentsViewController.taskID = self.taskID;
