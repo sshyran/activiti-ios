@@ -1,22 +1,21 @@
-# Welcome to the Alfresco Activiti iOS App
+# Welcome to the Alfresco Process Services iOS App
 
-## What Is Alfresco Activiti iOS?
+## What Is Alfresco Process Services iOS?
 
-Alfresco Activiti provides highly scalable workflow and Business Process Management services in the Cloud and on-premises. With the Alfresco Activiti iOS application you can view your task lists, complete forms and collaborate with others. You can start new processes, attaching files, photos or videos for simple review and approve workflow or support more complex business processes (complete with integrations to others systems). At any time, you can involve other people to collaborate to help complete a task. Alfresco Activiti supports shared task queues and the full process capabilities of the BPMN2 standard.
+Alfresco Process Services provides highly scalable workflow and Business Process Management services in the Cloud and on-premises. With the Alfresco Process Services iOS application you can view your task lists, complete forms and collaborate with others. You can start new processes, attaching files, photos or videos for simple review and approve workflow or support more complex business processes (complete with integrations to others systems). At any time, you can involve other people to collaborate to help complete a task. Alfresco Process Services supports shared task queues and the full process capabilities of the BPMN2 standard.
 
-The Alfresco Activiti iOS app is build on top of the Alfresco Activiti iOS SDK.
+The Alfresco Process Services iOS app is build on top of the Alfresco Activiti iOS SDK.
 The app is a reference implementation of the most common mobile use cases within the BPM and workflow domain. 
-The SDK can be used seperatly to create your own tailormade iOS client for the Alfresco Activiti BPM suite.
+The SDK can be used seperatly to create your own tailormade iOS client for the Alfresco Process Services BPM suite.
 
 ## Where can I find it ?
 
-On the Apple App Store ... [Alfresco Process Services powered by Activiti]
-(https://itunes.apple.com/us/app/alfresco-process-services-powered-by-activiti/id1129144376?mt=8)
+On the Apple App Store ... [Alfresco Process Services powered by Activiti](https://itunes.apple.com/us/app/alfresco-process-services-powered-by-activiti/id1129144376?mt=8)
 
 ## Contributors
 
 * Yvo Swillens (Alfresco) <yvoswillens@gmail.com>
-* Emanuel Lupu-Marinei (Ness Technologies) <emanuel.lupu@ness.com>
+* Emanuel Lupu-Marinei (Ness Technologies) <emanuel.lupu@icloud.com>
 
 ## What's the code License ?
 
