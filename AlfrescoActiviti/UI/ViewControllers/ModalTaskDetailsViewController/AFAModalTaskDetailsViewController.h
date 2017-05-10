@@ -20,12 +20,6 @@
 #import "AFATaskServices.h"
 @class ASDKModelTask;
 
-typedef NS_ENUM(NSInteger, AFAModalTaskDetailsActionType) {
-    AFAModalTaskDetailsActionTypeUndefined = -1,
-    AFAModalTaskDetailsActionTypeCreate = 0,
-    AFAModalTaskDetailsActionTypeUpdate
-};
-
 @protocol AFAModalTaskDetailsViewControllerDelegate <NSObject>
 
 @optional
@@ -38,7 +32,6 @@ typedef NS_ENUM(NSInteger, AFAModalTaskDetailsActionType) {
 
 - (void)executeAlertActionWithModel:(id)modelObject
                     completionBlock:(id)completionBlock;
-- (AFAModalTaskDetailsActionType)actionType;
 
 @end
 

@@ -29,8 +29,4 @@
                                            completionBlock:completionBlock];
 }
 
-- (AFAModalTaskDetailsActionType)actionType {
-    return AFAModalTaskDetailsActionTypeCreate;
-}
-
 @end

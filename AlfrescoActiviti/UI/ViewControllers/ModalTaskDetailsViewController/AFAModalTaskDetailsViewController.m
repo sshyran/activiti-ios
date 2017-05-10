@@ -30,6 +30,9 @@
 // Managers
 #import "AFAProfileServices.h"
 #import "AFAServiceRepository.h"
+#import "AFAModalTaskDetailsCreateTaskAction.h"
+#import "AFAModalTaskDetailsUpdateTaskAction.h"
+#import "AFAModalTaskDetailsCreateChecklistAction.h"
 @import ActivitiSDK;
 
 // Models
@@ -198,7 +201,8 @@
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
             if ([self.confirmAlertAction respondsToSelector:@selector(executeAlertActionWithModel:completionBlock:)]) {
-                if (AFAModalTaskDetailsActionTypeCreate == [self.confirmAlertAction actionType]) {
+                if ([self.confirmAlertAction isKindOfClass:[AFAModalTaskDetailsCreateTaskAction class]] ||
+                    [self.confirmAlertAction isKindOfClass:[AFAModalTaskDetailsCreateChecklistAction class]]) {
                     AFATaskCreateModel *taskCreateModel = [AFATaskCreateModel new];
                     taskCreateModel.taskName = self.nameTextField.text;
                     taskCreateModel.taskDescription = self.descriptionTextView.text;
@@ -207,7 +211,7 @@
                     
                     [self.confirmAlertAction executeAlertActionWithModel:taskCreateModel
                                                          completionBlock:taskDetailsCompletionBlock];
-                } else if (AFAModalTaskDetailsActionTypeUpdate == [self.confirmAlertAction actionType]) {
+                } else if ([self.confirmAlertAction isKindOfClass:[AFAModalTaskDetailsUpdateTaskAction class]]) {
                     AFATaskUpdateModel *taskUpdate = [AFATaskUpdateModel new];
                     taskUpdate.taskName = self.nameTextField.text;
                     taskUpdate.taskDescription = self.descriptionTextView.text;
@@ -215,6 +219,7 @@
                     [self.confirmAlertAction executeAlertActionWithModel:taskUpdate
                                                          completionBlock:taskDetailsUpdateCompletionBlock];
                 }
+                
             }
         } else {
             [strongSelf.progressHUD dismiss];
