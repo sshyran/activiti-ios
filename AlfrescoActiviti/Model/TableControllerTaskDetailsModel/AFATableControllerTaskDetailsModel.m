@@ -48,7 +48,7 @@
 }
 
 - (BOOL)isCompletedTask {
-    return self.currentTask.endDate ? YES : NO;
+    return (self.currentTask.endDate && self.currentTask.duration) ? YES : NO;
 }
 
 - (BOOL)canBeRequeued {

@@ -39,12 +39,12 @@ typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsSectionType) {
 
 - (instancetype)initWithProcessInstanceID:(NSString *)processInstanceID
                                themeColor:(UIColor *)themeColor;
+
 - (void)processInstanceDetailsWithCompletionBlock:(void (^)(NSError *error, BOOL registerCellActions))completionBlock;
 - (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 - (void)processInstanceContentWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 - (void)processInstanceCommentsWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 - (void)deleteCurrentProcessInstanceWithCompletionBlock:(void (^)(NSError *error))completionBlock;
-
 
 - (id)cellFactoryForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType;
 - (id)reusableTableControllerModelForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType;

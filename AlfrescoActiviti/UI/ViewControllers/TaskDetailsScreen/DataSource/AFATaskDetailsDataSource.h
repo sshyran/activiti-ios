@@ -16,19 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
-#import "AFABaseThemedViewController.h"
+#import <Foundation/Foundation.h>
 #import "AFATaskDetailsDataSourceProtocol.h"
 
-typedef NS_ENUM(NSInteger, AFATaskDetailsUnwindActionType) {
-    AFATaskDetailsUnwindActionTypeTaskList,
-    AFATaskDetailsUnwindActionTypeProcessInstanceDetails,
-    AFATaskDetailsUnwindActionTypeChecklist,
-};
+@interface AFATaskDetailsDataSource : NSObject <AFATaskDetailsDataSourceProtocol>
 
-@interface AFATaskDetailsViewController : AFABaseThemedViewController
-
-@property (strong, nonatomic) id<AFATaskDetailsDataSourceProtocol>  dataSource;
-@property (assign, nonatomic) AFATaskDetailsUnwindActionType        unwindActionType;
+@property (strong, nonatomic, readonly) UIColor     *themeColor;
+@property (strong, nonatomic, readonly) NSString    *taskID;
+@property (strong, nonatomic) NSMutableDictionary   *sectionModels;
+@property (strong, nonatomic) NSMutableDictionary   *cellFactories;
+@property (strong, nonatomic) AFATableController    *tableController;
 
 @end
