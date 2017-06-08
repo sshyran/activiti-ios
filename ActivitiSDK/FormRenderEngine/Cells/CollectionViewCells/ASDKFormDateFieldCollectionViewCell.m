@@ -111,6 +111,8 @@
 #pragma mark Cell states & validation
 
 - (void)prepareForReuse {
+    [super prepareForReuse];
+    
     self.descriptionLabel.text = nil;
     self.descriptionLabel.textColor = self.colorSchemeManager.formViewValidValueColor;
     self.selectedDateLabel.text = nil;
