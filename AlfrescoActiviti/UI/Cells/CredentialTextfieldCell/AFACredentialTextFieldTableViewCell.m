@@ -39,6 +39,8 @@ CGFloat kHairlineViewAlphaDimmed    = 0.5f;
 }
 
 - (void)prepareForReuse {
+    [super prepareForReuse];
+    
     self.inputTextField.text = nil;
     self.inputTextField.keyboardType = UIKeyboardTypeDefault;
     self.inputTextField.secureTextEntry = NO;

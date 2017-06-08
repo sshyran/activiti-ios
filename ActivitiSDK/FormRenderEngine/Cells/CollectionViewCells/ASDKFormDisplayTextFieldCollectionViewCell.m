@@ -58,6 +58,8 @@
 #pragma mark Cell states & validation
 
 - (void)prepareForReuse {
+    [super prepareForReuse];
+    
     self.displayTextLabel.text = nil;
     self.disclosureIndicatorLabel.hidden = NO;
 }

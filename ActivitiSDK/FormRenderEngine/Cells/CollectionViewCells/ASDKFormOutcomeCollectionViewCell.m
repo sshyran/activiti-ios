@@ -66,6 +66,8 @@
 #pragma mark Cell states & validation
 
 - (void)prepareForReuse {
+    [super prepareForReuse];
+    
     [UIView performWithoutAnimation:^{
         [self.outcomeButton setTitle:nil
                             forState:UIControlStateNormal];

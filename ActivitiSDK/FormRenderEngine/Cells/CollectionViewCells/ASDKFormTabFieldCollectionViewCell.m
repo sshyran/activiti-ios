@@ -24,6 +24,8 @@
 @implementation ASDKFormTabFieldCollectionViewCell
 
 - (void)prepareForReuse {
+    [super prepareForReuse];
+    
     self.descriptionLabel.text = nil;
 }
 
