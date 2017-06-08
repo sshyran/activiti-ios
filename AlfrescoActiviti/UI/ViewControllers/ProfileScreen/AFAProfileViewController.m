@@ -173,6 +173,7 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 - (IBAction)onRefresh:(id)sender {
     self.refreshView.hidden = YES;
     self.noInformationAvailableLabel.hidden = YES;
+    [self showProfileSaveButton:NO];
     
     [self fetchProfileInformation];
     [self fetchProfileImage];
@@ -305,33 +306,24 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     if (self.isSlided) {
         // If the user chose to slide the drawer menu rollback changes he made to the fields
+        [self.dataSource rollbackProfileChanges];
+        [self showProfileSaveButton:NO];
         [self updateUIForProfileContent:self.dataSource.currentProfile];
     } else {
-        BOOL isProfileUpdated = NO;
-        
-        // Deep copy the profile object so that it remains untouched by future mutations
-        NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.dataSource.currentProfile];
-        ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
-        
         // Check for changes made to the profile
         if (self.firstNameTextField == textField) {
-            if (![profileCopy.userFirstName isEqualToString:textField.text]) {
-                isProfileUpdated = YES;
-                profileCopy.userFirstName = textField.text;
+            if (![self.dataSource.currentProfile.userFirstName isEqualToString:textField.text]) {
+                self.dataSource.currentProfile.userFirstName = textField.text;
             }
         }
         
         if (self.lastNameTextField == textField) {
-            if (![profileCopy.userLastName isEqualToString:textField.text]) {
-                isProfileUpdated = YES;
-                profileCopy.userLastName = textField.text;
+            if (![self.dataSource.currentProfile.userLastName isEqualToString:textField.text]) {
+                self.dataSource.currentProfile.userLastName = textField.text;
             }
         }
         
-        // If changes were made to the profile, update the server values
-        if (isProfileUpdated) {
-            [self updateInformationForProfile:profileCopy];
-        }
+        [self showProfileSaveButton:[self.dataSource isProfileUpdated]];
     }
 }
 
@@ -401,10 +393,27 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                      completion:nil];
 }
 
-- (void)updateInformationForProfile:(ASDKModelProfile *)profile {
+- (void)showProfileSaveButton:(BOOL)isSaveButtonEnabled {
+    // Set up the profile information save button
+    UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"save-icon"]
+                                                                          style:UIBarButtonItemStylePlain
+                                                                         target:self.dataSource
+                                                                         action:@selector(challengeUserCredentialsForProfileUpdate)];
+    saveBarButtonItem.tintColor = [UIColor whiteColor];
+    
+    if (isSaveButtonEnabled) {
+        self.navigationItem.rightBarButtonItem = saveBarButtonItem;
+    } else {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
+}
+
+- (void)updateProfileInformation {
     // Ignore profile information updates when the screen is slided
     if (self.isSlided) {
         // If the user chose to slide the drawer menu rollback changes he made to the fields
+        [self.dataSource rollbackProfileChanges];
+        [self showProfileSaveButton:NO];
         [self updateUIForProfileContent:self.dataSource.currentProfile];
         return;
     }
@@ -413,7 +422,7 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     
     __weak typeof(self) weakSelf = self;
     AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices requestProfileUpdateWithModel:profile
+    [profileServices requestProfileUpdateWithModel:self.dataSource.currentProfile
                                    completionBlock:^(ASDKModelProfile *profile, NSError *error) {
                                        __strong typeof(self) strongSelf = weakSelf;
                                        
@@ -437,7 +446,7 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                            // Store the fetched profile
                                            profile.groups = strongSelf.dataSource.currentProfile.groups;
                                            strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
-                                           strongSelf.dataSource.delegate = self;
+                                           strongSelf.dataSource.delegate = strongSelf;
                                            strongSelf.profileTableView.dataSource = strongSelf.dataSource;
                                            
                                            [strongSelf updateUIForProfileContent:profile];
@@ -446,8 +455,12 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                            [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
                                            
                                            // If an error occured, roll back to the previous valid state of the user profile
+                                           [strongSelf.dataSource rollbackProfileChanges];
+                                           [self showProfileSaveButton:NO];
                                            [strongSelf updateUIForProfileContent:strongSelf.dataSource.currentProfile];
                                        }
+                                       
+                                       [strongSelf showProfileSaveButton:NO];
                                    }];
 }
 
@@ -537,7 +550,7 @@ heightForFooterInSection:(NSInteger)section {
 }
 
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Utils
 
 - (void)updateUIForProfileContent:(ASDKModelProfile *)profile {
@@ -575,7 +588,7 @@ heightForFooterInSection:(NSInteger)section {
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
                                  [self.view endEditing:YES];
-    }];
+                             }];
 }
 
 @end

@@ -209,6 +209,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     profileInformationRequestRepresentation.userLastName = profileModel.userLastName;
     profileInformationRequestRepresentation.email = profileModel.email;
     profileInformationRequestRepresentation.companyName = profileModel.companyName;
+    profileInformationRequestRepresentation.password = profileModel.password;
     
     __weak typeof(self) weakSelf = self;
     __block NSURLSessionDataTask *dataTask =

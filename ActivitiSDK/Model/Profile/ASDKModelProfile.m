@@ -43,6 +43,7 @@
                                                       @"externalID"         : @"externalId",
                                                       @"pictureID"          : @"pictureId",
                                                       @"groups"             : @"groups",
+                                                      @"password"           : @"password",
                                                       @"creationDate"       : @"created",
                                                       @"lastUpdate"         : @"lastUpdate"}];
     
