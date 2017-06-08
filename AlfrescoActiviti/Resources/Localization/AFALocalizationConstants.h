@@ -149,6 +149,7 @@ extern NSString *kLocalizationSuccessText;
 extern NSString *kLocalizationAuditLogText;
 extern NSString *kLocalizationSignOutText;
 extern NSString *kLocalizationSettingsText;
+extern NSString *kLocalizationPaswordText;
 
 // Alert dialogs use
 extern NSString *kLocalizationAlertDialogOopsTitleText;
@@ -229,6 +230,7 @@ extern NSString *kLocalizationProfileScreenDiskUsageText;
 extern NSString *kLocalizationProfileScreenDiskUsageAvailableText;
 extern NSString *kLocalizationProfileScreenActivitiDataText;
 extern NSString *kLocalizationProfileScreenReportToolText;
+extern NSString *kLocalizationProfileScreenConfirmCredentialsText;
 
 // Settings screen
 extern NSString *kLocalizationSettingsScreenBugReportingText;

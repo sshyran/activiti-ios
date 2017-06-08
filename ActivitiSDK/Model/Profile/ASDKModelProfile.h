@@ -36,6 +36,7 @@ typedef NS_ENUM(NSInteger, ASDKModelProfileState) {
 @property (strong, nonatomic) NSString              *externalID;
 @property (strong, nonatomic) NSString              *pictureID;
 @property (strong, nonatomic) NSArray               *groups;
+@property (strong, nonatomic) NSString              *password;
 @property (assign, nonatomic) ASDKModelProfileState profileState;
 @property (strong, nonatomic) NSDate                *creationDate;
 @property (strong, nonatomic) NSDate                *lastUpdate;

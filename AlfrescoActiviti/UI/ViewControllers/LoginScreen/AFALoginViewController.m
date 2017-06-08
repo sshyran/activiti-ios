@@ -254,8 +254,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (IBAction)onEnvironment:(id)sender {
     NSMutableArray *loginViewModels = [NSMutableArray new];
     
-    
-    
     if (self.loginViewModel) {
         [loginViewModels addObject:self.loginViewModel];
     }

@@ -31,9 +31,10 @@
 #import "AFAProfileActionTableViewCell.h"
 
 @interface AFAProfileViewControllerDataSource () <AFAProfileDetailTableViewCellDelegate,
-AFAProfileActionTableViewCellDelegate>
+                                                  AFAProfileActionTableViewCellDelegate>
 
 @property (weak, nonatomic) UITableView *profileTableView;
+@property (strong, nonatomic) ASDKModelProfile *originalProfileInstance;
 
 @end
 
@@ -44,9 +45,66 @@ AFAProfileActionTableViewCellDelegate>
     
     if (self) {
         _currentProfile = profile;
+        // Deep copy the profile object so that it remains untouched by future mutations
+        NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject:profile];
+        ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
+        _originalProfileInstance = profileCopy;
     }
     
     return self;
+}
+
+- (void)rollbackProfileChanges {
+    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject:self.originalProfileInstance];
+    ASDKModelProfile *originalProfileInstanceCopy = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
+    _currentProfile = originalProfileInstanceCopy;
+}
+
+- (BOOL)isProfileUpdated {
+    return [self.currentProfile isEqual:self.originalProfileInstance] ? NO : YES;
+}
+
+- (void)challengeUserCredentialsForProfileUpdate {
+    UIAlertController *changePasswordAlertController = [UIAlertController
+                                                        alertControllerWithTitle:NSLocalizedString(kLocalizationProfileScreenConfirmCredentialsText, @"Re-enter password")
+                                                        message:nil
+                                                        preferredStyle:UIAlertControllerStyleAlert];
+    [changePasswordAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = NSLocalizedString(kLocalizationPaswordText, @"Password");
+        textField.secureTextEntry = YES;
+    }];
+    
+    __weak typeof(self) weakSelf = self;
+    UIAlertAction *confirmAction =
+    [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogConfirmText, @"Confirm")
+                             style:UIAlertActionStyleDefault
+                           handler:^(UIAlertAction * _Nonnull action) {
+                               __strong typeof(self) strongSelf = weakSelf;
+                               
+                               UITextField *passwordField = changePasswordAlertController.textFields.firstObject;
+                               if (!passwordField.text.length) {
+                                   if ([strongSelf.delegate respondsToSelector:@selector(handleNetworkErrorWithMessage:)]) {
+                                       [strongSelf.delegate handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationLoginInvalidCredentialsText, @"Invalid credentials")];
+                                   }
+                               } else {
+                                   // Update profile with the provided password
+                                   strongSelf.currentProfile.password = passwordField.text;
+                                   
+                                   if ([strongSelf.delegate respondsToSelector:@selector(updateProfileInformation)]) {
+                                       [strongSelf.delegate updateProfileInformation];
+                                   }
+                               }
+                           }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogCancelButtonText, @"Cancel")
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    
+    [changePasswordAlertController addAction:cancelAction];
+    [changePasswordAlertController addAction:confirmAction];
+    
+    if ([self.delegate respondsToSelector:@selector(presentAlertController:)]) {
+        [self.delegate presentAlertController:changePasswordAlertController];
+    }
 }
 
 
@@ -57,26 +115,19 @@ AFAProfileActionTableViewCellDelegate>
                               forCell:(UITableViewCell *)cell {
     // Check which property of the profile is affected by this cell
     NSIndexPath *indexPath = [self.profileTableView indexPathForCell:cell];
-    BOOL isProfileUpdated = NO;
-    
-    // Deep copy the profile object so that it remains untouched by future mutations
-    NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject: self.currentProfile];
-    ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData: buffer];
     
     if (AFAProfileControllerSectionTypeContactInformation == indexPath.section) {
         switch (indexPath.row) {
             case AFAProfileControllerContactInformationTypeEmail: {
-                if (![profileCopy.email isEqualToString:value]) {
-                    isProfileUpdated = YES;
-                    profileCopy.email = value;
+                if (![self.currentProfile.email isEqualToString:value]) {
+                    self.currentProfile.email = value;
                 }
             }
                 break;
                 
             case AFAProfileControllerContactInformationTypeCompany: {
-                if (![profileCopy.companyName isEqualToString:value]) {
-                    isProfileUpdated = YES;
-                    profileCopy.companyName = value;
+                if (![self.currentProfile.companyName isEqualToString:value]) {
+                    self.currentProfile.companyName = value;
                 }
             }
                 break;
@@ -86,10 +137,8 @@ AFAProfileActionTableViewCellDelegate>
         }
     }
     
-    if (isProfileUpdated) {
-        if ([self.delegate respondsToSelector:@selector(updateInformationForProfile:)]) {
-            [self.delegate updateInformationForProfile:profileCopy];
-        }
+    if ([self.delegate respondsToSelector:@selector(showProfileSaveButton:)]) {
+        [self.delegate showProfileSaveButton:[self isProfileUpdated]];
     }
 }
 

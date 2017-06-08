@@ -34,7 +34,8 @@
              @"userFirstName"   : @"firstName",
              @"userLastName"    : @"lastName",
              @"email"           : @"email",
-             @"companyName"     : @"company"};
+             @"companyName"     : @"company",
+             @"password"        : @"password"};
 }
 
 @end

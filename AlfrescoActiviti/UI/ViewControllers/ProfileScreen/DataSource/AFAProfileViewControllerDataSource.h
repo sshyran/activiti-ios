@@ -34,17 +34,21 @@ typedef NS_ENUM(NSInteger, AFAProfileControllerContactInformationType) {
 
 @protocol AFAProfileViewControllerDataSourceDelegate <NSObject>
 
-- (void)updateInformationForProfile:(ASDKModelProfile *)profile;
 - (void)handleNetworkErrorWithMessage:(NSString *)errorMessage;
 - (void)updateProfilePasswordWithNewPassword:(NSString *)updatedPassword
                                  oldPassword:(NSString *)oldPassword;
 - (void)presentAlertController:(UIAlertController *)alertController;
+- (void)showProfileSaveButton:(BOOL)isSaveButtonEnabled;
+- (void)updateProfileInformation;
 
 @end
 
 @protocol AFAProfileViewControllerDataSource <NSObject, UITableViewDataSource>
 
 - (instancetype)initWithProfile:(ASDKModelProfile *)profile;
+- (void)rollbackProfileChanges;
+- (BOOL)isProfileUpdated;
+- (void)challengeUserCredentialsForProfileUpdate;
 
 @property (weak, nonatomic) id<AFAProfileViewControllerDataSourceDelegate> delegate;
 @property (strong, nonatomic, readonly) ASDKModelProfile *currentProfile;

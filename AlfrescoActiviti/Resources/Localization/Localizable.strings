@@ -148,6 +148,7 @@
 "auditLogText"                                           = "Audit log";
 "signOutText"                                            = "Sign out";
 "settingsText"                                           = "Settings";
+"passwordText"                                           = "Password";
 
 // Alert dialogs use
 "alertDialogOopsTitleText"                               = "Oops...";
@@ -227,6 +228,7 @@
 "profileScreenDiskUsageText"                             = "Disk usage";
 "profileScreenDiskUsageAvailableText"                    = "Available";
 "profileScreenActivitiDataText"                          = "Alfresco Process Services data";
+"profileScreenConfirmCredentialsText"                    = "Please enter your password to allow these changes";
 
 // Settings screen
 "profileScreenReportToolText"                            = "Report a bug overlay";
