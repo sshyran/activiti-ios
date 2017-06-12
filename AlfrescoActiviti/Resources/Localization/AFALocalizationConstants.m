@@ -270,6 +270,7 @@ NSString *kLocalizationProfileScreenNewPasswordText              = @"profileScre
 NSString *kLocalizationProfileScreenRepeatPasswordText           = @"profileScreenRepeatPasswordText";
 NSString *kLocalizationProfileScreenPasswordUpdatedText          = @"profileScreenPasswordUpdatedText";
 NSString *kLocalizationProfileScreenPasswordMismatchText         = @"profileScreenPasswordMismatchText";
+NSString *kLocalizationProfileScreenInvalidPasswordResponseText  = @"profileScreenInvalidPasswordResponseText";
 NSString *kLocalizationProfileScreenNoInformationAvailableText   = @"profileScreenNoInformationAvailableText";
 NSString *kLocalizationProfileScreenCleanCacheButtonText         = @"profileScreenCleanCacheButtonText";
 NSString *kLocalizationProfileScreenCleanCacheAlertText          = @"profileScreenCleanCacheAlertText";

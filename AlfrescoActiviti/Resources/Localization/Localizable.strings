@@ -222,6 +222,7 @@
 "profileScreenRepeatPasswordText"                        = "Repeat new password";
 "profileScreenPasswordUpdatedText"                       = "Password updated";
 "profileScreenPasswordMismatchText"                      = "It seems that the values you entered for the password fields are not valid or the passwords don't match.";
+"profileScreenInvalidPasswordResponseText"               = "The password you provided is invalid or doesn't match the given criteria.";
 "profileScreenNoInformationAvailableText"                = "There's no information available at this time, wait a moment and then try again...";
 "profileScreenCleanCacheButtonText"                      = "Clean cache";
 "profileScreenCleanCacheAlertText"                       = "By cleaning the local content cache any documents that you've downloaded so far will have to be downloaded again, are you sure you want to continue?";

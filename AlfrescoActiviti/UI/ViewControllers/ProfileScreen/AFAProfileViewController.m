@@ -493,7 +493,7 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
                                                           });
                                                       } else {
                                                           [strongSelf.progressHUD dismiss];
-                                                          [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                                          [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationProfileScreenInvalidPasswordResponseText, @"Invalid password response text")];
                                                       }
                                                   }];
 }
