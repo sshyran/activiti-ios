@@ -29,6 +29,7 @@
 
 // Data source
 #import "AFAProcessInstanceDetailsDataSource.h"
+#import "AFATaskDetailsDataSource.h"
 
 // Models
 #import "AFATableControllerProcessInstanceDetailsModel.h"
@@ -152,8 +153,9 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([kSegueIDProcessInstanceTaskDetails isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *taskDetailsController = (AFATaskDetailsViewController *)segue.destinationViewController;
-        taskDetailsController.navigationBarThemeColor = self.navigationBarThemeColor;
-        taskDetailsController.taskID = [(ASDKModelTask *)sender modelID];
+        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:[(ASDKModelTask *)sender modelID]
+                                                                                                themeColor:self.navigationBarThemeColor];
+        taskDetailsController.dataSource = taskDetailsDataSource;
         taskDetailsController.unwindActionType = AFATaskDetailsUnwindActionTypeProcessInstanceDetails;
     } else if ([kSegueIDContentPickerComponentEmbedding isEqualToString:segue.identifier]) {
         self.contentPickerViewController = (AFAContentPickerViewController *)segue.destinationViewController;
@@ -251,7 +253,6 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     [self.dataSource updateTableControllerForSectionType:self.currentSelectedSection];
     self.noContentView.hidden = YES;
     self.navigationItem.rightBarButtonItem = nil;
-    
     switch (self.currentSelectedSection) {
         case AFAProcessInstanceDetailsSectionTypeDetails: {
             self.navigationBarTitle = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenTitleText, @"Process instance details screen title");

@@ -50,7 +50,7 @@
         
         [self setUpCellFactoriesWithThemeColor:themeColor];
         
-        // Set the default cell factory to task details
+        // Set the default cell factory to process instace details
         self.tableController.cellFactory = [self cellFactoryForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
     }
     

@@ -204,6 +204,7 @@
 		137C12331D421E3400B87B34 /* ASDKModelFormTabDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C12311D421E3400B87B34 /* ASDKModelFormTabDescription.m */; };
 		137C58AB1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C58AA1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m */; };
 		137C58AE1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 137C58AD1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m */; };
+		137DC2A41EC30A3A0044820D /* AFATaskDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 137DC2A31EC30A3A0044820D /* AFATaskDetailsDataSource.m */; };
 		137FC4311C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */; };
 		1380854A1E02C30800455FAE /* ASDKFilterNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */; };
 		13891CAA1D00258800A61015 /* AFAConfirmationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13891CA91D00258800A61015 /* AFAConfirmationView.m */; };
@@ -916,6 +917,9 @@
 		137C58AA1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+AFAImageEffects.m"; path = "UI/Categories/UIView+AFAImageEffects.m"; sourceTree = "<group>"; };
 		137C58AC1BF9C6BC00DF41B3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ImageEffects.h"; path = "UI/Categories/UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		137C58AD1BF9C6BC00DF41B3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+ImageEffects.m"; path = "UI/Categories/UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		137DC29F1EC307F60044820D /* AFATaskDetailsDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskDetailsDataSourceProtocol.h; path = UI/ViewControllers/TaskDetailsScreen/DataSource/Protocol/AFATaskDetailsDataSourceProtocol.h; sourceTree = "<group>"; };
+		137DC2A21EC30A3A0044820D /* AFATaskDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskDetailsDataSource.h; path = UI/ViewControllers/TaskDetailsScreen/DataSource/AFATaskDetailsDataSource.h; sourceTree = "<group>"; };
+		137DC2A31EC30A3A0044820D /* AFATaskDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskDetailsDataSource.m; path = UI/ViewControllers/TaskDetailsScreen/DataSource/AFATaskDetailsDataSource.m; sourceTree = "<group>"; };
 		137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineValueTransactionsProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineValueTransactionsProtocol.h; sourceTree = "<group>"; };
 		138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKFilterNetworkServicesTest.m; sourceTree = "<group>"; };
 		13891CA81D00258800A61015 /* AFAConfirmationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAConfirmationView.h; path = UI/Components/ConfirmationView/AFAConfirmationView.h; sourceTree = "<group>"; };
@@ -1807,6 +1811,7 @@
 		132511F21BA80FB700C4CA64 /* TaskDetailsScreen */ = {
 			isa = PBXGroup;
 			children = (
+				137DC2A11EC308060044820D /* DataSource */,
 				8D7C1A7E1C8091AF0092EA81 /* PeoplePickerController */,
 				139F78F91E548D060030EFCD /* ModalPeoplePickerController */,
 				137B943F1BD654B200134BF1 /* FormController */,
@@ -2792,6 +2797,24 @@
 				137C12311D421E3400B87B34 /* ASDKModelFormTabDescription.m */,
 			);
 			name = FormTabDescription;
+			sourceTree = "<group>";
+		};
+		137DC2A01EC307FA0044820D /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				137DC29F1EC307F60044820D /* AFATaskDetailsDataSourceProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
+		137DC2A11EC308060044820D /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				137DC2A01EC307FA0044820D /* Protocol */,
+				137DC2A21EC30A3A0044820D /* AFATaskDetailsDataSource.h */,
+				137DC2A31EC30A3A0044820D /* AFATaskDetailsDataSource.m */,
+			);
+			name = DataSource;
 			sourceTree = "<group>";
 		};
 		13891CAB1D00258D00A61015 /* ConfirmationView */ = {
@@ -5671,6 +5694,7 @@
 				137194531B6922DE00D4E1F0 /* main.m in Sources */,
 				13EBECB71CFD902700EC8F96 /* AFATaskChecklistCellFactory.m in Sources */,
 				1323CFCF1B87630800E66D6F /* UIImage+AFAThumbnailCreation.m in Sources */,
+				137DC2A41EC30A3A0044820D /* AFATaskDetailsDataSource.m in Sources */,
 				130269691C57735800152F71 /* AFAFilterOptionTableViewCell.m in Sources */,
 				13667FE11C871C8A005E4AEA /* AFATableControllerProcessInstanceDetailsCellFactory.m in Sources */,
 				137C58AB1BF9C55C00DF41B3 /* UIView+AFAImageEffects.m in Sources */,

@@ -16,17 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFAModalTaskDetailsCreateChecklistAction.h"
-#import "AFAServiceRepository.h"
+#import <Foundation/Foundation.h>
+#import "AFATaskDetailsDataSourceProtocol.h"
 
-@implementation AFAModalTaskDetailsCreateChecklistAction
+@interface AFATaskDetailsDataSource : NSObject <AFATaskDetailsDataSourceProtocol>
 
-- (void)executeAlertActionWithModel:(id)modelObject
-                    completionBlock:(id)completionBlock {
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    [taskServices requestChecklistCreateWithRepresentation:modelObject
-                                                    taskID:self.parentTaskID
-                                           completionBlock:completionBlock];
-}
+@property (strong, nonatomic, readonly) UIColor     *themeColor;
+@property (strong, nonatomic, readonly) NSString    *taskID;
+@property (strong, nonatomic) NSMutableDictionary   *sectionModels;
+@property (strong, nonatomic) NSMutableDictionary   *cellFactories;
+@property (strong, nonatomic) AFATableController    *tableController;
 
 @end

@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AFABaseThemedViewController.h"
+#import "AFATaskDetailsDataSourceProtocol.h"
 
 typedef NS_ENUM(NSInteger, AFATaskDetailsUnwindActionType) {
     AFATaskDetailsUnwindActionTypeTaskList,
@@ -27,7 +28,7 @@ typedef NS_ENUM(NSInteger, AFATaskDetailsUnwindActionType) {
 
 @interface AFATaskDetailsViewController : AFABaseThemedViewController
 
-@property (strong, nonatomic) NSString *taskID;
-@property (assign, nonatomic) AFATaskDetailsUnwindActionType unwindActionType;
+@property (strong, nonatomic) id<AFATaskDetailsDataSourceProtocol>  dataSource;
+@property (assign, nonatomic) AFATaskDetailsUnwindActionType        unwindActionType;
 
 @end

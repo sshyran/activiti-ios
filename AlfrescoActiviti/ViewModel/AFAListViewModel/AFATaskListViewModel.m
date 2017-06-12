@@ -29,12 +29,9 @@
 
 - (NSString *)noRecordsLabelText {
     return NSLocalizedString(kLocalizationListScreenNoTasksAvailableText, @"No tasks available text");
-    
-    NSLocalizedString(kLocalizationProcessInstanceScreenNoProcessInstancesText, @"No process instances text");
 }
 
 - (NSString *)searchTextFieldPlacholderText {
-    NSLocalizedString(kLocalizationListScreenProcessInstancesText, @"process instances text");
     return [NSString stringWithFormat:NSLocalizedString(kLocalizationListScreenSearchFieldPlaceholderFormat, @"Search bar format"), NSLocalizedString(kLocalizationListScreenTasksText, @"tasks text")];
 }
 

@@ -22,7 +22,7 @@
             <objects>
                 <navigationController storyboardIdentifier="Navigation" navigationBarHidden="YES" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="v9Y-ro-k4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="v9Y-ro-k4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -38,7 +38,7 @@
         <scene sceneID="5ZC-YG-evy">
             <objects>
                 <navigationController id="Xjc-tR-raA" customClass="AFANavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="IqS-JF-Kuz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="IqS-JF-Kuz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.19215686274509802" green="0.26666666666666666" blue="0.29411764705882354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -6238,10 +6238,10 @@
         <image name="user-icon" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="RN3-5C-FKi"/>
         <segue reference="RF7-69-ZNi"/>
-        <segue reference="OCj-p8-qSZ"/>
+        <segue reference="Rct-bP-63w"/>
         <segue reference="XZ3-C5-Oig"/>
-        <segue reference="Axm-Tn-V6n"/>
+        <segue reference="fpJ-UB-l4s"/>
+        <segue reference="RN3-5C-FKi"/>
     </inferredMetricsTieBreakers>
 </document>

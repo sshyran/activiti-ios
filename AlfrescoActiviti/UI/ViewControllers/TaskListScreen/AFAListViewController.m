@@ -48,6 +48,7 @@
 #import "AFATaskListViewDataSource.h"
 #import "AFAProcessListViewDataSource.h"
 #import "AFAProcessInstanceDetailsDataSource.h"
+#import "AFATaskDetailsDataSource.h"
 
 // Managers
 #import "AFATaskServices.h"
@@ -269,7 +270,10 @@ UITableViewDelegate>
         detailsViewController.navigationBarThemeColor = self.navigationBarThemeColor;
         
         ASDKModelTask *currentSelectedTask = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
-        detailsViewController.taskID = currentSelectedTask.modelID;
+        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:currentSelectedTask.modelID
+                                                                                                themeColor:self.navigationBarThemeColor];
+        
+        detailsViewController.dataSource = taskDetailsDataSource;
     }
     
     if ([kSegueIDStartProcessInstance isEqualToString:segue.identifier]) {
