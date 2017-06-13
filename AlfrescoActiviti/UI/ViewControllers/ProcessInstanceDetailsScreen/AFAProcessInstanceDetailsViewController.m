@@ -115,6 +115,7 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     // Bind table view's delegates to table controller
     self.processTableView.dataSource = self.dataSource.tableController;
     self.processTableView.delegate = self.dataSource.tableController;
+    self.navigationBarThemeColor = self.dataSource.themeColor;
     
     // Set up the details table view to adjust it's size automatically
     self.processTableView.estimatedRowHeight = 60.0f;

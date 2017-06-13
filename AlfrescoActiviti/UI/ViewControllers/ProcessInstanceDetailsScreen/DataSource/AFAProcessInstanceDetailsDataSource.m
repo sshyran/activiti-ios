@@ -43,10 +43,11 @@
     self = [super init];
     
     if (self) {
+        _processInstanceID = processInstanceID;
+        _themeColor = themeColor;
         _sectionModels = [NSMutableDictionary dictionary];
         _cellFactories = [NSMutableDictionary dictionary];
         _tableController = [AFATableController new];
-        _processInstanceID = processInstanceID;
         
         [self setUpCellFactoriesWithThemeColor:themeColor];
         

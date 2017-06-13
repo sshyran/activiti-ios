@@ -22,6 +22,7 @@
 @interface AFAProcessInstanceDetailsDataSource : NSObject <AFAProcessInstanceDetailsDataSourceProtocol>
 
 @property (strong, nonatomic, readonly) NSString  *processInstanceID;
+@property (strong, nonatomic, readonly) UIColor   *themeColor;
 @property (strong, nonatomic) NSMutableDictionary *sectionModels;
 @property (strong, nonatomic) NSMutableDictionary *cellFactories;
 @property (strong, nonatomic) AFATableController  *tableController;
