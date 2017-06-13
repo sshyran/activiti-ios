@@ -32,9 +32,10 @@ typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsSectionType) {
 @protocol AFAProcessInstanceDetailsDataSourceProtocol <NSObject>
 
 @property (strong, nonatomic, readonly) NSString  *processInstanceID;
+@property (strong, nonatomic, readonly) UIColor   *themeColor;
 @property (strong, nonatomic) NSMutableDictionary *sectionModels;
-@property (strong, nonatomic) AFATableController  *tableController;
 @property (strong, nonatomic) NSMutableDictionary *cellFactories;
+@property (strong, nonatomic) AFATableController  *tableController;
 
 
 - (instancetype)initWithProcessInstanceID:(NSString *)processInstanceID
