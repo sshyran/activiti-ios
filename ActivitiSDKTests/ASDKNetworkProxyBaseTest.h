@@ -34,8 +34,6 @@ typedef void (^ASDKTestRequestProgressBlock)(NSProgress *uploadProgress);
 - (NSURLSessionDownloadTask *)downloadTaskWithStatusCode:(ASDKHTTPCode)statusCode
                                                    error:(NSError *)error;
 
-- (NSDictionary *)contentDictionaryFromJSON:(NSString *)jsonFileName;
-
 - (NSError *)requestGenericError;
 
 @end

@@ -75,4 +75,15 @@
     return theData;
 }
 
+- (NSDictionary *)contentDictionaryFromJSON:(NSString *)jsonFileName {
+    NSError *error = nil;
+    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:jsonFileName ofType:@"json"];
+    NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
+    NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
+                                                                             options:NSJSONReadingMutableContainers
+                                                                               error:&error];
+    
+    return response;
+}
+
 @end

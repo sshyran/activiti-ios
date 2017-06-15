@@ -44,15 +44,8 @@
 
 - (void)testThatItParsesSimpleUnpopulatedFormModels {
     // given
-    NSError *error = nil;
-    
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TaskAllFieldsFormResponse"
-                                                                          ofType:@"json"];
-    NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
-                                                                             options:NSJSONReadingMutableContainers
-                                                                               error:&error];
-    XCTAssertNil(error);
+    NSDictionary *response = [self contentDictionaryFromJSON:@"TaskAllFieldsFormResponse"];
+    XCTAssertNotNil(response);
     
     XCTestExpectation *expectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     
@@ -315,15 +308,8 @@
 
 - (void)testThatItParsesTabAndVisibilityConditionRulesOfFormModels {
     // given
-    NSError *error = nil;
-    
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TaskTabsWithVisibilityConditionsFormResponse"
-                                                                          ofType:@"json"];
-    NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
-                                                                             options:NSJSONReadingMutableContainers
-                                                                               error:&error];
-    XCTAssertNil(error);
+    NSDictionary *response = [self contentDictionaryFromJSON:@"TaskTabsWithVisibilityConditionsFormResponse"];
+    XCTAssertNotNil(response);
     
     XCTestExpectation *expectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     
@@ -379,15 +365,8 @@
 
 - (void)testThatItParsesDynamicTableFormFieldModel {
     // given
-    NSError *error = nil;
-    
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TaskTabsWithVisibilityConditionsFormResponse"
-                                                                          ofType:@"json"];
-    NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
-                                                                             options:NSJSONReadingMutableContainers
-                                                                               error:&error];
-    XCTAssertNil(error);
+    NSDictionary *response = [self contentDictionaryFromJSON:@"TaskTabsWithVisibilityConditionsFormResponse"];
+    XCTAssertNotNil(response);
     
     XCTestExpectation *expectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     
@@ -434,15 +413,8 @@
 
 - (void)testThatItParsesTaskFormRestFieldValues {
     // given
-    NSError *error = nil;
-    
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TaskFormRestFieldValuesResponse"
-                                                                          ofType:@"json"];
-    NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
-                                                                             options:NSJSONReadingMutableContainers
-                                                                               error:&error];
-    XCTAssertNil(error);
+    NSDictionary *response = [self contentDictionaryFromJSON:@"TaskFormRestFieldValuesResponse"];
+    XCTAssertNotNil(response);
     
     XCTestExpectation *expectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     
@@ -470,15 +442,8 @@
 
 - (void)testThatItParsesFormVariable {
     // given
-    NSError *error = nil;
-    
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TaskFormWithVariableResponse"
-                                                                          ofType:@"json"];
-    NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
-                                                                             options:NSJSONReadingMutableContainers
-                                                                               error:&error];
-    XCTAssertNil(error);
+    NSDictionary *response = [self contentDictionaryFromJSON:@"TaskFormWithVariableResponse"];
+    XCTAssertNotNil(response);
     
     XCTestExpectation *expectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
     

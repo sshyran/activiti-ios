@@ -1,0 +1,177 @@
+{
+    "id": 15017,
+    "name": "PreprocessorForm",
+    "processDefinitionId": "PreprocessorProcess:3:105031",
+    "processDefinitionName": "PreprocessorProcess",
+    "processDefinitionKey": "PreprocessorProcess",
+    "taskId": "105039",
+    "taskDefinitionKey": "sid-F40F98B5-9B2A-4697-BC6F-D9C2C35AB256",
+    "tabs": [],
+    "fields": [
+               {
+               "fieldType": "ContainerRepresentation",
+               "id": "1497513382703",
+               "name": "Label",
+               "type": "container",
+               "value": null,
+               "required": false,
+               "readOnly": false,
+               "overrideId": false,
+               "colspan": 1,
+               "placeholder": null,
+               "minLength": 0,
+               "maxLength": 0,
+               "minValue": null,
+               "maxValue": null,
+               "regexPattern": null,
+               "optionType": null,
+               "hasEmptyValue": null,
+               "options": null,
+               "restUrl": null,
+               "restResponsePath": null,
+               "restIdProperty": null,
+               "restLabelProperty": null,
+               "tab": null,
+               "className": null,
+               "dateDisplayFormat": null,
+               "layout": null,
+               "sizeX": 2,
+               "sizeY": 1,
+               "row": -1,
+               "col": -1,
+               "visibilityCondition": null,
+               "numberOfColumns": 2,
+               "fields": {
+               "1": [
+                     {
+                     "fieldType": "RestFieldRepresentation",
+                     "id": "dropdown",
+                     "name": "Dropdown",
+                     "type": "dropdown",
+                     "value": "Choose one...",
+                     "required": false,
+                     "readOnly": false,
+                     "overrideId": false,
+                     "colspan": 1,
+                     "placeholder": null,
+                     "minLength": 0,
+                     "maxLength": 0,
+                     "minValue": null,
+                     "maxValue": null,
+                     "regexPattern": null,
+                     "optionType": "rest",
+                     "hasEmptyValue": true,
+                     "options": [
+                                 {
+                                 "id": "empty",
+                                 "name": "Choose one..."
+                                 }
+                                 ],
+                     "restUrl": "https://jsonplaceholder.typicode.com/users",
+                     "restResponsePath": "",
+                     "restIdProperty": "name",
+                     "restLabelProperty": "name",
+                     "tab": null,
+                     "className": null,
+                     "params": {
+                     "existingColspan": 1,
+                     "maxColspan": 2
+                     },
+                     "dateDisplayFormat": null,
+                     "layout": {
+                     "row": -1,
+                     "column": -1,
+                     "colspan": 1
+                     },
+                     "sizeX": 1,
+                     "sizeY": 1,
+                     "row": -1,
+                     "col": -1,
+                     "visibilityCondition": null,
+                     "endpoint": null,
+                     "requestHeaders": null
+                     }
+                     ],
+               "2": []
+               }
+               },
+               {
+               "fieldType": "DynamicTableRepresentation",
+               "id": "dynamictable",
+               "name": "DynamicTable",
+               "type": "dynamic-table",
+               "value": null,
+               "required": false,
+               "readOnly": false,
+               "overrideId": false,
+               "colspan": 1,
+               "placeholder": null,
+               "minLength": 0,
+               "maxLength": 0,
+               "minValue": null,
+               "maxValue": null,
+               "regexPattern": null,
+               "optionType": null,
+               "hasEmptyValue": null,
+               "options": null,
+               "restUrl": null,
+               "restResponsePath": null,
+               "restIdProperty": null,
+               "restLabelProperty": null,
+               "tab": null,
+               "className": null,
+               "params": {
+               "existingColspan": 1,
+               "maxColspan": 1
+               },
+               "dateDisplayFormat": null,
+               "layout": {
+               "row": -1,
+               "column": -1,
+               "colspan": 2
+               },
+               "sizeX": 2,
+               "sizeY": 2,
+               "row": -1,
+               "col": -1,
+               "visibilityCondition": null,
+               "columnDefinitions": [
+                                     {
+                                     "id": "DropdownDynamicTable",
+                                     "name": "DropdownDynamicTable",
+                                     "type": "Dropdown",
+                                     "value": null,
+                                     "optionType": "rest",
+                                     "options": [
+                                                 {
+                                                 "id": null,
+                                                 "name": "Option 1"
+                                                 }
+                                                 ],
+                                     "restResponsePath": null,
+                                     "restUrl": "https://jsonplaceholder.typicode.com/users",
+                                     "restIdProperty": "id",
+                                     "restLabelProperty": "name",
+                                     "amountCurrency": null,
+                                     "amountEnableFractions": false,
+                                     "required": true,
+                                     "editable": true,
+                                     "sortable": true,
+                                     "visible": true,
+                                     "endpoint": null,
+                                     "requestHeaders": null
+                                     }
+                                     ]
+               }
+               ],
+    "outcomes": [],
+    "javascriptEvents": [],
+    "className": "",
+    "style": "",
+    "customFieldTemplates": {},
+    "metadata": {},
+    "variables": [],
+    "customFieldsValueInfo": {},
+    "gridsterForm": false,
+    "globalDateFormat": "D-M-YYYY"
+}

@@ -114,17 +114,6 @@
     return (NSURLSessionDownloadTask *)mockTask;
 }
 
-- (NSDictionary *)contentDictionaryFromJSON:(NSString *)jsonFileName {
-    NSError *error = nil;
-    NSString *filePath = [[NSBundle bundleForClass:[self class]] pathForResource:jsonFileName ofType:@"json"];
-    NSData *jsonData = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:jsonData
-                                                                             options:NSJSONReadingMutableContainers
-                                                                               error:&error];
-    
-    return response;
-}
-
 - (NSError *)requestGenericError {
     return [NSError errorWithDomain:@"com.activitiSDK.tests"
                                code:0
