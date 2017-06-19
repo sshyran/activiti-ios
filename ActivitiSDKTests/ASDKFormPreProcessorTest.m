@@ -134,6 +134,34 @@ typedef void (^ASDKFormDescriptionCompletionBlock) (ASDKModelFormDescription *fo
                                  handler:nil];
 }
 
+- (void)testThatItProcessesTaskReadonlyAmountAndHyperlinkFields {
+    // given
+    ASDKModelFormDescription *formDescription = [self formFieldDescriptionFromJSON:@"FormReadOnlyAmountFieldAndHyperLinkResponse"];
+    
+    // expect
+    XCTestExpectation *taskFormFieldsExpectation = [self expectationWithDescription:NSStringFromSelector(_cmd)];
+    
+    // when
+    [self.formPreProcessor setupWithTaskID:OCMOCK_ANY
+                            withFormFields:formDescription.formFields
+                   withDynamicTableFieldID:nil
+                 preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
+                     ASDKModelAmountFormField *amountFormField = (ASDKModelAmountFormField *)[(ASDKModelFormField *)processedFormFields.firstObject formFields].firstObject;
+                     ASDKModelHyperlinkFormField *hyperlinkFormField = (ASDKModelHyperlinkFormField *)[(ASDKModelFormField *)processedFormFields.firstObject formFields].lastObject;
+                     
+                     XCTAssert([amountFormField.currency isEqualToString:@"$"]);
+                     XCTAssertTrue(amountFormField.enableFractions);
+                     
+                     XCTAssert([hyperlinkFormField.hyperlinkURL isEqualToString:@"http://www.alfresco.com"]);
+                     XCTAssert([hyperlinkFormField.displayText isEqualToString:@"Alfresco site"]);
+                     
+                     [taskFormFieldsExpectation fulfill];
+                 }];
+    
+    [self waitForExpectationsWithTimeout:.5f
+                                 handler:nil];
+}
+
 - (ASDKModelFormDescription *)formFieldDescriptionFromJSON:(NSString *)jsonFilename {
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t processingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);

@@ -127,6 +127,7 @@
 		135752E51DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752E41DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json */; };
 		135752E71DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 135752E61DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json */; };
 		1357C8661EF277F40030EBC5 /* FormDropdownWithRestURLResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 1357C8651EF277F30030EBC5 /* FormDropdownWithRestURLResponse.json */; };
+		1357C8681EF404F80030EBC5 /* FormReadOnlyAmountFieldAndHyperLinkResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 1357C8671EF404F80030EBC5 /* FormReadOnlyAmountFieldAndHyperLinkResponse.json */; };
 		135DB32B1B6B616A009138FC /* ASDKLogConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 13E830671B6A12AB0028901A /* ASDKLogConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */; };
@@ -809,6 +810,7 @@
 		135752E41DDB0D66000793D4 /* TaskFormRestFieldValuesResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskFormRestFieldValuesResponse.json; path = Resources/JSONResponses/TaskFormRestFieldValuesResponse.json; sourceTree = "<group>"; };
 		135752E61DDC5F3A000793D4 /* TaskTabsWithVisibilityConditionsFormResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = TaskTabsWithVisibilityConditionsFormResponse.json; path = Resources/JSONResponses/TaskTabsWithVisibilityConditionsFormResponse.json; sourceTree = "<group>"; };
 		1357C8651EF277F30030EBC5 /* FormDropdownWithRestURLResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = FormDropdownWithRestURLResponse.json; path = Resources/JSONResponses/FormDropdownWithRestURLResponse.json; sourceTree = "<group>"; };
+		1357C8671EF404F80030EBC5 /* FormReadOnlyAmountFieldAndHyperLinkResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = FormReadOnlyAmountFieldAndHyperLinkResponse.json; path = Resources/JSONResponses/FormReadOnlyAmountFieldAndHyperLinkResponse.json; sourceTree = "<group>"; };
 		135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKLogFormatter.h; path = Logging/ASDKLogFormatter.h; sourceTree = "<group>"; };
 		135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLogFormatter.m; path = Logging/ASDKLogFormatter.m; sourceTree = "<group>"; };
 		135EF5631B9090E800ECD1B2 /* NSDate+AFAStringTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+AFAStringTransformation.h"; path = "Business/Categories/NSDate+AFAStringTransformation.h"; sourceTree = "<group>"; };
@@ -3070,6 +3072,7 @@
 				13C0C6AC1DE2FCB700C46ED4 /* FilterListResponse.json */,
 				13C0C6AE1DE2FE8E00C46ED4 /* FilterDetailsResponse.json */,
 				1357C8651EF277F30030EBC5 /* FormDropdownWithRestURLResponse.json */,
+				1357C8671EF404F80030EBC5 /* FormReadOnlyAmountFieldAndHyperLinkResponse.json */,
 			);
 			name = JSONResponses;
 			sourceTree = "<group>";
@@ -5407,6 +5410,7 @@
 				13C0C6971DDDB95D00C46ED4 /* TaskFormWithVariableResponse.json in Resources */,
 				13C0C69B1DDDE69F00C46ED4 /* ApplicationListResponse.json in Resources */,
 				13C0C69D1DDEFCEA00C46ED4 /* IntegrationAccountListResponse.json in Resources */,
+				1357C8681EF404F80030EBC5 /* FormReadOnlyAmountFieldAndHyperLinkResponse.json in Resources */,
 				135752CB1DD600F3000793D4 /* ProfileDetailsResponse.json in Resources */,
 				135752CF1DD603D7000793D4 /* ProfileContentResponse.json in Resources */,
 				135752D71DD9BEF4000793D4 /* TaskDetailsUploadContentResponse.json in Resources */,
