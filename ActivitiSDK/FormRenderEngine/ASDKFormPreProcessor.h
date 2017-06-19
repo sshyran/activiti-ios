@@ -22,6 +22,6 @@
 
 @interface ASDKFormPreProcessor : NSObject <ASDKFormPreProcessorProtocol>
 
-@property (strong, nonatomic) ASDKFormNetworkServices            *formNetworkServices;
+@property (strong, nonatomic) ASDKFormNetworkServices *formNetworkServices;
 
 @end

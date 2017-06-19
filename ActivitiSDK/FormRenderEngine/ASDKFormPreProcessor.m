@@ -28,10 +28,10 @@
 
 @interface ASDKFormPreProcessor ()
 
-@property (strong, nonatomic) NSString                              *taskID;
-@property (strong, nonatomic) NSString                              *processDefinitionID;
-@property (assign, nonatomic) BOOL                                  isStartForm;
-@property (strong, nonatomic) NSString                              *dynamicTableFieldID;
+@property (strong, nonatomic) NSString  *taskID;
+@property (strong, nonatomic) NSString  *processDefinitionID;
+@property (assign, nonatomic) BOOL      isStartForm;
+@property (strong, nonatomic) NSString  *dynamicTableFieldID;
 
 @end
 
@@ -60,7 +60,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                 [self preProcessFormField:formFieldInContainer
                         withDispatchGroup:group];
             }
-        } else{
+        } else {
             [self preProcessFormField:formField
                     withDispatchGroup:group];
         }
@@ -127,7 +127,6 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
             ASDKModelRestFormField *restFormField = (ASDKModelRestFormField *)formField;
             
             if ([restFormField respondsToSelector:@selector(restURL)] && restFormField.restURL) {
-                
                 // entering service group
                 dispatch_group_enter(group);
                 
@@ -159,7 +158,7 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                                                                         withFieldID:self.dynamicTableFieldID
                                                                        withColumnID:formField.modelID
                                                                     completionBlock:^(NSArray *restFormFieldOptions, NSError *error) {
-                                                                        
+
                                                                         formField.formFieldOptions = restFormFieldOptions;
                                                                         
                                                                         // leaving dispatch group
@@ -224,7 +223,8 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                 // create column definition dictionary for quick access
                 NSMutableDictionary *columnFormFieldDict = [[NSMutableDictionary alloc] init];
                 for (ASDKModelFormField *columnFormField in dynamicTableFormField.columnDefinitions) {
-                    [columnFormFieldDict setValue:columnFormField forKey:columnFormField.modelID];
+                    [columnFormFieldDict setValue:columnFormField
+                                           forKey:columnFormField.modelID];
                 }
                 
                 for (NSDictionary *rowValues in dynamicTableFormField.values) {

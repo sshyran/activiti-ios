@@ -25,5 +25,6 @@
 - (NSURL *)baseURL;
 - (BOOL)isURL:(NSURL *)firstURL equivalentToURL:(NSURL *)secondURL;
 - (NSData *)createRandomNSDataOfSize:(NSUInteger)byteSize;
+- (NSDictionary *)contentDictionaryFromJSON:(NSString *)jsonFileName;
 
 @end

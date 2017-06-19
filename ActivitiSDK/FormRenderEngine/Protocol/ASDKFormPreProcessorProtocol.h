@@ -28,14 +28,44 @@ typedef void (^ASDKFormPreProcessCompletionBlock) (NSArray *formFields, NSError 
 
 @property (strong, nonatomic) ASDKFormNetworkServices *formNetworkServices;
 
+
+/**
+ * Given a task ID, an optional dynamic table field id and a set of form
+ * fields additional data fetching or processing over the form fields is 
+ * addressed within this method such that the result is prepared for the 
+ * form engine. These additional steps are needed in order to provide 
+ * consistent relevant structures to the engine and avoid on-the-fly structure
+ * mutations in the engine itself.
+ *
+ * @param taskID                    Task ID for which the processing is performed.
+ * @param formFields                The list of form fields associated with the task form.
+ * @param dynamicTableFieldID       Optional parameter indicating the identify of a dynamic table structure
+ * @param preProcessCompletionBlock Completion block providing a processed set of form fields that are ready
+ *                                  to be parsed by the form engine
+ */
 - (void)setupWithTaskID:(NSString *)taskID
          withFormFields:(NSArray *)formFields
 withDynamicTableFieldID:(NSString *)dynamicTableFieldID
 preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock;
 
+
+/**
+ * Given a process definition ID, an optional dynamic table field id and a set 
+ * of form fields additional data fetching or processing over the form fields is
+ * addressed within this methid such that the result is prepared for the form engine.
+ * These additional steps are needed in order to provide
+ * consistent relevant structures to the engine and avoid on-the-fly structure
+ * mutations in the engine itself.
+ *
+ * @param processDefinitionID       Process definition ID for which the form field processing is performed
+ * @param formFields                The list of form fields associated with the process definition start form
+ * @param dynamicTableFieldID       Optional parameter indicating the identify of a dynamic table structure
+ * @param preProcessCompletionBlock Completion block providing a processed set of form fields that are ready
+ *                                  to be parsed by the form engine
+ */
 - (void)setupWithProcessDefinitionID:(NSString *)processDefinitionID
                       withFormFields:(NSArray *)formFields
-            withDynamicTableFieldID:(NSString *)dynamicTableFieldID
+             withDynamicTableFieldID:(NSString *)dynamicTableFieldID
            preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletionBlock;
 
 @end
