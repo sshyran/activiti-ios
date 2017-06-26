@@ -36,7 +36,6 @@
                                                       @"endDate"                        : @"ended",
                                                       @"startDate"                      : @"started",
                                                       @"initiatorModel"                 : @"startedBy",
-                                                      @"graphicalNotationDefined"       : @"graphicalNotationDefined",
                                                       @"processDefinitionCategory"      : @"processDefinitionCategory",
                                                       @"processDefinitionDeploymentID"  : @"processDefinitionDeploymentId",
                                                       @"processDefinitionDescription"   : @"processDefinitionDescription",
@@ -83,9 +82,6 @@
  *  @param key Name of the property KVC is trying to set
  */
 - (void)setNilValueForKey:(NSString *)key {
-    if ([NSStringFromSelector(@selector(graphicalNotationDefined)) isEqualToString:key]) {
-        _graphicalNotationDefined = NO;
-    }
     if ([NSStringFromSelector(@selector(processDefinitionVersion)) isEqualToString:key]) {
         _processDefinitionVersion = 0;
     }

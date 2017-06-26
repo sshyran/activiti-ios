@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="ASDKMOApp" representedClassName="ASDKMOApp" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="applicationDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="applicationModelID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="deploymentID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tenantID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="theme" optional="YES" attributeType="Integer 16" minValueString="-1" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOAttributable" representedClassName="ASDKMOAttributable" isAbstract="YES" syncable="YES" codeGenerationType="category">
+        <attribute name="modelID" attributeType="String" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOComment" representedClassName="ASDKMOComment" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="comment" inverseEntity="ASDKMOProfile" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOContent" representedClassName="ASDKMOContent" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="contentName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="displayType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isLink" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isModelContentAvailable" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="mimeType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="previewStatus" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="2" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sourceID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbnailStatus" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="2" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="contents" inverseEntity="ASDKMOProfile" syncable="YES"/>
+        <relationship name="processInstanceContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceContent" inverseName="contents" inverseEntity="ASDKMOProcessInstanceContent" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOFileContent" representedClassName="ASDKMOFileContent" syncable="YES" codeGenerationType="category">
+        <attribute name="modelFileURL" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOFilter" representedClassName="ASDKMOFilter" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="applicationID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="assignmentType" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="3" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="processInstanceID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortType" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="4" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="4" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOFilterModel" representedClassName="ASDKMOFilterModel" syncable="YES" codeGenerationType="category">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOGroup" representedClassName="ASDKMOGroup" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="externalID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="groupState" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="2" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parentGroupID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tenantID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="2" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="subGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOGroup" inverseName="subGroups" inverseEntity="ASDKMOGroup" syncable="YES"/>
+        <relationship name="userProfiles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="groups" inverseEntity="ASDKMOProfile" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOIntegrationAccount" representedClassName="ASDKMOIntegrationAccount" syncable="YES" codeGenerationType="category">
+        <attribute name="authorizationURLString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="integrationServiceID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isAccountAuthorized" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isMetadataAllowed" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOIntegrationContent" representedClassName="ASDKMOIntegrationContent" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="isFolder" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="simpleType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMONetwork" representedClassName="ASDKMONetwork" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category"/>
+    <entity name="ASDKMOProcessDefinition" representedClassName="ASDKMOProcessDefinition" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="definitionDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="deploymentID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hasStartForm" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tenantID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="version" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOProcessInstance" representedClassName="ASDKMOProcessInstance" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="initiator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="processInstances" inverseEntity="ASDKMOProfile" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOProcessInstanceContent" representedClassName="ASDKMOProcessInstanceContent" syncable="YES" codeGenerationType="category">
+        <relationship name="contents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOContent" inverseName="processInstanceContent" inverseEntity="ASDKMOContent" syncable="YES"/>
+        <relationship name="processInstanceContentField" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceContentField" inverseName="processInstanceContent" inverseEntity="ASDKMOProcessInstanceContentField" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOProcessInstanceContentField" representedClassName="ASDKMOProcessInstanceContentField" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="processInstanceContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceContent" inverseName="processInstanceContentField" inverseEntity="ASDKMOProcessInstanceContent" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOProfile" representedClassName="ASDKMOProfile" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="companyName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="externalID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastUpdate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pictureID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="profileState" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="1" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="tenantID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tenantName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tenantPictureID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userFirstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userLastName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="comment" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOComment" inverseName="author" inverseEntity="ASDKMOComment" syncable="YES"/>
+        <relationship name="contents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOContent" inverseName="owner" inverseEntity="ASDKMOContent" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOGroup" inverseName="userProfiles" inverseEntity="ASDKMOGroup" syncable="YES"/>
+        <relationship name="involvedTasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOTask" inverseName="involvedPeople" inverseEntity="ASDKMOTask" syncable="YES"/>
+        <relationship name="processInstances" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstance" inverseName="initiator" inverseEntity="ASDKMOProcessInstance" syncable="YES"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOTask" inverseName="assignee" inverseEntity="ASDKMOTask" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOServerConfiguration" representedClassName="ASDKMOServerConfiguration" syncable="YES" codeGenerationType="category">
+        <attribute name="hostAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCommunicationOverSecureLayer" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="port" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serviceDocument" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOSite" representedClassName="ASDKMOSite" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOTask" representedClassName="ASDKMOTask" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="dueDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="formKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isManagerOfCandidateGroup" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isMemberOfCandidateGroup" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isMemberOfCandidateUsers" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parentTaskID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="processDefinitionID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="processDefinitionName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="processInstanceID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="assignee" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="tasks" inverseEntity="ASDKMOProfile" syncable="YES"/>
+        <relationship name="involvedPeople" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="involvedTasks" inverseEntity="ASDKMOProfile" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOUser" representedClassName="ASDKMOUser" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
+        <attribute name="companyName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="externalID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pictureID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userFirstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userLastName" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ASDKMOApp" positionX="-263" positionY="126" width="128" height="150"/>
+        <element name="ASDKMOAttributable" positionX="-146" positionY="-117" width="128" height="60"/>
+        <element name="ASDKMOComment" positionX="412" positionY="180" width="128" height="90"/>
+        <element name="ASDKMOContent" positionX="0" positionY="441" width="128" height="225"/>
+        <element name="ASDKMOFileContent" positionX="-504" positionY="408" width="128" height="60"/>
+        <element name="ASDKMOFilter" positionX="-333" positionY="558" width="128" height="135"/>
+        <element name="ASDKMOFilterModel" positionX="-351" positionY="405" width="128" height="75"/>
+        <element name="ASDKMOGroup" positionX="133" positionY="126" width="128" height="165"/>
+        <element name="ASDKMOIntegrationAccount" positionX="-396" positionY="72" width="128" height="105"/>
+        <element name="ASDKMOIntegrationContent" positionX="-369" positionY="99" width="128" height="90"/>
+        <element name="ASDKMONetwork" positionX="-387" positionY="81" width="128" height="45"/>
+        <element name="ASDKMOProcessDefinition" positionX="-72" positionY="125" width="128" height="165"/>
+        <element name="ASDKMOProcessInstance" positionX="180" positionY="336" width="128" height="105"/>
+        <element name="ASDKMOProcessInstanceContent" positionX="-414" positionY="54" width="128" height="75"/>
+        <element name="ASDKMOProcessInstanceContentField" positionX="-405" positionY="63" width="128" height="75"/>
+        <element name="ASDKMOProfile" positionX="432" positionY="359" width="128" height="330"/>
+        <element name="ASDKMOServerConfiguration" positionX="-630" positionY="126" width="128" height="135"/>
+        <element name="ASDKMOSite" positionX="-378" positionY="90" width="128" height="60"/>
+        <element name="ASDKMOTask" positionX="-146" positionY="402" width="128" height="300"/>
+        <element name="ASDKMOUser" positionX="-450" positionY="126" width="128" height="135"/>
+    </elements>
+</model>
