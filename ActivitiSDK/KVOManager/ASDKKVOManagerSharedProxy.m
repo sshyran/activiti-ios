@@ -22,7 +22,7 @@
 
 @interface ASDKKVOManagerSharedProxy () {
     NSHashTable *_kvoManagerInfos;
-    OSSpinLock _spinLock;
+    NSLock *_lock;
 }
 
 @end
@@ -49,7 +49,7 @@
     if (self) {
         _kvoManagerInfos = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
                                                        capacity:0];
-        _spinLock = OS_SPINLOCK_INIT;
+        _lock = [NSLock new];
     }
     
     return self;
@@ -61,9 +61,9 @@
 
 - (void)observe:(id)object
 withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     [_kvoManagerInfos addObject:managerInfo];
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     [object addObserver:self
              forKeyPath:managerInfo.keyPath
@@ -73,9 +73,9 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
 
 - (void)removeObserver:(id)object
        withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     [_kvoManagerInfos removeObject:managerInfo];
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     [object removeObserver:self
                 forKeyPath:managerInfo.keyPath
@@ -92,9 +92,9 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
                        context:(void *)context {
     ASDKKVOManagerInfo *managerInfo = nil;
     
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     managerInfo = [_kvoManagerInfos member:(__bridge id)context];
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     if (managerInfo) {
         ASDKKVOManager *kvoManager = managerInfo.kvoManager;

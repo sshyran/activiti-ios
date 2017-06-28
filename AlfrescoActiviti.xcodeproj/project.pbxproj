@@ -239,6 +239,10 @@
 		139050F41CB68F8C004FEA89 /* ASDKModelFormVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139050F51CB68F8C004FEA89 /* ASDKModelFormVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */; };
 		13908B9F1D254886000CF383 /* ActivitiSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1394F66A1F028A68005C8C32 /* ASDKPersistenceStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F6681F028A68005C8C32 /* ASDKPersistenceStack.h */; };
+		1394F66B1F028A68005C8C32 /* ASDKPersistenceStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F6691F028A68005C8C32 /* ASDKPersistenceStack.m */; };
+		1394F66E1F03F260005C8C32 /* ASDKPersistenceStackConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F66C1F03F260005C8C32 /* ASDKPersistenceStackConstants.h */; };
+		1394F66F1F03F260005C8C32 /* ASDKPersistenceStackConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F66D1F03F260005C8C32 /* ASDKPersistenceStackConstants.m */; };
 		139564E21C20512500BF6153 /* ASDKModelFileSourceFolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E01C20512500BF6153 /* ASDKModelFileSourceFolder.h */; };
 		139564E31C20512500BF6153 /* ASDKModelFileSourceFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 139564E11C20512500BF6153 /* ASDKModelFileSourceFolder.m */; };
 		139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 139564E51C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h */; };
@@ -388,6 +392,8 @@
 		13BCAE061F010AC700146E7E /* ASDKMOProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BCADB61F010AC700146E7E /* ASDKMOProcessInstance.m */; };
 		13BCAE091F010AC700146E7E /* ASDKMOProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BCADB91F010AC700146E7E /* ASDKMOProfile.h */; };
 		13BCAE0A1F010AC700146E7E /* ASDKMOProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BCADBA1F010AC700146E7E /* ASDKMOProfile.m */; };
+		13BCAE0E1F01281A00146E7E /* ASDKServiceDataAccessorProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BCAE0D1F01281A00146E7E /* ASDKServiceDataAccessorProtocol.h */; };
+		13BCAE121F02853B00146E7E /* ASDKPersistenceStackProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13BCAE111F02853B00146E7E /* ASDKPersistenceStackProtocol.h */; };
 		13BDA7371B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA7361B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m */; };
 		13BDA73C1B7B4CFC00A2CE40 /* UIColor+AFATheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BDA73B1B7B4CFC00A2CE40 /* UIColor+AFATheme.m */; };
 		13BDA73F1B7B632100A2CE40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 13BDA73E1B7B632100A2CE40 /* Localizable.strings */; };
@@ -999,6 +1005,10 @@
 		139050EE1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormVisibilityCondition.m; path = Model/FormVisibilityCondition/ASDKModelFormVisibilityCondition.m; sourceTree = "<group>"; };
 		139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormVariable.h; path = Model/FormVariable/ASDKModelFormVariable.h; sourceTree = "<group>"; };
 		139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormVariable.m; path = Model/FormVariable/ASDKModelFormVariable.m; sourceTree = "<group>"; };
+		1394F6681F028A68005C8C32 /* ASDKPersistenceStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKPersistenceStack.h; path = CacheServices/PersistenceStack/ASDKPersistenceStack.h; sourceTree = "<group>"; };
+		1394F6691F028A68005C8C32 /* ASDKPersistenceStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKPersistenceStack.m; path = CacheServices/PersistenceStack/ASDKPersistenceStack.m; sourceTree = "<group>"; };
+		1394F66C1F03F260005C8C32 /* ASDKPersistenceStackConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKPersistenceStackConstants.h; path = CacheServices/Constants/ASDKPersistenceStackConstants.h; sourceTree = "<group>"; };
+		1394F66D1F03F260005C8C32 /* ASDKPersistenceStackConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKPersistenceStackConstants.m; path = CacheServices/Constants/ASDKPersistenceStackConstants.m; sourceTree = "<group>"; };
 		139564E01C20512500BF6153 /* ASDKModelFileSourceFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFileSourceFolder.h; path = Model/FormFieldFileSourceFolder/ASDKModelFileSourceFolder.h; sourceTree = "<group>"; };
 		139564E11C20512500BF6153 /* ASDKModelFileSourceFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFileSourceFolder.m; path = Model/FormFieldFileSourceFolder/ASDKModelFileSourceFolder.m; sourceTree = "<group>"; };
 		139564E51C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFileSourceFolderTreeElement.h; path = Model/FormFieldFileSourceFolderTreeElement/ASDKModelFileSourceFolderTreeElement.h; sourceTree = "<group>"; };
@@ -1184,6 +1194,8 @@
 		13BCADB61F010AC700146E7E /* ASDKMOProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKMOProcessInstance.m; path = ActivitiSDK/CacheServices/CacheModels/ASDKMOProcessInstance.m; sourceTree = "<group>"; };
 		13BCADB91F010AC700146E7E /* ASDKMOProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKMOProfile.h; path = ActivitiSDK/CacheServices/CacheModels/ASDKMOProfile.h; sourceTree = "<group>"; };
 		13BCADBA1F010AC700146E7E /* ASDKMOProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKMOProfile.m; path = ActivitiSDK/CacheServices/CacheModels/ASDKMOProfile.m; sourceTree = "<group>"; };
+		13BCAE0D1F01281A00146E7E /* ASDKServiceDataAccessorProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKServiceDataAccessorProtocol.h; path = CacheServices/DataAccessors/Protocol/ASDKServiceDataAccessorProtocol.h; sourceTree = "<group>"; };
+		13BCAE111F02853B00146E7E /* ASDKPersistenceStackProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKPersistenceStackProtocol.h; path = CacheServices/PersistenceStack/Protocol/ASDKPersistenceStackProtocol.h; sourceTree = "<group>"; };
 		13BDA7351B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFACredentialTextFieldTableViewCell.h; path = UI/Cells/CredentialTextfieldCell/AFACredentialTextFieldTableViewCell.h; sourceTree = "<group>"; };
 		13BDA7361B7B4B6C00A2CE40 /* AFACredentialTextFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFACredentialTextFieldTableViewCell.m; path = UI/Cells/CredentialTextfieldCell/AFACredentialTextFieldTableViewCell.m; sourceTree = "<group>"; };
 		13BDA73A1B7B4CFC00A2CE40 /* UIColor+AFATheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+AFATheme.h"; path = "UI/Categories/UIColor+AFATheme.h"; sourceTree = "<group>"; };
@@ -2308,8 +2320,10 @@
 		1357C8951EFA64EC0030EBC5 /* CacheServices */ = {
 			isa = PBXGroup;
 			children = (
-				13BCAD0E1F01041E00146E7E /* CacheModels */,
 				1357C8921EFA64E40030EBC5 /* CacheServicesDataModel.xcdatamodeld */,
+				13BCAD0E1F01041E00146E7E /* CacheModels */,
+				13BCAE131F02854500146E7E /* PersistenceStack */,
+				13BCAE0F1F01282700146E7E /* DataAccessors */,
 			);
 			name = CacheServices;
 			sourceTree = "<group>";
@@ -3087,6 +3101,15 @@
 			name = FormVariable;
 			sourceTree = "<group>";
 		};
+		1394F6701F03F264005C8C32 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				1394F66C1F03F260005C8C32 /* ASDKPersistenceStackConstants.h */,
+				1394F66D1F03F260005C8C32 /* ASDKPersistenceStackConstants.m */,
+			);
+			name = Constants;
+			sourceTree = "<group>";
+		};
 		139564E41C20512B00BF6153 /* FormFieldFileSourceFolder */ = {
 			isa = PBXGroup;
 			children = (
@@ -3857,6 +3880,41 @@
 			);
 			name = CacheModels;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		13BCAE0F1F01282700146E7E /* DataAccessors */ = {
+			isa = PBXGroup;
+			children = (
+				13BCAE101F01283500146E7E /* Protocol */,
+			);
+			name = DataAccessors;
+			sourceTree = "<group>";
+		};
+		13BCAE101F01283500146E7E /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13BCAE0D1F01281A00146E7E /* ASDKServiceDataAccessorProtocol.h */,
+			);
+			name = Protocol;
+			sourceTree = "<group>";
+		};
+		13BCAE131F02854500146E7E /* PersistenceStack */ = {
+			isa = PBXGroup;
+			children = (
+				1394F6701F03F264005C8C32 /* Constants */,
+				13BCAE141F02855000146E7E /* Protocol */,
+				1394F6681F028A68005C8C32 /* ASDKPersistenceStack.h */,
+				1394F6691F028A68005C8C32 /* ASDKPersistenceStack.m */,
+			);
+			name = PersistenceStack;
+			sourceTree = "<group>";
+		};
+		13BCAE141F02855000146E7E /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13BCAE111F02853B00146E7E /* ASDKPersistenceStackProtocol.h */,
+			);
+			name = Protocol;
 			sourceTree = "<group>";
 		};
 		13BDA7381B7B4B7200A2CE40 /* CredentialTextFieldCell */ = {
@@ -5157,6 +5215,7 @@
 				8D6ABE801CBD1DFB008FACB4 /* ASDKModelDynamicTableColumnDefinitionAmountFormField.h in Headers */,
 				13EBECAC1CF8736E00EC8F96 /* ASDKFormEngineControllerActionHandlerDelegate.h in Headers */,
 				8D6ABE741CBCE7CD008FACB4 /* ASDKDynamicTableColumnTableViewCell.h in Headers */,
+				1394F66E1F03F260005C8C32 /* ASDKPersistenceStackConstants.h in Headers */,
 				8D3A51DF1C80868500FF9A00 /* ASDKModelProcessDefinition.h in Headers */,
 				138F0A2A1C6B7E9000DA9414 /* ASDKRadioFormFieldDetailsViewController.h in Headers */,
 				13B7E2101B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.h in Headers */,
@@ -5303,6 +5362,7 @@
 				13BCADF51F010AC700146E7E /* ASDKMOIntegrationContent.h in Headers */,
 				132C8D341D6ED279003AC8EE /* ASDKFilterCreationRequestRepresentation.h in Headers */,
 				135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */,
+				13BCAE121F02853B00146E7E /* ASDKPersistenceStackProtocol.h in Headers */,
 				13A0BCB31BD7BF8E00599661 /* ASDKFormCheckbox.h in Headers */,
 				136DFF791DA653DA00FA40E0 /* ASDKImageResponseSerializer.h in Headers */,
 				137B944F1BD67CB300134BF1 /* ASDKModelFormField.h in Headers */,
@@ -5332,10 +5392,12 @@
 				8DB399AA1C9C319B0089E0AB /* ASDKAvatarInitialsView.h in Headers */,
 				136E114D1CEB122800047E38 /* ASDKIntegrationDataSourceDelegate.h in Headers */,
 				13F35D471BDE8CF200FC3F4E /* ASDKFormCellProtocol.h in Headers */,
+				13BCAE0E1F01281A00146E7E /* ASDKServiceDataAccessorProtocol.h in Headers */,
 				13A578651CEDD63C0014B6FD /* ASDKIntegrationFolderContentDataSource.h in Headers */,
 				8D3A51EC1C8089F200FF9A00 /* ASDKUserNetworkServices.h in Headers */,
 				1306E9701CC507D100BF696E /* ASDKFormRenderEngineDataSourceDelegate.h in Headers */,
 				138C48B51C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h in Headers */,
+				1394F66A1F028A68005C8C32 /* ASDKPersistenceStack.h in Headers */,
 				137B94601BD796B700134BF1 /* ASDKFormCollectionViewController.h in Headers */,
 				8D9D98861C9C37AE002C0F81 /* UIView+ASDKViewAnimations.h in Headers */,
 				8DEA25481C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.h in Headers */,
@@ -6042,12 +6104,14 @@
 				13EEC5CF1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m in Sources */,
 				8D3A51F31C808A3B00FF9A00 /* ASDKProcessParserOperationWorker.m in Sources */,
 				13BCAE061F010AC700146E7E /* ASDKMOProcessInstance.m in Sources */,
+				1394F66B1F028A68005C8C32 /* ASDKPersistenceStack.m in Sources */,
 				1363A23E1D634315009EAC54 /* ASDKCSRFTokenStorage.m in Sources */,
 				138F0A421C6CC29100DA9414 /* ASDKFormHeaderCollectionReusableView.m in Sources */,
 				8D3A51D61C80851B00FF9A00 /* ASDKUserRequestRepresentation.m in Sources */,
 				8DB399951C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.m in Sources */,
 				8DEA25321C7C89C000BF376F /* ASDKFormHyperlinkFieldCollectionViewCell.m in Sources */,
 				13BCADE21F010AC700146E7E /* ASDKMOApp.m in Sources */,
+				1394F66F1F03F260005C8C32 /* ASDKPersistenceStackConstants.m in Sources */,
 				136DFF7A1DA653DA00FA40E0 /* ASDKImageResponseSerializer.m in Sources */,
 				137B94551BD692E500134BF1 /* ASDKModelFormOutcome.m in Sources */,
 				8DD3B76C1CA0197E00B5D561 /* ASDKPeopleFormFieldPeoplePickerViewController.m in Sources */,
@@ -6291,7 +6355,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Alfresco Activiti";
@@ -6337,7 +6401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "Alfresco Activiti";
 				PROVISIONING_PROFILE = "d8f028dd-11c5-42c3-a958-28716ead6dc3";
@@ -6535,7 +6599,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "Alfresco Activiti";
 				PROVISIONING_PROFILE = "d8f028dd-11c5-42c3-a958-28716ead6dc3";

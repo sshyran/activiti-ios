@@ -56,6 +56,7 @@
 #import "ASDKFormColorSchemeManagerProtocol.h"
 #import "ASDKCSRFTokenStorage.h"
 #import "ASDKFilterParserOperationWorker.h"
+#import "ASDKPersistenceStack.h"
 
 // Configurations imports
 #import "ASDKBasicAuthentificationProvider.h"
@@ -338,6 +339,18 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [_serviceLocator addService:tokenStorage];
     
     ASDKLogVerbose(@"CSRF token storage manager...%@", tokenStorage ? @"OK" : @"NOT_OK");
+    
+    // Set up the persistence stack
+    ASDKPersistenceStack *persistenceStack = [[ASDKPersistenceStack alloc] initWithErrorHandler:^(NSError *error) {
+        ASDKLogVerbose(@"Persistence stack...%@", error ? @"NOT_OK" : @"OK");
+        if (error) {
+            ASDKLogError(@"Reason:%@", error.localizedDescription);
+        }
+    }];
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKPersistenceStackProtocol)]) {
+        [_serviceLocator removeService:persistenceStack];
+    }
+    [_serviceLocator addService:persistenceStack];
 }
 
 - (void)updateServerConfigurationCredentialsForUsername:(NSString *)username

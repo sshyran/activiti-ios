@@ -23,7 +23,7 @@
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 @interface AFAServiceRepository () {
-    OSSpinLock _spinLock;
+    NSLock *_lock;
 }
 
 @property (strong, nonatomic) NSMutableDictionary *serviceRepository;
@@ -56,7 +56,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     if (self) {
         self.serviceRepository = [NSMutableDictionary dictionary];
-        _spinLock = OS_SPINLOCK_INIT;
+        _lock = [NSLock new];
     }
     
     return self;
@@ -72,16 +72,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     AFALogVerbose(@"Registered service object of type :%@", NSStringFromClass([serviceObject class]));
     
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     [self.serviceRepository setObject:serviceObject
                                forKey:@(serviceObjectType)];
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
 }
 
 - (id)serviceObjectForPurpose:(AFAServiceObjectType)serviceObjectType {
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     id serviceObject = [self.serviceRepository objectForKey:@(serviceObjectType)];
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     return serviceObject;
 }
@@ -89,9 +89,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)removeServiceForPurpose:(AFAServiceObjectType)serviceObjectType {
     AFALogVerbose(@"Removed service object of type:%@", NSStringFromClass([self.serviceRepository[@(serviceObjectType)] class]));
     
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     [self.serviceRepository removeObjectForKey:@(serviceObjectType)];
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
 }
 
 @end

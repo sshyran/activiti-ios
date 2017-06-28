@@ -23,7 +23,7 @@
 
 @implementation ASDKKVOManager {
     NSMapTable *_objInfoMap;
-    OSSpinLock _spinLock;
+    NSLock *_lock;
 }
 
 
@@ -46,7 +46,7 @@
         _objInfoMap = [[NSMapTable alloc] initWithKeyOptions:keyOptions
                                                 valueOptions:valueOptions
                                                     capacity:0];
-        _spinLock = OS_SPINLOCK_INIT;
+        _lock = [NSLock new];
     }
     
     return self;
@@ -92,14 +92,14 @@
 
 - (void)observe:(id)object
 withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     
     NSMutableSet *managerInfos = [_objInfoMap objectForKey:object];
     
     ASDKKVOManagerInfo *existingInfo = [managerInfos member:managerInfo];
     if (existingInfo) {
         // Objects already exists in the map table
-        OSSpinLockUnlock(&_spinLock);
+        [_lock unlock];
     }
     
     if (!managerInfos) {
@@ -111,7 +111,7 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     // Register passed manager info with set in the info map table
     [managerInfos addObject:managerInfo];
     
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     [[ASDKKVOManagerSharedProxy sharedInstance] observe:object
                                         withManagerInfo:managerInfo];
@@ -119,7 +119,7 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
 
 - (void)removeObserver:(id)object
        withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
-    OSSpinLockLock(&_spinLock);
+    [_lock lock];
     
     NSMutableSet *managerInfos = [_objInfoMap objectForKey:object];
     
@@ -132,7 +132,7 @@ withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
         }
     }
     
-    OSSpinLockUnlock(&_spinLock);
+    [_lock unlock];
     
     [[ASDKKVOManagerSharedProxy sharedInstance] removeObserver:object
                                                withManagerInfo:existingInfo];

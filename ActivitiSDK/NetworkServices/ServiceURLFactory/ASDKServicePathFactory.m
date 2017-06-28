@@ -59,7 +59,7 @@ static NSString * const kASDkHTTPS = @"https";
         }
         
         _baseURL = [NSURL URLWithString:serviceDocumentPath
-                          relativeToURL:[NSURL URLWithString:[hostAddress stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+                          relativeToURL:[NSURL URLWithString:[hostAddress stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]]];
     }
     
     return self;
