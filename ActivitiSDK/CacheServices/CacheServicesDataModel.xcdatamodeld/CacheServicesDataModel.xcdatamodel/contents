@@ -152,25 +152,25 @@
         <attribute name="userLastName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ASDKMOApp" positionX="-263" positionY="126" width="128" height="150"/>
+        <element name="ASDKMOApp" positionX="-146" positionY="-558" width="128" height="150"/>
         <element name="ASDKMOAttributable" positionX="-146" positionY="-117" width="128" height="60"/>
-        <element name="ASDKMOComment" positionX="412" positionY="180" width="128" height="90"/>
-        <element name="ASDKMOContent" positionX="0" positionY="441" width="128" height="225"/>
-        <element name="ASDKMOFileContent" positionX="-504" positionY="408" width="128" height="60"/>
-        <element name="ASDKMOFilter" positionX="-333" positionY="558" width="128" height="135"/>
-        <element name="ASDKMOFilterModel" positionX="-351" positionY="405" width="128" height="75"/>
-        <element name="ASDKMOGroup" positionX="133" positionY="126" width="128" height="165"/>
-        <element name="ASDKMOIntegrationAccount" positionX="-396" positionY="72" width="128" height="105"/>
-        <element name="ASDKMOIntegrationContent" positionX="-369" positionY="99" width="128" height="90"/>
-        <element name="ASDKMONetwork" positionX="-387" positionY="81" width="128" height="45"/>
-        <element name="ASDKMOProcessDefinition" positionX="-72" positionY="125" width="128" height="165"/>
-        <element name="ASDKMOProcessInstance" positionX="180" positionY="336" width="128" height="105"/>
-        <element name="ASDKMOProcessInstanceContent" positionX="-414" positionY="54" width="128" height="75"/>
-        <element name="ASDKMOProcessInstanceContentField" positionX="-405" positionY="63" width="128" height="75"/>
-        <element name="ASDKMOProfile" positionX="432" positionY="359" width="128" height="330"/>
-        <element name="ASDKMOServerConfiguration" positionX="-630" positionY="126" width="128" height="135"/>
-        <element name="ASDKMOSite" positionX="-378" positionY="90" width="128" height="60"/>
-        <element name="ASDKMOTask" positionX="-146" positionY="402" width="128" height="300"/>
-        <element name="ASDKMOUser" positionX="-450" positionY="126" width="128" height="135"/>
+        <element name="ASDKMOComment" positionX="-308" positionY="468" width="128" height="90"/>
+        <element name="ASDKMOContent" positionX="-648" positionY="-72" width="162" height="225"/>
+        <element name="ASDKMOFileContent" positionX="-423" positionY="-558" width="128" height="60"/>
+        <element name="ASDKMOFilter" positionX="16" positionY="-558" width="128" height="135"/>
+        <element name="ASDKMOFilterModel" positionX="-423" positionY="-486" width="128" height="75"/>
+        <element name="ASDKMOGroup" positionX="34" positionY="468" width="128" height="165"/>
+        <element name="ASDKMOIntegrationAccount" positionX="504" positionY="-249" width="162" height="105"/>
+        <element name="ASDKMOIntegrationContent" positionX="504" positionY="27" width="162" height="90"/>
+        <element name="ASDKMONetwork" positionX="504" positionY="-36" width="162" height="45"/>
+        <element name="ASDKMOProcessDefinition" positionX="513" positionY="405" width="162" height="165"/>
+        <element name="ASDKMOProcessInstance" positionX="513" positionY="282" width="162" height="105"/>
+        <element name="ASDKMOProcessInstanceContent" positionX="-441" positionY="-261" width="225" height="75"/>
+        <element name="ASDKMOProcessInstanceContentField" positionX="-441" positionY="-126" width="216" height="75"/>
+        <element name="ASDKMOProfile" positionX="-135" positionY="72" width="128" height="330"/>
+        <element name="ASDKMOServerConfiguration" positionX="-648" positionY="-558" width="198" height="135"/>
+        <element name="ASDKMOSite" positionX="504" positionY="-117" width="162" height="60"/>
+        <element name="ASDKMOTask" positionX="-648" positionY="162" width="162" height="300"/>
+        <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="135"/>
     </elements>
 </model>

@@ -96,11 +96,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     self = [super init];
     
     if (self) {
-        ASDKLogVerbose(@"Logger component setup...OK");
-        
-        // Setup service locator component
         _serviceLocator = [ASDKServiceLocator new];
-        
         ASDKLogVerbose(@"Service locator component...%@", _serviceLocator ? @"OK" : @"NOT_OK");
     }
     
@@ -118,239 +114,76 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKLogVerbose(@"Registering services...");
     
     // Create a service path factory with the passed server configuration
-    ASDKServicePathFactory *servicePathFactory =
-    [[ASDKServicePathFactory alloc] initWithHostAddress:self.serverConfiguration.hostAddressString
-                                    serviceDocumentPath:self.serverConfiguration.serviceDocument
-                                                   port:self.serverConfiguration.port
-                                        overSecureLayer:self.serverConfiguration.isCommunicationOverSecureLayer];
+    ASDKServicePathFactory *servicePathFactory = [[ASDKServicePathFactory alloc] initWithHostAddress:self.serverConfiguration.hostAddressString
+                                                                                 serviceDocumentPath:self.serverConfiguration.serviceDocument
+                                                                                                port:self.serverConfiguration.port
+                                                                                     overSecureLayer:self.serverConfiguration.isCommunicationOverSecureLayer];
     
     // Set up the request manager
-    ASDKBasicAuthentificationProvider *basicAuthentificationProvider = [[ASDKBasicAuthentificationProvider alloc] initWithUserName:self.serverConfiguration.username
-                                                                                                                          password:self.serverConfiguration.password];
+    ASDKBasicAuthentificationProvider *basicAuthentificationProvider =
+    [[ASDKBasicAuthentificationProvider alloc] initWithUserName:self.serverConfiguration.username
+                                                       password:self.serverConfiguration.password];
     self.requestOperationManager = [[ASDKRequestOperationManager alloc] initWithBaseURL:servicePathFactory.baseURL
                                                                  authenticationProvider:basicAuthentificationProvider];
-    // Set up the parser manager and register workers for it
-    ASDKParserOperationManager *parserOperationManager = [ASDKParserOperationManager new];
-    ASDKProfileParserOperationWorker *profileParserWorker = [ASDKProfileParserOperationWorker new];
-    [parserOperationManager registerWorker:profileParserWorker
-                               forServices:[profileParserWorker availableServices]];
-    ASDKTaskDetailsParserOperationWorker *taskDetailsParserWorker = [ASDKTaskDetailsParserOperationWorker new];
-    [parserOperationManager registerWorker:taskDetailsParserWorker
-                               forServices:[taskDetailsParserWorker availableServices]];
-    ASDKTaskFormParserOperationWorker *taskFormParserWorker = [ASDKTaskFormParserOperationWorker new];
-    [parserOperationManager registerWorker:taskFormParserWorker
-                               forServices:[taskFormParserWorker availableServices]];
-    ASDKAppParserOperationWorker *appParserWorker = [ASDKAppParserOperationWorker new];
-    [parserOperationManager registerWorker:appParserWorker
-                               forServices:[appParserWorker availableServices]];
-    ASDKUserParserOperationWorker *userParserWorker = [ASDKUserParserOperationWorker new];
-    [parserOperationManager registerWorker:userParserWorker
-                               forServices:[userParserWorker availableServices]];
-    ASDKProcessParserOperationWorker *processParserWorker = [ASDKProcessParserOperationWorker new];
-    [parserOperationManager registerWorker:processParserWorker
-                               forServices:[processParserWorker availableServices]];
-    ASDKIntegrationParserOperationWorker *integrationParserWorker = [ASDKIntegrationParserOperationWorker new];
-    [parserOperationManager registerWorker:integrationParserWorker
-                               forServices:[integrationParserWorker availableServices]];
-    ASDKFilterParserOperationWorker *filterParserWorker = [ASDKFilterParserOperationWorker new];
-    [parserOperationManager registerWorker:filterParserWorker
-                               forServices:[filterParserWorker availableServices]];
+    
+    // Set up parser services
+    ASDKParserOperationManager *parserOperationManager = [self parserOperationManager];
     
     // Link the processing queues between the request and parser managers
-    self.requestOperationManager.completionQueue = parserOperationManager.completionQueue;
+    self.requestOperationManager.completionQueue = self.parserOperationManager.completionQueue;
     
     // Set up the disk services
     ASDKDiskServices *diskService = [ASDKDiskServices new];
     
-    // Set up the CSRF token storage manager
-    ASDKCSRFTokenStorage *tokenStorage = [ASDKCSRFTokenStorage new];
+    // Set up network services
+    [self setupCSRFTokenStorageManager];
+    [self setupApplicationNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                                      parserManager:parserOperationManager
+                                                 servicePathFactory:servicePathFactory
+                                                       diskServices:diskService];
+    [self setupProfileNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                                  parserManager:parserOperationManager
+                                             servicePathFactory:servicePathFactory
+                                                   diskServices:diskService];
+    [self setupTaskNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                               parserManager:parserOperationManager
+                                          servicePathFactory:servicePathFactory
+                                                diskServices:diskService];
+    [self setupFilterNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                                 parserManager:parserOperationManager
+                                            servicePathFactory:servicePathFactory
+                                                  diskServices:diskService];
+    [self setupProcessInstanceNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                                          parserManager:parserOperationManager
+                                                     servicePathFactory:servicePathFactory
+                                                           diskServices:diskService];
+    [self setupProcessDefinitionNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                                            parserManager:parserOperationManager
+                                                       servicePathFactory:servicePathFactory
+                                                             diskServices:diskService];
+    [self setupUserNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                               parserManager:parserOperationManager
+                                          servicePathFactory:servicePathFactory
+                                                diskServices:diskService];
+    [self setupFormNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                               parserManager:parserOperationManager
+                                          servicePathFactory:servicePathFactory
+                                                diskServices:diskService];
+    [self setupQuerryNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                                 parserManager:parserOperationManager
+                                            servicePathFactory:servicePathFactory
+                                                  diskServices:diskService];
+    [self setupIntegrationNetworkServiceWithRequestOperationManager:self.requestOperationManager
+                                                      parserManager:parserOperationManager
+                                                 servicePathFactory:servicePathFactory
+                                                       diskServices:diskService];
     
-    // Set up the aplication newtork service
-    ASDKAppNetworkServices *applicationNetworkService = [[ASDKAppNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                                                                 parserManager:parserOperationManager
-                                                                                            servicePathFactory:servicePathFactory
-                                                                                                  diskServices:diskService
-                                                                                                  resultsQueue:nil];
+    // Set up form services
+    [self setupFormRenderEngine];
+    [self setupFormColorSchemeManager];
     
-    // Check for previously registered services and remove them first
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKAppNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:applicationNetworkService];
-    }
-    [_serviceLocator addService:applicationNetworkService];
-    
-    ASDKLogVerbose(@"App network services...%@", applicationNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the profile network service
-    ASDKProfileNetworkServices *profileNetworkService = [[ASDKProfileNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                                                                     parserManager:parserOperationManager
-                                                                                                servicePathFactory:servicePathFactory
-                                                                                                      diskServices:diskService
-                                                                                                      resultsQueue:nil];
-    [profileNetworkService configureWithCSRFTokenStorage:tokenStorage];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProfileNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:profileNetworkService];
-    }
-    [_serviceLocator addService:profileNetworkService];
-    
-    ASDKLogVerbose(@"Profile network services...%@", profileNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the task network service
-    ASDKTaskNetworkServices *taskNetworkService = [[ASDKTaskNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                                                            parserManager:parserOperationManager
-                                                                                       servicePathFactory:servicePathFactory
-                                                                                             diskServices:diskService
-                                                                                             resultsQueue:nil];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKTaskNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:taskNetworkService];
-    }
-    [_serviceLocator addService:taskNetworkService];
-    
-    ASDKLogVerbose(@"Task network services...%@", taskNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the filter network service
-    ASDKFilterNetworkServices *filterNetworkService = [[ASDKFilterNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                                                                  parserManager:parserOperationManager
-                                                                                             servicePathFactory:servicePathFactory
-                                                                                                   diskServices:diskService
-                                                                                                   resultsQueue:nil];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFilterNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:filterNetworkService];
-    }
-    [_serviceLocator addService:filterNetworkService];
-    
-    ASDKLogVerbose(@"Filter network services...%@", filterNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the process instance network service
-    
-    ASDKProcessInstanceNetworkServices *processInstanceNetworkService =
-    [[ASDKProcessInstanceNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                         parserManager:parserOperationManager
-                                                    servicePathFactory:servicePathFactory
-                                                          diskServices:diskService
-                                                          resultsQueue:nil];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessInstanceNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:processInstanceNetworkService];
-    }
-    [_serviceLocator addService:processInstanceNetworkService];
-    
-    ASDKLogVerbose(@"Process instance network services...%@", processInstanceNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the process definition network service
-    
-    ASDKProcessDefinitionNetworkServices *processDefinitionNetworkService =
-    [[ASDKProcessDefinitionNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                           parserManager:parserOperationManager
-                                                      servicePathFactory:servicePathFactory
-                                                            diskServices:diskService
-                                                            resultsQueue:nil];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessDefinitionNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:processDefinitionNetworkService];
-    }
-    [_serviceLocator addService:processDefinitionNetworkService];
-    
-    ASDKLogVerbose(@"Process definition network services...%@", processDefinitionNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the user network service
-    
-    ASDKUserNetworkServices *userNetworkService =
-    [[ASDKUserNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                              parserManager:parserOperationManager
-                                         servicePathFactory:servicePathFactory
-                                               diskServices:diskService
-                                               resultsQueue:nil];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKUserNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:userNetworkService];
-    }
-    [_serviceLocator addService:userNetworkService];
-    
-    ASDKLogVerbose(@"User network services...%@", userNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the form network service
-    ASDKFormNetworkServices *formNetworkService = [[ASDKFormNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                                                            parserManager:parserOperationManager
-                                                                                       servicePathFactory:servicePathFactory
-                                                                                             diskServices:diskService
-                                                                                             resultsQueue:nil];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:formNetworkService];
-    }
-    [_serviceLocator addService:formNetworkService];
-    
-    ASDKLogVerbose(@"Form network services...%@", formNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the query network service
-    ASDKQuerryNetworkServices *queryNetworkService = [[ASDKQuerryNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                                                                 parserManager:parserOperationManager
-                                                                                            servicePathFactory:servicePathFactory
-                                                                                                  diskServices:diskService
-                                                                                                  resultsQueue:nil];
-    
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKQuerryNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:queryNetworkService];
-    }
-    [_serviceLocator addService:queryNetworkService];
-    
-    ASDKLogVerbose(@"Query network services...%@", queryNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up integration network service
-    ASDKIntegrationNetworkServices *integrationNetworkService =
-    [[ASDKIntegrationNetworkServices alloc] initWithRequestManager:self.requestOperationManager
-                                                     parserManager:parserOperationManager
-                                                servicePathFactory:servicePathFactory
-                                                      diskServices:diskService
-                                                      resultsQueue:nil];
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)]) {
-        [_serviceLocator removeService:integrationNetworkService];
-    }
-    [_serviceLocator addService:integrationNetworkService];
-    
-    ASDKLogVerbose(@"Integration network services...%@", integrationNetworkService ? @"OK" : @"NOT_OK");
-    
-    // Set up the form render engine service
-    ASDKFormRenderEngine *formRenderEngine = [ASDKFormRenderEngine new];
-    formRenderEngine.formNetworkServices = formNetworkService;
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormRenderEngineProtocol)]) {
-        [_serviceLocator removeService:formRenderEngine];
-    }
-    [_serviceLocator addService:formRenderEngine];
-    
-    ASDKLogVerbose(@"Form render engine services...%@", formRenderEngine ? @"OK" : @"NOT_OK");
-    
-    // Set up the form color scheme manager
-    ASDKFormColorSchemeManager *colorSchemeManager = [ASDKFormColorSchemeManager new];
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)]) {
-        [_serviceLocator removeService:colorSchemeManager];
-    }
-    [_serviceLocator addService:colorSchemeManager];
-    
-    ASDKLogVerbose(@"Form color scheme manager...%@", colorSchemeManager ? @"OK" : @"NOT_OK");
-    
-    // Register the csrf token storage manager
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKCSRFTokenStorageProtocol)]) {
-        [_serviceLocator removeService:tokenStorage];
-    }
-    [_serviceLocator addService:tokenStorage];
-    
-    ASDKLogVerbose(@"CSRF token storage manager...%@", tokenStorage ? @"OK" : @"NOT_OK");
-    
-    // Set up the persistence stack
-    ASDKPersistenceStack *persistenceStack = [[ASDKPersistenceStack alloc] initWithErrorHandler:^(NSError *error) {
-        ASDKLogVerbose(@"Persistence stack...%@", error ? @"NOT_OK" : @"OK");
-        if (error) {
-            ASDKLogError(@"Reason:%@", error.localizedDescription);
-        }
-    }];
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKPersistenceStackProtocol)]) {
-        [_serviceLocator removeService:persistenceStack];
-    }
-    [_serviceLocator addService:persistenceStack];
+    // Set up persistence services
+    [self setupPersistenceStack];
 }
 
 - (void)updateServerConfigurationCredentialsForUsername:(NSString *)username
@@ -362,6 +195,273 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [[ASDKBasicAuthentificationProvider alloc] initWithUserName:username
                                                        password:password];
     [self.requestOperationManager replaceAuthenticationProvider:authenticationProvider];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (ASDKParserOperationManager *)parserOperationManager {
+    ASDKParserOperationManager *parserOperationManager = [ASDKParserOperationManager new];
+    
+    ASDKProfileParserOperationWorker *profileParserWorker = [ASDKProfileParserOperationWorker new];
+    [parserOperationManager registerWorker:profileParserWorker
+                               forServices:[profileParserWorker availableServices]];
+    ASDKAppParserOperationWorker *appParserWorker = [ASDKAppParserOperationWorker new];
+    [parserOperationManager registerWorker:appParserWorker
+                               forServices:[appParserWorker availableServices]];
+    ASDKTaskDetailsParserOperationWorker *taskDetailsParserWorker = [ASDKTaskDetailsParserOperationWorker new];
+    [parserOperationManager registerWorker:taskDetailsParserWorker
+                               forServices:[taskDetailsParserWorker availableServices]];
+    ASDKFilterParserOperationWorker *filterParserWorker = [ASDKFilterParserOperationWorker new];
+    [parserOperationManager registerWorker:filterParserWorker
+                               forServices:[filterParserWorker availableServices]];
+    ASDKTaskFormParserOperationWorker *taskFormParserWorker = [ASDKTaskFormParserOperationWorker new];
+    [parserOperationManager registerWorker:taskFormParserWorker
+                               forServices:[taskFormParserWorker availableServices]];
+    ASDKUserParserOperationWorker *userParserWorker = [ASDKUserParserOperationWorker new];
+    [parserOperationManager registerWorker:userParserWorker
+                               forServices:[userParserWorker availableServices]];
+    ASDKIntegrationParserOperationWorker *integrationParserWorker = [ASDKIntegrationParserOperationWorker new];
+    [parserOperationManager registerWorker:integrationParserWorker
+                               forServices:[integrationParserWorker availableServices]];
+    ASDKProcessParserOperationWorker *processParserWorker = [ASDKProcessParserOperationWorker new];
+    [parserOperationManager registerWorker:processParserWorker
+                               forServices:[processParserWorker availableServices]];
+    
+    return parserOperationManager;
+}
+
+- (void)setupProfileNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                                parserManager:(ASDKParserOperationManager *)parserManager
+                                           servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                                 diskServices:(ASDKDiskServices *)diskServices {
+    ASDKProfileNetworkServices *profileNetworkService =
+    [[ASDKProfileNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                 parserManager:parserManager
+                                            servicePathFactory:servicePathFactory
+                                                  diskServices:diskServices
+                                                  resultsQueue:nil];
+    [profileNetworkService configureWithCSRFTokenStorage:[self.serviceLocator serviceConformingToProtocol:@protocol(ASDKCSRFTokenStorageProtocol)]];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProfileNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:profileNetworkService];
+    }
+    [_serviceLocator addService:profileNetworkService];
+    
+    ASDKLogVerbose(@"Profile network services...%@", profileNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupApplicationNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                                    parserManager:(ASDKParserOperationManager *)parserManager
+                                               servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                                     diskServices:(ASDKDiskServices *)diskServices {
+    ASDKAppNetworkServices *applicationNetworkService = [[ASDKAppNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                                                                 parserManager:parserManager
+                                                                                            servicePathFactory:servicePathFactory
+                                                                                                  diskServices:diskServices
+                                                                                                  resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKAppNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:applicationNetworkService];
+    }
+    [_serviceLocator addService:applicationNetworkService];
+    
+    ASDKLogVerbose(@"App network services...%@", applicationNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupTaskNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                             parserManager:(ASDKParserOperationManager *)parserManager
+                                        servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                              diskServices:(ASDKDiskServices *)diskServices {
+    ASDKTaskNetworkServices *taskNetworkService = [[ASDKTaskNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                                                            parserManager:parserManager
+                                                                                       servicePathFactory:servicePathFactory
+                                                                                             diskServices:diskServices
+                                                                                             resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKTaskNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:taskNetworkService];
+    }
+    [_serviceLocator addService:taskNetworkService];
+    
+    ASDKLogVerbose(@"Task network services...%@", taskNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupFilterNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                               parserManager:(ASDKParserOperationManager *)parserManager
+                                          servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                                diskServices:(ASDKDiskServices *)diskServices {
+    ASDKFilterNetworkServices *filterNetworkService = [[ASDKFilterNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                                                                  parserManager:parserManager
+                                                                                             servicePathFactory:servicePathFactory
+                                                                                                   diskServices:diskServices
+                                                                                                   resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFilterNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:filterNetworkService];
+    }
+    [_serviceLocator addService:filterNetworkService];
+    
+    ASDKLogVerbose(@"Filter network services...%@", filterNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupProcessInstanceNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                                        parserManager:(ASDKParserOperationManager *)parserManager
+                                                   servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                                         diskServices:(ASDKDiskServices *)diskServices {
+    ASDKProcessInstanceNetworkServices *processInstanceNetworkService =
+    [[ASDKProcessInstanceNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                         parserManager:parserManager
+                                                    servicePathFactory:servicePathFactory
+                                                          diskServices:diskServices
+                                                          resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessInstanceNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:processInstanceNetworkService];
+    }
+    [_serviceLocator addService:processInstanceNetworkService];
+    
+    ASDKLogVerbose(@"Process instance network services...%@", processInstanceNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupProcessDefinitionNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                                          parserManager:(ASDKParserOperationManager *)parserManager
+                                                     servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                                           diskServices:(ASDKDiskServices *)diskServices {
+    ASDKProcessDefinitionNetworkServices *processDefinitionNetworkService =
+    [[ASDKProcessDefinitionNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                           parserManager:parserManager
+                                                      servicePathFactory:servicePathFactory
+                                                            diskServices:diskServices
+                                                            resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKProcessDefinitionNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:processDefinitionNetworkService];
+    }
+    [_serviceLocator addService:processDefinitionNetworkService];
+    
+    ASDKLogVerbose(@"Process definition network services...%@", processDefinitionNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupUserNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                             parserManager:(ASDKParserOperationManager *)parserManager
+                                        servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                              diskServices:(ASDKDiskServices *)diskServices {
+    ASDKUserNetworkServices *userNetworkService =
+    [[ASDKUserNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                              parserManager:parserManager
+                                         servicePathFactory:servicePathFactory
+                                               diskServices:diskServices
+                                               resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKUserNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:userNetworkService];
+    }
+    [_serviceLocator addService:userNetworkService];
+    
+    ASDKLogVerbose(@"User network services...%@", userNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupFormNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                             parserManager:(ASDKParserOperationManager *)parserManager
+                                        servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                              diskServices:(ASDKDiskServices *)diskServices {
+    // Set up the form network service
+    ASDKFormNetworkServices *formNetworkService = [[ASDKFormNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                                                            parserManager:parserManager
+                                                                                       servicePathFactory:servicePathFactory
+                                                                                             diskServices:diskServices
+                                                                                             resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:formNetworkService];
+    }
+    [_serviceLocator addService:formNetworkService];
+    
+    ASDKLogVerbose(@"Form network services...%@", formNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupQuerryNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                               parserManager:(ASDKParserOperationManager *)parserManager
+                                          servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                                diskServices:(ASDKDiskServices *)diskServices {
+    ASDKQuerryNetworkServices *queryNetworkService = [[ASDKQuerryNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                                                                 parserManager:parserManager
+                                                                                            servicePathFactory:servicePathFactory
+                                                                                                  diskServices:diskServices
+                                                                                                  resultsQueue:nil];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKQuerryNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:queryNetworkService];
+    }
+    [_serviceLocator addService:queryNetworkService];
+    
+    ASDKLogVerbose(@"Query network services...%@", queryNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupIntegrationNetworkServiceWithRequestOperationManager:(ASDKRequestOperationManager *)requestOperationManager
+                                                    parserManager:(ASDKParserOperationManager *)parserManager
+                                               servicePathFactory:(ASDKServicePathFactory *)servicePathFactory
+                                                     diskServices:(ASDKDiskServices *)diskServices {
+    ASDKIntegrationNetworkServices *integrationNetworkService =
+    [[ASDKIntegrationNetworkServices alloc] initWithRequestManager:requestOperationManager
+                                                     parserManager:parserManager
+                                                servicePathFactory:servicePathFactory
+                                                      diskServices:diskServices
+                                                      resultsQueue:nil];
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)]) {
+        [_serviceLocator removeService:integrationNetworkService];
+    }
+    [_serviceLocator addService:integrationNetworkService];
+    
+    ASDKLogVerbose(@"Integration network services...%@", integrationNetworkService ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupFormRenderEngine {
+    ASDKFormRenderEngine *formRenderEngine = [ASDKFormRenderEngine new];
+    formRenderEngine.formNetworkServices = [self.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormRenderEngineProtocol)]) {
+        [_serviceLocator removeService:formRenderEngine];
+    }
+    [_serviceLocator addService:formRenderEngine];
+    
+    ASDKLogVerbose(@"Form render engine services...%@", formRenderEngine ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupFormColorSchemeManager {
+    ASDKFormColorSchemeManager *colorSchemeManager = [ASDKFormColorSchemeManager new];
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)]) {
+        [_serviceLocator removeService:colorSchemeManager];
+    }
+    [_serviceLocator addService:colorSchemeManager];
+    
+    ASDKLogVerbose(@"Form color scheme manager...%@", colorSchemeManager ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupCSRFTokenStorageManager {
+    // Set up the CSRF token storage manager
+    ASDKCSRFTokenStorage *tokenStorage = [ASDKCSRFTokenStorage new];
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKCSRFTokenStorageProtocol)]) {
+        [_serviceLocator removeService:tokenStorage];
+    }
+    [_serviceLocator addService:tokenStorage];
+    
+    ASDKLogVerbose(@"CSRF token storage manager...%@", tokenStorage ? @"OK" : @"NOT_OK");
+}
+
+- (void)setupPersistenceStack {
+    ASDKPersistenceStack *persistenceStack = [[ASDKPersistenceStack alloc] initWithErrorHandler:^(NSError *error) {
+        ASDKLogVerbose(@"Persistence stack...%@", error ? @"NOT_OK" : @"OK");
+        if (error) {
+            ASDKLogError(@"Reason:%@", error.localizedDescription);
+        }
+    }];
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKPersistenceStackProtocol)]) {
+        [_serviceLocator removeService:persistenceStack];
+    }
+    [_serviceLocator addService:persistenceStack];
 }
 
 @end

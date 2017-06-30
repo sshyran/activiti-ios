@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "ASDKDataAccessorResponseBase.h"
 
 @class ASDKNetworkService;
 
@@ -26,10 +27,21 @@ typedef NS_ENUM(NSInteger, ASDKServiceDataAccessorCachingPolicy) {
     ASDKServiceDataAccessorCachingPolicyHybrid
 };
 
+@protocol ASDKDataAccessorDelegate <NSObject>
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response;
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor;
+
+- (void)dataAccessorDidStartFetchingRemoteData:(id<ASDKServiceDataAccessorProtocol>)dataAccessor;
+
+@end
+
 @protocol ASDKServiceDataAccessorProtocol <NSObject>
 
-@property (assign, nonatomic) ASDKServiceDataAccessorCachingPolicy cachePolicy;
-@property (strong, nonatomic) ASDKNetworkService *networkService;
+@property (assign, nonatomic) ASDKServiceDataAccessorCachingPolicy  cachePolicy;
+@property (strong, nonatomic) ASDKNetworkService                    *networkService;
 
 #warning add cache service
 
