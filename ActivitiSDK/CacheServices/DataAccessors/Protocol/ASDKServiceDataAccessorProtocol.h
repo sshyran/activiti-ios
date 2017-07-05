@@ -19,30 +19,51 @@
 #import <Foundation/Foundation.h>
 #import "ASDKDataAccessorResponseBase.h"
 
-@class ASDKNetworkService;
+@class ASDKNetworkService, ASDKCacheService;
+@protocol ASDKServiceDataAccessorProtocol;
 
 typedef NS_ENUM(NSInteger, ASDKServiceDataAccessorCachingPolicy) {
     ASDKServiceDataAccessorCachingPolicyCacheOnly,
     ASDKServiceDataAccessorCachingPolicyAPIOnly,
-    ASDKServiceDataAccessorCachingPolicyHybrid
+    ASDKServiceDataAccessorCachingPolicyHybrid                  // Default behavior unless specified otherwise
 };
 
 @protocol ASDKDataAccessorDelegate <NSObject>
 
+/**
+ * Signals that a data response from the cache or remote has been received and delivers
+ * an encapsulated response.
+ *
+ * @param dataAccessor  Reference to the data accessor that is delivering the response
+ * @param response      Response object that's encapsulating the actual data, whether the response
+ *                      is being delivered from the cache or remote
+ */
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response;
 
+
+/**
+ * Signals that all data fetching operations from the cache or remote have finished
+ *
+ * @param dataAccessor Reference to the data accessor that is delivering the response
+ */
 - (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor;
 
+
+/**
+ * Signals that the data accessor will begin to fetch remote data
+ *
+ * @param dataAccessor Reference to the data accessor that is delivering the response
+ */
 - (void)dataAccessorDidStartFetchingRemoteData:(id<ASDKServiceDataAccessorProtocol>)dataAccessor;
 
 @end
 
 @protocol ASDKServiceDataAccessorProtocol <NSObject>
 
-@property (assign, nonatomic) ASDKServiceDataAccessorCachingPolicy  cachePolicy;
-@property (strong, nonatomic) ASDKNetworkService                    *networkService;
-
-#warning add cache service
+@property (assign, nonatomic)           ASDKServiceDataAccessorCachingPolicy  cachePolicy;
+@property (strong, nonatomic)           ASDKCacheService                      *cacheService;
+@property (strong, nonatomic, readonly) ASDKNetworkService                    *networkService;
+@property (weak, nonatomic)             id<ASDKDataAccessorDelegate>          delegate;
 
 @end

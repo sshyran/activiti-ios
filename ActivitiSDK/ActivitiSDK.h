@@ -133,6 +133,9 @@
 #import <ActivitiSDK/ASDKDiskServices.h>
 #import <ActivitiSDK/ASDKIntegrationNetworkServices.h>
 
+// Data accessors
+#import <ActivitiSDK/ASDKProfileDataAccessor.h>
+
 // Service categories
 #import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>
 #import <ActivitiSDK/NSString+ASDKEmailValidation.h>
