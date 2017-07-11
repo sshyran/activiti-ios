@@ -239,6 +239,10 @@
 		139050F41CB68F8C004FEA89 /* ASDKModelFormVariable.h in Headers */ = {isa = PBXBuildFile; fileRef = 139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		139050F51CB68F8C004FEA89 /* ASDKModelFormVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = 139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */; };
 		13908B9F1D254886000CF383 /* ActivitiSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1371947E1B6924DE00D4E1F0 /* ActivitiSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1393C9591F0D06E400E9635B /* ASDKProfileCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1393C9571F0D06E400E9635B /* ASDKProfileCacheMapper.h */; };
+		1393C95A1F0D06E400E9635B /* ASDKProfileCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1393C9581F0D06E400E9635B /* ASDKProfileCacheMapper.m */; };
+		1393C95F1F0E26C700E9635B /* ASDKGroupCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1393C95D1F0E26C700E9635B /* ASDKGroupCacheMapper.h */; };
+		1393C9601F0E26C700E9635B /* ASDKGroupCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1393C95E1F0E26C700E9635B /* ASDKGroupCacheMapper.m */; };
 		1394F66A1F028A68005C8C32 /* ASDKPersistenceStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F6681F028A68005C8C32 /* ASDKPersistenceStack.h */; };
 		1394F66B1F028A68005C8C32 /* ASDKPersistenceStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F6691F028A68005C8C32 /* ASDKPersistenceStack.m */; };
 		1394F66E1F03F260005C8C32 /* ASDKPersistenceStackConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F66C1F03F260005C8C32 /* ASDKPersistenceStackConstants.h */; };
@@ -1022,6 +1026,10 @@
 		139050EE1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormVisibilityCondition.m; path = Model/FormVisibilityCondition/ASDKModelFormVisibilityCondition.m; sourceTree = "<group>"; };
 		139050F21CB68F8C004FEA89 /* ASDKModelFormVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormVariable.h; path = Model/FormVariable/ASDKModelFormVariable.h; sourceTree = "<group>"; };
 		139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormVariable.m; path = Model/FormVariable/ASDKModelFormVariable.m; sourceTree = "<group>"; };
+		1393C9571F0D06E400E9635B /* ASDKProfileCacheMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProfileCacheMapper.h; path = CacheServices/CacheModelMappers/ProfileCacheMapper/ASDKProfileCacheMapper.h; sourceTree = "<group>"; };
+		1393C9581F0D06E400E9635B /* ASDKProfileCacheMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKProfileCacheMapper.m; path = CacheServices/CacheModelMappers/ProfileCacheMapper/ASDKProfileCacheMapper.m; sourceTree = "<group>"; };
+		1393C95D1F0E26C700E9635B /* ASDKGroupCacheMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKGroupCacheMapper.h; path = CacheServices/CacheModelMappers/GroupCacheMapper/ASDKGroupCacheMapper.h; sourceTree = "<group>"; };
+		1393C95E1F0E26C700E9635B /* ASDKGroupCacheMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKGroupCacheMapper.m; path = CacheServices/CacheModelMappers/GroupCacheMapper/ASDKGroupCacheMapper.m; sourceTree = "<group>"; };
 		1394F6681F028A68005C8C32 /* ASDKPersistenceStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKPersistenceStack.h; path = CacheServices/PersistenceStack/ASDKPersistenceStack.h; sourceTree = "<group>"; };
 		1394F6691F028A68005C8C32 /* ASDKPersistenceStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKPersistenceStack.m; path = CacheServices/PersistenceStack/ASDKPersistenceStack.m; sourceTree = "<group>"; };
 		1394F66C1F03F260005C8C32 /* ASDKPersistenceStackConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKPersistenceStackConstants.h; path = CacheServices/Constants/ASDKPersistenceStackConstants.h; sourceTree = "<group>"; };
@@ -2357,6 +2365,7 @@
 			children = (
 				1357C8921EFA64E40030EBC5 /* CacheServicesDataModel.xcdatamodeld */,
 				13BCAD0E1F01041E00146E7E /* CacheModels */,
+				1393C95B1F0D06E900E9635B /* CacheModelMappers */,
 				13CCEEB21F0CDB7400F30337 /* CacheService */,
 				13BCAE131F02854500146E7E /* PersistenceStack */,
 				13BCAE0F1F01282700146E7E /* DataAccessors */,
@@ -3137,6 +3146,33 @@
 				139050F31CB68F8C004FEA89 /* ASDKModelFormVariable.m */,
 			);
 			name = FormVariable;
+			sourceTree = "<group>";
+		};
+		1393C95B1F0D06E900E9635B /* CacheModelMappers */ = {
+			isa = PBXGroup;
+			children = (
+				1393C95C1F0D06F500E9635B /* ProfileCacheMapper */,
+				1393C9611F0E26CF00E9635B /* GroupCacheMapper */,
+			);
+			name = CacheModelMappers;
+			sourceTree = "<group>";
+		};
+		1393C95C1F0D06F500E9635B /* ProfileCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				1393C9571F0D06E400E9635B /* ASDKProfileCacheMapper.h */,
+				1393C9581F0D06E400E9635B /* ASDKProfileCacheMapper.m */,
+			);
+			name = ProfileCacheMapper;
+			sourceTree = "<group>";
+		};
+		1393C9611F0E26CF00E9635B /* GroupCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				1393C95D1F0E26C700E9635B /* ASDKGroupCacheMapper.h */,
+				1393C95E1F0E26C700E9635B /* ASDKGroupCacheMapper.m */,
+			);
+			name = GroupCacheMapper;
 			sourceTree = "<group>";
 		};
 		1394F6701F03F264005C8C32 /* Constants */ = {
@@ -5394,6 +5430,7 @@
 				8DA7190F1C8F071A00907218 /* ASDKAttachFormFieldContentPickerViewController.h in Headers */,
 				139564E71C20571100BF6153 /* ASDKModelFileSourceFolderTreeElement.h in Headers */,
 				13A5785C1CEDA58A0014B6FD /* ASDKModelIntegrationContent.h in Headers */,
+				1393C95F1F0E26C700E9635B /* ASDKGroupCacheMapper.h in Headers */,
 				8D3A51E91C8089EC00FF9A00 /* ASDKUserNetworkServiceProtocol.h in Headers */,
 				13BCADD11F010AC700146E7E /* ASDKMOFileContent.h in Headers */,
 				8D9E6AE41CBE4EDB001EA2CA /* ASDKFormRenderEngineFormFieldsDataSourceProtocol.h in Headers */,
@@ -5506,6 +5543,7 @@
 				137B944F1BD67CB300134BF1 /* ASDKModelFormField.h in Headers */,
 				13BCADE51F010AC700146E7E /* ASDKMOAttributable.h in Headers */,
 				136DFF711DA643B300FA40E0 /* ASDKJSONResponseSerializer.h in Headers */,
+				1393C9591F0D06E400E9635B /* ASDKProfileCacheMapper.h in Headers */,
 				13BCADC11F010AC700146E7E /* ASDKMOProcessDefinition.h in Headers */,
 				139050EB1CB3FF49004FEA89 /* ASDKFormVisibilityConditionsProcessorProtocol.h in Headers */,
 				134594281BDA4B7C00A234BD /* ASDKFormTextFieldCollectionViewCell.h in Headers */,
@@ -6226,6 +6264,7 @@
 				138F0A471C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.m in Sources */,
 				13FF67A21CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m in Sources */,
 				8D3A51E01C80868500FF9A00 /* ASDKModelProcessDefinition.m in Sources */,
+				1393C9601F0E26C700E9635B /* ASDKGroupCacheMapper.m in Sources */,
 				13BCAE021F010AC700146E7E /* ASDKMOProcessInstanceContentField.m in Sources */,
 				1394F6921F0A705C005C8C32 /* ASDKAsyncBlockOperation.m in Sources */,
 				138F0A371C6B9D3100DA9414 /* ASDKRadioFieldCollectionViewCell.m in Sources */,
@@ -6270,6 +6309,7 @@
 				139E54091C21935500CE4674 /* ASDKModelApp.m in Sources */,
 				13BA5C0B1BE113AD0091D6C9 /* ASDKFormFieldValueRequestRepresentation.m in Sources */,
 				13E8307B1B6A45640028901A /* ASDKAPIEndpointDefinitionList.m in Sources */,
+				1393C95A1F0D06E400E9635B /* ASDKProfileCacheMapper.m in Sources */,
 				13CE5C6E1B998711002E5172 /* ASDKModelFilter.m in Sources */,
 				139E54041C218F1100CE4674 /* ASDKAppParserOperationWorker.m in Sources */,
 				8DB399A31C9B07890089E0AB /* ASDKActivityView.m in Sources */,

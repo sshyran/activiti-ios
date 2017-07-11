@@ -33,5 +33,6 @@ typedef void (^ASDKPersistenceErrorHandlerBlock) (NSError *error);
 - (NSManagedObjectContext *)backgroundContext;
 - (void)performForegroundTask:(ASDKPersistenceTaskBlock)taskBlock;
 - (void)performBackgroundTask:(ASDKPersistenceTaskBlock)taskBlock;
+- (void)saveContext;
 
 @end

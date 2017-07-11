@@ -17,9 +17,14 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+@import CoreData;
 
-// Error domain
-extern NSString * const ASDKPersistenceStackErrorDomain;
-extern NSInteger const  kASDKPersistenceStackInitializationErrorCode;
-extern NSInteger const  kASDKPersistenceStackSaveViewContextErrorCode;
+@class ASDKMOGroup, ASDKModelGroup;
 
+@interface ASDKGroupCacheMapper : NSObject
+
+- (ASDKMOGroup *)mapGroupToCacheMO:(ASDKModelGroup *)group
+                    usingMOContext:(NSManagedObjectContext *)moContext;
+- (ASDKModelGroup *)mapCacheMOToGroup:(ASDKMOGroup *)moGroup;
+
+@end

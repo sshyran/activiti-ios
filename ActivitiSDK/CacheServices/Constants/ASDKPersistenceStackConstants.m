@@ -24,3 +24,4 @@
 
 NSString * const ASDKPersistenceStackErrorDomain                = @"ASDKPersistenceStackErrorDomain";
 NSInteger const  kASDKPersistenceStackInitializationErrorCode   = 1;
+NSInteger const  kASDKPersistenceStackSaveViewContextErrorCode  = 2;

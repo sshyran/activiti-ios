@@ -46,14 +46,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         NSManagedObjectModel *managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-        _persistentContainer = [[NSPersistentContainer alloc] initWithName:persistenceStackModelName
+        NSPersistentContainer *persistentContainer = [[NSPersistentContainer alloc] initWithName:persistenceStackModelName
                                                         managedObjectModel:managedObjectModel];
         
-        [_persistentContainer loadPersistentStoresWithCompletionHandler:^(NSPersistentStoreDescription *description, NSError *error) {
+        [persistentContainer loadPersistentStoresWithCompletionHandler:^(NSPersistentStoreDescription *description, NSError *error) {
+#warning review if setting this is enough that changes are passed to the view context
+            persistentContainer.viewContext.automaticallyMergesChangesFromParent = YES;
+            persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
             if (errorHandlerBlock) {
                 errorHandlerBlock(error);
             }
         }];
+        
+        _persistentContainer = persistentContainer;
     }
     
     return self;
@@ -84,6 +89,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         taskBlock(managedObjectContext);
     }];
 }
+- (void)saveContext {
+    NSError *error = nil;
+    if ([[self viewContext] hasChanges]) {
+        if ([[self viewContext] save:&error]) {
+            ASDKLogError(@"Cannot save view context. Reason:%@.\nCore Data stack error:%@", [self saveViewContextOperationError], error.localizedDescription);
+            [[self viewContext] rollback];
+        }
+    }
+}
 
 
 #pragma mark -
@@ -95,6 +109,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                NSLocalizedRecoverySuggestionErrorKey: @"Check the resource path for the schema object."};
     return [NSError errorWithDomain:ASDKPersistenceStackErrorDomain
                                code:kASDKPersistenceStackInitializationErrorCode
+                           userInfo:userInfo];
+}
+
+- (NSError *)saveViewContextOperationError {
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Cannot save view context",
+                               NSLocalizedFailureReasonErrorKey     : @"An error occured during the save operation. Rolling back changes.",
+                               NSLocalizedRecoverySuggestionErrorKey: @"Investigate the detailed error responses thrown by Core Data during the save operation."};
+    return [NSError errorWithDomain:ASDKPersistenceStackErrorDomain
+                               code:kASDKPersistenceStackSaveViewContextErrorCode
                            userInfo:userInfo];
 }
 

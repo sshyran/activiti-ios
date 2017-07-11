@@ -11,6 +11,11 @@
     </entity>
     <entity name="ASDKMOAttributable" representedClassName="ASDKMOAttributable" isAbstract="YES" syncable="YES" codeGenerationType="category">
         <attribute name="modelID" attributeType="String" indexed="YES" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="modelID"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="ASDKMOComment" representedClassName="ASDKMOComment" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -97,6 +102,7 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="externalID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isCurrentProfile" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="lastUpdate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="pictureID" optional="YES" attributeType="String" syncable="YES"/>
@@ -153,13 +159,13 @@
     </entity>
     <elements>
         <element name="ASDKMOApp" positionX="-146" positionY="-558" width="128" height="150"/>
-        <element name="ASDKMOAttributable" positionX="-146" positionY="-117" width="128" height="60"/>
+        <element name="ASDKMOAttributable" positionX="-146" positionY="-117" width="128" height="58"/>
         <element name="ASDKMOComment" positionX="-308" positionY="468" width="128" height="90"/>
         <element name="ASDKMOContent" positionX="-648" positionY="-72" width="162" height="225"/>
         <element name="ASDKMOFileContent" positionX="-423" positionY="-558" width="128" height="60"/>
         <element name="ASDKMOFilter" positionX="16" positionY="-558" width="128" height="135"/>
         <element name="ASDKMOFilterModel" positionX="-423" positionY="-486" width="128" height="75"/>
-        <element name="ASDKMOGroup" positionX="34" positionY="468" width="128" height="165"/>
+        <element name="ASDKMOGroup" positionX="34" positionY="468" width="128" height="163"/>
         <element name="ASDKMOIntegrationAccount" positionX="504" positionY="-249" width="162" height="105"/>
         <element name="ASDKMOIntegrationContent" positionX="504" positionY="27" width="162" height="90"/>
         <element name="ASDKMONetwork" positionX="504" positionY="-36" width="162" height="45"/>
@@ -167,7 +173,7 @@
         <element name="ASDKMOProcessInstance" positionX="513" positionY="282" width="162" height="105"/>
         <element name="ASDKMOProcessInstanceContent" positionX="-441" positionY="-261" width="225" height="75"/>
         <element name="ASDKMOProcessInstanceContentField" positionX="-441" positionY="-126" width="216" height="75"/>
-        <element name="ASDKMOProfile" positionX="-135" positionY="72" width="128" height="330"/>
+        <element name="ASDKMOProfile" positionX="-135" positionY="72" width="128" height="343"/>
         <element name="ASDKMOServerConfiguration" positionX="-648" positionY="-558" width="198" height="135"/>
         <element name="ASDKMOSite" positionX="504" positionY="-117" width="162" height="60"/>
         <element name="ASDKMOTask" positionX="-648" positionY="162" width="162" height="300"/>

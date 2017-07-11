@@ -20,4 +20,8 @@
 
 @implementation ASDKMOAttributable
 
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
+
 @end

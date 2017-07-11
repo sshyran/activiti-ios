@@ -18,10 +18,14 @@
 
 #import "ASDKProfileDataAccessor.h"
 
+// Constants
+#import "ASDKLogConfiguration.h"
+
 // Managers
 #import "ASDKBootstrap.h"
 #import "ASDKProfileNetworkServices.h"
 #import "ASDKServiceLocator.h"
+#import "ASDKProfileCacheServices.h"
 
 // Operations
 #import "ASDKAsyncBlockOperation.h"
@@ -29,6 +33,7 @@
 // Model
 #import "ASDKDataAccessorResponseModel.h"
 
+static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
 @implementation ASDKProfileDataAccessor
 
@@ -47,6 +52,7 @@
         ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
         _networkService = (ASDKProfileNetworkServices *)[sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKProfileNetworkServiceProtocol)];
         _networkService.resultsQueue = profileUpdatesProcessingQueue;
+        _cacheService = [ASDKProfileCacheServices new];
     }
     
     return self;
@@ -96,6 +102,10 @@
 }
 
 - (ASDKAsyncBlockOperation *)remoteUserProfileOperation {
+    if (self.delegate) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
     __weak typeof(self) weakSelf = self;
     ASDKAsyncBlockOperation *remoteUserProfileOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
         __strong typeof(self) strongSelf = weakSelf;
@@ -122,30 +132,41 @@
     ASDKAsyncBlockOperation *cachedUserProfileOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        ASDKModelProfile *dummyProfile = [ASDKModelProfile new];
-        dummyProfile.userFirstName = @"dummy";
-        
-        ASDKDataAccessorResponseModel *response = [[ASDKDataAccessorResponseModel alloc] initWithModel:dummyProfile
-                                                                                          isCachedData:YES
-                                                                                                 error:nil];
-        
-        if (strongSelf.delegate) {
-            [strongSelf.delegate dataAccessor:strongSelf
-                          didLoadDataResponse:response];
-        }
-        
-        [operation complete];
+        [[strongSelf profileCacheService] fetchCurrentUserProfile:^(ASDKModelProfile *profile, NSError *error) {
+            if (profile) {
+                ASDKDataAccessorResponseModel *response = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
+                                                                                                  isCachedData:YES
+                                                                                                         error:nil];
+                if (weakSelf.delegate) {
+                    [weakSelf.delegate dataAccessor:weakSelf
+                                didLoadDataResponse:response];
+                }
+            }
+            
+            [operation complete];
+        }];
     }];
     
     return cachedUserProfileOperation;
 }
 
 - (ASDKAsyncBlockOperation *)userProfileStoreInCacheOperation {
+    __weak typeof(self) weakSelf = self;
     ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
         ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
         ASDKDataAccessorResponseModel *remoteResponse = dependencyOperation.result;
         
-        // Store in cache
+        if (remoteResponse.model) {
+            [[strongSelf profileCacheService] cacheCurrentUserProfile:remoteResponse.model
+                                                  withCompletionBlock:^(NSError *error) {
+                                                      if (!error) {
+                                                          [weakSelf saveChanges];
+                                                      } else {
+                                                          ASDKLogError(@"Encountered an error while caching the current user profile. Reason:%@", error.localizedDescription);
+                                                      }
+            }];
+        }
         
         [operation complete];
     }];
@@ -174,6 +195,10 @@
 
 - (ASDKProfileNetworkServices *)profileNetworkService {
     return (ASDKProfileNetworkServices *)self.networkService;
+}
+
+- (ASDKProfileCacheServices *)profileCacheService {
+    return (ASDKProfileCacheServices *)self.cacheService;
 }
 
 @end

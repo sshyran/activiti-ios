@@ -23,6 +23,7 @@
     @protected
     ASDKServiceDataAccessorCachingPolicy  _cachePolicy;
     ASDKNetworkService                    *_networkService;
+    ASDKCacheService                      *_cacheService;
 }
 
 @property (assign, nonatomic)           ASDKServiceDataAccessorCachingPolicy  cachePolicy;
@@ -33,5 +34,6 @@
 - (instancetype)initWithDelegate:(id<ASDKDataAccessorDelegate>)delegate;
 
 - (NSOperationQueue *)serialOperationQueue;
+- (void)saveChanges;
 
 @end

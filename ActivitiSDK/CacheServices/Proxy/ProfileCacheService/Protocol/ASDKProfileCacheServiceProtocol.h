@@ -20,11 +20,12 @@
 
 @class ASDKModelProfile;
 
-typedef void  (^ASDKCacheServiceProfileCompletionBlock) (ASDKModelProfile *profile, NSError *error);
+typedef void (^ASDKCacheServiceProfileCompletionBlock) (ASDKModelProfile *profile, NSError *error);
 
 @protocol ASDKProfileCacheServiceProtocol <NSObject>
 
-- (void)cacheCurrentUserProfile:(ASDKModelProfile *)profile;
+- (void)cacheCurrentUserProfile:(ASDKModelProfile *)profile
+            withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
 - (void)fetchCurrentUserProfile:(ASDKCacheServiceProfileCompletionBlock)profileCompletionBlock;
 
 @end

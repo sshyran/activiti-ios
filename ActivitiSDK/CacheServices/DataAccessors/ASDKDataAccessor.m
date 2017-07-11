@@ -18,6 +18,9 @@
 
 #import "ASDKDataAccessor.h"
 
+// Managers
+#import "ASDKCacheService.h"
+
 @implementation ASDKDataAccessor
 
 
@@ -42,6 +45,15 @@
     operationQueue.maxConcurrentOperationCount = 1;
     
     return operationQueue;
+}
+
+- (void)saveChanges {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.cacheService.persistenceStack saveContext];
+    });
+    
 }
 
 @end

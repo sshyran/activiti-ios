@@ -30,10 +30,11 @@
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
-@interface AFAProfileServices ()
+@interface AFAProfileServices () <ASDKDataAccessorDelegate>
 
 @property (strong, nonatomic) dispatch_queue_t              profileUpdatesProcessingQueue;
 @property (strong, nonatomic) ASDKProfileNetworkServices    *profileNetworkService;
+@property (strong, nonatomic) ASDKProfileDataAccessor       *fetchCurrentProfileDataAccessor;
 
 @end
 
@@ -53,6 +54,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
         self.profileNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKProfileNetworkServiceProtocol)];
         self.profileNetworkService.resultsQueue = self.profileUpdatesProcessingQueue;
+        
+        self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+        [self.fetchCurrentProfileDataAccessor fetchCurrentUserProfile];
     }
     
     return self;
@@ -213,6 +217,23 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (void)cancellProfileNetworkRequests {
     [self.profileNetworkService cancelAllProfileNetworkOperations];
+}
+
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    NSLog(@"");
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+    NSLog(@"");
+}
+
+- (void)dataAccessorDidStartFetchingRemoteData:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+    NSLog(@"");
 }
 
 @end

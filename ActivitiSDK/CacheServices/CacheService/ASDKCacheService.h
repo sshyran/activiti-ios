@@ -17,8 +17,9 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "ASDKPersistenceStack.h"
 
-@class ASDKPersistenceStack;
+typedef void (^ASDKCacheServiceCompletionBlock) (NSError *error);
 
 @interface ASDKCacheService : NSObject {
     @protected
