@@ -93,15 +93,8 @@
 - (void)observe:(id)object
 withManagerInfo:(ASDKKVOManagerInfo *)managerInfo {
     [_lock lock];
-    
+
     NSMutableSet *managerInfos = [_objInfoMap objectForKey:object];
-    
-    ASDKKVOManagerInfo *existingInfo = [managerInfos member:managerInfo];
-    if (existingInfo) {
-        // Objects already exists in the map table
-        [_lock unlock];
-    }
-    
     if (!managerInfos) {
         managerInfos = [NSMutableSet set];
         [_objInfoMap setObject:managerInfos
