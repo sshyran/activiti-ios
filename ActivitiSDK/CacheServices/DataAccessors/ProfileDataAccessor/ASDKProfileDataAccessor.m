@@ -32,6 +32,8 @@
 
 // Model
 #import "ASDKDataAccessorResponseModel.h"
+#import "ASDKDataAccessorResponseProgress.h"
+
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
@@ -59,7 +61,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Service - Current user profile
 
 - (void)fetchCurrentUserProfile {
@@ -102,7 +104,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (ASDKAsyncBlockOperation *)remoteUserProfileOperation {
-    if (self.delegate) {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
         [self.delegate dataAccessorDidStartFetchingRemoteData:self];
     }
     
@@ -136,7 +138,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             if (profile) {
                 ASDKDataAccessorResponseModel *response = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
                                                                                                   isCachedData:YES
-                                                                                                         error:nil];
+                                                                                                         error:error];
                 if (weakSelf.delegate) {
                     [weakSelf.delegate dataAccessor:weakSelf
                                 didLoadDataResponse:response];
@@ -165,10 +167,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                       } else {
                                                           ASDKLogError(@"Encountered an error while caching the current user profile. Reason:%@", error.localizedDescription);
                                                       }
-            }];
+                                                      
+                                                      [operation complete];
+                                                  }];
         }
-        
-        [operation complete];
     }];
     
     return storeInCacheOperation;
@@ -187,6 +189,140 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }];
     
     return completionOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Current user profile image
+
+- (void)fetchCurrentUserProfileImage {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.profileNetworkService fetchProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKDataAccessorResponseModel *responseModel = [[ASDKDataAccessorResponseModel alloc] initWithModel:profileImage
+                                                                                               isCachedData:NO
+                                                                                                      error:error];
+        if (strongSelf.delegate) {
+            [strongSelf.delegate dataAccessor:strongSelf
+                          didLoadDataResponse:responseModel];
+            
+            [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+        }
+    }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Update current profile
+
+- (void)updateCurrentProfileWithModel:(ASDKModelProfile *)profileModel {
+    NSParameterAssert(profileModel);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.profileNetworkService updateProfileWithModel:profileModel
+                                       completionBlock:^(ASDKModelProfile *profile, NSError *error) {
+                                           __strong typeof(self) strongSelf = weakSelf;
+                                           
+                                           ASDKDataAccessorResponseModel *responseModel =
+                                           [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
+                                                                                   isCachedData:NO
+                                                                                          error:error];
+                                           if (strongSelf.delegate) {
+                                               [strongSelf.delegate dataAccessor:strongSelf
+                                                             didLoadDataResponse:responseModel];
+                                               
+                                               [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                           }
+                                       }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Update current profile password
+
+- (void)updateCurrentProfileWithNewPassword:(NSString *)newPassword
+                                oldPassword:(NSString *)oldPassword {
+    NSParameterAssert(newPassword);
+    NSParameterAssert(oldPassword);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.profileNetworkService updateProfileWithNewPassword:newPassword
+                                                 oldPassword:oldPassword
+                                             completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
+                                                 __strong typeof(self) strongSelf = weakSelf;
+                                                 
+                                                 ASDKDataAccessorResponseModel *responseModel =
+                                                 [[ASDKDataAccessorResponseModel alloc] initWithModel:newPassword
+                                                                                         isCachedData:NO
+                                                                                                error:error];
+                                                 if (strongSelf.delegate) {
+                                                     [strongSelf.delegate dataAccessor:strongSelf
+                                                                   didLoadDataResponse:responseModel];
+                                                 }
+                                             }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Upload current profile image
+
+- (void)uploadCurrentProfileImageForContentModel:(ASDKModelFileContent *)fileContentModel
+                                     contentData:(NSData *)contentData {
+    NSParameterAssert(fileContentModel);
+    NSParameterAssert(contentData);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.profileNetworkService uploadProfileImageWithModel:fileContentModel
+                                                contentData:contentData
+                                              progressBlock:^(NSUInteger progress, NSError *error) {
+                                                  __strong typeof(self) strongSelf = weakSelf;
+                                                  
+                                                  ASDKDataAccessorResponseProgress *responseProgress =
+                                                  [[ASDKDataAccessorResponseProgress alloc] initWithProgress:progress
+                                                                                                isCachedData:NO
+                                                                                                       error:error];
+                                                  if (strongSelf.delegate) {
+                                                      [strongSelf.delegate dataAccessor:strongSelf
+                                                                    didLoadDataResponse:responseProgress];
+                                                  }
+                                                  
+                                              } completionBlock:^(ASDKModelContent *profileImageContent, NSError *error) {
+                                                  __strong typeof(self) strongSelf = weakSelf;
+                                                  
+                                                  ASDKDataAccessorResponseModel *responseModel =
+                                                  [[ASDKDataAccessorResponseModel alloc] initWithModel:profileImageContent
+                                                                                          isCachedData:NO
+                                                                                                 error:error];
+                                                  if (strongSelf.delegate) {
+                                                      [strongSelf.delegate dataAccessor:strongSelf
+                                                                    didLoadDataResponse:responseModel];
+                                                  }
+                                              }];
+}
+
+
+#pragma mark -
+#pragma mark Cancel operations
+
+- (void)cancelProfileRequests {
+    [self.profileNetworkService cancelAllProfileNetworkOperations];
 }
 
 

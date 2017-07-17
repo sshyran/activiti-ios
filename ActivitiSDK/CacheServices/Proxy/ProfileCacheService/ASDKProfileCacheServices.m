@@ -65,16 +65,16 @@
         NSError *error = nil;
         NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
                                                                     error:&error];
-        
-        if (!error) {
-            for (ASDKMOProfile *profile in fetchResults) {
-                profile.isCurrentProfile = NO;
-            }
-        }
-        
+
         ASDKMOProfile *currentUserProfile = [strongSelf.profileCacheMapper mapProfileToCacheMO:profile
                                                                                 usingMOContext:managedObjectContext];
         currentUserProfile.isCurrentProfile = YES;
+        
+        for (ASDKMOProfile *profile in fetchResults) {
+            if (![currentUserProfile.modelID isEqualToString:profile.modelID]) {
+                profile.isCurrentProfile = NO;
+            }
+        }
         
         [managedObjectContext save:&error];
         

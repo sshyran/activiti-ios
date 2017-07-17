@@ -50,7 +50,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                         managedObjectModel:managedObjectModel];
         
         [persistentContainer loadPersistentStoresWithCompletionHandler:^(NSPersistentStoreDescription *description, NSError *error) {
-#warning review if setting this is enough that changes are passed to the view context
             persistentContainer.viewContext.automaticallyMergesChangesFromParent = YES;
             persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
             if (errorHandlerBlock) {

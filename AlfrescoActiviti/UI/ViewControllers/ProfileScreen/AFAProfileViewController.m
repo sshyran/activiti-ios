@@ -56,9 +56,9 @@ typedef NS_ENUM(NSInteger, AFAProfileControllerState) {
 static const CGFloat kProfileControllerSectionHeight = 40.0f;
 
 @interface AFAProfileViewController () <AFAProfileViewControllerDataSourceDelegate,
-                                        AFAContentPickerViewControllerDelegate,
-                                        UITextFieldDelegate,
-                                        UITableViewDelegate>
+AFAContentPickerViewControllerDelegate,
+UITextFieldDelegate,
+UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView                *profileTableView;
 @property (weak, nonatomic) IBOutlet AFAAvatarView              *avatarView;
@@ -80,7 +80,11 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 @property (assign, nonatomic) AFAProfileControllerState         controllerState;
 @property (strong, nonatomic) UIImage                           *profileImage;
 
-// KVO
+// Services
+@property (strong, nonatomic) AFAProfileServices                *requestProfileService;
+@property (strong, nonatomic) AFAProfileServices                *profileImageService;
+@property (strong, nonatomic) AFAProfileServices                *profileUpdateService;
+@property (strong, nonatomic) AFAProfileServices                *profilePasswordUpdateService;
 @property (strong, nonatomic) ASDKKVOManager                    *kvoManager;
 
 @end
@@ -97,6 +101,10 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     if (self) {
         _controllerState = AFAProfileControllerStateIdle;
         _progressHUD = [self configureProgressHUD];
+        _requestProfileService = [AFAProfileServices new];
+        _profileImageService = [AFAProfileServices new];
+        _profileUpdateService = [AFAProfileServices new];
+        _profilePasswordUpdateService = [AFAProfileServices new];
         
         // Set up state bindings
         [self handleBindingsForAppListViewController];
@@ -241,25 +249,38 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 
 - (void)fetchProfileInformation {
     __weak typeof(self) weakSelf = self;
-    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+    
+    void (^updateProfileDataSourceBlock)() = ^(ASDKModelProfile *profile) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        // Display the last update date
+        if (strongSelf.refreshControl) {
+            strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+        
+        // Store the fetched profile
+        strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
+        strongSelf.dataSource.delegate = self;
+        strongSelf.profileTableView.dataSource = strongSelf.dataSource;
+        
+        [self updateUIForProfileContent:profile];
+    };
+    
+    [self.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            updateProfileDataSourceBlock(profile);
+        } else {
+            [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
         strongSelf.controllerState = AFAProfileControllerStateIdle;
+        
         if (!error) {
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-            
-            // Store the fetched profile
-            strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
-            strongSelf.dataSource.delegate = self;
-            strongSelf.profileTableView.dataSource = strongSelf.dataSource;
-            
-            [self updateUIForProfileContent:profile];
-        } else {
-            [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+            updateProfileDataSourceBlock(profile);
         }
         
         BOOL isInformationAvailable = error ? NO : YES;
@@ -274,9 +295,8 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
 }
 
 - (void)fetchProfileImage {
-    AFAProfileServices *profileService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
     __weak typeof(self) weakSelf = self;
-    [profileService requestProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
+    [self.profileImageService requestProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
             strongSelf.profileImage = profileImage;
@@ -421,47 +441,47 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     [self showFormSaveIndicatorView];
     
     __weak typeof(self) weakSelf = self;
-    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices requestProfileUpdateWithModel:self.dataSource.currentProfile
-                                   completionBlock:^(ASDKModelProfile *profile, NSError *error) {
-                                       __strong typeof(self) strongSelf = weakSelf;
-                                       
-                                       if (!error) {
-                                           // Display the last update date
-                                           if (strongSelf.refreshControl) {
-                                               strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-                                           }
-                                           
-                                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                               weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenProfileInformationUpdatedText, "Profile updated text");
-                                               weakSelf.progressHUD.detailTextLabel.text = nil;
-                                               weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                               weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                           });
-                                           
-                                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                               [weakSelf.progressHUD dismiss];
-                                           });
-                                           
-                                           // Store the fetched profile
-                                           profile.groups = strongSelf.dataSource.currentProfile.groups;
-                                           strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
-                                           strongSelf.dataSource.delegate = strongSelf;
-                                           strongSelf.profileTableView.dataSource = strongSelf.dataSource;
-                                           
-                                           [strongSelf updateUIForProfileContent:profile];
-                                       } else {
-                                           [strongSelf.progressHUD dismiss];
-                                           [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                           
-                                           // If an error occured, roll back to the previous valid state of the user profile
-                                           [strongSelf.dataSource rollbackProfileChanges];
-                                           [self showProfileSaveButton:NO];
-                                           [strongSelf updateUIForProfileContent:strongSelf.dataSource.currentProfile];
-                                       }
-                                       
-                                       [strongSelf showProfileSaveButton:NO];
-                                   }];
+    [self.profileUpdateService
+     requestProfileUpdateWithModel:self.dataSource.currentProfile
+     completionBlock:^(ASDKModelProfile *profile, NSError *error) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         if (!error) {
+             // Display the last update date
+             if (strongSelf.refreshControl) {
+                 strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+             }
+             
+             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                 weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenProfileInformationUpdatedText, "Profile updated text");
+                 weakSelf.progressHUD.detailTextLabel.text = nil;
+                 weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                 weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+             });
+             
+             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                 [weakSelf.progressHUD dismiss];
+             });
+             
+             // Store the fetched profile
+             profile.groups = strongSelf.dataSource.currentProfile.groups;
+             strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
+             strongSelf.dataSource.delegate = strongSelf;
+             strongSelf.profileTableView.dataSource = strongSelf.dataSource;
+             
+             [strongSelf updateUIForProfileContent:profile];
+         } else {
+             [strongSelf.progressHUD dismiss];
+             [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+             
+             // If an error occured, roll back to the previous valid state of the user profile
+             [strongSelf.dataSource rollbackProfileChanges];
+             [self showProfileSaveButton:NO];
+             [strongSelf updateUIForProfileContent:strongSelf.dataSource.currentProfile];
+         }
+         
+         [strongSelf showProfileSaveButton:NO];
+     }];
 }
 
 - (void)updateProfilePasswordWithNewPassword:(NSString *)updatedPassword
@@ -469,33 +489,33 @@ static const CGFloat kProfileControllerSectionHeight = 40.0f;
     [self showFormSaveIndicatorView];
     
     __weak typeof(self) weakSelf = self;
-    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices requestProfilePasswordUpdatedWithNewPassword:updatedPassword
-                                                      oldPassword:oldPassword
-                                                  completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
-                                                      __strong typeof(self) strongSelf = weakSelf;
-                                                      
-                                                      if (!error) {
-                                                          // Display the last update date
-                                                          if (strongSelf.refreshControl) {
-                                                              strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-                                                          }
-                                                          
-                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                              weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenPasswordUpdatedText, "Password updated text");
-                                                              weakSelf.progressHUD.detailTextLabel.text = nil;
-                                                              weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                                              weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                                          });
-                                                          
-                                                          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                              [weakSelf.progressHUD dismiss];
-                                                          });
-                                                      } else {
-                                                          [strongSelf.progressHUD dismiss];
-                                                          [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationProfileScreenInvalidPasswordResponseText, @"Invalid password response text")];
-                                                      }
-                                                  }];
+    [self.profilePasswordUpdateService
+     requestProfilePasswordUpdatedWithNewPassword:updatedPassword
+     oldPassword:oldPassword
+     completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         if (!error) {
+             // Display the last update date
+             if (strongSelf.refreshControl) {
+                 strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+             }
+             
+             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                 weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationProfileScreenPasswordUpdatedText, "Password updated text");
+                 weakSelf.progressHUD.detailTextLabel.text = nil;
+                 weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                 weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+             });
+             
+             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                 [weakSelf.progressHUD dismiss];
+             });
+         } else {
+             [strongSelf.progressHUD dismiss];
+             [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationProfileScreenInvalidPasswordResponseText, @"Invalid password response text")];
+         }
+     }];
 }
 
 

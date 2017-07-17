@@ -73,6 +73,10 @@
 #import <ActivitiSDK/ASDKModelSite.h>
 #import <ActivitiSDK/ASDKModelIntegrationContent.h>
 #import <ActivitiSDK/ASDKFormFieldValueRequestRepresentation.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseModel.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseCollection.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseConfirmation.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseProgress.h>
 
 #import <ActivitiSDK/ASDKIntegrationNetworksDataSource.h>
 #import <ActivitiSDK/ASDKIntegrationSitesDataSource.h>

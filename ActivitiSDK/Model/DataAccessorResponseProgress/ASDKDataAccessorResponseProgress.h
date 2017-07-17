@@ -16,20 +16,14 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKDataAccessor.h"
+#import "ASDKDataAccessorResponseBase.h"
 
-@class ASDKModelProfile, ASDKModelFileContent;
+@interface ASDKDataAccessorResponseProgress : ASDKDataAccessorResponseBase
 
-@interface ASDKProfileDataAccessor : ASDKDataAccessor
+@property (assign, nonatomic, readonly) NSUInteger progress;
 
-- (void)fetchCurrentUserProfile;
-- (void)fetchCurrentUserProfileImage;
-- (void)updateCurrentProfileWithModel:(ASDKModelProfile *)profileModel;
-- (void)updateCurrentProfileWithNewPassword:(NSString *)newPassword
-                                oldPassword:(NSString *)oldPassword;
-- (void)uploadCurrentProfileImageForContentModel:(ASDKModelFileContent *)fileContentModel
-                                     contentData:(NSData *)contentData;
-- (void)cancelProfileRequests;
+- (instancetype)initWithProgress:(NSUInteger)progress
+                    isCachedData:(BOOL)isCachedData
+                           error:(NSError *)error;
 
 @end

@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, ASDKServiceDataAccessorCachingPolicy) {
 - (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor;
 
 
+@optional
 /**
  * Signals that the data accessor will begin to fetch remote data
  *

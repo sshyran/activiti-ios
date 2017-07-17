@@ -38,6 +38,9 @@
 
 @property (strong, nonatomic) AFACredentialModel *credentialModel;
 
+// Services
+@property (strong, nonatomic) AFAProfileServices *requestProfileService;
+
 @end
 
 @implementation AFALoginViewModel
@@ -53,17 +56,19 @@
         NSDictionary *placeholderAttributes = @{NSForegroundColorAttributeName : [UIColor placeholderColorForCredentialTextField]};
         
         _usernameAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginUsernamePlaceholderText, @"Username placeholder text")
-                                                                                 attributes:placeholderAttributes];
-        _passwordAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginPasswordPlaceholderText, @"Password placeholder text")
-                                                                                 attributes:placeholderAttributes];
-        _hostnameAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginHostnamePlaceholderText, @"Hostname placeholder text")
-                                                                                 attributes:placeholderAttributes];
-        _portAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginPortPlaceholderText, @"Port placeholder text")
                                                                              attributes:placeholderAttributes];
+        _passwordAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginPasswordPlaceholderText, @"Password placeholder text")
+                                                                             attributes:placeholderAttributes];
+        _hostnameAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginHostnamePlaceholderText, @"Hostname placeholder text")
+                                                                             attributes:placeholderAttributes];
+        _portAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginPortPlaceholderText, @"Port placeholder text")
+                                                                         attributes:placeholderAttributes];
         _serviceDocumentAttributedPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(kLocalizationLoginServiceDocumentPlaceholderText, @"Document placeholder text")
-                                                                                        attributes:placeholderAttributes];
+                                                                                    attributes:placeholderAttributes];
         _credentialModel = [AFACredentialModel new];
         _credentialModel.serviceDocument = kASDKAPIApplicationPath;
+        
+        _requestProfileService = [AFAProfileServices new];
     }
     
     return self;
@@ -157,23 +162,26 @@
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
     [sdkBootstrap setupServicesWithServerConfiguration:serverConfiguration];
     
-    // Register a clean profile services instance
-    AFAServiceRepository *serviceRepository = [AFAServiceRepository sharedRepository];
-    if ([serviceRepository serviceObjectForPurpose:AFAServiceObjectTypeProfileServices]) {
-        [serviceRepository removeServiceForPurpose:AFAServiceObjectTypeProfileServices];
-    }
-    
-    AFAProfileServices *profileServices = [AFAProfileServices new];
-    [serviceRepository registerServiceObject:profileServices
-                                  forPurpose:AFAServiceObjectTypeProfileServices];
-    
     __weak typeof(self) weakSelf = self;
-    [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+    void (^errorHandlingBlock)() = ^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        // Check first if the request wasn't previously canceled
+        // An error occured
+        strongSelf.authState = AFALoginAuthenticationStateFailed;
+        
+        [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
+        [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
+        
+        completionBlock(NO, error);
+    };
+    
+    [self.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        // Check first if the request wasn't previously canceled or verified with cached values
         if (AFALoginAuthenticationStateCanceled != strongSelf.authState &&
-            AFALoginAuthenticationStatePreparing != strongSelf.authState) {
+            AFALoginAuthenticationStatePreparing != strongSelf.authState &&
+            AFALoginAuthenticationStateAuthorized != strongSelf.authState) {
             if (!error && profile) {
                 // Login is successfull - Check whether the user has choosen to remember credentials
                 // and store them in the keychain
@@ -223,13 +231,20 @@
                 strongSelf.authState = AFALoginAuthenticationStateAuthorized;
                 completionBlock(YES, nil);
             } else {
-                // An error occured
-                strongSelf.authState = AFALoginAuthenticationStateFailed;
-                
-                [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
-                [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
-                
-                completionBlock(NO, error);
+                errorHandlingBlock(error);
+            }
+        }
+    } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        // Check first if the request wasn't previously canceled
+        if (AFALoginAuthenticationStateCanceled != strongSelf.authState &&
+            AFALoginAuthenticationStatePreparing != strongSelf.authState) {
+            if (!error && profile) {
+                strongSelf.authState = AFALoginAuthenticationStateAuthorized;
+                completionBlock(YES, nil);
+            } else {
+                errorHandlingBlock(error);
             }
         }
     }];
@@ -257,8 +272,7 @@
     }
     
     // Cancel also the request
-    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices cancellProfileNetworkRequests];
+    [self.requestProfileService cancellProfileNetworkRequests];
 }
 
 @end

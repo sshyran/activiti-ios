@@ -44,8 +44,8 @@
     moProfile.externalID = profile.externalID;
     moProfile.pictureID = profile.pictureID;
     moProfile.profileState = profile.profileState;
-    moProfile.creationDate = moProfile.creationDate;
-    moProfile.lastUpdate = moProfile.lastUpdate;
+    moProfile.creationDate = profile.creationDate;
+    moProfile.lastUpdate = profile.lastUpdate;
     
     if (profile.groups.count) {
         ASDKGroupCacheMapper *groupMapper = [ASDKGroupCacheMapper new];

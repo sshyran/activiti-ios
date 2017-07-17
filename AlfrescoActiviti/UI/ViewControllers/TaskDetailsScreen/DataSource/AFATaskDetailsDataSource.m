@@ -97,10 +97,11 @@
                               
                               // Fetch profile information
                               dispatch_group_enter(taskDetailsGroup);
-                              AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
+                              AFAProfileServices *profileServices = [AFAProfileServices new];
                               __block ASDKModelProfile *currentUserProfile = nil;
                               __block BOOL hadEncounteredAnError = NO;
-                              [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+                              
+                              void (^currentProfileCompletionBlock)() = ^(ASDKModelProfile *profile, NSError *error) {
                                   if (hadEncounteredAnError) {
                                       return;
                                   } else {
@@ -114,6 +115,15 @@
                                       }
                                       dispatch_group_leave(taskDetailsGroup);
                                   }
+                              };
+                              
+                              [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+                                  // Check if cached value has been already provided
+                                  if (!currentUserProfile) {
+                                      currentProfileCompletionBlock(profile, error);
+                                  }
+                              } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
+                                  currentProfileCompletionBlock(profile, error);
                               }];
                               
                               // Fetch parent task if applicable

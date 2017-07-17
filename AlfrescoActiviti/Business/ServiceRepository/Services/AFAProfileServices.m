@@ -32,9 +32,27 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 @interface AFAProfileServices () <ASDKDataAccessorDelegate>
 
-@property (strong, nonatomic) dispatch_queue_t              profileUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKProfileNetworkServices    *profileNetworkService;
-@property (strong, nonatomic) ASDKProfileDataAccessor       *fetchCurrentProfileDataAccessor;
+// Current profile
+@property (strong, nonatomic) ASDKProfileDataAccessor                       *fetchCurrentProfileDataAccessor;
+@property (copy, nonatomic) AFAProfileCompletionBlock                       currentProfileCompletionBlock;
+@property (copy, nonatomic) AFAProfileCompletionBlock                       currentProfileCachedResultsBlock;
+
+// Fetch current profile image
+@property (strong, nonatomic) ASDKProfileDataAccessor                       *fetchCurrentProfileImageDataAccessor;
+@property (copy, nonatomic) AFAProfileServicesProfileImageCompletionBlock   profileImageCompletionBlock;
+
+// Update current profile
+@property (strong, nonatomic) ASDKProfileDataAccessor                       *updateCurrentProfileDataAccessor;
+@property (copy, nonatomic) AFAProfileCompletionBlock                       updateCurrentProfileCompletionBlock;
+
+// Current profile password update
+@property (strong, nonatomic) ASDKProfileDataAccessor                       *updateCurrentProfilePasswordDataAccessor;
+@property (copy, nonatomic) AFAProfilePasswordCompletionBlock               updateProfilePasswordCompletionBlock;
+
+// Upload current profile image
+@property (strong, nonatomic) ASDKProfileDataAccessor                       *uploadCurrentProfileImageDataAccessor;
+@property (copy, nonatomic) AFAProfileContentProgressBlock                  uploadCurrentProfileImageProgressBlock;
+@property (copy, nonatomic) AFAProfileContentUploadCompletionBlock          uploadCurrentProfileImageCompletionBlock;
 
 @end
 
@@ -42,181 +60,79 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 
 #pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        self.profileUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        
-        // Acquire and set up the app network service
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.profileNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKProfileNetworkServiceProtocol)];
-        self.profileNetworkService.resultsQueue = self.profileUpdatesProcessingQueue;
-        
-        self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
-        [self.fetchCurrentProfileDataAccessor fetchCurrentUserProfile];
-    }
-    
-    return self;
-}
-
-
-#pragma mark -
 #pragma mark Public interface
 
 - (void)requestProfileImageWithCompletionBlock:(AFAProfileServicesProfileImageCompletionBlock)completionBlock {
     NSParameterAssert(completionBlock);
+    self.profileImageCompletionBlock = completionBlock;
     
-    [self.profileNetworkService fetchProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
-        if (!error) {
-            AFALogVerbose(@"Profile image fetched successfully (%@)", profileImage ? @"ContentAvailable" : @"NoContent");
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(profileImage, nil);
-            });
-        } else {
-            AFALogError(@"An error occured while loading the profile picture. Reason:%@", error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error);
-            });
-        }
-    }];
+    self.fetchCurrentProfileImageDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+    [self.fetchCurrentProfileImageDataAccessor fetchCurrentUserProfileImage];
 }
 
 - (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock {
-    NSParameterAssert(completionBlock);
+    self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+    self.fetchCurrentProfileDataAccessor.cachePolicy = ASDKServiceDataAccessorCachingPolicyAPIOnly;
     
-    [self.profileNetworkService fetchProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
-        if (!error) {
-            AFALogVerbose(@"Profile information fetched successfully for user :%@", [NSString stringWithFormat:@"%@ %@", profile.userFirstName, profile.userLastName]);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(profile, nil);
-            });
-        } else {
-            AFALogError(@"An error occured while fetching profile information for the current user. Reason:%@", error.localizedDescription);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error);
-            });
-        }
-    }];
+    [self requestProfileWithCompletionBlock:completionBlock
+                              cachedResults:nil];
+}
+
+- (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock
+                            cachedResults:(AFAProfileCompletionBlock)cacheCompletionBlock {
+    NSParameterAssert(completionBlock);
+    self.currentProfileCompletionBlock = completionBlock;
+    self.currentProfileCachedResultsBlock = cacheCompletionBlock;
+    
+    if (!self.fetchCurrentProfileDataAccessor) {
+        self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+    }
+    [self.fetchCurrentProfileDataAccessor fetchCurrentUserProfile];
 }
 
 - (void)requestProfileUpdateWithModel:(ASDKModelProfile *)profileModel
                       completionBlock:(AFAProfileCompletionBlock)completionBlock {
-    NSParameterAssert(profileModel);
     NSParameterAssert(completionBlock);
+    self.updateCurrentProfileCompletionBlock = completionBlock;
     
-    [self.profileNetworkService updateProfileWithModel:profileModel
-                                       completionBlock:^(ASDKModelProfile *profile, NSError *error) {
-                                           if (!error) {
-                                               AFALogVerbose(@"Profile information updated successfully for the current user.");
-                                               
-                                               // If the user updated the email address (username) then replace the authentication provider in the
-                                               // SDK with the new username and also update the keychain values if the user checked the remember
-                                               // credentials option
-                                               ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-                                               if (![profile.email isEqualToString:sdkBootstrap.serverConfiguration.username]) {
-                                                   [sdkBootstrap updateServerConfigurationCredentialsForUsername:profile.email
-                                                                                                        password:sdkBootstrap.serverConfiguration.password];
-                                                   
-                                                   if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]) {
-                                                       [AFAKeychainWrapper updateKeychainValue:profile.email
-                                                                                 forIdentifier:kUsernameCredentialIdentifier];
-                                                   }
-                                               }
-                                               
-                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                   completionBlock(profile, nil);
-                                               });
-                                           } else {
-                                               AFALogError(@"An error occured while updating profile information for the current user. Reason:%@", error.localizedDescription);
-                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                   completionBlock(nil, error);
-                                               });
-                                           }
-    }];
+    self.updateCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+    [self.updateCurrentProfileDataAccessor updateCurrentProfileWithModel:profileModel];
 }
 
 - (void)requestProfilePasswordUpdatedWithNewPassword:(NSString *)updatedPassword
                                          oldPassword:(NSString *)oldPassword
                                      completionBlock:(AFAProfilePasswordCompletionBlock)completionBlock {
-    NSParameterAssert(updatedPassword);
-    NSParameterAssert(oldPassword);
+    NSParameterAssert(completionBlock);
+    self.updateProfilePasswordCompletionBlock = completionBlock;
     
-    [self.profileNetworkService updateProfileWithNewPassword:updatedPassword
-                                                 oldPassword:oldPassword
-                                             completionBlock:^(BOOL isPasswordUpdated, NSError *error) {
-                                                 if (!error) {
-                                                     AFALogVerbose(@"Profile password updated successfully for the current user.");
-                                                     
-                                                     // If the password has been updated replace the authentication provider in the SDK with
-                                                     // the new password and also update the keychain values if the user checked the remember
-                                                     // credentials option
-                                                     if (isPasswordUpdated) {
-                                                         ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-                                                         [sdkBootstrap updateServerConfigurationCredentialsForUsername:sdkBootstrap.serverConfiguration.username
-                                                                                                              password:updatedPassword];
-                                                         
-                                                         if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]) {
-                                                             [AFAKeychainWrapper updateKeychainValue:updatedPassword
-                                                                                       forIdentifier:kPasswordCredentialIdentifier];
-                                                         }
-                                                     }
-                                                     
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock(isPasswordUpdated, nil);
-                                                     });
-                                                 } else {
-                                                     AFALogError(@"An error occured while updating profile password for the current user. Reason:%@", error.localizedDescription);
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock(NO, error);
-                                                     });
-                                                 }
-    }];
+    self.updateCurrentProfilePasswordDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+    [self.updateCurrentProfilePasswordDataAccessor updateCurrentProfileWithNewPassword:updatedPassword
+                                                                           oldPassword:oldPassword];
 }
 
 - (void)requestUploadProfileImageAtFileURL:(NSURL *)fileURL
                                contentData:(NSData *)contentData
                              progressBlock:(AFAProfileContentProgressBlock)progressBlock
                            completionBlock:(AFAProfileContentUploadCompletionBlock)completionBlock {
-    NSParameterAssert(fileURL);
-    NSParameterAssert(contentData);
     NSParameterAssert(completionBlock);
+    
+    self.uploadCurrentProfileImageProgressBlock = progressBlock;
+    self.uploadCurrentProfileImageCompletionBlock = completionBlock;
     
     ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
     fileContentModel.modelFileURL = fileURL;
     
-    [self.profileNetworkService uploadProfileImageWithModel:fileContentModel
-                                        contentData:contentData
-                                      progressBlock:^(NSUInteger progress, NSError *error) {
-                                          AFALogVerbose(@"Profile image is %lu%% uploaded", (unsigned long)progress);
-                                          
-                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                              progressBlock (progress, error);
-                                          });
-                                      } completionBlock:^(ASDKModelContent *profileImageContent, NSError *error) {
-                                          if (!error) {
-                                              AFALogVerbose(@"Profile image was succesfully uploaded");
-                                              
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  completionBlock (YES, nil);
-                                              });
-                                          } else {
-                                              AFALogError(@"An error occured while uploading the profile picture. Reason:%@", error.localizedDescription);
-                                              
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  completionBlock (NO, error);
-                                              });
-                                          }
-                                      }];
+    self.uploadCurrentProfileImageDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+    [self.uploadCurrentProfileImageDataAccessor uploadCurrentProfileImageForContentModel:fileContentModel
+                                                                             contentData:contentData];
 }
 
 - (void)cancellProfileNetworkRequests {
-    [self.profileNetworkService cancelAllProfileNetworkOperations];
+    [self.fetchCurrentProfileDataAccessor cancelProfileRequests];
+    [self.fetchCurrentProfileImageDataAccessor cancelProfileRequests];
+    [self.updateCurrentProfileDataAccessor cancelProfileRequests];
+    [self.updateCurrentProfilePasswordDataAccessor cancelProfileRequests];
+    [self.uploadCurrentProfileImageDataAccessor cancelProfileRequests];
 }
 
 
@@ -225,15 +141,202 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
-    NSLog(@"");
+    if (self.fetchCurrentProfileImageDataAccessor == dataAccessor) {
+        [self handleCurrentProfileImageDataAccessorResponse:response];
+    } else if (self.fetchCurrentProfileDataAccessor == dataAccessor) {
+        [self handleCurrentProfileDataAccessorResponse:response];
+    } else if (self.updateCurrentProfileDataAccessor == dataAccessor) {
+        [self handleUpdateCurrentProfileDataAccessorResponse:response];
+    } else if (self.updateCurrentProfilePasswordDataAccessor == dataAccessor) {
+        [self handleUpdateCurrentProfilePasswordDataAccessorResponse:response];
+    } else if (self.uploadCurrentProfileImageDataAccessor == dataAccessor) {
+        [self handleUploadProfileImageForCurrentProfileDataAccessorResponse:response];
+    }
 }
 
 - (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
-    NSLog(@"");
 }
 
-- (void)dataAccessorDidStartFetchingRemoteData:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
-    NSLog(@"");
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleCurrentProfileImageDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *profileImageResponse = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!profileImageResponse.error) {
+        AFALogVerbose(@"Profile image fetched successfully (%@)", profileImageResponse.model ? @"ContentAvailable" : @"NoContent");
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.profileImageCompletionBlock(profileImageResponse.model, nil);
+            strongSelf.profileImageCompletionBlock = nil;
+        });
+    } else {
+        AFALogError(@"An error occured while loading the profile picture. Reason:%@", profileImageResponse.error.localizedDescription);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.profileImageCompletionBlock(nil, profileImageResponse.error);
+            strongSelf.profileImageCompletionBlock = nil;
+        });
+    }
+}
+
+- (void)handleCurrentProfileDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *profileResponse = (ASDKDataAccessorResponseModel *)response;
+    ASDKModelProfile *profile = (ASDKModelProfile *)profileResponse.model;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!profileResponse.error) {
+        AFALogVerbose(@"Profile information fetched successfully for user :%@", [profile normalisedName]);
+        
+        if (profileResponse.isCachedData) {
+            if (self.currentProfileCachedResultsBlock) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    __strong typeof(self) strongSelf = weakSelf;
+                    
+                    strongSelf.currentProfileCachedResultsBlock(profile, nil);
+                    strongSelf.currentProfileCachedResultsBlock = nil;
+                });
+            }
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                strongSelf.currentProfileCompletionBlock(profile, nil);
+                strongSelf.currentProfileCompletionBlock = nil;
+            });
+        }
+    } else {
+        AFALogError(@"An error occured while fetching profile information for the current user. Reason:%@", profileResponse.error.localizedDescription);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.currentProfileCompletionBlock(nil, profileResponse.error);
+            strongSelf.currentProfileCompletionBlock = nil;
+        });
+    }
+}
+
+- (void)handleUpdateCurrentProfileDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *profileResponse = (ASDKDataAccessorResponseModel *)response;
+    ASDKModelProfile *profile = (ASDKModelProfile *)profileResponse.model;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!profileResponse.error) {
+        AFALogVerbose(@"Profile information updated successfully for the current user.");
+        
+        // If the user updated the email address (username) then replace the authentication provider in the
+        // SDK with the new username and also update the keychain values if the user checked the remember
+        // credentials option
+        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+        if (![profile.email isEqualToString:sdkBootstrap.serverConfiguration.username]) {
+            [sdkBootstrap updateServerConfigurationCredentialsForUsername:profile.email
+                                                                 password:sdkBootstrap.serverConfiguration.password];
+            
+            if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]) {
+                [AFAKeychainWrapper updateKeychainValue:profile.email
+                                          forIdentifier:kUsernameCredentialIdentifier];
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.updateCurrentProfileCompletionBlock(profile, nil);
+            strongSelf.updateCurrentProfileCompletionBlock = nil;
+        });
+    } else {
+        AFALogError(@"An error occured while updating profile information for the current user. Reason:%@", profileResponse.error.localizedDescription);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.updateCurrentProfileCompletionBlock(nil, profileResponse.error);
+            strongSelf.updateCurrentProfileCompletionBlock = nil;
+        });
+    }
+}
+
+- (void)handleUpdateCurrentProfilePasswordDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *profileResponse = (ASDKDataAccessorResponseModel *)response;
+    NSString *newPassword = profileResponse.model;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!profileResponse.error) {
+        AFALogVerbose(@"Profile password updated successfully for the current user.");
+        
+        // If the password has been updated replace the authentication provider in the SDK with
+        // the new password and also update the keychain values if the user checked the remember
+        // credentials option
+        if (newPassword.length) {
+            ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+            [sdkBootstrap updateServerConfigurationCredentialsForUsername:sdkBootstrap.serverConfiguration.username
+                                                                 password:newPassword];
+            
+            if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]) {
+                [AFAKeychainWrapper updateKeychainValue:newPassword
+                                          forIdentifier:kPasswordCredentialIdentifier];
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.updateProfilePasswordCompletionBlock(newPassword, nil);
+            strongSelf.updateProfilePasswordCompletionBlock = nil;
+        });
+    } else {
+        AFALogError(@"An error occured while updating profile password for the current user. Reason:%@", profileResponse.error.localizedDescription);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.updateProfilePasswordCompletionBlock(NO, profileResponse.error);
+            strongSelf.updateProfilePasswordCompletionBlock = nil;
+        });
+    }
+}
+
+- (void)handleUploadProfileImageForCurrentProfileDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSUInteger progress = progressResponse.progress;
+        AFALogVerbose(@"Profile image is %lu%% uploaded", (unsigned long)progress);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.uploadCurrentProfileImageProgressBlock (progress, progressResponse.error);
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
+        ASDKDataAccessorResponseModel *contentResponse = (ASDKDataAccessorResponseModel *)response;
+        
+        if (!contentResponse.error) {
+            AFALogVerbose(@"Profile image was succesfully uploaded");
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                strongSelf.uploadCurrentProfileImageCompletionBlock(YES, nil);
+                strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
+                strongSelf.uploadCurrentProfileImageProgressBlock = nil;
+            });
+        } else {
+            AFALogError(@"An error occured while uploading the profile picture. Reason:%@", contentResponse.error.localizedDescription);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                strongSelf.uploadCurrentProfileImageCompletionBlock(NO, contentResponse.error);
+                strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
+                strongSelf.uploadCurrentProfileImageProgressBlock = nil;
+            });
+        }
+    }
 }
 
 @end

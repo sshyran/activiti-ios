@@ -46,6 +46,19 @@ typedef void  (^AFAProfileContentUploadCompletionBlock)         (BOOL isContentU
 - (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock;
 
 /**
+ *  Performs a request for the detailed profile but first it tries to return cached data
+ *
+ *  @param completionBlock      Completion block providing a reference to the profile model object and an
+ *                              optional error reason.
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the profile model object and
+ *                              an optional error reason.
+ */
+- (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock
+                            cachedResults:(AFAProfileCompletionBlock)cacheCompletionBlock;
+
+
+
+/**
  *  Given a ASDKModelProfile model object it will update all of the provided fields and return via the
  *  completion block an updated profile model object and an optional error reason.
  *

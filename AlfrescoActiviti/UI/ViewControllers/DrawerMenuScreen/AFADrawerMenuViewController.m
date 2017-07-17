@@ -51,9 +51,21 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
 @property (strong, nonatomic) UIImage               *profileImage;
 @property (assign, nonatomic) AFADrawerMenuCellType currentSelectedMenuCell;
 
+// Services
+@property (strong, nonatomic) AFAProfileServices    *fetchProfileImageService;
+
 @end
 
 @implementation AFADrawerMenuViewController
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        _fetchProfileImageService = [AFAProfileServices new];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
@@ -145,9 +157,8 @@ typedef NS_ENUM(NSInteger, AFADrawerMenuCellType) {
 #pragma mark Service integration
 
 - (void)updateProfileImageForIndexPath:(NSIndexPath *)indexPath  {
-    AFAProfileServices *profileService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
     __weak typeof(self) weakSelf = self;
-    [profileService requestProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
+    [self.fetchProfileImageService requestProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
         if (!error) {
