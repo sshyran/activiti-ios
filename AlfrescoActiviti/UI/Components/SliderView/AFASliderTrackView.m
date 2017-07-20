@@ -19,8 +19,8 @@
 #import "AFASliderTrackView.h"
 #import "AFASliderTitleView.h"
 
-CGFloat kAFASliderTrackBulletRadius = 5.0f;
-CGFloat kAFASliderBulletTitleOffsetY = 20.0f;
+static const CGFloat kAFASliderTrackBulletRadius = 5.0f;
+static const CGFloat kAFASliderBulletTitleOffsetY = 20.0f;
 
 @interface AFASliderTrackView ()
 

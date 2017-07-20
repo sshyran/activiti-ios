@@ -36,14 +36,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 
 #pragma mark -
@@ -82,6 +82,22 @@
     transition.type = kCATransitionFade;
     transition.duration = duration;
     return transition;
+}
+
+
+#pragma mark -
+#pragma mark Public interface
+
+- (void)showWarningMessage:(NSString *)warningMessage {
+    [AFANavigationBarBannerAlertView showAlertWithText:warningMessage
+                                                 style:AFABannerAlertStyleWarning
+                                      inViewController:self];
+}
+
+- (void)showErrorMessage:(NSString *)errorMessage {
+    [AFANavigationBarBannerAlertView showAlertWithText:errorMessage
+                                                 style:AFABannerAlertStyleError
+                                      inViewController:self];
 }
 
 @end

@@ -53,6 +53,7 @@
 		131DCF4E1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */; };
 		1320B2501E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 1320B24E1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h */; };
 		1320B2511E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1320B24F1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m */; };
+		132154D71F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 132154D61F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.m */; };
 		132167101B8AF37500B7406B /* AFAAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1321670F1B8AF37500B7406B /* AFAAvatarView.m */; };
 		132167141B8B027000B7406B /* AFAAvatarMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132167131B8B027000B7406B /* AFAAvatarMenuTableViewCell.m */; };
 		1323CFC31B87065000E66D6F /* UIImage+AFAFontGlyphicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 1323CFC21B87065000E66D6F /* UIImage+AFAFontGlyphicons.m */; };
@@ -778,6 +779,8 @@
 		131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsUpdateTaskAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsUpdateTaskAction/AFAModalTaskDetailsUpdateTaskAction.m; sourceTree = "<group>"; };
 		1320B24E1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormThemedCollectionViewCell.h; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormThemedCollectionViewCell.h; sourceTree = "<group>"; };
 		1320B24F1E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFormThemedCollectionViewCell.m; path = FormRenderEngine/Cells/CollectionViewCells/ASDKFormThemedCollectionViewCell.m; sourceTree = "<group>"; };
+		132154D51F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFANavigationBarBannerAlertView.h; path = UI/Components/BannerAlertView/AFANavigationBarBannerAlertView.h; sourceTree = "<group>"; };
+		132154D61F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFANavigationBarBannerAlertView.m; path = UI/Components/BannerAlertView/AFANavigationBarBannerAlertView.m; sourceTree = "<group>"; };
 		1321670E1B8AF37500B7406B /* AFAAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAvatarView.h; path = UI/Components/AvatarView/AFAAvatarView.h; sourceTree = "<group>"; };
 		1321670F1B8AF37500B7406B /* AFAAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAvatarView.m; path = UI/Components/AvatarView/AFAAvatarView.m; sourceTree = "<group>"; };
 		132167121B8B027000B7406B /* AFAAvatarMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAvatarMenuTableViewCell.h; path = UI/Cells/AvatarMenuCell/AFAAvatarMenuTableViewCell.h; sourceTree = "<group>"; };
@@ -1887,6 +1890,15 @@
 			name = FormThemedCollectionView;
 			sourceTree = "<group>";
 		};
+		132154D81F1E00A400A8C7F2 /* BannerAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				132154D51F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.h */,
+				132154D61F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.m */,
+			);
+			name = BannerAlertView;
+			sourceTree = "<group>";
+		};
 		132167111B8AF37900B7406B /* AvatarView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2225,6 +2237,7 @@
 				8D7C1A761C80910F0092EA81 /* NoContentView */,
 				13891CAB1D00258D00A61015 /* ConfirmationView */,
 				136DFF691DA3DB8600FA40E0 /* FilterHeaderView */,
+				132154D81F1E00A400A8C7F2 /* BannerAlertView */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -6229,6 +6242,7 @@
 				8D7C1A3E1C808CD30092EA81 /* AFANameTableViewCell.m in Sources */,
 				8D7C1A5A1C808D7F0092EA81 /* AFACommentTableViewCell.m in Sources */,
 				13A106981E93BB3500506871 /* AFATaskListViewModel.m in Sources */,
+				132154D71F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.m in Sources */,
 				135443EF1B97409C0044157B /* AFASliderTitleView.m in Sources */,
 				8D7C1A851C80921E0092EA81 /* AFAUserServices.m in Sources */,
 			);

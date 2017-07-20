@@ -24,7 +24,6 @@
 
 @implementation AFASliderTitleView
 
-
 - (void)displayTitles:(NSArray *)bulletTitles
        forCoordinates:(NSArray *)coordinatesArr
        withAttributes:(NSDictionary *)attributes {

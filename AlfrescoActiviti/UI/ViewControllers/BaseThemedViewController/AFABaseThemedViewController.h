@@ -17,10 +17,14 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "AFANavigationBarBannerAlertView.h"
 
 @interface AFABaseThemedViewController : UIViewController
 
 @property (strong, nonatomic) NSString *navigationBarTitle;
 @property (strong, nonatomic) UIColor  *navigationBarThemeColor;
+
+- (void)showWarningMessage:(NSString *)warningMessage;
+- (void)showErrorMessage:(NSString *)errorMessage;
 
 @end
