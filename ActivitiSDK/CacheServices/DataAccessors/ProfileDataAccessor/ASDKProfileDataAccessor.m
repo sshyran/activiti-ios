@@ -135,7 +135,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         __strong typeof(self) strongSelf = weakSelf;
         
         [[strongSelf profileCacheService] fetchCurrentUserProfile:^(ASDKModelProfile *profile, NSError *error) {
-            if (profile) {
+            if (!error) {
+                ASDKLogVerbose(@"Profile information fetched successfully from cache for user :%@", [profile normalisedName]);
+                
                 ASDKDataAccessorResponseModel *response = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
                                                                                                   isCachedData:YES
                                                                                                          error:error];
@@ -143,6 +145,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                     [weakSelf.delegate dataAccessor:weakSelf
                                 didLoadDataResponse:response];
                 }
+            } else {
+                ASDKLogError(@"An error occured while fetching cached profile information for the current user. Reason:%@", error.localizedDescription);
             }
             
             [operation complete];

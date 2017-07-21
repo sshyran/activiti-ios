@@ -23,6 +23,8 @@
 static const CGFloat kTopMargin = 10.f;
 static const NSTimeInterval kHideTimeout = 2.f;
 
+typedef void  (^AFANavigationBarBannerAlertHideCompletionBlock) ();
+
 @interface AFANavigationBarBannerAlertView()
 
 @property (strong, nonatomic) UILabel               *alertTextLabel;
@@ -34,11 +36,10 @@ static const NSTimeInterval kHideTimeout = 2.f;
 
 @implementation AFANavigationBarBannerAlertView
 
-- (instancetype)initWithFrame:(CGRect)frame
-                    alertText:(NSString *)alertText
-                   alertStyle:(AFABannerAlertStyle)alertStyle
-         parentViewController:(UIViewController *)parentViewController {
-    self = [super initWithFrame:frame];
+- (instancetype)initWithAlertText:(NSString *)alertText
+                       alertStyle:(AFABannerAlertStyle)alertStyle
+             parentViewController:(UIViewController *)parentViewController {
+    self = [super initWithFrame:CGRectZero];
     if (self) {
         _alertText = alertText;
         _alertStyle = alertStyle;
@@ -52,13 +53,18 @@ static const NSTimeInterval kHideTimeout = 2.f;
 + (instancetype)showAlertWithText:(NSString *)alertText
                             style:(AFABannerAlertStyle)alertStyle
                  inViewController:(UIViewController *)viewController {
-    AFANavigationBarBannerAlertView *bannerAlert = [[AFANavigationBarBannerAlertView alloc] initWithFrame:CGRectZero
-                                                                                                alertText:alertText
-                                                                                               alertStyle:alertStyle
-                                                                                     parentViewController:viewController];
+    AFANavigationBarBannerAlertView *bannerAlert = [[AFANavigationBarBannerAlertView alloc] initWithAlertText:alertText
+                                                                                                   alertStyle:alertStyle
+                                                                                         parentViewController:viewController];
     [bannerAlert showAndHideWithTimeout:kHideTimeout];
     
     return bannerAlert;
+}
+
+- (instancetype)initWithParentViewController:(UIViewController *)parentViewController {
+    return [self initWithAlertText:nil
+                        alertStyle:AFABannerAlertStyleUndefined
+              parentViewController:parentViewController];
 }
 
 - (void)layoutSubviews {
@@ -87,25 +93,9 @@ static const NSTimeInterval kHideTimeout = 2.f;
     self.alertTextLabel.textAlignment = NSTextAlignmentCenter;
     self.alertTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.alertTextLabel.backgroundColor = [UIColor clearColor];
-    self.alertTextLabel.text = self.alertText;
     self.alertTextLabel.font = [UIFont fontWithName:@"Avenir-Book"
                                                size:14.0f];
     [self addSubview:self.alertTextLabel];
-    
-    // Set up background and text color based on the style of the alert
-    UIColor *backgroundColor = nil;
-    UIColor *alertTextColor = nil;
-    
-    if (AFABannerAlertStyleWarning == self.alertStyle) {
-        backgroundColor = [UIColor yellowColor];
-        alertTextColor = [UIColor darkGreyTextColor];
-    } else if (AFABannerAlertStyleError == self.alertStyle) {
-        backgroundColor = [UIColor redColor];
-        alertTextColor = [UIColor whiteColor];
-    }
-    
-    self.backgroundColor = backgroundColor;
-    self.alertTextLabel.textColor = alertTextColor;
     
     // Configure alert label constraints
     NSArray *horizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[alertLabel]-|"
@@ -129,6 +119,27 @@ static const NSTimeInterval kHideTimeout = 2.f;
     [self setNeedsUpdateConstraints];
 }
 
+- (void)updateAlertStyleAndText {
+    // Set up background and text color based on the style of the alert
+    UIColor *backgroundColor = nil;
+    UIColor *alertTextColor = nil;
+    
+    if (AFABannerAlertStyleWarning == self.alertStyle) {
+        backgroundColor = [UIColor connectivityWarningColor];
+        alertTextColor = [UIColor darkGreyTextColor];
+    } else if (AFABannerAlertStyleError == self.alertStyle) {
+        backgroundColor = [UIColor redColor];
+        alertTextColor = [UIColor whiteColor];
+    } else if (AFABannerAlertStyleSuccess == self.alertStyle) {
+        backgroundColor = [UIColor connectivityRestoredColor];
+        alertTextColor = [UIColor whiteColor];
+    }
+    
+    self.backgroundColor = backgroundColor;
+    self.alertTextLabel.textColor = alertTextColor;
+    self.alertTextLabel.text = self.alertText;
+}
+
 - (void)show {
     _isBannerVisible = YES;
     
@@ -150,6 +161,7 @@ static const NSTimeInterval kHideTimeout = 2.f;
     [self.superview addConstraints:horizontalConstraints];
     [self.superview addConstraints:topConstraints];
     
+    [self updateAlertStyleAndText];
     [self updateUI];
     
     self.transform = CGAffineTransformMakeTranslation(0, -self.frame.size.height);
@@ -159,7 +171,7 @@ static const NSTimeInterval kHideTimeout = 2.f;
                      }];
 }
 
-- (void)hide {
+- (void)hide:(AFANavigationBarBannerAlertHideCompletionBlock)hideCompletionBlock {
     if (self.hideTimer) {
         [self.hideTimer invalidate];
         self.hideTimer = nil;
@@ -174,7 +186,14 @@ static const NSTimeInterval kHideTimeout = 2.f;
         self.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        if (hideCompletionBlock) {
+            hideCompletionBlock();
+        }
     }];
+}
+
+- (void)hide {
+    [self hide:nil];
 }
 
 - (void)showAndHideWithTimeout:(NSTimeInterval)timeout {
@@ -185,6 +204,22 @@ static const NSTimeInterval kHideTimeout = 2.f;
                                                     selector:@selector(hide)
                                                     userInfo:nil
                                                      repeats:NO];
+}
+
+- (void)showAndHideWithText:(NSString *)alertText
+                      style:(AFABannerAlertStyle)alertStyle {
+    _alertText = alertText;
+    _alertStyle = alertStyle;
+    
+    if (self.isBannerVisible) {
+        __weak typeof(self) weakSelf = self;
+        [self hide:^{
+            __strong typeof(self) strongSelf = weakSelf;
+            [strongSelf showAndHideWithTimeout:kHideTimeout];
+        }];
+    } else {
+        [self showAndHideWithTimeout:kHideTimeout];
+    }
 }
 
 @end

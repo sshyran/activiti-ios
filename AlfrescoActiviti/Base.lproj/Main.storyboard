@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2sj-96-gBg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2sj-96-gBg">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -22,7 +22,7 @@
             <objects>
                 <navigationController storyboardIdentifier="Navigation" navigationBarHidden="YES" id="2sj-96-gBg" customClass="AFANavigationController" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="v9Y-ro-k4e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="v9Y-ro-k4e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -38,7 +38,7 @@
         <scene sceneID="5ZC-YG-evy">
             <objects>
                 <navigationController id="Xjc-tR-raA" customClass="AFANavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="IqS-JF-Kuz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="IqS-JF-Kuz">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.19215686274509802" green="0.26666666666666666" blue="0.29411764705882354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1014,6 +1014,9 @@
                                                     <state key="normal" title="Action button">
                                                         <color key="titleColor" red="0.21568627450980393" green="0.55686274509803924" blue="0.77254901960784317" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
+                                                    <state key="disabled">
+                                                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
                                                     <connections>
                                                         <action selector="onAction:" destination="afm-Yn-IEo" eventType="touchUpInside" id="2EB-MZ-Qhx"/>
                                                     </connections>
@@ -1108,6 +1111,7 @@
                         <outlet property="fullScreenOverlayView" destination="6Fj-cZ-v7m" id="h9D-wo-OhV"/>
                         <outlet property="lastNameTextField" destination="Y5h-1k-42b" id="sap-WF-KoL"/>
                         <outlet property="noInformationAvailableLabel" destination="c28-Vd-gmL" id="Kmi-PZ-J2S"/>
+                        <outlet property="profilePictureAddButtonView" destination="rpV-JL-jGb" id="E8B-41-mTp"/>
                         <outlet property="profileTableView" destination="jji-XO-ofh" id="pbu-US-6Zg"/>
                         <outlet property="refreshButton" destination="ZI6-m8-xPJ" id="uXf-Hn-XKL"/>
                         <outlet property="refreshView" destination="vPS-iR-SRm" id="Kjz-Sf-91c"/>
@@ -4060,56 +4064,6 @@
             </objects>
             <point key="canvasLocation" x="26" y="820"/>
         </scene>
-        <!--Connectivity View Controller-->
-        <scene sceneID="WI2-Jg-tAf">
-            <objects>
-                <viewController storyboardIdentifier="ConnectivityViewControllerID" id="YRu-ab-Y6m" customClass="AFAConnectivityViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="uSd-K9-UUk"/>
-                        <viewControllerLayoutGuide type="bottom" id="65i-63-WKJ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="pyz-td-BTB">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="connectivity-icon" translatesAutoresizingMaskIntoConstraints="NO" id="rLB-cR-wJF">
-                                <rect key="frame" x="124" y="170" width="128" height="128"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="128" id="lNE-LN-2B3"/>
-                                    <constraint firstAttribute="height" constant="128" id="lej-jm-0Jv"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Whoops!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97b-2D-SzO">
-                                <rect key="frame" x="137" y="308" width="101" height="35"/>
-                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="25"/>
-                                <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No internet connection available. Check your internet connection and try again." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3MP-b4-4aQ">
-                                <rect key="frame" x="38" y="353" width="300" height="38.5"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="gic-Yq-c6y"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
-                                <color key="textColor" red="0.63137254901960782" green="0.63137254901960782" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.98039215686274506" green="0.98039215686274506" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="rLB-cR-wJF" firstAttribute="centerX" secondItem="pyz-td-BTB" secondAttribute="centerX" id="ASx-FN-5hw"/>
-                            <constraint firstItem="3MP-b4-4aQ" firstAttribute="top" secondItem="97b-2D-SzO" secondAttribute="bottom" constant="10" id="KQv-ph-TAe"/>
-                            <constraint firstItem="rLB-cR-wJF" firstAttribute="centerY" secondItem="pyz-td-BTB" secondAttribute="centerY" constant="-100" id="NzI-Ir-k0l"/>
-                            <constraint firstItem="97b-2D-SzO" firstAttribute="centerX" secondItem="rLB-cR-wJF" secondAttribute="centerX" id="VSr-rI-M13"/>
-                            <constraint firstItem="97b-2D-SzO" firstAttribute="top" secondItem="rLB-cR-wJF" secondAttribute="bottom" constant="10" id="aUn-pq-AwT"/>
-                            <constraint firstItem="3MP-b4-4aQ" firstAttribute="centerX" secondItem="rLB-cR-wJF" secondAttribute="centerX" id="zyo-K4-ICh"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="As1-Lw-oec" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1021" y="-480"/>
-        </scene>
         <!--Process Instance Details View Controller-->
         <scene sceneID="JgZ-j7-xKi">
             <objects>
@@ -6217,7 +6171,6 @@
         <image name="clear-icon" width="15" height="15"/>
         <image name="comment-icon" width="25" height="25"/>
         <image name="confirmation-icon" width="30" height="30"/>
-        <image name="connectivity-icon" width="128" height="128"/>
         <image name="contact-icon" width="20" height="20"/>
         <image name="content-icon" width="25" height="25"/>
         <image name="contribution-icon" width="25" height="25"/>
@@ -6241,7 +6194,7 @@
         <segue reference="RF7-69-ZNi"/>
         <segue reference="Rct-bP-63w"/>
         <segue reference="XZ3-C5-Oig"/>
-        <segue reference="fpJ-UB-l4s"/>
         <segue reference="RN3-5C-FKi"/>
+        <segue reference="Axm-Tn-V6n"/>
     </inferredMetricsTieBreakers>
 </document>

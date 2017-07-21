@@ -51,6 +51,7 @@
 typedef NS_ENUM(NSInteger, AFAProfileControllerState) {
     AFAProfileControllerStateIdle,
     AFAProfileControllerStateRefreshInProgress,
+    AFAProfileControllerStateCachedResults
 };
 
 static const CGFloat kProfileControllerSectionHeight = 40.0f;
@@ -75,6 +76,7 @@ UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel                    *noInformationAvailableLabel;
 @property (weak, nonatomic) IBOutlet UIView                     *refreshView;
 @property (weak, nonatomic) IBOutlet UIButton                   *refreshButton;
+@property (weak, nonatomic) IBOutlet ASDKRoundedBorderView      *profilePictureAddButtonView;
 
 // Internal state properties
 @property (assign, nonatomic) AFAProfileControllerState         controllerState;
@@ -176,6 +178,23 @@ UITableViewDelegate>
 
 
 #pragma mark -
+#pragma mark Connectivity notifications
+
+- (void)didRestoredNetworkConnectivity {
+    [super didRestoredNetworkConnectivity];
+    
+    self.controllerState = AFAProfileControllerStateRefreshInProgress;
+    [self onRefresh:nil];
+}
+
+- (void)didLoseNetworkConnectivity {
+    [super didLoseNetworkConnectivity];
+    
+    [self onRefresh:nil];
+}
+
+
+#pragma mark -
 #pragma mark Actions
 
 - (IBAction)onRefresh:(id)sender {
@@ -259,27 +278,35 @@ UITableViewDelegate>
         }
         
         // Store the fetched profile
-        strongSelf.dataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
-        strongSelf.dataSource.delegate = self;
-        strongSelf.profileTableView.dataSource = strongSelf.dataSource;
+        AFAProfileViewControllerDataSource *profileDataSource = [[AFAProfileViewControllerDataSource alloc] initWithProfile:profile];
+        profileDataSource.delegate = self;
+        BOOL showingCachedOrRefreshingData = (AFAProfileControllerStateRefreshInProgress == strongSelf.controllerState ||
+                                              AFAProfileControllerStateCachedResults == strongSelf.controllerState);
+        profileDataSource.isInputEnabled = showingCachedOrRefreshingData ? NO : YES;
+        strongSelf.profileTableView.dataSource = profileDataSource;
+        strongSelf.dataSource = profileDataSource;
         
-        [self updateUIForProfileContent:profile];
+        [strongSelf updateUIForProfileContent:profile];
     };
     
     [self.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
         if (!error) {
+            strongSelf.controllerState = AFAProfileControllerStateIdle;
             updateProfileDataSourceBlock(profile);
         } else {
-            [strongSelf handleNetworkErrorWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+            if (error.code == NSURLErrorNotConnectedToInternet) {
+                [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+            } else {
+                [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+            }
         }
     } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        strongSelf.controllerState = AFAProfileControllerStateIdle;
-        
         if (!error) {
+            strongSelf.controllerState = AFAProfileControllerStateCachedResults;
             updateProfileDataSourceBlock(profile);
         }
         
@@ -413,7 +440,7 @@ UITableViewDelegate>
                      completion:nil];
 }
 
-- (void)showProfileSaveButton:(BOOL)isSaveButtonEnabled {
+- (void)showProfileSaveButton:(BOOL)isSaveButtonEnabled {    
     // Set up the profile information save button
     UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"save-icon"]
                                                                           style:UIBarButtonItemStylePlain
@@ -596,10 +623,17 @@ heightForFooterInSection:(NSInteger)section {
                              block:^(id observer, id object, NSDictionary *change) {
                                  AFAProfileControllerState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
                                  
+                                 BOOL showingCachedOrRefreshingData = (AFAProfileControllerStateRefreshInProgress == controllerState ||
+                                                                       AFAProfileControllerStateCachedResults == controllerState);
+                                 
                                  dispatch_async(dispatch_get_main_queue(), ^{
                                      weakSelf.activityView.hidden = (AFAProfileControllerStateRefreshInProgress == controllerState) ? NO : YES;
                                      weakSelf.activityView.animating = (AFAProfileControllerStateRefreshInProgress == controllerState) ? YES : NO;
                                      weakSelf.profileTableView.hidden = (AFAProfileControllerStateRefreshInProgress == controllerState) ? YES : NO;
+
+                                     weakSelf.firstNameTextField.enabled = showingCachedOrRefreshingData ? NO : YES;
+                                     weakSelf.lastNameTextField.enabled = showingCachedOrRefreshingData ? NO : YES;
+                                     weakSelf.profilePictureAddButtonView.hidden = showingCachedOrRefreshingData;
                                  });
                              }];
     

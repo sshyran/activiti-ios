@@ -43,5 +43,7 @@
 + (UIColor *)darkGreyTextColor;
 + (UIColor *)distructiveOperationBackgroundColor;
 + (UIColor *)checkmarkedActionColor;
++ (UIColor *)connectivityWarningColor;
++ (UIColor *)connectivityRestoredColor;
 
 @end

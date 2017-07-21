@@ -521,7 +521,6 @@
 		13EEC5D51C04D0E100B95740 /* ASDKModelFormFieldFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EEC5D31C04D0E100B95740 /* ASDKModelFormFieldFileSource.m */; };
 		13EEC5E51C05CD0700B95740 /* ASDKRoundedBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B7FE21B78FAD300C17D06 /* ASDKRoundedBorderView.m */; };
 		13EEC5E61C05CDFE00B95740 /* ASDKRoundedBorderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 133B7FE11B78FAD300C17D06 /* ASDKRoundedBorderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		13EED87A1C56721500F17105 /* AFAConnectivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EED8791C56721500F17105 /* AFAConnectivityViewController.m */; };
 		13F07EF71CBFC8C400002FEB /* ASDKKVOManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF11CBFC8C400002FEB /* ASDKKVOManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13F07EF81CBFC8C400002FEB /* ASDKKVOManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F07EF21CBFC8C400002FEB /* ASDKKVOManager.m */; };
 		13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF31CBFC8C400002FEB /* ASDKKVOManagerInfo.h */; };
@@ -1377,8 +1376,6 @@
 		13EEC5CD1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldAttachParameter.m; path = Model/AttachFormFieldOption/ASDKModelFormFieldAttachParameter.m; sourceTree = "<group>"; };
 		13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldFileSource.h; path = Model/FormFieldFileSource/ASDKModelFormFieldFileSource.h; sourceTree = "<group>"; };
 		13EEC5D31C04D0E100B95740 /* ASDKModelFormFieldFileSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldFileSource.m; path = Model/FormFieldFileSource/ASDKModelFormFieldFileSource.m; sourceTree = "<group>"; };
-		13EED8781C56721500F17105 /* AFAConnectivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAConnectivityViewController.h; path = UI/ViewControllers/ConnectivityScreen/AFAConnectivityViewController.h; sourceTree = "<group>"; };
-		13EED8791C56721500F17105 /* AFAConnectivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAConnectivityViewController.m; path = UI/ViewControllers/ConnectivityScreen/AFAConnectivityViewController.m; sourceTree = "<group>"; };
 		13F07EF11CBFC8C400002FEB /* ASDKKVOManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManager.h; path = KVOManager/ASDKKVOManager.h; sourceTree = "<group>"; };
 		13F07EF21CBFC8C400002FEB /* ASDKKVOManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKKVOManager.m; path = KVOManager/ASDKKVOManager.m; sourceTree = "<group>"; };
 		13F07EF31CBFC8C400002FEB /* ASDKKVOManagerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManagerInfo.h; path = KVOManager/ASDKKVOManagerInfo.h; sourceTree = "<group>"; };
@@ -2178,7 +2175,6 @@
 				13CE8ED21B85B2810022F17A /* DrawerMenuScreen */,
 				13C958031B837D53002A08F1 /* ListScreen */,
 				132511F21BA80FB700C4CA64 /* TaskDetailsScreen */,
-				13EED87B1C56721A00F17105 /* ConnectivityScreen */,
 				8D7C1A7A1C8091690092EA81 /* StartProcessInstanceScreen */,
 				136D035C1C844F5100DC94B7 /* ProcessInstanceDetailsScreen */,
 				13ACE37D1C9996BE00693A29 /* AddCommentsScreen */,
@@ -4699,15 +4695,6 @@
 			name = FormFieldFileSource;
 			sourceTree = "<group>";
 		};
-		13EED87B1C56721A00F17105 /* ConnectivityScreen */ = {
-			isa = PBXGroup;
-			children = (
-				13EED8781C56721500F17105 /* AFAConnectivityViewController.h */,
-				13EED8791C56721500F17105 /* AFAConnectivityViewController.m */,
-			);
-			name = ConnectivityScreen;
-			sourceTree = "<group>";
-		};
 		13F07EFD1CBFC8C800002FEB /* KVOManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -6161,7 +6148,6 @@
 				1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */,
 				136680071C89AEF9005E4AEA /* AFAQueryServices.m in Sources */,
 				13EBECBB1CFDBEB000EC8F96 /* AFAChecklistTableViewCell.m in Sources */,
-				13EED87A1C56721500F17105 /* AFAConnectivityViewController.m in Sources */,
 				13667FEA1C87355E005E4AEA /* AFAShowDiagramTableViewCell.m in Sources */,
 				137B8DE01BB99B1200F1A6DC /* AFATableControllerContentCellFactory.m in Sources */,
 				13BBAB091E9CF761009B2D43 /* AFAContentPickerDataSource.m in Sources */,

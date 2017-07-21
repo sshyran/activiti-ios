@@ -183,6 +183,14 @@ NSString *kLocalizationPaswordText                               = @"passwordTex
 
 
 #pragma mark -
+#pragma mark Offline use
+
+NSString *kLocalizationOfflineProvidingCachedResultsText         = @"offlineProvidingCachedResultsText";
+NSString *kLocalizationOfflineConnectivityRetryText              = @"offlineConnectivityRetryText";
+NSString *kLocalizationOfflineConnectivityConnectedRefreshingText= @"offlineConnectivityConnectedRefreshingText";
+
+
+#pragma mark -
 #pragma mark Alert dialog use
 
 NSString *kLocalizationAlertDialogOopsTitleText                  = @"alertDialogOopsTitleText";

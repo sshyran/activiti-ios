@@ -31,7 +31,6 @@ extern NSTimeInterval kOverlayAlphaChangeTime;
 
 extern NSString *kStoryboardIDLoginCredentialsViewController;
 extern NSString *kStoryboardIDEmbeddedCredentialsPageController;
-extern NSString *kStoryboardIDConnectivityViewController;
 extern NSString *kStoryboardIDContentPickerViewController;
 extern NSString *kStoryboardIDModalTaskDetailsViewController;
 extern NSString *kStoryboardIDModalPeoplePickerViewController;

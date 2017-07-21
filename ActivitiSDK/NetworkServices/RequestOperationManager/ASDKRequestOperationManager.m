@@ -55,14 +55,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
         self.requestSerializer = authenticationProvider;
         
         // Start monitoring network changes
-        NSOperationQueue *operationQueue = self.operationQueue;
         [self.reachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
             switch (status) {
                 case AFNetworkReachabilityStatusReachableViaWWAN:
                 case AFNetworkReachabilityStatusReachableViaWiFi: {
                     ASDKLogWarn(@"Reachability status changed. Resuming network operation queue...");
-                    [operationQueue setSuspended:NO];
-                    
                     [[NSNotificationCenter defaultCenter] postNotificationName:kASDKAPINetworkServiceInternetConnectionAvailable
                                                                         object:nil];
                 }
@@ -70,8 +67,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_WARN; // | ASDK_LOG_FLAG_T
                     
                 case AFNetworkReachabilityStatusNotReachable: {
                     ASDKLogWarn(@"Reachability status changed. Suspending network operation queue...");
-                    [operationQueue setSuspended:YES];
-                    
                     [[NSNotificationCenter defaultCenter] postNotificationName:kASDKAPINetworkServiceNoInternetConnection
                                                                         object:nil];
                 }

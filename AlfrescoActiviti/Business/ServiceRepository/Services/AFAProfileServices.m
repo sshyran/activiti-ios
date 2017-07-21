@@ -73,7 +73,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock {
     self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
     self.fetchCurrentProfileDataAccessor.cachePolicy = ASDKServiceDataAccessorCachingPolicyAPIOnly;
-    
+#warning Cancel previously launched requests?
     [self requestProfileWithCompletionBlock:completionBlock
                               cachedResults:nil];
 }
@@ -166,22 +166,22 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     __weak typeof(self) weakSelf = self;
     if (!profileImageResponse.error) {
-        AFALogVerbose(@"Profile image fetched successfully (%@)", profileImageResponse.model ? @"ContentAvailable" : @"NoContent");
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.profileImageCompletionBlock(profileImageResponse.model, nil);
-            strongSelf.profileImageCompletionBlock = nil;
+            if (strongSelf.profileImageCompletionBlock) {
+                strongSelf.profileImageCompletionBlock(profileImageResponse.model, nil);
+                strongSelf.profileImageCompletionBlock = nil;
+            }
         });
     } else {
-        AFALogError(@"An error occured while loading the profile picture. Reason:%@", profileImageResponse.error.localizedDescription);
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.profileImageCompletionBlock(nil, profileImageResponse.error);
-            strongSelf.profileImageCompletionBlock = nil;
+            if (strongSelf.profileImageCompletionBlock) {
+                strongSelf.profileImageCompletionBlock(nil, profileImageResponse.error);
+                strongSelf.profileImageCompletionBlock = nil;
+            }
         });
     }
 }
@@ -192,32 +192,35 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     __weak typeof(self) weakSelf = self;
     if (!profileResponse.error) {
-        AFALogVerbose(@"Profile information fetched successfully for user :%@", [profile normalisedName]);
-        
         if (profileResponse.isCachedData) {
             if (self.currentProfileCachedResultsBlock) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     __strong typeof(self) strongSelf = weakSelf;
                     
-                    strongSelf.currentProfileCachedResultsBlock(profile, nil);
-                    strongSelf.currentProfileCachedResultsBlock = nil;
+                    if (strongSelf.currentProfileCachedResultsBlock) {
+                        strongSelf.currentProfileCachedResultsBlock(profile, nil);
+                        strongSelf.currentProfileCachedResultsBlock = nil;
+                    }
                 });
             }
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;
                 
-                strongSelf.currentProfileCompletionBlock(profile, nil);
-                strongSelf.currentProfileCompletionBlock = nil;
+                if (strongSelf.currentProfileCompletionBlock) {
+                    strongSelf.currentProfileCompletionBlock(profile, nil);
+                    strongSelf.currentProfileCompletionBlock = nil;
+                }
             });
         }
     } else {
-        AFALogError(@"An error occured while fetching profile information for the current user. Reason:%@", profileResponse.error.localizedDescription);
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.currentProfileCompletionBlock(nil, profileResponse.error);
-            strongSelf.currentProfileCompletionBlock = nil;
+            if (strongSelf.currentProfileCompletionBlock) {
+                strongSelf.currentProfileCompletionBlock(nil, profileResponse.error);
+                strongSelf.currentProfileCompletionBlock = nil;
+            }
         });
     }
 }
@@ -228,7 +231,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     __weak typeof(self) weakSelf = self;
     if (!profileResponse.error) {
-        AFALogVerbose(@"Profile information updated successfully for the current user.");
         
         // If the user updated the email address (username) then replace the authentication provider in the
         // SDK with the new username and also update the keychain values if the user checked the remember
@@ -247,16 +249,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.updateCurrentProfileCompletionBlock(profile, nil);
-            strongSelf.updateCurrentProfileCompletionBlock = nil;
+            if (strongSelf.updateCurrentProfileCompletionBlock) {
+                strongSelf.updateCurrentProfileCompletionBlock(profile, nil);
+                strongSelf.updateCurrentProfileCompletionBlock = nil;
+            }
         });
     } else {
-        AFALogError(@"An error occured while updating profile information for the current user. Reason:%@", profileResponse.error.localizedDescription);
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.updateCurrentProfileCompletionBlock(nil, profileResponse.error);
-            strongSelf.updateCurrentProfileCompletionBlock = nil;
+            if (strongSelf.updateCurrentProfileCompletionBlock) {
+                strongSelf.updateCurrentProfileCompletionBlock(nil, profileResponse.error);
+                strongSelf.updateCurrentProfileCompletionBlock = nil;
+            }
         });
     }
 }
@@ -267,7 +272,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     __weak typeof(self) weakSelf = self;
     if (!profileResponse.error) {
-        AFALogVerbose(@"Profile password updated successfully for the current user.");
         
         // If the password has been updated replace the authentication provider in the SDK with
         // the new password and also update the keychain values if the user checked the remember
@@ -286,16 +290,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.updateProfilePasswordCompletionBlock(newPassword, nil);
-            strongSelf.updateProfilePasswordCompletionBlock = nil;
+            if (strongSelf.updateProfilePasswordCompletionBlock) {
+                strongSelf.updateProfilePasswordCompletionBlock(newPassword, nil);
+                strongSelf.updateProfilePasswordCompletionBlock = nil;
+            }
         });
     } else {
-        AFALogError(@"An error occured while updating profile password for the current user. Reason:%@", profileResponse.error.localizedDescription);
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.updateProfilePasswordCompletionBlock(NO, profileResponse.error);
-            strongSelf.updateProfilePasswordCompletionBlock = nil;
+            if (strongSelf.updateProfilePasswordCompletionBlock) {
+                strongSelf.updateProfilePasswordCompletionBlock(NO, profileResponse.error);
+                strongSelf.updateProfilePasswordCompletionBlock = nil;
+            }
         });
     }
 }
@@ -310,30 +317,32 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.uploadCurrentProfileImageProgressBlock (progress, progressResponse.error);
+            if(strongSelf.uploadCurrentProfileImageProgressBlock) {
+                strongSelf.uploadCurrentProfileImageProgressBlock (progress, progressResponse.error);
+            }
         });
     } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
         ASDKDataAccessorResponseModel *contentResponse = (ASDKDataAccessorResponseModel *)response;
         
         if (!contentResponse.error) {
-            AFALogVerbose(@"Profile image was succesfully uploaded");
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;
                 
-                strongSelf.uploadCurrentProfileImageCompletionBlock(YES, nil);
-                strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
-                strongSelf.uploadCurrentProfileImageProgressBlock = nil;
+                if (strongSelf.uploadCurrentProfileImageCompletionBlock) {
+                    strongSelf.uploadCurrentProfileImageCompletionBlock(YES, nil);
+                    strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
+                    strongSelf.uploadCurrentProfileImageProgressBlock = nil;
+                }
             });
         } else {
-            AFALogError(@"An error occured while uploading the profile picture. Reason:%@", contentResponse.error.localizedDescription);
-            
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;
                 
-                strongSelf.uploadCurrentProfileImageCompletionBlock(NO, contentResponse.error);
-                strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
-                strongSelf.uploadCurrentProfileImageProgressBlock = nil;
+                if (strongSelf.uploadCurrentProfileImageCompletionBlock) {
+                    strongSelf.uploadCurrentProfileImageCompletionBlock(NO, contentResponse.error);
+                    strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
+                    strongSelf.uploadCurrentProfileImageProgressBlock = nil;
+                }
             });
         }
     }

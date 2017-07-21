@@ -58,6 +58,7 @@ typedef NS_ENUM(NSInteger, AFAProfileControllerContactInformationType) {
 @interface AFAProfileViewControllerDataSource : NSObject <AFAProfileViewControllerDataSource>
 
 @property (weak, nonatomic) id<AFAProfileViewControllerDataSourceDelegate> delegate;
-@property (strong, nonatomic, readonly) ASDKModelProfile *currentProfile;
+@property (strong, nonatomic, readonly) ASDKModelProfile    *currentProfile;
+@property (assign, nonatomic) BOOL                          isInputEnabled;
 
 @end

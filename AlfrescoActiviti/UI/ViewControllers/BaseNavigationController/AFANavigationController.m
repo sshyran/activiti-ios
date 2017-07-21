@@ -17,80 +17,21 @@
  ******************************************************************************/
 
 #import "AFANavigationController.h"
-#import "AFAUIConstants.h"
-#import "AFAConnectivityViewController.h"
-#import "AFALoginViewController.h"
-@import ActivitiSDK;
-
-@interface AFANavigationController ()
-
-@property (strong, nonatomic) id                            reachabilityChangeObserver;
-@property (strong, nonatomic) AFAConnectivityViewController *connectivityViewController;
-
-@end
 
 @implementation AFANavigationController
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    
-    if (self) {
-        __weak typeof(self) weakSelf = self;
-        self.reachabilityChangeObserver =
-        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceNoInternetConnection
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification * _Nonnull note) {
-          __strong typeof(self) strongSelf = weakSelf;
-          if (strongSelf.topViewController.class != [AFALoginViewController class]) {
-              strongSelf.connectivityViewController = [strongSelf.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDConnectivityViewController];
-              [strongSelf presentViewController:strongSelf.connectivityViewController
-                                       animated:YES
-                                     completion:nil];
-          }
-        }];
-        
-        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceInternetConnectionAvailable
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification * _Nonnull note) {
-          __strong typeof(self) strongSelf = weakSelf;
-          [strongSelf.connectivityViewController dismissViewControllerAnimated:YES
-                                                                    completion:nil];
-        }];
-    }
-    
-    return self;
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityChangeObserver];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 #pragma mark - 
 #pragma mark Navigation
 
-// Pass the call to the top most of the navigation stack
 - (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
                                       fromViewController:(UIViewController *)fromViewController
                                               identifier:(NSString *)identifier {
+    // Pass the call to the top most of the navigation stack
     UIViewController *controller = self.topViewController;
     return [controller segueForUnwindingToViewController:toViewController
                                       fromViewController:fromViewController
                                               identifier:identifier];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 }
 
 @end

@@ -21,7 +21,8 @@
 typedef NS_ENUM(NSInteger, AFABannerAlertStyle) {
     AFABannerAlertStyleUndefined = -1,
     AFABannerAlertStyleError     = 0,
-    AFABannerAlertStyleWarning   = 1
+    AFABannerAlertStyleWarning   = 1,
+    AFABannerAlertStyleSuccess   = 2
 };
 
 @interface AFANavigationBarBannerAlertView : UIView
@@ -30,17 +31,20 @@ typedef NS_ENUM(NSInteger, AFABannerAlertStyle) {
 @property (assign, nonatomic, readonly) AFABannerAlertStyle alertStyle;
 @property (assign, nonatomic, readonly) BOOL                isBannerVisible;
 
-- (instancetype)initWithFrame:(CGRect)frame
-                    alertText:(NSString *)alertText
-                   alertStyle:(AFABannerAlertStyle)alertStyle
-         parentViewController:(UIViewController *)parentViewController;
-
 + (instancetype)showAlertWithText:(NSString *)alertText
                             style:(AFABannerAlertStyle)alertStyle
                  inViewController:(UIViewController *)viewController;
 
+- (instancetype)initWithAlertText:(NSString *)alertText
+                       alertStyle:(AFABannerAlertStyle)alertStyle
+             parentViewController:(UIViewController *)parentViewController;
+
+- (instancetype)initWithParentViewController:(UIViewController *)parentViewController;
+
 - (void)show;
 - (void)hide;
 - (void)showAndHideWithTimeout:(NSTimeInterval)timeout;
+- (void)showAndHideWithText:(NSString *)alertText
+                      style:(AFABannerAlertStyle)alertStyle;
 
 @end

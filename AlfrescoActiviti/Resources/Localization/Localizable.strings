@@ -150,6 +150,11 @@
 "settingsText"                                           = "Settings";
 "passwordText"                                           = "Password";
 
+// Offline use
+"offlineProvidingCachedResultsText"                      = "No internet connection, providing cached data";
+"offlineConnectivityRetryText"                           = "Connecting";
+"offlineConnectivityConnectedRefreshingText"             = "You are now connected, refreshing data...";
+
 // Alert dialogs use
 "alertDialogOopsTitleText"                               = "Oops...";
 "alertDialogGenericNetworkErrorText"                     = "A network error has occured while fetching your data.\nPlease try again...";

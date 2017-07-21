@@ -18,32 +18,68 @@
 
 #import "AFABaseThemedViewController.h"
 #import "AFAUIConstants.h"
+#import "AFALocalizationConstants.h"
+@import ActivitiSDK;
 
 @interface AFABaseThemedViewController ()
+
+@property (strong, nonatomic) id                                reachabilityChangeObserver;
+@property (strong, nonatomic) AFANavigationBarBannerAlertView   *bannerAlertView;
+@property (assign, nonatomic) BOOL                              isControllerViewVisible;
 
 @end
 
 @implementation AFABaseThemedViewController
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        __weak typeof(self) weakSelf = self;
+        _reachabilityChangeObserver =
+        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceNoInternetConnection
+                                                          object:nil
+                                                           queue:[NSOperationQueue mainQueue]
+                                                      usingBlock:^(NSNotification * _Nonnull note) {
+                                                          __strong typeof(self) strongSelf = weakSelf;
+                                                          
+                                                          if (strongSelf.isControllerViewVisible) {
+                                                              [self didLoseNetworkConnectivity];
+                                                          }
+                                                      }];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceInternetConnectionAvailable
+                                                          object:nil
+                                                           queue:[NSOperationQueue mainQueue]
+                                                      usingBlock:^(NSNotification * _Nonnull note) {
+                                                          __strong typeof(self) strongSelf = weakSelf;
+                                                          
+                                                          if (strongSelf.isControllerViewVisible) {
+                                                              [strongSelf showWarningMessage:NSLocalizedString(kLocalizationOfflineConnectivityRetryText, @"Reconnect text")];
+                                                              [strongSelf didRestoredNetworkConnectivity];
+                                                          }
+                                                      }];
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityChangeObserver];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    _bannerAlertView = [[AFANavigationBarBannerAlertView alloc] initWithParentViewController:self];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidAppear:(BOOL)animated {
+    self.isControllerViewVisible = YES;
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+- (void)viewDidDisappear:(BOOL)animated {
+    self.isControllerViewVisible = NO;
+}
 
 
 #pragma mark -
@@ -89,15 +125,26 @@
 #pragma mark Public interface
 
 - (void)showWarningMessage:(NSString *)warningMessage {
-    [AFANavigationBarBannerAlertView showAlertWithText:warningMessage
-                                                 style:AFABannerAlertStyleWarning
-                                      inViewController:self];
+    [self.bannerAlertView showAndHideWithText:warningMessage
+                                        style:AFABannerAlertStyleWarning];
 }
 
 - (void)showErrorMessage:(NSString *)errorMessage {
-    [AFANavigationBarBannerAlertView showAlertWithText:errorMessage
-                                                 style:AFABannerAlertStyleError
-                                      inViewController:self];
+    [self.bannerAlertView showAndHideWithText:errorMessage
+                                        style:AFABannerAlertStyleError];
+}
+
+- (void)showConfirmationMessage:(NSString *)confirmationMessage {
+    [self.bannerAlertView showAndHideWithText:confirmationMessage
+                                        style:AFABannerAlertStyleSuccess];
+}
+
+- (void)didRestoredNetworkConnectivity {
+    [self showConfirmationMessage:NSLocalizedString(kLocalizationOfflineConnectivityConnectedRefreshingText, @"Reconect text")];
+}
+
+- (void)didLoseNetworkConnectivity {
+    // Override in child classes
 }
 
 @end

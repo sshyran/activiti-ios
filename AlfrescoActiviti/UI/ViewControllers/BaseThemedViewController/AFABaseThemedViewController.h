@@ -26,5 +26,8 @@
 
 - (void)showWarningMessage:(NSString *)warningMessage;
 - (void)showErrorMessage:(NSString *)errorMessage;
+- (void)showConfirmationMessage:(NSString *)confirmationMessage;
+- (void)didRestoredNetworkConnectivity;
+- (void)didLoseNetworkConnectivity;
 
 @end

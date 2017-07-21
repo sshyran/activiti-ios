@@ -34,7 +34,6 @@ NSTimeInterval kOverlayAlphaChangeTime                          = .25f;
 
 NSString *kStoryboardIDLoginCredentialsViewController           = @"LoginCredentialsViewControllerID";
 NSString *kStoryboardIDEmbeddedCredentialsPageController        = @"EmbeddedCredentialsPageControllerID";
-NSString *kStoryboardIDConnectivityViewController               = @"ConnectivityViewControllerID";
 NSString *kStoryboardIDContentPickerViewController              = @"ContentPickerViewControllerID";
 NSString *kStoryboardIDModalTaskDetailsViewController           = @"ModalTaskDetailsViewControllerID";
 NSString *kStoryboardIDModalPeoplePickerViewController          = @"ModalPeoplePickerViewControllerID";
