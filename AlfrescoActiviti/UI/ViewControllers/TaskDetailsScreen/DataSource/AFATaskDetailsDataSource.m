@@ -159,10 +159,10 @@
                                       completionBlock(nil, registerCellActions);
                                   }
                               });
-                          }
-                          
-                          if (completionBlock) {
-                              completionBlock(taskDetailsError, NO);
+                          } else {
+                              if (completionBlock) {
+                                  completionBlock(taskDetailsError, NO);
+                              }
                           }
                       }];
 }
