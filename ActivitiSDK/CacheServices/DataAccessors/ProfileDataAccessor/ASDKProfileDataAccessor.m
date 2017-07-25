@@ -167,7 +167,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             [[strongSelf profileCacheService] cacheCurrentUserProfile:remoteResponse.model
                                                   withCompletionBlock:^(NSError *error) {
                                                       if (!error) {
-                                                          [weakSelf saveChanges];
+                                                          [[weakSelf profileCacheService] saveChanges];
                                                       } else {
                                                           ASDKLogError(@"Encountered an error while caching the current user profile. Reason:%@", error.localizedDescription);
                                                       }

@@ -62,9 +62,29 @@ typedef NS_ENUM(NSInteger, ASDKServiceDataAccessorCachingPolicy) {
 
 @protocol ASDKServiceDataAccessorProtocol <NSObject>
 
+/**
+ * Cache policy defining the order of operations inside a data accessor.
+ */
 @property (assign, nonatomic)           ASDKServiceDataAccessorCachingPolicy  cachePolicy;
+
+
+/**
+ * This property is intentionally defined of a base class type to allow custom derived subclasses
+ * with different implementations of persistence mediums other than the default Core Data one to be used.
+ */
 @property (strong, nonatomic)           ASDKCacheService                      *cacheService;
+
+
+/**
+ * This property holds a reference to the domain specific network service subclass used to fetch
+ * remote data.
+ */
 @property (strong, nonatomic, readonly) ASDKNetworkService                    *networkService;
+
+
+/**
+ * Delegate object that is notified about operations performed by the data accessor.
+ */
 @property (weak, nonatomic)             id<ASDKDataAccessorDelegate>          delegate;
 
 @end

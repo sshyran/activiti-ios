@@ -17,17 +17,21 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import "ASDKPersistenceStack.h"
+#import "ASDKCacheService.h"
+
+typedef void (^ASDKCacheServiceCompletionBlock) (NSError *error);
 
 /**
- * This class serves as an extension point for cache services and should be subclassed
- * to match various persistence mediums. 
+ * This class represents a precursor to cache services based upon the Core Data 
+ * stack. This class is to be sublcassed to add domain specific operations like
+ * fetching / caching users.
  */
-@interface ASDKCacheService : NSObject
+@interface ASDKCoreDataCacheService : ASDKCacheService {
+    @protected
+    ASDKPersistenceStack *_persistenceStack;
+}
 
-/**
- * Forwards a save message to the cache's persistence stack to persist any changes made to
- * objects belonging to the persistence medium.
- */
-- (void)saveChanges;
+@property (strong, nonatomic, readonly) ASDKPersistenceStack *persistenceStack;
 
 @end

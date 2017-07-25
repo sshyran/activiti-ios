@@ -16,18 +16,33 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "ASDKCoreDataCacheService.h"
 
-/**
- * This class serves as an extension point for cache services and should be subclassed
- * to match various persistence mediums. 
- */
-@interface ASDKCacheService : NSObject
+// Protocols
+#import "ASDKPersistenceStackProtocol.h"
 
-/**
- * Forwards a save message to the cache's persistence stack to persist any changes made to
- * objects belonging to the persistence medium.
- */
-- (void)saveChanges;
+// Managers
+#import "ASDKBootstrap.h"
+#import "ASDKServiceLocator.h"
+
+@implementation ASDKCoreDataCacheService
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        ASDKBootstrap *bootStrap = [ASDKBootstrap sharedInstance];
+        _persistenceStack = [bootStrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKPersistenceStackProtocol)];
+    }
+    
+    return self;
+}
+
+- (void)saveChanges {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.persistenceStack saveContext];
+    });
+}
 
 @end

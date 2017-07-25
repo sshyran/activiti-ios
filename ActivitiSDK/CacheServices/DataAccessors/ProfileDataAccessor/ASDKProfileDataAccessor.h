@@ -23,13 +23,48 @@
 
 @interface ASDKProfileDataAccessor : ASDKDataAccessor
 
+/**
+ * Requests the current user profile and reports network or cached data through the
+ * designated data accessor delegate.
+ */
 - (void)fetchCurrentUserProfile;
+
+/**
+ * Requests the current user profile image and reports network or cached data through the
+ * designated data accessor delegate.
+ */
 - (void)fetchCurrentUserProfileImage;
+
+/**
+ *
+ * Updates the current profile data with changes encapsulated in a model object and reports
+ * through the desginated data accessor delegate.
+ *
+ * @param profileModel Model object describing a profile.
+ */
 - (void)updateCurrentProfileWithModel:(ASDKModelProfile *)profileModel;
+
+/**
+ * Updates the current user's password and reports through the desginated data accessor delegate.
+ *
+ @param newPassword New password string.
+ @param oldPassword Old password string.
+ */
 - (void)updateCurrentProfileWithNewPassword:(NSString *)newPassword
                                 oldPassword:(NSString *)oldPassword;
+
+/**
+ * Updates the current profile image and reports through the desginated data accessor delegate.
+ *
+ @param fileContentModel    Description information for the image to be uploaded.
+ @param contentData         Image data.
+ */
 - (void)uploadCurrentProfileImageForContentModel:(ASDKModelFileContent *)fileContentModel
                                      contentData:(NSData *)contentData;
+
+/**
+ * Requests cancelation for all domain specific operations.
+ */
 - (void)cancelProfileRequests;
 
 @end

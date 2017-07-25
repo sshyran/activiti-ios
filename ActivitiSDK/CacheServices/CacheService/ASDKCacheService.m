@@ -18,23 +18,10 @@
 
 #import "ASDKCacheService.h"
 
-// Protocols
-#import "ASDKPersistenceStackProtocol.h"
-
-// Managers
-#import "ASDKBootstrap.h"
-#import "ASDKServiceLocator.h"
-
 @implementation ASDKCacheService
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        ASDKBootstrap *bootStrap = [ASDKBootstrap sharedInstance];
-        _persistenceStack = [bootStrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKPersistenceStackProtocol)];
-    }
-    
-    return self;
+- (void)saveChanges {
+    // Implement in subclasses
 }
 
 @end

@@ -91,7 +91,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)saveContext {
     NSError *error = nil;
     if ([[self viewContext] hasChanges]) {
-        if ([[self viewContext] save:&error]) {
+        if (![[self viewContext] save:&error]) {
             ASDKLogError(@"Cannot save view context. Reason:%@.\nCore Data stack error:%@", [self saveViewContextOperationError], error.localizedDescription);
             [[self viewContext] rollback];
         }

@@ -26,13 +26,55 @@ typedef void (^ASDKPersistenceErrorHandlerBlock) (NSError *error);
 
 @protocol ASDKPersistenceStackProtocol <NSObject>
 
+/**
+ * Container that encapsulates the Core Data stack.
+ */
 @property (strong, nonatomic, readonly) NSPersistentContainer *persistentContainer;
 
+
+/**
+ * Initializez, configures and loads a persistence store dedicated to caching and
+ * fetching cached data.
+ *
+ * @param errorHandlerBlock Error reporting block that gets called if the persistence 
+ *                          stack cannot be properly set up.
+ * @return Initialized instance
+ */
 - (instancetype)initWithErrorHandler:(ASDKPersistenceErrorHandlerBlock)errorHandlerBlock;
+
+
+/**
+ * Returns managed object context associated with the main queue.
+ */
 - (NSManagedObjectContext *)viewContext;
+
+
+/**
+ * Creates and returns a private managed object context.
+ */
 - (NSManagedObjectContext *)backgroundContext;
+
+
+/**
+ * Executes the passed block on the context associated with the main queue.
+ *
+ * @param taskBlock Block to be executed
+ */
 - (void)performForegroundTask:(ASDKPersistenceTaskBlock)taskBlock;
+
+
+/**
+ * Executes the passed block on a private managed object context.
+ *
+ * @param taskBlock Block to be executed.
+ */
 - (void)performBackgroundTask:(ASDKPersistenceTaskBlock)taskBlock;
+
+
+/**
+ * Persists changes (if there are any) on the view context and rolls back changes
+ * if the save operation fails.
+ */
 - (void)saveContext;
 
 @end

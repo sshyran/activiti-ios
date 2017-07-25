@@ -17,9 +17,9 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKCacheService.h"
+#import "ASDKCoreDataCacheService.h"
 #import "ASDKProfileCacheServiceProtocol.h"
 
-@interface ASDKProfileCacheServices : ASDKCacheService <ASDKProfileCacheServiceProtocol>
+@interface ASDKProfileCacheServices : ASDKCoreDataCacheService <ASDKProfileCacheServiceProtocol>
 
 @end

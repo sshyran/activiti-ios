@@ -33,7 +33,9 @@
 
 - (instancetype)initWithDelegate:(id<ASDKDataAccessorDelegate>)delegate;
 
+/**
+ * Creates and returns a serial operation queue.
+ */
 - (NSOperationQueue *)serialOperationQueue;
-- (void)saveChanges;
 
 @end

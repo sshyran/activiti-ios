@@ -24,8 +24,23 @@ typedef void (^ASDKCacheServiceProfileCompletionBlock) (ASDKModelProfile *profil
 
 @protocol ASDKProfileCacheServiceProtocol <NSObject>
 
+
+/**
+ * Cache passed user profile and report the operation success over a completion block.
+ *
+ * @param profile Profile model to be cached
+ * @param completionBlock Completion block indicating the status of the operation
+ */
 - (void)cacheCurrentUserProfile:(ASDKModelProfile *)profile
             withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+
+/**
+ * Fetches and reports via a completion block the current user profile.
+ *
+ * @param profileCompletionBlock Completion block providing a profile model and an optional
+ *                               error reason
+ */
 - (void)fetchCurrentUserProfile:(ASDKCacheServiceProfileCompletionBlock)profileCompletionBlock;
 
 @end
