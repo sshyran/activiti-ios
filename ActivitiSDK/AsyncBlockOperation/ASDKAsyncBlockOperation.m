@@ -42,6 +42,10 @@
 }
 
 - (void)main {
+    if (self.isCancelled) {
+        [self complete];
+    }
+    
     if (self.block) {
         self.block(self);
     } else {

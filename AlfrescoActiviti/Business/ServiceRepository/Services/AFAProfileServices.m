@@ -71,22 +71,29 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock {
-    self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
-    self.fetchCurrentProfileDataAccessor.cachePolicy = ASDKServiceDataAccessorCachingPolicyAPIOnly;
-#warning Cancel previously launched requests?
     [self requestProfileWithCompletionBlock:completionBlock
-                              cachedResults:nil];
+                              cachedResults:nil
+                                cachePolicy:ASDKServiceDataAccessorCachingPolicyAPIOnly];
 }
 
 - (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock
                             cachedResults:(AFAProfileCompletionBlock)cacheCompletionBlock {
+    [self requestProfileWithCompletionBlock:completionBlock
+                              cachedResults:cacheCompletionBlock
+                                cachePolicy:ASDKServiceDataAccessorCachingPolicyHybrid];
+}
+
+- (void)requestProfileWithCompletionBlock:(AFAProfileCompletionBlock)completionBlock
+                            cachedResults:(AFAProfileCompletionBlock)cacheCompletionBlock
+                              cachePolicy:(ASDKServiceDataAccessorCachingPolicy)cachePolicy {
     NSParameterAssert(completionBlock);
+    
     self.currentProfileCompletionBlock = completionBlock;
     self.currentProfileCachedResultsBlock = cacheCompletionBlock;
     
-    if (!self.fetchCurrentProfileDataAccessor) {
-        self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
-    }
+    self.fetchCurrentProfileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:self];
+    self.fetchCurrentProfileDataAccessor.cachePolicy = cachePolicy;
+    
     [self.fetchCurrentProfileDataAccessor fetchCurrentUserProfile];
 }
 
@@ -128,11 +135,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)cancellProfileNetworkRequests {
-    [self.fetchCurrentProfileDataAccessor cancelProfileRequests];
-    [self.fetchCurrentProfileImageDataAccessor cancelProfileRequests];
-    [self.updateCurrentProfileDataAccessor cancelProfileRequests];
-    [self.updateCurrentProfilePasswordDataAccessor cancelProfileRequests];
-    [self.uploadCurrentProfileImageDataAccessor cancelProfileRequests];
+    [self.fetchCurrentProfileDataAccessor cancelOperations];
+    [self.fetchCurrentProfileImageDataAccessor cancelOperations];
+    [self.updateCurrentProfileDataAccessor cancelOperations];
+    [self.updateCurrentProfilePasswordDataAccessor cancelOperations];
+    [self.uploadCurrentProfileImageDataAccessor cancelOperations];
 }
 
 
@@ -193,16 +200,14 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     __weak typeof(self) weakSelf = self;
     if (!profileResponse.error) {
         if (profileResponse.isCachedData) {
-            if (self.currentProfileCachedResultsBlock) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    __strong typeof(self) strongSelf = weakSelf;
-                    
-                    if (strongSelf.currentProfileCachedResultsBlock) {
-                        strongSelf.currentProfileCachedResultsBlock(profile, nil);
-                        strongSelf.currentProfileCachedResultsBlock = nil;
-                    }
-                });
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.currentProfileCachedResultsBlock) {
+                    strongSelf.currentProfileCachedResultsBlock(profile, nil);
+                    strongSelf.currentProfileCachedResultsBlock = nil;
+                }
+            });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;

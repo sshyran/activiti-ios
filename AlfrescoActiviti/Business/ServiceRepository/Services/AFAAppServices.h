@@ -25,16 +25,19 @@ typedef void  (^AFAAppServicesRuntimeAppDefinitionsCompletionBlock) (NSArray *ap
 @interface AFAAppServices : NSObject
 
 /**
- *  Performs a request to fetch and return via the completion block a list of runtime app
- *  definitions, the same list that you would see on the Activiti WEB landing page after login.
+ * Performs a request to fetch and return via the completion block a list of runtime app
+ * definitions, the same list that you would see on the Activiti WEB landing page after login.
  *
- *  @param completionBlock Completion block providing the runtime app definition list an optional
- *                         error reason and pagination information
+ * @param completionBlock       Completion block providing the runtime app definition list an optional
+ *                              error reason and pagination information
+ * @param cacheCompletionBlock  Completion block providing a cached reference to the runtime app definition
+ *                              list and an optional error reason
  */
-- (void)requestRuntimeAppDefinitionsWithCompletionBlock:(AFAAppServicesRuntimeAppDefinitionsCompletionBlock)completionBlock;
+- (void)requestRuntimeAppDefinitionsWithCompletionBlock:(AFAAppServicesRuntimeAppDefinitionsCompletionBlock)completionBlock
+                                          cachedResults:(AFAAppServicesRuntimeAppDefinitionsCompletionBlock)cacheCompletionBlock;
 
 /**
- *  Cancels all requests related to app services activity
+ * Cancels all requests related to app services activity
  */
 - (void)cancellAppNetworkRequests;
 

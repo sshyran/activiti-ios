@@ -37,14 +37,20 @@
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
+@interface ASDKProfileDataAccessor ()
+
+@property (strong, nonatomic) NSOperationQueue *processingQueue;
+
+@end
+
 @implementation ASDKProfileDataAccessor
 
 - (instancetype)initWithDelegate:(id<ASDKDataAccessorDelegate>)delegate {
     self = [super initWithDelegate:delegate];
     
     if (self) {
+        _processingQueue = [self serialOperationQueue];
         _cachePolicy = ASDKServiceDataAccessorCachingPolicyHybrid;
-        
         dispatch_queue_t profileUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue",
                                                                                  [NSBundle bundleForClass:[self class]].bundleIdentifier,
                                                                                  NSStringFromClass([self class])] UTF8String],
@@ -65,8 +71,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Service - Current user profile
 
 - (void)fetchCurrentUserProfile {
-    NSOperationQueue *processingQueue = [self serialOperationQueue];
-    
     // Define operations
     ASDKAsyncBlockOperation *remoteUserProfileOperation = [self remoteUserProfileOperation];
     ASDKAsyncBlockOperation *cachedUserProfileOperation = [self cachedUserProfileOperation];
@@ -77,15 +81,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     switch (self.cachePolicy) {
         case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
             [completionOperation addDependency:cachedUserProfileOperation];
-            [processingQueue addOperations:@[cachedUserProfileOperation, completionOperation]
-                         waitUntilFinished:NO];
+            [self.processingQueue addOperations:@[cachedUserProfileOperation, completionOperation]
+                              waitUntilFinished:NO];
         }
             break;
             
         case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
             [completionOperation addDependency:remoteUserProfileOperation];
-            [processingQueue addOperations:@[remoteUserProfileOperation, completionOperation]
-                         waitUntilFinished:NO];
+            [self.processingQueue addOperations:@[remoteUserProfileOperation, completionOperation]
+                              waitUntilFinished:NO];
         }
             break;
             
@@ -93,13 +97,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             [remoteUserProfileOperation addDependency:cachedUserProfileOperation];
             [storeInCacheOperation addDependency:remoteUserProfileOperation];
             [completionOperation addDependency:storeInCacheOperation];
-            [processingQueue addOperations:@[cachedUserProfileOperation, remoteUserProfileOperation, storeInCacheOperation, completionOperation]
-                         waitUntilFinished:NO];
+            [self.processingQueue addOperations:@[cachedUserProfileOperation, remoteUserProfileOperation, storeInCacheOperation, completionOperation]
+                              waitUntilFinished:NO];
         }
             break;
             
-        default:
-            break;
+        default: break;
     }
 }
 
@@ -113,6 +116,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         __strong typeof(self) strongSelf = weakSelf;
         
         [strongSelf.profileNetworkService fetchProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+            if (operation.isCancelled) {
+                [operation complete];
+                return;
+            }
+            
             ASDKDataAccessorResponseModel *responseModel = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
                                                                                                    isCachedData:NO
                                                                                                           error:error];
@@ -135,6 +143,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         __strong typeof(self) strongSelf = weakSelf;
         
         [[strongSelf profileCacheService] fetchCurrentUserProfile:^(ASDKModelProfile *profile, NSError *error) {
+            if (operation.isCancelled) {
+                [operation complete];
+                return;
+            }
+            
             if (!error) {
                 ASDKLogVerbose(@"Profile information fetched successfully from cache for user :%@", [profile normalisedName]);
                 
@@ -166,6 +179,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         if (remoteResponse.model) {
             [[strongSelf profileCacheService] cacheCurrentUserProfile:remoteResponse.model
                                                   withCompletionBlock:^(NSError *error) {
+                                                      if (operation.isCancelled) {
+                                                          [operation complete];
+                                                          return;
+                                                      }
+                                                      
                                                       if (!error) {
                                                           [[weakSelf profileCacheService] saveChanges];
                                                       } else {
@@ -184,6 +202,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     __weak typeof(self) weakSelf = self;
     ASDKAsyncBlockOperation *completionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
         __strong typeof(self) strongSelf = weakSelf;
+        
+        if (operation.isCancelled) {
+            [operation complete];
+            return ;
+        }
         
         if (strongSelf.delegate) {
             [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
@@ -325,7 +348,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark -
 #pragma mark Cancel operations
 
-- (void)cancelProfileRequests {
+- (void)cancelOperations {
+    [super cancelOperations];
+    [self.processingQueue cancelAllOperations];
     [self.profileNetworkService cancelAllProfileNetworkOperations];
 }
 

@@ -38,4 +38,9 @@
  */
 - (NSOperationQueue *)serialOperationQueue;
 
+/**
+ * Requests cancelation for all domain specific operations.
+ */
+- (void)cancelOperations;
+
 @end

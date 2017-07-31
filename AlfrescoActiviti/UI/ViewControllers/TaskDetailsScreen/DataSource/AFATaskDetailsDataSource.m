@@ -43,6 +43,12 @@
 #import "AFAProfileServices.h"
 #import "AFAIntegrationServices.h"
 
+@interface AFATaskDetailsDataSource ()
+
+// Services
+@property (strong, nonatomic) AFAProfileServices *requestProfileService;
+
+@end
 
 @implementation AFATaskDetailsDataSource
 
@@ -56,6 +62,7 @@
         _sectionModels = [NSMutableDictionary dictionary];
         _cellFactories = [NSMutableDictionary dictionary];
         _tableController = [AFATableController new];
+        _requestProfileService = [AFAProfileServices new];
         
         [self setupCellFactoriesWithThemeColor:themeColor];
         
@@ -97,7 +104,6 @@
                               
                               // Fetch profile information
                               dispatch_group_enter(taskDetailsGroup);
-                              AFAProfileServices *profileServices = [AFAProfileServices new];
                               __block ASDKModelProfile *currentUserProfile = nil;
                               __block BOOL hadEncounteredAnError = NO;
                               
@@ -117,7 +123,7 @@
                                   }
                               };
                               
-                              [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+                              [strongSelf.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
                                   // Check if cached value has been already provided
                                   if (!currentUserProfile) {
                                       currentProfileCompletionBlock(profile, error);

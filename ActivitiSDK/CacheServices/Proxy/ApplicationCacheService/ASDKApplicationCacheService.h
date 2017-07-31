@@ -16,39 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKDataAccessor.h"
+#import "ASDKCoreDataCacheService.h"
+#import "ASDKApplicationCacheServiceProtocol.h"
 
-// Managers
-#import "ASDKCacheService.h"
-
-@implementation ASDKDataAccessor
-
-
-#pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)initWithDelegate:(id<ASDKDataAccessorDelegate>)delegate {
-    self = [super init];
-    if (self) {
-        _delegate = delegate;
-    }
-    
-    return self;
-}
-
-
-#pragma mark - 
-#pragma mark Public interface
-
-- (NSOperationQueue *)serialOperationQueue {
-    NSOperationQueue *operationQueue = [NSOperationQueue new];
-    operationQueue.maxConcurrentOperationCount = 1;
-    
-    return operationQueue;
-}
-
-- (void)cancelOperations {
-    // Implement in sublcasses.
-}
+@interface ASDKApplicationCacheService : ASDKCoreDataCacheService <ASDKApplicationCacheServiceProtocol>
 
 @end

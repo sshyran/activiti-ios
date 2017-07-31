@@ -62,9 +62,4 @@
 - (void)uploadCurrentProfileImageForContentModel:(ASDKModelFileContent *)fileContentModel
                                      contentData:(NSData *)contentData;
 
-/**
- * Requests cancelation for all domain specific operations.
- */
-- (void)cancelProfileRequests;
-
 @end

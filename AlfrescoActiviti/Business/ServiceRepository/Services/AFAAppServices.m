@@ -19,15 +19,12 @@
 #import "AFAAppServices.h"
 @import ActivitiSDK;
 
-// Configurations
-#import "AFALogConfiguration.h"
+@interface AFAAppServices () <ASDKDataAccessorDelegate>
 
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
-
-@interface AFAAppServices ()
-
-@property (strong, nonatomic) dispatch_queue_t          appUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKAppNetworkServices    *appNetworkService;
+// Runtime app definitions
+@property (strong, nonatomic) ASDKApplicationsDataAccessor                      *fetchAppDataAccessor;
+@property (copy, nonatomic) AFAAppServicesRuntimeAppDefinitionsCompletionBlock  runtimeAppDefinitionsCompletionBlock;
+@property (copy, nonatomic) AFAAppServicesRuntimeAppDefinitionsCompletionBlock  runtimeAppDefinitionsCachedResultsBlock;
 
 @end
 
@@ -35,57 +32,79 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 
 #pragma mark -
-#pragma mark Life cycle
+#pragma mark Public interface
 
-- (instancetype)init {
-    self = [super init];
+- (void)requestRuntimeAppDefinitionsWithCompletionBlock:(AFAAppServicesRuntimeAppDefinitionsCompletionBlock)completionBlock
+                                          cachedResults:(AFAAppServicesRuntimeAppDefinitionsCompletionBlock)cacheCompletionBlock {
+    NSParameterAssert(completionBlock);
     
-    if (self) {
-        self.appUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        
-        // Acquire and set up the app network service
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.appNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKAppNetworkServiceProtocol)];
-        self.appNetworkService.resultsQueue = self.appUpdatesProcessingQueue;
-    }
+    self.runtimeAppDefinitionsCompletionBlock = completionBlock;
+    self.runtimeAppDefinitionsCachedResultsBlock = cacheCompletionBlock;
     
-    return self;
+    self.fetchAppDataAccessor = [[ASDKApplicationsDataAccessor alloc] initWithDelegate:self];
+    [self.fetchAppDataAccessor fetchRuntimeApplicationDefinitions];
+}
+
+- (void)cancellAppNetworkRequests {
+    [self.fetchAppDataAccessor cancelOperations];
 }
 
 
 #pragma mark -
-#pragma mark Public interface
+#pragma mark Private interface
 
-- (void)requestRuntimeAppDefinitionsWithCompletionBlock:(AFAAppServicesRuntimeAppDefinitionsCompletionBlock)completionBlock {
-    NSParameterAssert(completionBlock);
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchAppDataAccessor == dataAccessor) {
+        [self handleAppDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
     
-    [self.appNetworkService fetchRuntimeAppDefinitionsWithCompletionBlock:
-     ^(NSArray *runtimeAppDefinitions, NSError *error, ASDKModelPaging *paging) {
-        if (!error && runtimeAppDefinitions) {
-            AFALogVerbose(@"Fetched %lu runtime app definitions.", (unsigned long)runtimeAppDefinitions.count);
-            
-            // Filter any unused values from the application list i.e. apps that should
-            // not be visible to the user
-            NSPredicate *userApplicationsPredicate = [NSPredicate predicateWithFormat:@"SELF.deploymentID != nil"];
-            NSArray *userApplicationsArr = [runtimeAppDefinitions filteredArrayUsingPredicate:userApplicationsPredicate];
-            
-            AFALogVerbose(@"Filtered out the app list to :%lu elements.", (unsigned long)userApplicationsArr.count);
-            
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleAppDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *applicationListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *runtimeAppDefinitions = applicationListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!applicationListResponse.error) {
+        if (applicationListResponse.isCachedData) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(userApplicationsArr, nil, paging);
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.runtimeAppDefinitionsCachedResultsBlock) {
+                    strongSelf.runtimeAppDefinitionsCachedResultsBlock(runtimeAppDefinitions, nil, nil);
+                    strongSelf.runtimeAppDefinitionsCachedResultsBlock = nil;
+                }
             });
         } else {
-            AFALogError(@"An error occured while the user tried to fetch the runtime app definitions. Reason:%@", error.localizedDescription);
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error, nil);
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.runtimeAppDefinitionsCompletionBlock) {
+                    strongSelf.runtimeAppDefinitionsCompletionBlock(runtimeAppDefinitions, nil, nil);
+                    strongSelf.runtimeAppDefinitionsCompletionBlock = nil;
+                }
             });
         }
-    }];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.runtimeAppDefinitionsCompletionBlock) {
+                strongSelf.runtimeAppDefinitionsCompletionBlock(nil, applicationListResponse.error, nil);
+                strongSelf.runtimeAppDefinitionsCompletionBlock = nil;
+            }
+        });
+    }
 }
 
-- (void)cancellAppNetworkRequests {
-    [self.appNetworkService cancelAllAppNetworkOperations];
-}
+
 
 @end

@@ -23,6 +23,7 @@
 @protocol ASDKServiceDataAccessorProtocol;
 
 typedef NS_ENUM(NSInteger, ASDKServiceDataAccessorCachingPolicy) {
+    ASDKServiceDataAccessorCachingPolicyUndefined = -1,
     ASDKServiceDataAccessorCachingPolicyCacheOnly,
     ASDKServiceDataAccessorCachingPolicyAPIOnly,
     ASDKServiceDataAccessorCachingPolicyHybrid                  // Default behavior unless specified otherwise

@@ -18,37 +18,13 @@
 
 #import "ASDKDataAccessor.h"
 
-// Managers
-#import "ASDKCacheService.h"
-
-@implementation ASDKDataAccessor
+@interface ASDKApplicationsDataAccessor : ASDKDataAccessor
 
 
-#pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)initWithDelegate:(id<ASDKDataAccessorDelegate>)delegate {
-    self = [super init];
-    if (self) {
-        _delegate = delegate;
-    }
-    
-    return self;
-}
-
-
-#pragma mark - 
-#pragma mark Public interface
-
-- (NSOperationQueue *)serialOperationQueue {
-    NSOperationQueue *operationQueue = [NSOperationQueue new];
-    operationQueue.maxConcurrentOperationCount = 1;
-    
-    return operationQueue;
-}
-
-- (void)cancelOperations {
-    // Implement in sublcasses.
-}
+/**
+ * Requests the runtime application definitions and reports network or cached data 
+ * through the designated data accessor delegate.
+ */
+- (void)fetchRuntimeApplicationDefinitions;
 
 @end
