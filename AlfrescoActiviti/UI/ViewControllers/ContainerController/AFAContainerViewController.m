@@ -20,18 +20,15 @@
 #import "AFAUIConstants.h"
 #import "AFALocalizationConstants.h"
 
+// Categories
+#import "UIViewController+AFAAlertAddition.h"
+
+// Models
+#import "AFALoginViewModel.h"
+
 // View models
 #import "AFATaskListViewModel.h"
 #import "AFAProcessListViewModel.h"
-
-// Controllers
-#import "AFAContainerViewController.h"
-#import "AFAApplicationListViewController.h"
-#import "AFADrawerMenuViewController.h"
-#import "AFANavigationController.h"
-#import "AFAListViewController.h"
-#import "AFAProfileViewController.h"
-#import "AFASettingsViewController.h"
 
 // Managers
 #import "AFAServiceRepository.h"
@@ -46,11 +43,14 @@
 #import "AFAIntegrationServices.h"
 @import ActivitiSDK;
 
-// Models
-#import "AFALoginViewModel.h"
+// Controllers
+#import "AFAContainerViewController.h"
+#import "AFAApplicationListViewController.h"
+#import "AFADrawerMenuViewController.h"
+#import "AFAListViewController.h"
+#import "AFAProfileViewController.h"
+#import "AFASettingsViewController.h"
 
-// Categories
-#import "UIViewController+AFAAlertAddition.h"
 
 @interface AFAContainerViewController () <AFAContainerViewControllerDelegate>
 
@@ -71,7 +71,7 @@
 
 // Controllers
 @property (strong, nonatomic) AFADrawerMenuViewController   *drawerMenuViewController;
-@property (strong, nonatomic) AFANavigationController       *detailsNavigationController;
+@property (strong, nonatomic) UINavigationController        *detailsNavigationController;
 
 @end
 
@@ -156,10 +156,10 @@
                  sender:(id)sender {
     if ([kSegueIDApplicationListEmbedding isEqualToString:segue.identifier]) {
         // Check if the application list is the root controller of a navigation controller
-        if ([segue.destinationViewController isKindOfClass:[AFANavigationController class]]) {
-            self.detailsNavigationController = (AFANavigationController *)segue.destinationViewController;
+        if ([segue.destinationViewController isKindOfClass:[UINavigationController class]]) {
+            self.detailsNavigationController = (UINavigationController *)segue.destinationViewController;
             
-            AFAApplicationListViewController *applicationListViewController = ((AFANavigationController *)segue.destinationViewController).viewControllers.firstObject;
+            AFAApplicationListViewController *applicationListViewController = ((UINavigationController *)segue.destinationViewController).viewControllers.firstObject;
             applicationListViewController.delegate = self;
         }
     }

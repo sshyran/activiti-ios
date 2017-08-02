@@ -16,22 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFANavigationController.h"
+@import UIKit;
 
-@implementation AFANavigationController
-
-
-#pragma mark - 
-#pragma mark Navigation
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    // Pass the call to the top most of the navigation stack
-    UIViewController *controller = self.topViewController;
-    return [controller segueForUnwindingToViewController:toViewController
-                                      fromViewController:fromViewController
-                                              identifier:identifier];
-}
+@interface AFAPopFadeAnimator : NSObject <UIViewControllerAnimatedTransitioning>
 
 @end

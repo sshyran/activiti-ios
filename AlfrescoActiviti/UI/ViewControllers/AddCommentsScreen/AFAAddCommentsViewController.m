@@ -32,9 +32,6 @@
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 // Views
 #import <JGProgressHUD/JGProgressHUD.h>
 
@@ -100,33 +97,6 @@
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     self.commentsTextViewBottomConstraint.constant = CGRectGetHeight(keyboardFrame) + 8.0f;
     [self.view layoutIfNeeded];
-}
-
-
-#pragma mark - 
-#pragma mark Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDTaskDetailsAddCommentsUnwind isEqualToString:identifier] ||
-        [kSegueIDProcessInstanceDetailsAddCommentsUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 

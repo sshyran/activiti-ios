@@ -35,9 +35,6 @@
 #import "AFAProcessInstanceDetailsDataSource.h"
 #import "AFATaskDetailsDataSource.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 // Managers
 #import "AFAServiceRepository.h"
 #import "AFATableController.h"
@@ -268,34 +265,10 @@ AFAModalPeoplePickerViewControllerDelegate>
     }
 }
 
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDTaskDetailsUnwind isEqualToString:identifier]) {
-        // Clear the form engine once the screen is dismissed
-        AFAFormServices *formServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-        [formServices requestEngineCleanup];
-        
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    if ([kSegueIDProcessInstanceTaskDetailsUnwind isEqualToString:identifier] ||
-        [kSegueIDTaskDetailsChecklistUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
-}
+#warning Clean form engine on dismiss
+// Clear the form engine once the screen is dismissed
+//AFAFormServices *formServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
+//[formServices requestEngineCleanup];
 
 - (IBAction)unwindPeoplePickerController:(UIStoryboardSegue *)segue {
 }

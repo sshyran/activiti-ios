@@ -31,9 +31,6 @@
 #import "AFAServiceRepository.h"
 #import "AFAFormServices.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 // Views
 #import "AFAActivityView.h"
 
@@ -158,26 +155,6 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-
-#pragma mark -
-#pragma mark Navigation
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDProcessInstanceViewCompletedStartFormUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 

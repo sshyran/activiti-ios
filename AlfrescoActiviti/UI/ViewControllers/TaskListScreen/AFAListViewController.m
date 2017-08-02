@@ -61,9 +61,6 @@
 #import "ASDKRoundedBorderView.h"
 #import "AFAActivityView.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 typedef NS_ENUM(NSInteger, AFAListControllerState) {
     AFAListControllerStateIdle,
     AFAListControllerStateRefreshInProgress,
@@ -291,22 +288,6 @@ UITableViewDelegate>
         processInstanceDetailsController.dataSource = processInstanceDetailsDataSource;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeProcessList;
     }
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDListUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 - (IBAction)unwindTaskListController:(UIStoryboardSegue *)segue {

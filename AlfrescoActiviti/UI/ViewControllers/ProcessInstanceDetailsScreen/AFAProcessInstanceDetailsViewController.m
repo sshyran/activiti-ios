@@ -48,9 +48,6 @@
 #import "AFATableControllerContentCellFactory.h"
 #import "AFATableControllerCommentCellFactory.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 // Controllers
 #import "AFATaskDetailsViewController.h"
 #import "AFAContentPickerViewController.h"
@@ -168,24 +165,6 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         AFAProcessStartFormViewController *startFormViewController = (AFAProcessStartFormViewController *)segue.destinationViewController;
         [startFormViewController setupStartFormForProcessInstanceObject:processInstanceDetailsModel.currentProcessInstance];
     }
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDProcessInstanceDetailsUnwind isEqualToString:identifier] ||
-        [kSegueIDProcessInstanceStartFormUnwind isEqualToString:identifier] ||
-        [kSegueIDTaskDetailsViewProcessUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 - (IBAction)unwindFromTaskDetailsController:(UIStoryboardSegue *)segue {

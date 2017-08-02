@@ -16,8 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
-@interface AFAModalReplaceSegue : UIStoryboardSegue
+@interface AFAModalDismissAnimator : NSObject <UIViewControllerAnimatedTransitioning>
 
 @end

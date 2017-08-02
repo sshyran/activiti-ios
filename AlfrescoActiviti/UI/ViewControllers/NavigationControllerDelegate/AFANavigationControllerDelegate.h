@@ -16,8 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
-@interface AFAModalReplaceSegueUnwind : UIStoryboardSegue
+@interface AFANavigationControllerDelegate : NSObject <UINavigationControllerDelegate>
 
 @end

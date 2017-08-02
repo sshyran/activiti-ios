@@ -17,8 +17,12 @@
  ******************************************************************************/
 
 #import "AFABaseThemedViewController.h"
+
+// Constants
 #import "AFAUIConstants.h"
 #import "AFALocalizationConstants.h"
+
+// Managers
 @import ActivitiSDK;
 
 @interface AFABaseThemedViewController ()

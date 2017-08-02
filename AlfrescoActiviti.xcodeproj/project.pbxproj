@@ -62,8 +62,6 @@
 		1323CFCF1B87630800E66D6F /* UIImage+AFAThumbnailCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1323CFCE1B87630800E66D6F /* UIImage+AFAThumbnailCreation.m */; };
 		1323CFD61B87719900E66D6F /* AFALogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1323CFD51B87719900E66D6F /* AFALogFormatter.m */; };
 		132511F11BA80FB500C4CA64 /* AFATaskDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 132511F01BA80FB500C4CA64 /* AFATaskDetailsViewController.m */; };
-		132511F51BA811F700C4CA64 /* AFAPushFadeSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 132511F41BA811F700C4CA64 /* AFAPushFadeSegue.m */; };
-		132511F91BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m in Sources */ = {isa = PBXBuildFile; fileRef = 132511F81BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m */; };
 		1328D34D1BB91CAC0010757C /* AFATableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D34C1BB91CAC0010757C /* AFATableController.m */; };
 		1328D3511BB92D540010757C /* AFATableControllerTaskDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3501BB92D540010757C /* AFATableControllerTaskDetailsModel.m */; };
 		1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */; };
@@ -88,6 +86,10 @@
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
 		13323B5E1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */; };
 		13323B611E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */; };
+		133539F81F2F7BF20058B85E /* AFAModalDismissAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 133539F71F2F7BF20058B85E /* AFAModalDismissAnimator.m */; };
+		133539FB1F30A8010058B85E /* AFAPushFadeAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 133539FA1F30A8010058B85E /* AFAPushFadeAnimator.m */; };
+		133539FF1F30A84C0058B85E /* AFAPopFadeAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 133539FE1F30A84C0058B85E /* AFAPopFadeAnimator.m */; };
+		13353A031F31B9020058B85E /* AFANavigationControllerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13353A021F31B9020058B85E /* AFANavigationControllerDelegate.m */; };
 		133A23A41EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A23A31EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m */; };
 		133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 133A6BCA1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h */; };
 		133A6BCD1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 133A6BCB1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.m */; };
@@ -156,6 +158,7 @@
 		136680071C89AEF9005E4AEA /* AFAQueryServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 136680061C89AEF9005E4AEA /* AFAQueryServices.m */; };
 		1366800B1C89D296005E4AEA /* AFASimpleSectionHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800A1C89D296005E4AEA /* AFASimpleSectionHeaderCell.m */; };
 		1366800F1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1366800E1C8DEC57005E4AEA /* AFAProcessStartFormViewController.m */; };
+		136829A71F2F1C0300B74EAF /* AFAModalReplaceAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 136829A61F2F1C0300B74EAF /* AFAModalReplaceAnimator.m */; };
 		136D035B1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */; };
 		136DFF681DA3DB8300FA40E0 /* AFAFilterHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 136DFF671DA3DB8300FA40E0 /* AFAFilterHeaderView.m */; };
 		136DFF711DA643B300FA40E0 /* ASDKJSONResponseSerializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 136DFF6F1DA643B300FA40E0 /* ASDKJSONResponseSerializer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -443,10 +446,7 @@
 		13C94BE41B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C94BE21B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13C94BE51B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C94BE31B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m */; };
 		13C957F61B833525002A08F1 /* AFABusinessConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C957F51B833525002A08F1 /* AFABusinessConstants.m */; };
-		13C957FA1B836713002A08F1 /* AFAModalReplaceSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C957F91B836713002A08F1 /* AFAModalReplaceSegue.m */; };
-		13C957FF1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C957FE1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m */; };
 		13C958021B837D48002A08F1 /* AFAListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C958011B837D48002A08F1 /* AFAListViewController.m */; };
-		13C958061B838518002A08F1 /* AFANavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C958051B838518002A08F1 /* AFANavigationController.m */; };
 		13C9B57A1B9451B10009BD27 /* AFAFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C9B5791B9451B10009BD27 /* AFAFilterViewController.m */; };
 		13C9B57E1B9497B90009BD27 /* ASDKModelPaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C9B57C1B9497B90009BD27 /* ASDKModelPaging.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13C9B57F1B9497B90009BD27 /* ASDKModelPaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C9B57D1B9497B90009BD27 /* ASDKModelPaging.m */; };
@@ -806,10 +806,6 @@
 		1323CFD51B87719900E66D6F /* AFALogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFALogFormatter.m; path = Business/Logging/AFALogFormatter.m; sourceTree = "<group>"; };
 		132511EF1BA80FB500C4CA64 /* AFATaskDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskDetailsViewController.h; path = UI/ViewControllers/TaskDetailsScreen/AFATaskDetailsViewController.h; sourceTree = "<group>"; };
 		132511F01BA80FB500C4CA64 /* AFATaskDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskDetailsViewController.m; path = UI/ViewControllers/TaskDetailsScreen/AFATaskDetailsViewController.m; sourceTree = "<group>"; };
-		132511F31BA811F700C4CA64 /* AFAPushFadeSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAPushFadeSegue.h; path = UI/Segues/PushFadeSegue/AFAPushFadeSegue.h; sourceTree = "<group>"; };
-		132511F41BA811F700C4CA64 /* AFAPushFadeSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAPushFadeSegue.m; path = UI/Segues/PushFadeSegue/AFAPushFadeSegue.m; sourceTree = "<group>"; };
-		132511F71BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAPushFadeSegueUnwind.h; path = UI/Segues/PushFadeSegue/AFAPushFadeSegueUnwind.h; sourceTree = "<group>"; };
-		132511F81BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAPushFadeSegueUnwind.m; path = UI/Segues/PushFadeSegue/AFAPushFadeSegueUnwind.m; sourceTree = "<group>"; };
 		1328D34B1BB91CAC0010757C /* AFATableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableController.h; path = Business/TableController/AFATableController.h; sourceTree = "<group>"; };
 		1328D34C1BB91CAC0010757C /* AFATableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableController.m; path = Business/TableController/AFATableController.m; sourceTree = "<group>"; };
 		1328D34F1BB92D540010757C /* AFATableControllerTaskDetailsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerTaskDetailsModel.h; path = Model/TableControllerTaskDetailsModel/AFATableControllerTaskDetailsModel.h; sourceTree = "<group>"; };
@@ -843,6 +839,14 @@
 		13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerTaskAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerTaskAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
 		13323B5F1E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; sourceTree = "<group>"; };
 		13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
+		133539F61F2F7BF20058B85E /* AFAModalDismissAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalDismissAnimator.h; path = UI/Animators/ModalDismissAnimator/AFAModalDismissAnimator.h; sourceTree = "<group>"; };
+		133539F71F2F7BF20058B85E /* AFAModalDismissAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalDismissAnimator.m; path = UI/Animators/ModalDismissAnimator/AFAModalDismissAnimator.m; sourceTree = "<group>"; };
+		133539F91F30A8010058B85E /* AFAPushFadeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAPushFadeAnimator.h; path = UI/Animators/PushFadeAnimator/AFAPushFadeAnimator.h; sourceTree = "<group>"; };
+		133539FA1F30A8010058B85E /* AFAPushFadeAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAPushFadeAnimator.m; path = UI/Animators/PushFadeAnimator/AFAPushFadeAnimator.m; sourceTree = "<group>"; };
+		133539FD1F30A84C0058B85E /* AFAPopFadeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAPopFadeAnimator.h; path = UI/Animators/PopFadeAnimator/AFAPopFadeAnimator.h; sourceTree = "<group>"; };
+		133539FE1F30A84C0058B85E /* AFAPopFadeAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAPopFadeAnimator.m; path = UI/Animators/PopFadeAnimator/AFAPopFadeAnimator.m; sourceTree = "<group>"; };
+		13353A011F31B9020058B85E /* AFANavigationControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFANavigationControllerDelegate.h; path = UI/ViewControllers/NavigationControllerDelegate/AFANavigationControllerDelegate.h; sourceTree = "<group>"; };
+		13353A021F31B9020058B85E /* AFANavigationControllerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFANavigationControllerDelegate.m; path = UI/ViewControllers/NavigationControllerDelegate/AFANavigationControllerDelegate.m; sourceTree = "<group>"; };
 		133A23A21EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessInstanceDetailsDataSource.h; path = UI/ViewControllers/ProcessInstanceDetailsScreen/DataSource/AFAProcessInstanceDetailsDataSource.h; sourceTree = "<group>"; };
 		133A23A31EA5F98B008E79C7 /* AFAProcessInstanceDetailsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessInstanceDetailsDataSource.m; path = UI/ViewControllers/ProcessInstanceDetailsScreen/DataSource/AFAProcessInstanceDetailsDataSource.m; sourceTree = "<group>"; };
 		133A23A61EA5FFF5008E79C7 /* AFAProcessInstanceDetailsDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessInstanceDetailsDataSourceProtocol.h; path = UI/ViewControllers/ProcessInstanceDetailsScreen/DataSource/Protocol/AFAProcessInstanceDetailsDataSourceProtocol.h; sourceTree = "<group>"; };
@@ -935,6 +939,8 @@
 		1367370F1B860FF900364886 /* UIFont+ASDKGlyphicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIFont+ASDKGlyphicons.m"; path = "../ActivitiSDK/FormRenderEngine/Categories/UIFont+ASDKGlyphicons.m"; sourceTree = "<group>"; };
 		136737121B86122600364886 /* NSString+ASDKFontGlyphicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+ASDKFontGlyphicons.h"; path = "../ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKFontGlyphicons.h"; sourceTree = "<group>"; };
 		136737131B86122600364886 /* NSString+ASDKFontGlyphicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+ASDKFontGlyphicons.m"; path = "../ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKFontGlyphicons.m"; sourceTree = "<group>"; };
+		136829A51F2F1C0300B74EAF /* AFAModalReplaceAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalReplaceAnimator.h; path = UI/Animators/ModalReplaceAnimator/AFAModalReplaceAnimator.h; sourceTree = "<group>"; };
+		136829A61F2F1C0300B74EAF /* AFAModalReplaceAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalReplaceAnimator.m; path = UI/Animators/ModalReplaceAnimator/AFAModalReplaceAnimator.m; sourceTree = "<group>"; };
 		136D03591C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProcessInstanceDetailsViewController.h; path = UI/ViewControllers/ProcessInstanceDetailsScreen/AFAProcessInstanceDetailsViewController.h; sourceTree = "<group>"; };
 		136D035A1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProcessInstanceDetailsViewController.m; path = UI/ViewControllers/ProcessInstanceDetailsScreen/AFAProcessInstanceDetailsViewController.m; sourceTree = "<group>"; };
 		136DFF661DA3DB8300FA40E0 /* AFAFilterHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAFilterHeaderView.h; path = UI/Components/FilterHeaderView/AFAFilterHeaderView.h; sourceTree = "<group>"; };
@@ -1288,14 +1294,8 @@
 		13C94BE31B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterRequestRepresentation.m; path = NetworkServices/RequestRepresentations/FilterInformation/ASDKFilterRequestRepresentation.m; sourceTree = "<group>"; };
 		13C957F41B833525002A08F1 /* AFABusinessConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFABusinessConstants.h; path = Business/Constants/AFABusinessConstants.h; sourceTree = "<group>"; };
 		13C957F51B833525002A08F1 /* AFABusinessConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFABusinessConstants.m; path = Business/Constants/AFABusinessConstants.m; sourceTree = "<group>"; };
-		13C957F81B836713002A08F1 /* AFAModalReplaceSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalReplaceSegue.h; path = UI/Segues/ModalReplaceSegue/AFAModalReplaceSegue.h; sourceTree = "<group>"; };
-		13C957F91B836713002A08F1 /* AFAModalReplaceSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalReplaceSegue.m; path = UI/Segues/ModalReplaceSegue/AFAModalReplaceSegue.m; sourceTree = "<group>"; };
-		13C957FD1B837906002A08F1 /* AFAModalReplaceSegueUnwind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalReplaceSegueUnwind.h; path = UI/Segues/ModalReplaceSegueUnwind/AFAModalReplaceSegueUnwind.h; sourceTree = "<group>"; };
-		13C957FE1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalReplaceSegueUnwind.m; path = UI/Segues/ModalReplaceSegueUnwind/AFAModalReplaceSegueUnwind.m; sourceTree = "<group>"; };
 		13C958001B837D48002A08F1 /* AFAListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAListViewController.h; path = UI/ViewControllers/TaskListScreen/AFAListViewController.h; sourceTree = "<group>"; };
 		13C958011B837D48002A08F1 /* AFAListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFAListViewController.m; path = UI/ViewControllers/TaskListScreen/AFAListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		13C958041B838518002A08F1 /* AFANavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFANavigationController.h; path = UI/ViewControllers/BaseNavigationController/AFANavigationController.h; sourceTree = "<group>"; };
-		13C958051B838518002A08F1 /* AFANavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFANavigationController.m; path = UI/ViewControllers/BaseNavigationController/AFANavigationController.m; sourceTree = "<group>"; };
 		13C9B5781B9451B10009BD27 /* AFAFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAFilterViewController.h; path = UI/ViewControllers/TaskFilterController/AFAFilterViewController.h; sourceTree = "<group>"; };
 		13C9B5791B9451B10009BD27 /* AFAFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = AFAFilterViewController.m; path = UI/ViewControllers/TaskFilterController/AFAFilterViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		13C9B57C1B9497B90009BD27 /* ASDKModelPaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelPaging.h; path = Model/Paging/ASDKModelPaging.h; sourceTree = "<group>"; };
@@ -1999,17 +1999,6 @@
 			name = TaskDetailsScreen;
 			sourceTree = "<group>";
 		};
-		132511F61BA8120300C4CA64 /* AFAPushFadeSegue */ = {
-			isa = PBXGroup;
-			children = (
-				132511F31BA811F700C4CA64 /* AFAPushFadeSegue.h */,
-				132511F41BA811F700C4CA64 /* AFAPushFadeSegue.m */,
-				132511F71BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.h */,
-				132511F81BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m */,
-			);
-			name = AFAPushFadeSegue;
-			sourceTree = "<group>";
-		};
 		1328D34E1BB91CB10010757C /* TableController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2137,6 +2126,33 @@
 			name = Business;
 			sourceTree = "<group>";
 		};
+		133539FC1F30A8050058B85E /* PushFadeAnimator */ = {
+			isa = PBXGroup;
+			children = (
+				133539F91F30A8010058B85E /* AFAPushFadeAnimator.h */,
+				133539FA1F30A8010058B85E /* AFAPushFadeAnimator.m */,
+			);
+			name = PushFadeAnimator;
+			sourceTree = "<group>";
+		};
+		13353A001F30A8510058B85E /* PopFadeAnimator */ = {
+			isa = PBXGroup;
+			children = (
+				133539FD1F30A84C0058B85E /* AFAPopFadeAnimator.h */,
+				133539FE1F30A84C0058B85E /* AFAPopFadeAnimator.m */,
+			);
+			name = PopFadeAnimator;
+			sourceTree = "<group>";
+		};
+		13353A041F31B9080058B85E /* NavigationControllerDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				13353A011F31B9020058B85E /* AFANavigationControllerDelegate.h */,
+				13353A021F31B9020058B85E /* AFANavigationControllerDelegate.m */,
+			);
+			name = NavigationControllerDelegate;
+			sourceTree = "<group>";
+		};
 		1336D34C1BAAAC4D00641456 /* ListDetailsScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -2229,7 +2245,7 @@
 				13DBF3591B79E1E5003E6938 /* Constants */,
 				13DBF3541B79DF53003E6938 /* Categories */,
 				133B7FE41B78FB2500C17D06 /* Components */,
-				13C957FC1B836728002A08F1 /* Segues */,
+				136829A91F2F1C1500B74EAF /* Animators */,
 				13BDA7391B7B4B7F00A2CE40 /* Cells */,
 				133B7FD91B78DBAC00C17D06 /* ViewControllers */,
 			);
@@ -2605,6 +2621,27 @@
 			);
 			name = Fonts;
 			path = ../AlfrescoActiviti;
+			sourceTree = "<group>";
+		};
+		136829A81F2F1C0900B74EAF /* ModalReplaceAnimator */ = {
+			isa = PBXGroup;
+			children = (
+				136829A51F2F1C0300B74EAF /* AFAModalReplaceAnimator.h */,
+				136829A61F2F1C0300B74EAF /* AFAModalReplaceAnimator.m */,
+				133539F61F2F7BF20058B85E /* AFAModalDismissAnimator.h */,
+				133539F71F2F7BF20058B85E /* AFAModalDismissAnimator.m */,
+			);
+			name = ModalReplaceAnimator;
+			sourceTree = "<group>";
+		};
+		136829A91F2F1C1500B74EAF /* Animators */ = {
+			isa = PBXGroup;
+			children = (
+				136829A81F2F1C0900B74EAF /* ModalReplaceAnimator */,
+				133539FC1F30A8050058B85E /* PushFadeAnimator */,
+				13353A001F30A8510058B85E /* PopFadeAnimator */,
+			);
+			name = Animators;
 			sourceTree = "<group>";
 		};
 		136D035C1C844F5100DC94B7 /* ProcessInstanceDetailsScreen */ = {
@@ -4217,26 +4254,6 @@
 			name = Constants;
 			sourceTree = "<group>";
 		};
-		13C957FB1B836720002A08F1 /* ModalReplaceSegue */ = {
-			isa = PBXGroup;
-			children = (
-				13C957F81B836713002A08F1 /* AFAModalReplaceSegue.h */,
-				13C957F91B836713002A08F1 /* AFAModalReplaceSegue.m */,
-				13C957FD1B837906002A08F1 /* AFAModalReplaceSegueUnwind.h */,
-				13C957FE1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m */,
-			);
-			name = ModalReplaceSegue;
-			sourceTree = "<group>";
-		};
-		13C957FC1B836728002A08F1 /* Segues */ = {
-			isa = PBXGroup;
-			children = (
-				13C957FB1B836720002A08F1 /* ModalReplaceSegue */,
-				132511F61BA8120300C4CA64 /* AFAPushFadeSegue */,
-			);
-			name = Segues;
-			sourceTree = "<group>";
-		};
 		13C958031B837D53002A08F1 /* ListScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -4248,19 +4265,10 @@
 			name = ListScreen;
 			sourceTree = "<group>";
 		};
-		13C958071B83851B002A08F1 /* BaseNavigationController */ = {
-			isa = PBXGroup;
-			children = (
-				13C958041B838518002A08F1 /* AFANavigationController.h */,
-				13C958051B838518002A08F1 /* AFANavigationController.m */,
-			);
-			name = BaseNavigationController;
-			sourceTree = "<group>";
-		};
 		13C958081B83852F002A08F1 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				13C958071B83851B002A08F1 /* BaseNavigationController */,
+				13353A041F31B9080058B85E /* NavigationControllerDelegate */,
 				13AE35831C46860B00BEB477 /* BaseSliderViewController */,
 				13AE35871C47D69600BEB477 /* BaseThemedViewController */,
 			);
@@ -6164,7 +6172,6 @@
 				13AAD3BF1CDB824800818537 /* AFAProfileDetailTableViewCell.m in Sources */,
 				1323CFCB1B875FB900E66D6F /* AFAImageContainerModel.m in Sources */,
 				13667FF21C887CEA005E4AEA /* AFATableControllerProcessInstanceTasksCellFactory.m in Sources */,
-				132511F91BA8357A00C4CA64 /* AFAPushFadeSegueUnwind.m in Sources */,
 				13A1B2811B989B2700C4B6CE /* AFABaseModel.m in Sources */,
 				13BB57B11E9665DE0057B687 /* AFABaseListViewDataSource.m in Sources */,
 				13E6E28B1B7E0EE1001F5737 /* AFAFadingTableView.m in Sources */,
@@ -6182,6 +6189,7 @@
 				1323CFC71B87481E00E66D6F /* AFAThumbnailManager.m in Sources */,
 				13A106951E93884D00506871 /* AFAProcessListViewDataSource.m in Sources */,
 				13C444171BBA744400868904 /* AFATableControllerCommentCellFactory.m in Sources */,
+				13353A031F31B9020058B85E /* AFANavigationControllerDelegate.m in Sources */,
 				137B8DD41BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m in Sources */,
 				139DF5C61C5BB4600062D01D /* AFAProcessServices.m in Sources */,
 				1328D3511BB92D540010757C /* AFATableControllerTaskDetailsModel.m in Sources */,
@@ -6204,7 +6212,6 @@
 				13FCF6411E5DCFE9002CC3EE /* AFARequeueTableViewCell.m in Sources */,
 				13A8CAB81B8B3FB100B7A25E /* AFAMenuButtonCell.m in Sources */,
 				13ACE37C1C9996B900693A29 /* AFAAddCommentsViewController.m in Sources */,
-				13C957FA1B836713002A08F1 /* AFAModalReplaceSegue.m in Sources */,
 				13667FF61C887FD6005E4AEA /* AFATaskDetailsStyleTableViewCell.m in Sources */,
 				8D7C1A621C808DB10092EA81 /* AFACreatedDateTableViewCell.m in Sources */,
 				132511F11BA80FB500C4CA64 /* AFATaskDetailsViewController.m in Sources */,
@@ -6250,12 +6257,14 @@
 				13C957F61B833525002A08F1 /* AFABusinessConstants.m in Sources */,
 				13C958021B837D48002A08F1 /* AFAListViewController.m in Sources */,
 				8D7C1A561C808D640092EA81 /* AFAContentFileTableViewCell.m in Sources */,
+				136829A71F2F1C0300B74EAF /* AFAModalReplaceAnimator.m in Sources */,
 				13AE35861C47D69300BEB477 /* AFABaseThemedViewController.m in Sources */,
 				136130141D74788F00B23F71 /* AFATaskMembershipTableViewCell.m in Sources */,
 				8D7C1A5E1C808D970092EA81 /* AFACommentHeaderTableViewCell.m in Sources */,
 				13667FEE1C887490005E4AEA /* AFATableControllerProcessInstanceTasksModel.m in Sources */,
 				13C444131BBA6CDB00868904 /* AFATableControllerCommentModel.m in Sources */,
 				13DBF3581B79E1B7003E6938 /* AFAUIConstants.m in Sources */,
+				133539F81F2F7BF20058B85E /* AFAModalDismissAnimator.m in Sources */,
 				13481F2F1B95C4B4005D3149 /* AFAKeychainWrapper.m in Sources */,
 				13AE35821C46860800BEB477 /* AFABaseSliderViewController.m in Sources */,
 				13B811AF1BBE558B00E25CBE /* AFAContentPickerViewController.m in Sources */,
@@ -6281,6 +6290,7 @@
 				7597AEE91B821E9500F8B5DE /* AFAActivityView.m in Sources */,
 				8D7C1A4A1C808D160092EA81 /* AFADueTableViewCell.m in Sources */,
 				139DF5BE1C5A63740062D01D /* AFAProfileServices.m in Sources */,
+				133539FB1F30A8010058B85E /* AFAPushFadeAnimator.m in Sources */,
 				1323CFD61B87719900E66D6F /* AFALogFormatter.m in Sources */,
 				8D7C1A521C808D470092EA81 /* AFAContributorTableViewCell.m in Sources */,
 				13AAD3C31CDB82A900818537 /* AFAProfileSimpleTableViewCell.m in Sources */,
@@ -6289,8 +6299,6 @@
 				13BBAB131E9D17E8009B2D43 /* AFAContentPickerTaskUploadBehavior.m in Sources */,
 				75E868071B7E75E500862D51 /* AFASwitchView.m in Sources */,
 				13CE8ED11B85B27B0022F17A /* AFADrawerMenuViewController.m in Sources */,
-				13C957FF1B837906002A08F1 /* AFAModalReplaceSegueUnwind.m in Sources */,
-				13C958061B838518002A08F1 /* AFANavigationController.m in Sources */,
 				136D035B1C844F4700DC94B7 /* AFAProcessInstanceDetailsViewController.m in Sources */,
 				135443EC1B970D600044157B /* AFASliderButtonView.m in Sources */,
 				1328D34D1BB91CAC0010757C /* AFATableController.m in Sources */,
@@ -6304,13 +6312,13 @@
 				13A5D6031CA046CF00EFA760 /* AFATaskCreateModel.m in Sources */,
 				8D7C1A7D1C8091860092EA81 /* AFAStartProcessInstanceViewController.m in Sources */,
 				13AAD3B91CDB81E100818537 /* AFAProfileSectionTableViewCell.m in Sources */,
-				132511F51BA811F700C4CA64 /* AFAPushFadeSegue.m in Sources */,
 				8D7C1A3E1C808CD30092EA81 /* AFANameTableViewCell.m in Sources */,
 				8D7C1A5A1C808D7F0092EA81 /* AFACommentTableViewCell.m in Sources */,
 				13A106981E93BB3500506871 /* AFATaskListViewModel.m in Sources */,
 				132154D71F1E00A100A8C7F2 /* AFANavigationBarBannerAlertView.m in Sources */,
 				135443EF1B97409C0044157B /* AFASliderTitleView.m in Sources */,
 				8D7C1A851C80921E0092EA81 /* AFAUserServices.m in Sources */,
+				133539FF1F30A84C0058B85E /* AFAPopFadeAnimator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,8 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <UIKit/UIKit.h>
+@import UIKit;
 
-@interface AFAPushFadeSegue : UIStoryboardSegue
+@interface AFAPushFadeAnimator : NSObject <UIViewControllerAnimatedTransitioning>
 
 @end

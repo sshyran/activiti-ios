@@ -40,12 +40,15 @@
 
 // Views
 #import "AFAActivityView.h"
-#import "AFAModalReplaceSegueUnwind.h"
+
+// Animators
+#import "AFAModalReplaceAnimator.h"
+#import "AFAModalDismissAnimator.h"
 
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
-@interface AFALoginViewController ()
+@interface AFALoginViewController () <UIViewControllerTransitioningDelegate>
 
 // Views
 @property (weak, nonatomic) IBOutlet UIView                     *effectViewContainer;
@@ -187,16 +190,23 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
 
+
 #pragma mark -
 #pragma mark Navigation
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
+                                                                  presentingController:(UIViewController *)presenting
+                                                                      sourceController:(UIViewController *)source {
+    return [AFAModalReplaceAnimator new];
+}
+
+- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    return [AFAModalDismissAnimator new];
+}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
@@ -209,24 +219,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     if ([kSegueIDLoginAuthorized isEqualToString:segue.identifier]) {
         AFAContainerViewController *containerViewController = segue.destinationViewController;
+        containerViewController.transitioningDelegate = self;
         containerViewController.loginViewModel = self.loginViewModel;
     }
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDLoginAuthorizedUnwind isEqualToString:identifier]) {
-        AFAModalReplaceSegueUnwind *unwindSegue = [AFAModalReplaceSegueUnwind segueWithIdentifier:identifier
-                                                                                           source:fromViewController
-                                                                                      destination:toViewController
-                                                                                   performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 - (IBAction)unwindToLoginController:(UIStoryboardSegue *)segue {

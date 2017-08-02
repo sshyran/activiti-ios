@@ -42,9 +42,6 @@
 // Cells
 #import "AFAProcessDefinitionListStyleTableViewCell.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 // Controllers
 #import "AFAProcessStartFormViewController.h"
 #import "AFAProcessInstanceDetailsViewController.h"
@@ -187,22 +184,6 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
         processInstanceDetailsController.dataSource = processInstanceDetailsDataSource;
         processInstanceDetailsController.unwindActionType = AFAProcessInstanceDetailsUnwindActionTypeStartForm;
     }
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDStartProcessInstanceUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 
