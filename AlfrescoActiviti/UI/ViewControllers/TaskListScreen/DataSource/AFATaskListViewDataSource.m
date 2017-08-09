@@ -61,9 +61,11 @@
     AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     __weak typeof(self) weakSelf = self;
     [taskService requestTaskListWithFilter:filter
-                       withCompletionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                       completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
                            __strong typeof(self) strongSelf = weakSelf;
                            completionBlock (strongSelf, taskList, error, paging);
+                       } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                           NSLog(@"");
                        }];
 }
 

@@ -220,8 +220,10 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
         __strong typeof(self) strongSelf = weakSelf;
         
         if (!error) {
-            strongSelf.controllerState = AFAApplicationListControllerStateCachedResults;
-            [strongSelf updateUIForApplicationList:appDefinitionsList];
+            if (appDefinitionsList) {
+                strongSelf.controllerState = AFAApplicationListControllerStateCachedResults;
+                [strongSelf updateUIForApplicationList:appDefinitionsList];
+            }
         } else {
             strongSelf.noApplicationsLabel.hidden = NO;
             strongSelf.applicationListTableView.hidden = YES;

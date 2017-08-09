@@ -16,22 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKDataAccessorResponseBase.h"
+#import "ASDKCoreDataCacheService.h"
+#import "ASDKTaskCacheServiceProtocol.h"
 
-@class ASDKModelPaging;
-
-@interface ASDKDataAccessorResponseCollection : ASDKDataAccessorResponseBase
-
-@property (strong, nonatomic, readonly) NSArray         *collection;
-@property (strong, nonatomic, readonly) ASDKModelPaging *paging;
-
-- (instancetype)initWithCollection:(NSArray *)collection
-                 isCachedData:(BOOL)isCachedData
-                        error:(NSError *)error;
-
-- (instancetype)initWithCollection:(NSArray *)collection
-                            paging:(ASDKModelPaging *)paging
-                      isCachedData:(BOOL)isCachedData
-                             error:(NSError *)error;
+@interface ASDKTaskCacheService : ASDKCoreDataCacheService <ASDKTaskCacheServiceProtocol>
 
 @end

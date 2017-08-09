@@ -119,7 +119,10 @@
                                               completionBlock(error, registerCellActions);
                                           }
                                       }
-                                      dispatch_group_leave(taskDetailsGroup);
+                                      
+                                      if (currentUserProfile) {
+                                          dispatch_group_leave(taskDetailsGroup);
+                                      }
                                   }
                               };
                               

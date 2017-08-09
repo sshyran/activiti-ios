@@ -16,22 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKDataAccessorResponseBase.h"
+#import <Foundation/Foundation.h>
+@import CoreData;
 
-@class ASDKModelPaging;
+@class ASDKMOTask, ASDKModelTask;
 
-@interface ASDKDataAccessorResponseCollection : ASDKDataAccessorResponseBase
+@interface ASDKTaskCacheMapper : NSObject
 
-@property (strong, nonatomic, readonly) NSArray         *collection;
-@property (strong, nonatomic, readonly) ASDKModelPaging *paging;
-
-- (instancetype)initWithCollection:(NSArray *)collection
-                 isCachedData:(BOOL)isCachedData
-                        error:(NSError *)error;
-
-- (instancetype)initWithCollection:(NSArray *)collection
-                            paging:(ASDKModelPaging *)paging
-                      isCachedData:(BOOL)isCachedData
-                             error:(NSError *)error;
+- (ASDKMOTask *)mapTaskToCacheMO:(ASDKModelTask *)task
+                  usingMOContext:(NSManagedObjectContext *)moContext;
+- (ASDKModelTask *)mapCacheMOToTask:(ASDKMOTask *)moTask;
 
 @end

@@ -48,12 +48,16 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *  Performs a request for tasks with properties defined from within the filter model.
  *  The underlaying implementation is using a filter representation to call the API.
  *
- *  @param taskFilter      Filter object describing what properties should be filtered
- *  @param completionBlock Completion block providing the task list, an optional error reason and
- pagination information
+ *  @param taskFilter           Filter object describing what properties should be filtered
+ *  @param completionBlock      Completion block providing the task list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the task
+ *                              list, an optional error and pagination information
  */
 - (void)requestTaskListWithFilter:(AFAGenericFilterModel *)taskFilter
-              withCompletionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock;
+                  completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock
+                    cachedResults:(AFATaskServicesTaskListCompletionBlock)cacheCompletionBlock;
+
 
 /**
  *  Performs a request for a task's details given the task ID.
@@ -195,7 +199,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *
  *  @param user            The user model object which is going to be removed
  *  @param taskID          The ID of the task for which the involvement removal is requested
- *  @param completionBlock Completion block providing whether the involvement removal operation finished 
+ *  @param completionBlock Completion block providing whether the involvement removal operation finished
  *                         successfully and an optional error reason.
  */
 - (void)requestToRemoveTaskUserInvolvement:(ASDKModelUser *)user
@@ -215,7 +219,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
              completionBlock:(AFATaskServicesCreateCommentCompletionBlock)completionBlock;
 
 /**
- *  Performs a request to create a task given a task create model representation which contains all the 
+ *  Performs a request to create a task given a task create model representation which contains all the
  *  needed info.
  *
  *  @param taskRepresentation Model object describing all the required but not mandatory fields to create a task
@@ -223,7 +227,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *                            error reason.
  */
 - (void)requestCreateTaskWithRepresentation:(AFATaskCreateModel *)taskRepresentation
-                     completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock;
+                            completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock;
 
 /**
  *  Performs a request to claim a task given it's ID
@@ -264,7 +268,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *  @param allowCachedResults   Boolean value specifying if results can be provided if already present on the disk
  *  @param progressBlock        Block used to report progress updates for the download operation and an optional error
  *                              reason
- *  @param completionBlock      Completion block providing the URL location of the downloaded content, whether is a local reference  
+ *  @param completionBlock      Completion block providing the URL location of the downloaded content, whether is a local reference
  *                              and an optional error reason
  */
 - (void)requestDownloadAuditLogForTaskWithID:(NSString *)taskID

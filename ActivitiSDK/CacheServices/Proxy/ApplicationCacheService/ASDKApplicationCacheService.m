@@ -58,13 +58,25 @@
         managedObjectContext.automaticallyMergesChangesFromParent = YES;
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
         
-        for (ASDKModelApp *app in appDefinitionList) {
-            [strongSelf.appCacheMapper mapAppToCacheMO:app
-                                        usingMOContext:managedObjectContext];
-        }
-        
         NSError *error = nil;
-        [managedObjectContext save:&error];
+        NSFetchRequest *oldAppsFetchRequest = [ASDKMOApp fetchRequest];
+        NSBatchDeleteRequest *removeOldAppsRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldAppsFetchRequest];
+        removeOldAppsRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+        
+        NSBatchDeleteResult *deletionResult = [managedObjectContext executeRequest:removeOldAppsRequest
+                                                                                 error:&error];
+        NSArray *moIDArr = deletionResult.result;
+        [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                     intoContexts:@[managedObjectContext]];
+        
+        if (!error) {
+            for (ASDKModelApp *app in appDefinitionList) {
+                [strongSelf.appCacheMapper mapAppToCacheMO:app
+                                            usingMOContext:managedObjectContext];
+            }
+            
+            [managedObjectContext save:&error];
+        }
         
         if (completionBlock) {
             completionBlock(error);
@@ -79,6 +91,8 @@
         
         NSFetchRequest *fetchRequest = [ASDKMOApp fetchRequest];
         fetchRequest.predicate = [NSPredicate predicateWithFormat:@"deploymentID != nil"];
+        fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"deploymentID"
+                                                                       ascending:NO]];
         
         NSError *error = nil;
         NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest

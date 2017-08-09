@@ -140,6 +140,7 @@
 // Data accessors
 #import <ActivitiSDK/ASDKProfileDataAccessor.h>
 #import <ActivitiSDK/ASDKApplicationsDataAccessor.h>
+#import <ActivitiSDK/ASDKTaskDataAccessor.h>
 
 // Service categories
 #import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>

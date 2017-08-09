@@ -391,6 +391,7 @@ UITableViewDelegate>
     // Based on the chosen list content type fetch the list of tasks or the process
     // instance list with the default filter provided by the filter controller
     self.currentFilter.size = kDefaultTaskListFetchSize;
+    self.currentFilter.appDeploymentID = self.currentListViewModel.application.deploymentID;
     [self.dataSource loadContentListForFilter:self.currentFilter
                           withCompletionBlock:completionBlock];
 }

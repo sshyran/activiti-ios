@@ -16,22 +16,20 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKDataAccessorResponseBase.h"
+#import "ASDKDataAccessor.h"
 
-@class ASDKModelPaging;
+@class ASDKFilterRequestRepresentation;
 
-@interface ASDKDataAccessorResponseCollection : ASDKDataAccessorResponseBase
+@interface ASDKTaskDataAccessor : ASDKDataAccessor
 
-@property (strong, nonatomic, readonly) NSArray         *collection;
-@property (strong, nonatomic, readonly) ASDKModelPaging *paging;
 
-- (instancetype)initWithCollection:(NSArray *)collection
-                 isCachedData:(BOOL)isCachedData
-                        error:(NSError *)error;
-
-- (instancetype)initWithCollection:(NSArray *)collection
-                            paging:(ASDKModelPaging *)paging
-                      isCachedData:(BOOL)isCachedData
-                             error:(NSError *)error;
+/**
+ * Requests a list of tasks for the current logged in user conforming to the properties 
+ * of a provided filter and reports network or cached data through the designated
+ * data accessor delegate.
+ *
+ * @param filter Filter object describing which subset of the task list should be fetched
+ */
+- (void)fetchTasksWithFilter:(ASDKFilterRequestRepresentation *)filter;
 
 @end

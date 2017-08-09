@@ -34,10 +34,15 @@
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
-@interface AFATaskServices ()
+@interface AFATaskServices () <ASDKDataAccessorDelegate>
 
 @property (strong, nonatomic) dispatch_queue_t          taskUpdatesProcessingQueue;
 @property (strong, nonatomic) ASDKTaskNetworkServices   *taskNetworkService;
+
+// Task list
+@property (strong, nonatomic) ASDKTaskDataAccessor                  *fetchTaskListDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock  taskListCompletionBlock;
+@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock  taskListCachedResultsBlock;
 
 @end
 
@@ -67,15 +72,20 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark Public interface
 
 - (void)requestTaskListWithFilter:(AFAGenericFilterModel *)taskFilter
-              withCompletionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock {
+                  completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock
+                    cachedResults:(AFATaskServicesTaskListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(taskFilter);
     NSParameterAssert(completionBlock);
+    
+    self.taskListCompletionBlock = completionBlock;
+    self.taskListCachedResultsBlock = cacheCompletionBlock;
     
     // Create request representation for the filter model
     ASDKFilterRequestRepresentation *filterRequestRepresentation = [ASDKFilterRequestRepresentation new];
     filterRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
     filterRequestRepresentation.filterID = taskFilter.filterID;
     filterRequestRepresentation.appDefinitionID = taskFilter.appDefinitionID;
+    filterRequestRepresentation.appDeploymentID = taskFilter.appDeploymentID;
     
     ASDKModelFilter *modelFilter = [ASDKModelFilter new];
     modelFilter.jsonAdapterType = ASDKModelJSONAdapterTypeExcludeNilValues;
@@ -88,21 +98,25 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     filterRequestRepresentation.page = taskFilter.page;
     filterRequestRepresentation.size = taskFilter.size;
     
-    [self.taskNetworkService fetchTaskListWithFilterRepresentation:filterRequestRepresentation
-                                                   completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                                                       if (!error) {
-                                                           AFALogVerbose(@"Fetched %lu task entries", (unsigned long)taskList.count);
-                                                           
-                                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                                               completionBlock (taskList, nil, paging);
-                                                           });
-                                                       } else {
-                                                           AFALogError(@"An error occured while fetching the task list with filter:%@. Reason:%@", taskFilter.description, error.localizedDescription);
-                                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                                               completionBlock(nil, error, nil);
-                                                           });
-                                                       }
-                                                   }];
+    self.fetchTaskListDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.fetchTaskListDataAccessor fetchTasksWithFilter:filterRequestRepresentation];
+    
+    
+//    [self.taskNetworkService fetchTaskListWithFilterRepresentation:filterRequestRepresentation
+//                                                   completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+//                                                       if (!error) {
+//                                                           AFALogVerbose(@"Fetched %lu task entries", (unsigned long)taskList.count);
+//                                                           
+//                                                           dispatch_async(dispatch_get_main_queue(), ^{
+//                                                               completionBlock (taskList, nil, paging);
+//                                                           });
+//                                                       } else {
+//                                                           AFALogError(@"An error occured while fetching the task list with filter:%@. Reason:%@", taskFilter.description, error.localizedDescription);
+//                                                           dispatch_async(dispatch_get_main_queue(), ^{
+//                                                               completionBlock(nil, error, nil);
+//                                                           });
+//                                                       }
+//                                                   }];
 }
 
 - (void)requestTaskDetailsForID:(NSString *)taskID
@@ -711,6 +725,28 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                             AFALogError(@"An error occured while updating the checklist order for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
                                                         }
                                                     }];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchTaskListDataAccessor == dataAccessor) {
+        [self handleFetchTaskListDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleFetchTaskListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    
 }
 
 @end

@@ -61,7 +61,6 @@
 }
 
 - (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
-    
 }
 
 

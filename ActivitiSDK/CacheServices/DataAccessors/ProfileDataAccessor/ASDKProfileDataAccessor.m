@@ -124,9 +124,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             ASDKDataAccessorResponseModel *responseModel = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
                                                                                                    isCachedData:NO
                                                                                                           error:error];
-            if (strongSelf.delegate) {
-                [strongSelf.delegate dataAccessor:strongSelf
-                              didLoadDataResponse:responseModel];
+            if (weakSelf.delegate) {
+                [weakSelf.delegate dataAccessor:weakSelf
+                            didLoadDataResponse:responseModel];
             }
             
             operation.result = responseModel;
@@ -205,7 +205,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         
         if (operation.isCancelled) {
             [operation complete];
-            return ;
+            return;
         }
         
         if (strongSelf.delegate) {

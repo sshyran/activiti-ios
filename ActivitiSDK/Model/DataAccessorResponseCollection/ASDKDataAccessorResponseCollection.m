@@ -17,16 +17,28 @@
  ******************************************************************************/
 
 #import "ASDKDataAccessorResponseCollection.h"
+#import "ASDKModelPaging.h"
 
 @implementation ASDKDataAccessorResponseCollection
 
 - (instancetype)initWithCollection:(NSArray *)collection
                       isCachedData:(BOOL)isCachedData
                              error:(NSError *)error {
+    return [self initWithCollection:collection
+                             paging:nil
+                       isCachedData:isCachedData
+                              error:error];
+}
+
+- (instancetype)initWithCollection:(NSArray *)collection
+                            paging:(ASDKModelPaging *)paging
+                      isCachedData:(BOOL)isCachedData
+                             error:(NSError *)error {
     self = [super initWithError:error
                    isCachedData:isCachedData];
     if (self) {
         _collection = collection;
+        _paging = paging;
     }
     
     return self;
