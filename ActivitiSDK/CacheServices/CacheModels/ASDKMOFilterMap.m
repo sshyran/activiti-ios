@@ -16,12 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Mantle/Mantle.h>
+#import "ASDKMOFilterMap.h"
 
-@interface ASDKModelPaging : MTLModel <MTLJSONSerializing>
+@implementation ASDKMOFilterMap
 
-@property (assign, nonatomic) NSInteger size;
-@property (assign, nonatomic) NSInteger start;
-@property (assign, nonatomic) NSInteger total;
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
 
 @end

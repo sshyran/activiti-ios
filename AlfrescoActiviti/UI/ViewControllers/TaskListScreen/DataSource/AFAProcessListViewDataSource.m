@@ -23,6 +23,7 @@
 
 // Models
 #import "AFAGenericFilterModel.h"
+#import "AFAListResponseModel.h"
 
 // Cells
 #import "AFATaskListStyleCell.h"
@@ -60,13 +61,20 @@
 }
 
 - (void)loadContentListForFilter:(AFAGenericFilterModel *)filter
-             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
+             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock
+                   cachedResults:(AFAListHandleCompletionBlock)cacheCompletionBlock {
     AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
     __weak typeof(self) weakSelf = self;
     [processServices requestProcessInstanceListWithFilter:filter
                                       withCompletionBlock:^(NSArray *processInstanceList, NSError *error, ASDKModelPaging *paging) {
                                           __strong typeof(self) strongSelf = weakSelf;
-                                          completionBlock(strongSelf, processInstanceList, error, paging);
+                                          
+                                          AFAListResponseModel *response = [AFAListResponseModel new];
+                                          response.objectList = processInstanceList;
+                                          response.error = error;
+                                          response.paging = paging;
+                                          
+                                          completionBlock(strongSelf, response);
                                       }];
 }
 

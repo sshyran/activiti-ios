@@ -18,6 +18,7 @@
 
 #import "ASDKMOTask.h"
 #import "ASDKMOProfile.h"
+#import "ASDKMOTaskFilterMap.h"
 
 @implementation ASDKMOTask
 

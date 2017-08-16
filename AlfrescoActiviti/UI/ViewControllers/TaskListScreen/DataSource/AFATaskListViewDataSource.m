@@ -21,6 +21,9 @@
 // Constants
 #import "AFAUIConstants.h"
 
+// Models
+#import "AFAListResponseModel.h"
+
 // Cells
 #import "AFATaskListStyleCell.h"
 
@@ -57,27 +60,45 @@
 }
 
 - (void)loadContentListForFilter:(AFAGenericFilterModel *)filter
-             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
+             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock
+                   cachedResults:(AFAListHandleCompletionBlock)cacheCompletionBlock {
     AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     __weak typeof(self) weakSelf = self;
     [taskService requestTaskListWithFilter:filter
-                       completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                           __strong typeof(self) strongSelf = weakSelf;
-                           completionBlock (strongSelf, taskList, error, paging);
-                       } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                           NSLog(@"");
-                       }];
+                           completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                               __strong typeof(self) strongSelf = weakSelf;
+                               completionBlock(strongSelf, [self responseModelForTaskList:taskList
+                                                                                    error:error
+                                                                                    pagin:paging]);
+                           } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                               __strong typeof(self) strongSelf = weakSelf;
+                               
+                               cacheCompletionBlock(strongSelf, [self responseModelForTaskList:taskList
+                                                                                         error:error
+                                                                                         pagin:paging]);
+                           }];
 }
 
 - (void)processAdditionalEntries:(NSArray *)additionalEntriesArr
                        forPaging:(ASDKModelPaging *)paging {
     _tasks = [self processAdditionalEntries:additionalEntriesArr
-                        forExistingEntries:self.tasks
-                                    paging:paging];
+                         forExistingEntries:self.tasks
+                                     paging:paging];
     _totalPages = [self totalPagesForPaging:paging
                                 dataEntries:_tasks];
     _preloadCellIdx = [self preloadCellIndexForPaging:paging
                                           dataEntries:_tasks];
+}
+
+- (AFAListResponseModel *)responseModelForTaskList:(NSArray *)taskList
+                                             error:(NSError *)error
+                                             pagin:(ASDKModelPaging *)paging {
+    AFAListResponseModel *response = [AFAListResponseModel new];
+    response.objectList = taskList;
+    response.error = error;
+    response.paging = paging;
+    
+    return response;
 }
 
 

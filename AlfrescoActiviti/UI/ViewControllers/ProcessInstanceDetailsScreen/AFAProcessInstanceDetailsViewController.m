@@ -386,12 +386,10 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
             AFATableControllerCommentModel *processInstanceCommentModel = [self.dataSource reusableTableControllerModelForSectionType:
                                                                            AFAProcessInstanceDetailsSectionTypeComments];
             
-            BOOL isTaskCompleted = processInstanceDetailsModel.currentProcessInstance.endDate ? YES : NO;
-            
             // Display the no content view if appropiate
             strongSelf.noContentView.hidden = !processInstanceCommentModel.commentListArr.count ? NO : YES;
             strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
-            strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
+            strongSelf.noContentView.descriptionLabel.text = [processInstanceDetailsModel isCompletedProcessInstance] ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
             
             // Display the last update date
             if (strongSelf.refreshControl) {
@@ -490,11 +488,10 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
         __strong typeof(self) strongSelf = weakSelf;
         
         AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-        BOOL isCompletedProcessInstance = processInstanceDetailsModel.currentProcessInstance.endDate ? YES : NO;
         
         NSString *alertMessage = nil;
         NSString *processInstanceName = processInstanceDetailsModel.currentProcessInstance.name;
-        if (isCompletedProcessInstance) {
+        if ([processInstanceDetailsModel isCompletedProcessInstance]) {
             alertMessage = [NSString stringWithFormat:NSLocalizedString(kLocalizationProcessInstanceDetailsScreenDeleteProcessConfirmationFormat, @"Delete process instance text"), processInstanceName ? processInstanceName : @""];
         } else {
             alertMessage = [NSString stringWithFormat:NSLocalizedString(kLocalizationProcessInstanceDetailsScreenCancelProcessConfirmationFormat, @"Cancel process instance text"), processInstanceName ? processInstanceName : @""];

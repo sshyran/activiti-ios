@@ -34,13 +34,13 @@
 
 - (void)setupCellWithCommentsPaging:(ASDKModelPaging *)paging {
     NSString *commentFormat = nil;
-    if (!paging.pageCount || paging.pageCount > 1) {
+    if (!paging.total || paging.total > 1) {
         commentFormat = kLocalizationTaskDetailsScreenCommentsFormat;
     } else {
         commentFormat = kLocalizationTaskDetailsScreenCommentFormat;
     }
     
-    self.commentCountLabel.text = [NSString stringWithFormat:NSLocalizedString(commentFormat, @"x comments format"), paging.pageCount];
+    self.commentCountLabel.text = [NSString stringWithFormat:NSLocalizedString(commentFormat, @"x comments format"), paging.total];
 }
 
 @end

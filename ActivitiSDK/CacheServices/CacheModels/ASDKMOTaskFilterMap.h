@@ -16,12 +16,17 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Mantle/Mantle.h>
+#import <Foundation/Foundation.h>
+#import "ASDKMOFilterMap.h"
 
-@interface ASDKModelPaging : MTLModel <MTLJSONSerializing>
+@class ASDKMOTask;
 
-@property (assign, nonatomic) NSInteger size;
-@property (assign, nonatomic) NSInteger start;
-@property (assign, nonatomic) NSInteger total;
+NS_ASSUME_NONNULL_BEGIN
+
+@interface ASDKMOTaskFilterMap : ASDKMOFilterMap
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "ASDKMOTaskFilterMap+CoreDataProperties.h"

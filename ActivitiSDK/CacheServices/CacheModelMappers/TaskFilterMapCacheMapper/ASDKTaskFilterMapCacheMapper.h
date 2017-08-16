@@ -16,12 +16,18 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Mantle/Mantle.h>
+#import <Foundation/Foundation.h>
+@import CoreData;
 
-@interface ASDKModelPaging : MTLModel <MTLJSONSerializing>
+@class ASDKMOTaskFilterMap, ASDKFilterRequestRepresentation;
 
-@property (assign, nonatomic) NSInteger size;
-@property (assign, nonatomic) NSInteger start;
-@property (assign, nonatomic) NSInteger total;
+@interface ASDKTaskFilterMapCacheMapper : NSObject
+
+- (ASDKMOTaskFilterMap *)mapTaskList:(NSArray *)taskList
+                         withFilter:(ASDKFilterRequestRepresentation *)filter
+                      usingMOContext:(NSManagedObjectContext *)moContext;
+
+- (ASDKMOTaskFilterMap *)mapToExistingTaskFilterMap:(ASDKMOTaskFilterMap *)taskFilterMap
+                                           taskList:(NSArray *)taskList;
 
 @end

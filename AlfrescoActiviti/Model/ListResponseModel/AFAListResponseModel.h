@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile SDK.
+ * This file is part of the Alfresco Activiti Mobile iOS App.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Mantle/Mantle.h>
+#import <Foundation/Foundation.h>
 
-@interface ASDKModelPaging : MTLModel <MTLJSONSerializing>
+@class ASDKModelPaging;
 
-@property (assign, nonatomic) NSInteger size;
-@property (assign, nonatomic) NSInteger start;
-@property (assign, nonatomic) NSInteger total;
+@interface AFAListResponseModel : NSObject
+
+@property (strong, nonatomic) NSArray           *objectList;
+@property (strong, nonatomic) NSError           *error;
+@property (strong, nonatomic) ASDKModelPaging   *paging;
 
 @end

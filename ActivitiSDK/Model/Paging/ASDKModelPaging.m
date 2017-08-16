@@ -30,7 +30,7 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{@"size"        : @"size",
              @"start"       : @"start",
-             @"pageCount"   : @"total"};
+             @"total"   : @"total"};
 }
 
 @end

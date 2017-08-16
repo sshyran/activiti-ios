@@ -22,6 +22,7 @@
 #pragma mark -
 #pragma mark Error domain
 
-NSString * const ASDKPersistenceStackErrorDomain                = @"ASDKPersistenceStackErrorDomain";
-NSInteger const  kASDKPersistenceStackInitializationErrorCode   = 1;
-NSInteger const  kASDKPersistenceStackSaveViewContextErrorCode  = 2;
+NSString * const ASDKPersistenceStackErrorDomain                        = @"ASDKPersistenceStackErrorDomain";
+NSInteger const  kASDKPersistenceStackInitializationErrorCode           = 1;
+NSInteger const  kASDKPersistenceStackSaveViewContextErrorCode          = 2;
+NSInteger const  kASDKPersistenceStackCleanCacheStalledDataErrorCode    = 3;

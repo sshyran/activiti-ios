@@ -652,9 +652,7 @@ AFAModalPeoplePickerViewControllerDelegate>
             strongSelf.noContentView.hidden = !taskContentModel.attachedContentArr.count ? NO : YES;
             strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
             
-            BOOL isTaskCompleted = (taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
-            
-            strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable") :  NSLocalizedString(kLocalizationNoContentScreenFilesText, @"No files available text");
+            strongSelf.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable") :  NSLocalizedString(kLocalizationNoContentScreenFilesText, @"No files available text");
             
             // Display the last update date
             if (strongSelf.refreshControl) {

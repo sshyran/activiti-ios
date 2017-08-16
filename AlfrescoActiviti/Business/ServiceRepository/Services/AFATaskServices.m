@@ -100,23 +100,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     self.fetchTaskListDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
     [self.fetchTaskListDataAccessor fetchTasksWithFilter:filterRequestRepresentation];
-    
-    
-//    [self.taskNetworkService fetchTaskListWithFilterRepresentation:filterRequestRepresentation
-//                                                   completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-//                                                       if (!error) {
-//                                                           AFALogVerbose(@"Fetched %lu task entries", (unsigned long)taskList.count);
-//                                                           
-//                                                           dispatch_async(dispatch_get_main_queue(), ^{
-//                                                               completionBlock (taskList, nil, paging);
-//                                                           });
-//                                                       } else {
-//                                                           AFALogError(@"An error occured while fetching the task list with filter:%@. Reason:%@", taskFilter.description, error.localizedDescription);
-//                                                           dispatch_async(dispatch_get_main_queue(), ^{
-//                                                               completionBlock(nil, error, nil);
-//                                                           });
-//                                                       }
-//                                                   }];
 }
 
 - (void)requestTaskDetailsForID:(NSString *)taskID
@@ -746,7 +729,40 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark Private interface
 
 - (void)handleFetchTaskListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *taskListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *taskList = taskListResponse.collection;
     
+    __weak typeof(self) weakSelf = self;
+    if (!taskListResponse.error) {
+        if (taskListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskListCachedResultsBlock) {
+                    strongSelf.taskListCachedResultsBlock(taskList, nil, taskListResponse.paging);
+                    strongSelf.taskListCachedResultsBlock = nil;
+                }
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskListCompletionBlock) {
+                    strongSelf.taskListCompletionBlock(taskList, nil, taskListResponse.paging);
+                    strongSelf.taskListCompletionBlock = nil;
+                }
+            });
+        }
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+           __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskListCompletionBlock) {
+                strongSelf.taskListCompletionBlock(nil, taskListResponse.error, nil);
+                strongSelf.taskListCompletionBlock = nil;
+            }
+        });
+    }
 }
 
 @end

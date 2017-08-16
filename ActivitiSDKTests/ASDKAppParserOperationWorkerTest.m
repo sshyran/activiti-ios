@@ -63,7 +63,7 @@
                                  XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                  XCTAssert([(NSArray *)parsedObject count] == 13);
                                  
-                                 XCTAssert(paging.pageCount == 13);
+                                 XCTAssert(paging.total == 13);
                                  XCTAssert(paging.size == 13);
                                  XCTAssert(!paging.start);
                                  
