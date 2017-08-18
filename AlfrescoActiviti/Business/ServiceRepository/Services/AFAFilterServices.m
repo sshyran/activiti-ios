@@ -27,10 +27,20 @@
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
-@interface AFAFilterServices ()
+@interface AFAFilterServices () <ASDKDataAccessorDelegate>
 
-@property (strong, nonatomic) dispatch_queue_t                      filterUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKFilterNetworkServices             *filterNetworkService;
+@property (strong, nonatomic) dispatch_queue_t                          filterUpdatesProcessingQueue;
+@property (strong, nonatomic) ASDKFilterNetworkServices                 *filterNetworkService;
+
+// Default task filter list
+@property (strong, nonatomic) ASDKFilterDataAccessor                    *fetchDefaultTaskFilterListDataAccessor;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  defaultTaskFilterListCompletionBlock;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  defaultTaskFilterListCachedResultsBlock;
+
+// Application specific task filter list
+@property (strong, nonatomic) ASDKFilterDataAccessor                    *fetchTaskFilterListDataAccessor;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  taskFilterListCompletionBlock;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  taskFilterListCachedResultsBlock;
 
 @end
 
@@ -59,60 +69,28 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark -
 #pragma mark Public interface
 
-- (void)requestTaskFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
+- (void)requestTaskFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock
+                                   cachedResults:(AFAFilterServicesFilterListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(completionBlock);
     
-    [self.filterNetworkService fetchTaskFilterListWithCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-        if (!error && filterList) {
-            AFALogVerbose(@"Fetched %lu task filter entries", (unsigned long)filterList.count);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock (filterList, nil, paging);
-            });
-        } else {
-            AFALogError(@"An error occured while fetching the task filter list. Reason:%@", error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error, nil);
-            });
-        }
-    }];
+    self.defaultTaskFilterListCompletionBlock = completionBlock;
+    self.defaultTaskFilterListCachedResultsBlock = cacheCompletionBlock;
+    
+    self.fetchDefaultTaskFilterListDataAccessor = [[ASDKFilterDataAccessor alloc] initWithDelegate:self];
+    [self.fetchDefaultTaskFilterListDataAccessor fetchDefaultTaskFilterList];
 }
 
 - (void)requestTaskFilterListForAppID:(NSString *)appID
-                  withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
+                  withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock
+                        cachedResults:(AFAFilterServicesFilterListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(appID);
     NSParameterAssert(completionBlock);
     
-    ASDKFilterListRequestRepresentation *filterListRequestRepresentation = [ASDKFilterListRequestRepresentation new];
-    filterListRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    filterListRequestRepresentation.appID = appID;
+    self.taskFilterListCompletionBlock = completionBlock;
+    self.taskFilterListCachedResultsBlock = cacheCompletionBlock;
     
-    __weak typeof(self) weakSelf = self;
-    [self.filterNetworkService fetchTaskFilterListWithFilter:filterListRequestRepresentation
-                                         withCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-                                             if (!error) {
-                                                 if (filterList.count) {
-                                                     AFALogVerbose(@"Fetched %lu task filter entries", (unsigned long)filterList.count);
-                                                     
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock (filterList, nil, paging);
-                                                     });
-                                                 } else {
-                                                     AFALogVerbose(@"There are no filters defined. Will populate with default ones...");
-                                                     
-                                                     __strong typeof(self) strongSelf = weakSelf;
-                                                     [strongSelf requestCreateDefaultTaskFiltersForAppID:appID
-                                                                                     withCompletionBlock:completionBlock];
-                                                 }
-                                             } else {
-                                                 AFALogError(@"An error occured while fetching the task filter list. Reason:%@", error.localizedDescription);
-                                                 
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     completionBlock(nil, error, nil);
-                                                 });
-                                             }
-                                         }];
+    self.fetchTaskFilterListDataAccessor = [[ASDKFilterDataAccessor alloc] initWithDelegate:self];
+    [self.fetchTaskFilterListDataAccessor fetchTaskFilterListForApplicationID:appID];
 }
 
 - (void)requestProcessInstanceFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
@@ -173,122 +151,96 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 
 #pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchDefaultTaskFilterListDataAccessor == dataAccessor) {
+        [self handleFetchDefaultTaskFilterListDataAccessorResponse:response];
+    } else if (self.fetchTaskFilterListDataAccessor == dataAccessor) {
+        [self handleFetchTaskFilterListDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
 #pragma mark Private interface
 
-- (void)requestCreateDefaultTaskFiltersForAppID:(NSString *)appID
-                            withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
-    NSParameterAssert(appID);
-    NSParameterAssert(completionBlock);
-    
-    __block NSError *operationError = nil;
-    __block NSMutableArray *filterArr = [NSMutableArray array];
-    
-    dispatch_group_t defaultTaskFilterGroup = dispatch_group_create();
-    
-    ASDKFilterModelCompletionBlock defaultFilterCompletionBlock = ^(ASDKModelFilter *filter, NSError *error) {
-        if (!error && filter) {
-            AFALogVerbose(@"Created default filter:%@", filter.name);
-            [filterArr addObject:filter];
-        } else {
-            operationError = error;
-        }
-        dispatch_group_leave(defaultTaskFilterGroup);
-    };
-    
-    // Involved tasks filter
-    ASDKFilterCreationRequestRepresentation *involvedTasksFilter = [ASDKFilterCreationRequestRepresentation new];
-    involvedTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    involvedTasksFilter.appID = appID;
-    involvedTasksFilter.icon = kASDKAPIIconNameInvolved;
-    involvedTasksFilter.index = 0;
-    involvedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterInvolvedTasksText, @"Involved tasks text");
-    
-    ASDKModelFilter *involvedFilter = [ASDKModelFilter new];
-    involvedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    involvedFilter.assignmentType = ASDKTaskAssignmentTypeInvolved;
-    involvedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
-    involvedFilter.state = ASDKModelFilterStateTypeActive;
-    
-    involvedTasksFilter.filter = involvedFilter;
-    
-    dispatch_group_enter(defaultTaskFilterGroup);
-    [self.filterNetworkService createUserTaskFilterWithRepresentation:involvedTasksFilter
-                                                  withCompletionBlock:defaultFilterCompletionBlock];
-    
-    // My tasks filter
-    ASDKFilterCreationRequestRepresentation *myTasksFilter = [ASDKFilterCreationRequestRepresentation new];
-    myTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    myTasksFilter.appID = appID;
-    myTasksFilter.icon = kASDKAPIIconNameMy;
-    myTasksFilter.index = 1;
-    myTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterMyTasksText, @"My tasks text");
-    
-    ASDKModelFilter *myFilter = [ASDKModelFilter new];
-    myFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    myFilter.assignmentType = ASDKTaskAssignmentTypeAssignee;
-    myFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
-    myFilter.state = ASDKModelFilterStateTypeActive;
-    
-    myTasksFilter.filter = myFilter;
-    
-    dispatch_group_enter(defaultTaskFilterGroup);
-    [self.filterNetworkService createUserTaskFilterWithRepresentation:myTasksFilter
-                                                  withCompletionBlock:defaultFilterCompletionBlock];
-    
-    // Queued tasks
-    ASDKFilterCreationRequestRepresentation *queuedTasksFilter = [ASDKFilterCreationRequestRepresentation new];
-    queuedTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    queuedTasksFilter.appID = appID;
-    queuedTasksFilter.icon = kASDKAPIIconNameQueued;
-    queuedTasksFilter.index = 2;
-    queuedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterQueuedTasksText, @"Queued tasks text");
-    
-    ASDKModelFilter *queuedFilter = [ASDKModelFilter new];
-    queuedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    queuedFilter.assignmentType = ASDKTaskAssignmentTypeCandidate;
-    queuedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
-    queuedFilter.state = ASDKModelFilterStateTypeActive;
-    
-    queuedTasksFilter.filter = queuedFilter;
-    
-    dispatch_group_enter(defaultTaskFilterGroup);
-    [self.filterNetworkService createUserTaskFilterWithRepresentation:queuedTasksFilter
-                                                  withCompletionBlock:defaultFilterCompletionBlock];
-    
-    // Completed tasks
-    ASDKFilterCreationRequestRepresentation *completedTasksFilter = [ASDKFilterCreationRequestRepresentation new];
-    completedTasksFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    completedTasksFilter.appID = appID;
-    completedTasksFilter.icon = kASDKAPIIconNameCompleted;
-    completedTasksFilter.index = 3;
-    completedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedTasksText, @"Completed tasks text");
-    
-    ASDKModelFilter *completedFilter = [ASDKModelFilter new];
-    completedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    completedFilter.assignmentType = ASDKTaskAssignmentTypeInvolved;
-    completedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
-    completedFilter.state = ASDKModelFilterStateTypeCompleted;
-    
-    completedTasksFilter.filter = completedFilter;
-    
-    dispatch_group_enter(defaultTaskFilterGroup);
-    [self.filterNetworkService createUserTaskFilterWithRepresentation:completedTasksFilter
-                                                  withCompletionBlock:defaultFilterCompletionBlock];
+- (void)handleFetchDefaultTaskFilterListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *filterListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *filterList = filterListResponse.collection;
     
     __weak typeof(self) weakSelf = self;
-    dispatch_group_notify(defaultTaskFilterGroup, dispatch_get_main_queue(), ^{
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (operationError) {
-            AFALogError(@"Encountered an error for default task filter create operation. Reason:%@", operationError.localizedDescription);
-            completionBlock(nil, operationError, nil);
+    if (!filterListResponse.error) {
+        if (filterListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.defaultTaskFilterListCachedResultsBlock) {
+                    strongSelf.defaultTaskFilterListCachedResultsBlock(filterList, nil, filterListResponse.paging);
+                    strongSelf.defaultTaskFilterListCachedResultsBlock = nil;
+                }
+            });
         } else {
-            // Re-fetch again because filter detail information is not suficient to be reported back
-            AFALogVerbose(@"Successfully created %lu default task filters. Re-fetching filter details...", (unsigned long)filterArr.count);
-            [strongSelf requestTaskFilterListForAppID:appID
-                                  withCompletionBlock:completionBlock];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.defaultTaskFilterListCompletionBlock) {
+                    strongSelf.defaultTaskFilterListCompletionBlock(filterList, nil, filterListResponse.paging);
+                    strongSelf.defaultTaskFilterListCompletionBlock = nil;
+                }
+            });
         }
-    });
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.defaultTaskFilterListCompletionBlock) {
+                strongSelf.defaultTaskFilterListCompletionBlock(nil, filterListResponse.error, nil);
+                strongSelf.defaultTaskFilterListCompletionBlock = nil;
+            }
+        });
+    }
+}
+
+- (void)handleFetchTaskFilterListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *filterListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *filterList = filterListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!filterListResponse.error) {
+        if (filterListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskFilterListCachedResultsBlock) {
+                    strongSelf.taskFilterListCachedResultsBlock(filterList, nil, filterListResponse.paging);
+                    strongSelf.taskFilterListCachedResultsBlock = nil;
+                }
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskFilterListCompletionBlock) {
+                    strongSelf.taskFilterListCompletionBlock(filterList, nil, filterListResponse.paging);
+                    strongSelf.taskFilterListCompletionBlock = nil;
+                }
+            });
+        }
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskFilterListCompletionBlock) {
+                strongSelf.taskFilterListCompletionBlock(nil, filterListResponse.error, nil);
+                strongSelf.taskFilterListCompletionBlock = nil;
+            }
+        });
+    }
 }
 
 - (void)requestCreateDefaultProcessInstanceFiltersForAppID:(NSString *)appID
@@ -317,7 +269,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     runningProcessInstancesFilter.appID = appID;
     runningProcessInstancesFilter.icon = kASDKAPIIconNameRunning;
     runningProcessInstancesFilter.index = 0;
-    runningProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterRunningProcessText, @"Running process instances text");
+//    runningProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterRunningProcessText, @"Running process instances text");
     
     ASDKModelFilter *runningFilter = [ASDKModelFilter new];
     runningFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
@@ -336,7 +288,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     completedProcessInstancesFilter.appID = appID;
     completedProcessInstancesFilter.icon = kASDKAPIIconNameCompleted;
     completedProcessInstancesFilter.index = 1;
-    completedProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedProcessesText, @"Completed process instances text");
+//    completedProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedProcessesText, @"Completed process instances text");
     
     ASDKModelFilter *completedFilter = [ASDKModelFilter new];
     completedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
@@ -355,7 +307,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     allProcessInstancesFilter.appID = appID;
     allProcessInstancesFilter.icon = kASDKAPIIconNameAll;
     allProcessInstancesFilter.index = 2;
-    allProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterAllProcessesText, @"All process instances text");
+//    allProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterAllProcessesText, @"All process instances text");
     
     ASDKModelFilter *allFilter = [ASDKModelFilter new];
     allFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;

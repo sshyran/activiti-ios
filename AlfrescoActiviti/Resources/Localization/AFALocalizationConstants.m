@@ -293,16 +293,3 @@ NSString *kLocalizationProfileScreenConfirmCredentialsText       = @"profileScre
 #pragma mark Settings screen
 
 NSString *kLocalizationSettingsScreenBugReportingText            = @"settingsScreenBugReportingText";
-
-
-#pragma mark -
-#pragma mark Default filter names
-
-NSString *kLocalizationDefaultFilterInvolvedTasksText            = @"defaultFilterInvolvedTasksText";
-NSString *kLocalizationDefaultFilterMyTasksText                  = @"defaultFilterMyTasksText";
-NSString *kLocalizationDefaultFilterQueuedTasksText              = @"defaultFilterQueuedTasksText";
-NSString *kLocalizationDefaultFilterCompletedTasksText           = @"defaultFilterCompletedTasksText";
-NSString *kLocalizationDefaultFilterRunningProcessText           = @"defaultFilterRunningProcessesText";
-NSString *kLocalizationDefaultFilterCompletedProcessesText       = @"defaultFilterCompletedProcessesText";
-NSString *kLocalizationDefaultFilterAllProcessesText             = @"defaultFilterAllProcessesText";
-

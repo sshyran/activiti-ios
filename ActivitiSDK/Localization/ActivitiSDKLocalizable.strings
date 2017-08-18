@@ -87,3 +87,11 @@
 "dynamicTableControllerNoRowsNotEditableText"                   = "This table has no rows.";
 "dynamicTableControllerIncompleteRowDataText"                   = "Are you sure you want to return without filling in the required field information? The row will be discarded.";
 
+// Default filter names
+"defaultFilterInvolvedTasksText"                         = "Involved tasks";
+"defaultFilterMyTasksText"                               = "My tasks";
+"defaultFilterQueuedTasksText"                           = "Queued tasks";
+"defaultFilterCompletedTasksText"                        = "Completed tasks";
+"defaultFilterRunningProcessesText"                      = "Running";
+"defaultFilterCompletedProcessesText"                    = "Completed";
+"defaultFilterAllProcessesText"                          = "All";

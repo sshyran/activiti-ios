@@ -240,12 +240,3 @@ extern NSString *kLocalizationProfileScreenConfirmCredentialsText;
 
 // Settings screen
 extern NSString *kLocalizationSettingsScreenBugReportingText;
-
-// Default filter names
-extern NSString *kLocalizationDefaultFilterInvolvedTasksText;
-extern NSString *kLocalizationDefaultFilterMyTasksText;
-extern NSString *kLocalizationDefaultFilterQueuedTasksText;
-extern NSString *kLocalizationDefaultFilterCompletedTasksText;
-extern NSString *kLocalizationDefaultFilterRunningProcessText;
-extern NSString *kLocalizationDefaultFilterCompletedProcessesText;
-extern NSString *kLocalizationDefaultFilterAllProcessesText;

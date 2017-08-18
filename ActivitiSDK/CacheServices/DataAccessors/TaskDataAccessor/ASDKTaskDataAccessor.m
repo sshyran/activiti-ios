@@ -101,8 +101,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             [storeInCacheTaskListOperation addDependency:remoteTaskListOperation];
             [completionOperation addDependency:storeInCacheTaskListOperation];
             [self.processingQueue addOperations:@[cachedTaskListOperation,
-                                                 remoteTaskListOperation,
-                                                 storeInCacheTaskListOperation,
+                                                  remoteTaskListOperation,
+                                                  storeInCacheTaskListOperation,
                                                   completionOperation]
                               waitUntilFinished:NO];
         }

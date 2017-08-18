@@ -141,6 +141,7 @@
 #import <ActivitiSDK/ASDKProfileDataAccessor.h>
 #import <ActivitiSDK/ASDKApplicationsDataAccessor.h>
 #import <ActivitiSDK/ASDKTaskDataAccessor.h>
+#import <ActivitiSDK/ASDKFilterDataAccessor.h>
 
 // Service categories
 #import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>

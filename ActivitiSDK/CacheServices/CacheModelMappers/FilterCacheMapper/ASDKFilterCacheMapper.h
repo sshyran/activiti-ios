@@ -16,19 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKDataAccessor.h"
+#import <Foundation/Foundation.h>
+@import CoreData;
 
-@class ASDKFilterRequestRepresentation;
+@class ASDKMOFilter, ASDKModelFilter;
 
-@interface ASDKTaskDataAccessor : ASDKDataAccessor
+@interface ASDKFilterCacheMapper : NSObject
 
-/**
- * Requests a list of tasks for the current logged in user conforming to the properties 
- * of a provided filter and reports network or cached data through the designated
- * data accessor delegate.
- *
- * @param filter Filter object describing which subset of the task list should be fetched
- */
-- (void)fetchTasksWithFilter:(ASDKFilterRequestRepresentation *)filter;
+- (ASDKMOFilter *)mapFilterToCacheMO:(ASDKModelFilter *)filter
+                      usingMOContext:(NSManagedObjectContext *)moContext;
+- (ASDKModelFilter *)mapCacheMOToFilter:(ASDKMOFilter *)moFilter;
 
 @end

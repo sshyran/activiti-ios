@@ -18,17 +18,21 @@
 
 #import "ASDKDataAccessor.h"
 
-@class ASDKFilterRequestRepresentation;
-
-@interface ASDKTaskDataAccessor : ASDKDataAccessor
+@interface ASDKFilterDataAccessor : ASDKDataAccessor
 
 /**
- * Requests a list of tasks for the current logged in user conforming to the properties 
- * of a provided filter and reports network or cached data through the designated
- * data accessor delegate.
- *
- * @param filter Filter object describing which subset of the task list should be fetched
+ * Requests the default defined task filter list in the APS installation that are
+ * not associated with any application and reports network or cached data through
+ * the designated data accessor delegate.
  */
-- (void)fetchTasksWithFilter:(ASDKFilterRequestRepresentation *)filter;
+- (void)fetchDefaultTaskFilterList;
+
+/**
+ * Requests the task filter list that is associated with an application an reports
+ * network or cached data through the desinated data accessor delegate.
+ *
+ * @param appID Application id for which the filter list is requested.
+ */
+- (void)fetchTaskFilterListForApplicationID:(NSString *)appID;
 
 @end

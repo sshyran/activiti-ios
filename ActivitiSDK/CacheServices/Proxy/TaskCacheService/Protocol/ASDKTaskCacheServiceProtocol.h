@@ -46,8 +46,8 @@ typedef void  (^ASDKCacheServiceTaskListCompletionBlock) (NSArray *taskList, NSE
  * The filter contains information such as to which application are the tasks afiliated to
  * the page at which the tasks are retrieved and so on.
  *
- * @param filter: Filter object describing the rules of selection from the total available set
- * @param completionBlock Completion block providing a list of model objects, paging
+ * @param filter:           Filter object describing the rules of selection from the total available set
+ * @param completionBlock   Completion block providing a list of model objects, paging
  *                          information and an optional error reason
  */
 - (void)fetchTaskList:(ASDKCacheServiceTaskListCompletionBlock)completionBlock

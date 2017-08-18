@@ -239,12 +239,3 @@
 // Settings screen
 "profileScreenReportToolText"                            = "Report a bug overlay";
 "settingsScreenBugReportingText"                         = "Problem reporting";
-
-// Default filter names
-"defaultFilterInvolvedTasksText"                         = "Involved tasks";
-"defaultFilterMyTasksText"                               = "My tasks";
-"defaultFilterQueuedTasksText"                           = "Queued tasks";
-"defaultFilterCompletedTasksText"                        = "Completed tasks";
-"defaultFilterRunningProcessesText"                      = "Running";
-"defaultFilterCompletedProcessesText"                    = "Completed";
-"defaultFilterAllProcessesText"                          = "All";

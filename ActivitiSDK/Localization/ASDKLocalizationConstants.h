@@ -93,3 +93,12 @@ extern NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText;
 extern NSString *kLocalizationDynamicTableNoRowsText;
 extern NSString *kLocalizationDynamicTableNoRowsNotEditableText;
 extern NSString *kLocalizationDynamicTableIncompleteRowDataText;
+
+// Default filter names
+extern NSString *kLocalizationDefaultFilterInvolvedTasksText;
+extern NSString *kLocalizationDefaultFilterMyTasksText;
+extern NSString *kLocalizationDefaultFilterQueuedTasksText;
+extern NSString *kLocalizationDefaultFilterCompletedTasksText;
+extern NSString *kLocalizationDefaultFilterRunningProcessText;
+extern NSString *kLocalizationDefaultFilterCompletedProcessesText;
+extern NSString *kLocalizationDefaultFilterAllProcessesText;

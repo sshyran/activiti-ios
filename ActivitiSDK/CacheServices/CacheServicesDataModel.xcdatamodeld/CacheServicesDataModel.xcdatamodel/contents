@@ -42,8 +42,8 @@
     <entity name="ASDKMOFilter" representedClassName="ASDKMOFilter" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="applicationID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="assignmentType" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="3" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isTaskFilter" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="processInstanceID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sortType" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="4" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="4" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
     </entity>
@@ -174,6 +174,7 @@
         <element name="ASDKMOContent" positionX="-765" positionY="-81" width="162" height="225"/>
         <element name="ASDKMOFileContent" positionX="-423" positionY="-558" width="128" height="60"/>
         <element name="ASDKMOFilter" positionX="16" positionY="-558" width="128" height="133"/>
+        <element name="ASDKMOFilterMap" positionX="-126" positionY="738" width="128" height="73"/>
         <element name="ASDKMOFilterModel" positionX="-423" positionY="-486" width="128" height="75"/>
         <element name="ASDKMOGroup" positionX="153" positionY="459" width="128" height="163"/>
         <element name="ASDKMOIntegrationAccount" positionX="504" positionY="-249" width="162" height="105"/>
@@ -187,8 +188,7 @@
         <element name="ASDKMOServerConfiguration" positionX="-648" positionY="-558" width="198" height="135"/>
         <element name="ASDKMOSite" positionX="504" positionY="-117" width="162" height="60"/>
         <element name="ASDKMOTask" positionX="-765" positionY="153" width="162" height="343"/>
-        <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="135"/>
-        <element name="ASDKMOFilterMap" positionX="-126" positionY="738" width="128" height="73"/>
         <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="58"/>
+        <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="135"/>
     </elements>
 </model>

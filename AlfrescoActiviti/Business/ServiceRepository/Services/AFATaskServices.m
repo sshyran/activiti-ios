@@ -712,7 +712,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 
 #pragma mark -
-#pragma mark Private interface
+#pragma mark ASDKDataAccessorDelegate
 
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
