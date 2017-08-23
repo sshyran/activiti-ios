@@ -65,7 +65,7 @@
 typedef NS_ENUM(NSInteger, AFAListControllerState) {
     AFAListControllerStateIdle = 0,
     AFAListControllerStateRefreshInProgress,
-    AFAListControllerStateCachedResults
+    AFAListControllerStateEmptyList
 };
 
 typedef NS_ENUM(NSInteger, AFAListButtonType) {
@@ -271,10 +271,9 @@ UITableViewDelegate>
 - (IBAction)onRefresh:(id)sender {
     // Perform the refresh operation only when there is a filter available
     if (self.currentFilter) {
-        self.refreshView.hidden = YES;
-        self.noRecordsLabel.hidden = YES;
-        
         [self searchWithTerm:self.searchTextField.text];
+    } else {
+        [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
     }
 }
 
@@ -397,9 +396,6 @@ UITableViewDelegate>
     }
     
     if (!response.error) {
-        AFAListControllerState controllerState = isCachedResponse ? AFAListControllerStateCachedResults : AFAListControllerStateIdle;
-        self.controllerState = controllerState;
-        
         // Display the last update date
         if (self.refreshControl) {
             self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
@@ -408,18 +404,12 @@ UITableViewDelegate>
         [self.dataSource processAdditionalEntries:response.objectList
                                         forPaging:response.paging];
         BOOL isContentAvailable = self.dataSource.dataEntries.count ? YES : NO;
-        
-        // Check if we got an empty list
-        self.noRecordsLabel.hidden = isContentAvailable;
-        self.listTableView.hidden = !isContentAvailable;
-        self.refreshView.hidden = isContentAvailable;
+        self.controllerState = isContentAvailable ? AFAListControllerStateIdle : AFAListControllerStateEmptyList;
         
         [self.listTableView reloadData];
     } else {
         if (isCachedResponse) {
-            self.noRecordsLabel.hidden = NO;
-            self.listTableView.hidden = YES;
-            self.refreshView.hidden = NO;
+            self.controllerState = AFAListControllerStateEmptyList;
             
             [self.dataSource processAdditionalEntries:nil
                                             forPaging:nil];
@@ -457,12 +447,8 @@ UITableViewDelegate>
                                   filterType:(AFAFilterType)filterType {
     // If no filter information is found don't continue with further requests
     if (!filterModel) {
-        self.controllerState = AFAListControllerStateIdle;
-        self.noRecordsLabel.hidden = NO;
-        self.listTableView.hidden = YES;
-        self.refreshView.hidden = NO;
-        
-        [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        self.controllerState = AFAListControllerStateEmptyList;
+        [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
     } else {
         if ((AFAFilterTypeTask == filterType &&
              [self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) ||
@@ -694,12 +680,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                  AFAListControllerState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     weakSelf.loadingActivityView.hidden =
-                                     (AFAListControllerStateRefreshInProgress == controllerState) ? NO : YES;
-                                     weakSelf.loadingActivityView.animating =
-                                     (AFAListControllerStateRefreshInProgress == controllerState) ? YES : NO;
-                                     weakSelf.listTableView.hidden =
-                                     (AFAListControllerStateRefreshInProgress == controllerState) ? YES : NO;
+                                     if (AFAListControllerStateIdle == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.listTableView.hidden = NO;
+                                         weakSelf.refreshView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else if (AFAListControllerStateRefreshInProgress == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = NO;
+                                         weakSelf.loadingActivityView.animating = YES;
+                                         weakSelf.listTableView.hidden = YES;
+                                         weakSelf.refreshView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else if (AFAListControllerStateEmptyList == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.listTableView.hidden = YES;
+                                         weakSelf.refreshView.hidden = NO;
+                                         weakSelf.noRecordsLabel.hidden = NO;
+                                     }
                                  });
                              }];
 }

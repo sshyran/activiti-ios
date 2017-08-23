@@ -32,6 +32,7 @@
                                                                        inManagedObjectContext:moContext];
     taskFilterMap.applicationID = filter.appDefinitionID;
     taskFilterMap.assignmentType = filter.filterModel.assignmentType;
+    taskFilterMap.state = filter.filterModel.state;
     
     return [self mapToExistingTaskFilterMap:taskFilterMap
                                    taskList:taskList];

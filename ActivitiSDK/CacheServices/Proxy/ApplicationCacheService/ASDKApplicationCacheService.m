@@ -64,7 +64,7 @@
         removeOldAppsRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
         
         NSBatchDeleteResult *deletionResult = [managedObjectContext executeRequest:removeOldAppsRequest
-                                                                                 error:&error];
+                                                                             error:&error];
         NSArray *moIDArr = deletionResult.result;
         [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
                                                      intoContexts:@[managedObjectContext]];
@@ -91,12 +91,17 @@
         
         NSFetchRequest *fetchRequest = [ASDKMOApp fetchRequest];
         fetchRequest.predicate = [NSPredicate predicateWithFormat:@"deploymentID != nil"];
-        fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"deploymentID"
-                                                                       ascending:NO]];
         
         NSError *error = nil;
         NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
                                                                     error:&error];
+        
+        fetchResults = [fetchResults sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"modelID"
+                                                                                               ascending:YES
+                                                                                              comparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+                                                                                                  return [obj1 compare:obj2
+                                                                                                               options:NSNumericSearch];
+                                                                                              }]]];
         
         NSMutableArray *applications = [NSMutableArray array];
         for (ASDKMOApp *moApp in fetchResults) {

@@ -50,6 +50,7 @@
     <entity name="ASDKMOFilterMap" representedClassName="ASDKMOFilterMap" isAbstract="YES" syncable="YES" codeGenerationType="category">
         <attribute name="applicationID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="assignmentType" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="ASDKMOFilterModel" representedClassName="ASDKMOFilterModel" syncable="YES" codeGenerationType="category">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
@@ -174,7 +175,7 @@
         <element name="ASDKMOContent" positionX="-765" positionY="-81" width="162" height="225"/>
         <element name="ASDKMOFileContent" positionX="-423" positionY="-558" width="128" height="60"/>
         <element name="ASDKMOFilter" positionX="16" positionY="-558" width="128" height="133"/>
-        <element name="ASDKMOFilterMap" positionX="-126" positionY="738" width="128" height="73"/>
+        <element name="ASDKMOFilterMap" positionX="-126" positionY="738" width="128" height="90"/>
         <element name="ASDKMOFilterModel" positionX="-423" positionY="-486" width="128" height="75"/>
         <element name="ASDKMOGroup" positionX="153" positionY="459" width="128" height="163"/>
         <element name="ASDKMOIntegrationAccount" positionX="504" positionY="-249" width="162" height="105"/>

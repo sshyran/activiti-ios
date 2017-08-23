@@ -41,7 +41,13 @@
                                paging:(ASDKModelPaging *)paging {
     NSArray *entriesArr = nil;
     
-    if (existingEntriesArr.count) {
+    if (!paging.start) {
+        if (!additionalEntriesArr.count) {
+            return nil;
+        } else {
+            entriesArr = additionalEntriesArr;
+        }
+    } else if (existingEntriesArr.count) {
         // Make sure that the incoming data is not a subset of the existing collection
         NSArray *existingModelIDsArr = [existingEntriesArr valueForKeyPath:@"@distinctUnionOfObjects.modelID"];
         NSPredicate *uniqueEntitiesPredicate = [NSPredicate predicateWithFormat:@"NOT (modelID IN %@)", existingModelIDsArr];

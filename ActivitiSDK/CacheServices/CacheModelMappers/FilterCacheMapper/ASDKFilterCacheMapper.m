@@ -44,7 +44,7 @@
     filter.name = moFilter.name;
     filter.sortType = moFilter.sortType;
     filter.state = moFilter.state;
-    filter.assignmentType = filter.assignmentType;
+    filter.assignmentType = moFilter.assignmentType;
     filter.applicationID = moFilter.applicationID;
     
     return filter;

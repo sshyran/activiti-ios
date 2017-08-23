@@ -149,11 +149,17 @@
                       withCompletionBlock:(ASDKCacheServiceFilterListCompletionBlock)completionBlock {
     NSFetchRequest *fetchRequest = [ASDKMOFilter fetchRequest];
     fetchRequest.predicate = predicate;
-    fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modelID"
-                                                                   ascending:NO]];
+    
     NSError *error = nil;
     NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
                                                                 error:&error];
+    fetchResults = [fetchResults sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"modelID"
+                                                                                             ascending:YES
+                                                                                            comparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+                                                                                                return [obj1 compare:obj2
+                                                                                                             options:NSNumericSearch];
+                                                                                            }]]];
+    
     NSMutableArray *taskFilters = [NSMutableArray array];
     for (ASDKMOFilter *moFilter in fetchResults) {
         ASDKModelFilter *filter = [self.filterCacheMapper mapCacheMOToFilter:moFilter];

@@ -294,7 +294,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                            return;
                                                        }
                                                        
-                                                       if (!filterList.count) {
+                                                       if (!error && !filterList.count) {
                                                            ASDKLogVerbose(@"There are no filters defined. Will populate with default ones...");
                                                            
                                                            // Generate default filter operations and define additional dependency rules
