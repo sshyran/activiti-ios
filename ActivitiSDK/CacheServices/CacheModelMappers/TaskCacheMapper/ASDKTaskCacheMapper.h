@@ -27,4 +27,5 @@
                   usingMOContext:(NSManagedObjectContext *)moContext;
 - (ASDKModelTask *)mapCacheMOToTask:(ASDKMOTask *)moTask;
 
+
 @end

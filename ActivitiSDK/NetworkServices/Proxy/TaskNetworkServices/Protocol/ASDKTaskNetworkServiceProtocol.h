@@ -354,6 +354,6 @@ typedef void  (^ASDKTaskClaimCompletionBlock) (BOOL isTaskClaimed, NSError *erro
 /**
  *  Cancells all queued or running network operations
  */
-- (void)cancelAllTaskNetworkOperations;
+- (void)cancelAllNetworkOperations;
 
 @end

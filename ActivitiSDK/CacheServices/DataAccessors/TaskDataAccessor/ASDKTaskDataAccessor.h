@@ -31,4 +31,17 @@
  */
 - (void)fetchTasksWithFilter:(ASDKFilterRequestRepresentation *)filter;
 
+/**
+ * Requests the details of a task and reports network or cached data through the designated
+ * data accessor delegate.
+ *
+ * @param taskID The ID of the task for which the details are requested
+ */
+- (void)fetchTaskDetailsForTaskID:(NSString *)taskID;
+
+/**
+ * Cancels ongoing operations for the current data accessor.
+ */
+- (void)cancelOperations;
+
 @end

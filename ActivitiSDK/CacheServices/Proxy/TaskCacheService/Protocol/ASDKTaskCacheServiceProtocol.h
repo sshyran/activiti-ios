@@ -19,9 +19,11 @@
 #import <Foundation/Foundation.h>
 
 @class ASDKModelPaging,
-ASDKFilterRequestRepresentation;
+ASDKFilterRequestRepresentation,
+ASDKModelTask;
 
-typedef void  (^ASDKCacheServiceTaskListCompletionBlock) (NSArray *taskList, NSError *error, ASDKModelPaging *paging);
+typedef void (^ASDKCacheServiceTaskListCompletionBlock) (NSArray *taskList, NSError *error, ASDKModelPaging *paging);
+typedef void (^ASDKCacheServiceTaskDetailsCompletionBlock) (ASDKModelTask *task, NSError *error);
 
 @protocol ASDKTaskCacheServiceProtocol <NSObject>
 
@@ -52,5 +54,26 @@ typedef void  (^ASDKCacheServiceTaskListCompletionBlock) (NSArray *taskList, NSE
  */
 - (void)fetchTaskList:(ASDKCacheServiceTaskListCompletionBlock)completionBlock
           usingFilter:(ASDKFilterRequestRepresentation *)filter;
+
+
+/**
+ * Caches provided task details and reports the operation success over a completion block.
+ *
+ * @param task              Task model to be cached
+ * @param completionBlock   Completion block indicating the success of the operation
+ */
+- (void)cacheTaskDetails:(ASDKModelTask *)task
+     withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+
+/**
+ * Fetches and reports via a completion block the task details for the specified id.
+ *
+ * @param taskID            Task id for which the details are requested
+ * @param completionBlock   Completion block providing a task model object and an
+ *                          optional error reason
+ */
+- (void)fetchTaskDetailsForID:(NSString *)taskID
+          withCompletionBlock:(ASDKCacheServiceTaskDetailsCompletionBlock)completionBlock;
 
 @end

@@ -35,4 +35,9 @@
  */
 - (void)fetchTaskFilterListForApplicationID:(NSString *)appID;
 
+/**
+ * Cancels ongoing operations for the current data accessor.
+ */
+- (void)cancelOperations;
+
 @end

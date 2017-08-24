@@ -62,4 +62,9 @@
 - (void)uploadCurrentProfileImageForContentModel:(ASDKModelFileContent *)fileContentModel
                                      contentData:(NSData *)contentData;
 
+/**
+ * Cancels ongoing operations for the current data accessor.
+ */
+- (void)cancelOperations;
+
 @end

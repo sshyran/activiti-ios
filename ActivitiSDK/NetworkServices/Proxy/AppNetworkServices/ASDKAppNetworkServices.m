@@ -112,7 +112,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:dataTask];
 }
 
-- (void)cancelAllAppNetworkOperations {
+- (void)cancelAllNetworkOperations {
     [self.networkOperations makeObjectsPerformSelector:@selector(cancel)];
     [self.networkOperations removeAllObjects];
 }

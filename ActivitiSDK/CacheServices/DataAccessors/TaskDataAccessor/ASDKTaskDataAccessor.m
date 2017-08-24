@@ -34,6 +34,7 @@
 #import "ASDKFilterRequestRepresentation.h"
 #import "ASDKDataAccessorResponseCollection.h"
 #import "ASDKDataAccessorResponseProgress.h"
+#import "ASDKDataAccessorResponseModel.h"
 
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
@@ -76,7 +77,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKAsyncBlockOperation *remoteTaskListOperation = [self remoteTaskListOperationForFilter:filter];
     ASDKAsyncBlockOperation *cachedTaskListOperation = [self cachedTaskListOperationForFilter:filter];
     ASDKAsyncBlockOperation *storeInCacheTaskListOperation = [self taskListStoreInCacheOperationWithFilter:filter];
-    ASDKAsyncBlockOperation *completionOperation = [self taskListCompletionOperation];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
     
     // Handle cache policies
     switch (self.cachePolicy) {
@@ -211,7 +212,171 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     return storeInCacheOperation;
 }
 
-- (ASDKAsyncBlockOperation *)taskListCompletionOperation {
+
+#pragma mark -
+#pragma mark Service - Task details
+
+- (void)fetchTaskDetailsForTaskID:(NSString *)taskID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteTaskDetailsOperation = [self remoteTaskDetailsOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *cachedTaskDetailsOperation = [self cachedTaskDetailsOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *storeInCacheTaskDetailsOperation = [self taskDetailsStoreInCacheOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedTaskDetailsOperation];
+            [self.processingQueue addOperations:@[cachedTaskDetailsOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteTaskDetailsOperation];
+            [self.processingQueue addOperations:@[remoteTaskDetailsOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteTaskDetailsOperation addDependency:cachedTaskDetailsOperation];
+            [storeInCacheTaskDetailsOperation addDependency:remoteTaskDetailsOperation];
+            [completionOperation addDependency:storeInCacheTaskDetailsOperation];
+            [self.processingQueue addOperations:@[cachedTaskDetailsOperation,
+                                                  remoteTaskDetailsOperation,
+                                                  storeInCacheTaskDetailsOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteTaskDetailsOperationForTaskID:(NSString *)taskID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteTaskDetailsOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskNetworkService fetchTaskDetailsForTaskID:taskID
+                                                 completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                                     if (operation.isCancelled) {
+                                                         [operation complete];
+                                                         return;
+                                                     }
+                                                     
+                                                     ASDKDataAccessorResponseModel *response =
+                                                     [[ASDKDataAccessorResponseModel alloc] initWithModel:task
+                                                                                             isCachedData:NO
+                                                                                                    error:error];
+                                                     if (weakSelf.delegate) {
+                                                         [weakSelf.delegate dataAccessor:weakSelf
+                                                                     didLoadDataResponse:response];
+                                                     }
+                                                     
+                                                     operation.result = response;
+                                                     [operation complete];
+                                                 }];
+    }];
+    
+    return remoteTaskDetailsOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedTaskDetailsOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedTaskDetailsOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskCacheService fetchTaskDetailsForID:taskID
+                                       withCompletionBlock:^(ASDKModelTask *task, NSError *error) {
+                                           if (operation.isCancelled) {
+                                               [operation complete];
+                                               return;
+                                           }
+                                           
+                                           if (!error) {
+                                               ASDKLogVerbose(@"Task details information fetched successfully from cache for taskID:%@", taskID);
+                                               
+                                               ASDKDataAccessorResponseModel *response =
+                                               [[ASDKDataAccessorResponseModel alloc] initWithModel:task
+                                                                                       isCachedData:YES
+                                                                                              error:error];
+                                               
+                                               if (weakSelf.delegate) {
+                                                   [weakSelf.delegate dataAccessor:weakSelf
+                                                               didLoadDataResponse:response];
+                                               }
+                                           } else {
+                                               ASDKLogError(@"An error occured while fetching cached task details for taskID:%@. Reason:%@", taskID, error.localizedDescription);
+                                           }
+                                           
+                                           [operation complete];
+                                       }];
+    }];
+    
+    return cachedTaskDetailsOperation;
+}
+
+- (ASDKAsyncBlockOperation *)taskDetailsStoreInCacheOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseModel *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.model) {
+            [strongSelf.taskCacheService cacheTaskDetails:remoteResponse.model
+                                      withCompletionBlock:^(NSError *error) {
+                                          if (operation.isCancelled) {
+                                              [operation complete];
+                                              return;
+                                          }
+                                          
+                                          if (!error) {
+                                              [[weakSelf taskCacheService] saveChanges];
+                                          } else {
+                                              ASDKLogError(@"Encountered an error while caching the task details for taskID:%@. Reason:%@", taskID, error.localizedDescription);
+                                          }
+                                          
+                                          [operation complete];
+            }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Cancel operations
+
+- (void)cancelOperations {
+    [super cancelOperations];
+    [self.processingQueue cancelAllOperations];
+    [self.taskNetworkService cancelAllNetworkOperations];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (ASDKTaskNetworkServices *)taskNetworkService {
+    return (ASDKTaskNetworkServices *)self.networkService;
+}
+
+- (ASDKTaskCacheService *)taskCacheService {
+    return (ASDKTaskCacheService *)self.cacheService;
+}
+
+- (ASDKAsyncBlockOperation *)defaultCompletionOperation {
     __weak typeof(self) weakSelf = self;
     ASDKAsyncBlockOperation *completionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
         __strong typeof(self) strongSelf = weakSelf;
@@ -229,28 +394,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }];
     
     return completionOperation;
-}
-
-
-#pragma mark -
-#pragma mark Cancel operations
-
-- (void)cancelOperations {
-    [super cancelOperations];
-    [self.processingQueue cancelAllOperations];
-    [self.taskNetworkService cancelAllTaskNetworkOperations];
-}
-
-
-#pragma mark -
-#pragma mark Private interface
-
-- (ASDKTaskNetworkServices *)taskNetworkService {
-    return (ASDKTaskNetworkServices *)self.networkService;
-}
-
-- (ASDKTaskCacheService *)taskCacheService {
-    return (ASDKTaskCacheService *)self.cacheService;
 }
 
 @end

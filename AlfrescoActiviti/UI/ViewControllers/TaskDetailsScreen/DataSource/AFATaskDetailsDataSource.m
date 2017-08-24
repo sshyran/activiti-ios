@@ -82,7 +82,7 @@
     
     __weak typeof(self) weakSelf = self;
     [taskServices requestTaskDetailsForID:self.taskID
-                      withCompletionBlock:^(ASDKModelTask *task, NSError *taskDetailsError) {
+                      completionBlock:^(ASDKModelTask *task, NSError *taskDetailsError) {
                           __strong typeof(self) strongSelf = weakSelf;
                           BOOL registerCellActions = NO;
                           
@@ -140,21 +140,23 @@
                               if (task.parentTaskID) {
                                   dispatch_group_enter(taskDetailsGroup);
                                   [taskServices requestTaskDetailsForID:task.parentTaskID
-                                                    withCompletionBlock:^(ASDKModelTask *task, NSError *error) {
-                                                        if (hadEncounteredAnError) {
-                                                            return;
-                                                        } else {
-                                                            hadEncounteredAnError = error ? YES : NO;
-                                                            if (!hadEncounteredAnError) {
-                                                                parentTask = task;
-                                                            } else {
-                                                                if (completionBlock) {
-                                                                    completionBlock(error, registerCellActions);
-                                                                }
-                                                            }
-                                                            dispatch_group_leave(taskDetailsGroup);
-                                                        }
-                                                    }];
+                                   completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                       if (hadEncounteredAnError) {
+                                           return;
+                                       } else {
+                                           hadEncounteredAnError = error ? YES : NO;
+                                           if (!hadEncounteredAnError) {
+                                               parentTask = task;
+                                           } else {
+                                               if (completionBlock) {
+                                                   completionBlock(error, registerCellActions);
+                                               }
+                                           }
+                                           dispatch_group_leave(taskDetailsGroup);
+                                       }
+                                   } cachedResults:^(ASDKModelTask *task, NSError *error) {
+                                       
+                                   }];
                               }
                               
                               dispatch_group_notify(taskDetailsGroup, dispatch_get_main_queue(), ^{
@@ -173,6 +175,8 @@
                                   completionBlock(taskDetailsError, NO);
                               }
                           }
+                      } cachedResults:^(ASDKModelTask *task, NSError *error) {
+                          
                       }];
 }
 
@@ -201,7 +205,7 @@
     
     __weak typeof(self) weakSelf = self;
     [taskServices requestTaskDetailsForID:self.taskID
-                      withCompletionBlock:^(ASDKModelTask *task, NSError *error) {
+                      completionBlock:^(ASDKModelTask *task, NSError *error) {
                           __strong typeof(self) strongSelf = weakSelf;
                           
                           if (!error) {
@@ -220,6 +224,8 @@
                           if (completionBlock) {
                               completionBlock(error);
                           }
+                      } cachedResults:^(ASDKModelTask *task, NSError *error) {
+                          
                       }];
 }
 

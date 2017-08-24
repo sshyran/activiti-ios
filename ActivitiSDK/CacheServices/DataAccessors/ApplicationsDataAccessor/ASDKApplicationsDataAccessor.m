@@ -229,6 +229,16 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 
 #pragma mark -
+#pragma mark Cancel operations
+
+- (void)cancelOperations {
+    [super cancelOperations];
+    [self.processingQueue cancelAllOperations];
+    [self.appNetworkService cancelAllNetworkOperations];
+}
+
+
+#pragma mark -
 #pragma mark Private interface
 
 - (ASDKAppNetworkServices *)appNetworkService {

@@ -36,13 +36,18 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 @interface AFATaskServices () <ASDKDataAccessorDelegate>
 
-@property (strong, nonatomic) dispatch_queue_t          taskUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKTaskNetworkServices   *taskNetworkService;
+@property (strong, nonatomic) dispatch_queue_t                          taskUpdatesProcessingQueue;
+@property (strong, nonatomic) ASDKTaskNetworkServices                   *taskNetworkService;
 
 // Task list
-@property (strong, nonatomic) ASDKTaskDataAccessor                  *fetchTaskListDataAccessor;
-@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock  taskListCompletionBlock;
-@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock  taskListCachedResultsBlock;
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *fetchTaskListDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock      taskListCompletionBlock;
+@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock      taskListCachedResultsBlock;
+
+// Task details
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *fetchTaskDetailsDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskDetailsCompletionBlock   taskDetailsCompletionBlock;
+@property (copy, nonatomic) AFATaskServicesTaskDetailsCompletionBlock   taskDetailsCachedResultsBlock;
 
 @end
 
@@ -103,26 +108,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestTaskDetailsForID:(NSString *)taskID
-            withCompletionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
+            completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock
+                  cachedResults:(AFATaskServicesTaskDetailsCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService fetchTaskDetailsForTaskID:taskID
-                                       completionBlock:^(ASDKModelTask *task, NSError *error) {
-                                           if (!error) {
-                                               AFALogVerbose(@"Fetched details for task name %@", task.name);
-                                               
-                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                   completionBlock (task, nil);
-                                               });
-                                           } else {
-                                               AFALogError(@"An error occured while fetching details for task: %@. Reason:%@", task.name, error.localizedDescription);
-                                               
-                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                   completionBlock(nil, error);
-                                               });
-                                           }
-                                       }];
+    self.taskDetailsCompletionBlock = completionBlock;
+    self.taskDetailsCachedResultsBlock = cacheCompletionBlock;
+    
+    self.fetchTaskDetailsDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.fetchTaskDetailsDataAccessor fetchTaskDetailsForTaskID:taskID];
 }
 
 - (void)requestTaskContentForID:(NSString *)taskID
@@ -718,6 +713,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
     if (self.fetchTaskListDataAccessor == dataAccessor) {
         [self handleFetchTaskListDataAccessorResponse:response];
+    } else if (self.fetchTaskDetailsDataAccessor == dataAccessor) {
+        [self handleFetchTaskDetailsDataAccessorResponse:response];
     }
 }
 
@@ -760,6 +757,42 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             if (strongSelf.taskListCompletionBlock) {
                 strongSelf.taskListCompletionBlock(nil, taskListResponse.error, nil);
                 strongSelf.taskListCompletionBlock = nil;
+            }
+        });
+    }
+}
+
+- (void)handleFetchTaskDetailsDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *taskResponse = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!taskResponse.error) {
+        if (taskResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskDetailsCachedResultsBlock) {
+                    strongSelf.taskDetailsCachedResultsBlock(taskResponse.model, nil);
+                    strongSelf.taskDetailsCachedResultsBlock = nil;
+                }
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskDetailsCompletionBlock) {
+                    strongSelf.taskDetailsCompletionBlock(taskResponse.model, nil);
+                    strongSelf.taskDetailsCompletionBlock = nil;
+                }
+            });
+        }
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskDetailsCompletionBlock) {
+                strongSelf.taskDetailsCompletionBlock(nil, taskResponse.error);
+                strongSelf.taskDetailsCompletionBlock = nil;
             }
         });
     }

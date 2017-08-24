@@ -54,6 +54,10 @@
     return self;
 }
 
+
+#pragma mark -
+#pragma makr Public interface
+
 - (void)cacheTaskList:(NSArray *)taskList
           usingFilter:(ASDKFilterRequestRepresentation *)filter
   withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
@@ -135,27 +139,13 @@
                 // If the assignment predicate is nil this means that it's assigned
                 // filter map is empty so a fetch would be irrelevant
                 if (completionBlock) {
-                    paging = [ASDKModelPaging new];
-                    paging.size = 0;
-                    paging.start = fetchOffset;
-                    paging.total = 0;
-                    
-                    completionBlock(nil, nil, paging);
+                    completionBlock(nil, nil, [strongSelf emptyPagination]);
                     return;
                 }
             }
             
             NSCompoundPredicate *compoundPredicate = [[NSCompoundPredicate alloc] initWithType:NSAndPredicateType
                                                                                  subpredicates:predicates];
-            
-            // Count the total number of cached tasks to create pagination information
-            NSFetchRequest *taskCountFetchRequest = [ASDKMOTask fetchRequest];
-            taskCountFetchRequest.predicate = compoundPredicate;
-            taskCountFetchRequest.includesSubentities = NO;
-            taskCountFetchRequest.includesPropertyValues = NO;
-            
-            NSUInteger taskTotalCount = [managedObjectContext countForFetchRequest:taskCountFetchRequest
-                                                                             error:&error];
             
             // Configure the fetch request
             fetchRequest.predicate = compoundPredicate;
@@ -165,10 +155,10 @@
             matchingTaskArr = [managedObjectContext executeFetchRequest:fetchRequest
                                                                   error:&error];
             
-            paging = [ASDKModelPaging new];
-            paging.size = filter.size;
-            paging.start = fetchOffset;
-            paging.total = taskTotalCount;
+            // Count the total number of cached tasks to create pagination information
+            paging = [strongSelf paginationForCachedTasksMatchingPredicate:compoundPredicate
+                                                                withFilter:filter
+                                                    inManagedObjectContext:managedObjectContext];
         }
         
         if (completionBlock) {
@@ -187,18 +177,51 @@
     }];
 }
 
-
-#pragma mark -
-#pragma mark Utils
-
-- (NSError *)clearCacheStalledDataError {
-    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Cannot clean task cache stalled date.",
-                               NSLocalizedFailureReasonErrorKey     : @"One of the cache clean operations failed.",
-                               NSLocalizedRecoverySuggestionErrorKey: @"Investigate which of the clean requests failed."};
-    return [NSError errorWithDomain:ASDKPersistenceStackErrorDomain
-                               code:kASDKPersistenceStackCleanCacheStalledDataErrorCode
-                           userInfo:userInfo];
+- (void)cacheTaskDetails:(ASDKModelTask *)task
+     withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        [strongSelf.taskCacheMapper mapTaskToCacheMO:task
+                                      usingMOContext:managedObjectContext];
+        [managedObjectContext save:&error];
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
 }
+
+- (void)fetchTaskDetailsForID:(NSString *)taskID
+          withCompletionBlock:(ASDKCacheServiceTaskDetailsCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        NSFetchRequest *fetchRequest = [ASDKMOTask fetchRequest];
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"modelID == %@", taskID];
+        
+        NSError *error = nil;
+        NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
+                                                                    error:&error];
+        
+        if (completionBlock) {
+            ASDKMOTask *moTask = fetchResults.firstObject;
+            
+            if (error || !moTask) {
+                completionBlock(nil, error);
+            } else {
+                ASDKModelTask *task = [strongSelf.taskCacheMapper mapCacheMOToTask:moTask];
+                completionBlock(task, nil);
+            }
+        }
+    }];
+}
+
 
 
 #pragma mark -
@@ -289,6 +312,40 @@
     [managedObjectContext save:&error];
     
     return error;
+}
+
+- (ASDKModelPaging *)paginationForCachedTasksMatchingPredicate:(NSPredicate *)predicate
+                                                    withFilter:(ASDKFilterRequestRepresentation *)filter
+                                        inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    NSFetchRequest *taskCountFetchRequest = [ASDKMOTask fetchRequest];
+    taskCountFetchRequest.predicate = predicate;
+    taskCountFetchRequest.includesSubentities = NO;
+    taskCountFetchRequest.includesPropertyValues = NO;
+    
+    NSError *error = nil;
+    NSUInteger taskTotalCount = [managedObjectContext countForFetchRequest:taskCountFetchRequest
+                                                                     error:&error];
+    
+    if (error) {
+        return nil;
+    }
+    
+    ASDKModelPaging * paging = [ASDKModelPaging new];
+    paging.size = filter.size;
+    paging.start = filter.size * filter.page;
+    paging.total = taskTotalCount;
+    
+    return paging;
+}
+
+
+- (ASDKModelPaging *)emptyPagination {
+    ASDKModelPaging *paging = [ASDKModelPaging new];
+    paging.size = 0;
+    paging.start = 0;
+    paging.total = 0;
+    
+    return paging;
 }
 
 
@@ -400,6 +457,19 @@
     }
     
     return sortDescriptor;
+}
+
+
+#pragma mark -
+#pragma mark Errors
+
+- (NSError *)clearCacheStalledDataError {
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Cannot clean task cache stalled date.",
+                               NSLocalizedFailureReasonErrorKey     : @"One of the cache clean operations failed.",
+                               NSLocalizedRecoverySuggestionErrorKey: @"Investigate which of the clean requests failed."};
+    return [NSError errorWithDomain:ASDKPersistenceStackErrorDomain
+                               code:kASDKPersistenceStackCleanCacheStalledDataErrorCode
+                           userInfo:userInfo];
 }
 
 @end

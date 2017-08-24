@@ -351,7 +351,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 - (void)cancelOperations {
     [super cancelOperations];
     [self.processingQueue cancelAllOperations];
-    [self.profileNetworkService cancelAllProfileNetworkOperations];
+    [self.profileNetworkService cancelAllNetworkOperations];
 }
 
 
