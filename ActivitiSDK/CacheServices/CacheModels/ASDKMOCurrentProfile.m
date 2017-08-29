@@ -16,14 +16,13 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKMOProfile.h"
-#import "ASDKMOComment.h"
-#import "ASDKMOContent.h"
-#import "ASDKMOGroup.h"
-#import "ASDKMOProcessInstance.h"
-#import "ASDKMOTask.h"
 #import "ASDKMOCurrentProfile.h"
+#import "ASDKMOProfile.h"
 
-@implementation ASDKMOProfile
+@implementation ASDKMOCurrentProfile
+
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
 
 @end

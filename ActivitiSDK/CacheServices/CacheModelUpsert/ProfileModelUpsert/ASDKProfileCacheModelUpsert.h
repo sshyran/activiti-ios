@@ -16,14 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKMOProfile.h"
-#import "ASDKMOComment.h"
-#import "ASDKMOContent.h"
-#import "ASDKMOGroup.h"
-#import "ASDKMOProcessInstance.h"
-#import "ASDKMOTask.h"
-#import "ASDKMOCurrentProfile.h"
+#import <Foundation/Foundation.h>
+@import CoreData;
 
-@implementation ASDKMOProfile
+@class ASDKMOProfile, ASDKModelProfile;
+
+@interface ASDKProfileCacheModelUpsert : NSObject
+
++ (ASDKMOProfile *)upsertProfileToCache:(ASDKModelProfile *)profile
+                                  error:(NSError **)error
+                            inMOContext:(NSManagedObjectContext *)moContext;
 
 @end

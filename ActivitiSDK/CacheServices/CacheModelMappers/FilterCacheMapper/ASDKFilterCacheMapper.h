@@ -23,8 +23,8 @@
 
 @interface ASDKFilterCacheMapper : NSObject
 
-- (ASDKMOFilter *)mapFilterToCacheMO:(ASDKModelFilter *)filter
-                      usingMOContext:(NSManagedObjectContext *)moContext;
-- (ASDKModelFilter *)mapCacheMOToFilter:(ASDKMOFilter *)moFilter;
++ (ASDKMOFilter *)mapFilter:(ASDKModelFilter *)filter
+                  toCacheMO:(ASDKMOFilter *)moFilter;
++ (ASDKModelFilter *)mapCacheMOToFilter:(ASDKMOFilter *)moFilter;
 
 @end

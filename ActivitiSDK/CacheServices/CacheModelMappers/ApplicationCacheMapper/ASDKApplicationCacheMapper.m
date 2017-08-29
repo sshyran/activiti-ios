@@ -24,10 +24,8 @@
 
 @implementation ASDKApplicationCacheMapper
 
-- (ASDKMOApp *)mapAppToCacheMO:(ASDKModelApp *)app
-                usingMOContext:(NSManagedObjectContext *)moContext {
-    ASDKMOApp *moApp = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOApp entityName]
-                                                     inManagedObjectContext:moContext];
++ (ASDKMOApp *)mapApp:(ASDKModelApp *)app
+            toCacheMO:(ASDKMOApp *)moApp {
     moApp.modelID = app.modelID;
     moApp.applicationDescription = app.applicationDescription;
     moApp.applicationModelID = app.applicationModelID;
@@ -40,7 +38,7 @@
     return moApp;
 }
 
-- (ASDKModelApp *)mapCacheMOToApp:(ASDKMOApp *)moApp {
++ (ASDKModelApp *)mapCacheMOToApp:(ASDKMOApp *)moApp {
     ASDKModelApp *app = [ASDKModelApp new];
     app.modelID = moApp.modelID;
     app.applicationDescription = moApp.applicationDescription;

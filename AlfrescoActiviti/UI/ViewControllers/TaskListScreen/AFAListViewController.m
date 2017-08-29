@@ -447,8 +447,10 @@ UITableViewDelegate>
                                   filterType:(AFAFilterType)filterType {
     // If no filter information is found don't continue with further requests
     if (!filterModel) {
-        self.controllerState = AFAListControllerStateEmptyList;
-        [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        if (!self.currentFilter) {
+            self.controllerState = AFAListControllerStateEmptyList;
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
     } else {
         if ((AFAFilterTypeTask == filterType &&
              [self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) ||

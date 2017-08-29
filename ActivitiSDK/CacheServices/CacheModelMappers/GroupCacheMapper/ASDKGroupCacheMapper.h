@@ -23,8 +23,8 @@
 
 @interface ASDKGroupCacheMapper : NSObject
 
-- (ASDKMOGroup *)mapGroupToCacheMO:(ASDKModelGroup *)group
-                    usingMOContext:(NSManagedObjectContext *)moContext;
+- (ASDKMOGroup *)mapGroup:(ASDKModelGroup *)group
+                toCacheMO:(ASDKMOGroup *)moGroup;
 - (ASDKModelGroup *)mapCacheMOToGroup:(ASDKMOGroup *)moGroup;
 
 @end

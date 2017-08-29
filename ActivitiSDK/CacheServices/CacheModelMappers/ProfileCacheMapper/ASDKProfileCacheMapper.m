@@ -22,16 +22,19 @@
 #import "ASDKModelProfile.h"
 #import "ASDKMOProfile.h"
 #import "ASDKModelGroup.h"
+#import "ASDKMOCurrentProfile.h"
 
 // Mappers
 #import "ASDKGroupCacheMapper.h"
 
 @implementation ASDKProfileCacheMapper
 
-- (ASDKMOProfile *)mapProfileToCacheMO:(ASDKModelProfile *)profile
-                        usingMOContext:(NSManagedObjectContext *)moContext {
-    ASDKMOProfile *moProfile = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProfile entityName]
-                                                             inManagedObjectContext:moContext];
+
+#pragma mark -
+#pragma mark Public interface
+
++ (ASDKMOProfile *)mapProfile:(ASDKModelProfile *)profile
+                    toCacheMO:(ASDKMOProfile *)moProfile {
     moProfile.modelID = profile.modelID;
     moProfile.tenantID = profile.tenantID;
     moProfile.tenantName = profile.tenantName;
@@ -47,19 +50,17 @@
     moProfile.creationDate = profile.creationDate;
     moProfile.lastUpdate = profile.lastUpdate;
     
-    if (profile.groups.count) {
-        ASDKGroupCacheMapper *groupMapper = [ASDKGroupCacheMapper new];
-        for (ASDKModelGroup *group in profile.groups) {
-            ASDKMOGroup *moGroup = [groupMapper mapGroupToCacheMO:group
-                                                   usingMOContext:moContext];
-            [moProfile addGroupsObject:moGroup];
-        }
-    }
-    
     return moProfile;
 }
 
-- (ASDKModelProfile *)mapCacheMOToProfile:(ASDKMOProfile *)moProfile {
++ (ASDKMOCurrentProfile *)mapCacheMOProfile:(ASDKMOProfile *)moProfile
+                    toCurrentProfileCacheMO:(ASDKMOCurrentProfile *)moCurrentProfile {
+    moCurrentProfile.profile = moProfile;
+    return moCurrentProfile;
+}
+
+
++ (ASDKModelProfile *)mapCacheMOToProfile:(ASDKMOProfile *)moProfile {
     ASDKModelProfile *profile = [ASDKModelProfile new];
     profile.modelID = moProfile.modelID;
     profile.tenantID = moProfile.tenantID;
@@ -88,7 +89,7 @@
     return profile;
 }
 
-- (ASDKModelProfile *)mapCacheMOToProfileProxy:(ASDKMOProfile *)moProfile {
++ (ASDKModelProfile *)mapCacheMOToProfileProxy:(ASDKMOProfile *)moProfile {
     ASDKModelProfile *profile = [ASDKModelProfile new];
     profile.modelID = moProfile.modelID;
     

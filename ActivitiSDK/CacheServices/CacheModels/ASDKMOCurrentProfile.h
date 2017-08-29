@@ -16,14 +16,19 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKMOProfile.h"
-#import "ASDKMOComment.h"
-#import "ASDKMOContent.h"
-#import "ASDKMOGroup.h"
-#import "ASDKMOProcessInstance.h"
-#import "ASDKMOTask.h"
-#import "ASDKMOCurrentProfile.h"
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@implementation ASDKMOProfile
+@class ASDKMOProfile;
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface ASDKMOCurrentProfile : NSManagedObject
+
++ (NSString *)entityName;
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "ASDKMOCurrentProfile+CoreDataProperties.h"

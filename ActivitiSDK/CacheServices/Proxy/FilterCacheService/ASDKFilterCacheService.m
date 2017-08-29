@@ -26,26 +26,8 @@
 // Persistence
 #import "ASDKFilterCacheMapper.h"
 
-@interface ASDKFilterCacheService ()
-
-@property (strong, nonatomic) ASDKFilterCacheMapper *filterCacheMapper;
-
-@end
 
 @implementation ASDKFilterCacheService
-
-
-#pragma mark -
-#pragma mark Lifecycle
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _filterCacheMapper = [ASDKFilterCacheMapper new];
-    }
-    
-    return self;
-}
 
 
 #pragma mark -
@@ -85,7 +67,7 @@
     
     [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
         __strong typeof(self) strongSelf = weakSelf;
-    
+        
         [strongSelf fetchTaskFilterListUsingPredicate:[strongSelf adhocTaskFilterPredicate]
                                inManagedObjectContext:managedObjectContext
                                   withCompletionBlock:completionBlock];
@@ -131,8 +113,10 @@
     
     if (!error) {
         for (ASDKModelFilter *filter in filterList) {
-            ASDKMOFilter *moFilter = [self.filterCacheMapper mapFilterToCacheMO:filter
-                                                                 usingMOContext:managedObjectContext];
+            ASDKMOFilter *moFilter = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOFilter entityName]
+                                                                   inManagedObjectContext:managedObjectContext];
+            moFilter = [ASDKFilterCacheMapper mapFilter:filter
+                                              toCacheMO:moFilter];
             moFilter.isTaskFilter = YES;
         }
         
@@ -162,7 +146,7 @@
     
     NSMutableArray *taskFilters = [NSMutableArray array];
     for (ASDKMOFilter *moFilter in fetchResults) {
-        ASDKModelFilter *filter = [self.filterCacheMapper mapCacheMOToFilter:moFilter];
+        ASDKModelFilter *filter = [ASDKFilterCacheMapper mapCacheMOToFilter:moFilter];
         [taskFilters addObject:filter];
     }
     

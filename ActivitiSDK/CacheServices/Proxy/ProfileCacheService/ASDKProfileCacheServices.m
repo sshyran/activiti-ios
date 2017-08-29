@@ -21,59 +21,47 @@
 // Models
 #import "ASDKModelProfile.h"
 #import "ASDKMOProfile.h"
+#import "ASDKMOCurrentProfile.h"
+
+// Model upsert
+#import "ASDKProfileCacheModelUpsert.h"
+#import "ASDKGroupCacheModelUpsert.h"
 
 // Persistence
 #import "ASDKProfileCacheMapper.h"
 
-
-@interface ASDKProfileCacheServices ()
-
-@property (strong, nonatomic) ASDKProfileCacheMapper *profileCacheMapper;
-
-@end
-
 @implementation ASDKProfileCacheServices
 
-
-#pragma mark -
-#pragma mark Lifecycle
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _profileCacheMapper = [ASDKProfileCacheMapper new];
-    }
-    
-    return self;
-}
 
 #pragma mark -
 #pragma mark Public interface
 
 - (void)cacheCurrentUserProfile:(ASDKModelProfile *)profile
             withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
-    __weak typeof(self) weakSelf = self;
     [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
-        __strong typeof(self) strongSelf = weakSelf;
         managedObjectContext.automaticallyMergesChangesFromParent = YES;
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
         
-        // Unset other profiles as the default ones
-        NSFetchRequest *fetchRequest = [ASDKMOProfile fetchRequest];
-        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isCurrentProfile == YES"];
-        
         NSError *error = nil;
-        NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
-                                                                    error:&error];
-
-        ASDKMOProfile *currentUserProfile = [strongSelf.profileCacheMapper mapProfileToCacheMO:profile
-                                                                                usingMOContext:managedObjectContext];
-        currentUserProfile.isCurrentProfile = YES;
         
-        for (ASDKMOProfile *profile in fetchResults) {
-            if (![currentUserProfile.modelID isEqualToString:profile.modelID]) {
-                profile.isCurrentProfile = NO;
+        NSFetchRequest *fetchCurrentProfileRequest = [ASDKMOCurrentProfile fetchRequest];
+        NSArray *currentProfileResults = [managedObjectContext executeFetchRequest:fetchCurrentProfileRequest
+                                                                             error:&error];
+        
+        if (!error) {
+            ASDKMOCurrentProfile *moCurrentProfile = currentProfileResults.firstObject;
+            if (!moCurrentProfile) {
+                moCurrentProfile = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOCurrentProfile entityName]
+                                                                 inManagedObjectContext:managedObjectContext];
             }
+            ASDKMOProfile *moProfile = [ASDKProfileCacheModelUpsert upsertProfileToCache:profile
+                                                                                   error:&error
+                                                                             inMOContext:managedObjectContext];
+            if (!error) {
+                [ASDKProfileCacheMapper mapCacheMOProfile:moProfile
+                                  toCurrentProfileCacheMO:moCurrentProfile];
+            }
+            
         }
         
         [managedObjectContext save:&error];
@@ -85,24 +73,24 @@
 }
 
 - (void)fetchCurrentUserProfile:(ASDKCacheServiceProfileCompletionBlock)profileCompletionBlock {
-    __weak typeof(self) weakSelf = self;
     [self.persistenceStack  performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        NSFetchRequest *fetchRequest = [ASDKMOProfile fetchRequest];
-        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"isCurrentProfile == YES"];
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
         
         NSError *error = nil;
+        
+        NSFetchRequest *fetchRequest = [ASDKMOCurrentProfile fetchRequest];
         NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
                                                                     error:&error];
         
         if (profileCompletionBlock) {
-            ASDKMOProfile *moProfile = fetchResults.firstObject;
+            ASDKMOCurrentProfile *moCurrentProfile = fetchResults.firstObject;
+            ASDKMOProfile *moProfile = moCurrentProfile.profile;
             
             if (error || !moProfile) {
                 profileCompletionBlock(nil, error);
             } else {
-                ASDKModelProfile *profile = [strongSelf.profileCacheMapper mapCacheMOToProfile:moProfile];
+                ASDKModelProfile *profile = [ASDKProfileCacheMapper mapCacheMOToProfile:moProfile];
                 profileCompletionBlock(profile, nil);
             }
         }

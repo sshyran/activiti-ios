@@ -28,10 +28,8 @@
 
 @implementation ASDKTaskCacheMapper
 
-- (ASDKMOTask *)mapTaskToCacheMO:(ASDKModelTask *)task
-                  usingMOContext:(NSManagedObjectContext *)moContext {
-    ASDKMOTask *moTask = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOTask entityName]
-                                                       inManagedObjectContext:moContext];
++ (ASDKMOTask *)mapTask:(ASDKModelTask *)task
+              toCacheMO:(ASDKMOTask *)moTask {
     moTask.modelID = task.modelID;
     moTask.name = task.name;
     moTask.taskDescription = task.taskDescription;
@@ -51,24 +49,10 @@
     moTask.processDefinitionDeploymentID = task.processDefinitionDeploymentID;
     moTask.category = task.category;
 
-    ASDKProfileCacheMapper *profileMapper = [ASDKProfileCacheMapper new];
-    if (task.assigneeModel) {
-        moTask.assignee = [profileMapper mapProfileToCacheMO:task.assigneeModel
-                                              usingMOContext:moContext];
-    }
-    
-    if (task.involvedPeople.count) {
-        for (ASDKModelProfile *profile in task.involvedPeople) {
-            ASDKMOProfile *moProfile = [profileMapper mapProfileToCacheMO:profile
-                                                           usingMOContext:moContext];
-            [moTask addInvolvedPeopleObject:moProfile];
-        }
-    }
-    
     return moTask;
 }
 
-- (ASDKModelTask *)mapCacheMOToTask:(ASDKMOTask *)moTask {
++ (ASDKModelTask *)mapCacheMOToTask:(ASDKMOTask *)moTask {
     ASDKModelTask *task = [ASDKModelTask new];
     task.modelID = moTask.modelID;
     task.name = moTask.name;
@@ -89,16 +73,15 @@
     task.processDefinitionDeploymentID = moTask.processDefinitionDeploymentID;
     task.category = moTask.category;
     
-    ASDKProfileCacheMapper *profileMapper = [ASDKProfileCacheMapper new];
     if (moTask.assignee) {
-        ASDKModelProfile *profile = [profileMapper mapCacheMOToProfile:moTask.assignee];
+        ASDKModelProfile *profile = [ASDKProfileCacheMapper mapCacheMOToProfile:moTask.assignee];
         task.assigneeModel = profile;
     }
     
     if (moTask.involvedPeople.count) {
         NSMutableArray *involvedPeople = [NSMutableArray array];
         for (ASDKMOProfile *moProfile in moTask.involvedPeople) {
-            ASDKModelProfile *profile = [profileMapper mapCacheMOToProfile:moProfile];
+            ASDKModelProfile *profile = [ASDKProfileCacheMapper mapCacheMOToProfile:moProfile];
             [involvedPeople addObject:profile];
         }
         task.involvedPeople = involvedPeople;

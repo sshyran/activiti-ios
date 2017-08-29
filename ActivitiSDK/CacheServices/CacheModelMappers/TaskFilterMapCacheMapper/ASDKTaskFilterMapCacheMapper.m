@@ -22,25 +22,18 @@
 #import "ASDKMOTaskFilterMap.h"
 #import "ASDKFilterRequestRepresentation.h"
 #import "ASDKModelFilter.h"
+#import "ASDKMOTask.h"
 
 @implementation ASDKTaskFilterMapCacheMapper
 
-- (ASDKMOTaskFilterMap *)mapTaskList:(NSArray *)taskList
++ (ASDKMOTaskFilterMap *)mapTaskList:(NSArray *)taskList
                           withFilter:(ASDKFilterRequestRepresentation *)filter
-                      usingMOContext:(NSManagedObjectContext *)moContext {
-    ASDKMOTaskFilterMap *taskFilterMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOTaskFilterMap entityName]
-                                                                       inManagedObjectContext:moContext];
+                           toCacheMO:(ASDKMOTaskFilterMap *)taskFilterMap {
     taskFilterMap.applicationID = filter.appDefinitionID;
     taskFilterMap.assignmentType = filter.filterModel.assignmentType;
     taskFilterMap.state = filter.filterModel.state;
-    
-    return [self mapToExistingTaskFilterMap:taskFilterMap
-                                   taskList:taskList];
-}
-
-- (ASDKMOTaskFilterMap *)mapToExistingTaskFilterMap:(ASDKMOTaskFilterMap *)taskFilterMap
-                                           taskList:(NSArray *)taskList {
     [taskFilterMap addTasks:[NSSet setWithArray:taskList]];
+    
     return taskFilterMap;
 }
 

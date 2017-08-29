@@ -17,15 +17,18 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-@import CoreData;
 
-@class ASDKMOProfile, ASDKModelProfile;
+@class ASDKMOProfile,
+ASDKModelProfile,
+ASDKMOCurrentProfile;
 
 @interface ASDKProfileCacheMapper : NSObject
 
-- (ASDKMOProfile *)mapProfileToCacheMO:(ASDKModelProfile *)profile
-                        usingMOContext:(NSManagedObjectContext *)moContext;
-- (ASDKModelProfile *)mapCacheMOToProfile:(ASDKMOProfile *)moProfile;
-- (ASDKModelProfile *)mapCacheMOToProfileProxy:(ASDKMOProfile *)moProfile;
++ (ASDKMOProfile *)mapProfile:(ASDKModelProfile *)profile
+                    toCacheMO:(ASDKMOProfile *)moProfile;
++ (ASDKMOCurrentProfile *)mapCacheMOProfile:(ASDKMOProfile *)moProfile
+             toCurrentProfileCacheMO:(ASDKMOCurrentProfile *)moCurrentProfile;
++ (ASDKModelProfile *)mapCacheMOToProfile:(ASDKMOProfile *)moProfile;
++ (ASDKModelProfile *)mapCacheMOToProfileProxy:(ASDKMOProfile *)moProfile;
 
 @end

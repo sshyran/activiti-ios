@@ -23,9 +23,9 @@
 
 @interface ASDKTaskCacheMapper : NSObject
 
-- (ASDKMOTask *)mapTaskToCacheMO:(ASDKModelTask *)task
-                  usingMOContext:(NSManagedObjectContext *)moContext;
-- (ASDKModelTask *)mapCacheMOToTask:(ASDKMOTask *)moTask;
++ (ASDKMOTask *)mapTask:(ASDKModelTask *)task
+              toCacheMO:(ASDKMOTask *)moTask;
++ (ASDKModelTask *)mapCacheMOToTask:(ASDKMOTask *)moTask;
 
 
 @end

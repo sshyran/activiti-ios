@@ -28,10 +28,8 @@
 
 @implementation ASDKGroupCacheMapper
 
-- (ASDKMOGroup *)mapGroupToCacheMO:(ASDKModelGroup *)group
-                    usingMOContext:(NSManagedObjectContext *)moContext {
-    ASDKMOGroup *moGroup = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOGroup entityName]
-                                                         inManagedObjectContext:moContext];
+- (ASDKMOGroup *)mapGroup:(ASDKModelGroup *)group
+                toCacheMO:(ASDKMOGroup *)moGroup {
     moGroup.modelID = group.modelID;
     moGroup.tenantID = group.tenantID;
     moGroup.name = group.name;
@@ -39,27 +37,6 @@
     moGroup.parentGroupID = group.parentGroupID;
     moGroup.groupState = group.groupState;
     moGroup.type = group.type;
-    
-    if (group.subGroups.count) {
-        ASDKGroupCacheMapper *groupMapper = [ASDKGroupCacheMapper new];
-        
-        for (ASDKModelGroup *subGroup in group.subGroups) {
-            ASDKMOGroup *moSubGroup = [groupMapper mapGroupToCacheMO:subGroup
-                                                      usingMOContext:moContext];
-            [moGroup addSubGroupsObject:moSubGroup];
-        }
-    }
-    
-    if (group.userProfiles.count) {
-        ASDKProfileCacheMapper *profileMapper = [ASDKProfileCacheMapper new];
-        
-        for (ASDKModelProfile *profile in group.userProfiles) {
-            ASDKMOProfile *moProfile = [profileMapper mapProfileToCacheMO:profile
-                                                         usingMOContext:moContext];
-            
-            [moGroup addUserProfilesObject:moProfile];
-        }
-    }
     
     return moGroup;
 }
@@ -85,11 +62,9 @@
     }
     
     if (moGroup.userProfiles.count) {
-        ASDKProfileCacheMapper *profileMapper = [ASDKProfileCacheMapper new];
-        
         NSMutableArray *profiles = [NSMutableArray array];
         for (ASDKMOProfile *moProfile in moGroup.userProfiles) {
-            ASDKModelProfile *profile = [profileMapper mapCacheMOToProfileProxy:moProfile];
+            ASDKModelProfile *profile = [ASDKProfileCacheMapper mapCacheMOToProfileProxy:moProfile];
             [profiles addObject:profile];
         }
         group.userProfiles = profiles;

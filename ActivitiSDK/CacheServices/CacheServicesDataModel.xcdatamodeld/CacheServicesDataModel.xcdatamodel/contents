@@ -11,11 +11,6 @@
     </entity>
     <entity name="ASDKMOAttributable" representedClassName="ASDKMOAttributable" isAbstract="YES" syncable="YES" codeGenerationType="category">
         <attribute name="modelID" attributeType="String" indexed="YES" syncable="YES"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="modelID"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="ASDKMOComment" representedClassName="ASDKMOComment" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -35,6 +30,9 @@
         <attribute name="thumbnailStatus" optional="YES" attributeType="Integer 16" minValueString="-1" maxValueString="2" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="contents" inverseEntity="ASDKMOProfile" syncable="YES"/>
         <relationship name="processInstanceContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceContent" inverseName="contents" inverseEntity="ASDKMOProcessInstanceContent" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOCurrentProfile" representedClassName="ASDKMOCurrentProfile" syncable="YES" codeGenerationType="category">
+        <relationship name="profile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="currentProfile" inverseEntity="ASDKMOProfile" syncable="YES"/>
     </entity>
     <entity name="ASDKMOFileContent" representedClassName="ASDKMOFileContent" syncable="YES" codeGenerationType="category">
         <attribute name="modelFileURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -107,7 +105,6 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="externalID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isCurrentProfile" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="lastUpdate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="pictureID" optional="YES" attributeType="String" syncable="YES"/>
@@ -119,6 +116,7 @@
         <attribute name="userLastName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="comment" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOComment" inverseName="author" inverseEntity="ASDKMOComment" syncable="YES"/>
         <relationship name="contents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOContent" inverseName="owner" inverseEntity="ASDKMOContent" syncable="YES"/>
+        <relationship name="currentProfile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOCurrentProfile" inverseName="profile" inverseEntity="ASDKMOCurrentProfile" syncable="YES"/>
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOGroup" inverseName="userProfiles" inverseEntity="ASDKMOGroup" syncable="YES"/>
         <relationship name="involvedTasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOTask" inverseName="involvedPeople" inverseEntity="ASDKMOTask" syncable="YES"/>
         <relationship name="processInstances" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstance" inverseName="initiator" inverseEntity="ASDKMOProcessInstance" syncable="YES"/>
@@ -158,7 +156,7 @@
         <relationship name="taskFilterMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOTaskFilterMap" inverseName="tasks" inverseEntity="ASDKMOTaskFilterMap" syncable="YES"/>
     </entity>
     <entity name="ASDKMOTaskFilterMap" representedClassName="ASDKMOTaskFilterMap" parentEntity="ASDKMOFilterMap" syncable="YES" codeGenerationType="category">
-        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOTask" inverseName="taskFilterMap" inverseEntity="ASDKMOTask" syncable="YES"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOTask" inverseName="taskFilterMap" inverseEntity="ASDKMOTask" syncable="YES"/>
     </entity>
     <entity name="ASDKMOUser" representedClassName="ASDKMOUser" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="companyName" optional="YES" attributeType="String" syncable="YES"/>
@@ -173,11 +171,12 @@
         <element name="ASDKMOAttributable" positionX="-146" positionY="-117" width="128" height="58"/>
         <element name="ASDKMOComment" positionX="-353" positionY="468" width="128" height="90"/>
         <element name="ASDKMOContent" positionX="-765" positionY="-81" width="162" height="225"/>
+        <element name="ASDKMOCurrentProfile" positionX="-135" positionY="468" width="128" height="58"/>
         <element name="ASDKMOFileContent" positionX="-423" positionY="-558" width="128" height="60"/>
         <element name="ASDKMOFilter" positionX="16" positionY="-558" width="128" height="133"/>
         <element name="ASDKMOFilterMap" positionX="-126" positionY="738" width="128" height="90"/>
         <element name="ASDKMOFilterModel" positionX="-423" positionY="-486" width="128" height="75"/>
-        <element name="ASDKMOGroup" positionX="153" positionY="459" width="128" height="163"/>
+        <element name="ASDKMOGroup" positionX="153" positionY="467" width="128" height="163"/>
         <element name="ASDKMOIntegrationAccount" positionX="504" positionY="-249" width="162" height="105"/>
         <element name="ASDKMOIntegrationContent" positionX="504" positionY="27" width="162" height="90"/>
         <element name="ASDKMONetwork" positionX="504" positionY="-36" width="162" height="45"/>

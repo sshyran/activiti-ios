@@ -23,8 +23,8 @@
 
 @interface ASDKApplicationCacheMapper : NSObject
 
-- (ASDKMOApp *)mapAppToCacheMO:(ASDKModelApp *)app
-                usingMOContext:(NSManagedObjectContext *)moContext;
-- (ASDKModelApp *)mapCacheMOToApp:(ASDKMOApp *)moApp;
++ (ASDKMOApp *)mapApp:(ASDKModelApp *)app
+            toCacheMO:(ASDKMOApp *)moApp;
++ (ASDKModelApp *)mapCacheMOToApp:(ASDKMOApp *)moApp;
 
 @end

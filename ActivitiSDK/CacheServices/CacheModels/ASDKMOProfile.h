@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "ASDKMOAttributable.h"
 
-@class ASDKMOComment, ASDKMOContent, ASDKMOGroup, ASDKMOProcessInstance, ASDKMOTask;
+@class ASDKMOComment, ASDKMOContent, ASDKMOGroup, ASDKMOProcessInstance, ASDKMOTask, ASDKMOCurrentProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -23,11 +23,8 @@
 
 @interface ASDKTaskFilterMapCacheMapper : NSObject
 
-- (ASDKMOTaskFilterMap *)mapTaskList:(NSArray *)taskList
-                         withFilter:(ASDKFilterRequestRepresentation *)filter
-                      usingMOContext:(NSManagedObjectContext *)moContext;
-
-- (ASDKMOTaskFilterMap *)mapToExistingTaskFilterMap:(ASDKMOTaskFilterMap *)taskFilterMap
-                                           taskList:(NSArray *)taskList;
++ (ASDKMOTaskFilterMap *)mapTaskList:(NSArray *)taskList
+                          withFilter:(ASDKFilterRequestRepresentation *)filter
+                           toCacheMO:(ASDKMOTaskFilterMap *)taskFilterMap;
 
 @end

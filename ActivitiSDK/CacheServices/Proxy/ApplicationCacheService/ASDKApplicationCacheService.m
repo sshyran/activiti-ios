@@ -25,26 +25,8 @@
 // Persistence
 #import "ASDKApplicationCacheMapper.h"
 
-@interface ASDKApplicationCacheService ()
-
-@property (strong, nonatomic) ASDKApplicationCacheMapper *appCacheMapper;
-
-@end
 
 @implementation ASDKApplicationCacheService
-
-
-#pragma mark -
-#pragma mark Lifecycle
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _appCacheMapper = [ASDKApplicationCacheMapper new];
-    }
-    
-    return self;
-}
 
 
 #pragma mark -
@@ -52,9 +34,7 @@
 
 - (void)cacheRuntimeApplicationDefinitions:(NSArray *)appDefinitionList
                       withtCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
-    __weak typeof(self) weakSelf = self;
     [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
-        __strong typeof(self) strongSelf = weakSelf;
         managedObjectContext.automaticallyMergesChangesFromParent = YES;
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
         
@@ -71,8 +51,10 @@
         
         if (!error) {
             for (ASDKModelApp *app in appDefinitionList) {
-                [strongSelf.appCacheMapper mapAppToCacheMO:app
-                                            usingMOContext:managedObjectContext];
+                ASDKMOApp *moApp = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOApp entityName]
+                                                                 inManagedObjectContext:managedObjectContext];
+                [ASDKApplicationCacheMapper mapApp:app
+                                         toCacheMO:moApp];
             }
             
             [managedObjectContext save:&error];
@@ -85,10 +67,7 @@
 }
 
 - (void)fetchRuntimeApplicationDefinitions:(ASDKCacheServiceAppCompletionBlock)completionBlock {
-    __weak typeof(self) weakSelf = self;
     [self.persistenceStack  performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
         NSFetchRequest *fetchRequest = [ASDKMOApp fetchRequest];
         fetchRequest.predicate = [NSPredicate predicateWithFormat:@"deploymentID != nil"];
         
@@ -96,16 +75,17 @@
         NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
                                                                     error:&error];
         
-        fetchResults = [fetchResults sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"modelID"
-                                                                                               ascending:YES
-                                                                                              comparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-                                                                                                  return [obj1 compare:obj2
-                                                                                                               options:NSNumericSearch];
-                                                                                              }]]];
+        fetchResults = [fetchResults sortedArrayUsingDescriptors:
+                        @[[NSSortDescriptor sortDescriptorWithKey:@"modelID"
+                                                        ascending:YES
+                                                       comparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
+                                                           return [obj1 compare:obj2
+                                                                        options:NSNumericSearch];
+                                                       }]]];
         
         NSMutableArray *applications = [NSMutableArray array];
         for (ASDKMOApp *moApp in fetchResults) {
-            ASDKModelApp *app = [strongSelf.appCacheMapper mapCacheMOToApp:moApp];
+            ASDKModelApp *app = [ASDKApplicationCacheMapper mapCacheMOToApp:moApp];
             [applications addObject:app];
         }
         

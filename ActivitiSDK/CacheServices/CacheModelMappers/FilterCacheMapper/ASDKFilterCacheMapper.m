@@ -24,10 +24,8 @@
 
 @implementation ASDKFilterCacheMapper
 
-- (ASDKMOFilter *)mapFilterToCacheMO:(ASDKModelFilter *)filter
-                      usingMOContext:(NSManagedObjectContext *)moContext {
-    ASDKMOFilter *moFilter = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOFilter entityName]
-                                                           inManagedObjectContext:moContext];
++ (ASDKMOFilter *)mapFilter:(ASDKModelFilter *)filter
+                  toCacheMO:(ASDKMOFilter *)moFilter {
     moFilter.modelID = filter.modelID;
     moFilter.name = filter.name;
     moFilter.sortType = filter.sortType;
@@ -38,7 +36,7 @@
     return moFilter;
 }
 
-- (ASDKModelFilter *)mapCacheMOToFilter:(ASDKMOFilter *)moFilter {
++ (ASDKModelFilter *)mapCacheMOToFilter:(ASDKMOFilter *)moFilter {
     ASDKModelFilter *filter = [ASDKModelFilter new];
     filter.modelID = moFilter.modelID;
     filter.name = moFilter.name;
