@@ -74,11 +74,14 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
 /**
  *  Performs a request for attached task content given the task ID.
  *
- *  @param taskID          The ID of the task for which the content is requested
- *  @param completionBlock Completion block providing the content object and an optional error reason
+ *  @param taskID               The ID of the task for which the content is requested
+ *  @param completionBlock      Completion block providing the content object and an optional error reason
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the task and an 
+ *                              optional error.
  */
 - (void)requestTaskContentForID:(NSString *)taskID
-            withCompletionBlock:(AFATaskServicesTaskContentCompletionBlock)completionBlock;
+            completionBlock:(AFATaskServicesTaskContentCompletionBlock)completionBlock
+                  cachedResults:(AFATaskServicesTaskContentCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the comment list attached to the specified task.

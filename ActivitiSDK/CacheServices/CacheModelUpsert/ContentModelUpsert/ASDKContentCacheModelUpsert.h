@@ -17,16 +17,17 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+@import CoreData;
 
-@class ASDKMOProcessInstanceContent, ASDKMOProfile, ASDKMOTaskContentMap;
+@class ASDKModelContent, ASDKMOContent;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKContentCacheModelUpsert : NSObject
 
-@interface ASDKMOContent : ASDKMOAttributable
++ (ASDKMOContent *)upsertContentToCache:(ASDKModelContent *)content
+                                  error:(NSError **)error
+                            inMOContext:(NSManagedObjectContext *)moContext;
++ (NSArray *)upsertContentListToCache:(NSArray *)contentList
+                                error:(NSError **)error
+                          inMOContext:(NSManagedObjectContext *)moContext;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOContent+CoreDataProperties.h"

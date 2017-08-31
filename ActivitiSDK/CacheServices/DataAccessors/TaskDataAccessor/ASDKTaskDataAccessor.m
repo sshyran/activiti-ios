@@ -347,6 +347,146 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                           }
                                           
                                           [operation complete];
+                                      }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Task content
+
+- (void)fetchTaskContentForTaskID:(NSString *)taskID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteTaskContentOperation = [self remoteTaskContentOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *cachedTaskContentOperation = [self cachedTaskContentOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *storeInCacheOperation = [self taskContentStoreInCacheOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedTaskContentOperation];
+            [self.processingQueue addOperations:@[cachedTaskContentOperation, completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteTaskContentOperation];
+            [self.processingQueue addOperations:@[remoteTaskContentOperation, completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteTaskContentOperation addDependency:cachedTaskContentOperation];
+            [storeInCacheOperation addDependency:remoteTaskContentOperation];
+            [completionOperation addDependency:storeInCacheOperation];
+            [self.processingQueue addOperations:@[cachedTaskContentOperation,
+                                                  remoteTaskContentOperation,
+                                                  storeInCacheOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteTaskContentOperationForTaskID:(NSString *)taskID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteTaskContentOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskNetworkService fetchTaskContentForTaskID:taskID
+                                                 completionBlock:^(NSArray *contentList, NSError *error) {
+                                                     if (operation.isCancelled) {
+                                                         [operation complete];
+                                                     }
+                                                     
+                                                     ASDKDataAccessorResponseCollection *responseCollection =
+                                                     [[ASDKDataAccessorResponseCollection alloc] initWithCollection:contentList
+                                                                                                       isCachedData:NO
+                                                                                                              error:error];
+                                                     
+                                                     if (weakSelf.delegate) {
+                                                         [weakSelf.delegate dataAccessor:weakSelf
+                                                                     didLoadDataResponse:responseCollection];
+                                                     }
+                                                     
+                                                     operation.result = responseCollection;
+                                                     [operation complete];
+                                                 }];
+    }];
+    
+    return remoteTaskContentOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedTaskContentOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedTaskContentListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskCacheService fetchTaskContentListForTaskWithID:taskID
+                                                   withCompletionBlock:^(NSArray *taskContentList, NSError *error) {
+                                                       if (operation.isCancelled) {
+                                                           [operation complete];
+                                                           return;
+                                                       }
+                                                       
+                                                       if (!error) {
+                                                           ASDKLogVerbose(@"Task content list fetched successfully from cache for taskID:%@", taskID);
+                                                           ASDKDataAccessorResponseCollection *response =
+                                                           [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskContentList
+                                                                                                             isCachedData:YES
+                                                                                                                    error:error];
+                                                           if (weakSelf.delegate) {
+                                                               [weakSelf.delegate dataAccessor:weakSelf
+                                                                           didLoadDataResponse:response];
+                                                           }
+                                                       } else {
+                                                           ASDKLogError(@"An Error occured while fetching the cached task content list. Reason: %@", error.localizedDescription);
+                                                       }
+                                                       
+                                                       [operation complete];
+        }];
+    }];
+    
+    return cachedTaskContentListOperation;
+}
+
+- (ASDKAsyncBlockOperation *)taskContentStoreInCacheOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseCollection *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.collection) {
+            [strongSelf.taskCacheService cacheTaskContentList:remoteResponse.collection
+                                                forTaskWithID:taskID
+                                          withCompletionBlock:^(NSError *error) {
+                                              if (operation.isCancelled) {
+                                                  [operation complete];
+                                                  return;
+                                              }
+                                              
+                                              if (!error) {
+                                                  [weakSelf.taskCacheService saveChanges];
+                                              } else {
+                                                  ASDKLogError(@"Encountered an error while caching the task content list for taskID: %@. Reason:%@", taskID, error.localizedDescription);
+                                              }
+                                              
+                                              [operation complete];
             }];
         }
     }];

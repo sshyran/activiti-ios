@@ -17,16 +17,13 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
 
-@class ASDKMOProcessInstanceContent, ASDKMOProfile, ASDKMOTaskContentMap;
+@class ASDKMOTaskContentMap;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKTaskContentMapCacheMapper : NSObject
 
-@interface ASDKMOContent : ASDKMOAttributable
++ (ASDKMOTaskContentMap *)mapTaskContentList:(NSArray *)taskContentList
+                                  forTaskID:(NSString *)taskID
+                                   toCacheMO:(ASDKMOTaskContentMap *)moTaskContentMap;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOContent+CoreDataProperties.h"

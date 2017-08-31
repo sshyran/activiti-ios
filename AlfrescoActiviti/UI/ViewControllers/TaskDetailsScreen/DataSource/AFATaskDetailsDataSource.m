@@ -253,7 +253,7 @@
     
     __weak typeof(self) weakSelf = self;
     [taskServices requestTaskContentForID:self.taskID
-                      withCompletionBlock:^(NSArray *contentList, NSError *error) {
+                      completionBlock:^(NSArray *contentList, NSError *error) {
                           __strong typeof(self) strongSelf = weakSelf;
                           
                           if (!error) {
@@ -270,6 +270,7 @@
                           if (completionBlock) {
                               completionBlock(error);
                           }
+                      } cachedResults:^(NSArray *contentList, NSError *error) {
                       }];
 }
 

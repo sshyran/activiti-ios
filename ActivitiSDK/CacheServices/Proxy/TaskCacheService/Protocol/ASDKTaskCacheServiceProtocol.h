@@ -24,6 +24,7 @@ ASDKModelTask;
 
 typedef void (^ASDKCacheServiceTaskListCompletionBlock) (NSArray *taskList, NSError *error, ASDKModelPaging *paging);
 typedef void (^ASDKCacheServiceTaskDetailsCompletionBlock) (ASDKModelTask *task, NSError *error);
+typedef void (^ASDKCacheServiceTaskContentListCompletionBlock) (NSArray *taskContentList, NSError *error);
 
 @protocol ASDKTaskCacheServiceProtocol <NSObject>
 
@@ -42,7 +43,6 @@ typedef void (^ASDKCacheServiceTaskDetailsCompletionBlock) (ASDKModelTask *task,
           usingFilter:(ASDKFilterRequestRepresentation *)filter
   withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
 
-
 /**
  * Fetches a subset of the task list conforming to the passed filter description.
  * The filter contains information such as to which application are the tasks afiliated to
@@ -55,7 +55,6 @@ typedef void (^ASDKCacheServiceTaskDetailsCompletionBlock) (ASDKModelTask *task,
 - (void)fetchTaskList:(ASDKCacheServiceTaskListCompletionBlock)completionBlock
           usingFilter:(ASDKFilterRequestRepresentation *)filter;
 
-
 /**
  * Caches provided task details and reports the operation success over a completion block.
  *
@@ -64,7 +63,6 @@ typedef void (^ASDKCacheServiceTaskDetailsCompletionBlock) (ASDKModelTask *task,
  */
 - (void)cacheTaskDetails:(ASDKModelTask *)task
      withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
-
 
 /**
  * Fetches and reports via a completion block the task details for the specified id.
@@ -75,5 +73,28 @@ typedef void (^ASDKCacheServiceTaskDetailsCompletionBlock) (ASDKModelTask *task,
  */
 - (void)fetchTaskDetailsForID:(NSString *)taskID
           withCompletionBlock:(ASDKCacheServiceTaskDetailsCompletionBlock)completionBlock;
+
+/**
+ * Caches provided task content list that is afiliated with a task.
+ *
+ * @param taskContentList   List of task content objects to be cached
+ * @param taskID            Task ID for which the task content list is to be cached
+ * @param completionBlock   Completion block indicating the success of the operation
+ */
+- (void)cacheTaskContentList:(NSArray *)taskContentList
+               forTaskWithID:(NSString *)taskID
+         withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+
+/**
+ * Fetches and reports via a completion block the task content list for the specified
+ * task ID.
+ *
+ * @param taskID            Task ID for which the content list is requested
+ * @param completionBlock   Completion block providing a list of task content objects and
+ *                          additional error reason
+ */
+- (void)fetchTaskContentListForTaskWithID:(NSString *)taskID
+                      withCompletionBlock:(ASDKCacheServiceTaskContentListCompletionBlock)completionBlock;
 
 @end

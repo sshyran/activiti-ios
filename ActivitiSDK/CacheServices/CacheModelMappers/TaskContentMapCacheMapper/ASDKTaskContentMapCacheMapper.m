@@ -16,17 +16,20 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKTaskContentMapCacheMapper.h"
 
-@class ASDKMOProcessInstanceContent, ASDKMOProfile, ASDKMOTaskContentMap;
+// Models
+#import "ASDKMOTaskContentMap.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation ASDKTaskContentMapCacheMapper
 
-@interface ASDKMOContent : ASDKMOAttributable
++ (ASDKMOTaskContentMap *)mapTaskContentList:(NSArray *)taskContentList
+                                   forTaskID:(NSString *)taskID
+                                   toCacheMO:(ASDKMOTaskContentMap *)moTaskContentMap {
+    moTaskContentMap.taskID = taskID;
+    [moTaskContentMap addTaskContentList:[NSSet setWithArray:taskContentList]];
+    
+    return moTaskContentMap;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOContent+CoreDataProperties.h"

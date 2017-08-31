@@ -16,17 +16,13 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKMOTaskContentMap.h"
+#import "ASDKMOContent.h"
 
-@class ASDKMOProcessInstanceContent, ASDKMOProfile, ASDKMOTaskContentMap;
+@implementation ASDKMOTaskContentMap
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ASDKMOContent : ASDKMOAttributable
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOContent+CoreDataProperties.h"

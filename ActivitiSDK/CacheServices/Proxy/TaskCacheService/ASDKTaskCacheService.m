@@ -28,19 +28,25 @@
 #import "ASDKModelFilter.h"
 #import "ASDKMOTaskFilterMap.h"
 #import "ASDKModelPaging.h"
+#import "ASDKModelContent.h"
+#import "ASDKMOContent.h"
+#import "ASDKMOTaskContentMap.h"
 
 // Model upsert
 #import "ASDKTaskCacheModelUpsert.h"
+#import "ASDKContentCacheModelUpsert.h"
 
 // Persistence
 #import "ASDKTaskCacheMapper.h"
 #import "ASDKTaskFilterMapCacheMapper.h"
+#import "ASDKTaskContentMapCacheMapper.h"
+#import "ASDKContentCacheMapper.h"
 
 @implementation ASDKTaskCacheService
 
 
 #pragma mark -
-#pragma makr Public interface
+#pragma mark Public interface
 
 - (void)cacheTaskList:(NSArray *)taskList
           usingFilter:(ASDKFilterRequestRepresentation *)filter
@@ -113,7 +119,7 @@
             NSUInteger count = MIN(matchingTaskArr.count - fetchOffset, filter.size);
             pagedTaskArr = [matchingTaskArr subarrayWithRange:NSMakeRange(fetchOffset, count)];
             
-            paging = [strongSelf paginationWithFilter:filter
+            paging = [strongSelf paginationWithStartIndex:filter.size * filter.page
                                     forTotalTaskCount:sortedTasks.count
                                    remainingTaskCount:count];
         }
@@ -178,6 +184,70 @@
     }];
 }
 
+- (void)cacheTaskContentList:(NSArray *)taskContentList
+               forTaskWithID:(NSString *)taskID
+         withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = [strongSelf cleanStalledTaskContentAndContentMapForTaskID:taskID
+                                                                         inContext:managedObjectContext];
+        if (!error) {
+            /* The content map exists to provide membership information for
+             * content in relation to a specific task. Just the state of the 
+             * content objects do not provide sufficient information to assign
+             * them to a task.
+             */
+            error = [strongSelf saveTaskContentAndGenerateContentMap:taskContentList
+                                                           forTaskID:taskID
+                                                           inContext:managedObjectContext];
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchTaskContentListForTaskWithID:(NSString *)taskID
+                      withCompletionBlock:(ASDKCacheServiceTaskContentListCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        NSError *error = nil;
+        NSArray *matchingContentArr = nil;
+        
+        NSFetchRequest *taskContentMapRequest = [ASDKMOTaskContentMap fetchRequest];
+        taskContentMapRequest.predicate = [NSPredicate predicateWithFormat:@"taskID == %@", taskID];
+        NSArray *taskContentMapArr = [managedObjectContext executeFetchRequest:taskContentMapRequest
+                                                                         error:&error];
+        
+        if (!error) {
+            ASDKMOTaskContentMap *taskContentMap = taskContentMapArr.firstObject;
+            matchingContentArr = [taskContentMap.taskContentList allObjects];
+        }
+        
+        if (completionBlock) {
+            if (error || !matchingContentArr.count) {
+                completionBlock(nil, error);
+            } else {
+                NSMutableArray *contentList = [NSMutableArray array];
+                for (ASDKMOContent *moContent in matchingContentArr) {
+                    ASDKModelContent *content = [ASDKContentCacheMapper mapCacheMOToContent:moContent];
+                    [contentList addObject:content];
+                }
+                
+                completionBlock(contentList, nil);
+            }
+        }
+    }];
+}
 
 
 #pragma mark -
@@ -185,21 +255,21 @@
 
 - (NSError *)cleanStalledTasksAndFilterMapInContext:(NSManagedObjectContext *)managedObjectContext
                                           forFilter:(ASDKFilterRequestRepresentation *)filter {
-    NSError *error = nil;
-    
+    NSError *internalError = nil;
     NSFetchRequest *oldTaskFilterMapRequest = [ASDKMOTaskFilterMap fetchRequest];
     oldTaskFilterMapRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
     oldTaskFilterMapRequest.resultType = NSManagedObjectIDResultType;
+    
     NSBatchDeleteRequest *removeOldTaskFilterMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldTaskFilterMapRequest];
     removeOldTaskFilterMapRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
-    NSBatchDeleteResult *taskFilterMapDeletionresult = [managedObjectContext executeRequest:removeOldTaskFilterMapRequest
-                                                                                      error:&error];
+    NSBatchDeleteResult *taskFilterMapDeletionResult = [managedObjectContext executeRequest:removeOldTaskFilterMapRequest
+                                                                                      error:&internalError];
     
-    NSArray *moIDArr = taskFilterMapDeletionresult.result;
+    NSArray *moIDArr = taskFilterMapDeletionResult.result;
     [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
                                                  intoContexts:@[managedObjectContext]];
     
-    if (error) {
+    if (internalError) {
         return [self clearCacheStalledDataError];
     }
     
@@ -236,14 +306,68 @@
     return nil;
 }
 
-- (ASDKModelPaging *)paginationWithFilter:(ASDKFilterRequestRepresentation *)filter
+- (NSError *)cleanStalledTaskContentAndContentMapForTaskID:(NSString *)taskID
+                                                 inContext:(NSManagedObjectContext *)managedObjectContext {
+    NSError *internalError = nil;
+    NSFetchRequest *oldTaskContentMapRequest = [ASDKMOTaskContentMap fetchRequest];
+    oldTaskContentMapRequest.predicate = [NSPredicate predicateWithFormat:@"taskID == %@", taskID];
+    oldTaskContentMapRequest.resultType = NSManagedObjectIDResultType;
+    
+    NSBatchDeleteRequest *removeOldTaskContentMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldTaskContentMapRequest];
+    removeOldTaskContentMapRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+    NSBatchDeleteResult *taskContentMapDeletionResult = [managedObjectContext executeRequest:removeOldTaskContentMapRequest
+                                                                                       error:&internalError];
+    NSArray *moIDArr = taskContentMapDeletionResult.result;
+    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                 intoContexts:@[managedObjectContext]];
+    
+    if (internalError) {
+        return [self clearCacheStalledDataError];
+    }
+    
+    return nil;
+}
+
+- (NSError *)saveTaskContentAndGenerateContentMap:(NSArray *)taskContentList
+                                        forTaskID:(NSString *)taskID
+                                        inContext:(NSManagedObjectContext *)managedObjectContext {
+    NSError *internalError = nil;
+    NSArray *moContentList = [ASDKContentCacheModelUpsert upsertContentListToCache:taskContentList
+                                                                             error:&internalError
+                                                                       inMOContext:managedObjectContext];
+    if (internalError) {
+        return internalError;
+    }
+    
+    NSFetchRequest *contentMapFetchRequest = [ASDKMOTaskContentMap fetchRequest];
+    contentMapFetchRequest.predicate = [NSPredicate predicateWithFormat:@"taskID == %@", taskID];
+    NSArray *fetchResults = [managedObjectContext executeFetchRequest:contentMapFetchRequest
+                                                                error:&internalError];
+    
+    if (internalError) {
+        return internalError;
+    }
+    
+    ASDKMOTaskContentMap *taskContentMap = fetchResults.firstObject;
+    if (!taskContentMap) {
+        taskContentMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOTaskContentMap entityName]
+                                                       inManagedObjectContext:managedObjectContext];
+    }
+    [ASDKTaskContentMapCacheMapper mapTaskContentList:moContentList
+                                            forTaskID:taskID
+                                            toCacheMO:taskContentMap];
+    
+    return nil;
+}
+
+- (ASDKModelPaging *)paginationWithStartIndex:(NSUInteger)startIndex
                         forTotalTaskCount:(NSUInteger)taskTotalCount
                        remainingTaskCount:(NSUInteger)remainingTaskCount {
     
     
     ASDKModelPaging * paging = [ASDKModelPaging new];
     paging.size = remainingTaskCount;
-    paging.start = filter.size * filter.page;
+    paging.start = startIndex;
     paging.total = taskTotalCount;
     
     return paging;
@@ -251,12 +375,9 @@
 
 
 - (ASDKModelPaging *)emptyPagination {
-    ASDKModelPaging *paging = [ASDKModelPaging new];
-    paging.size = 0;
-    paging.start = 0;
-    paging.total = 0;
-    
-    return paging;
+    return [self paginationWithStartIndex:0
+                        forTotalTaskCount:0
+                       remainingTaskCount:0];
 }
 
 
@@ -277,6 +398,10 @@
     }
     
     return nil;
+}
+
+- (NSPredicate *)predicateMatchingModelID:(NSString *)modelID {
+    return [NSPredicate predicateWithFormat:@"modelID == %@", modelID];
 }
 
 
@@ -321,7 +446,7 @@
 #pragma mark Errors
 
 - (NSError *)clearCacheStalledDataError {
-    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Cannot clean task cache stalled date.",
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey            : @"Cannot clean cache stalled data.",
                                NSLocalizedFailureReasonErrorKey     : @"One of the cache clean operations failed.",
                                NSLocalizedRecoverySuggestionErrorKey: @"Investigate which of the clean requests failed."};
     return [NSError errorWithDomain:ASDKPersistenceStackErrorDomain
