@@ -64,7 +64,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *
  *  @param taskID               The ID of the task the details are requested for
  *  @param completionBlock      Completion block providing the task object and an optional error reason
- *  @param cacheCompletionBlock Completion block providing a cached reference to the task and an 
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the task and an
  *                              optional error.
  */
 - (void)requestTaskDetailsForID:(NSString *)taskID
@@ -76,11 +76,11 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *
  *  @param taskID               The ID of the task for which the content is requested
  *  @param completionBlock      Completion block providing the content object and an optional error reason
- *  @param cacheCompletionBlock Completion block providing a cached reference to the task and an 
- *                              optional error.
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the task content list and
+ *                              an optional error.
  */
 - (void)requestTaskContentForID:(NSString *)taskID
-            completionBlock:(AFATaskServicesTaskContentCompletionBlock)completionBlock
+                completionBlock:(AFATaskServicesTaskContentCompletionBlock)completionBlock
                   cachedResults:(AFATaskServicesTaskContentCompletionBlock)cacheCompletionBlock;
 
 /**
@@ -89,9 +89,11 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *  @param taskID          The ID of the task for which the comment list is requested
  *  @param completionBlock Completion block providing the comment list, an optional error reason
  *                         and pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the
  */
 - (void)requestTaskCommentsForID:(NSString *)taskID
-             withCompletionBlock:(AFATaskServicesTaskCommentsCompletionBlock)completionBlock;
+                 completionBlock:(AFATaskServicesTaskCommentsCompletionBlock)completionBlock
+                   cachedResults:(AFATaskServicesTaskCommentsCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request to update the mentioned task with properties defined from within the update model.

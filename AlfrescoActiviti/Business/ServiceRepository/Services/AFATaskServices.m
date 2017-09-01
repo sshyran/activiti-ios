@@ -54,6 +54,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (copy, nonatomic) AFATaskServicesTaskContentCompletionBlock   taskContentListCompletionBlock;
 @property (copy, nonatomic) AFATaskServicesTaskContentCompletionBlock   taskContentListCachedResultsBlock;
 
+// Task comment list
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *fetchTaskCommentListDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskCommentsCompletionBlock  taskCommentListCompletionBlock;
+@property (copy, nonatomic) AFATaskServicesTaskCommentsCompletionBlock  taskCommentListCachedResultsBlock;
+
 @end
 
 @implementation AFATaskServices
@@ -139,26 +144,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestTaskCommentsForID:(NSString *)taskID
-             withCompletionBlock:(AFATaskServicesTaskCommentsCompletionBlock)completionBlock {
+             completionBlock:(AFATaskServicesTaskCommentsCompletionBlock)completionBlock
+                   cachedResults:(AFATaskServicesTaskCommentsCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService fetchTaskCommentsForTaskID:taskID
-                                        completionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
-                                            if (!error) {
-                                                AFALogVerbose(@"Fetched comment list for task with ID:%@", taskID);
-                                                
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    completionBlock (commentList, nil, paging);
-                                                });
-                                            } else {
-                                                AFALogError(@"An error occured while fetching the comment list for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                                
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    completionBlock(nil, error, nil);
-                                                });
-                                            }
-                                        }];
+    self.taskCommentListCompletionBlock = completionBlock;
+    self.taskCommentListCachedResultsBlock = cacheCompletionBlock;
+    
+    self.fetchTaskCommentListDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.fetchTaskCommentListDataAccessor fetchTaskCommentsForTaskID:taskID];
 }
 
 - (void)requestTaskUpdateWithRepresentation:(AFATaskUpdateModel *)update
@@ -712,6 +707,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         [self handleFetchTaskDetailsDataAccessorResponse:response];
     } else if (self.fetchTaskContentListDataAccessor == dataAccessor) {
         [self handleFetchTaskContentListDataAccessorResponse:response];
+    } else if (self.fetchTaskCommentListDataAccessor == dataAccessor) {
+        [self handleFetchTaskCommentListDataAccessorResponse:response];
     }
 }
 
@@ -827,6 +824,42 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             if (strongSelf.taskContentListCompletionBlock) {
                 strongSelf.taskContentListCompletionBlock(nil, taskContentListResponse.error);
                 strongSelf.taskContentListCompletionBlock = nil;
+            }
+        });
+    }
+}
+
+- (void)handleFetchTaskCommentListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *taskCommentListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *commentList = taskCommentListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!taskCommentListResponse.error) {
+        if (taskCommentListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskCommentListCachedResultsBlock) {
+                    strongSelf.taskCommentListCachedResultsBlock(commentList, nil, taskCommentListResponse.paging);
+                    strongSelf.taskCommentListCachedResultsBlock = nil;
+                }
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskCommentListCompletionBlock) {
+                    strongSelf.taskCommentListCompletionBlock(commentList, nil, taskCommentListResponse.paging);
+                }
+            });
+        }
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskCommentListCompletionBlock) {
+                strongSelf.taskCommentListCompletionBlock(nil, taskCommentListResponse.error, nil);
+                strongSelf.taskCommentListCompletionBlock = nil;
             }
         });
     }

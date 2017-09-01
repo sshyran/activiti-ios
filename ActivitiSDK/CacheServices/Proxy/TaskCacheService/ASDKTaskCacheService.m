@@ -31,16 +31,21 @@
 #import "ASDKModelContent.h"
 #import "ASDKMOContent.h"
 #import "ASDKMOTaskContentMap.h"
+#import "ASDKMOTaskCommentMap.h"
+#import "ASDKMOComment.h"
 
 // Model upsert
 #import "ASDKTaskCacheModelUpsert.h"
 #import "ASDKContentCacheModelUpsert.h"
+#import "ASDKCommentCacheModelUpsert.h"
+#import "ASDKCommentCacheMapper.h"
 
 // Persistence
 #import "ASDKTaskCacheMapper.h"
 #import "ASDKTaskFilterMapCacheMapper.h"
 #import "ASDKTaskContentMapCacheMapper.h"
 #import "ASDKContentCacheMapper.h"
+#import "ASDKTaskCommentMapCacheMapper.h"
 
 @implementation ASDKTaskCacheService
 
@@ -249,6 +254,78 @@
     }];
 }
 
+- (void)cacheTaskCommentList:(NSArray *)taskCommentList
+               forTaskWithID:(NSString *)taskID
+         withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = [strongSelf cleanStalledTaskCommentAndCommentMapForTaskID:taskID
+                                                                         inContext:managedObjectContext];
+        if (!error) {
+            /* The content map exists to provide membership information for
+             * content in relation to a specific task. Just the state of the
+             * content objects do not provide sufficient information to assign
+             * them to a task.
+             */
+            error = [strongSelf saveTaskCommentAndGenerateCommentMap:taskCommentList
+                                                           forTaskID:taskID
+                                                           inContext:managedObjectContext];
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchTaskCommentListForTaskWithID:(NSString *)taskID
+                      withCompletionBlock:(ASDKCacheServiceTaskCommentListCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKModelPaging *paging = nil;
+        NSError *error = nil;
+        NSArray *matchingCommentsArr = nil;
+        
+        NSFetchRequest *taskCommentMapRequest = [ASDKMOTaskCommentMap fetchRequest];
+        taskCommentMapRequest.predicate = [NSPredicate predicateWithFormat:@"taskID == %@", taskID];
+        NSArray *taskCommentMapArr = [managedObjectContext executeFetchRequest:taskCommentMapRequest
+                                                                         error:&error];
+        if (!error) {
+            ASDKMOTaskCommentMap *taskCommentMap = taskCommentMapArr.firstObject;
+            matchingCommentsArr = [taskCommentMap.taskCommentList allObjects];
+            paging = [strongSelf paginationWithStartIndex:0
+                                  forTotalTaskCount:matchingCommentsArr.count
+                                 remainingTaskCount:matchingCommentsArr.count];
+        }
+        
+        if (completionBlock) {
+            if (error || !matchingCommentsArr.count) {
+                completionBlock(nil, error, paging);
+            } else {
+                NSMutableArray *comments = [NSMutableArray array];
+                for (ASDKMOComment *moComment in matchingCommentsArr) {
+                    ASDKModelComment *comment = [ASDKCommentCacheMapper mapCacheMOToComment:moComment];
+                    [comments addObject:comment];
+                }
+                
+                completionBlock(comments, nil, paging);
+            }
+        }
+        
+    }];
+}
+
 
 #pragma mark -
 #pragma mark Operations
@@ -360,11 +437,63 @@
     return nil;
 }
 
+- (NSError *)cleanStalledTaskCommentAndCommentMapForTaskID:(NSString *)taskID
+                                                 inContext:(NSManagedObjectContext *)managedObjectContext {
+    NSError *internalError = nil;
+    NSFetchRequest *oldTaskCommentMapRequest = [ASDKMOTaskCommentMap fetchRequest];
+    oldTaskCommentMapRequest.predicate = [NSPredicate predicateWithFormat:@"taskID == %@", taskID];
+    oldTaskCommentMapRequest.resultType = NSManagedObjectIDResultType;
+    
+    NSBatchDeleteRequest *removeOldTaskCommentMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldTaskCommentMapRequest];
+    removeOldTaskCommentMapRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+    NSBatchDeleteResult *taskCommentMapDeletionResult = [managedObjectContext executeRequest:removeOldTaskCommentMapRequest
+                                                                                       error:&internalError];
+    NSArray *moIDArr = taskCommentMapDeletionResult.result;
+    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                 intoContexts:@[managedObjectContext]];
+    
+    if (internalError) {
+        return [self clearCacheStalledDataError];
+    }
+    
+    return nil;
+}
+
+- (NSError *)saveTaskCommentAndGenerateCommentMap:(NSArray *)taskCommentList
+                                        forTaskID:(NSString *)taskID
+                                        inContext:(NSManagedObjectContext *)managedObjectContext {
+    NSError *internalError = nil;
+    NSArray *moCommentList = [ASDKCommentCacheModelUpsert upsertCommentListToCache:taskCommentList
+                                                                             error:&internalError
+                                                                       inMOContext:managedObjectContext];
+    if (internalError) {
+        return internalError;
+    }
+    
+    NSFetchRequest *commentMapFetchRequest = [ASDKMOTaskCommentMap fetchRequest];
+    commentMapFetchRequest.predicate = [NSPredicate predicateWithFormat:@"taskID == %@", taskID];
+    NSArray *fetchResults = [managedObjectContext executeFetchRequest:commentMapFetchRequest
+                                                                error:&internalError];
+    if (internalError) {
+        return internalError;
+    }
+    
+    ASDKMOTaskCommentMap *taskCommentMap = fetchResults.firstObject;
+    if (!taskCommentMap) {
+        taskCommentMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOTaskCommentMap entityName]
+                                                       inManagedObjectContext:managedObjectContext];
+    }
+    
+    [ASDKTaskCommentMapCacheMapper mapTaskCommentList:moCommentList
+                                            forTaskID:taskID
+                                            toCacheMO:taskCommentMap];
+    
+    return nil;
+}
+
 - (ASDKModelPaging *)paginationWithStartIndex:(NSUInteger)startIndex
                         forTotalTaskCount:(NSUInteger)taskTotalCount
                        remainingTaskCount:(NSUInteger)remainingTaskCount {
-    
-    
     ASDKModelPaging * paging = [ASDKModelPaging new];
     paging.size = remainingTaskCount;
     paging.start = startIndex;

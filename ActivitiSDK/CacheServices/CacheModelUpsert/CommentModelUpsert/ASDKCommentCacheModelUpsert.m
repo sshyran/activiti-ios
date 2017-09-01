@@ -16,63 +16,63 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKContentCacheModelUpsert.h"
+#import "ASDKCommentCacheModelUpsert.h"
 
 // Models
-#import "ASDKModelContent.h"
-#import "ASDKMOContent.h"
+#import "ASDKModelComment.h"
+#import "ASDKMOComment.h"
 
 // Model mappers
-#import "ASDKContentCacheMapper.h"
+#import "ASDKCommentCacheMapper.h"
 
 // Model upsert
 #import "ASDKProfileCacheModelUpsert.h"
 
 
-@implementation ASDKContentCacheModelUpsert
+@implementation ASDKCommentCacheModelUpsert
 
-+ (ASDKMOContent *)upsertContentToCache:(ASDKModelContent *)content
++ (ASDKMOComment *)upsertCommentToCache:(ASDKModelComment *)comment
                                   error:(NSError **)error
                             inMOContext:(NSManagedObjectContext *)moContext {
     NSError *internalError = nil;
-    ASDKMOContent *moContent = nil;
+    ASDKMOComment *moComment = nil;
     
-    NSFetchRequest *fetchContentRequest = [ASDKMOContent fetchRequest];
-    fetchContentRequest.predicate = [self predicateMatchingModelID:content.modelID];
-    NSArray *contentResults = [moContext executeFetchRequest:fetchContentRequest
+    NSFetchRequest *fetchCommentRequest = [ASDKMOComment fetchRequest];
+    fetchCommentRequest.predicate = [self predicateMatchingModelID:comment.modelID];
+    NSArray *commentResults = [moContext executeFetchRequest:fetchCommentRequest
                                                        error:&internalError];
     if (!internalError) {
-        moContent = contentResults.firstObject;
-        if (!moContent) {
-            moContent = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOContent entityName]
+        moComment = commentResults.firstObject;
+        if (!moComment) {
+            moComment = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOComment entityName]
                                                       inManagedObjectContext:moContext];
         }
         
-        // Map content properties to managed object
-        [self populateMOContent:moContent
-      withPropertiesFromContent:content
+        // Map comment properties to managed object
+        [self populateMOComment:moComment
+      withPropertiesFromComment:comment
                     inMOContext:moContext
                           error:&internalError];
     }
     
     *error = internalError;
-    return moContent;
+    return moComment;
 }
 
-+ (NSArray *)upsertContentListToCache:(NSArray *)contentList
++ (NSArray *)upsertCommentListToCache:(NSArray *)commentList
                                 error:(NSError **)error
                           inMOContext:(NSManagedObjectContext *)moContext {
     NSError *internalError = nil;
-    NSMutableArray *moContentList = [NSMutableArray array];
-    NSArray *newIDs = [contentList valueForKey:@"modelID"];
+    NSMutableArray *moCommentList = [NSMutableArray array];
+    NSArray *newIDs = [commentList valueForKey:@"modelID"];
     
-    NSFetchRequest *fetchContentListRequest = [ASDKMOContent fetchRequest];
-    fetchContentListRequest.predicate = [NSPredicate predicateWithFormat:@"modelID IN %@", newIDs];
-    NSArray *contentResults = [moContext executeFetchRequest:fetchContentListRequest
+    NSFetchRequest *fetchCommentListRequest = [ASDKMOComment fetchRequest];
+    fetchCommentListRequest.predicate = [NSPredicate predicateWithFormat:@"modelID IN %@", newIDs];
+    NSArray *commentResults = [moContext executeFetchRequest:fetchCommentListRequest
                                                        error:&internalError];
     
     if (!internalError) {
-        NSArray *oldIDs = [contentResults valueForKey:@"modelID"];
+        NSArray *oldIDs = [commentResults valueForKey:@"modelID"];
         
         // Elements to update
         NSPredicate *intersectPredicate = [NSPredicate predicateWithFormat:@"SELF IN %@", newIDs];
@@ -87,25 +87,25 @@
         
         // Perform delete operations
         for (NSString *idString in deletedIDsArr) {
-            NSArray *contentListToBeDeleted = [contentResults filteredArrayUsingPredicate:[self predicateMatchingModelID:idString]];
-            ASDKMOContent *contentToBeDeleted = contentListToBeDeleted.firstObject;
-            [moContext deleteObject:contentToBeDeleted];
+            NSArray *commentListToBeDeleted = [commentResults filteredArrayUsingPredicate:[self predicateMatchingModelID:idString]];
+            ASDKMOComment *commentToBeDeleted = commentListToBeDeleted.firstObject;
+            [moContext deleteObject:commentToBeDeleted];
         }
         
         // Perform insert operations
         for (NSString *idString in insertedIDsArr) {
-            NSArray *contentListToBeInserted = [contentList filteredArrayUsingPredicate:[self predicateMatchingModelID:idString]];
-            for (ASDKModelContent *content in contentListToBeInserted) {
-                ASDKMOContent *moContent = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOContent entityName]
+            NSArray *commentListToBeInserted = [commentList filteredArrayUsingPredicate:[self predicateMatchingModelID:idString]];
+            for (ASDKModelComment *comment in commentListToBeInserted) {
+                ASDKMOComment *moComment = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOComment entityName]
                                                                          inManagedObjectContext:moContext];
-                [self populateMOContent:moContent
-              withPropertiesFromContent:content
+                [self populateMOComment:moComment
+              withPropertiesFromComment:comment
                             inMOContext:moContext
                                   error:&internalError];
                 if (internalError) {
                     break;
                 } else {
-                    [moContentList addObject:moContent];
+                    [moCommentList addObject:moComment];
                 }
             }
         }
@@ -113,19 +113,19 @@
         if (!internalError) {
             // Perform update operations
             for (NSString *idString in updatedIDsArr) {
-                NSArray *contentListToBeUpdated = [contentResults filteredArrayUsingPredicate:[self predicateMatchingModelID:idString]];
-                for (ASDKMOContent *moContent in contentListToBeUpdated) {
-                    NSArray *correspondentContentList = [contentList filteredArrayUsingPredicate:[self predicateMatchingModelID:moContent.modelID]];
-                    ASDKModelContent *content = correspondentContentList.firstObject;
+                NSArray *commentListToBeUpdated = [commentResults filteredArrayUsingPredicate:[self predicateMatchingModelID:idString]];
+                for (ASDKMOComment *moComment in commentListToBeUpdated) {
+                    NSArray *correspondentCommentList = [commentList filteredArrayUsingPredicate:[self predicateMatchingModelID:moComment.modelID]];
+                    ASDKModelComment *comment = correspondentCommentList.firstObject;
                     
-                    [self populateMOContent:moContent
-                  withPropertiesFromContent:content 
+                    [self populateMOComment:moComment
+                  withPropertiesFromComment:comment
                                 inMOContext:moContext
                                       error:&internalError];
                     if (internalError) {
                         break;
                     } else {
-                        [moContentList addObject:moContent];
+                        [moCommentList addObject:moComment];
                     }
                 }
             }
@@ -133,30 +133,30 @@
     }
     
     *error = internalError;
-    return moContentList;
+    return moCommentList;
 }
 
-+ (ASDKMOContent *)populateMOContent:(ASDKMOContent *)moContent
-           withPropertiesFromContent:(ASDKModelContent *)content
++ (ASDKMOComment *)populateMOComment:(ASDKMOComment *)moComment
+           withPropertiesFromComment:(ASDKModelComment *)comment
                          inMOContext:(NSManagedObjectContext *)moContext
                                error:(NSError **)error {
     NSError *internalError = nil;
     
-    [ASDKContentCacheMapper mapContent:content
-                             toCacheMO:moContent];
+    [ASDKCommentCacheMapper mapComment:comment
+                             toCacheMO:moComment];
     
-    // Map owner to managed object
-    if (content.owner) {
-        ASDKMOProfile *moProfile = [ASDKProfileCacheModelUpsert upsertProfileToCache:content.owner
+    // Map author to managed object
+    if (comment.authorModel) {
+        ASDKMOProfile *moProfile = [ASDKProfileCacheModelUpsert upsertProfileToCache:comment.authorModel
                                                                                error:&internalError
                                                                          inMOContext:moContext];
         if (!internalError) {
-            moContent.owner = moProfile;
+            moComment.author = moProfile;
         }
     }
     
     *error = internalError;
-    return moContent;
+    return moComment;
 }
 
 + (NSPredicate *)predicateMatchingModelID:(NSString *)modelID {

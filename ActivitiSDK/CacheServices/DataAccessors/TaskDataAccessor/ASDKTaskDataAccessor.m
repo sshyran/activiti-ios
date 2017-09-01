@@ -356,7 +356,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 
 #pragma mark -
-#pragma mark Service - Task content
+#pragma mark Service - Task content list
 
 - (void)fetchTaskContentForTaskID:(NSString *)taskID {
     // Define operations
@@ -458,7 +458,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                        }
                                                        
                                                        [operation complete];
-        }];
+                                                   }];
     }];
     
     return cachedTaskContentListOperation;
@@ -484,6 +484,149 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                   [weakSelf.taskCacheService saveChanges];
                                               } else {
                                                   ASDKLogError(@"Encountered an error while caching the task content list for taskID: %@. Reason:%@", taskID, error.localizedDescription);
+                                              }
+                                              
+                                              [operation complete];
+                                          }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Task comment list
+
+- (void)fetchTaskCommentsForTaskID:(NSString *)taskID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteTaskCommentListOperation = [self remoteTaskCommentListOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *cachedTaskCommentListOperation = [self cachedTaskCommentListOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *storeInCacheOperation = [self taskCommentListStoreInCacheOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedTaskCommentListOperation];
+            [self.processingQueue addOperations:@[cachedTaskCommentListOperation, completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteTaskCommentListOperation];
+            [self.processingQueue addOperations:@[remoteTaskCommentListOperation, completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteTaskCommentListOperation addDependency:cachedTaskCommentListOperation];
+            [storeInCacheOperation addDependency:remoteTaskCommentListOperation];
+            [completionOperation addDependency:storeInCacheOperation];
+            [self.processingQueue addOperations:@[cachedTaskCommentListOperation,
+                                                  remoteTaskCommentListOperation,
+                                                  storeInCacheOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteTaskCommentListOperationForTaskID:(NSString *)taskID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteTaskContentOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskNetworkService fetchTaskCommentsForTaskID:taskID
+                                                  completionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+                                                      if (operation.isCancelled) {
+                                                          [operation complete];
+                                                      }
+                                                      
+                                                      ASDKDataAccessorResponseCollection *responseCollection =
+                                                      [[ASDKDataAccessorResponseCollection alloc] initWithCollection:commentList
+                                                                                                              paging:paging
+                                                                                                        isCachedData:NO
+                                                                                                               error:error];
+                                                      
+                                                      if (weakSelf.delegate) {
+                                                          [weakSelf.delegate dataAccessor:weakSelf
+                                                                      didLoadDataResponse:responseCollection];
+                                                      }
+                                                      
+                                                      operation.result = responseCollection;
+                                                      [operation complete];
+                                                  }];
+    }];
+    
+    return remoteTaskContentOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedTaskCommentListOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedTaskContentListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskCacheService fetchTaskCommentListForTaskWithID:taskID
+                                                   withCompletionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+                                                       if (operation.isCancelled) {
+                                                           [operation complete];
+                                                           return;
+                                                       }
+                                                       
+                                                       if (!error) {
+                                                           ASDKLogVerbose(@"Task comment list fetched successfully from cache for taskID: %@.", taskID);
+                                                           
+                                                           ASDKDataAccessorResponseCollection *response =
+                                                           [[ASDKDataAccessorResponseCollection alloc] initWithCollection:commentList
+                                                                                                                   paging:paging
+                                                                                                             isCachedData:YES
+                                                                                                                    error:error];
+                                                           
+                                                           if (weakSelf.delegate) {
+                                                               [weakSelf.delegate dataAccessor:weakSelf
+                                                                           didLoadDataResponse:response];
+                                                           }
+                                                       } else {
+                                                           ASDKLogError(@"An error occured while fetching cached task comments. Reason: %@", error.localizedDescription);
+                                                       }
+                                                       
+                                                       [operation complete];
+        }];
+    }];
+    
+    return cachedTaskContentListOperation;
+}
+
+- (ASDKAsyncBlockOperation *)taskCommentListStoreInCacheOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseCollection *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.collection) {
+            [strongSelf.taskCacheService cacheTaskCommentList:remoteResponse.collection
+                                                forTaskWithID:taskID
+                                          withCompletionBlock:^(NSError *error) {
+                                              if (operation.isCancelled) {
+                                                  [operation complete];
+                                                  return;
+                                              }
+                                              
+                                              if (!error) {
+                                                  [weakSelf.taskCacheService saveChanges];
+                                              } else {
+                                                  ASDKLogError(@"Encountered an error while caching the task comment list for taskID: %@. Reason:%@", taskID, error.localizedDescription);
                                               }
                                               
                                               [operation complete];

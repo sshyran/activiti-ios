@@ -16,17 +16,20 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKTaskCommentMapCacheMapper.h"
 
-@class ASDKMOProfile, ASDKMOTaskCommentMap;
+// Models
+#import "ASDKMOTaskCommentMap.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation ASDKTaskCommentMapCacheMapper
 
-@interface ASDKMOComment : ASDKMOAttributable
++ (ASDKMOTaskCommentMap *)mapTaskCommentList:(NSArray *)taskCommentList
+                                   forTaskID:(NSString *)taskID
+                                   toCacheMO:(ASDKMOTaskCommentMap *)moTaskCommentMap {
+    moTaskCommentMap.taskID = taskID;
+    [moTaskCommentMap addTaskCommentList:[NSSet setWithArray:taskCommentList]];
+    
+    return moTaskCommentMap;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOComment+CoreDataProperties.h"

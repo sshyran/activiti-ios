@@ -17,16 +17,13 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
 
-@class ASDKMOProfile, ASDKMOTaskCommentMap;
+@class ASDKMOTaskCommentMap;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKTaskCommentMapCacheMapper : NSObject
 
-@interface ASDKMOComment : ASDKMOAttributable
++ (ASDKMOTaskCommentMap *)mapTaskCommentList:(NSArray *)taskCommentList
+                                   forTaskID:(NSString *)taskID
+                                   toCacheMO:(ASDKMOTaskCommentMap *)moTaskCommentMap;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOComment+CoreDataProperties.h"

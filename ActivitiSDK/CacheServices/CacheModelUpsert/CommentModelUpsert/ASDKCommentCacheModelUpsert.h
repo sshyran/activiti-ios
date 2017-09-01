@@ -17,16 +17,17 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+@import CoreData;
 
-@class ASDKMOProfile, ASDKMOTaskCommentMap;
+@class ASDKModelComment, ASDKMOComment;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKCommentCacheModelUpsert : NSObject
 
-@interface ASDKMOComment : ASDKMOAttributable
++ (ASDKMOComment *)upsertCommentToCache:(ASDKModelComment *)comment
+                                  error:(NSError **)error
+                            inMOContext:(NSManagedObjectContext *)moContext;
++ (NSArray *)upsertCommentListToCache:(NSArray *)commentList
+                                error:(NSError **)error
+                          inMOContext:(NSManagedObjectContext *)moContext;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOComment+CoreDataProperties.h"

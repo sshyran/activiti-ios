@@ -48,6 +48,14 @@
 - (void)fetchTaskContentForTaskID:(NSString *)taskID;
 
 /**
+ * Requests the comments associated witha a task and reports network or cached data through the
+ * designated data accessor delegate.
+ *
+ * @param taskID The ID of the task for which the content is requested
+ */
+- (void)fetchTaskCommentsForTaskID:(NSString *)taskID;
+
+/**
  * Cancels ongoing operations for the current data accessor.
  */
 - (void)cancelOperations;

@@ -279,7 +279,7 @@
     
     __weak typeof(self) weakSelf = self;
     [taskServices requestTaskCommentsForID:self.taskID
-                       withCompletionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+                       completionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
                            __strong typeof(self) strongSelf = weakSelf;
                            
                            if (!error) {
@@ -297,6 +297,8 @@
                            if (completionBlock) {
                                completionBlock(error);
                            }
+                       } cachedResults:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+                           
                        }];
 }
 

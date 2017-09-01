@@ -25,6 +25,7 @@ ASDKModelTask;
 typedef void (^ASDKCacheServiceTaskListCompletionBlock) (NSArray *taskList, NSError *error, ASDKModelPaging *paging);
 typedef void (^ASDKCacheServiceTaskDetailsCompletionBlock) (ASDKModelTask *task, NSError *error);
 typedef void (^ASDKCacheServiceTaskContentListCompletionBlock) (NSArray *taskContentList, NSError *error);
+typedef void (^ASDKCacheServiceTaskCommentListCompletionBlock) (NSArray *commentList, NSError *error, ASDKModelPaging *paging);
 
 @protocol ASDKTaskCacheServiceProtocol <NSObject>
 
@@ -96,5 +97,29 @@ typedef void (^ASDKCacheServiceTaskContentListCompletionBlock) (NSArray *taskCon
  */
 - (void)fetchTaskContentListForTaskWithID:(NSString *)taskID
                       withCompletionBlock:(ASDKCacheServiceTaskContentListCompletionBlock)completionBlock;
+
+
+/**
+ * Caches provided task comment list that is afiliated with a task.
+ *
+ * @param taskCommentList   List of task comments to be cached
+ * @param taskID            Task ID for which the task comment list is to be cached
+ * @param completionBlock   Completion block indicating the success of the operation
+ */
+- (void)cacheTaskCommentList:(NSArray *)taskCommentList
+               forTaskWithID:(NSString *)taskID
+         withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+
+/**
+ * Fetches and reports via a completion block the task comment list for the specified 
+ * task ID.
+ *
+ * @param taskID            Task ID for which the comment list is requested
+ * @param completionBlock   Completion block providing a list of comments, paging information
+ *                          and optional error reason
+ */
+- (void)fetchTaskCommentListForTaskWithID:(NSString *)taskID
+                      withCompletionBlock:(ASDKCacheServiceTaskCommentListCompletionBlock)completionBlock;
 
 @end

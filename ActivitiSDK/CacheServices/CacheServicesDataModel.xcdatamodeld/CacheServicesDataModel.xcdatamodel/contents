@@ -16,6 +16,7 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="comment" inverseEntity="ASDKMOProfile" syncable="YES"/>
+        <relationship name="taskCommentMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOTaskCommentMap" inverseName="taskCommentList" inverseEntity="ASDKMOTaskCommentMap" syncable="YES"/>
     </entity>
     <entity name="ASDKMOContent" representedClassName="ASDKMOContent" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="contentName" optional="YES" attributeType="String" syncable="YES"/>
@@ -156,6 +157,10 @@
         <relationship name="involvedPeople" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="involvedTasks" inverseEntity="ASDKMOProfile" syncable="YES"/>
         <relationship name="taskFilterMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOTaskFilterMap" inverseName="tasks" inverseEntity="ASDKMOTaskFilterMap" syncable="YES"/>
     </entity>
+    <entity name="ASDKMOTaskCommentMap" representedClassName="ASDKMOTaskCommentMap" syncable="YES" codeGenerationType="category">
+        <attribute name="taskID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="taskCommentList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOComment" inverseName="taskCommentMap" inverseEntity="ASDKMOComment" syncable="YES"/>
+    </entity>
     <entity name="ASDKMOTaskContentMap" representedClassName="ASDKMOTaskContentMap" syncable="YES" codeGenerationType="category">
         <attribute name="taskID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="taskContentList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOContent" inverseName="taskContentMap" inverseEntity="ASDKMOContent" syncable="YES"/>
@@ -174,7 +179,7 @@
     <elements>
         <element name="ASDKMOApp" positionX="-146" positionY="-558" width="128" height="148"/>
         <element name="ASDKMOAttributable" positionX="-146" positionY="-117" width="128" height="58"/>
-        <element name="ASDKMOComment" positionX="-353" positionY="468" width="128" height="90"/>
+        <element name="ASDKMOComment" positionX="-353" positionY="468" width="128" height="103"/>
         <element name="ASDKMOContent" positionX="-765" positionY="-81" width="162" height="238"/>
         <element name="ASDKMOCurrentProfile" positionX="-135" positionY="473" width="135" height="58"/>
         <element name="ASDKMOFileContent" positionX="-423" positionY="-558" width="128" height="60"/>
@@ -196,5 +201,6 @@
         <element name="ASDKMOTaskContentMap" positionX="-765" positionY="-207" width="162" height="73"/>
         <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="58"/>
         <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="135"/>
+        <element name="ASDKMOTaskCommentMap" positionX="-378" positionY="351" width="162" height="73"/>
     </elements>
 </model>
