@@ -72,6 +72,15 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (strong, nonatomic) ASDKTaskDataAccessor                      *completeTaskDataAccessor;
 @property (copy, nonatomic) AFATaskServicesTaskCompleteCompletionBlock  completeTaskCompletionBlock;
 
+// Task content upload
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *taskContentUploadDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskContentUploadCompletionBlock taskContentUploadCompletionBlock;
+@property (copy, nonatomic) AFATaskServiceTaskContentProgressBlock      taskContentUploadProgressBlock;
+
+// Task content delete
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *taskContentDeleteDataAccessor;
+@property (copy, nonatomic) AFATaslServiceTaskContentDeleteCompletionBlock taskContentDeleteCompletionBlock;
+
 @end
 
 @implementation AFATaskServices
@@ -202,48 +211,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                withCompletionBlock:(AFATaskServicesTaskCompleteCompletionBlock)completionBlock {
     NSParameterAssert(completionBlock);
     
-    self.completeTaskDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
     self.completeTaskCompletionBlock = completionBlock;
     
+    self.completeTaskDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
     [self.completeTaskDataAccessor completeTaskWithID:taskID];
-}
-
-- (void)requestContentUploadAtFileURL:(NSURL *)fileURL
-                            forTaskID:(NSString *)taskID
-                    withProgressBlock:(AFATaskServiceTaskContentProgressBlock)progressBlock
-                      completionBlock:(AFATaskServicesTaskContentUploadCompletionBlock)completionBlock {
-    NSParameterAssert(fileURL);
-    NSParameterAssert(taskID);
-    NSParameterAssert(completionBlock);
-    
-    ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
-    fileContentModel.modelFileURL = fileURL;
-    
-    [self.taskNetworkService uploadContentWithModel:fileContentModel
-                                          forTaskID:taskID
-                                      progressBlock:^(NSUInteger progress, NSError *error) {
-                                          AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
-                                          
-                                          if (progressBlock) {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  progressBlock (progress, error);
-                                              });
-                                          }
-                                      } completionBlock:^(BOOL isContentUploaded, NSError *error) {
-                                          if (!error && isContentUploaded) {
-                                              AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
-                                              
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  completionBlock (isContentUploaded, nil);
-                                              });
-                                          } else {
-                                              AFALogError(@"An error occured while uploading content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                              
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  completionBlock (NO, error);
-                                              });
-                                          }
-                                      }];
 }
 
 - (void)requestContentUploadAtFileURL:(NSURL *)fileURL
@@ -251,63 +222,25 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                             forTaskID:(NSString *)taskID
                     withProgressBlock:(AFATaskServiceTaskContentProgressBlock)progressBlock
                       completionBlock:(AFATaskServicesTaskContentUploadCompletionBlock)completionBlock {
-    NSParameterAssert(fileURL);
-    NSParameterAssert(contentData);
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
-    fileContentModel.modelFileURL = fileURL;
+    self.taskContentUploadProgressBlock = progressBlock;
+    self.taskContentUploadCompletionBlock = completionBlock;
     
-    [self.taskNetworkService uploadContentWithModel:fileContentModel
-                                        contentData:contentData
-                                          forTaskID:taskID
-                                      progressBlock:^(NSUInteger progress, NSError *error) {
-                                          AFALogVerbose(@"Content for task with ID:%@ is %lu%% uploaded", taskID, (unsigned long)progress);
-                                          
-                                          if (progressBlock) {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  progressBlock (progress, error);
-                                              });
-                                          }
-                                      } completionBlock:^(BOOL isContentUploaded, NSError *error) {
-                                          if (!error && isContentUploaded) {
-                                              AFALogVerbose(@"Content for task with ID:%@ was succesfully uploaded", taskID);
-                                              
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  completionBlock (isContentUploaded, nil);
-                                              });
-                                          } else {
-                                              AFALogError(@"An error occured while uploading content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                              
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  completionBlock (NO, error);
-                                              });
-                                          }
-                                      }];
+    self.taskContentUploadDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.taskContentUploadDataAccessor uploadContentForTaskWithID:taskID
+                                                       fromFileURL:fileURL
+                                                   withContentData:contentData];
 }
 
 - (void)requestTaskContentDeleteForContent:(ASDKModelContent *)content
                        withCompletionBlock:(AFATaslServiceTaskContentDeleteCompletionBlock)completionBlock {
-    NSParameterAssert(content);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService deleteContent:content
-                           completionBlock:^(BOOL isContentDeleted, NSError *error) {
-                               if (!error && isContentDeleted) {
-                                   AFALogVerbose(@"Content with ID:%@ was deleted successfully.", content.modelID);
-                                   
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       completionBlock(isContentDeleted, nil);
-                                   });
-                               } else {
-                                   AFALogError(@"An error occured while deleting content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
-                                   
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       completionBlock(NO, error);
-                                   });
-                               }
-                           }];
+    self.taskContentDeleteCompletionBlock = completionBlock;
+    
+    self.taskContentDeleteDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.taskContentDeleteDataAccessor deleteContent:content];
 }
 
 - (void)requestTaskContentDownloadForContent:(ASDKModelContent *)content
@@ -686,7 +619,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     } else if (self.updateTaskDetailsDataAccessor == dataAccessor) {
         [self handleUpdateTaskDetailsDataAccessorResponse:response];
     } else if (self.completeTaskDataAccessor == dataAccessor) {
-    
+        [self handleCompleteTaskDataAccessorResponse:response];
+    } else if (self.taskContentUploadDataAccessor == dataAccessor) {
+        [self handleTaskContentUploadDataAccessorResponse:response];
+    } else if (self.taskContentDeleteDataAccessor == dataAccessor) {
+        [self handleTaskContentDeleteDataAccessorResponse:response];
     }
 }
 
@@ -866,6 +803,48 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         
         if (strongSelf.completeTaskCompletionBlock) {
             strongSelf.completeTaskCompletionBlock(taskCompleteResponse.isConfirmation, taskCompleteResponse.error);
+        }
+    });
+}
+
+- (void)handleTaskContentUploadDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSUInteger progress = progressResponse.progress;
+        AFALogVerbose(@"Task content is %lu%% uploaded", (unsigned long)progress);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskContentUploadProgressBlock) {
+                strongSelf.taskContentUploadProgressBlock(progress, progressResponse.error);
+            }
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
+        ASDKDataAccessorResponseModel *contentResponse = (ASDKDataAccessorResponseModel *)response;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskContentUploadCompletionBlock) {
+                strongSelf.taskContentUploadCompletionBlock(contentResponse.model ? YES : NO, contentResponse.error);
+                strongSelf.taskContentUploadCompletionBlock = nil;
+                strongSelf.taskContentUploadProgressBlock = nil;
+            }
+        });
+    }
+}
+
+- (void)handleTaskContentDeleteDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *contentDeleteResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskContentDeleteCompletionBlock) {
+            strongSelf.taskContentDeleteCompletionBlock(contentDeleteResponse.isConfirmation, contentDeleteResponse.error);
         }
     });
 }

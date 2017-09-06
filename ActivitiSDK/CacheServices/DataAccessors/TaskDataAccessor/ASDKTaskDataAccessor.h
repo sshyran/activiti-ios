@@ -19,7 +19,8 @@
 #import "ASDKDataAccessor.h"
 
 @class ASDKFilterRequestRepresentation,
-ASDKTaskUpdateRequestRepresentation;
+ASDKTaskUpdateRequestRepresentation,
+ASDKModelContent;
 
 @interface ASDKTaskDataAccessor : ASDKDataAccessor
 
@@ -81,6 +82,26 @@ ASDKTaskUpdateRequestRepresentation;
  * @param taskID The ID of the task for which the completion is requested
  */
 - (void)completeTaskWithID:(NSString *)taskID;
+
+/**
+ * Uploads task associated content defined as an NSData object for the given task ID. Additional information
+ * that is needed for the upload process should be provided as a URL for the resource to
+ * be uploaded.
+ *
+ * @param taskID        The ID of the task for which the content upload is performed
+ * @param fileURL       URL of the resource to be uploaded
+ * @param contentData   NSData object with the actual content
+ */
+- (void)uploadContentForTaskWithID:(NSString *)taskID
+                   fromFileURL:(NSURL *)fileURL
+               withContentData:(NSData *)contentData;
+
+/**
+ * Deletes the passed content that was previously associated with a task.
+ *
+ * @param content Content to be deleted
+ */
+- (void)deleteContent:(ASDKModelContent *)content;
 
 /**
  * Cancels ongoing operations for the current data accessor.

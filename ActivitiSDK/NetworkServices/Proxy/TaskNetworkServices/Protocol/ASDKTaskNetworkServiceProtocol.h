@@ -36,7 +36,7 @@ typedef void  (^ASDKTaskContentCompletionBlock) (NSArray *contentList, NSError *
 typedef void  (^ASDKTaskCommentsCompletionBlock) (NSArray *commentList, NSError *error, ASDKModelPaging *paging);
 typedef void  (^ASDKTaskUpdateCompletionBlock) (BOOL isTaskUpdated, NSError *error);
 typedef void  (^ASDKTaskCompleteCompletionBlock) (BOOL isTaskCompleted, NSError *error);
-typedef void  (^ASDKTaskContentUploadCompletionBlock) (BOOL isContentUploaded, NSError *error);
+typedef void  (^ASDKTaskContentUploadCompletionBlock) (ASDKModelContent *uploadedContent, NSError *error);
 typedef void  (^ASDKTaskContentProgressBlock) (NSUInteger progress, NSError *error);
 typedef void  (^ASDKTaskContentDownloadProgressBlock) (NSString *formattedReceivedBytesString, NSError *error);
 typedef void  (^ASDKTaskContentDeletionCompletionBlock) (BOOL isContentDeleted, NSError *error);

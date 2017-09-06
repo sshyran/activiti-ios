@@ -118,21 +118,6 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
                withCompletionBlock:(AFATaskServicesTaskCompleteCompletionBlock)completionBlock;
 
 /**
- *  Performs a request to upload content at the specified URL for the given task ID
- *
- *  @param fileURL         URL from where data content will be uploaded
- *  @param taskID          The ID of the task for which the upload is requested
- *  @param progressBlock   Block used to report progress updates for the upload operation and an optional error
- *                         reason
- *  @param completionBlock Completion block providing whether the content was successfully uploaded or not and
- *                         an optional error reason
- */
-- (void)requestContentUploadAtFileURL:(NSURL *)fileURL
-                            forTaskID:(NSString *)taskID
-                    withProgressBlock:(AFATaskServiceTaskContentProgressBlock)progressBlock
-                      completionBlock:(AFATaskServicesTaskContentUploadCompletionBlock)completionBlock;
-
-/**
  *  Performs a request to upload content from a provided NSData object for the given task ID. Additional information
  *  that is needed for the upload process should be provided as a URL to the resource to be uploaded.
  *

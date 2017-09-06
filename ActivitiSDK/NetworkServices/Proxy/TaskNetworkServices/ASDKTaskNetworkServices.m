@@ -539,12 +539,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                            if (error) {
                                                                ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                   completionBlock(NO, error);
+                                                                   completionBlock(nil, error);
                                                                });
                                                            } else {
                                                                ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                   completionBlock(((ASDKModelContent *)parsedObject).isModelContentAvailable, nil);
+                                                                   completionBlock(parsedObject, nil);
                                                                });
                                                            }
                                                        }];
@@ -558,7 +558,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               [task stateDescriptionForError:error]);
                  
                  dispatch_async(strongSelf.resultsQueue, ^{
-                     completionBlock(NO, error);
+                     completionBlock(nil, error);
                  });
              }];
     
@@ -623,12 +623,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                       if (error) {
                           ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
                           dispatch_async(weakSelf.resultsQueue, ^{
-                              completionBlock(NO, error);
+                              completionBlock(nil, error);
                           });
                       } else {
                           ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
                           dispatch_async(weakSelf.resultsQueue, ^{
-                              completionBlock(((ASDKModelContent *)parsedObject).isModelContentAvailable, nil);
+                              completionBlock(parsedObject, nil);
                           });
                       }
                   }];
@@ -642,7 +642,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               [task stateDescriptionForError:error]);
                  
                  dispatch_async(strongSelf.resultsQueue, ^{
-                     completionBlock(NO, error);
+                     completionBlock(nil, error);
                  });
              }];
     

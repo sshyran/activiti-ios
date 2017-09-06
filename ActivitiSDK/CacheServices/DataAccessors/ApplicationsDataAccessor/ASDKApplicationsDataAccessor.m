@@ -158,17 +158,19 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             }
             
             if (!error) {
-                ASDKLogVerbose(@"Fetched %lu runtime application definitions from cache", (unsigned long)appDefinitionList.count);
-                
-                ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:appDefinitionList
-                                                                                                                 isCachedData:YES
-                                                                                                                        error:error];
-                if (weakSelf.delegate) {
-                    [weakSelf.delegate dataAccessor:weakSelf
-                                didLoadDataResponse:response];
+                if (appDefinitionList.count) {
+                    ASDKLogVerbose(@"Fetched %lu runtime application definitions from cache", (unsigned long)appDefinitionList.count);
+                    
+                    ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:appDefinitionList
+                                                                                                                     isCachedData:YES
+                                                                                                                            error:error];
+                    if (weakSelf.delegate) {
+                        [weakSelf.delegate dataAccessor:weakSelf
+                                    didLoadDataResponse:response];
+                    }
                 }
             } else {
-                ASDKLogError(@"An error occured whule fetching cached runtime application definitions. Reason:%@", error.localizedDescription);
+                ASDKLogError(@"An error occured while fetching cached runtime application definitions. Reason:%@", error.localizedDescription);
             }
             
             [operation complete];

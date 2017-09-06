@@ -142,21 +142,23 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     ASDKAsyncBlockOperation *cachedUserProfileOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        [[strongSelf profileCacheService] fetchCurrentUserProfile:^(ASDKModelProfile *profile, NSError *error) {
+        [strongSelf.profileCacheService fetchCurrentUserProfile:^(ASDKModelProfile *profile, NSError *error) {
             if (operation.isCancelled) {
                 [operation complete];
                 return;
             }
             
             if (!error) {
-                ASDKLogVerbose(@"Profile information successfully fetched from cache for user :%@", [profile normalisedName]);
-                
-                ASDKDataAccessorResponseModel *response = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
-                                                                                                  isCachedData:YES
-                                                                                                         error:error];
-                if (weakSelf.delegate) {
-                    [weakSelf.delegate dataAccessor:weakSelf
-                                didLoadDataResponse:response];
+                if (profile) {
+                    ASDKLogVerbose(@"Profile information successfully fetched from cache for user :%@", [profile normalisedName]);
+                    
+                    ASDKDataAccessorResponseModel *response = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
+                                                                                                      isCachedData:YES
+                                                                                                             error:error];
+                    if (weakSelf.delegate) {
+                        [weakSelf.delegate dataAccessor:weakSelf
+                                    didLoadDataResponse:response];
+                    }
                 }
             } else {
                 ASDKLogError(@"An error occured while fetching cached profile information for the current user. Reason:%@", error.localizedDescription);
@@ -178,7 +180,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         ASDKModelProfile *currentProfile = remoteResponse.model;
         
         if (remoteResponse.model) {
-            [[strongSelf profileCacheService] cacheCurrentUserProfile:currentProfile
+            [strongSelf.profileCacheService cacheCurrentUserProfile:currentProfile
                                                   withCompletionBlock:^(NSError *error) {
                                                       if (operation.isCancelled) {
                                                           [operation complete];
@@ -301,7 +303,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                  if (strongSelf.delegate) {
                                                      [strongSelf.delegate dataAccessor:strongSelf
                                                                    didLoadDataResponse:responseModel];
-                                                     
+
                                                      [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
                                                  }
                                              }];
@@ -334,7 +336,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                       [strongSelf.delegate dataAccessor:strongSelf
                                                                     didLoadDataResponse:responseProgress];
                                                   }
-                                                  
                                               } completionBlock:^(ASDKModelContent *profileImageContent, NSError *error) {
                                                   __strong typeof(self) strongSelf = weakSelf;
                                                   
