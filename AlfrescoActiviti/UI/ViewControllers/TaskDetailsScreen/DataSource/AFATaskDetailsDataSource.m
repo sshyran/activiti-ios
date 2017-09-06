@@ -325,6 +325,8 @@
                                     if (completionBlock) {
                                         completionBlock(error);
                                     }
+                                } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                    
                                 }];
 }
 

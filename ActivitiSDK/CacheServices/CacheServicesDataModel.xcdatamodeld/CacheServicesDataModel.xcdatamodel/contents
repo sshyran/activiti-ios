@@ -197,10 +197,10 @@
         <element name="ASDKMOProfile" positionX="-135" positionY="72" width="128" height="343"/>
         <element name="ASDKMOServerConfiguration" positionX="-648" positionY="-558" width="198" height="135"/>
         <element name="ASDKMOSite" positionX="504" positionY="-117" width="162" height="60"/>
-        <element name="ASDKMOTask" positionX="-765" positionY="171" width="162" height="343"/>
+        <element name="ASDKMOTask" positionX="-765" positionY="198" width="162" height="343"/>
+        <element name="ASDKMOTaskCommentMap" positionX="-378" positionY="351" width="162" height="73"/>
         <element name="ASDKMOTaskContentMap" positionX="-765" positionY="-207" width="162" height="73"/>
         <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="58"/>
         <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="135"/>
-        <element name="ASDKMOTaskCommentMap" positionX="-378" positionY="351" width="162" height="73"/>
     </elements>
 </model>

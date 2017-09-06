@@ -59,6 +59,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (copy, nonatomic) AFATaskServicesTaskCommentsCompletionBlock  taskCommentListCompletionBlock;
 @property (copy, nonatomic) AFATaskServicesTaskCommentsCompletionBlock  taskCommentListCachedResultsBlock;
 
+// Task checklist
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *fetchTaskChecklistDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock      taskChecklistCompletionBlock;
+@property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock      taskChecklistCachedResultsBlock;
+
+// Task update
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *updateTaskDetailsDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskUpdateCompletionBlock    updateTaskDetailsCompletionBlock;
+
+// Task completion
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *completeTaskDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskCompleteCompletionBlock  completeTaskCompletionBlock;
+
 @end
 
 @implementation AFATaskServices
@@ -89,7 +102,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestTaskListWithFilter:(AFAGenericFilterModel *)taskFilter
                   completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock
                     cachedResults:(AFATaskServicesTaskListCompletionBlock)cacheCompletionBlock {
-    NSParameterAssert(taskFilter);
     NSParameterAssert(completionBlock);
     
     self.taskListCompletionBlock = completionBlock;
@@ -118,9 +130,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestTaskDetailsForID:(NSString *)taskID
-            completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock
+                completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock
                   cachedResults:(AFATaskServicesTaskDetailsCompletionBlock)cacheCompletionBlock {
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
     self.taskDetailsCompletionBlock = completionBlock;
@@ -133,7 +144,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestTaskContentForID:(NSString *)taskID
                 completionBlock:(AFATaskServicesTaskContentCompletionBlock)completionBlock
                   cachedResults:(AFATaskServicesTaskContentCompletionBlock)cacheCompletionBlock {
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
     self.taskContentListCompletionBlock = completionBlock;
@@ -144,9 +154,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestTaskCommentsForID:(NSString *)taskID
-             completionBlock:(AFATaskServicesTaskCommentsCompletionBlock)completionBlock
+                 completionBlock:(AFATaskServicesTaskCommentsCompletionBlock)completionBlock
                    cachedResults:(AFATaskServicesTaskCommentsCompletionBlock)cacheCompletionBlock {
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
     self.taskCommentListCompletionBlock = completionBlock;
@@ -159,9 +168,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestTaskUpdateWithRepresentation:(AFATaskUpdateModel *)update
                                   forTaskID:(NSString *)taskID
                         withCompletionBlock:(AFATaskServicesTaskUpdateCompletionBlock)completionBlock {
-    NSParameterAssert(update);
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
+    
+    self.updateTaskDetailsCompletionBlock = completionBlock;
     
     // Create request representation for the task update model
     ASDKTaskUpdateRequestRepresentation *taskUpdateRequestRepresentation = [ASDKTaskUpdateRequestRepresentation new];
@@ -184,46 +193,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     taskUpdateRequestRepresentation.taskDescription = update.taskDescription;
     taskUpdateRequestRepresentation.dueDate = update.taskDueDate;
     
-    [self.taskNetworkService updateTaskForTaskID:taskID
-                          withTaskRepresentation:taskUpdateRequestRepresentation
-                                 completionBlock:^(BOOL isTaskUpdated, NSError *error) {
-                                     if (!error && isTaskUpdated) {
-                                         AFALogVerbose(@"Task with ID:%@ was updated successfully", taskID);
-                                         
-                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                             completionBlock(isTaskUpdated, nil);
-                                         });
-                                     } else {
-                                         AFALogError(@"An error occured updating task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                         
-                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                             completionBlock(NO, error);
-                                         });
-                                     }
-                                 }];
+    self.updateTaskDetailsDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.updateTaskDetailsDataAccessor updateTaskWithID:taskID
+                                      withRepresentation:taskUpdateRequestRepresentation];
 }
 
 - (void)requestTaskCompletionForID:(NSString *)taskID
                withCompletionBlock:(AFATaskServicesTaskCompleteCompletionBlock)completionBlock {
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService completeTaskForTaskID:taskID
-                                   completionBlock:^(BOOL isTaskCompleted, NSError *error) {
-                                       if (!error && isTaskCompleted) {
-                                           AFALogVerbose(@"Task with ID:%@ was marked as completed", taskID);
-                                           
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               completionBlock(isTaskCompleted, nil);
-                                           });
-                                       } else {
-                                           AFALogError(@"An error occured while marking as completed task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                           
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               completionBlock(NO, error);
-                                           });
-                                       }
-                                   }];
+    self.completeTaskDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    self.completeTaskCompletionBlock = completionBlock;
+    
+    [self.completeTaskDataAccessor completeTaskWithID:taskID];
 }
 
 - (void)requestContentUploadAtFileURL:(NSURL *)fileURL
@@ -615,26 +597,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestChecklistForTaskWithID:(NSString *)taskID
-                      completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock {
+                      completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock
+                        cachedResults:(AFATaskServicesTaskListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService fetchChecklistForTaskWithID:taskID
-                                         completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                                             if (!error) {
-                                                 AFALogVerbose(@"Fetched checklist for task with ID:%@", taskID);
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     completionBlock(taskList, nil, paging);
-                                                 });
-                                             } else {
-                                                 AFALogError(@"An error occured while fetching the checklist for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                                 
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     completionBlock(nil, error, nil);
-                                                 });
-                                             }
-                                         }];
+    self.taskChecklistCompletionBlock = completionBlock;
+    self.taskChecklistCachedResultsBlock = cacheCompletionBlock;
     
+    self.fetchTaskChecklistDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.fetchTaskChecklistDataAccessor fetchTaskCheckListForTaskID:taskID];
 }
 
 - (void)requestChecklistCreateWithRepresentation:(AFATaskCreateModel *)taskRepresentation
@@ -709,6 +681,12 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         [self handleFetchTaskContentListDataAccessorResponse:response];
     } else if (self.fetchTaskCommentListDataAccessor == dataAccessor) {
         [self handleFetchTaskCommentListDataAccessorResponse:response];
+    } else if (self.fetchTaskChecklistDataAccessor == dataAccessor) {
+        [self handleFetchTaskChecklistDataAccessorResponse:response];
+    } else if (self.updateTaskDetailsDataAccessor == dataAccessor) {
+        [self handleUpdateTaskDetailsDataAccessorResponse:response];
+    } else if (self.completeTaskDataAccessor == dataAccessor) {
+    
     }
 }
 
@@ -734,26 +712,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                     strongSelf.taskListCachedResultsBlock = nil;
                 }
             });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.taskListCompletionBlock) {
-                    strongSelf.taskListCompletionBlock(taskList, nil, taskListResponse.paging);
-                    strongSelf.taskListCompletionBlock = nil;
-                }
-            });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-           __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.taskListCompletionBlock) {
-                strongSelf.taskListCompletionBlock(nil, taskListResponse.error, nil);
-                strongSelf.taskListCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskListCompletionBlock) {
+            strongSelf.taskListCompletionBlock(taskList, taskListResponse.error, taskListResponse.paging);
+            strongSelf.taskListCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleFetchTaskDetailsDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -770,26 +741,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                     strongSelf.taskDetailsCachedResultsBlock = nil;
                 }
             });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.taskDetailsCompletionBlock) {
-                    strongSelf.taskDetailsCompletionBlock(taskResponse.model, nil);
-                    strongSelf.taskDetailsCompletionBlock = nil;
-                }
-            });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.taskDetailsCompletionBlock) {
-                strongSelf.taskDetailsCompletionBlock(nil, taskResponse.error);
-                strongSelf.taskDetailsCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskDetailsCompletionBlock) {
+            strongSelf.taskDetailsCompletionBlock(taskResponse.model, taskResponse.error);
+            strongSelf.taskDetailsCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleFetchTaskContentListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -807,26 +771,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                     strongSelf.taskContentListCachedResultsBlock = nil;
                 }
             });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.taskContentListCompletionBlock) {
-                    strongSelf.taskContentListCompletionBlock(contentList, nil);
-                    strongSelf.taskContentListCompletionBlock = nil;
-                }
-            });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.taskContentListCompletionBlock) {
-                strongSelf.taskContentListCompletionBlock(nil, taskContentListResponse.error);
-                strongSelf.taskContentListCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskContentListCompletionBlock) {
+            strongSelf.taskContentListCompletionBlock(contentList, taskContentListResponse.error);
+            strongSelf.taskContentListCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleFetchTaskCommentListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -844,25 +801,73 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                     strongSelf.taskCommentListCachedResultsBlock = nil;
                 }
             });
-        } else {
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskCommentListCompletionBlock) {
+            strongSelf.taskCommentListCompletionBlock(commentList, taskCommentListResponse.error, taskCommentListResponse.paging);
+        }
+    });
+}
+
+- (void)handleFetchTaskChecklistDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *taskCheckListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *checklist = taskCheckListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!taskCheckListResponse.error) {
+        if (taskCheckListResponse.isCachedData) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;
                 
-                if (strongSelf.taskCommentListCompletionBlock) {
-                    strongSelf.taskCommentListCompletionBlock(commentList, nil, taskCommentListResponse.paging);
+                if (strongSelf.taskChecklistCachedResultsBlock) {
+                    strongSelf.taskChecklistCachedResultsBlock(checklist, nil, taskCheckListResponse.paging);
+                    strongSelf.taskChecklistCachedResultsBlock = nil;
                 }
             });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.taskCommentListCompletionBlock) {
-                strongSelf.taskCommentListCompletionBlock(nil, taskCommentListResponse.error, nil);
-                strongSelf.taskCommentListCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskChecklistCompletionBlock) {
+            strongSelf.taskChecklistCompletionBlock(checklist, taskCheckListResponse.error, taskCheckListResponse.paging);
+        }
+    });
+}
+
+- (void)handleUpdateTaskDetailsDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *taskUpdateResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.updateTaskDetailsCompletionBlock) {
+            strongSelf.updateTaskDetailsCompletionBlock(taskUpdateResponse.isConfirmation, taskUpdateResponse.error);
+        }
+    });
+}
+
+- (void)handleCompleteTaskDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *taskCompleteResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.completeTaskCompletionBlock) {
+            strongSelf.completeTaskCompletionBlock(taskCompleteResponse.isConfirmation, taskCompleteResponse.error);
+        }
+    });
 }
 
 @end

@@ -172,25 +172,14 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     ASDKDataAccessorResponseModel *profileImageResponse = (ASDKDataAccessorResponseModel *)response;
     
     __weak typeof(self) weakSelf = self;
-    if (!profileImageResponse.error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
-            
-            if (strongSelf.profileImageCompletionBlock) {
-                strongSelf.profileImageCompletionBlock(profileImageResponse.model, nil);
-                strongSelf.profileImageCompletionBlock = nil;
-            }
-        });
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
-            
-            if (strongSelf.profileImageCompletionBlock) {
-                strongSelf.profileImageCompletionBlock(nil, profileImageResponse.error);
-                strongSelf.profileImageCompletionBlock = nil;
-            }
-        });
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.profileImageCompletionBlock) {
+            strongSelf.profileImageCompletionBlock(profileImageResponse.model, profileImageResponse.error);
+            strongSelf.profileImageCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleCurrentProfileDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -208,26 +197,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                     strongSelf.currentProfileCachedResultsBlock = nil;
                 }
             });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.currentProfileCompletionBlock) {
-                    strongSelf.currentProfileCompletionBlock(profile, nil);
-                    strongSelf.currentProfileCompletionBlock = nil;
-                }
-            });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.currentProfileCompletionBlock) {
-                strongSelf.currentProfileCompletionBlock(nil, profileResponse.error);
-                strongSelf.currentProfileCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.currentProfileCompletionBlock) {
+            strongSelf.currentProfileCompletionBlock(profile, profileResponse.error);
+            strongSelf.currentProfileCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleUpdateCurrentProfileDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -250,25 +232,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                           forIdentifier:kUsernameCredentialIdentifier];
             }
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
-            
-            if (strongSelf.updateCurrentProfileCompletionBlock) {
-                strongSelf.updateCurrentProfileCompletionBlock(profile, nil);
-                strongSelf.updateCurrentProfileCompletionBlock = nil;
-            }
-        });
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
-            
-            if (strongSelf.updateCurrentProfileCompletionBlock) {
-                strongSelf.updateCurrentProfileCompletionBlock(nil, profileResponse.error);
-                strongSelf.updateCurrentProfileCompletionBlock = nil;
-            }
-        });
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.updateCurrentProfileCompletionBlock) {
+            strongSelf.updateCurrentProfileCompletionBlock(profile, profileResponse.error);
+            strongSelf.updateCurrentProfileCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleUpdateCurrentProfilePasswordDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -291,25 +264,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                           forIdentifier:kPasswordCredentialIdentifier];
             }
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
-            
-            if (strongSelf.updateProfilePasswordCompletionBlock) {
-                strongSelf.updateProfilePasswordCompletionBlock(newPassword, nil);
-                strongSelf.updateProfilePasswordCompletionBlock = nil;
-            }
-        });
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
-            
-            if (strongSelf.updateProfilePasswordCompletionBlock) {
-                strongSelf.updateProfilePasswordCompletionBlock(NO, profileResponse.error);
-                strongSelf.updateProfilePasswordCompletionBlock = nil;
-            }
-        });
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.updateProfilePasswordCompletionBlock) {
+            strongSelf.updateProfilePasswordCompletionBlock(newPassword.length ? YES : NO, profileResponse.error);
+            strongSelf.updateProfilePasswordCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleUploadProfileImageForCurrentProfileDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -329,27 +293,15 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
         ASDKDataAccessorResponseModel *contentResponse = (ASDKDataAccessorResponseModel *)response;
         
-        if (!contentResponse.error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.uploadCurrentProfileImageCompletionBlock) {
-                    strongSelf.uploadCurrentProfileImageCompletionBlock(YES, nil);
-                    strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
-                    strongSelf.uploadCurrentProfileImageProgressBlock = nil;
-                }
-            });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.uploadCurrentProfileImageCompletionBlock) {
-                    strongSelf.uploadCurrentProfileImageCompletionBlock(NO, contentResponse.error);
-                    strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
-                    strongSelf.uploadCurrentProfileImageProgressBlock = nil;
-                }
-            });
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.uploadCurrentProfileImageCompletionBlock) {
+                strongSelf.uploadCurrentProfileImageCompletionBlock(contentResponse.error ? NO : YES, contentResponse.error);
+                strongSelf.uploadCurrentProfileImageCompletionBlock = nil;
+                strongSelf.uploadCurrentProfileImageProgressBlock = nil;
+            }
+        });
     }
 }
 

@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ActivitiSDK/CacheServices/CacheModels/ASDKMOTaskCommentMap+CoreDataClass.h">
-   </FileRef>
-   <FileRef
-      location = "group:ActivitiSDK/CacheServices/CacheModels/ASDKMOTaskCommentMap+CoreDataClass.m">
-   </FileRef>
-   <FileRef
       location = "group:AlfrescoActiviti.xcodeproj">
    </FileRef>
    <FileRef

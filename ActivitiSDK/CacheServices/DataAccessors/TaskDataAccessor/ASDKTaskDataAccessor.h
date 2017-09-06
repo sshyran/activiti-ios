@@ -18,7 +18,8 @@
 
 #import "ASDKDataAccessor.h"
 
-@class ASDKFilterRequestRepresentation;
+@class ASDKFilterRequestRepresentation,
+ASDKTaskUpdateRequestRepresentation;
 
 @interface ASDKTaskDataAccessor : ASDKDataAccessor
 
@@ -48,12 +49,38 @@
 - (void)fetchTaskContentForTaskID:(NSString *)taskID;
 
 /**
- * Requests the comments associated witha a task and reports network or cached data through the
+ * Requests the comments associated with a task and reports network or cached data through the
  * designated data accessor delegate.
  *
- * @param taskID The ID of the task for which the content is requested
+ * @param taskID The ID of the task for which the comments are requested
  */
 - (void)fetchTaskCommentsForTaskID:(NSString *)taskID;
+
+/**
+ * Requests the checklist tasks associated with a task and reports network or cached data 
+ * through the designated data accessor delegate.
+ *
+ * @param taskID The ID of the task for which the checklist is requested
+ */
+- (void)fetchTaskCheckListForTaskID:(NSString *)taskID;
+
+/**
+ * Updates a task's details with properties defined within the update representation and
+ * reports through the designated data accessor delegate.
+ *
+ * @param taskID                    The ID of the task for which the update is performed
+ * @param taskUpdateRepresentation  Model object describing the task properties to be updated
+ */
+- (void)updateTaskWithID:(NSString *)taskID
+      withRepresentation:(ASDKTaskUpdateRequestRepresentation *)taskUpdateRepresentation;
+
+/**
+ * Attempts to complete the specified task and reports the result through the designated
+ * data accessor delegate.
+ *
+ * @param taskID The ID of the task for which the completion is requested
+ */
+- (void)completeTaskWithID:(NSString *)taskID;
 
 /**
  * Cancels ongoing operations for the current data accessor.

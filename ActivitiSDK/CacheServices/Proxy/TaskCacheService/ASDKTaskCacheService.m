@@ -125,8 +125,8 @@
             pagedTaskArr = [matchingTaskArr subarrayWithRange:NSMakeRange(fetchOffset, count)];
             
             paging = [strongSelf paginationWithStartIndex:filter.size * filter.page
-                                    forTotalTaskCount:sortedTasks.count
-                                   remainingTaskCount:count];
+                                        forTotalTaskCount:sortedTasks.count
+                                       remainingTaskCount:count];
         }
         
         if (completionBlock) {
@@ -203,7 +203,7 @@
                                                                          inContext:managedObjectContext];
         if (!error) {
             /* The content map exists to provide membership information for
-             * content in relation to a specific task. Just the state of the 
+             * content in relation to a specific task. Just the state of the
              * content objects do not provide sufficient information to assign
              * them to a task.
              */
@@ -305,13 +305,13 @@
             ASDKMOTaskCommentMap *taskCommentMap = taskCommentMapArr.firstObject;
             matchingCommentsArr = [taskCommentMap.taskCommentList allObjects];
             paging = [strongSelf paginationWithStartIndex:0
-                                  forTotalTaskCount:matchingCommentsArr.count
-                                 remainingTaskCount:matchingCommentsArr.count];
+                                        forTotalTaskCount:matchingCommentsArr.count
+                                       remainingTaskCount:matchingCommentsArr.count];
         }
         
         if (completionBlock) {
             if (error || !matchingCommentsArr.count) {
-                completionBlock(nil, error, paging);
+                completionBlock(nil, error, nil);
             } else {
                 NSMutableArray *comments = [NSMutableArray array];
                 for (ASDKMOComment *moComment in matchingCommentsArr) {
@@ -322,7 +322,72 @@
                 completionBlock(comments, nil, paging);
             }
         }
+    }];
+}
+
+- (void)cacheTaskChecklist:(NSArray *)taskChecklist
+             forTaskWithID:(NSString *)taskID
+       withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
         
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        
+        NSError *error = [strongSelf cleanStalledTasksChecklistForTaskID:taskID
+                                                               inContext:managedObjectContext];
+        
+        if (!error) {
+            [ASDKTaskCacheModelUpsert upsertTaskListToCache:taskChecklist
+                                                      error:&error
+                                                inMOContext:managedObjectContext];
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchTaskCheckListForTaskWithID:(NSString *)taskID
+                    withCompletionBlock:(ASDKCacheServiceTaskListCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        NSError *error = nil;
+        ASDKModelPaging *paging = nil;
+        
+        NSFetchRequest *taskChecklistRequest = [ASDKMOTask fetchRequest];
+        taskChecklistRequest.predicate = [NSPredicate predicateWithFormat:@"parentTaskID == %@", taskID];
+        NSArray *moTaskChecklistArr = [managedObjectContext executeFetchRequest:taskChecklistRequest
+                                                                          error:&error];
+        
+        if (!error) {
+            paging = [strongSelf paginationWithStartIndex:0
+                                        forTotalTaskCount:moTaskChecklistArr.count
+                                       remainingTaskCount:moTaskChecklistArr.count];
+        }
+        
+        if (completionBlock) {
+            if (error || moTaskChecklistArr.count) {
+                completionBlock(nil, error, nil);
+            } else {
+                NSMutableArray *taskChecklistArr = [NSMutableArray array];
+                for (ASDKMOTask *moTask in taskChecklistArr) {
+                    ASDKModelTask *task = [ASDKTaskCacheMapper mapCacheMOToTask:moTask];
+                    [taskChecklistArr addObject:task];
+                }
+                
+                completionBlock(taskChecklistArr, nil, paging);
+            }
+        }
     }];
 }
 
@@ -343,6 +408,29 @@
                                                                                       error:&internalError];
     
     NSArray *moIDArr = taskFilterMapDeletionResult.result;
+    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                 intoContexts:@[managedObjectContext]];
+    
+    if (internalError) {
+        return [self clearCacheStalledDataError];
+    }
+    
+    return nil;
+}
+
+- (NSError *)cleanStalledTasksChecklistForTaskID:(NSString *)taskID
+                                       inContext:(NSManagedObjectContext *)managedObjectContext {
+    NSError *internalError = nil;
+    NSFetchRequest *oldTaskChecklistRequest = [ASDKMOTask fetchRequest];
+    oldTaskChecklistRequest.predicate = [NSPredicate predicateWithFormat:@"parentTaskID == %@", taskID];
+    oldTaskChecklistRequest.resultType = NSManagedObjectIDResultType;
+    
+    NSBatchDeleteRequest *removeOldTaskChecklistRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldTaskChecklistRequest];
+    removeOldTaskChecklistRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+    NSBatchDeleteResult *taskChecklistDeletionResult = [managedObjectContext executeRequest:removeOldTaskChecklistRequest
+                                                                                      error:&internalError];
+    
+    NSArray *moIDArr = taskChecklistDeletionResult.result;
     [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
                                                  intoContexts:@[managedObjectContext]];
     
@@ -492,8 +580,8 @@
 }
 
 - (ASDKModelPaging *)paginationWithStartIndex:(NSUInteger)startIndex
-                        forTotalTaskCount:(NSUInteger)taskTotalCount
-                       remainingTaskCount:(NSUInteger)remainingTaskCount {
+                            forTotalTaskCount:(NSUInteger)taskTotalCount
+                           remainingTaskCount:(NSUInteger)remainingTaskCount {
     ASDKModelPaging * paging = [ASDKModelPaging new];
     paging.size = remainingTaskCount;
     paging.start = startIndex;

@@ -194,6 +194,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                             }
                                                             
                                                             if (!error) {
+                                                                ASDKLogVerbose(@"Successfully cached runtime applications");
+                                                                
                                                                 [[weakSelf appCacheService] saveChanges];
                                                             } else {
                                                                 ASDKLogError(@"Encountered an error while caching the runtime application definitions. Reason %@", error.localizedDescription);

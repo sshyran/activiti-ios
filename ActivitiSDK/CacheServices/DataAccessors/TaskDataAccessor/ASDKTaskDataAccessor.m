@@ -35,6 +35,7 @@
 #import "ASDKDataAccessorResponseCollection.h"
 #import "ASDKDataAccessorResponseProgress.h"
 #import "ASDKDataAccessorResponseModel.h"
+#import "ASDKDataAccessorResponseConfirmation.h"
 
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
@@ -73,6 +74,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Service - Task list
 
 - (void)fetchTasksWithFilter:(ASDKFilterRequestRepresentation *)filter {
+    NSParameterAssert(filter);
+    
     // Define operations
     ASDKAsyncBlockOperation *remoteTaskListOperation = [self remoteTaskListOperationForFilter:filter];
     ASDKAsyncBlockOperation *cachedTaskListOperation = [self cachedTaskListOperationForFilter:filter];
@@ -160,7 +163,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             }
             
             if (!error) {
-                ASDKLogVerbose(@"Task list information fetched successfully from cache for filter.\nFilter:%@", filter);
+                ASDKLogVerbose(@"Task list information successfully fetched from cache for filter.\nFilter:%@", filter);
                 
                 ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskList
                                                                                                                        paging:paging
@@ -199,6 +202,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                        }
                                        
                                        if (!error) {
+                                           ASDKLogVerbose(@"Task list was successfully cached for filter.\nFilter: %@", filter);
+                                           
                                            [weakSelf.taskCacheService saveChanges];
                                        } else {
                                            ASDKLogError(@"Encountered an error while caching the task list for filter: %@. Reason:%@", filter, error.localizedDescription);
@@ -217,6 +222,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Service - Task details
 
 - (void)fetchTaskDetailsForTaskID:(NSString *)taskID {
+    NSParameterAssert(taskID);
+    
     // Define operations
     ASDKAsyncBlockOperation *remoteTaskDetailsOperation = [self remoteTaskDetailsOperationForTaskID:taskID];
     ASDKAsyncBlockOperation *cachedTaskDetailsOperation = [self cachedTaskDetailsOperationForTaskID:taskID];
@@ -303,7 +310,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                            }
                                            
                                            if (!error) {
-                                               ASDKLogVerbose(@"Task details information fetched successfully from cache for taskID:%@", taskID);
+                                               ASDKLogVerbose(@"Task details information successfully fetched from cache for taskID:%@", taskID);
                                                
                                                ASDKDataAccessorResponseModel *response =
                                                [[ASDKDataAccessorResponseModel alloc] initWithModel:task
@@ -341,9 +348,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                           }
                                           
                                           if (!error) {
+                                              ASDKLogVerbose(@"Task details successfully cached for taskID: %@", taskID);
                                               [[weakSelf taskCacheService] saveChanges];
                                           } else {
-                                              ASDKLogError(@"Encountered an error while caching the task details for taskID:%@. Reason:%@", taskID, error.localizedDescription);
+                                              ASDKLogError(@"Encountered an error while caching the task details for taskID: %@. Reason: %@", taskID, error.localizedDescription);
                                           }
                                           
                                           [operation complete];
@@ -359,6 +367,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Service - Task content list
 
 - (void)fetchTaskContentForTaskID:(NSString *)taskID {
+    NSParameterAssert(taskID);
+    
     // Define operations
     ASDKAsyncBlockOperation *remoteTaskContentOperation = [self remoteTaskContentOperationForTaskID:taskID];
     ASDKAsyncBlockOperation *cachedTaskContentOperation = [self cachedTaskContentOperationForTaskID:taskID];
@@ -444,7 +454,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                        }
                                                        
                                                        if (!error) {
-                                                           ASDKLogVerbose(@"Task content list fetched successfully from cache for taskID:%@", taskID);
+                                                           ASDKLogVerbose(@"Task content list successfully fetched from cache for taskID:%@", taskID);
                                                            ASDKDataAccessorResponseCollection *response =
                                                            [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskContentList
                                                                                                              isCachedData:YES
@@ -481,6 +491,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                               }
                                               
                                               if (!error) {
+                                                  ASDKLogVerbose(@"Task content successfully cached for taskID:%@", taskID);
+                                                  
                                                   [weakSelf.taskCacheService saveChanges];
                                               } else {
                                                   ASDKLogError(@"Encountered an error while caching the task content list for taskID: %@. Reason:%@", taskID, error.localizedDescription);
@@ -499,6 +511,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark Service - Task comment list
 
 - (void)fetchTaskCommentsForTaskID:(NSString *)taskID {
+    NSParameterAssert(taskID);
+    
     // Define operations
     ASDKAsyncBlockOperation *remoteTaskCommentListOperation = [self remoteTaskCommentListOperationForTaskID:taskID];
     ASDKAsyncBlockOperation *cachedTaskCommentListOperation = [self cachedTaskCommentListOperationForTaskID:taskID];
@@ -584,7 +598,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                        }
                                                        
                                                        if (!error) {
-                                                           ASDKLogVerbose(@"Task comment list fetched successfully from cache for taskID: %@.", taskID);
+                                                           ASDKLogVerbose(@"Task comment list successfully fetched from cache for taskID: %@.", taskID);
                                                            
                                                            ASDKDataAccessorResponseCollection *response =
                                                            [[ASDKDataAccessorResponseCollection alloc] initWithCollection:commentList
@@ -601,7 +615,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                        }
                                                        
                                                        [operation complete];
-        }];
+                                                   }];
     }];
     
     return cachedTaskContentListOperation;
@@ -624,17 +638,227 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                               }
                                               
                                               if (!error) {
+                                                  ASDKLogVerbose(@"Task comment list successfully cached for taskID: %@", taskID);
+                                                  
                                                   [weakSelf.taskCacheService saveChanges];
                                               } else {
                                                   ASDKLogError(@"Encountered an error while caching the task comment list for taskID: %@. Reason:%@", taskID, error.localizedDescription);
                                               }
                                               
                                               [operation complete];
+                                          }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Task checklist list
+
+- (void)fetchTaskCheckListForTaskID:(NSString *)taskID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteTaskChecklistOperation = [self remoteTaskChecklistOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *cachedTaskChecklistOperation = [self cachedTaskChecklistOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *storeInCacheTaskChecklistOperation = [self taskChecklistStoreInCacheOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedTaskChecklistOperation];
+            [self.processingQueue addOperations:@[cachedTaskChecklistOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteTaskChecklistOperation];
+            [self.processingQueue addOperations:@[remoteTaskChecklistOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteTaskChecklistOperation addDependency:cachedTaskChecklistOperation];
+            [storeInCacheTaskChecklistOperation addDependency:remoteTaskChecklistOperation];
+            [completionOperation addDependency:storeInCacheTaskChecklistOperation];
+            [self.processingQueue addOperations:@[cachedTaskChecklistOperation,
+                                                  remoteTaskChecklistOperation,
+                                                  storeInCacheTaskChecklistOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+
+}
+
+- (ASDKAsyncBlockOperation *)remoteTaskChecklistOperationForTaskID:(NSString *)taskID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteTaskListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskNetworkService fetchChecklistForTaskWithID:taskID
+                                                   completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                                       if (operation.isCancelled) {
+                                                           [operation complete];
+                                                           return;
+                                                       }
+                                                       
+                                                       ASDKDataAccessorResponseCollection *responseCollection =
+                                                       [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskList
+                                                                                                         isCachedData:NO
+                                                                                                                error:error];
+                                                       
+                                                       if (weakSelf.delegate) {
+                                                           [weakSelf.delegate dataAccessor:weakSelf
+                                                                       didLoadDataResponse:responseCollection];
+                                                       }
+                                                       
+                                                       operation.result = responseCollection;
+                                                       [operation complete];
+                                                   }];
+    }];
+    
+    return remoteTaskListOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedTaskChecklistOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedTaskChecklistOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.taskCacheService fetchTaskCheckListForTaskWithID:taskID
+                                                 withCompletionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                                     if (operation.isCancelled) {
+                                                         [operation complete];
+                                                         return;
+                                                     }
+                                                     
+                                                     if (!error) {
+                                                         ASDKLogVerbose(@"Task checklist successfully fetched from cache for taskID:%@", taskID);
+                                                         
+                                                         ASDKDataAccessorResponseCollection *response =
+                                                         [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskList
+                                                                                                                 paging:paging
+                                                                                                           isCachedData:YES
+                                                                                                                  error:error];
+                                                         
+                                                         if (weakSelf.delegate) {
+                                                             [weakSelf.delegate dataAccessor:weakSelf
+                                                                         didLoadDataResponse:response];
+                                                         }
+                                                     } else {
+                                                         ASDKLogError(@"An error occured while fetching the task checklist for taskID:%@. Reason: %@", taskID, error.localizedDescription);
+                                                     }
+                                                     
+                                                     [operation complete];
+        }];
+    }];
+    
+    return cachedTaskChecklistOperation;
+}
+
+- (ASDKAsyncBlockOperation *)taskChecklistStoreInCacheOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseCollection *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.collection) {
+            [strongSelf.taskCacheService cacheTaskChecklist:remoteResponse.collection
+                                              forTaskWithID:taskID
+                                        withCompletionBlock:^(NSError *error) {
+                                            if (operation.isCancelled) {
+                                                [operation complete];
+                                                return;
+                                            }
+                                            
+                                            if (!error) {
+                                                ASDKLogVerbose(@"Task checklist successfully cached for taskID: %@", taskID);
+                                                
+                                                [weakSelf.taskCacheService saveChanges];
+                                            } else {
+                                                ASDKLogError(@"Encountered an error while caching the task checklist for taskID: %@. Reason: %@", taskID, error.localizedDescription);
+                                            }
+                                            
+                                            [operation complete];
             }];
         }
     }];
     
     return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Update task details
+
+- (void)updateTaskWithID:(NSString *)taskID
+      withRepresentation:(ASDKTaskUpdateRequestRepresentation *)taskUpdateRepresentation {
+    NSParameterAssert(taskID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService updateTaskForTaskID:taskID
+                          withTaskRepresentation:taskUpdateRepresentation
+                                 completionBlock:^(BOOL isTaskUpdated, NSError *error) {
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     
+                                     if (strongSelf.delegate) {
+                                         ASDKDataAccessorResponseConfirmation *confirmation =
+                                         [[ASDKDataAccessorResponseConfirmation alloc] initWithConfirmation:isTaskUpdated
+                                                                                               isCachedData:NO
+                                                                                                      error:error];
+                                         
+                                         [strongSelf.delegate dataAccessor:strongSelf
+                                                       didLoadDataResponse:confirmation];
+                                         [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                     }
+    }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Complete task
+
+- (void)completeTaskWithID:(NSString *)taskID {
+    NSParameterAssert(taskID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService completeTaskForTaskID:taskID
+                                   completionBlock:^(BOOL isTaskCompleted, NSError *error) {
+                                       __strong typeof(self) strongSelf = weakSelf;
+                                       
+                                       if (strongSelf.delegate) {
+                                           ASDKDataAccessorResponseConfirmation *confirmation =
+                                           [[ASDKDataAccessorResponseConfirmation alloc] initWithConfirmation:isTaskCompleted
+                                                                                                 isCachedData:NO
+                                                                                                        error:error];
+                                           
+                                           [strongSelf.delegate dataAccessor:strongSelf
+                                                         didLoadDataResponse:confirmation];
+                                           [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                       }
+    }];
 }
 
 

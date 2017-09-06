@@ -184,26 +184,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                     strongSelf.defaultTaskFilterListCachedResultsBlock = nil;
                 }
             });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.defaultTaskFilterListCompletionBlock) {
-                    strongSelf.defaultTaskFilterListCompletionBlock(filterList, nil, filterListResponse.paging);
-                    strongSelf.defaultTaskFilterListCompletionBlock = nil;
-                }
-            });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.defaultTaskFilterListCompletionBlock) {
-                strongSelf.defaultTaskFilterListCompletionBlock(nil, filterListResponse.error, nil);
-                strongSelf.defaultTaskFilterListCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.defaultTaskFilterListCompletionBlock) {
+            strongSelf.defaultTaskFilterListCompletionBlock(filterList, filterListResponse.error, filterListResponse.paging);
+            strongSelf.defaultTaskFilterListCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)handleFetchTaskFilterListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
@@ -221,26 +214,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                     strongSelf.taskFilterListCachedResultsBlock = nil;
                 }
             });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.taskFilterListCompletionBlock) {
-                    strongSelf.taskFilterListCompletionBlock(filterList, nil, filterListResponse.paging);
-                    strongSelf.taskFilterListCompletionBlock = nil;
-                }
-            });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.taskFilterListCompletionBlock) {
-                strongSelf.taskFilterListCompletionBlock(nil, filterListResponse.error, nil);
-                strongSelf.taskFilterListCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskFilterListCompletionBlock) {
+            strongSelf.taskFilterListCompletionBlock(filterList, filterListResponse.error, filterListResponse.paging);
+            strongSelf.taskFilterListCompletionBlock = nil;
+        }
+    });
 }
 
 - (void)requestCreateDefaultProcessInstanceFiltersForAppID:(NSString *)appID

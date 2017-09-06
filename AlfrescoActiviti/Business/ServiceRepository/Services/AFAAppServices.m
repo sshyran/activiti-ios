@@ -82,26 +82,19 @@
                     strongSelf.runtimeAppDefinitionsCachedResultsBlock = nil;
                 }
             });
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                if (strongSelf.runtimeAppDefinitionsCompletionBlock) {
-                    strongSelf.runtimeAppDefinitionsCompletionBlock(runtimeAppDefinitions, nil, nil);
-                    strongSelf.runtimeAppDefinitionsCompletionBlock = nil;
-                }
-            });
-        }
-    } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(self) strongSelf = weakSelf;
             
-            if (strongSelf.runtimeAppDefinitionsCompletionBlock) {
-                strongSelf.runtimeAppDefinitionsCompletionBlock(nil, applicationListResponse.error, nil);
-                strongSelf.runtimeAppDefinitionsCompletionBlock = nil;
-            }
-        });
+            return;
+        }
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.runtimeAppDefinitionsCompletionBlock) {
+            strongSelf.runtimeAppDefinitionsCompletionBlock(runtimeAppDefinitions, applicationListResponse.error, nil);
+            strongSelf.runtimeAppDefinitionsCompletionBlock = nil;
+        }
+    });
 }
 
 

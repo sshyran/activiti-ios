@@ -149,7 +149,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             }
             
             if (!error) {
-                ASDKLogVerbose(@"Profile information fetched successfully from cache for user :%@", [profile normalisedName]);
+                ASDKLogVerbose(@"Profile information successfully fetched from cache for user :%@", [profile normalisedName]);
                 
                 ASDKDataAccessorResponseModel *response = [[ASDKDataAccessorResponseModel alloc] initWithModel:profile
                                                                                                   isCachedData:YES
@@ -175,9 +175,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         __strong typeof(self) strongSelf = weakSelf;
         ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
         ASDKDataAccessorResponseModel *remoteResponse = dependencyOperation.result;
+        ASDKModelProfile *currentProfile = remoteResponse.model;
         
         if (remoteResponse.model) {
-            [[strongSelf profileCacheService] cacheCurrentUserProfile:remoteResponse.model
+            [[strongSelf profileCacheService] cacheCurrentUserProfile:currentProfile
                                                   withCompletionBlock:^(NSError *error) {
                                                       if (operation.isCancelled) {
                                                           [operation complete];
@@ -185,6 +186,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                       }
                                                       
                                                       if (!error) {
+                                                          ASDKLogVerbose(@"Successfully cached the current profile for: %@.", [currentProfile normalisedName]);
+                                                          
                                                           [[weakSelf profileCacheService] saveChanges];
                                                       } else {
                                                           ASDKLogError(@"Encountered an error while caching the current user profile. Reason:%@", error.localizedDescription);
@@ -298,6 +301,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                  if (strongSelf.delegate) {
                                                      [strongSelf.delegate dataAccessor:strongSelf
                                                                    didLoadDataResponse:responseModel];
+                                                     
+                                                     [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
                                                  }
                                              }];
 }
@@ -340,6 +345,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                   if (strongSelf.delegate) {
                                                       [strongSelf.delegate dataAccessor:strongSelf
                                                                     didLoadDataResponse:responseModel];
+                                                      
+                                                      [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
                                                   }
                                               }];
 }

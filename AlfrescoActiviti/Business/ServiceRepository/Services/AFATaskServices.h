@@ -112,7 +112,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *
  *  @param taskID          The ID of the task which is to be marked as completed
  *  @param completionBlock Completion block prodiving whether the task has been marked as completed or not
- and an optional error reason
+ *                         and an optional error reason
  */
 - (void)requestTaskCompletionForID:(NSString *)taskID
                withCompletionBlock:(AFATaskServicesTaskCompleteCompletionBlock)completionBlock;
@@ -287,12 +287,15 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
 /**
  *  Performs a request for the checklist of a defined taskID
  *
- *  @param taskID          ID of the task for which the checklist is requested
- *  @param completionBlock Completion block providing the list of checklist elements, an optional error reason and pagination
- *                         information
+ *  @param taskID               ID of the task for which the checklist is requested
+ *  @param completionBlock      Completion block providing the list of checklist elements, an optional error reason and pagination
+ *                              information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the task checklist, an optional error
+ *                              and pagination information
  */
 - (void)requestChecklistForTaskWithID:(NSString *)taskID
-                      completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock;
+                      completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock
+                        cachedResults:(AFATaskServicesTaskListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Creates a checklist based on the passed representation

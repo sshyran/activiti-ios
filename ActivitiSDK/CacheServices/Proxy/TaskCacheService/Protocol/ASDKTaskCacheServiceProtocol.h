@@ -86,7 +86,6 @@ typedef void (^ASDKCacheServiceTaskCommentListCompletionBlock) (NSArray *comment
                forTaskWithID:(NSString *)taskID
          withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
 
-
 /**
  * Fetches and reports via a completion block the task content list for the specified
  * task ID.
@@ -97,7 +96,6 @@ typedef void (^ASDKCacheServiceTaskCommentListCompletionBlock) (NSArray *comment
  */
 - (void)fetchTaskContentListForTaskWithID:(NSString *)taskID
                       withCompletionBlock:(ASDKCacheServiceTaskContentListCompletionBlock)completionBlock;
-
 
 /**
  * Caches provided task comment list that is afiliated with a task.
@@ -110,7 +108,6 @@ typedef void (^ASDKCacheServiceTaskCommentListCompletionBlock) (NSArray *comment
                forTaskWithID:(NSString *)taskID
          withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
 
-
 /**
  * Fetches and reports via a completion block the task comment list for the specified 
  * task ID.
@@ -121,5 +118,27 @@ typedef void (^ASDKCacheServiceTaskCommentListCompletionBlock) (NSArray *comment
  */
 - (void)fetchTaskCommentListForTaskWithID:(NSString *)taskID
                       withCompletionBlock:(ASDKCacheServiceTaskCommentListCompletionBlock)completionBlock;
+
+/**
+ * Caches provided task checklist that is afiliated with a task.
+ *
+ * @param taskChecklist     List of task checklist elements to be cached
+ * @param taskID            The ID for which the task checklist is to be cached
+ * @param completionBlock   Completion block indicating the success of the operation
+ */
+- (void)cacheTaskChecklist:(NSArray *)taskChecklist
+             forTaskWithID:(NSString *)taskID
+       withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+/**
+ * Fetches and reports via a completion block the task checklist for the specified
+ * task ID.
+ *
+ * @param taskID            Task ID for which the checklist is requested
+ * @param completionBlock   Completion block providing a list of tasks, paging information
+ *                          and optional error reason
+ */
+- (void)fetchTaskCheckListForTaskWithID:(NSString *)taskID
+                    withCompletionBlock:(ASDKCacheServiceTaskListCompletionBlock)completionBlock;
 
 @end
