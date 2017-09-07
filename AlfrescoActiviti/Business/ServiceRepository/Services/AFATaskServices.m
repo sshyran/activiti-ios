@@ -79,7 +79,17 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 // Task content delete
 @property (strong, nonatomic) ASDKTaskDataAccessor                      *taskContentDeleteDataAccessor;
-@property (copy, nonatomic) AFATaslServiceTaskContentDeleteCompletionBlock taskContentDeleteCompletionBlock;
+@property (copy, nonatomic) AFATaskServiceTaskContentDeleteCompletionBlock taskContentDeleteCompletionBlock;
+
+// Task content download
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *taskContentDownloadDataAccessor;
+@property (copy, nonatomic) AFATaskServiceTaskContentDownloadProgressBlock   taskContentDownloadProgressBlock;
+@property (copy, nonatomic) AFATaskServiceTaskContentDownloadCompletionBlock taskContentDownloadCompletionBlock;
+
+// Task content thumbnail download
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *taskContentThumbnailDownloadDataAccessor;
+@property (copy, nonatomic) AFATaskServiceTaskContentDownloadProgressBlock   taskContentThumbnailDownloadProgressBlock;
+@property (copy, nonatomic) AFATaskServiceTaskContentDownloadCompletionBlock taskContentThumbnailDownloadCompletionBlock;
 
 @end
 
@@ -234,7 +244,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestTaskContentDeleteForContent:(ASDKModelContent *)content
-                       withCompletionBlock:(AFATaslServiceTaskContentDeleteCompletionBlock)completionBlock {
+                       withCompletionBlock:(AFATaskServiceTaskContentDeleteCompletionBlock)completionBlock {
     NSParameterAssert(completionBlock);
     
     self.taskContentDeleteCompletionBlock = completionBlock;
@@ -247,69 +257,28 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                           allowCachedResults:(BOOL)allowCachedResults
                            withProgressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
                          withCompletionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock {
-    NSParameterAssert(content);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService downloadContent:content
-                          allowCachedResults:allowCachedResults
-                               progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                   AFALogVerbose(@"Downloaded %@ of content for task with ID:%@ ", formattedReceivedBytesString, content.modelID);
-                                   
-                                   if (progressBlock) {
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           progressBlock (formattedReceivedBytesString, error);
-                                       });
-                                   }
-                               } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                   if (!error && downloadedContentURL) {
-                                       AFALogVerbose(@"Content with ID:%@ was downloaded successfully.", content.modelID);
-                                       
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           completionBlock(downloadedContentURL, isLocalContent,nil);
-                                       });
-                                   } else {
-                                       AFALogError(@"An error occured while downloading content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
-                                       
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           completionBlock(nil, NO, error);
-                                       });
-                                   }
-                               }];
+    self.taskContentDownloadProgressBlock = progressBlock;
+    self.taskContentDownloadCompletionBlock = completionBlock;
+    
+    self.taskContentDownloadDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    self.taskContentDownloadDataAccessor.cachePolicy = allowCachedResults ? ASDKServiceDataAccessorCachingPolicyHybrid : ASDKServiceDataAccessorCachingPolicyAPIOnly;
+    
+    [self.taskContentDownloadDataAccessor downloadTaskContent:content];
 }
 
 - (void)requestTaskContentThumbnailDownloadForContent:(ASDKModelContent *)content
                                    allowCachedResults:(BOOL)allowCachedResults
                                     withProgressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
                                   withCompletionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock {
-    NSParameterAssert(content);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService downloadThumbnailForContent:content
-                                      allowCachedResults:allowCachedResults
-                                           progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                               AFALogVerbose(@"Downloaded %@ of content thumbnail for task with ID:%@ ", formattedReceivedBytesString, content.modelID);
-                                               
-                                               if (progressBlock) {
-                                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                                       progressBlock (formattedReceivedBytesString, error);
-                                                   });
-                                               }
-                                           }
-                                         completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                             if (!error && downloadedContentURL) {
-                                                 AFALogVerbose(@"Thumbnail for content with ID:%@ was downloaded successfully.", content.modelID);
-                                                 
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     completionBlock(downloadedContentURL, isLocalContent,nil);
-                                                 });
-                                             } else {
-                                                 AFALogError(@"An error occured while downloading thumbnail for content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
-                                                 
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     completionBlock(nil, NO, error);
-                                                 });
-                                             }
-                                         }];
+    self.taskContentThumbnailDownloadProgressBlock = progressBlock;
+    self.taskContentThumbnailDownloadCompletionBlock = completionBlock;
+    
+    self.taskContentThumbnailDownloadDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.taskContentThumbnailDownloadDataAccessor downloadThumbnailForTaskContent:content];
 }
 
 - (void)requestTaskUserInvolvement:(ASDKModelUser *)user
@@ -624,6 +593,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         [self handleTaskContentUploadDataAccessorResponse:response];
     } else if (self.taskContentDeleteDataAccessor == dataAccessor) {
         [self handleTaskContentDeleteDataAccessorResponse:response];
+    } else if (self.taskContentDownloadDataAccessor == dataAccessor) {
+        [self handleTaskContentDownloadDataAccessorResponse:response];
+    } else if (self.taskContentThumbnailDownloadDataAccessor == dataAccessor) {
+        [self handleTaskContentThumbnailDownloadDataAccessorResponse:response];
     }
 }
 
@@ -812,7 +785,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
         ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
         NSUInteger progress = progressResponse.progress;
-        AFALogVerbose(@"Task content is %lu%% uploaded", (unsigned long)progress);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
@@ -847,6 +819,62 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             strongSelf.taskContentDeleteCompletionBlock(contentDeleteResponse.isConfirmation, contentDeleteResponse.error);
         }
     });
+}
+
+- (void)handleTaskContentDownloadDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSString *formattedProgressString = progressResponse.formattedProgressString;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskContentDownloadProgressBlock) {
+                strongSelf.taskContentDownloadProgressBlock(formattedProgressString, progressResponse.error);
+            }
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
+        ASDKDataAccessorResponseModel *contentResponse = (ASDKDataAccessorResponseModel *)response;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskContentDownloadCompletionBlock) {
+                strongSelf.taskContentDownloadCompletionBlock(contentResponse.model, contentResponse.isCachedData, contentResponse.error);
+                strongSelf.taskContentDownloadCompletionBlock = nil;
+                strongSelf.taskContentDownloadProgressBlock = nil;
+            }
+        });
+    }
+}
+
+- (void)handleTaskContentThumbnailDownloadDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSString *formattedProgressString = progressResponse.formattedProgressString;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskContentThumbnailDownloadProgressBlock) {
+                strongSelf.taskContentThumbnailDownloadProgressBlock(formattedProgressString, progressResponse.error);
+            }
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
+        ASDKDataAccessorResponseModel *contentResponse = (ASDKDataAccessorResponseModel *)response;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskContentThumbnailDownloadCompletionBlock) {
+                strongSelf.taskContentThumbnailDownloadCompletionBlock(contentResponse.model, contentResponse.isCachedData, contentResponse.error);
+                strongSelf.taskContentThumbnailDownloadCompletionBlock = nil;
+                strongSelf.taskContentThumbnailDownloadProgressBlock = nil;
+            }
+        });
+    }
 }
 
 @end

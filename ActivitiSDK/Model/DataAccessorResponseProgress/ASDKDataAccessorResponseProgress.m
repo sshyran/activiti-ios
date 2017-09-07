@@ -21,12 +21,22 @@
 @implementation ASDKDataAccessorResponseProgress
 
 - (instancetype)initWithProgress:(NSUInteger)progress
-                    isCachedData:(BOOL)isCachedData
                            error:(NSError *)error {
     self = [super initWithError:error
-                   isCachedData:isCachedData];
+                   isCachedData:NO];
     if (self) {
         _progress = progress;
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithFormattedProgressString:(NSString *)formattedProgressString
+                                          error:(NSError *)error {
+    self = [super initWithError:error
+                   isCachedData:NO];
+    if (self) {
+        _formattedProgressString = formattedProgressString;
     }
     
     return self;

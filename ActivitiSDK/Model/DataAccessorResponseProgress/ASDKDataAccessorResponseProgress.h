@@ -20,10 +20,13 @@
 
 @interface ASDKDataAccessorResponseProgress : ASDKDataAccessorResponseBase
 
-@property (assign, nonatomic, readonly) NSUInteger progress;
+@property (assign, nonatomic, readonly) NSUInteger  progress;
+@property (strong, nonatomic, readonly) NSString    *formattedProgressString;
 
 - (instancetype)initWithProgress:(NSUInteger)progress
-                    isCachedData:(BOOL)isCachedData
                            error:(NSError *)error;
+
+- (instancetype)initWithFormattedProgressString:(NSString *)formattedProgressString
+                                          error:(NSError *)error;
 
 @end

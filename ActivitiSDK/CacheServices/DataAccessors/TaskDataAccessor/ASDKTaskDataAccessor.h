@@ -96,6 +96,23 @@ ASDKModelContent;
                    fromFileURL:(NSURL *)fileURL
                withContentData:(NSData *)contentData;
 
+
+/**
+ * Requests the specified content associated with a task and reports network or cached data
+ * through the designated data accessor delegate.
+ *
+ * @param content Content to be downloaded
+ */
+- (void)downloadTaskContent:(ASDKModelContent *)content;
+
+/**
+ * Requests the thumbnail representation that is associated with a task's content and reports
+ * network or cached data through the designated data accesor delegate.
+ *
+ * @param content Content to be downloaded
+ */
+- (void)downloadThumbnailForTaskContent:(ASDKModelContent *)content;
+
 /**
  * Deletes the passed content that was previously associated with a task.
  *

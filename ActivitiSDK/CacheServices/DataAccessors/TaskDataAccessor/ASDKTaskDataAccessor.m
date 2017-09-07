@@ -901,7 +901,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                           
                                           ASDKDataAccessorResponseProgress *responseProgress =
                                           [[ASDKDataAccessorResponseProgress alloc] initWithProgress:progress
-                                                                                        isCachedData:NO
                                                                                                error:error];
                                           if (strongSelf.delegate) {
                                               [strongSelf.delegate dataAccessor:strongSelf
@@ -913,6 +912,85 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                           ASDKDataAccessorResponseModel *responseModel =
                                           [[ASDKDataAccessorResponseModel alloc] initWithModel:uploadedContent
                                                                                   isCachedData:NO
+                                                                                         error:error];
+                                          if (strongSelf.delegate) {
+                                              [strongSelf.delegate dataAccessor:strongSelf
+                                                            didLoadDataResponse:responseModel];
+                                              
+                                              [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                          }
+                                      }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Download task content
+
+- (void)downloadTaskContent:(ASDKModelContent *)content {
+    NSParameterAssert(content);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService downloadContent:content
+                          allowCachedResults:(self.cachePolicy == ASDKServiceDataAccessorCachingPolicyAPIOnly) ? NO : YES
+                               progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                   __strong typeof(self) strongSelf = weakSelf;
+                                   
+                                   ASDKDataAccessorResponseProgress *responseProgress =
+                                   [[ASDKDataAccessorResponseProgress alloc] initWithFormattedProgressString:formattedReceivedBytesString
+                                                                                                       error:error];
+                                   if (strongSelf.delegate) {
+                                       [strongSelf.delegate dataAccessor:strongSelf
+                                                     didLoadDataResponse:responseProgress];
+                                   }
+                               } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                   __strong typeof(self) strongSelf = weakSelf;
+                                   
+                                   ASDKDataAccessorResponseModel *responseModel =
+                                   [[ASDKDataAccessorResponseModel alloc] initWithModel:downloadedContentURL
+                                                                           isCachedData:isLocalContent
+                                                                                  error:error];
+                                   if (strongSelf.delegate) {
+                                       [strongSelf.delegate dataAccessor:strongSelf
+                                                     didLoadDataResponse:responseModel];
+                                       
+                                       [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                   }
+                               }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Download task content thumbnail
+
+- (void)downloadThumbnailForTaskContent:(ASDKModelContent *)content {
+    NSParameterAssert(content);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService downloadThumbnailForContent:content
+                                      allowCachedResults:(self.cachePolicy == ASDKServiceDataAccessorCachingPolicyAPIOnly) ? NO : YES progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                          __strong typeof(self) strongSelf = weakSelf;
+                                          
+                                          ASDKDataAccessorResponseProgress *responseProgress =
+                                          [[ASDKDataAccessorResponseProgress alloc] initWithFormattedProgressString:formattedReceivedBytesString
+                                                                                                              error:error];
+                                          if (strongSelf.delegate) {
+                                              [strongSelf.delegate dataAccessor:strongSelf
+                                                            didLoadDataResponse:responseProgress];
+                                          }
+                                      } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                          __strong typeof(self) strongSelf = weakSelf;
+                                          
+                                          ASDKDataAccessorResponseModel *responseModel =
+                                          [[ASDKDataAccessorResponseModel alloc] initWithModel:downloadedContentURL
+                                                                                  isCachedData:isLocalContent
                                                                                          error:error];
                                           if (strongSelf.delegate) {
                                               [strongSelf.delegate dataAccessor:strongSelf

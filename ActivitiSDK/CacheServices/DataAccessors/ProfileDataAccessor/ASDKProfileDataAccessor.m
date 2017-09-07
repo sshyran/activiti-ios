@@ -330,7 +330,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                   
                                                   ASDKDataAccessorResponseProgress *responseProgress =
                                                   [[ASDKDataAccessorResponseProgress alloc] initWithProgress:progress
-                                                                                                isCachedData:NO
                                                                                                        error:error];
                                                   if (strongSelf.delegate) {
                                                       [strongSelf.delegate dataAccessor:strongSelf

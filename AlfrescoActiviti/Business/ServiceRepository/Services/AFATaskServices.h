@@ -35,7 +35,7 @@ typedef void  (^AFATaskServicesTaskUpdateCompletionBlock)       (BOOL isTaskUpda
 typedef void  (^AFATaskServicesTaskCompleteCompletionBlock)     (BOOL isTaskCompleted, NSError *error);
 typedef void  (^AFATaskServiceTaskContentProgressBlock)         (NSUInteger progress, NSError *error);
 typedef void  (^AFATaskServicesTaskContentUploadCompletionBlock)(BOOL isContentUploaded, NSError *error);
-typedef void  (^AFATaslServiceTaskContentDeleteCompletionBlock) (BOOL isContentDeleted, NSError *error);
+typedef void  (^AFATaskServiceTaskContentDeleteCompletionBlock) (BOOL isContentDeleted, NSError *error);
 typedef void  (^AFATaskServiceTaskContentDownloadProgressBlock) (NSString *formattedReceivedBytesString, NSError *error);
 typedef void  (^AFATaskServiceTaskContentDownloadCompletionBlock)(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error);
 typedef void  (^AFATaskServicesUserInvolvementCompletionBlock)  (BOOL isUserInvolved, NSError *error);
@@ -143,7 +143,7 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
  *                         optional error reason
  */
 - (void)requestTaskContentDeleteForContent:(ASDKModelContent *)content
-                       withCompletionBlock:(AFATaslServiceTaskContentDeleteCompletionBlock)completionBlock;
+                       withCompletionBlock:(AFATaskServiceTaskContentDeleteCompletionBlock)completionBlock;
 
 /**
  *  Performs a request to download the mentioned content
