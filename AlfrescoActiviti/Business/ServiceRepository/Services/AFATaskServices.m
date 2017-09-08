@@ -91,6 +91,14 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (copy, nonatomic) AFATaskServiceTaskContentDownloadProgressBlock   taskContentThumbnailDownloadProgressBlock;
 @property (copy, nonatomic) AFATaskServiceTaskContentDownloadCompletionBlock taskContentThumbnailDownloadCompletionBlock;
 
+// Involve user
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *taskInvolveUserDataAccessor;
+@property (copy, nonatomic) AFATaskServicesUserInvolvementCompletionBlock   taskInvolveUserCompletionBlock;
+
+// Remove user
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *taskRemoveUserDataAccesor;
+@property (copy, nonatomic) AFATaskServicesUserInvolvementCompletionBlock   taskRemoveUserCompletionBlock;
+
 @end
 
 @implementation AFATaskServices
@@ -284,59 +292,25 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestTaskUserInvolvement:(ASDKModelUser *)user
                          forTaskID:(NSString *)taskID
                    completionBlock:(AFATaskServicesUserInvolvementCompletionBlock)completionBlock {
-    NSParameterAssert(user);
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    ASDKTaskUserInvolvementCompletionBlock involvementCompletionBlock = ^(BOOL isUserInvolved, NSError *error) {
-        if (!error && isUserInvolved) {
-            AFALogVerbose(@"User %@ had been involved with task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(isUserInvolved, nil);
-            });
-        } else {
-            AFALogError(@"An error occured while involving user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(NO, error);
-            });
-        }
-    };
+    self.taskInvolveUserCompletionBlock = completionBlock;
     
-    AFAUserServices *userService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
-    
-    if ([userService isLoggedInOnCloud]) {
-        [self.taskNetworkService involveUserWithEmailAddress:user.email
-                                                   forTaskID:taskID
-                                             completionBlock:involvementCompletionBlock];
-    } else {
-        [self.taskNetworkService involveUserWithID:user.modelID
-                                         forTaskID:taskID
-                                   completionBlock:involvementCompletionBlock];
-    }
+    self.taskInvolveUserDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.taskInvolveUserDataAccessor involveUser:user
+                                     inTaskWithID:taskID];
 }
 
 - (void)requestToRemoveTaskUserInvolvement:(ASDKModelUser *)user
                                  forTaskID:(NSString *)taskID
                            completionBlock:(AFATaskServicesUserInvolvementCompletionBlock)completionBlock {
-    NSParameterAssert(user);
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService removeInvolvedUserWithID:user.modelID
-                                            forTaskID:taskID
-                                      completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                                          if (!error && !isUserInvolved) {
-                                              AFALogVerbose(@"User %@ had been removed from task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID);
-                                          } else {
-                                              AFALogError(@"An error occured while removing user %@ for task %@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
-                                          }
-                                          
-                                          dispatch_async(dispatch_get_main_queue(), ^{
-                                              completionBlock(isUserInvolved, nil);
-                                          });
-                                      }];
+    self.taskRemoveUserCompletionBlock = completionBlock;
+    
+    self.taskRemoveUserDataAccesor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.taskRemoveUserDataAccesor removeInvolvedUser:user
+                                        fromTaskWithID:taskID];
 }
 
 - (void)requestCreateComment:(NSString *)comment
@@ -597,6 +571,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         [self handleTaskContentDownloadDataAccessorResponse:response];
     } else if (self.taskContentThumbnailDownloadDataAccessor == dataAccessor) {
         [self handleTaskContentThumbnailDownloadDataAccessorResponse:response];
+    } else if (self.taskInvolveUserDataAccessor == dataAccessor ||
+               self.taskRemoveUserDataAccesor == dataAccessor) {
+        [self handleTaskUserInvolveDataAccessorResponse:response];
     }
 }
 
@@ -875,6 +852,19 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             }
         });
     }
+}
+
+- (void)handleTaskUserInvolveDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *taskInvolveResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskInvolveUserCompletionBlock) {
+            strongSelf.taskInvolveUserCompletionBlock(taskInvolveResponse.isConfirmation, taskInvolveResponse.error);
+        }
+    });
 }
 
 @end

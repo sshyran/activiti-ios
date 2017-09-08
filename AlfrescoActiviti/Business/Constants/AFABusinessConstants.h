@@ -19,10 +19,6 @@
 #import <Foundation/Foundation.h>
 
 
-// API Endpoints
-
-extern NSString *kActivitiCloudHostName;
-
 // Login related
 extern NSUInteger kDefaultLoginUnsecuredPort;
 extern NSUInteger kDefaultLoginSecuredPort;

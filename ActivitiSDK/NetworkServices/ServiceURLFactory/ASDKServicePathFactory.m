@@ -75,6 +75,14 @@ static NSString * const kASDkHTTPS = @"https";
 
 
 #pragma mark -
+#pragma mark Cloud hostname 
+
+- (NSString *)cloudHostnamePath {
+    return kASDKAPICloudHostnamePath;
+}
+
+
+#pragma mark -
 #pragma mark Apps
 
 - (NSString *)runtimeAppDefinitionsServicePath {

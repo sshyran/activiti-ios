@@ -20,7 +20,8 @@
 
 @class ASDKFilterRequestRepresentation,
 ASDKTaskUpdateRequestRepresentation,
-ASDKModelContent;
+ASDKModelContent,
+ASDKModelUser;
 
 @interface ASDKTaskDataAccessor : ASDKDataAccessor
 
@@ -119,6 +120,26 @@ ASDKModelContent;
  * @param content Content to be deleted
  */
 - (void)deleteContent:(ASDKModelContent *)content;
+
+/**
+ * Involves user with mentioned task and reports the result through the designated data
+ * accessor delegate.
+ *
+ * @param user      User to be involved with the task
+ * @param taskID    The ID of the task which the user should be involved with
+ */
+- (void)involveUser:(ASDKModelUser *)user
+       inTaskWithID:(NSString *)taskID;
+
+/**
+ * Removes involvement of a user with a mentioned task and reports the result through the designated
+ * data accessor delegate
+ *
+ * @param user User to be removed from the involved user list
+ * @param taskID The ID of the task from which the user should be removed
+ */
+- (void)removeInvolvedUser:(ASDKModelUser *)user
+            fromTaskWithID:(NSString *)taskID;
 
 /**
  * Cancels ongoing operations for the current data accessor.

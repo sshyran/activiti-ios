@@ -20,12 +20,6 @@
 
 
 #pragma mark -
-#pragma mark API Endpoints
-
-NSString *kActivitiCloudHostName                    = @"activiti.alfresco.com";
-
-
-#pragma mark -
 #pragma mark Login related
 
 NSUInteger kDefaultLoginUnsecuredPort                = 80;

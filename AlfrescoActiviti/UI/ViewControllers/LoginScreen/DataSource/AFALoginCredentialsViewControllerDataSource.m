@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "AFALoginCredentialsViewControllerDataSource.h"
+@import ActivitiSDK;
 
 // Constants
 #import "AFALocalizationConstants.h"
@@ -108,7 +109,7 @@
     // If the login type is of cloud type then update the model with
     // the default host name and security layer
     if (AFALoginAuthenticationTypeCloud == self.loginModel.authentificationType) {
-        [self.loginModel updateHostNameEntry:kActivitiCloudHostName];
+        [self.loginModel updateHostNameEntry:kASDKAPICloudHostnamePath];
         [self.loginModel updateCommunicationOverSecureLayer:YES];
         [self.loginModel updatePortEntry:nil];
     }

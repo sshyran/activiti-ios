@@ -48,6 +48,9 @@
 // Server information
 - (NSString *)serverInformationServicePath;
 
+// Cloud hostname
+- (NSString *)cloudHostnamePath;
+
 // Apps
 - (NSString *)runtimeAppDefinitionsServicePath;
 

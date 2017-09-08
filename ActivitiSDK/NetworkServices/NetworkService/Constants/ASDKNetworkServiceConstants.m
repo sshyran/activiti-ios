@@ -92,7 +92,7 @@ NSString *kASDKAPIIconNameAll                                   = @"glyphicon-th
 
 
 #pragma mark -
-#pragma makr Filter keys
+#pragma mark Filter keys
 
 NSString * const kASDKAPIJSONKeyData                            = @"data";
 NSString * const kASDKAPIJSONKeyName                            = @"name";

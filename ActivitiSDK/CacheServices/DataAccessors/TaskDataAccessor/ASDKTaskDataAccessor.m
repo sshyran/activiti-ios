@@ -38,6 +38,8 @@
 #import "ASDKDataAccessorResponseConfirmation.h"
 #import "ASDKModelFileContent.h"
 #import "ASDKModelContent.h"
+#import "ASDKModelServerConfiguration.h"
+#import "ASDKModelUser.h"
 
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
@@ -1032,12 +1034,100 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 
 #pragma mark -
+#pragma mark Service - Involve user with task
+
+- (void)involveUser:(ASDKModelUser *)user
+       inTaskWithID:(NSString *)taskID {
+    NSParameterAssert(user);
+    NSParameterAssert(taskID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    if ([self isLoggedInOnCloud]) {
+        [self.taskNetworkService involveUserWithEmailAddress:user.email
+                                                   forTaskID:taskID
+                                             completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                                 __strong typeof(self) strongSelf = weakSelf;
+                                                 
+                                                 [strongSelf handleUserInvolvement:isUserInvolved
+                                                                             error:error];
+                                             }];
+    } else {
+        [self.taskNetworkService involveUserWithID:user.modelID
+                                         forTaskID:taskID
+                                   completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                       __strong typeof(self) strongSelf = weakSelf;
+                                       
+                                       [strongSelf handleUserInvolvement:isUserInvolved
+                                                                   error:error];
+                                   }];
+    }
+}
+
+
+#pragma mark -
+#pragma mark Service - Remove involved user from task
+
+- (void)removeInvolvedUser:(ASDKModelUser *)user
+            fromTaskWithID:(NSString *)taskID {
+    NSParameterAssert(user);
+    NSParameterAssert(taskID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    if ([self isLoggedInOnCloud]) {
+        [self.taskNetworkService removeInvolvedUserWithEmailAddress:user.email
+                                                          forTaskID:taskID
+                                                    completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                                        __strong typeof(self) strongSelf = weakSelf;
+                                                        
+                                                        [strongSelf handleUserInvolvement:isUserInvolved
+                                                                                    error:error];
+                                                    }];
+    } else {
+        [self.taskNetworkService removeInvolvedUserWithID:user.modelID
+                                                forTaskID:taskID
+                                          completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
+                                              [strongSelf handleUserInvolvement:isUserInvolved
+                                                                          error:error];
+                                          }];
+    }
+}
+
+
+#pragma mark -
 #pragma mark Cancel operations
 
 - (void)cancelOperations {
     [super cancelOperations];
     [self.processingQueue cancelAllOperations];
     [self.taskNetworkService cancelAllNetworkOperations];
+}
+
+
+#pragma mark -
+#pragma mark Handlers
+
+- (void)handleUserInvolvement:(BOOL)isUserInvolved
+                        error:(NSError *)error {
+    ASDKDataAccessorResponseConfirmation *confirmationResponse =
+    [[ASDKDataAccessorResponseConfirmation alloc] initWithConfirmation:isUserInvolved
+                                                          isCachedData:NO
+                                                                 error:error];
+    if (self.delegate) {
+        [self.delegate dataAccessor:self
+                      didLoadDataResponse:confirmationResponse];
+        
+        [self.delegate dataAccessorDidFinishedLoadingDataResponse:self];
+    }
 }
 
 
@@ -1070,6 +1160,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }];
     
     return completionOperation;
+}
+
+- (BOOL)isLoggedInOnCloud {
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    NSString *cloudHostname = [self.taskNetworkService.servicePathFactory cloudHostnamePath];
+    return [sdkBootstrap.serverConfiguration.hostAddressString isEqualToString:cloudHostname];
 }
 
 @end

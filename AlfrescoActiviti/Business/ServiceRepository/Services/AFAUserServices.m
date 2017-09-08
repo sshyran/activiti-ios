@@ -117,7 +117,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (BOOL)isLoggedInOnCloud {
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    return [sdkBootstrap.serverConfiguration.hostAddressString isEqualToString:kActivitiCloudHostName];
+    return [sdkBootstrap.serverConfiguration.hostAddressString isEqualToString:[self.userNetworkService.servicePathFactory cloudHostnamePath]];
 }
 
 @end
