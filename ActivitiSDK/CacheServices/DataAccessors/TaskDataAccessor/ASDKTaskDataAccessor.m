@@ -40,6 +40,8 @@
 #import "ASDKModelContent.h"
 #import "ASDKModelServerConfiguration.h"
 #import "ASDKModelUser.h"
+#import "ASDKModelComment.h"
+#import "ASDKTaskCreationRequestRepresentation.h"
 
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
@@ -1102,6 +1104,110 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
 }
 
+#pragma mark -
+#pragma mark Service - Create task comment
+
+- (void)createComment:(NSString *)comment
+        forTaskWithID:(NSString *)taskID {
+    NSParameterAssert(comment);
+    NSParameterAssert(taskID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService createComment:comment
+                                 forTaskID:taskID
+                           completionBlock:^(ASDKModelComment *comment, NSError *error) {
+                               __strong typeof(self) strongSelf = weakSelf;
+                               
+                               ASDKDataAccessorResponseModel *response =
+                               [[ASDKDataAccessorResponseModel alloc] initWithModel:comment
+                                                                       isCachedData:NO
+                                                                              error:error];
+                               if (weakSelf.delegate) {
+                                   [weakSelf.delegate dataAccessor:weakSelf
+                                               didLoadDataResponse:response];
+                                   
+                                   [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                               }
+                           }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Create task
+
+- (void)createTaskWithRepresentation:(ASDKTaskCreationRequestRepresentation *)taskRepresentation {
+    NSParameterAssert(taskRepresentation);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService createTaskWithRepresentation:taskRepresentation
+                                          completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
+                                              ASDKDataAccessorResponseModel *response =
+                                              [[ASDKDataAccessorResponseModel alloc] initWithModel:task
+                                                                                      isCachedData:NO
+                                                                                             error:error];
+                                              if (weakSelf.delegate) {
+                                                  [weakSelf.delegate dataAccessor:weakSelf
+                                                              didLoadDataResponse:response];
+                                                  
+                                                  [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                              }
+                                          }];
+}
+
+
+#pragma mark -
+#pragma Service - Claim task
+
+- (void)claimTaskWithID:(NSString *)taskID {
+    NSParameterAssert(taskID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService claimTaskWithID:taskID
+                             completionBlock:^(BOOL isTaskClaimed, NSError *error) {
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 
+                                 [strongSelf handleTaskClaiming:isTaskClaimed
+                                                          error:error];
+                             }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Unclaim task
+
+- (void)unclaimTaskWithID:(NSString *)taskID {
+    NSParameterAssert(taskID);
+    NSParameterAssert(taskID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.taskNetworkService unclaimTaskWithID:taskID
+                               completionBlock:^(BOOL isTaskClaimed, NSError *error) {
+                                   __strong typeof(self) strongSelf = weakSelf;
+                                   
+                                   [strongSelf handleTaskClaiming:isTaskClaimed
+                                                            error:error];
+                               }];
+}
+
+
 
 #pragma mark -
 #pragma mark Cancel operations
@@ -1124,7 +1230,21 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                  error:error];
     if (self.delegate) {
         [self.delegate dataAccessor:self
-                      didLoadDataResponse:confirmationResponse];
+                didLoadDataResponse:confirmationResponse];
+        
+        [self.delegate dataAccessorDidFinishedLoadingDataResponse:self];
+    }
+}
+
+- (void)handleTaskClaiming:(BOOL)isTaskClaimed
+                     error:(NSError *)error {
+    ASDKDataAccessorResponseConfirmation *confirmationResponse =
+    [[ASDKDataAccessorResponseConfirmation alloc] initWithConfirmation:isTaskClaimed
+                                                          isCachedData:NO
+                                                                 error:error];
+    if (self.delegate) {
+        [self.delegate dataAccessor:self
+                didLoadDataResponse:confirmationResponse];
         
         [self.delegate dataAccessorDidFinishedLoadingDataResponse:self];
     }

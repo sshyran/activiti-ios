@@ -21,7 +21,9 @@
 @class ASDKFilterRequestRepresentation,
 ASDKTaskUpdateRequestRepresentation,
 ASDKModelContent,
-ASDKModelUser;
+ASDKModelUser,
+ASDKModelComment,
+ASDKTaskCreationRequestRepresentation;
 
 @interface ASDKTaskDataAccessor : ASDKDataAccessor
 
@@ -133,13 +135,47 @@ ASDKModelUser;
 
 /**
  * Removes involvement of a user with a mentioned task and reports the result through the designated
- * data accessor delegate
+ * data accessor delegate.
  *
  * @param user User to be removed from the involved user list
  * @param taskID The ID of the task from which the user should be removed
  */
 - (void)removeInvolvedUser:(ASDKModelUser *)user
             fromTaskWithID:(NSString *)taskID;
+
+/**
+ * Creates a comment a comment for the specified task and reports the result through the designated
+ * data accessor delegate.
+ *
+ * @param comment   Comment to be created
+ * @param taskID    The ID of the task for which the comment is to be created
+ */
+- (void)createComment:(NSString *)comment
+        forTaskWithID:(NSString *)taskID;
+
+/**
+ * Creates a task with the given representation and reports the result through the designated
+ * data accessor delegate.
+ *
+ * @param taskRepresentation Representation used to create the task
+ */
+- (void)createTaskWithRepresentation:(ASDKTaskCreationRequestRepresentation *)taskRepresentation;
+
+/**
+ * Claims the specified task and reports the result through the designated data accessor
+ * delegate.
+ *
+ * @param taskID The ID of the task to be claimed
+ */
+- (void)claimTaskWithID:(NSString *)taskID;
+
+/**
+ * Unclaims the specified task and reports the result through the designated data accessor
+ * delegate.
+ *
+ * @param taskID The ID of the task to be unclaimed
+ */
+- (void)unclaimTaskWithID:(NSString *)taskID;
 
 /**
  * Cancels ongoing operations for the current data accessor.

@@ -99,6 +99,22 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (strong, nonatomic) ASDKTaskDataAccessor                      *taskRemoveUserDataAccesor;
 @property (copy, nonatomic) AFATaskServicesUserInvolvementCompletionBlock   taskRemoveUserCompletionBlock;
 
+// Create task comment
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *createTaskCommentDataAccessor;
+@property (copy, nonatomic) AFATaskServicesCreateCommentCompletionBlock createTaskCommentCompletionBlock;
+
+// Create task
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *createTaskDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskDetailsCompletionBlock   createTaskCompletionBlock;
+
+// Claim task
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *claimTaskDataAccessor;
+@property (copy, nonatomic) AFATaskServicesClaimCompletionBlock         claimTaskCompletionBlock;
+
+// Unclaim task
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *unclaimTaskDataAccessor;
+@property (copy, nonatomic) AFATaskServicesClaimCompletionBlock         unclaimTaskCompletionBlock;
+
 @end
 
 @implementation AFATaskServices
@@ -316,32 +332,17 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestCreateComment:(NSString *)comment
                    forTaskID:(NSString *)taskID
              completionBlock:(AFATaskServicesCreateCommentCompletionBlock)completionBlock {
-    NSParameterAssert(comment);
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService createComment:comment
-                                 forTaskID:taskID
-                           completionBlock:^(ASDKModelComment *comment, NSError *error) {
-                               if (!error && comment) {
-                                   AFALogVerbose(@"Comment for task ID :%@ created successfully.", taskID);
-                                   
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       completionBlock(comment, nil);
-                                   });
-                               } else {
-                                   AFALogError(@"An error occured creating comment for task id %@. Reason:%@", taskID, error.localizedDescription);
-                                   
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       completionBlock(nil, error);
-                                   });
-                               }
-                           }];
+    self.createTaskCommentCompletionBlock = completionBlock;
+    
+    self.createTaskCommentDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.createTaskCommentDataAccessor createComment:comment
+                                        forTaskWithID:taskID];
 }
 
 - (void)requestCreateTaskWithRepresentation:(AFATaskCreateModel *)taskRepresentation
                             completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
-    NSParameterAssert(taskRepresentation);
     NSParameterAssert(completionBlock);
     
     ASDKTaskCreationRequestRepresentation *taskCreationRequestRepresentation = [ASDKTaskCreationRequestRepresentation new];
@@ -351,68 +352,30 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     taskCreationRequestRepresentation.assigneeID = taskRepresentation.assigneeID;
     taskCreationRequestRepresentation.jsonAdapterType = ASDKModelJSONAdapterTypeExcludeNilValues;
     
-    [self.taskNetworkService createTaskWithRepresentation:taskCreationRequestRepresentation
-                                          completionBlock:^(ASDKModelTask *task, NSError *error) {
-                                              if (!error) {
-                                                  AFALogVerbose(@"Created task %@", task.name);
-                                                  
-                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                      completionBlock (task, nil);
-                                                  });
-                                              } else {
-                                                  AFALogError(@"An error occured while creating task: %@. Reason:%@", task.name, error.localizedDescription);
-                                                  
-                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                      completionBlock(nil, error);
-                                                  });
-                                              }
-                                          }];
+    self.createTaskCompletionBlock = completionBlock;
+    
+    self.createTaskDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.createTaskDataAccessor createTaskWithRepresentation:taskCreationRequestRepresentation];
 }
 
 - (void)requestTaskClaimForTaskID:(NSString *)taskID
                   completionBlock:(AFATaskServicesClaimCompletionBlock)completionBlock {
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService claimTaskWithID:taskID
-                             completionBlock:^(BOOL isTaskClaimed, NSError *error) {
-                                 if (!error && isTaskClaimed) {
-                                     AFALogVerbose(@"Claimed task with ID:%@", taskID);
-                                     
-                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                         completionBlock (YES, nil);
-                                     });
-                                 } else {
-                                     AFALogError(@"An error occured while claiming task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                     
-                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                         completionBlock(NO, error);
-                                     });
-                                 }
-                             }];
+    self.claimTaskCompletionBlock = completionBlock;
+    
+    self.claimTaskDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.claimTaskDataAccessor claimTaskWithID:taskID];
 }
 
 - (void)requestTaskUnclaimForTaskID:(NSString *)taskID
                     completionBlock:(AFATaskServicesClaimCompletionBlock)completionBlock {
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService unclaimTaskWithID:taskID
-                               completionBlock:^(BOOL isTaskClaimed, NSError *error) {
-                                   if (!error && !isTaskClaimed) {
-                                       AFALogVerbose(@"Unclaimed task with ID:%@", taskID);
-                                       
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           completionBlock (NO, nil);
-                                       });
-                                   } else {
-                                       AFALogError(@"An error occured while unclaiming task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                       
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           completionBlock(YES, error);
-                                       });
-                                   }
-                               }];
+    self.unclaimTaskCompletionBlock = completionBlock;
+    
+    self.unclaimTaskDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.unclaimTaskDataAccessor unclaimTaskWithID:taskID];
 }
 
 - (void)requestTaskAssignForTaskWithID:(NSString *)taskID
@@ -574,6 +537,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     } else if (self.taskInvolveUserDataAccessor == dataAccessor ||
                self.taskRemoveUserDataAccesor == dataAccessor) {
         [self handleTaskUserInvolveDataAccessorResponse:response];
+    } else if (self.createTaskCommentDataAccessor == dataAccessor) {
+        [self handleTaskCreateCommentDataAccessorResponse:response];
+    } else if (self.createTaskDataAccessor == dataAccessor) {
+        [self handleTaskCreateDataAccessorResponse:response];
+    } else if (self.claimTaskDataAccessor == dataAccessor ||
+               self.unclaimTaskDataAccessor == dataAccessor) {
+        [self handleTaskClaimDataAccessorResponse:response];
     }
 }
 
@@ -863,6 +833,49 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         
         if (strongSelf.taskInvolveUserCompletionBlock) {
             strongSelf.taskInvolveUserCompletionBlock(taskInvolveResponse.isConfirmation, taskInvolveResponse.error);
+            strongSelf.taskInvolveUserCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleTaskCreateCommentDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *commentResponse = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.createTaskCommentCompletionBlock) {
+            strongSelf.createTaskCommentCompletionBlock(commentResponse.model, commentResponse.error);
+            strongSelf.createTaskCommentCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleTaskCreateDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *taskResponse = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.createTaskCompletionBlock) {
+            strongSelf.createTaskCompletionBlock(taskResponse.model, taskResponse.error);
+            strongSelf.createTaskCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleTaskClaimDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *taskClaimResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.claimTaskCompletionBlock) {
+            strongSelf.claimTaskCompletionBlock(taskClaimResponse.isConfirmation, taskClaimResponse.error);
+            strongSelf.claimTaskCompletionBlock = nil;
         }
     });
 }
