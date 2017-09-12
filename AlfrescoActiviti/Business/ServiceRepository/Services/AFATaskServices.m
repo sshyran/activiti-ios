@@ -24,15 +24,10 @@
 #import "AFATaskUpdateModel.h"
 #import "AFATaskCreateModel.h"
 
-// Configurations
-#import "AFALogConfiguration.h"
-
 // Services
 #import "AFAUserServices.h"
 #import "AFAServiceRepository.h"
 
-
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 @interface AFATaskServices () <ASDKDataAccessorDelegate>
 
@@ -114,6 +109,23 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 // Unclaim task
 @property (strong, nonatomic) ASDKTaskDataAccessor                      *unclaimTaskDataAccessor;
 @property (copy, nonatomic) AFATaskServicesClaimCompletionBlock         unclaimTaskCompletionBlock;
+
+// Assign task
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *assignTaskDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskDetailsCompletionBlock   assignTaskCompletionBlock;
+
+// Download task audit log
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *taskAuditLogDownloadDataAccessor;
+@property (copy, nonatomic) AFATaskServiceTaskContentDownloadProgressBlock   taskAuditLogDownloadProgressBlock;
+@property (copy, nonatomic) AFATaskServiceTaskContentDownloadCompletionBlock taskAuditLogDownloadCompletionBlock;
+
+// Create checklist
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *createTaskChecklistDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskDetailsCompletionBlock   createTaskChecklistCompletionBlock;
+
+// Update checklist order
+@property (strong, nonatomic) ASDKTaskDataAccessor                      *updateChecklistOrderDataAccessor;
+@property (copy, nonatomic) AFATaskServicesTaskUpdateCompletionBlock    updateChecklistOrderCompletionBlock;
 
 @end
 
@@ -302,6 +314,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self.taskContentThumbnailDownloadCompletionBlock = completionBlock;
     
     self.taskContentThumbnailDownloadDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    self.taskContentThumbnailDownloadDataAccessor.cachePolicy = allowCachedResults ? ASDKServiceDataAccessorCachingPolicyHybrid : ASDKServiceDataAccessorCachingPolicyAPIOnly;
     [self.taskContentThumbnailDownloadDataAccessor downloadThumbnailForTaskContent:content];
 }
 
@@ -381,58 +394,27 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestTaskAssignForTaskWithID:(NSString *)taskID
                                 toUser:(ASDKModelUser *)user
                        completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
-    NSParameterAssert(taskID);
-    NSParameterAssert(user);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService assignTaskWithID:taskID
-                                       toUser:user
-                              completionBlock:^(ASDKModelTask *task, NSError *error) {
-                                  if (!error && task) {
-                                      AFALogVerbose(@"Assigned user:%@ to task:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], task.name);
-                                      
-                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                          completionBlock(task, nil);
-                                      });
-                                  } else {
-                                      AFALogError(@"An error occured while assigning user:%@ to task with ID:%@. Reason:%@", [NSString stringWithFormat:@"%@ %@", user.userFirstName, user.userLastName], taskID, error.localizedDescription);
-                                      
-                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                          completionBlock(nil, error);
-                                      });
-                                  }
-                              }];
+    self.assignTaskCompletionBlock = completionBlock;
+    
+    self.assignTaskDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.assignTaskDataAccessor assignTaskWithID:taskID
+                                           toUser:user];
 }
 
 - (void)requestDownloadAuditLogForTaskWithID:(NSString *)taskID
                           allowCachedResults:(BOOL)allowCachedResults
                                progressBlock:(AFATaskServiceTaskContentDownloadProgressBlock)progressBlock
                              completionBlock:(AFATaskServiceTaskContentDownloadCompletionBlock)completionBlock {
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
     
-    [self.taskNetworkService downloadAuditLogForTaskWithID:taskID
-                                        allowCachedResults:allowCachedResults
-                                             progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                                 AFALogVerbose(@"Downloaded %@ of content for the audit log of task with ID:%@ ", formattedReceivedBytesString, taskID);
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     progressBlock (formattedReceivedBytesString, error);
-                                                 });
-                                             } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                                 if (!error && downloadedContentURL) {
-                                                     AFALogVerbose(@"Audit log content for task with ID:%@ was downloaded successfully.", taskID);
-                                                     
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock(downloadedContentURL, isLocalContent,nil);
-                                                     });
-                                                 } else {
-                                                     AFALogError(@"An error occured while downloading audit log content for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                                     
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock(nil, NO, error);
-                                                     });
-                                                 }
-                                             }];
+    self.taskAuditLogDownloadProgressBlock = progressBlock;
+    self.taskAuditLogDownloadCompletionBlock = completionBlock;
+    
+    self.taskAuditLogDownloadDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    self.taskAuditLogDownloadDataAccessor.cachePolicy = allowCachedResults ? ASDKServiceDataAccessorCachingPolicyHybrid : ASDKServiceDataAccessorCachingPolicyAPIOnly;
+    [self.taskAuditLogDownloadDataAccessor downloadAuditLogForTaskWithID:taskID];
 }
 
 - (void)requestChecklistForTaskWithID:(NSString *)taskID
@@ -451,9 +433,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestChecklistCreateWithRepresentation:(AFATaskCreateModel *)taskRepresentation
                                           taskID:(NSString *)taskID
                                  completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
-    NSParameterAssert(taskRepresentation);
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
+    
+    self.createTaskCompletionBlock = completionBlock;
     
     ASDKTaskCreationRequestRepresentation *checklistCreationRequestRepresentation = [ASDKTaskCreationRequestRepresentation new];
     checklistCreationRequestRepresentation.taskName = taskRepresentation.taskName;
@@ -462,54 +444,31 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     checklistCreationRequestRepresentation.parentTaskID = taskID;
     checklistCreationRequestRepresentation.jsonAdapterType = ASDKModelJSONAdapterTypeExcludeNilValues;
     
-    [self.taskNetworkService createChecklistWithRepresentation:checklistCreationRequestRepresentation
-                                                        taskID:taskID
-                                               completionBlock:^(ASDKModelTask *task, NSError *error) {
-                                                   if (!error) {
-                                                       AFALogVerbose(@"Created checklist item %@", task.name);
-                                                       
-                                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                                           completionBlock (task, nil);
-                                                       });
-                                                   } else {
-                                                       AFALogError(@"An error occured while creating checklist item: %@. Reason:%@", task.name, error.localizedDescription);
-                                                       
-                                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                                           completionBlock(nil, error);
-                                                       });
-                                                   }
-                                               }];
+    self.createTaskChecklistDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.createTaskChecklistDataAccessor createChecklisEntryWithRepresentation:checklistCreationRequestRepresentation
+                                                                  forTaskWithID:taskID];
 }
 
 - (void)requestChecklistOrderUpdateWithOrderArrat:(NSArray *)orderArray
                                            taskID:(NSString *)taskID
                                   completionBlock:(AFATaskServicesTaskUpdateCompletionBlock)completionBlock {
-    NSParameterAssert(orderArray);
-    NSParameterAssert(taskID);
     NSParameterAssert(completionBlock);
+    
+    self.updateChecklistOrderCompletionBlock = completionBlock;
     
     ASDKTaskChecklistOrderRequestRepresentation *checklistOrderRequestRepresentation = [ASDKTaskChecklistOrderRequestRepresentation new];
     checklistOrderRequestRepresentation.checklistOrder = orderArray;
     
-    [self.taskNetworkService updateChecklistOrderWithRepresentation:checklistOrderRequestRepresentation
-                                                             taskID:taskID
-                                                    completionBlock:^(BOOL isTaskUpdated, NSError *error) {
-                                                        if (!error && isTaskUpdated) {
-                                                            AFALogVerbose(@"Updated checklist order for task with ID:%@", taskID);
-                                                            
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                completionBlock(YES, nil);
-                                                            });
-                                                        } else {
-                                                            AFALogError(@"An error occured while updating the checklist order for task with ID:%@. Reason:%@", taskID, error.localizedDescription);
-                                                        }
-                                                    }];
+    self.updateChecklistOrderDataAccessor = [[ASDKTaskDataAccessor alloc] initWithDelegate:self];
+    [self.updateChecklistOrderDataAccessor updateChecklistOrderWithRepresentation:checklistOrderRequestRepresentation
+                                                                    forTaskWithID:taskID];
 }
 
 
 #pragma mark -
 #pragma mark ASDKDataAccessorDelegate
 
+#warning refactor approach 
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
     if (self.fetchTaskListDataAccessor == dataAccessor) {
@@ -544,6 +503,14 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     } else if (self.claimTaskDataAccessor == dataAccessor ||
                self.unclaimTaskDataAccessor == dataAccessor) {
         [self handleTaskClaimDataAccessorResponse:response];
+    } else if (self.assignTaskDataAccessor == dataAccessor) {
+        [self handleTaskAssignDataAccessorResponse:response];
+    } else if (self.taskAuditLogDownloadDataAccessor == dataAccessor) {
+        [self handleTaskAuditLogDownloadDataAccessorResponse:response];
+    } else if (self.createTaskChecklistDataAccessor == dataAccessor) {
+        [self handleCreateChecklistDataAccessorResponse:response];
+    } else if (self.updateChecklistOrderDataAccessor == dataAccessor) {
+        [self handleUpdateChecklistOrderDataAccessorResponse:response];
     }
 }
 
@@ -876,6 +843,76 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         if (strongSelf.claimTaskCompletionBlock) {
             strongSelf.claimTaskCompletionBlock(taskClaimResponse.isConfirmation, taskClaimResponse.error);
             strongSelf.claimTaskCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleTaskAssignDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *taskResponse = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.assignTaskCompletionBlock) {
+            strongSelf.assignTaskCompletionBlock(taskResponse.model, taskResponse.error);
+            strongSelf.assignTaskCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleTaskAuditLogDownloadDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSString *formattedProgressString = progressResponse.formattedProgressString;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskAuditLogDownloadProgressBlock) {
+                strongSelf.taskAuditLogDownloadProgressBlock(formattedProgressString, progressResponse.error);
+            }
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
+        ASDKDataAccessorResponseModel *auditLogResponse = (ASDKDataAccessorResponseModel *)response;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.taskAuditLogDownloadCompletionBlock) {
+                strongSelf.taskAuditLogDownloadCompletionBlock(auditLogResponse.model, auditLogResponse.isCachedData, auditLogResponse.error);
+                strongSelf.taskAuditLogDownloadCompletionBlock = nil;
+                strongSelf.taskAuditLogDownloadProgressBlock = nil;
+            }
+        });
+    }
+}
+
+- (void)handleCreateChecklistDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *taskResponse = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.createTaskChecklistCompletionBlock) {
+            strongSelf.createTaskChecklistCompletionBlock(taskResponse.model, taskResponse.error);
+            strongSelf.createTaskChecklistCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleUpdateChecklistOrderDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *taskChecklistUpdateResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.updateChecklistOrderCompletionBlock) {
+            strongSelf.updateChecklistOrderCompletionBlock(taskChecklistUpdateResponse.isConfirmation, taskChecklistUpdateResponse.error);
+            strongSelf.updateChecklistOrderCompletionBlock = nil;
         }
     });
 }

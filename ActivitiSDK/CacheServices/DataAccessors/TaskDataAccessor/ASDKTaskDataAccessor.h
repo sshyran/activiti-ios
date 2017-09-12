@@ -23,12 +23,13 @@ ASDKTaskUpdateRequestRepresentation,
 ASDKModelContent,
 ASDKModelUser,
 ASDKModelComment,
-ASDKTaskCreationRequestRepresentation;
+ASDKTaskCreationRequestRepresentation,
+ASDKTaskChecklistOrderRequestRepresentation;
 
 @interface ASDKTaskDataAccessor : ASDKDataAccessor
 
 /**
- * Requests a list of tasks for the current logged in user conforming to the properties 
+ * Requests a list of tasks for the current logged in user conforming to the properties
  * of a provided filter and reports network or cached data through the designated
  * data accessor delegate.
  *
@@ -45,7 +46,7 @@ ASDKTaskCreationRequestRepresentation;
 - (void)fetchTaskDetailsForTaskID:(NSString *)taskID;
 
 /**
- * Requests the content associated with a task and reports network or cached data through the 
+ * Requests the content associated with a task and reports network or cached data through the
  * designated data accessor delegate.
  *
  * @param taskID The ID of the task for which the content is requested
@@ -61,7 +62,7 @@ ASDKTaskCreationRequestRepresentation;
 - (void)fetchTaskCommentsForTaskID:(NSString *)taskID;
 
 /**
- * Requests the checklist tasks associated with a task and reports network or cached data 
+ * Requests the checklist tasks associated with a task and reports network or cached data
  * through the designated data accessor delegate.
  *
  * @param taskID The ID of the task for which the checklist is requested
@@ -96,8 +97,8 @@ ASDKTaskCreationRequestRepresentation;
  * @param contentData   NSData object with the actual content
  */
 - (void)uploadContentForTaskWithID:(NSString *)taskID
-                   fromFileURL:(NSURL *)fileURL
-               withContentData:(NSData *)contentData;
+                       fromFileURL:(NSURL *)fileURL
+                   withContentData:(NSData *)contentData;
 
 
 /**
@@ -176,6 +177,45 @@ ASDKTaskCreationRequestRepresentation;
  * @param taskID The ID of the task to be unclaimed
  */
 - (void)unclaimTaskWithID:(NSString *)taskID;
+
+/**
+ * Assigns a task to a user and reports the result through the designated data accessor
+ * delegate.
+ *
+ * @param taskID    The ID of the task to be assigned
+ * @param user      The user the task should be assigned to
+ */
+- (void)assignTaskWithID:(NSString *)taskID
+                  toUser:(ASDKModelUser *)user;
+
+/**
+ * Requests the audit log that is associated with a task and reports network or cached data
+ * through the designated data accesor delegate.
+ *
+ * @param taskID The ID of the task for which the download audit is requested
+ */
+- (void)downloadAuditLogForTaskWithID:(NSString *)taskID;
+
+/**
+ * Create a checklist entry for a given task based on a provided task representation and
+ * reports the result through the designated data accessor delegate.
+ *
+ * @param taskRepresentation    The task representation containing the structural details of
+ *                              the checklist element
+ * @param taskID                The ID of the task for which the checklist entry is created
+ */
+- (void)createChecklisEntryWithRepresentation:(ASDKTaskCreationRequestRepresentation *)taskRepresentation
+                                forTaskWithID:(NSString *)taskID;
+
+/**
+ * Update the checklist entries order associated with a specified task given an array of checklist IDs
+ * and reports the result through the designated data accessor delegate.
+ *
+ * @param checklistOrderRepresentation  Request representation containing an ordered collection IDs of existing checklist entries
+ * @param taskID                        The ID of the task for which the checklist order is applied
+ */
+- (void)updateChecklistOrderWithRepresentation:(ASDKTaskChecklistOrderRequestRepresentation *)checklistOrderRepresentation
+                                 forTaskWithID:(NSString *)taskID;
 
 /**
  * Cancels ongoing operations for the current data accessor.
