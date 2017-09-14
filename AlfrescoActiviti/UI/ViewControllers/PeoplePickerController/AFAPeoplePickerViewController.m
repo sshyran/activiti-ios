@@ -68,6 +68,12 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 @property (strong, nonatomic) NSMutableDictionary               *selectedContributors;
 @property (assign, nonatomic) AFAPeoplePickerControllerState    controllerState;
 
+// Task services
+@property (strong, nonatomic) AFATaskServices                   *involveUserService;
+@property (strong, nonatomic) AFATaskServices                   *removeUserService;
+@property (strong, nonatomic) AFATaskServices                   *assignTaskService;
+
+
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                     *kvoManager;
 
@@ -82,9 +88,13 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.controllerState = AFAPeoplePickerControllerStateIdle;
-        self.selectedContributors = [NSMutableDictionary dictionary];
-        self.progressHUD = [self configureProgressHUD];
+        _controllerState = AFAPeoplePickerControllerStateIdle;
+        _selectedContributors = [NSMutableDictionary dictionary];
+        _progressHUD = [self configureProgressHUD];
+        
+        _involveUserService = [AFATaskServices new];
+        _assignTaskService = [AFATaskServices new];
+        _removeUserService = [AFATaskServices new];
         
         // Set up state bindings
         [self handleBindingsForPeoplePickerViewController];
@@ -218,89 +228,87 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 }
 
 - (void)involveUserForCurrentTask:(ASDKModelUser *)user {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    
     NSString *userFullName = [user normalisedName];
     
     [self showUserInvolvementIndicatorView];
     
     __weak typeof(self) weakSelf = self;
-    [taskService requestTaskUserInvolvement:user
-                                  forTaskID:self.taskID
-                            completionBlock:^(BOOL isUserInvolved, NSError *error) {
-        __strong typeof(self) strongSelf = weakSelf;
-        if (!error && isUserInvolved) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                weakSelf.progressHUD.textLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationPeoplePickerControllerInvolvingUserFormat, "User X is now involved text"), userFullName];
-                weakSelf.progressHUD.detailTextLabel.text = nil;
-                
-                weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-            });
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [weakSelf.progressHUD dismiss];
-            });
-        } else {
-            [strongSelf.progressHUD dismiss];
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-    }];
+    [self.involveUserService requestTaskUserInvolvement:user
+                                              forTaskID:self.taskID
+                                        completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                            __strong typeof(self) strongSelf = weakSelf;
+                                            if (!error && isUserInvolved) {
+                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                    weakSelf.progressHUD.textLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationPeoplePickerControllerInvolvingUserFormat, "User X is now involved text"), userFullName];
+                                                    weakSelf.progressHUD.detailTextLabel.text = nil;
+                                                    
+                                                    weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                                    weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                                });
+                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                    [weakSelf.progressHUD dismiss];
+                                                });
+                                            } else {
+                                                [strongSelf.progressHUD dismiss];
+                                                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                            }
+                                        }];
 }
 
 - (void)assignUserForCurrentTask:(ASDKModelUser *)user {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     NSString *userFullName = [user normalisedName];
     
     [self showUserInvolvementIndicatorView];
     __weak typeof(self) weakSelf = self;
-    [taskService requestTaskAssignForTaskWithID:self.taskID
-                                         toUser:user
-                                completionBlock:^(ASDKModelTask *task, NSError *error) {
-                                    __strong typeof(self) strongSelf = weakSelf;
-                                    if (!error && task) {
-                                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                            weakSelf.progressHUD.textLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationPeoplePickerControllerAssigningUserFormat, "User X is now assigned text"), userFullName];
-                                            weakSelf.progressHUD.detailTextLabel.text = nil;
-                                            
-                                            weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                            weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                        });
-                                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                            [weakSelf.progressHUD dismiss];
-                                        });
-                                    } else {
-                                        [strongSelf.progressHUD dismiss];
-                                        [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                    }
-    }];
+    [self.assignTaskService requestTaskAssignForTaskWithID:self.taskID
+                                                    toUser:user
+                                           completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                               __strong typeof(self) strongSelf = weakSelf;
+                                               if (!error && task) {
+                                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                       weakSelf.progressHUD.textLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationPeoplePickerControllerAssigningUserFormat, "User X is now assigned text"), userFullName];
+                                                       weakSelf.progressHUD.detailTextLabel.text = nil;
+                                                       
+                                                       weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                                       weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                                   });
+                                                   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                       [weakSelf.progressHUD dismiss];
+                                                   });
+                                               } else {
+                                                   [strongSelf.progressHUD dismiss];
+                                                   [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                               }
+                                           }];
 }
 
 - (void)removeInvolvedUserForCurrentTask:(ASDKModelUser *)user {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     NSString *userFullName = [user normalisedName];
     
     [self showUserInvolvementIndicatorView];
     
     __weak typeof(self) weakSelf = self;
-    [taskService requestToRemoveTaskUserInvolvement:user
-                                          forTaskID:self.taskID
-                                    completionBlock:^(BOOL isUserInvolved, NSError *error) {
-        __strong typeof(self) strongSelf = weakSelf;
-        if (!error && !isUserInvolved) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                weakSelf.progressHUD.textLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationPeoplePickerControllerRemovingUserFormat, "User X is no longer involved text"), userFullName];
-                weakSelf.progressHUD.detailTextLabel.text = nil;
-                
-                weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-            });
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [weakSelf.progressHUD dismiss];
-            });
-        } else {
-            [strongSelf.progressHUD dismiss];
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-    }];
+    [self.removeUserService requestToRemoveTaskUserInvolvement:user
+                                                     forTaskID:self.taskID
+                                               completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                                   __strong typeof(self) strongSelf = weakSelf;
+                                                   if (!error && !isUserInvolved) {
+                                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                           weakSelf.progressHUD.textLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationPeoplePickerControllerRemovingUserFormat, "User X is no longer involved text"), userFullName];
+                                                           weakSelf.progressHUD.detailTextLabel.text = nil;
+                                                           
+                                                           weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                                           weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                                       });
+                                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                           [weakSelf.progressHUD dismiss];
+                                                       });
+                                                   } else {
+                                                       [strongSelf.progressHUD dismiss];
+                                                       [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                                   }
+                                               }];
 }
 
 

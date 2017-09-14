@@ -41,6 +41,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 @property (strong, nonatomic) NSMutableDictionary *thumbnailOperationsDict;
 @property (strong, nonatomic) AFAThumbnailManager *thumbnailManager;
+@property (strong, nonatomic) AFATaskServices     *downloadContentThumbnailService;
 
 @end
 
@@ -50,8 +51,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self = [super init];
     
     if (self) {
-        self.thumbnailOperationsDict = [NSMutableDictionary new];
-        self.thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
+        _thumbnailOperationsDict = [NSMutableDictionary new];
+        _thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
+        _downloadContentThumbnailService = [AFATaskServices new];
     }
     
     return self;
@@ -86,9 +88,8 @@ shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
             content.thumbnailStatus == ASDKModelContentAvailabilityTypeCreated) {
             self.thumbnailOperationsDict[indexPath] = content.modelID;
             
-            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
             __weak typeof(self) weakSelf = self;
-            [taskServices
+            [self.downloadContentThumbnailService
              requestTaskContentThumbnailDownloadForContent:content
              allowCachedResults:YES
              withProgressBlock:nil

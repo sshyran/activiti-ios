@@ -88,10 +88,6 @@
         AFAServiceRepository *serviceRepository = [AFAServiceRepository sharedRepository];
         
         // Register SDK integration services
-        AFATaskServices *taskServices = [AFATaskServices new];
-        [serviceRepository registerServiceObject:taskServices
-                                      forPurpose:AFAServiceObjectTypeTaskServices];
-        
         AFAProcessServices *processServices = [AFAProcessServices new];
         [serviceRepository registerServiceObject:processServices
                                       forPurpose:AFAServiceObjectTypeProcessServices];

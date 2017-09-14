@@ -17,16 +17,29 @@
  ******************************************************************************/
 
 #import "AFAModalTaskDetailsCreateChecklistAction.h"
-#import "AFAServiceRepository.h"
+
+@interface AFAModalTaskDetailsCreateChecklistAction ()
+
+@property (strong, nonatomic) AFATaskServices *createChecklistService;
+
+@end
 
 @implementation AFAModalTaskDetailsCreateChecklistAction
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _createChecklistService = [AFATaskServices new];
+    }
+    
+    return self;
+}
+
 - (void)executeAlertActionWithModel:(id)modelObject
                     completionBlock:(id)completionBlock {
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    [taskServices requestChecklistCreateWithRepresentation:modelObject
-                                                    taskID:self.parentTaskID
-                                           completionBlock:completionBlock];
+    [self.createChecklistService requestChecklistCreateWithRepresentation:modelObject
+                                                                   taskID:self.parentTaskID
+                                                          completionBlock:completionBlock];
 }
 
 @end

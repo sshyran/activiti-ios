@@ -41,7 +41,12 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem            *confirmBarButtonItem;
 @property (weak, nonatomic) IBOutlet UITextView                 *commentsTextView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint         *commentsTextViewBottomConstraint;
+
+// Internal state properties
 @property (strong, nonatomic) JGProgressHUD                     *progressHUD;
+
+// Services
+@property (strong, nonatomic) AFATaskServices                   *createCommentService;
 
 @end
 
@@ -68,7 +73,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [self.backBarButtonItem setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
                                                      NSForegroundColorAttributeName: [UIColor whiteColor]}
                                           forState:UIControlStateNormal];
@@ -141,10 +146,10 @@
         
         // Check whether we need to add a task or process instance comment
         if (self.taskID) {
-            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-            [taskServices requestCreateComment:self.commentsTextView.text
-                                     forTaskID:self.taskID
-                               completionBlock:commentCompletionBlock];
+            
+            [self.createCommentService requestCreateComment:self.commentsTextView.text
+                                                  forTaskID:self.taskID
+                                            completionBlock:commentCompletionBlock];
         } else {
             AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
             [processServices requestCreateComment:self.commentsTextView.text

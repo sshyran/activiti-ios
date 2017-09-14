@@ -69,6 +69,7 @@ UITableViewDelegate>
 @property (strong, nonatomic) NSURL                                         *currentSelectedDownloadResourceURL;
 @property (strong, nonatomic) NSData                                        *currentSelectedResourceData;
 @property (strong, nonatomic) ASDKIntegrationLoginWebViewViewController     *integrationLoginController;
+@property (strong, nonatomic) AFATaskServices                               *downloadContentService;
 
 @end
 
@@ -78,7 +79,8 @@ UITableViewDelegate>
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.progressHUD = [self configureProgressHUD];
+        _progressHUD = [self configureProgressHUD];
+        _downloadContentService = [AFATaskServices new];
     }
     
     return self;
@@ -132,13 +134,11 @@ UITableViewDelegate>
 - (void)dowloadContent:(ASDKModelContent *)content
     allowCachedContent:(BOOL)allowCachedContent {
     
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    
     __weak typeof(self) weakSelf = self;
     // Check if the content that's about to be downloaded is available
     if (content.isModelContentAvailable) {
         [self showDownloadProgressHUD];
-        [taskServices
+        [self.downloadContentService
          requestTaskContentDownloadForContent:content
          allowCachedResults:allowCachedContent
          withProgressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
@@ -226,7 +226,7 @@ UITableViewDelegate>
 }
 
 - (void)downloadResourceWithID:(NSString *)resourceID
-          allowCachedResults:(BOOL)allowCachedResults {
+            allowCachedResults:(BOOL)allowCachedResults {
     [self showDownloadProgressHUD];
     
     __weak typeof(self) weakSelf = self;

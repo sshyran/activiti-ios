@@ -32,9 +32,24 @@
 
 // Managers
 #import "AFATaskServices.h"
-#import "AFAServiceRepository.h"
+
+@interface AFATaskListViewDataSource ()
+
+@property (strong, nonatomic) AFATaskServices *fetchTaskListService;
+
+@end
 
 @implementation AFATaskListViewDataSource
+
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _fetchTaskListService = [AFATaskServices new];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
@@ -62,21 +77,20 @@
 - (void)loadContentListForFilter:(AFAGenericFilterModel *)filter
              withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock
                    cachedResults:(AFAListHandleCompletionBlock)cacheCompletionBlock {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
     __weak typeof(self) weakSelf = self;
-    [taskService requestTaskListWithFilter:filter
-                           completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                               __strong typeof(self) strongSelf = weakSelf;
-                               completionBlock(strongSelf, [self responseModelForTaskList:taskList
-                                                                                    error:error
-                                                                                    pagin:paging]);
-                           } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                               __strong typeof(self) strongSelf = weakSelf;
-                               
-                               cacheCompletionBlock(strongSelf, [self responseModelForTaskList:taskList
-                                                                                         error:error
-                                                                                         pagin:paging]);
-                           }];
+    [self.fetchTaskListService requestTaskListWithFilter:filter
+                                         completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             completionBlock(strongSelf, [self responseModelForTaskList:taskList
+                                                                                                  error:error
+                                                                                                  pagin:paging]);
+                                         } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             cacheCompletionBlock(strongSelf, [self responseModelForTaskList:taskList
+                                                                                                       error:error
+                                                                                                       pagin:paging]);
+                                         }];
 }
 
 - (void)processAdditionalEntries:(NSArray *)additionalEntriesArr

@@ -133,25 +133,6 @@
 
 
 #pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        self.taskUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        
-        // Acquire and set up the app network service
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.taskNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKTaskNetworkServiceProtocol)];
-        self.taskNetworkService.resultsQueue = self.taskUpdatesProcessingQueue;
-    }
-    
-    return self;
-}
-
-
-#pragma mark -
 #pragma mark Public interface
 
 - (void)requestTaskListWithFilter:(AFAGenericFilterModel *)taskFilter
@@ -468,49 +449,96 @@
 #pragma mark -
 #pragma mark ASDKDataAccessorDelegate
 
-#warning refactor approach 
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    // Fetch lists
     if (self.fetchTaskListDataAccessor == dataAccessor) {
         [self handleFetchTaskListDataAccessorResponse:response];
-    } else if (self.fetchTaskDetailsDataAccessor == dataAccessor) {
-        [self handleFetchTaskDetailsDataAccessorResponse:response];
-    } else if (self.fetchTaskContentListDataAccessor == dataAccessor) {
+    }
+    
+    if (self.fetchTaskContentListDataAccessor == dataAccessor) {
         [self handleFetchTaskContentListDataAccessorResponse:response];
-    } else if (self.fetchTaskCommentListDataAccessor == dataAccessor) {
+    }
+    
+    if (self.fetchTaskCommentListDataAccessor == dataAccessor) {
         [self handleFetchTaskCommentListDataAccessorResponse:response];
-    } else if (self.fetchTaskChecklistDataAccessor == dataAccessor) {
+    }
+    
+    if (self.fetchTaskChecklistDataAccessor == dataAccessor) {
         [self handleFetchTaskChecklistDataAccessorResponse:response];
-    } else if (self.updateTaskDetailsDataAccessor == dataAccessor) {
-        [self handleUpdateTaskDetailsDataAccessorResponse:response];
-    } else if (self.completeTaskDataAccessor == dataAccessor) {
-        [self handleCompleteTaskDataAccessorResponse:response];
-    } else if (self.taskContentUploadDataAccessor == dataAccessor) {
-        [self handleTaskContentUploadDataAccessorResponse:response];
-    } else if (self.taskContentDeleteDataAccessor == dataAccessor) {
-        [self handleTaskContentDeleteDataAccessorResponse:response];
-    } else if (self.taskContentDownloadDataAccessor == dataAccessor) {
-        [self handleTaskContentDownloadDataAccessorResponse:response];
-    } else if (self.taskContentThumbnailDownloadDataAccessor == dataAccessor) {
-        [self handleTaskContentThumbnailDownloadDataAccessorResponse:response];
-    } else if (self.taskInvolveUserDataAccessor == dataAccessor ||
-               self.taskRemoveUserDataAccesor == dataAccessor) {
-        [self handleTaskUserInvolveDataAccessorResponse:response];
-    } else if (self.createTaskCommentDataAccessor == dataAccessor) {
-        [self handleTaskCreateCommentDataAccessorResponse:response];
-    } else if (self.createTaskDataAccessor == dataAccessor) {
+    }
+    
+    // Fetch details
+    if (self.fetchTaskDetailsDataAccessor == dataAccessor) {
+        [self handleFetchTaskDetailsDataAccessorResponse:response];
+    }
+    
+    // Create operations
+    if (self.createTaskDataAccessor == dataAccessor) {
         [self handleTaskCreateDataAccessorResponse:response];
-    } else if (self.claimTaskDataAccessor == dataAccessor ||
-               self.unclaimTaskDataAccessor == dataAccessor) {
-        [self handleTaskClaimDataAccessorResponse:response];
-    } else if (self.assignTaskDataAccessor == dataAccessor) {
-        [self handleTaskAssignDataAccessorResponse:response];
-    } else if (self.taskAuditLogDownloadDataAccessor == dataAccessor) {
-        [self handleTaskAuditLogDownloadDataAccessorResponse:response];
-    } else if (self.createTaskChecklistDataAccessor == dataAccessor) {
+    }
+    
+    if (self.createTaskCommentDataAccessor == dataAccessor) {
+        [self handleTaskCreateCommentDataAccessorResponse:response];
+    }
+    
+    if (self.createTaskChecklistDataAccessor == dataAccessor) {
         [self handleCreateChecklistDataAccessorResponse:response];
-    } else if (self.updateChecklistOrderDataAccessor == dataAccessor) {
+    }
+    
+    // Update operations
+    if (self.completeTaskDataAccessor == dataAccessor) {
+        [self handleCompleteTaskDataAccessorResponse:response];
+    }
+    
+    if (self.updateTaskDetailsDataAccessor == dataAccessor) {
+        [self handleUpdateTaskDetailsDataAccessorResponse:response];
+    }
+    
+    if (self.taskInvolveUserDataAccessor == dataAccessor ||
+        self.taskRemoveUserDataAccesor == dataAccessor) {
+        [self handleTaskUserInvolveDataAccessorResponse:response];
+    }
+    
+    if (self.claimTaskDataAccessor == dataAccessor) {
+        [self handleTaskClaimDataAccessorResponse:response];
+    }
+    
+    if (self.unclaimTaskDataAccessor == dataAccessor) {
+        [self handleTaskUnclaimDataAccessorResponse:response];
+    }
+    
+    if (self.assignTaskDataAccessor == dataAccessor) {
+        [self handleTaskAssignDataAccessorResponse:response];
+    }
+    
+    if (self.updateChecklistOrderDataAccessor == dataAccessor) {
         [self handleUpdateChecklistOrderDataAccessorResponse:response];
+    }
+    
+    // Delete operations
+    if (self.taskContentDeleteDataAccessor == dataAccessor) {
+        [self handleTaskContentDeleteDataAccessorResponse:response];
+    }
+    if (self.taskRemoveUserDataAccesor == dataAccessor) {
+        [self handleTaskRemoveUserDataAccessorResponse:response];
+    }
+    
+    // Content upload and download
+    if (self.taskContentUploadDataAccessor == dataAccessor) {
+        [self handleTaskContentUploadDataAccessorResponse:response];
+    }
+    
+    if (self.taskContentDownloadDataAccessor == dataAccessor) {
+        [self handleTaskContentDownloadDataAccessorResponse:response];
+    }
+    
+    if (self.taskContentThumbnailDownloadDataAccessor == dataAccessor) {
+        [self handleTaskContentThumbnailDownloadDataAccessorResponse:response];
+    }
+    
+    if (self.taskAuditLogDownloadDataAccessor == dataAccessor) {
+        [self handleTaskAuditLogDownloadDataAccessorResponse:response];
     }
 }
 
@@ -805,6 +833,20 @@
     });
 }
 
+- (void)handleTaskRemoveUserDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *taskInvolveResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskRemoveUserCompletionBlock) {
+            strongSelf.taskRemoveUserCompletionBlock(taskInvolveResponse.isConfirmation, taskInvolveResponse.error);
+            strongSelf.taskRemoveUserCompletionBlock = nil;
+        }
+    });
+}
+
 - (void)handleTaskCreateCommentDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
     ASDKDataAccessorResponseModel *commentResponse = (ASDKDataAccessorResponseModel *)response;
     
@@ -843,6 +885,20 @@
         if (strongSelf.claimTaskCompletionBlock) {
             strongSelf.claimTaskCompletionBlock(taskClaimResponse.isConfirmation, taskClaimResponse.error);
             strongSelf.claimTaskCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleTaskUnclaimDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *taskClaimResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.unclaimTaskCompletionBlock) {
+            strongSelf.unclaimTaskCompletionBlock(taskClaimResponse.isConfirmation, taskClaimResponse.error);
+            strongSelf.unclaimTaskCompletionBlock = nil;
         }
     });
 }
