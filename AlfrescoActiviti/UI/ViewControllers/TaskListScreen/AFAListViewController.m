@@ -52,7 +52,6 @@
 #import "AFATaskDetailsDataSource.h"
 
 // Managers
-#import "AFATaskServices.h"
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
 #import "AFAModalTaskDetailsCreateTaskAction.h"

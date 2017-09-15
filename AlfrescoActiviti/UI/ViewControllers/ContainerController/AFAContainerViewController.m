@@ -34,7 +34,6 @@
 #import "AFAServiceRepository.h"
 #import "AFAThumbnailManager.h"
 #import "AFAAppServices.h"
-#import "AFATaskServices.h"
 #import "AFAProcessServices.h"
 #import "AFAFilterServices.h"
 #import "AFAFormServices.h"

@@ -48,6 +48,7 @@
 // Services
 @property (strong, nonatomic) AFAProfileServices    *requestProfileService;
 @property (strong, nonatomic) AFATaskServices       *fetchTaskDetailsService;
+@property (strong, nonatomic) AFATaskServices       *fetchParentTaskService;
 @property (strong, nonatomic) AFATaskServices       *deleteTaskContentService;
 @property (strong, nonatomic) AFATaskServices       *removeUserService;
 @property (strong, nonatomic) AFATaskServices       *fetchTaskContentService;
@@ -76,6 +77,7 @@
         
         _requestProfileService = [AFAProfileServices new];
         _fetchTaskDetailsService = [AFATaskServices new];
+        _fetchParentTaskService = [AFATaskServices new];
         _deleteTaskContentService = [AFATaskServices new];
         _removeUserService = [AFATaskServices new];
         _fetchTaskContentService = [AFATaskServices new];
@@ -161,24 +163,24 @@
              __block ASDKModelTask *parentTask = nil;
              if (task.parentTaskID) {
                  dispatch_group_enter(taskDetailsGroup);
-                 [strongSelf.fetchTaskDetailsService requestTaskDetailsForID:task.parentTaskID
-                                                             completionBlock:^(ASDKModelTask *task, NSError *error) {
-                                                                 if (hadEncounteredAnError) {
-                                                                     return;
-                                                                 } else {
-                                                                     hadEncounteredAnError = error ? YES : NO;
-                                                                     if (!hadEncounteredAnError) {
-                                                                         parentTask = task;
-                                                                     } else {
-                                                                         if (completionBlock) {
-                                                                             completionBlock(error, registerCellActions);
-                                                                         }
-                                                                     }
-                                                                     dispatch_group_leave(taskDetailsGroup);
-                                                                 }
-                                                             } cachedResults:^(ASDKModelTask *task, NSError *error) {
-                                                                 
-                                                             }];
+                 [strongSelf.fetchParentTaskService requestTaskDetailsForID:task.parentTaskID
+                                                            completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                                                if (hadEncounteredAnError) {
+                                                                    return;
+                                                                } else {
+                                                                    hadEncounteredAnError = error ? YES : NO;
+                                                                    if (!hadEncounteredAnError) {
+                                                                        parentTask = task;
+                                                                    } else {
+                                                                        if (completionBlock) {
+                                                                            completionBlock(error, registerCellActions);
+                                                                        }
+                                                                    }
+                                                                    dispatch_group_leave(taskDetailsGroup);
+                                                                }
+                                                            } cachedResults:^(ASDKModelTask *task, NSError *error) {
+                                                                
+                                                            }];
              }
              
              dispatch_group_notify(taskDetailsGroup, dispatch_get_main_queue(), ^{

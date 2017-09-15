@@ -42,16 +42,6 @@
 @implementation AFATaskListViewDataSource
 
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _fetchTaskListService = [AFATaskServices new];
-    }
-    
-    return self;
-}
-
-
 #pragma mark -
 #pragma mark Public interface
 
@@ -61,6 +51,7 @@
     if (self) {
         _tasks = dataEntries;
         _themeColor = themeColor;
+        _fetchTaskListService = [AFATaskServices new];
     }
     
     return self;

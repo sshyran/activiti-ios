@@ -56,7 +56,8 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.progressHUD = [self configureProgressHUD];
+        _progressHUD = [self configureProgressHUD];
+        _createCommentService = [AFATaskServices new];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(keyboardWillChange:)
@@ -146,7 +147,6 @@
         
         // Check whether we need to add a task or process instance comment
         if (self.taskID) {
-            
             [self.createCommentService requestCreateComment:self.commentsTextView.text
                                                   forTaskID:self.taskID
                                             completionBlock:commentCompletionBlock];

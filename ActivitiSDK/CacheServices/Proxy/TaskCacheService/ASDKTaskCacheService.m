@@ -376,11 +376,11 @@
         }
         
         if (completionBlock) {
-            if (error || moTaskChecklistArr.count) {
+            if (error || !moTaskChecklistArr.count) {
                 completionBlock(nil, error, nil);
             } else {
                 NSMutableArray *taskChecklistArr = [NSMutableArray array];
-                for (ASDKMOTask *moTask in taskChecklistArr) {
+                for (ASDKMOTask *moTask in moTaskChecklistArr) {
                     ASDKModelTask *task = [ASDKTaskCacheMapper mapCacheMOToTask:moTask];
                     [taskChecklistArr addObject:task];
                 }

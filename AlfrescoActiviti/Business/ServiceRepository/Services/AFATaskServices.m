@@ -416,7 +416,7 @@
                                  completionBlock:(AFATaskServicesTaskDetailsCompletionBlock)completionBlock {
     NSParameterAssert(completionBlock);
     
-    self.createTaskCompletionBlock = completionBlock;
+    self.createTaskChecklistCompletionBlock = completionBlock;
     
     ASDKTaskCreationRequestRepresentation *checklistCreationRequestRepresentation = [ASDKTaskCreationRequestRepresentation new];
     checklistCreationRequestRepresentation.taskName = taskRepresentation.taskName;

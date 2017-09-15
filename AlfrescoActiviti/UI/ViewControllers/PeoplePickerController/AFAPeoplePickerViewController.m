@@ -47,6 +47,7 @@
 typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
     AFAPeoplePickerControllerStateIdle,
     AFAPeoplePickerControllerStateInProgress,
+    AFAPeoplePickerControllerStateEmptyList
 };
 
 
@@ -116,12 +117,9 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    self.instructionsView.hidden = NO;
     [self.peopleSearchField becomeFirstResponder];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -141,10 +139,6 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 #pragma mark UITextField Delegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if (!self.instructionsView.hidden) {
-        self.instructionsView.hidden = YES;
-    }
-    
     [self toggleContentTransparentOverlay];
     
     return YES;
@@ -207,21 +201,16 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
                             completionBlock:^(NSArray *users, NSError *error, ASDKModelPaging *paging) {
                                 __strong typeof(self) strongSelf = weakSelf;
                                 
-                                strongSelf.controllerState = AFAPeoplePickerControllerStateIdle;
+                                BOOL isContentAvailable = users.count ? YES : NO;
+                                strongSelf.controllerState = isContentAvailable ? AFAPeoplePickerControllerStateIdle : AFAPeoplePickerControllerStateEmptyList;
+                                self.instructionsView.hidden = isContentAvailable;
                                 
                                 if (!error) {
                                     strongSelf.contributorsArr = users;
-                                    
-                                    // Check if we got an empty list
-                                    strongSelf.noRecordsLabel.hidden = users.count ? YES : NO;
-                                    strongSelf.contributorsTableView.hidden = users.count ? NO : YES;
-                                    
+
                                     // Reload table data
                                     [strongSelf.contributorsTableView reloadData];
                                 } else {
-                                    strongSelf.noRecordsLabel.hidden = NO;
-                                    strongSelf.contributorsTableView.hidden = YES;
-                                    
                                     [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
                                 }
                             }];
@@ -397,20 +386,25 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                         forKeyPath:NSStringFromSelector(@selector(controllerState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 
                                  AFAPeoplePickerControllerState controllerState = [change[NSKeyValueChangeNewKey] boolValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     if (AFAPeoplePickerControllerStateInProgress == controllerState) {
-                                         strongSelf.contributorsTableView.hidden = YES;
-                                         strongSelf.noRecordsLabel.hidden = YES;
-                                     } else {
-                                         // Check if there are any results to show before showing the contributors tableview
-                                         strongSelf.contributorsTableView.hidden = strongSelf.contributorsArr.count ? NO : YES;
+                                     if (AFAPeoplePickerControllerStateIdle == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.contributorsTableView.hidden = NO;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else if (AFAPeoplePickerControllerStateInProgress == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = NO;
+                                         weakSelf.loadingActivityView.animating = YES;
+                                         weakSelf.contributorsTableView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else  if (AFAPeoplePickerControllerStateEmptyList == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.contributorsTableView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = NO;
                                      }
-                                     strongSelf.loadingActivityView.hidden = (AFAPeoplePickerControllerStateInProgress == controllerState) ? NO : YES;
-                                     strongSelf.loadingActivityView.animating = (AFAPeoplePickerControllerStateInProgress == controllerState) ? YES : NO;
                                  });
                              }];
 }
