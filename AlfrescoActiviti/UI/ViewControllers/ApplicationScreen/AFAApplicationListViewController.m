@@ -48,7 +48,7 @@
 typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
     AFAApplicationListControllerStateIdle,
     AFAApplicationListControllerStateRefreshInProgress,
-    AFAApplicationListControllerStateCachedResults
+    AFAApplicationListControllerStateEmptyList
 };
 
 @interface AFAApplicationListViewController ()
@@ -197,9 +197,12 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
     [self.requestApplicationsService requestRuntimeAppDefinitionsWithCompletionBlock:^(NSArray *appDefinitionsList, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        strongSelf.controllerState = AFAApplicationListControllerStateIdle;
         if (!error) {
-            [strongSelf updateUIForApplicationList:appDefinitionsList];
+            BOOL isContentAvailable = appDefinitionsList.count ? YES : NO;
+            strongSelf.controllerState = isContentAvailable ? AFAApplicationListControllerStateIdle : AFAApplicationListControllerStateEmptyList;
+            
+            strongSelf.applicationListArr = appDefinitionsList;
+            [self.applicationListTableView reloadData];
             
             // Display the last update date
             if (strongSelf.refreshControl) {
@@ -219,15 +222,14 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
     } cachedResults:^(NSArray *appDefinitionsList, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         
+        BOOL isContentAvailable = appDefinitionsList.count ? YES : NO;
+        strongSelf.controllerState = isContentAvailable ? AFAApplicationListControllerStateIdle : AFAApplicationListControllerStateEmptyList;
+        
         if (!error) {
             if (appDefinitionsList) {
-                strongSelf.controllerState = AFAApplicationListControllerStateCachedResults;
-                [strongSelf updateUIForApplicationList:appDefinitionsList];
+                strongSelf.applicationListArr = appDefinitionsList;
+                [self.applicationListTableView reloadData];
             }
-        } else {
-            strongSelf.noApplicationsLabel.hidden = NO;
-            strongSelf.applicationListTableView.hidden = YES;
-            strongSelf.refreshView.hidden = NO;
         }
         
         [[NSOperationQueue currentQueue] addOperationWithBlock:^{
@@ -283,24 +285,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 #pragma mark -
-#pragma mark Utils
-
-- (void)updateUIForApplicationList:(NSArray *)applicationList {
-    // Store application list
-    self.applicationListArr =  applicationList;
-    
-    // Check if we got an empty list
-    BOOL isContentAvailable = self.applicationListArr.count ? YES : NO;
-    self.noApplicationsLabel.hidden = isContentAvailable;
-    self.applicationListTableView.hidden = !isContentAvailable;
-    self.refreshView.hidden = isContentAvailable;
-    
-    // Reload table data
-    [self.applicationListTableView reloadData];
-}
-
-
-#pragma mark -
 #pragma mark KVO bindings
 
 - (void)handleBindingsForAppListViewController {
@@ -311,12 +295,28 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                         forKeyPath:NSStringFromSelector(@selector(controllerState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 AFAApplicationListControllerState controllerState = [change[NSKeyValueChangeNewKey] boolValue];
+                                 AFAApplicationListControllerState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     weakSelf.activityView.hidden = (AFAApplicationListControllerStateRefreshInProgress == controllerState) ? NO : YES;
-                                     weakSelf.activityView.animating = (AFAApplicationListControllerStateRefreshInProgress == controllerState) ? YES : NO;
-                                     weakSelf.applicationListTableView.hidden = (AFAApplicationListControllerStateRefreshInProgress == controllerState) ? YES : NO;
+                                     if (AFAApplicationListControllerStateIdle == controllerState) {
+                                         weakSelf.activityView.hidden = YES;
+                                         weakSelf.activityView.animating = NO;
+                                         weakSelf.applicationListTableView.hidden = NO;
+                                         weakSelf.refreshView.hidden = YES;
+                                         weakSelf.noApplicationsLabel.hidden = YES;
+                                     } else if (AFAApplicationListControllerStateRefreshInProgress == controllerState) {
+                                         weakSelf.activityView.hidden = NO;
+                                         weakSelf.activityView.animating = YES;
+                                         weakSelf.applicationListTableView.hidden = YES;
+                                         weakSelf.refreshView.hidden = YES;
+                                         weakSelf.noApplicationsLabel.hidden = YES;
+                                     } else if (AFAApplicationListControllerStateEmptyList == controllerState) {
+                                         weakSelf.activityView.hidden = YES;
+                                         weakSelf.activityView.animating = NO;
+                                         weakSelf.applicationListTableView.hidden = YES;
+                                         weakSelf.refreshView.hidden = NO;
+                                         weakSelf.noApplicationsLabel.hidden = NO;
+                                     }
                                  });
                              }];
 }

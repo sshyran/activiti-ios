@@ -33,6 +33,14 @@ typedef NS_ENUM(NSInteger, AFATaskDetailsSectionType) {
     AFATaskDetailsSectionTypeEnumCount
 };
 
+typedef void (^AFATaskDetailsDataSourceCompletionBlock)  (NSError *error, BOOL registerCellActions);
+typedef void (^AFATaskDeleteContentDataSourceCompletionBlock) (BOOL isContentDeleted, NSError *error);
+typedef void (^AFATaskDataSourceErrorCompletionBlock) (NSError *error);
+typedef void (^AFATaskUserInvolvementDataSourceCompletionBlock) (BOOL isUserInvolved, NSError *error);
+typedef void (^AFATaskUpdateDataSourceCompletionBlock) (BOOL isTaskUpdated, NSError *error);
+typedef void (^AFATaskCompleteDataSourceCompletionBlock) (BOOL isTaskCompleted, NSError *error);
+typedef void (^AFATaskClaimingDataSourceCompletionBlock) (BOOL isTaskClaimed, NSError *error);
+
 @protocol AFATaskDetailsDataSourceProtocol <NSObject>
 
 @property (strong, nonatomic, readonly) UIColor     *themeColor;
@@ -44,24 +52,29 @@ typedef NS_ENUM(NSInteger, AFATaskDetailsSectionType) {
 - (instancetype)initWithTaskID:(NSString *)taskID
                     themeColor:(UIColor *)themeColor;
 
-- (void)taskDetailsWithCompletionBlock:(void (^)(NSError *error, BOOL registerCellActions))completionBlock;
+- (void)taskDetailsWithCompletionBlock:(AFATaskDetailsDataSourceCompletionBlock)completionBlock
+                    cachedResultsBlock:(AFATaskDetailsDataSourceCompletionBlock)cachedResultsBlock;
 - (void)updateTaskDueDateWithDate:(NSDate *)dueDate;
 - (void)deleteContentForTaskAtIndex:(NSInteger)index
-                withCompletionBlock:(void (^)(BOOL isContentDeleted, NSError *error))completionBlock;
-- (void)taskContributorsWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+                withCompletionBlock:(AFATaskDeleteContentDataSourceCompletionBlock)completionBlock;
+- (void)taskContributorsWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                         cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResulstBlock;
 - (void)removeInvolvementForUser:(ASDKModelUser *)user
-             withCompletionBlock:(void (^)(BOOL isUserInvolved, NSError *error))completionBlock;
+             withCompletionBlock:(AFATaskUserInvolvementDataSourceCompletionBlock)completionBlock;
 - (void)saveTaskForm;
-- (void)taskContentWithCompletionBlock:(void (^)(NSError *error))completionBlock;
-- (void)taskCommentsWithCompletionBlock:(void (^)(NSError *error))completionBlock;
-- (void)taskChecklistWithCompletionBlock:(void (^)(NSError *error))completionBlock;
-- (void)updateCurrentTaskDetailsWithCompletionBlock:(void (^)(BOOL isTaskUpdated, NSError *error))completionBlock;
-- (void)completeTaskWithCompletionBlock:(void (^)(BOOL isTaskCompleted, NSError *error))completionBlock;
-- (void)claimTaskWithCompletionBlock:(void (^)(BOOL isTaskClaimed, NSError *error))completionBlock;
-- (void)unclaimTaskWithCompletionBlock:(void (^)(BOOL isTaskClaimed, NSError *error))completionBlock;
-- (void)updateChecklistOrderWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+- (void)taskContentWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                    cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResultsBlock;
+- (void)taskCommentsWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                     cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResultsBlock;
+- (void)taskChecklistWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                      cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResultsBlock;
+- (void)updateCurrentTaskDetailsWithCompletionBlock:(AFATaskUpdateDataSourceCompletionBlock)completionBlock;
+- (void)completeTaskWithCompletionBlock:(AFATaskCompleteDataSourceCompletionBlock)completionBlock;
+- (void)claimTaskWithCompletionBlock:(AFATaskClaimingDataSourceCompletionBlock)completionBlock;
+- (void)unclaimTaskWithCompletionBlock:(AFATaskClaimingDataSourceCompletionBlock)completionBlock;
+- (void)updateChecklistOrderWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock;
 - (void)uploadIntegrationContentForNode:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
-                    withCompletionBlock:(void (^)(NSError *error))completionBlock;
+                    withCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock;
 
 - (NSDate *)taskDueDate;
 - (ASDKModelUser *)involvedUserAtIndex:(NSInteger)index;

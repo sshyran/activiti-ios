@@ -399,17 +399,12 @@ UITableViewDelegate>
         if (self.refreshControl) {
             self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
         }
-        
         [self.dataSource processAdditionalEntries:response.objectList
                                         forPaging:response.paging];
-        BOOL isContentAvailable = self.dataSource.dataEntries.count ? YES : NO;
-        self.controllerState = isContentAvailable ? AFAListControllerStateIdle : AFAListControllerStateEmptyList;
         
         [self.listTableView reloadData];
     } else {
         if (isCachedResponse) {
-            self.controllerState = AFAListControllerStateEmptyList;
-            
             [self.dataSource processAdditionalEntries:nil
                                             forPaging:nil];
             [self.listTableView reloadData];
@@ -422,11 +417,10 @@ UITableViewDelegate>
         }
     }
     
-    __weak typeof(self) weakSelf = self;
-    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-        __strong typeof(self) strongSelf = weakSelf;
-        [strongSelf.refreshControl endRefreshing];
-    }];
+    BOOL isContentAvailable = self.dataSource.dataEntries.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFAListControllerStateIdle : AFAListControllerStateEmptyList;
+    
+    [self endRefreshOnRefreshControl];
     
     // If an activity indicator is present in the table's footer view remove it
     if (self.listTableView.tableFooterView) {
@@ -436,6 +430,18 @@ UITableViewDelegate>
         self.listTableView.tableFooterView = nil;
         [UIView commitAnimations];
     }
+}
+
+
+#pragma mark -
+#pragma mark Convenience methods
+
+- (void)endRefreshOnRefreshControl {
+    __weak typeof(self) weakSelf = self;
+    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.refreshControl endRefreshing];
+    }];
 }
 
 

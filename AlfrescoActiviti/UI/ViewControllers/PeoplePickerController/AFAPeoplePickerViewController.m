@@ -386,7 +386,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                         forKeyPath:NSStringFromSelector(@selector(controllerState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 AFAPeoplePickerControllerState controllerState = [change[NSKeyValueChangeNewKey] boolValue];
+                                 AFAPeoplePickerControllerState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
                                      if (AFAPeoplePickerControllerStateIdle == controllerState) {

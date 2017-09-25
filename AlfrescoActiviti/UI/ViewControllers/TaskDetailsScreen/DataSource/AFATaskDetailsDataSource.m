@@ -60,6 +60,12 @@
 @property (strong, nonatomic) AFATaskServices       *unclaimTaskService;
 @property (strong, nonatomic) AFATaskServices       *updateChecklistOrderService;
 
+// Models
+@property (strong, nonatomic) AFATableControllerTaskDetailsModel *cachedTaskDetailsModel;
+@property (strong, nonatomic) AFATableControllerTaskDetailsModel *remoteTaskDetailsModel;
+@property (strong, nonatomic) NSError *cachedTaskDetailsError;
+@property (strong, nonatomic) NSError *remoteTaskDetailsError;
+
 @end
 
 @implementation AFATaskDetailsDataSource
@@ -102,106 +108,57 @@
 #pragma mark -
 #pragma mark Public interface
 
-- (void)taskDetailsWithCompletionBlock:(void (^)(NSError *error, BOOL registerCellActions))completionBlock {
+- (void)taskDetailsWithCompletionBlock:(AFATaskDetailsDataSourceCompletionBlock)completionBlock
+                    cachedResultsBlock:(AFATaskDetailsDataSourceCompletionBlock)cachedResultsBlock {
+    /* Task details information is comprised out of multiple services aggregations
+     * 1. Fetch the task details for the current task ID
+     * 2. Fetch the parent task if applicable
+     * 3. If the current task is claimable and has an assignee then fetch the
+     * current user profile to also check if the task is already claimed and
+     * can be dequeued.
+     */
+    self.cachedTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
+    self.remoteTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
+    
+    dispatch_group_t remoteTaskDetailsGroup = dispatch_group_create();
+    dispatch_group_t cachedTaskDetailsGroup = dispatch_group_create();
+    
+    // 1 & 2
+    dispatch_group_enter(remoteTaskDetailsGroup);
+    dispatch_group_enter(cachedTaskDetailsGroup);
+    [self fetchDetailsForTaskWithID:self.taskID
+                remoteDispatchGroup:remoteTaskDetailsGroup
+                cachedDispatchGroup:cachedTaskDetailsGroup];
+    
+    // 3
+    dispatch_group_enter(remoteTaskDetailsGroup);
+    dispatch_group_enter(cachedTaskDetailsGroup);
+    [self fetchCurrentProfileInRemoteDispatchGroup:remoteTaskDetailsGroup
+                               cachedDispatchGroup:cachedTaskDetailsGroup];
+    
+    // Report result once all prerequisites are met
     __weak typeof(self) weakSelf = self;
-    [self.fetchTaskDetailsService
-     requestTaskDetailsForID:self.taskID
-     completionBlock:^(ASDKModelTask *task, NSError *taskDetailsError) {
-         __strong typeof(self) strongSelf = weakSelf;
-         BOOL registerCellActions = NO;
-         
-         if (!taskDetailsError) {
-             AFATableControllerTaskDetailsModel *taskDetailsModel = [AFATableControllerTaskDetailsModel new];
-             taskDetailsModel.currentTask = task;
-             
-             if (!strongSelf.sectionModels[@(AFATaskDetailsSectionTypeTaskDetails)]) {
-                 // Cell actions for all the cell factories are registered after the initial task details
-                 // are loaded
-                 registerCellActions = YES;
-             }
-             strongSelf.sectionModels[@(AFATaskDetailsSectionTypeTaskDetails)] = taskDetailsModel;
-             
-             // If the current task is claimable and has an assignee then fetch the
-             // current user profile to also check if the task is already claimed and
-             // can be dequeued
-             dispatch_group_t taskDetailsGroup = dispatch_group_create();
-             
-             // Fetch profile information
-             dispatch_group_enter(taskDetailsGroup);
-             __block ASDKModelProfile *currentUserProfile = nil;
-             __block BOOL hadEncounteredAnError = NO;
-             
-             void (^currentProfileCompletionBlock)() = ^(ASDKModelProfile *profile, NSError *error) {
-                 if (hadEncounteredAnError) {
-                     return;
-                 } else {
-                     hadEncounteredAnError = error ? YES : NO;
-                     if (!hadEncounteredAnError) {
-                         currentUserProfile = profile;
-                     } else {
-                         if (completionBlock) {
-                             completionBlock(error, registerCellActions);
-                         }
-                     }
-                     
-                     if (currentUserProfile) {
-                         dispatch_group_leave(taskDetailsGroup);
-                     }
-                 }
-             };
-             
-             [strongSelf.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
-                 // Check if cached value has been already provided
-                 if (!currentUserProfile) {
-                     currentProfileCompletionBlock(profile, error);
-                 }
-             } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
-                 currentProfileCompletionBlock(profile, error);
-             }];
-             
-             // Fetch parent task if applicable
-             __block ASDKModelTask *parentTask = nil;
-             if (task.parentTaskID) {
-                 dispatch_group_enter(taskDetailsGroup);
-                 [strongSelf.fetchParentTaskService requestTaskDetailsForID:task.parentTaskID
-                                                            completionBlock:^(ASDKModelTask *task, NSError *error) {
-                                                                if (hadEncounteredAnError) {
-                                                                    return;
-                                                                } else {
-                                                                    hadEncounteredAnError = error ? YES : NO;
-                                                                    if (!hadEncounteredAnError) {
-                                                                        parentTask = task;
-                                                                    } else {
-                                                                        if (completionBlock) {
-                                                                            completionBlock(error, registerCellActions);
-                                                                        }
-                                                                    }
-                                                                    dispatch_group_leave(taskDetailsGroup);
-                                                                }
-                                                            } cachedResults:^(ASDKModelTask *task, NSError *error) {
-                                                                
-                                                            }];
-             }
-             
-             dispatch_group_notify(taskDetailsGroup, dispatch_get_main_queue(), ^{
-                 AFATableControllerTaskDetailsModel *taskDetailsModel = weakSelf.sectionModels[@(AFATaskDetailsSectionTypeTaskDetails)];
-                 taskDetailsModel.userProfile = currentUserProfile;
-                 taskDetailsModel.parentTask = parentTask;
-                 
-                 [weakSelf updateTableControllerForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-                 
-                 if (completionBlock) {
-                     completionBlock(nil, registerCellActions);
-                 }
-             });
-         } else {
-             if (completionBlock) {
-                 completionBlock(taskDetailsError, NO);
-             }
-         }
-     } cachedResults:^(ASDKModelTask *task, NSError *error) {
-         
-     }];
+    dispatch_group_notify(cachedTaskDetailsGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, kNilOptions), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        BOOL registerCellActions = [strongSelf registerTaskDetailsCellActionsForModel:self.cachedTaskDetailsModel];
+        if (cachedResultsBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cachedResultsBlock(weakSelf.cachedTaskDetailsError, registerCellActions);
+            });
+        }
+    });
+    
+    dispatch_group_notify(remoteTaskDetailsGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, kNilOptions), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        BOOL registerCellActions = [strongSelf registerTaskDetailsCellActionsForModel:self.remoteTaskDetailsModel];
+        if (completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock(weakSelf.remoteTaskDetailsError, registerCellActions);
+            });
+        }
+    });
 }
 
 - (void)updateTaskDueDateWithDate:(NSDate *)dueDate {
@@ -210,7 +167,7 @@
 }
 
 - (void)deleteContentForTaskAtIndex:(NSInteger)index
-                withCompletionBlock:(void (^)(BOOL isContentDeleted, NSError *error))completionBlock {
+                withCompletionBlock:(AFATaskDeleteContentDataSourceCompletionBlock)completionBlock {
     AFATableControllerContentModel *taskContentModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
     ASDKModelContent *selectedContentModel = taskContentModel.attachedContentArr[index];
     
@@ -222,35 +179,33 @@
                                                   }];
 }
 
-- (void)taskContributorsWithCompletionBlock:(void (^)(NSError *error))completionBlock {
+- (void)taskContributorsWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                         cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResulstBlock {
     __weak typeof(self) weakSelf = self;
     [self.fetchTaskDetailsService requestTaskDetailsForID:self.taskID
                                           completionBlock:^(ASDKModelTask *task, NSError *error) {
                                               __strong typeof(self) strongSelf = weakSelf;
                                               
                                               if (!error) {
-                                                  // Extract the number of collaborators for the given task
-                                                  AFATableControllerTaskContributorsModel *taskContributorsModel = [AFATableControllerTaskContributorsModel new];
-                                                  taskContributorsModel.involvedPeople = task.involvedPeople;
-                                                  strongSelf.sectionModels[@(AFATaskDetailsSectionTypeContributors)] = taskContributorsModel;
-                                                  
-                                                  [strongSelf updateTableControllerForSectionType:AFATaskDetailsSectionTypeContributors];
-                                                  
-                                                  // Check if the task is already completed and in that case mark the table
-                                                  // controller as not editable
-                                                  strongSelf.tableController.isEditable = !(task.endDate && task.duration);
+                                                  [strongSelf handleTaskContributorsResponseForTask:task];
                                               }
-                                              
                                               if (completionBlock) {
                                                   completionBlock(error);
                                               }
                                           } cachedResults:^(ASDKModelTask *task, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
                                               
+                                              if (!error) {
+                                                  [strongSelf handleTaskContributorsResponseForTask:task];
+                                              }
+                                              if (cachedResulstBlock) {
+                                                  cachedResulstBlock(error);
+                                              }
                                           }];
 }
 
 - (void)removeInvolvementForUser:(ASDKModelUser *)user
-             withCompletionBlock:(void (^)(BOOL isUserInvolved, NSError *error))completionBlock {
+             withCompletionBlock:(AFATaskUserInvolvementDataSourceCompletionBlock)completionBlock {
     [self.removeUserService requestToRemoveTaskUserInvolvement:user
                                                      forTaskID:self.taskID
                                                completionBlock:^(BOOL isUserInvolved, NSError *error) {
@@ -266,83 +221,84 @@
     [formEngineActionHandler saveForm];
 }
 
-- (void)taskContentWithCompletionBlock:(void (^)(NSError *))completionBlock {
+- (void)taskContentWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                    cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResultsBlock {
     __weak typeof(self) weakSelf = self;
     [self.fetchTaskContentService requestTaskContentForID:self.taskID
                                           completionBlock:^(NSArray *contentList, NSError *error) {
                                               __strong typeof(self) strongSelf = weakSelf;
                                               
                                               if (!error) {
-                                                  AFATableControllerContentModel *taskContentModel = [AFATableControllerContentModel new];
-                                                  taskContentModel.attachedContentArr = contentList;
-                                                  strongSelf.sectionModels[@(AFATaskDetailsSectionTypeFilesContent)] = taskContentModel;
-                                                  
-                                                  [strongSelf updateTableControllerForSectionType:AFATaskDetailsSectionTypeFilesContent];
-                                                  
-                                                  AFATableControllerTaskDetailsModel *taskDetailsModel = [strongSelf reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-                                                  strongSelf.tableController.isEditable = ![taskDetailsModel isCompletedTask];
+                                                  [strongSelf handleTaskContentListResponse:contentList];
                                               }
-                                              
                                               if (completionBlock) {
                                                   completionBlock(error);
                                               }
                                           } cachedResults:^(NSArray *contentList, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
+                                              if (!error) {
+                                                  [strongSelf handleTaskContentListResponse:contentList];
+                                              }
+                                              if (cachedResultsBlock) {
+                                                  cachedResultsBlock(error);
+                                              }
                                           }];
 }
 
-- (void)taskCommentsWithCompletionBlock:(void (^)(NSError *error))completionBlock {
+- (void)taskCommentsWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                     cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResultsBlock {
     __weak typeof(self) weakSelf = self;
     [self.fetchTaskCommentsService requestTaskCommentsForID:self.taskID
                                             completionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
                                                 __strong typeof(self) strongSelf = weakSelf;
                                                 
                                                 if (!error) {
-                                                    // Extract the updated result
-                                                    AFATableControllerCommentModel *taskCommentModel = [AFATableControllerCommentModel new];
-                                                    NSSortDescriptor *newestCommentsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"creationDate"
-                                                                                                                                   ascending:NO];
-                                                    taskCommentModel.commentListArr = [commentList sortedArrayUsingDescriptors:@[newestCommentsSortDescriptor]];
-                                                    taskCommentModel.paging = paging;
-                                                    strongSelf.sectionModels[@(AFATaskDetailsSectionTypeComments)] = taskCommentModel;
-                                                    
-                                                    [strongSelf updateTableControllerForSectionType:AFATaskDetailsSectionTypeComments];
+                                                    [strongSelf handleTaskCommentListResponse:commentList
+                                                                                       paging:paging];
                                                 }
-                                                
                                                 if (completionBlock) {
                                                     completionBlock(error);
                                                 }
                                             } cachedResults:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+                                                __strong typeof(self) strongSelf = weakSelf;
                                                 
+                                                if (!error) {
+                                                    [strongSelf handleTaskCommentListResponse:commentList
+                                                                                       paging:paging];
+                                                }
+                                                if (cachedResultsBlock) {
+                                                    cachedResultsBlock(error);
+                                                }
                                             }];
 }
 
-- (void)taskChecklistWithCompletionBlock:(void (^)(NSError *error))completionBlock {
+- (void)taskChecklistWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
+                      cachedResultsBlock:(AFATaskDataSourceErrorCompletionBlock)cachedResultsBlock {
     __weak typeof(self) weakSelf = self;
     [self.fetchTaskChecklistService requestChecklistForTaskWithID:self.taskID
                                                   completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
                                                       __strong typeof(self) strongSelf = weakSelf;
                                                       
                                                       if (!error) {
-                                                          AFATableControllerChecklistModel *taskChecklistModel = [AFATableControllerChecklistModel new];
-                                                          taskChecklistModel.delegate = [strongSelf cellFactoryForSectionType:AFATaskDetailsSectionTypeChecklist];
-                                                          taskChecklistModel.checklistArr = taskList;
-                                                          strongSelf.sectionModels[@(AFATaskDetailsSectionTypeChecklist)] = taskChecklistModel;
-                                                          
-                                                          [strongSelf updateTableControllerForSectionType:AFATaskDetailsSectionTypeChecklist];
-                                                          
-                                                          AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-                                                          strongSelf.tableController.isEditable = ![taskDetailsModel isCompletedTask];
+                                                          [strongSelf handleTaskChecklistResponse:taskList];
                                                       }
-                                                      
                                                       if (completionBlock) {
                                                           completionBlock(error);
                                                       }
                                                   } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                                      __strong typeof(self) strongSelf = weakSelf;
                                                       
+                                                      if (!error) {
+                                                          [strongSelf handleTaskChecklistResponse:taskList];
+                                                      }
+                                                      if (cachedResultsBlock) {
+                                                          cachedResultsBlock(error);
+                                                      }
                                                   }];
 }
 
-- (void)updateCurrentTaskDetailsWithCompletionBlock:(void (^)(BOOL isTaskUpdated, NSError *error))completionBlock {
+- (void)updateCurrentTaskDetailsWithCompletionBlock:(AFATaskUpdateDataSourceCompletionBlock)completionBlock {
     AFATaskUpdateModel *taskUpdate = [AFATaskUpdateModel new];
     AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
     taskUpdate.taskDueDate = taskDetailsModel.currentTask.dueDate;
@@ -365,7 +321,7 @@
                                             }];
 }
 
-- (void)completeTaskWithCompletionBlock:(void (^)(BOOL isTaskCompleted, NSError *error))completionBlock {
+- (void)completeTaskWithCompletionBlock:(AFATaskCompleteDataSourceCompletionBlock)completionBlock {
     [self.completeTaskService requestTaskCompletionForID:self.taskID
                                      withCompletionBlock:^(BOOL isTaskCompleted, NSError *error) {
                                          if (completionBlock) {
@@ -374,7 +330,7 @@
                                      }];
 }
 
-- (void)claimTaskWithCompletionBlock:(void (^)(BOOL isTaskClaimed, NSError *error))completionBlock {
+- (void)claimTaskWithCompletionBlock:(AFATaskClaimingDataSourceCompletionBlock)completionBlock {
     [self.claimTaskService requestTaskClaimForTaskID:self.taskID
                                      completionBlock:^(BOOL isTaskClaimed, NSError *error) {
                                          if (completionBlock) {
@@ -383,7 +339,7 @@
                                      }];
 }
 
-- (void)unclaimTaskWithCompletionBlock:(void (^)(BOOL isTaskClaimed, NSError *error))completionBlock {
+- (void)unclaimTaskWithCompletionBlock:(AFATaskClaimingDataSourceCompletionBlock)completionBlock {
     [self.unclaimTaskService requestTaskUnclaimForTaskID:self.taskID
                                          completionBlock:^(BOOL isTaskClaimed, NSError *error) {
                                              if (completionBlock) {
@@ -392,7 +348,7 @@
                                          }];
 }
 
-- (void)updateChecklistOrderWithCompletionBlock:(void (^)(NSError *error))completionBlock {
+- (void)updateChecklistOrderWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock {
     AFATableControllerChecklistModel *taskChecklistModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeChecklist];
     
     [self.updateChecklistOrderService requestChecklistOrderUpdateWithOrderArrat:[taskChecklistModel checkListIDs]
@@ -406,7 +362,7 @@
 }
 
 - (void)uploadIntegrationContentForNode:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
-                    withCompletionBlock:(void (^)(NSError *error))completionBlock {
+                    withCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock {
     AFAIntegrationServices *integrationService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeIntegrationServices];
     
     [integrationService requestUploadIntegrationContentForTaskID:self.taskID
@@ -492,8 +448,62 @@
     self.tableController.cellFactory = [self cellFactoryForSectionType:sectionType];
 }
 
+
 #pragma mark -
-#pragma mark Private interface
+#pragma mark Response handlers
+
+- (void)handleTaskContributorsResponseForTask:(ASDKModelTask *)task {
+    // Extract the number of collaborators for the given task
+    AFATableControllerTaskContributorsModel *taskContributorsModel = [AFATableControllerTaskContributorsModel new];
+    taskContributorsModel.involvedPeople = task.involvedPeople;
+    self.sectionModels[@(AFATaskDetailsSectionTypeContributors)] = taskContributorsModel;
+    
+    [self updateTableControllerForSectionType:AFATaskDetailsSectionTypeContributors];
+    
+    // Check if the task is already completed and in that case mark the table
+    // controller as not editable
+    self.tableController.isEditable = !(task.endDate && task.duration);
+}
+
+- (void)handleTaskContentListResponse:(NSArray *)contentList {
+    AFATableControllerContentModel *taskContentModel = [AFATableControllerContentModel new];
+    taskContentModel.attachedContentArr = contentList;
+    self.sectionModels[@(AFATaskDetailsSectionTypeFilesContent)] = taskContentModel;
+    
+    [self updateTableControllerForSectionType:AFATaskDetailsSectionTypeFilesContent];
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    self.tableController.isEditable = ![taskDetailsModel isCompletedTask];
+}
+
+- (void)handleTaskCommentListResponse:(NSArray *)commentList
+                               paging:(ASDKModelPaging *)paging {
+    // Extract the updated result
+    AFATableControllerCommentModel *taskCommentModel = [AFATableControllerCommentModel new];
+    NSSortDescriptor *newestCommentsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"creationDate"
+                                                                                   ascending:NO];
+    taskCommentModel.commentListArr = [commentList sortedArrayUsingDescriptors:@[newestCommentsSortDescriptor]];
+    taskCommentModel.paging = paging;
+    self.sectionModels[@(AFATaskDetailsSectionTypeComments)] = taskCommentModel;
+    
+    [self updateTableControllerForSectionType:AFATaskDetailsSectionTypeComments];
+}
+
+- (void)handleTaskChecklistResponse:(NSArray *)taskList {
+    AFATableControllerChecklistModel *taskChecklistModel = [AFATableControllerChecklistModel new];
+    taskChecklistModel.delegate = [self cellFactoryForSectionType:AFATaskDetailsSectionTypeChecklist];
+    taskChecklistModel.checklistArr = taskList;
+    self.sectionModels[@(AFATaskDetailsSectionTypeChecklist)] = taskChecklistModel;
+    
+    [self updateTableControllerForSectionType:AFATaskDetailsSectionTypeChecklist];
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    self.tableController.isEditable = ![taskDetailsModel isCompletedTask];
+}
+
+
+#pragma mark -
+#pragma mark Helpers
 
 - (void)setupCellFactoriesWithThemeColor:(UIColor *)themeColor {
     // Details cell factory
@@ -518,6 +528,130 @@
     self.cellFactories[@(AFATaskDetailsSectionTypeContributors)] = contributorsCellFactory;
     self.cellFactories[@(AFATaskDetailsSectionTypeFilesContent)] = contentCellFactory;
     self.cellFactories[@(AFATaskDetailsSectionTypeComments)] = commentCellFactory;
+}
+
+- (void)fetchDetailsForTaskWithID:(NSString *)taskID
+              remoteDispatchGroup:(dispatch_group_t)remoteDispatchGroup
+              cachedDispatchGroup:(dispatch_group_t)cachedDispatchGroup {
+    __weak typeof(self) weakSelf = self;
+    [self.fetchTaskDetailsService requestTaskDetailsForID:taskID
+                                          completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              
+                                              if (error) {
+                                                  strongSelf.remoteTaskDetailsError = error;
+                                                  dispatch_group_leave(remoteDispatchGroup);
+                                              } else {
+                                                  strongSelf.remoteTaskDetailsModel.currentTask = task;
+                                                  
+                                                  if (task.parentTaskID) {
+                                                      [strongSelf fetchDetailsForParentTaskWithID:task.parentTaskID
+                                                                              remoteDispatchGroup:remoteDispatchGroup cachedDispatchGroup:cachedDispatchGroup];
+                                                  } else {
+                                                      dispatch_group_leave(remoteDispatchGroup);
+                                                  }
+                                              }
+                                          } cachedResults:^(ASDKModelTask *task, NSError *error) {
+                                              __strong typeof(self) strongSelf = weakSelf;
+                                              if (error) {
+                                                  strongSelf.cachedTaskDetailsError = error;
+                                                  dispatch_group_leave(cachedDispatchGroup);
+                                              } else {
+                                                  strongSelf.cachedTaskDetailsModel.currentTask = task;
+                                                  
+                                                  if (task.parentTaskID) {
+                                                      [strongSelf fetchDetailsForParentTaskWithID:task.parentTaskID
+                                                                              remoteDispatchGroup:remoteDispatchGroup cachedDispatchGroup:cachedDispatchGroup];
+                                                  } else {
+                                                      dispatch_group_leave(cachedDispatchGroup);
+                                                  }
+                                              }
+                                          }];
+}
+
+- (void)fetchDetailsForParentTaskWithID:(NSString *)parentTaskID
+                    remoteDispatchGroup:(dispatch_group_t)remoteDispatchGroup
+                    cachedDispatchGroup:(dispatch_group_t)cachedDispatchGroup {
+    __weak typeof(self) weakSelf = self;
+    [self.fetchParentTaskService requestTaskDetailsForID:parentTaskID
+                                         completionBlock:^(ASDKModelTask *task, NSError *error) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             BOOL leaveRemoteDispatchGroup = YES;
+                                             
+                                             if (error) {
+                                                 if (strongSelf.remoteTaskDetailsError) {
+                                                     leaveRemoteDispatchGroup = NO;
+                                                 } else {
+                                                     strongSelf.remoteTaskDetailsError = error;
+                                                 }
+                                             } else {
+                                                 strongSelf.remoteTaskDetailsModel.parentTask = task;
+                                             }
+                                             
+                                             if (leaveRemoteDispatchGroup) {
+                                                 dispatch_group_leave(remoteDispatchGroup);
+                                             }
+                                         } cachedResults:^(ASDKModelTask *task, NSError *error) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             BOOL leaveCachedDispatchGroup = YES;
+                                             
+                                             if (error) {
+                                                 if (strongSelf.cachedTaskDetailsError) {
+                                                     leaveCachedDispatchGroup = NO;
+                                                 } else {
+                                                     strongSelf.cachedTaskDetailsError = error;
+                                                 }
+                                             } else {
+                                                 strongSelf.cachedTaskDetailsModel.parentTask = task;
+                                             }
+                                             
+                                             if (leaveCachedDispatchGroup) {
+                                                 dispatch_group_leave(cachedDispatchGroup);
+                                             }
+                                         }];
+}
+
+- (void)fetchCurrentProfileInRemoteDispatchGroup:(dispatch_group_t)remoteDispatchGroup
+                             cachedDispatchGroup:(dispatch_group_t)cachedDispatchGroup {
+    __weak typeof(self) weakSelf = self;
+    [self.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (error) {
+            strongSelf.remoteTaskDetailsError = error;
+        } else {
+            strongSelf.remoteTaskDetailsModel.userProfile = profile;
+        }
+        dispatch_group_leave(remoteDispatchGroup);
+    } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (error) {
+            strongSelf.cachedTaskDetailsError = error;
+        } else {
+            strongSelf.cachedTaskDetailsModel.userProfile = profile;
+        }
+        dispatch_group_leave(cachedDispatchGroup);
+    }];
+}
+
+- (BOOL)registerTaskDetailsCellActionsForModel:(AFATableControllerTaskDetailsModel *)taskDetailsModel {
+    BOOL registerCellActions = NO;
+    
+    if (!self.sectionModels[@(AFATaskDetailsSectionTypeTaskDetails)]) {
+        // Cell actions for all the cell factories are registered after the initial task details
+        // are loaded
+        registerCellActions = YES;
+    }
+    
+    if (taskDetailsModel.currentTask && taskDetailsModel.userProfile) {
+        self.sectionModels[@(AFATaskDetailsSectionTypeTaskDetails)] = taskDetailsModel;
+    }
+    [self updateTableControllerForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    return registerCellActions;
 }
 
 @end
