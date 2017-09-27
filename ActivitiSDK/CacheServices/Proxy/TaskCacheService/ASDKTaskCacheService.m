@@ -235,7 +235,9 @@
         
         if (!error) {
             ASDKMOTaskContentMap *taskContentMap = taskContentMapArr.firstObject;
-            matchingContentArr = [taskContentMap.taskContentList allObjects];
+            NSSortDescriptor *contentSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"creationDate"
+                                                                                    ascending:YES];
+            matchingContentArr = [[taskContentMap.taskContentList allObjects] sortedArrayUsingDescriptors:@[contentSortDescriptor]];
         }
         
         if (completionBlock) {
