@@ -71,11 +71,13 @@
 @implementation AFATaskDetailsDataSource
 
 - (instancetype)initWithTaskID:(NSString *)taskID
+                  parentTaskID:(NSString *)parentTaskID
                     themeColor:(UIColor *)themeColor {
     self = [super init];
     
     if (self) {
         _taskID = taskID;
+        _parentTaskID = parentTaskID;
         _themeColor = themeColor;
         _sectionModels = [NSMutableDictionary dictionary];
         _cellFactories = [NSMutableDictionary dictionary];
@@ -111,11 +113,11 @@
 - (void)taskDetailsWithCompletionBlock:(AFATaskDetailsDataSourceCompletionBlock)completionBlock
                     cachedResultsBlock:(AFATaskDetailsDataSourceCompletionBlock)cachedResultsBlock {
     /* Task details information is comprised out of multiple services aggregations
-     * 1. Fetch the task details for the current task ID
-     * 2. Fetch the parent task if applicable
-     * 3. If the current task is claimable and has an assignee then fetch the
-     * current user profile to also check if the task is already claimed and
-     * can be dequeued.
+       1. Fetch the task details for the current task ID
+       2. Fetch the parent task if applicable
+       3. If the current task is claimable and has an assignee then fetch the
+       current user profile to also check if the task is already claimed and
+       can be dequeued.
      */
     self.cachedTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
     self.remoteTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
@@ -123,12 +125,21 @@
     dispatch_group_t remoteTaskDetailsGroup = dispatch_group_create();
     dispatch_group_t cachedTaskDetailsGroup = dispatch_group_create();
     
-    // 1 & 2
+    // 1
     dispatch_group_enter(remoteTaskDetailsGroup);
     dispatch_group_enter(cachedTaskDetailsGroup);
     [self fetchDetailsForTaskWithID:self.taskID
                 remoteDispatchGroup:remoteTaskDetailsGroup
                 cachedDispatchGroup:cachedTaskDetailsGroup];
+    
+    // 2
+    if (self.parentTaskID) {
+        dispatch_group_enter(remoteTaskDetailsGroup);
+        dispatch_group_enter(cachedTaskDetailsGroup);
+        [self fetchDetailsForParentTaskWithID:self.parentTaskID
+                    remoteDispatchGroup:remoteTaskDetailsGroup
+                    cachedDispatchGroup:cachedTaskDetailsGroup];
+    }
     
     // 3
     dispatch_group_enter(remoteTaskDetailsGroup);
@@ -533,6 +544,7 @@
 - (void)fetchDetailsForTaskWithID:(NSString *)taskID
               remoteDispatchGroup:(dispatch_group_t)remoteDispatchGroup
               cachedDispatchGroup:(dispatch_group_t)cachedDispatchGroup {
+    
     __weak typeof(self) weakSelf = self;
     [self.fetchTaskDetailsService requestTaskDetailsForID:taskID
                                           completionBlock:^(ASDKModelTask *task, NSError *error) {
@@ -540,32 +552,30 @@
                                               
                                               if (error) {
                                                   strongSelf.remoteTaskDetailsError = error;
-                                                  dispatch_group_leave(remoteDispatchGroup);
                                               } else {
                                                   strongSelf.remoteTaskDetailsModel.currentTask = task;
-                                                  
-                                                  if (task.parentTaskID) {
-                                                      [strongSelf fetchDetailsForParentTaskWithID:task.parentTaskID
-                                                                              remoteDispatchGroup:remoteDispatchGroup cachedDispatchGroup:cachedDispatchGroup];
-                                                  } else {
-                                                      dispatch_group_leave(remoteDispatchGroup);
-                                                  }
                                               }
+                                              
+                                              dispatch_group_leave(remoteDispatchGroup);
                                           } cachedResults:^(ASDKModelTask *task, NSError *error) {
                                               __strong typeof(self) strongSelf = weakSelf;
+                                              
                                               if (error) {
                                                   strongSelf.cachedTaskDetailsError = error;
-                                                  dispatch_group_leave(cachedDispatchGroup);
                                               } else {
                                                   strongSelf.cachedTaskDetailsModel.currentTask = task;
                                                   
-                                                  if (task.parentTaskID) {
-                                                      [strongSelf fetchDetailsForParentTaskWithID:task.parentTaskID
-                                                                              remoteDispatchGroup:remoteDispatchGroup cachedDispatchGroup:cachedDispatchGroup];
-                                                  } else {
-                                                      dispatch_group_leave(cachedDispatchGroup);
+                                                  // If the parent task information is not present when
+                                                  // fetching the task details perform an additional request
+                                                  if (!strongSelf.parentTaskID && task.parentTaskID) {
+                                                      dispatch_group_enter(remoteDispatchGroup);
+                                                      dispatch_group_enter(cachedDispatchGroup);
+                                                      [strongSelf fetchDetailsForParentTaskWithID:task.parentTaskID remoteDispatchGroup:remoteDispatchGroup
+                                                                              cachedDispatchGroup:cachedDispatchGroup];
                                                   }
                                               }
+                                              
+                                              dispatch_group_leave(cachedDispatchGroup);
                                           }];
 }
 
@@ -573,43 +583,28 @@
                     remoteDispatchGroup:(dispatch_group_t)remoteDispatchGroup
                     cachedDispatchGroup:(dispatch_group_t)cachedDispatchGroup {
     __weak typeof(self) weakSelf = self;
+    
     [self.fetchParentTaskService requestTaskDetailsForID:parentTaskID
                                          completionBlock:^(ASDKModelTask *task, NSError *error) {
                                              __strong typeof(self) strongSelf = weakSelf;
                                              
-                                             BOOL leaveRemoteDispatchGroup = YES;
-                                             
                                              if (error) {
-                                                 if (strongSelf.remoteTaskDetailsError) {
-                                                     leaveRemoteDispatchGroup = NO;
-                                                 } else {
-                                                     strongSelf.remoteTaskDetailsError = error;
-                                                 }
+                                                 strongSelf.remoteTaskDetailsError = error;
                                              } else {
                                                  strongSelf.remoteTaskDetailsModel.parentTask = task;
                                              }
                                              
-                                             if (leaveRemoteDispatchGroup) {
-                                                 dispatch_group_leave(remoteDispatchGroup);
-                                             }
+                                             dispatch_group_leave(remoteDispatchGroup);
                                          } cachedResults:^(ASDKModelTask *task, NSError *error) {
                                              __strong typeof(self) strongSelf = weakSelf;
                                              
-                                             BOOL leaveCachedDispatchGroup = YES;
-                                             
                                              if (error) {
-                                                 if (strongSelf.cachedTaskDetailsError) {
-                                                     leaveCachedDispatchGroup = NO;
-                                                 } else {
-                                                     strongSelf.cachedTaskDetailsError = error;
-                                                 }
+                                                 strongSelf.cachedTaskDetailsError = error;
                                              } else {
                                                  strongSelf.cachedTaskDetailsModel.parentTask = task;
                                              }
                                              
-                                             if (leaveCachedDispatchGroup) {
-                                                 dispatch_group_leave(cachedDispatchGroup);
-                                             }
+                                             dispatch_group_leave(cachedDispatchGroup);
                                          }];
 }
 

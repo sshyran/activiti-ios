@@ -210,8 +210,9 @@ UITableViewDelegate>
     if ([kSegueIDTaskDetails isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *detailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         
-        ASDKModelTask *currentSelectedTask = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
-        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:currentSelectedTask.modelID
+        ASDKModelTask *selectedTask = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
+        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:selectedTask.modelID
+                                                                                              parentTaskID:selectedTask.parentTaskID
                                                                                                 themeColor:self.navigationBarThemeColor];
         
         detailsViewController.dataSource = taskDetailsDataSource;

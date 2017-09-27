@@ -148,10 +148,13 @@ typedef NS_OPTIONS(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 #pragma mark -
 #pragma mark Navigation
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue
+                 sender:(id)sender {
     if ([kSegueIDProcessInstanceTaskDetails isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *taskDetailsController = (AFATaskDetailsViewController *)segue.destinationViewController;
-        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:[(ASDKModelTask *)sender modelID]
+        ASDKModelTask *task = (ASDKModelTask *)sender;
+        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:[task modelID]
+                                                                                              parentTaskID:task.parentTaskID
                                                                                                 themeColor:self.navigationBarThemeColor];
         taskDetailsController.dataSource = taskDetailsDataSource;
         taskDetailsController.unwindActionType = AFATaskDetailsUnwindActionTypeProcessInstanceDetails;

@@ -248,17 +248,21 @@ AFAModalPeoplePickerViewControllerDelegate>
         AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         
         AFATableControllerChecklistModel *checklistModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeChecklist];
-        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:((ASDKModelTask *)[checklistModel itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]).modelID
-                                                                                                themeColor:self.navigationBarThemeColor];
+        ASDKModelTask *selectedTask = ((ASDKModelTask *)[checklistModel itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]);
         
+        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:selectedTask.modelID
+                                                                                              parentTaskID:selectedTask.parentTaskID
+                                                                                                themeColor:self.navigationBarThemeColor];
         taskDetailsViewController.dataSource = taskDetailsDataSource;
         taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
     } else if ([kSegueIDTaskDetailsViewTask isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         
         AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:taskDetailsModel.currentTask.parentTaskID
-                                                                                                themeColor:self.navigationBarThemeColor];
+        AFATaskDetailsDataSource *taskDetailsDataSource =
+        [[AFATaskDetailsDataSource alloc] initWithTaskID:taskDetailsModel.currentTask.parentTaskID
+                                            parentTaskID:nil
+                                              themeColor:self.navigationBarThemeColor];
         taskDetailsViewController.dataSource = taskDetailsDataSource;
         taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
     }
@@ -279,6 +283,23 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (IBAction)unwindTaskChecklistController:(UIStoryboardSegue *)sender {
+}
+
+
+#pragma mark -
+#pragma mark Connectivity notifications
+
+- (void)didRestoredNetworkConnectivity {
+    [super didRestoredNetworkConnectivity];
+    
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
+    [self refreshContentForCurrentSection];
+}
+
+- (void)didLoseNetworkConnectivity {
+    [super didLoseNetworkConnectivity];
+    
+    [self refreshContentForCurrentSection];
 }
 
 
@@ -848,6 +869,8 @@ AFAModalPeoplePickerViewControllerDelegate>
         }
     }
     
+#warning handle error when loading task details
+    
     [self endRefreshOnRefreshControl];
     
     BOOL isContentAvailable = taskDetailsModel.currentTask ? YES : NO;
@@ -858,11 +881,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     AFATableControllerTaskContributorsModel *taskContributorsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeContributors];
     
     if (!error) {
-        AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-        
-        self.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"];
-        self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenContributorsNotEditableText, @"No contributors available not editable text") : NSLocalizedString(kLocalizationNoContentScreenContributorsText, @"No contributors available text");
-        
         [self.taskDetailsTableView reloadData];
         
         // Display the last update date
@@ -876,6 +894,10 @@ AFAModalPeoplePickerViewControllerDelegate>
             [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
     }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenContributorsNotEditableText, @"No contributors available not editable text") : NSLocalizedString(kLocalizationNoContentScreenContributorsText, @"No contributors available text");
     
     [self endRefreshOnRefreshControl];
     
@@ -887,11 +909,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     AFATableControllerContentModel *taskContentModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
     
     if (!error) {
-        AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-        
-        self.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
-        self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable") :  NSLocalizedString(kLocalizationNoContentScreenFilesText, @"No files available text");
-        
         [self.taskDetailsTableView reloadData];
         
         // Display the last update date
@@ -905,6 +922,11 @@ AFAModalPeoplePickerViewControllerDelegate>
             [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
     }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable") :  NSLocalizedString(kLocalizationNoContentScreenFilesText, @"No files available text");
     
     [self endRefreshOnRefreshControl];
     
@@ -916,11 +938,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     AFATableControllerCommentModel *commentModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeComments];
     
     if (!error) {
-        AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-        
-        self.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
-        self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
-        
         [self.taskDetailsTableView reloadData];
         
         // Display the last update date
@@ -934,6 +951,11 @@ AFAModalPeoplePickerViewControllerDelegate>
             [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
     }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
     
     [self endRefreshOnRefreshControl];
     
@@ -947,11 +969,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     if (!error) {
         [self.taskDetailsTableView reloadData];
         
-        AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-        
-        self.noContentView.iconImageView.image = [UIImage imageNamed:@"checklist-large-icon"];
-        self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenChecklistNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenChecklistEditableText, @"No comments available text") ;
-        
         // Display the last update date
         if (self.refreshControl) {
             self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
@@ -963,6 +980,11 @@ AFAModalPeoplePickerViewControllerDelegate>
             [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
     }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"checklist-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenChecklistNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenChecklistEditableText, @"No comments available text");
     
     [self endRefreshOnRefreshControl];
     

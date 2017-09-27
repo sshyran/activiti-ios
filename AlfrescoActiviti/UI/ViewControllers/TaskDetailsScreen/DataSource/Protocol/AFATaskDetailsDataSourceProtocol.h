@@ -50,6 +50,7 @@ typedef void (^AFATaskClaimingDataSourceCompletionBlock) (BOOL isTaskClaimed, NS
 @property (strong, nonatomic) NSMutableDictionary   *cellFactories;
 
 - (instancetype)initWithTaskID:(NSString *)taskID
+                  parentTaskID:(NSString *)parentTaskID
                     themeColor:(UIColor *)themeColor;
 
 - (void)taskDetailsWithCompletionBlock:(AFATaskDetailsDataSourceCompletionBlock)completionBlock

@@ -23,6 +23,7 @@
 
 @property (strong, nonatomic, readonly) UIColor     *themeColor;
 @property (strong, nonatomic, readonly) NSString    *taskID;
+@property (strong, nonatomic, readonly) NSString    *parentTaskID;
 @property (strong, nonatomic) NSMutableDictionary   *sectionModels;
 @property (strong, nonatomic) NSMutableDictionary   *cellFactories;
 @property (strong, nonatomic) AFATableController    *tableController;
