@@ -25,6 +25,7 @@
 @property (strong, nonatomic) ASDKModelTask     *currentTask;
 @property (strong, nonatomic) ASDKModelTask     *parentTask;
 @property (strong, nonatomic) ASDKModelProfile  *userProfile;
+@property (assign, nonatomic) BOOL              isConnectivityAvailable;
 
 - (BOOL)canBeRequeued;
 - (BOOL)isCompletedTask;

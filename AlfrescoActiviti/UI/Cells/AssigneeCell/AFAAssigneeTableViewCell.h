@@ -36,5 +36,6 @@ ASDKModelProcessInstance;
 
 - (void)setUpCellWithTask:(ASDKModelTask *)task;
 - (void)setupCellWithProcessInstance:(ASDKModelProcessInstance *)processInstance;
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable;
 
 @end

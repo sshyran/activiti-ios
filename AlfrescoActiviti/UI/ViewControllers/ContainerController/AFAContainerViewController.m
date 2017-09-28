@@ -40,6 +40,7 @@
 #import "AFAUserServices.h"
 #import "AFAQueryServices.h"
 #import "AFAIntegrationServices.h"
+#import "AFAReachabilityStore.h"
 @import ActivitiSDK;
 
 // Controllers
@@ -115,6 +116,11 @@
         AFAThumbnailManager *thumbnailManager = [AFAThumbnailManager new];
         [serviceRepository registerServiceObject:thumbnailManager
                                       forPurpose:AFAServiceObjectTypeThumbnailManager];
+        
+        // Register the reachability store to get notified or querry for network outages
+        AFAReachabilityStore *reachabilityStore = [AFAReachabilityStore new];
+        [serviceRepository registerServiceObject:reachabilityStore
+                                      forPurpose:AFAServiceObjectTypeReachabilityStore];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleUnAuthorizedRequestNotification)

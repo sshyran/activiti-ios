@@ -48,6 +48,7 @@ typedef void (^AFATaskClaimingDataSourceCompletionBlock) (BOOL isTaskClaimed, NS
 @property (strong, nonatomic) NSMutableDictionary   *sectionModels;
 @property (strong, nonatomic) AFATableController    *tableController;
 @property (strong, nonatomic) NSMutableDictionary   *cellFactories;
+@property (assign, nonatomic) BOOL                  isConnectivityAvailable;
 
 - (instancetype)initWithTaskID:(NSString *)taskID
                   parentTaskID:(NSString *)parentTaskID

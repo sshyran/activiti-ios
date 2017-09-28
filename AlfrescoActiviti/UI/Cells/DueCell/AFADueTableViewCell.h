@@ -36,5 +36,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *editButtonImageView;
 
 - (void)setUpCellWithTask:(ASDKModelTask *)task;
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable;
 
 @end

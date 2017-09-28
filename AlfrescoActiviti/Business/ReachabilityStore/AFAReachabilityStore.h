@@ -16,13 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFABaseModel.h"
-#import "AFATableController.h"
+#import <Foundation/Foundation.h>
 
-@interface AFATableControllerTaskContributorsModel : AFABaseModel <AFATableViewModelDelegate>
+typedef NS_ENUM(NSInteger, AFAReachabilityStoreType) {
+    AFAReachabilityStoreTypeReachableViaWANOrWiFi,
+    AFAReachabilityStoreTypeNotReachable
+};
 
-@property (strong, nonatomic) NSArray                           *involvedPeople;
-@property (assign, nonatomic, getter=isRefreshInProgress) BOOL  isRefreshInProgress;
-@property (assign, nonatomic) BOOL                              isConnectivityAvailable;
+@interface AFAReachabilityStore : NSObject
+
+@property (assign, nonatomic) AFAReachabilityStoreType reachability;
 
 @end

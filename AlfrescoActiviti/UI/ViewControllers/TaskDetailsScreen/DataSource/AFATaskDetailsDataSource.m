@@ -122,6 +122,9 @@
     self.cachedTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
     self.remoteTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
     
+    self.cachedTaskDetailsModel.isConnectivityAvailable = self.isConnectivityAvailable;
+    self.remoteTaskDetailsModel.isConnectivityAvailable = self.isConnectivityAvailable;
+    
     dispatch_group_t remoteTaskDetailsGroup = dispatch_group_create();
     dispatch_group_t cachedTaskDetailsGroup = dispatch_group_create();
     
@@ -466,6 +469,7 @@
 - (void)handleTaskContributorsResponseForTask:(ASDKModelTask *)task {
     // Extract the number of collaborators for the given task
     AFATableControllerTaskContributorsModel *taskContributorsModel = [AFATableControllerTaskContributorsModel new];
+    taskContributorsModel.isConnectivityAvailable = self.isConnectivityAvailable;
     taskContributorsModel.involvedPeople = task.involvedPeople;
     self.sectionModels[@(AFATaskDetailsSectionTypeContributors)] = taskContributorsModel;
     
@@ -473,18 +477,21 @@
     
     // Check if the task is already completed and in that case mark the table
     // controller as not editable
-    self.tableController.isEditable = !(task.endDate && task.duration);
+    BOOL isEditable = !(task.endDate && task.duration) && self.isConnectivityAvailable;
+    self.tableController.isEditable = isEditable;
 }
 
 - (void)handleTaskContentListResponse:(NSArray *)contentList {
     AFATableControllerContentModel *taskContentModel = [AFATableControllerContentModel new];
+    taskContentModel.isConnectivityAvailable = self.isConnectivityAvailable;
     taskContentModel.attachedContentArr = contentList;
     self.sectionModels[@(AFATaskDetailsSectionTypeFilesContent)] = taskContentModel;
     
     [self updateTableControllerForSectionType:AFATaskDetailsSectionTypeFilesContent];
     
     AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-    self.tableController.isEditable = ![taskDetailsModel isCompletedTask];
+    BOOL isEditable = ![taskDetailsModel isCompletedTask] && self.isConnectivityAvailable;
+    self.tableController.isEditable = isEditable;
 }
 
 - (void)handleTaskCommentListResponse:(NSArray *)commentList
@@ -509,7 +516,8 @@
     [self updateTableControllerForSectionType:AFATaskDetailsSectionTypeChecklist];
     
     AFATableControllerTaskDetailsModel *taskDetailsModel = [self reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-    self.tableController.isEditable = ![taskDetailsModel isCompletedTask];
+    BOOL isEditable = ![taskDetailsModel isCompletedTask] && self.isConnectivityAvailable;
+    self.tableController.isEditable = isEditable;
 }
 
 
@@ -550,9 +558,9 @@
                                           completionBlock:^(ASDKModelTask *task, NSError *error) {
                                               __strong typeof(self) strongSelf = weakSelf;
                                               
-                                              if (error) {
-                                                  strongSelf.remoteTaskDetailsError = error;
-                                              } else {
+                                              strongSelf.remoteTaskDetailsError = error;
+                                              
+                                              if (!error) {
                                                   strongSelf.remoteTaskDetailsModel.currentTask = task;
                                               }
                                               
@@ -560,9 +568,9 @@
                                           } cachedResults:^(ASDKModelTask *task, NSError *error) {
                                               __strong typeof(self) strongSelf = weakSelf;
                                               
-                                              if (error) {
-                                                  strongSelf.cachedTaskDetailsError = error;
-                                              } else {
+                                              strongSelf.cachedTaskDetailsError = error;
+                                              
+                                              if (!error) {
                                                   strongSelf.cachedTaskDetailsModel.currentTask = task;
                                                   
                                                   // If the parent task information is not present when
@@ -588,9 +596,9 @@
                                          completionBlock:^(ASDKModelTask *task, NSError *error) {
                                              __strong typeof(self) strongSelf = weakSelf;
                                              
-                                             if (error) {
-                                                 strongSelf.remoteTaskDetailsError = error;
-                                             } else {
+                                             strongSelf.remoteTaskDetailsError = error;
+                                             
+                                             if (!error) {
                                                  strongSelf.remoteTaskDetailsModel.parentTask = task;
                                              }
                                              
@@ -598,9 +606,9 @@
                                          } cachedResults:^(ASDKModelTask *task, NSError *error) {
                                              __strong typeof(self) strongSelf = weakSelf;
                                              
-                                             if (error) {
-                                                 strongSelf.cachedTaskDetailsError = error;
-                                             } else {
+                                             strongSelf.cachedTaskDetailsError = error;
+                                             
+                                             if (!error) {
                                                  strongSelf.cachedTaskDetailsModel.parentTask = task;
                                              }
                                              
@@ -614,18 +622,18 @@
     [self.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        if (error) {
-            strongSelf.remoteTaskDetailsError = error;
-        } else {
+        strongSelf.remoteTaskDetailsError = error;
+        
+        if (!error) {
             strongSelf.remoteTaskDetailsModel.userProfile = profile;
         }
         dispatch_group_leave(remoteDispatchGroup);
     } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        if (error) {
-            strongSelf.cachedTaskDetailsError = error;
-        } else {
+        strongSelf.cachedTaskDetailsError = error;
+        
+        if (!error) {
             strongSelf.cachedTaskDetailsModel.userProfile = profile;
         }
         dispatch_group_leave(cachedDispatchGroup);

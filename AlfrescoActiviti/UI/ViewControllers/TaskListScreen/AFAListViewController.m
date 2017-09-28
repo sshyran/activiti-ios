@@ -90,6 +90,7 @@ UITableViewDelegate>
 @property (weak, nonatomic)   IBOutlet AFAActivityView                      *loadingActivityView;
 @property (weak, nonatomic)   IBOutlet UITextField                          *searchTextField;
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *backBarButtonItem;
+@property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *addBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UIButton                             *taskListButton;
 @property (weak, nonatomic)   IBOutlet UIButton                             *processListButton;
 @property (weak, nonatomic)   IBOutlet UIView                               *underlineView;
@@ -189,6 +190,9 @@ UITableViewDelegate>
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self searchWithTerm:self.searchTextField.text];
+    
+    BOOL isReachable = (self.reachabilityStore.reachability == AFAReachabilityStoreTypeReachableViaWANOrWiFi) ? YES : NO;
+    [self refreshUIForConnectivity:isReachable];
 }
 
 
@@ -256,12 +260,20 @@ UITableViewDelegate>
     [super didRestoredNetworkConnectivity];
     
     [self searchWithTerm:self.searchTextField.text];
+    
+    [self refreshUIForConnectivity:YES];
 }
 
 - (void)didLoseNetworkConnectivity {
     [super didLoseNetworkConnectivity];
     
     [self searchWithTerm:self.searchTextField.text];
+    
+    [self refreshUIForConnectivity:NO];
+}
+
+- (void)refreshUIForConnectivity:(BOOL)isConnected {
+    self.addBarButtonItem.enabled = isConnected;
 }
 
 

@@ -73,7 +73,7 @@
 #import "AFAModalTaskDetailsViewController.h"
 #import "AFAModalPeoplePickerViewController.h"
 
-typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
+typedef NS_ENUM(NSUInteger, AFATaskDetailsLoadingState) {
     AFATaskDetailsLoadingStateIdle = 0,
     AFATaskDetailsLoadingStateRefreshInProgress,
     AFATaskDetailsLoadingStateEmptyList
@@ -145,6 +145,7 @@ AFAModalPeoplePickerViewControllerDelegate>
     [super viewDidLoad];
     
     // Bind table view's delegates to table controller
+    self.dataSource.isConnectivityAvailable = [self isNetworkReachable];
     self.taskDetailsTableView.dataSource = self.dataSource.tableController;
     self.taskDetailsTableView.delegate = self.dataSource.tableController;
     self.navigationBarThemeColor = self.dataSource.themeColor;
@@ -192,13 +193,13 @@ AFAModalPeoplePickerViewControllerDelegate>
                                                                            action:@selector(onTaskDetailsEdit:)];
     self.editBarButtonItem.tintColor = [UIColor whiteColor];
     
-    // Set the confirmation view delegate
     self.confirmationView.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self refreshContentForCurrentSection];
+    [self refreshUIForConnectivity:[self isNetworkReachable]];
 }
 
 
@@ -292,6 +293,9 @@ AFAModalPeoplePickerViewControllerDelegate>
 - (void)didRestoredNetworkConnectivity {
     [super didRestoredNetworkConnectivity];
     
+    self.dataSource.isConnectivityAvailable = YES;
+    [self refreshUIForConnectivity:self.dataSource.isConnectivityAvailable];
+    
     self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
     [self refreshContentForCurrentSection];
 }
@@ -299,7 +303,19 @@ AFAModalPeoplePickerViewControllerDelegate>
 - (void)didLoseNetworkConnectivity {
     [super didLoseNetworkConnectivity];
     
+    self.dataSource.isConnectivityAvailable = NO;
+    [self refreshUIForConnectivity:self.dataSource.isConnectivityAvailable];
+    
     [self refreshContentForCurrentSection];
+}
+
+- (void)refreshUIForConnectivity:(BOOL)isConnected {
+    self.addBarButtonItem.enabled = isConnected;
+    self.editBarButtonItem.enabled = isConnected;
+}
+
+- (BOOL)isNetworkReachable {
+    return (self.reachabilityStore.reachability == AFAReachabilityStoreTypeReachableViaWANOrWiFi) ? YES : NO;
 }
 
 
@@ -345,6 +361,10 @@ AFAModalPeoplePickerViewControllerDelegate>
         self.currentSelectedSection = sectionButton.tag;
         UIButton *currentSectionButton = [self buttonForSection:self.currentSelectedSection];
         currentSectionButton.tintColor = [self.navigationBarThemeColor colorWithAlphaComponent:.7f];
+        
+        // Exit editing mode if applicable
+        [self.taskDetailsTableView setEditing:NO
+                                     animated:YES];
         
         // Update the controller state and refresh the appropiate section
         self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
@@ -437,6 +457,7 @@ AFAModalPeoplePickerViewControllerDelegate>
 
 - (IBAction)onTableLongPress:(UILongPressGestureRecognizer *)sender {
     if (AFATaskDetailsSectionTypeChecklist == self.currentSelectedSection) {
+        
         if (!self.taskDetailsTableView.editing) {
             [self.taskDetailsTableView setEditing:YES
                                          animated:YES];

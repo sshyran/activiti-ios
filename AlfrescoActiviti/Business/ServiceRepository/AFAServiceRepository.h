@@ -25,7 +25,8 @@ typedef NS_ENUM(NSInteger, AFAServiceObjectType) {
     AFAServiceObjectTypeFormServices,
     AFAServiceObjectTypeUserServices,
     AFAServiceObjectTypeQueryServices,
-    AFAServiceObjectTypeIntegrationServices
+    AFAServiceObjectTypeIntegrationServices,
+    AFAServiceObjectTypeReachabilityStore
 };
 
 /**

@@ -46,6 +46,10 @@
     self.backgroundColor = [themeColor colorWithAlphaComponent:.4f];
 }
 
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable {
+    self.requeueTaskButton.enabled = isConnectivityAvailable;
+}
+
 
 #pragma mark -
 #pragma mark Actions

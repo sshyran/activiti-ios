@@ -30,8 +30,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 
@@ -41,6 +39,10 @@
 - (void)setUpWithThemeColor:(UIColor *)themeColor {
     self.claimRoundedBorderView.fillColor = themeColor;
     self.backgroundColor = [themeColor colorWithAlphaComponent:.4f];
+}
+
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable {
+    self.claimButton.enabled = isConnectivityAvailable;
 }
 
 

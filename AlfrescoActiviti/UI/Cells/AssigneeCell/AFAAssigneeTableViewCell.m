@@ -72,6 +72,10 @@
                              forState:UIControlStateNormal];
 }
 
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable {
+    self.assigneeNameButton.enabled = isConnectivityAvailable;
+}
+
 
 #pragma mark -
 #pragma mark Actions

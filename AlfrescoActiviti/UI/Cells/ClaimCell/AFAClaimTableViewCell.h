@@ -32,5 +32,6 @@
 @property (weak, nonatomic) IBOutlet UIButton                 *claimButton;
 
 - (void)setUpWithThemeColor:(UIColor *)themeColor;
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable;
 
 @end

@@ -27,5 +27,6 @@
 @property (strong, nonatomic) NSMutableDictionary   *sectionModels;
 @property (strong, nonatomic) NSMutableDictionary   *cellFactories;
 @property (strong, nonatomic) AFATableController    *tableController;
+@property (assign, nonatomic) BOOL                  isConnectivityAvailable;
 
 @end

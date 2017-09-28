@@ -23,13 +23,14 @@
 #import "AFALocalizationConstants.h"
 
 // Managers
+#import "AFAServiceRepository.h"
 @import ActivitiSDK;
 
 @interface AFABaseThemedViewController ()
 
-@property (strong, nonatomic) id                                reachabilityChangeObserver;
 @property (strong, nonatomic) AFANavigationBarBannerAlertView   *bannerAlertView;
 @property (assign, nonatomic) BOOL                              isControllerViewVisible;
+@property (strong, nonatomic) ASDKKVOManager                    *kvoManager;
 
 @end
 
@@ -38,37 +39,47 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        __weak typeof(self) weakSelf = self;
-        _reachabilityChangeObserver =
-        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceNoInternetConnection
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification * _Nonnull note) {
-                                                          __strong typeof(self) strongSelf = weakSelf;
-                                                          
-                                                          if (strongSelf.isControllerViewVisible) {
-                                                              [self didLoseNetworkConnectivity];
-                                                          }
-                                                      }];
+        AFAServiceRepository *serviceRepository = [AFAServiceRepository sharedRepository];
+        _reachabilityStore = [serviceRepository serviceObjectForPurpose:AFAServiceObjectTypeReachabilityStore];
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceInternetConnectionAvailable
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification * _Nonnull note) {
-                                                          __strong typeof(self) strongSelf = weakSelf;
-                                                          
-                                                          if (strongSelf.isControllerViewVisible) {
-                                                              [strongSelf showWarningMessage:NSLocalizedString(kLocalizationOfflineConnectivityRetryText, @"Reconnect text")];
-                                                              [strongSelf didRestoredNetworkConnectivity];
-                                                          }
-                                                      }];
+        _kvoManager = [ASDKKVOManager managerWithObserver:self];
+        
+        __weak typeof(self) weakSelf = self;
+        [_kvoManager observeObject:_reachabilityStore
+                            forKeyPath:NSStringFromSelector(@selector(reachability))
+                               options:NSKeyValueObservingOptionNew
+                                 block:^(id observer, id object, NSDictionary *change) {
+                                     __strong typeof(self) strongSelf = weakSelf;
+                                     
+                                     AFAReachabilityStoreType reachability = [change[NSKeyValueChangeNewKey] integerValue];
+                                     
+                                     switch (reachability) {
+                                         case AFAReachabilityStoreTypeNotReachable: {
+                                             if (strongSelf.isControllerViewVisible) {
+                                                 [self didLoseNetworkConnectivity];
+                                             }
+                                         }
+                                             break;
+                                             
+                                         case AFAReachabilityStoreTypeReachableViaWANOrWiFi: {
+                                             if (strongSelf.isControllerViewVisible) {
+                                                 [strongSelf showWarningMessage:NSLocalizedString(kLocalizationOfflineConnectivityRetryText, @"Reconnect text")];
+                                                 [strongSelf didRestoredNetworkConnectivity];
+                                             }
+                                         }
+                                             break;
+                                             
+                                         default: break;
+                                     }
+                                 }];
     }
     
     return self;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityChangeObserver];
+    [ASDKKVOManager removeObserver:self.reachabilityStore
+                        forKeyPath:NSStringFromSelector(@selector(reachability))];
 }
 
 - (void)viewDidLoad {
@@ -77,11 +88,13 @@
     _bannerAlertView = [[AFANavigationBarBannerAlertView alloc] initWithParentViewController:self];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.isControllerViewVisible = YES;
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     self.isControllerViewVisible = NO;
 }
 

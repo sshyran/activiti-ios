@@ -82,4 +82,8 @@
     }
 }
 
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable {
+    self.addDueDateButton.enabled = isConnectivityAvailable;
+}
+
 @end
