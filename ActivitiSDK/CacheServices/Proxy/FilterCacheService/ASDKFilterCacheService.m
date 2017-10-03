@@ -68,7 +68,7 @@
     [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        [strongSelf fetchTaskFilterListUsingPredicate:[strongSelf adhocTaskFilterPredicate]
+        [strongSelf fetchFilterListUsingPredicate:[strongSelf adhocTaskFilterPredicate]
                                inManagedObjectContext:managedObjectContext
                                   withCompletionBlock:completionBlock];
     }];
@@ -81,9 +81,60 @@
     [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        [strongSelf fetchTaskFilterListUsingPredicate:[strongSelf appTaskFilterPredicateForAppID:filter.appID]
+        [strongSelf fetchFilterListUsingPredicate:[strongSelf appTaskFilterPredicateForAppID:filter.appID]
                                inManagedObjectContext:managedObjectContext
                                   withCompletionBlock:completionBlock];
+    }];
+}
+
+- (void)cacheDefaultProcessInstanceFilterList:(NSArray *)filterList
+                          withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf cacheProcessInstanceFilterList:filterList
+                                    usingPredicate:[strongSelf adhocProcessInstanceFilterPredicate]
+                            inManagedObjectContext:managedObjectContext
+                               withCompletionBlock:completionBlock];
+    }];
+}
+
+- (void)cacheProcessInstanceFilterList:(NSArray *)filterList
+                           usingFilter:(ASDKFilterListRequestRepresentation *)filter
+                   withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf cacheProcessInstanceFilterList:filterList
+                                    usingPredicate:[strongSelf appTaskFilterPredicateForAppID:filter.appID] inManagedObjectContext:managedObjectContext
+                               withCompletionBlock:completionBlock];
+    }];
+}
+
+- (void)fetchDefaultProcessInstanceFilterList:(ASDKCacheServiceFilterListCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf fetchFilterListUsingPredicate:[strongSelf adhocProcessInstanceFilterPredicate]
+                           inManagedObjectContext:managedObjectContext
+                              withCompletionBlock:completionBlock];
+    }];
+}
+
+- (void)fetchProcessInstanceFilterList:(ASDKCacheServiceFilterListCompletionBlock)completionBlock
+                           usingFilter:(ASDKFilterListRequestRepresentation *)filter {
+    __weak typeof(self) weakSelf = self;
+    
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf fetchFilterListUsingPredicate:[strongSelf appTaskFilterPredicateForAppID:filter.appID]
+                           inManagedObjectContext:managedObjectContext
+                              withCompletionBlock:completionBlock];
     }];
 }
 
@@ -95,6 +146,29 @@
              usingPredicate:(NSPredicate *)predicate
      inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
         withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self cacheFilterList:filterList
+           usingPredicate:predicate
+   inManagedObjectContext:managedObjectContext
+      withCompletionBlock:completionBlock
+             isTaskFilter:YES];
+}
+
+- (void)cacheProcessInstanceFilterList:(NSArray *)filterList
+                        usingPredicate:(NSPredicate *)predicate
+                inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                   withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self cacheFilterList:filterList
+           usingPredicate:predicate
+   inManagedObjectContext:managedObjectContext
+      withCompletionBlock:completionBlock
+             isTaskFilter:NO];
+}
+
+- (void)cacheFilterList:(NSArray *)filterList
+         usingPredicate:(NSPredicate *)predicate
+ inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+    withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock
+           isTaskFilter:(BOOL)isTaskFilter {
     managedObjectContext.automaticallyMergesChangesFromParent = YES;
     managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
     
@@ -117,7 +191,7 @@
                                                                    inManagedObjectContext:managedObjectContext];
             moFilter = [ASDKFilterCacheMapper mapFilter:filter
                                               toCacheMO:moFilter];
-            moFilter.isTaskFilter = YES;
+            moFilter.isTaskFilter = isTaskFilter;
         }
         
         [managedObjectContext save:&error];
@@ -128,9 +202,9 @@
     }
 }
 
-- (void)fetchTaskFilterListUsingPredicate:(NSPredicate *)predicate
-                   inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
-                      withCompletionBlock:(ASDKCacheServiceFilterListCompletionBlock)completionBlock {
+- (void)fetchFilterListUsingPredicate:(NSPredicate *)predicate
+               inManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+                  withCompletionBlock:(ASDKCacheServiceFilterListCompletionBlock)completionBlock {
     NSFetchRequest *fetchRequest = [ASDKMOFilter fetchRequest];
     fetchRequest.predicate = predicate;
     
@@ -173,6 +247,14 @@
 
 - (NSPredicate *)appTaskFilterPredicateForAppID:(NSString *)appID {
     return [NSPredicate predicateWithFormat:@"isTaskFilter == YES && applicationID == %@", appID];
+}
+
+- (NSPredicate *)adhocProcessInstanceFilterPredicate {
+    return [NSPredicate predicateWithFormat:@"isTaskFilter == NO AND applicationID == nil"];
+}
+
+- (NSPredicate *)appProcessInstanceFilterPredicateForAppID:(NSString *)appID {
+    return [NSPredicate predicateWithFormat:@"isTaskFilter == NO && applicationID == %@", appID];
 }
 
 @end

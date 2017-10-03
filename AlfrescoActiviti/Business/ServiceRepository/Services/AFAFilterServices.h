@@ -54,20 +54,26 @@ typedef void  (^AFAFilterServicesFilterListCompletionBlock) (NSArray *filterList
  *  Performs a request for the default defined process instance filter list in the APS installation that
  *  is not associated with any application.
  *
- *  @param completionBlock Completion block providing the filter list, an optional error reason and
- *                         pagination information
+ *  @param completionBlock      Completion block providing the filter list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance filter
+ *                              list an optional error and pagination information
  */
-- (void)requestProcessInstanceFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock;
+- (void)requestProcessInstanceFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock
+                                              cachedResults:(AFAFilterServicesFilterListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the process instance filter list in the APS installation that is associated
  *  with an application.
  *
- *  @param appID           The ID for which the filter list is requested
- *  @param completionBlock Completion block providing the filter list, an optional error reason and pagination
- *                         information
+ *  @param appID                The ID for which the filter list is requested
+ *  @param completionBlock      Completion block providing the filter list, an optional error reason and pagination
+ *                              information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance filter
+ *                              list an optional error and pagination information
  */
 - (void)requestProcessInstanceFilterListForAppID:(NSString *)appID
-                             withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock;
+                             withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock
+                                   cachedResults:(AFAFilterServicesFilterListCompletionBlock)cacheCompletionBlock;
 
 @end

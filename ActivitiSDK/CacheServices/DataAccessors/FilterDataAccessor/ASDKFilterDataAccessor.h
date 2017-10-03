@@ -28,12 +28,27 @@
 - (void)fetchDefaultTaskFilterList;
 
 /**
- * Requests the task filter list that is associated with an application an reports
+ * Requests the task filter list that is associated with an application and reports
  * network or cached data through the desinated data accessor delegate.
  *
- * @param appID Application id for which the filter list is requested.
+ * @param appID Application ID for which the filter list is requested.
  */
 - (void)fetchTaskFilterListForApplicationID:(NSString *)appID;
+
+/**
+ * Requests the default defined process instance filter list in the APS installation
+ * that are not associated with any application and reports network or cached data
+ * through the designated data accessor delegate.
+ */
+- (void)fetchDefaultProcessInstanceFilterList;
+
+/**
+ * Requests the process instance filter list that is associated with an application and
+ * reports network or cached data through the designated data accessor delegate.
+
+ @param appID Application ID for which the filter list is requested.
+ */
+- (void)fetchProcessInstanceFilterListForApplicationID:(NSString *)appID;
 
 /**
  * Cancels ongoing operations for the current data accessor.

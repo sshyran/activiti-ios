@@ -22,10 +22,6 @@
 // Constants
 #import "AFALocalizationConstants.h"
 
-// Configurations
-#import "AFALogConfiguration.h"
-
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 @interface AFAFilterServices () <ASDKDataAccessorDelegate>
 
@@ -41,6 +37,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (strong, nonatomic) ASDKFilterDataAccessor                    *fetchTaskFilterListDataAccessor;
 @property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  taskFilterListCompletionBlock;
 @property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  taskFilterListCachedResultsBlock;
+
+// Default process instance filter list
+@property (strong, nonatomic) ASDKFilterDataAccessor                    *fetchDefaultProcessInstanceFilterListDataAccessor;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  defaultProcessInstanceFilterListCompletionBlock;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  defaultProcessInstanceFilterListCachedResultsBlock;
+
+// Application specific process instance filter list
+@property (strong, nonatomic) ASDKFilterDataAccessor                    *fetchProcessInstanceFilterListDataAccessor;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  processInstanceFilterListCompletionBlock;
+@property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  processInstanceFilterListCachedResultsBlock;
 
 @end
 
@@ -83,7 +89,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestTaskFilterListForAppID:(NSString *)appID
                   withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock
                         cachedResults:(AFAFilterServicesFilterListCompletionBlock)cacheCompletionBlock {
-    NSParameterAssert(appID);
     NSParameterAssert(completionBlock);
     
     self.taskFilterListCompletionBlock = completionBlock;
@@ -93,60 +98,27 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.fetchTaskFilterListDataAccessor fetchTaskFilterListForApplicationID:appID];
 }
 
-- (void)requestProcessInstanceFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
+- (void)requestProcessInstanceFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock
+                                              cachedResults:(AFAFilterServicesFilterListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(completionBlock);
     
-    [self.filterNetworkService  fetchProcessInstanceFilterListWithCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-        if (!error && filterList) {
-            AFALogVerbose(@"Fetched %lu process instance filter entries", (unsigned long)filterList.count);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock (filterList, nil, paging);
-            });
-        } else {
-            AFALogError(@"An error occured while fetching the process instance filter list. Reason:%@", error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error, nil);
-            });
-        }
-    }];
+    self.defaultProcessInstanceFilterListCompletionBlock = completionBlock;
+    self.defaultProcessInstanceFilterListCachedResultsBlock = cacheCompletionBlock;
+    
+    self.fetchDefaultProcessInstanceFilterListDataAccessor = [[ASDKFilterDataAccessor alloc] initWithDelegate:self];
+    [self.fetchDefaultProcessInstanceFilterListDataAccessor fetchDefaultProcessInstanceFilterList];
 }
 
 - (void)requestProcessInstanceFilterListForAppID:(NSString *)appID
-                             withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
-    NSParameterAssert(appID);
+                             withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock
+                                   cachedResults:(AFAFilterServicesFilterListCompletionBlock)cacheCompletionBlock{
     NSParameterAssert(completionBlock);
     
-    ASDKFilterListRequestRepresentation *filterListRequestRepresentation = [ASDKFilterListRequestRepresentation new];
-    filterListRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    filterListRequestRepresentation.appID = appID;
+    self.processInstanceFilterListCompletionBlock = completionBlock;
+    self.processInstanceFilterListCachedResultsBlock = cacheCompletionBlock;
     
-    __weak typeof(self) weakSelf = self;
-    [self.filterNetworkService fetchProcessInstanceFilterListWithFilter:filterListRequestRepresentation
-                                                    withCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-                                                        if (!error) {
-                                                            if (filterList.count) {
-                                                                AFALogVerbose(@"Fetched %lu process instance filter entries", (unsigned long)filterList.count);
-                                                                
-                                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                                    completionBlock (filterList, nil, paging);
-                                                                });
-                                                            } else {
-                                                                AFALogVerbose(@"There are no filters defined. Will populate with default ones...");
-                                                                
-                                                                __strong typeof(self) strongSelf = weakSelf;
-                                                                [strongSelf requestCreateDefaultProcessInstanceFiltersForAppID:appID
-                                                                                                           withCompletionBlock:completionBlock];
-                                                            }
-                                                        } else {
-                                                            AFALogError(@"An error occured while fetching the process instance filter list. Reason:%@", error.localizedDescription);
-                                                            
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                completionBlock(nil, error, nil);
-                                                            });
-                                                        }
-                                                    }];
+    self.fetchProcessInstanceFilterListDataAccessor = [[ASDKFilterDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProcessInstanceFilterListDataAccessor fetchProcessInstanceFilterListForApplicationID:appID];
 }
 
 
@@ -159,6 +131,10 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         [self handleFetchDefaultTaskFilterListDataAccessorResponse:response];
     } else if (self.fetchTaskFilterListDataAccessor == dataAccessor) {
         [self handleFetchTaskFilterListDataAccessorResponse:response];
+    } else if (self.fetchDefaultProcessInstanceFilterListDataAccessor == dataAccessor) {
+        
+    } else if (self.fetchProcessInstanceFilterListDataAccessor == dataAccessor) {
+        
     }
 }
 
@@ -229,96 +205,4 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     });
 }
 
-- (void)requestCreateDefaultProcessInstanceFiltersForAppID:(NSString *)appID
-                                      withCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
-    NSParameterAssert(appID);
-    NSParameterAssert(completionBlock);
-    
-    __block NSError *operationError = nil;
-    __block NSMutableArray *filterArr = [NSMutableArray array];
-    
-    dispatch_group_t defaultProcessInstanceFilterGroup = dispatch_group_create();
-    
-    ASDKFilterModelCompletionBlock defaultFilterCompletionBlock = ^(ASDKModelFilter *filter, NSError *error) {
-        if (!error && filter) {
-            AFALogVerbose(@"Created default filter:%@", filter.name);
-            [filterArr addObject:filter];
-        } else {
-            operationError = error;
-        }
-        dispatch_group_leave(defaultProcessInstanceFilterGroup);
-    };
-    
-    // Running process instances filter
-    ASDKFilterCreationRequestRepresentation *runningProcessInstancesFilter = [ASDKFilterCreationRequestRepresentation new];
-    runningProcessInstancesFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    runningProcessInstancesFilter.appID = appID;
-    runningProcessInstancesFilter.icon = kASDKAPIIconNameRunning;
-    runningProcessInstancesFilter.index = 0;
-//    runningProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterRunningProcessText, @"Running process instances text");
-    
-    ASDKModelFilter *runningFilter = [ASDKModelFilter new];
-    runningFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    runningFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
-    runningFilter.state = ASDKModelFilterStateTypeRunning;
-    
-    runningProcessInstancesFilter.filter = runningFilter;
-    
-    dispatch_group_enter(defaultProcessInstanceFilterGroup);
-    [self.filterNetworkService createProcessInstanceTaskFilterWithRepresentation:runningProcessInstancesFilter
-                                                  withCompletionBlock:defaultFilterCompletionBlock];
-    
-    // Completed process instances filter
-    ASDKFilterCreationRequestRepresentation *completedProcessInstancesFilter = [ASDKFilterCreationRequestRepresentation new];
-    completedProcessInstancesFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    completedProcessInstancesFilter.appID = appID;
-    completedProcessInstancesFilter.icon = kASDKAPIIconNameCompleted;
-    completedProcessInstancesFilter.index = 1;
-//    completedProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedProcessesText, @"Completed process instances text");
-    
-    ASDKModelFilter *completedFilter = [ASDKModelFilter new];
-    completedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    completedFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
-    completedFilter.state = ASDKModelFilterStateTypeCompleted;
-    
-    completedProcessInstancesFilter.filter = completedFilter;
-    
-    dispatch_group_enter(defaultProcessInstanceFilterGroup);
-    [self.filterNetworkService createProcessInstanceTaskFilterWithRepresentation:completedProcessInstancesFilter
-                                                  withCompletionBlock:defaultFilterCompletionBlock];
-    
-    // All process instances filter
-    ASDKFilterCreationRequestRepresentation *allProcessInstancesFilter = [ASDKFilterCreationRequestRepresentation new];
-    allProcessInstancesFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    allProcessInstancesFilter.appID = appID;
-    allProcessInstancesFilter.icon = kASDKAPIIconNameAll;
-    allProcessInstancesFilter.index = 2;
-//    allProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterAllProcessesText, @"All process instances text");
-    
-    ASDKModelFilter *allFilter = [ASDKModelFilter new];
-    allFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
-    allFilter.sortType = ASDKModelFilterSortTypeCreatedDesc;
-    allFilter.state = ASDKModelFilterStateTypeAll;
-    
-    allProcessInstancesFilter.filter = allFilter;
-    
-    dispatch_group_enter(defaultProcessInstanceFilterGroup);
-    [self.filterNetworkService createProcessInstanceTaskFilterWithRepresentation:allProcessInstancesFilter
-                                                  withCompletionBlock:defaultFilterCompletionBlock];
-    
-    __weak typeof(self) weakSelf = self;
-    dispatch_group_notify(defaultProcessInstanceFilterGroup, dispatch_get_main_queue(), ^{
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (operationError) {
-            AFALogError(@"Encountered an error for default process instance filter create operation. Reason:%@", operationError.localizedDescription);
-            completionBlock(nil, operationError, nil);
-        } else {
-            // Re-fetch again because filter detail information is not suficient to be reported back
-            AFALogVerbose(@"Successfully created %lu default process instance filters. Re-fetching filter details...", (unsigned long)filterArr.count);
-            [strongSelf requestProcessInstanceFilterListForAppID:appID
-                                             withCompletionBlock:completionBlock];
-        }
-    });
-}
 @end

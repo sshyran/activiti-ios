@@ -16,17 +16,24 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKDataAccessor.h"
 
-@class ASDKMOProfile, ASDKMOProcessInstanceFilterMap;
+@class ASDKFilterRequestRepresentation;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKProcessDataAccessor : ASDKDataAccessor
 
-@interface ASDKMOProcessInstance : ASDKMOAttributable
+/**
+ * Requests a list of process instances for the current logged in user conforming to
+ * the properties of a provided filter and reports network or cached data through the
+ * designated data accessor delegate.
+ *
+ * @param filter Filter object describing which subset of the task list should be fetched
+ */
+- (void)fetchProcessInstancesWithFilter:(ASDKFilterRequestRepresentation *)filter;
+
+/**
+ * Cancels ongoing operations for the current data accessor.
+ */
+- (void)cancelOperations;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessInstance+CoreDataProperties.h"

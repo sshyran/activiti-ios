@@ -16,17 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKCoreDataCacheService.h"
+#import "ASDKProcessInstanceCacheServiceProtocol.h"
 
-@class ASDKMOProfile, ASDKMOProcessInstanceFilterMap;
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ASDKMOProcessInstance : ASDKMOAttributable
+@interface ASDKProcessInstanceCacheService : ASDKCoreDataCacheService <ASDKProcessInstanceCacheServiceProtocol>
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessInstance+CoreDataProperties.h"

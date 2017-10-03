@@ -60,15 +60,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     if (self) {
         _processingQueue = [self serialOperationQueue];
         _cachePolicy = ASDKServiceDataAccessorCachingPolicyHybrid;
-        dispatch_queue_t profileUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue",
+        dispatch_queue_t taskUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue",
                                                                                  [NSBundle bundleForClass:[self class]].bundleIdentifier,
                                                                                  NSStringFromClass([self class])] UTF8String],
                                                                                DISPATCH_QUEUE_SERIAL);
         
-        // Acquire and set up the app network service
+        // Acquire and set up the task network service
         ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
         _networkService = (ASDKTaskNetworkServices *)[sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKTaskNetworkServiceProtocol)];
-        _networkService.resultsQueue = profileUpdatesProcessingQueue;
+        _networkService.resultsQueue = taskUpdatesProcessingQueue;
         _cacheService = [ASDKTaskCacheService new];
     }
     

@@ -56,7 +56,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                  NSStringFromClass([self class])] UTF8String],
                                                                                DISPATCH_QUEUE_SERIAL);
         
-        // Acquire and set up the app network service
+        // Acquire and set up the profile network service
         ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
         _networkService = (ASDKProfileNetworkServices *)[sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKProfileNetworkServiceProtocol)];
         _networkService.resultsQueue = profileUpdatesProcessingQueue;

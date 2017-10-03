@@ -213,9 +213,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // otherwise fetch the filter list for ad-hoc tasks
     if (self.currentApp) {
         [filterServices requestProcessInstanceFilterListForAppID:self.currentApp.modelID
-                                             withCompletionBlock:completionBlock];
+                                             withCompletionBlock:completionBlock cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+                                                 
+                                             }];
     } else {
-        [filterServices requestProcessInstanceFilterListWithCompletionBlock:completionBlock];
+        [filterServices requestProcessInstanceFilterListWithCompletionBlock:completionBlock cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+            
+        }];
     }
 }
 
