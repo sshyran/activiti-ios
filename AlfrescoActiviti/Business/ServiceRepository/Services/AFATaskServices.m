@@ -31,9 +31,6 @@
 
 @interface AFATaskServices () <ASDKDataAccessorDelegate>
 
-@property (strong, nonatomic) dispatch_queue_t                          taskUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKTaskNetworkServices                   *taskNetworkService;
-
 // Task list
 @property (strong, nonatomic) ASDKTaskDataAccessor                      *fetchTaskListDataAccessor;
 @property (copy, nonatomic) AFATaskServicesTaskListCompletionBlock      taskListCompletionBlock;

@@ -25,9 +25,6 @@
 
 @interface AFAFilterServices () <ASDKDataAccessorDelegate>
 
-@property (strong, nonatomic) dispatch_queue_t                          filterUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKFilterNetworkServices                 *filterNetworkService;
-
 // Default task filter list
 @property (strong, nonatomic) ASDKFilterDataAccessor                    *fetchDefaultTaskFilterListDataAccessor;
 @property (copy, nonatomic) AFAFilterServicesFilterListCompletionBlock  defaultTaskFilterListCompletionBlock;
@@ -51,25 +48,6 @@
 @end
 
 @implementation AFAFilterServices
-
-
-#pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        self.filterUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        
-        // Acquire and set up the app network service
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.filterNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFilterNetworkServiceProtocol)];
-        self.filterNetworkService.resultsQueue = self.filterUpdatesProcessingQueue;
-    }
-    
-    return self;
-}
 
 
 #pragma mark -
@@ -201,6 +179,66 @@
         if (strongSelf.taskFilterListCompletionBlock) {
             strongSelf.taskFilterListCompletionBlock(filterList, filterListResponse.error, filterListResponse.paging);
             strongSelf.taskFilterListCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleFetchDefaultProcessInstanceFilterListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *filterListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *filterList = filterListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!filterListResponse.error) {
+        if (filterListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.defaultProcessInstanceFilterListCachedResultsBlock) {
+                    strongSelf.defaultProcessInstanceFilterListCachedResultsBlock(filterList, nil, filterListResponse.paging);
+                    strongSelf.defaultProcessInstanceFilterListCachedResultsBlock = nil;
+                }
+            });
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.defaultProcessInstanceFilterListCompletionBlock) {
+            strongSelf.defaultProcessInstanceFilterListCompletionBlock(filterList, filterListResponse.error, filterListResponse.paging);
+            strongSelf.defaultProcessInstanceFilterListCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleFetchProcessInstanceFilterListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *filterListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *filterList = filterListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!filterListResponse.error) {
+        if (filterListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.processInstanceFilterListCachedResultsBlock) {
+                    strongSelf.processInstanceFilterListCachedResultsBlock(filterList, nil, filterListResponse.paging);
+                    strongSelf.processInstanceFilterListCachedResultsBlock = nil;
+                }
+            });
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.processInstanceFilterListCompletionBlock) {
+            strongSelf.processInstanceFilterListCompletionBlock(filterList, filterListResponse.error, filterListResponse.paging);
+            strongSelf.processInstanceFilterListCompletionBlock = nil;
         }
     });
 }
