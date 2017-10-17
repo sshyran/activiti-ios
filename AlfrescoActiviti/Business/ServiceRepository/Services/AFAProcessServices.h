@@ -40,12 +40,15 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
  *  Performs a request for process instances list with properties matching defined ones within the filter model.
  *  The underlaying implementation is using a filter representation to call the API.
  *
- *  @param filter          Filter object describing what properties should be filtered
- *  @param completionBlock Completion block providing the process instances list, an optional error reason and
- *                         pagination information
+ *  @param filter               Filter object describing what properties should be filtered
+ *  @param completionBlock      Completion block providing the process instances list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance list, an
+ *                              optional error reason and pagination information
  */
 - (void)requestProcessInstanceListWithFilter:(AFAGenericFilterModel *)filter
-                         withCompletionBlock:(AFAProcessServiceProcessInstanceListCompletionBlock)completionBlock;
+                         withCompletionBlock:(AFAProcessServiceProcessInstanceListCompletionBlock)completionBlock
+                               cachedResults:(AFAProcessServiceProcessInstanceListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the process definition list.

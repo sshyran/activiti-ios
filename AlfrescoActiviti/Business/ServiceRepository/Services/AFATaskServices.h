@@ -58,7 +58,6 @@ typedef void  (^AFATaskServicesClaimCompletionBlock)            (BOOL isTaskClai
                   completionBlock:(AFATaskServicesTaskListCompletionBlock)completionBlock
                     cachedResults:(AFATaskServicesTaskListCompletionBlock)cacheCompletionBlock;
 
-
 /**
  *  Performs a request for a task's details given the task ID.
  *

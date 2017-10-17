@@ -17,16 +17,12 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+@import CoreData;
 
-@class ASDKMOProfile;
+@interface ASDKProcessInstanceCacheModelUpsert : NSObject
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ASDKMOProcessInstance : ASDKMOAttributable
++ (NSArray *)upsertProcessInstanceListToCache:(NSArray *)processInstanceList
+                                        error:(NSError **)error
+                                  inMOContext:(NSManagedObjectContext *)moContext;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessInstance+CoreDataProperties.h"

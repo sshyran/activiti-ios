@@ -608,7 +608,8 @@
     NSPredicate *assignmentTypePredicate = [NSPredicate predicateWithFormat:@"assignmentType == %ld", filter.filterModel.assignmentType];
     NSPredicate *statePredicate = [NSPredicate predicateWithFormat:@"state == %ld", filter.filterModel.state];
     
-    return [[NSCompoundPredicate alloc] initWithType:NSAndPredicateType subpredicates:@[appIDPredicate, assignmentTypePredicate, statePredicate]];
+    return [[NSCompoundPredicate alloc] initWithType:NSAndPredicateType
+                                       subpredicates:@[appIDPredicate, assignmentTypePredicate, statePredicate]];
 }
 
 - (NSPredicate *)namePredicateForFilter:(ASDKFilterRequestRepresentation *)filter {

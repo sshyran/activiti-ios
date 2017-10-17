@@ -75,6 +75,8 @@
                                           response.paging = paging;
                                           
                                           completionBlock(strongSelf, response);
+                                      } cachedResults:^(NSArray *processInstanceList, NSError *error, ASDKModelPaging *paging) {
+                                          
                                       }];
 }
 

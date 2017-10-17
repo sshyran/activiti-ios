@@ -30,6 +30,10 @@
 #import "ASDKServiceLocator.h"
 #import "ASDKProcessInstanceCacheService.h"
 
+// Model
+#import "ASDKDataAccessorResponseCollection.h"
+#import "ASDKDataAccessorResponseModel.h"
+
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
 @interface ASDKProcessDataAccessor ()
@@ -108,15 +112,106 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (ASDKAsyncBlockOperation *)remoteProcessInstanceListOperationForFilter:(ASDKFilterRequestRepresentation *)filter {
-    return nil;
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteProcessInstanceListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.processInstanceNetworkService
+         fetchProcessInstanceListWithFilterRepresentation:filter
+         completionBlock:^(NSArray *processes, NSError *error, ASDKModelPaging *paging) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             ASDKDataAccessorResponseCollection *responseCollection =[[ASDKDataAccessorResponseCollection alloc] initWithCollection:processes
+                                                                                                                             paging:paging
+                                                                                                                       isCachedData:NO
+                                                                                                                              error:error];
+             
+             if (weakSelf.delegate) {
+                 [weakSelf.delegate dataAccessor:weakSelf
+                             didLoadDataResponse:responseCollection];
+             }
+             
+             operation.result = responseCollection;
+             [operation complete];
+         }];
+    }];
+    
+    return remoteProcessInstanceListOperation;
 }
 
 - (ASDKAsyncBlockOperation *)cachedProcessInstanceListOperationForFilter:(ASDKFilterRequestRepresentation *)filter {
-    return nil;
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedProcessInstanceListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.processInstanceCacheService fetchProcessInstanceList:^(NSArray *processes, NSError *error, ASDKModelPaging *paging) {
+            if (operation.isCancelled) {
+                [operation complete];
+                return;
+            }
+            
+            if (!error) {
+                if (processes.count) {
+                    ASDKLogVerbose(@"Process instance list information successfully fetched from the cache for filter.\nFilter:%@", filter);
+                    
+                    ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:processes
+                                                                                                                           paging:paging
+                                                                                                                     isCachedData:YES
+                                                                                                                            error:error];
+                    if (weakSelf.delegate) {
+                        [weakSelf.delegate dataAccessor:weakSelf
+                                    didLoadDataResponse:response];
+                    }
+                }
+            } else {
+                ASDKLogError(@"An error occured while fetching cache process instance list information. Reason: %@", error.localizedDescription);
+            }
+            
+            [operation complete];
+        } usingFilter:filter];
+    }];
+    
+    return cachedProcessInstanceListOperation;
 }
 
 - (ASDKAsyncBlockOperation *)processInstanceListStoreInCacheOperationWithFilter:(ASDKFilterRequestRepresentation *)filter {
-    return nil;
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseCollection *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.collection) {
+            [strongSelf.processInstanceCacheService cacheProcessInstanceList:remoteResponse.collection
+                                                                 usingFilter:filter
+                                                         withCompletionBlock:^(NSError *error) {
+                                                             if (operation.isCancelled) {
+                                                                 [operation complete];
+                                                                 return;
+                                                             }
+                                                             
+                                                             if (!error) {
+                                                                 ASDKLogVerbose(@"Process intance list was successfully cached for filter.\nFilter: %@", filter);
+                                                                 
+                                                                 [weakSelf.processInstanceCacheService saveChanges];
+                                                             } else {
+                                                                 ASDKLogError(@"Encountered an error while caching the process instance list for filter: %@. Reason: %@", filter, error.localizedDescription);
+                                                             }
+                                                             
+                                                             [operation complete];
+                                                         }];
+        }
+    }];
+    
+    return storeInCacheOperation;
 }
 
 

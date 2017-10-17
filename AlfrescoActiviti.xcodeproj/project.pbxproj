@@ -142,6 +142,10 @@
 		13481F2F1B95C4B4005D3149 /* AFAKeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 13481F2E1B95C4B4005D3149 /* AFAKeychainWrapper.m */; };
 		134B92E51BAFEF35000E641F /* ASDKModelContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 134B92E31BAFEF35000E641F /* ASDKModelContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		134B92E61BAFEF35000E641F /* ASDKModelContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 134B92E41BAFEF35000E641F /* ASDKModelContent.m */; };
+		135028981F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.h in Headers */ = {isa = PBXBuildFile; fileRef = 135028961F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.h */; };
+		135028991F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.m in Sources */ = {isa = PBXBuildFile; fileRef = 135028971F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.m */; };
+		1350289D1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1350289B1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.h */; };
+		1350289E1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1350289C1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.m */; };
 		135443E51B96DF770044157B /* AFASliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135443E41B96DF770044157B /* AFASliderView.m */; };
 		135443E91B96E1000044157B /* AFASliderTrackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135443E81B96E1000044157B /* AFASliderTrackView.m */; };
 		135443EC1B970D600044157B /* AFASliderButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 135443EB1B970D600044157B /* AFASliderButtonView.m */; };
@@ -494,7 +498,7 @@
 		13CCEEB51F0CDBF900F30337 /* ASDKCoreDataCacheService.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CCEEB31F0CDBF900F30337 /* ASDKCoreDataCacheService.h */; };
 		13CCEEB61F0CDBF900F30337 /* ASDKCoreDataCacheService.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCEEB41F0CDBF900F30337 /* ASDKCoreDataCacheService.m */; };
 		13CD88351F7CD539001A16D4 /* AFAReachabilityStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CD88341F7CD539001A16D4 /* AFAReachabilityStore.m */; };
-		13CD88391F7D19B7001A16D4 /* ASDKProcessDataAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CD88371F7D19B7001A16D4 /* ASDKProcessDataAccessor.h */; };
+		13CD88391F7D19B7001A16D4 /* ASDKProcessDataAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CD88371F7D19B7001A16D4 /* ASDKProcessDataAccessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13CD883A1F7D19B7001A16D4 /* ASDKProcessDataAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CD88381F7D19B7001A16D4 /* ASDKProcessDataAccessor.m */; };
 		13CD883E1F7D1CF0001A16D4 /* ASDKProcessInstanceCacheService.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CD883C1F7D1CF0001A16D4 /* ASDKProcessInstanceCacheService.h */; };
 		13CD883F1F7D1CF0001A16D4 /* ASDKProcessInstanceCacheService.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CD883D1F7D1CF0001A16D4 /* ASDKProcessInstanceCacheService.m */; };
@@ -956,6 +960,10 @@
 		13481F2E1B95C4B4005D3149 /* AFAKeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAKeychainWrapper.m; path = Business/KeychainWrapper/AFAKeychainWrapper.m; sourceTree = "<group>"; };
 		134B92E31BAFEF35000E641F /* ASDKModelContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelContent.h; path = Model/Content/ASDKModelContent.h; sourceTree = "<group>"; };
 		134B92E41BAFEF35000E641F /* ASDKModelContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelContent.m; path = Model/Content/ASDKModelContent.m; sourceTree = "<group>"; };
+		135028961F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceCacheModelUpsert.h; path = CacheServices/CacheModelUpsert/ProcessInstanceModelUpsert/ASDKProcessInstanceCacheModelUpsert.h; sourceTree = "<group>"; };
+		135028971F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceCacheModelUpsert.m; path = CacheServices/CacheModelUpsert/ProcessInstanceModelUpsert/ASDKProcessInstanceCacheModelUpsert.m; sourceTree = "<group>"; };
+		1350289B1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceCacheMapper.h; path = CacheServices/CacheModelMappers/ProcessInstanceCacheMapper/ASDKProcessInstanceCacheMapper.h; sourceTree = "<group>"; };
+		1350289C1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceCacheMapper.m; path = CacheServices/CacheModelMappers/ProcessInstanceCacheMapper/ASDKProcessInstanceCacheMapper.m; sourceTree = "<group>"; };
 		135443E31B96DF770044157B /* AFASliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFASliderView.h; path = UI/Components/SliderView/AFASliderView.h; sourceTree = "<group>"; };
 		135443E41B96DF770044157B /* AFASliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFASliderView.m; path = UI/Components/SliderView/AFASliderView.m; sourceTree = "<group>"; };
 		135443E71B96E1000044157B /* AFASliderTrackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFASliderTrackView.h; path = UI/Components/SliderView/AFASliderTrackView.h; sourceTree = "<group>"; };
@@ -2476,6 +2484,7 @@
 				133DDCFF1F544568001DDF26 /* TaskModelUpsert */,
 				133DDD0C1F56E9ED001DDF26 /* ContentModelUpsert */,
 				132C5AFA1F58565E0077059E /* CommentModelUpsert */,
+				1350289A1F8770FD00771787 /* ProcessModelUpsert */,
 			);
 			name = CacheModelUpsert;
 			sourceTree = "<group>";
@@ -2610,6 +2619,24 @@
 				134B92E41BAFEF35000E641F /* ASDKModelContent.m */,
 			);
 			name = Content;
+			sourceTree = "<group>";
+		};
+		1350289A1F8770FD00771787 /* ProcessModelUpsert */ = {
+			isa = PBXGroup;
+			children = (
+				135028961F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.h */,
+				135028971F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.m */,
+			);
+			name = ProcessModelUpsert;
+			sourceTree = "<group>";
+		};
+		1350289F1F87B4D600771787 /* ProcessInstanceCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				1350289B1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.h */,
+				1350289C1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.m */,
+			);
+			name = ProcessInstanceCacheMapper;
 			sourceTree = "<group>";
 		};
 		135443E61B96DF7B0044157B /* SliderView */ = {
@@ -3497,6 +3524,7 @@
 				132C5AEC1F5710970077059E /* TaskContentMapCacheMapper */,
 				132C5AF51F5854920077059E /* CommentCacheMapper */,
 				132C5AFF1F59521D0077059E /* TaskCommentMapCacheMapper */,
+				1350289F1F87B4D600771787 /* ProcessInstanceCacheMapper */,
 			);
 			name = CacheModelMappers;
 			sourceTree = "<group>";
@@ -5951,6 +5979,7 @@
 				131375091B6F677B00D2268E /* ASDKNetworkServiceProtocol.h in Headers */,
 				133DDD0A1F56E9EA001DDF26 /* ASDKContentCacheModelUpsert.h in Headers */,
 				13A578611CEDAAB50014B6FD /* ASDKIntegrationSiteContentDataSource.h in Headers */,
+				135028981F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.h in Headers */,
 				13F0E9341D3E59D200BF10A9 /* ASDKFormDisplayTextFieldCollectionViewCell.h in Headers */,
 				8D0FFDC51CC10CAE000D8A81 /* ASDKDynamicTableRowHeaderNavigationProtocol.h in Headers */,
 				13A5D5FF1CA03D2100EFA760 /* ASDKTaskCreationRequestRepresentation.h in Headers */,
@@ -6019,6 +6048,7 @@
 				13B7E20B1B749E80002CBDF4 /* ASDKTaskRequestRepresentation.h in Headers */,
 				13BCADE11F010AC700146E7E /* ASDKMOApp.h in Headers */,
 				13C855BA1C4D197600F84422 /* ASDKFilterListRequestRepresentation.h in Headers */,
+				1350289D1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.h in Headers */,
 				132C5AFD1F59521A0077059E /* ASDKTaskCommentMapCacheMapper.h in Headers */,
 				8D8F85FB1C8DD3D100356A5B /* UIViewController+ASDKAlertAddition.h in Headers */,
 				139050EF1CB53315004FEA89 /* ASDKModelFormVisibilityCondition.h in Headers */,
@@ -6912,6 +6942,7 @@
 				133F053D1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m in Sources */,
 				13F9BA311B739C290068BB8C /* ASDKProfilePasswordRequestRepresentation.m in Sources */,
 				8D3B50E91C86E258005BEEEB /* ASDKModelRestFormField.m in Sources */,
+				135028991F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.m in Sources */,
 				134B92E61BAFEF35000E641F /* ASDKModelContent.m in Sources */,
 				8D6ABE851CBD1E31008FACB4 /* ASDKModelDynamicTableColumnDefinitionRestFormField.m in Sources */,
 				130D5ED11E5AE95200B77139 /* NSString+ASDKEmailValidation.m in Sources */,
@@ -6925,6 +6956,7 @@
 				13BCADD21F010AC700146E7E /* ASDKMOFileContent.m in Sources */,
 				8DB399AB1C9C319B0089E0AB /* ASDKAvatarInitialsView.m in Sources */,
 				133DDD0B1F56E9EA001DDF26 /* ASDKContentCacheModelUpsert.m in Sources */,
+				1350289E1F87B4D300771787 /* ASDKProcessInstanceCacheMapper.m in Sources */,
 				1394F67F1F04E5AC005C8C32 /* ASDKDataAccessorResponseCollection.m in Sources */,
 				13B7E2081B749A07002CBDF4 /* ASDKTaskNetworkServices.m in Sources */,
 				139DF5FC1C64D7240062D01D /* ASDKFormRenderDataSource.m in Sources */,

@@ -27,7 +27,12 @@
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
-@interface AFAProcessServices()
+@interface AFAProcessServices() <ASDKDataAccessorDelegate>
+
+// Process instance list
+@property (strong, nonatomic) ASDKProcessDataAccessor                           *fetchProcessInstanceList;
+@property (copy, nonatomic) AFAProcessServiceProcessInstanceListCompletionBlock processInstanceListCompletionBlock;
+@property (copy, nonatomic) AFAProcessServiceProcessInstanceListCompletionBlock processInstanceCachedResultsBlock;
 
 @property (strong, nonatomic) dispatch_queue_t                      processUpdatesProcessingQueue;
 @property (strong, nonatomic) ASDKProcessInstanceNetworkServices    *processInstanceNetworkService;
@@ -63,9 +68,12 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark Public interface
 
 - (void)requestProcessInstanceListWithFilter:(AFAGenericFilterModel *)filter
-                         withCompletionBlock:(AFAProcessServiceProcessInstanceListCompletionBlock)completionBlock {
-    NSParameterAssert(filter);
+                         withCompletionBlock:(AFAProcessServiceProcessInstanceListCompletionBlock)completionBlock
+                               cachedResults:(AFAProcessServiceProcessInstanceListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(completionBlock);
+    
+    self.processInstanceListCompletionBlock = completionBlock;
+    self.processInstanceCachedResultsBlock = cacheCompletionBlock;
     
     // Create request representation for the filter model
     ASDKFilterRequestRepresentation *filterRequestRepresentation = [ASDKFilterRequestRepresentation new];
@@ -84,23 +92,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     filterRequestRepresentation.page = filter.page;
     filterRequestRepresentation.size = filter.size;
     
-    [self.processInstanceNetworkService
-     fetchProcessInstanceListWithFilterRepresentation:filterRequestRepresentation
-     completionBlock:^(NSArray *processes, NSError *error, ASDKModelPaging *paging) {
-         if (!error && processes) {
-             AFALogVerbose(@"Fetched %lu process instance entries", (unsigned long)processes.count);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock (processes, nil, paging);
-             });
-         } else {
-             AFALogError(@"An error occured while fetching the process instance list with filter:%@. Reason:%@", filter.description, error.localizedDescription);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock(nil, error, nil);
-             });
-         }
-     }];
+    self.fetchProcessInstanceList = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProcessInstanceList fetchProcessInstancesWithFilter:filterRequestRepresentation];
 }
 
 - (void)requestProcessDefinitionListWithCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock {
@@ -326,6 +319,54 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                                      });
                                                  }
                                              }];
+}
+
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchProcessInstanceList == dataAccessor) {
+        [self handleFetchProcessInstanceListDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleFetchProcessInstanceListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *processInstanceListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *processInstanceList = processInstanceListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!processInstanceListResponse.error) {
+        if (processInstanceListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.processInstanceCachedResultsBlock) {
+                    strongSelf.processInstanceCachedResultsBlock(processInstanceList, processInstanceListResponse.error, processInstanceListResponse.paging);
+                    strongSelf.processInstanceCachedResultsBlock = nil;
+                }
+            });
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.processInstanceListCompletionBlock) {
+            strongSelf.processInstanceListCompletionBlock(processInstanceList, processInstanceListResponse.error, processInstanceListResponse.paging);
+            strongSelf.processInstanceListCompletionBlock = nil;
+        }
+    });
 }
 
 @end
