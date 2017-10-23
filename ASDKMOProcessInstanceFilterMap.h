@@ -17,17 +17,16 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKMOFilterMap.h"
 
-@class ASDKMOProfile,
-ASDKMOProcessInstanceFilterMap;
+@class ASDKMOProcessInstance;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ASDKMOProcessInstance : ASDKMOAttributable
+@interface ASDKMOProcessInstanceFilterMap : ASDKMOFilterMap
 
 @end
 
 NS_ASSUME_NONNULL_END
 
-#import "ASDKMOProcessInstance+CoreDataProperties.h"
+#import "ASDKMOProcessInstanceFilterMap+CoreDataProperties.h"

@@ -21,7 +21,6 @@
 typedef NS_ENUM(NSInteger, AFAServiceObjectType) {
     AFAServiceObjectTypeThumbnailManager,
     AFAServiceObjectTypeProcessServices,
-    AFAServiceObjectTypeFilterServices,
     AFAServiceObjectTypeFormServices,
     AFAServiceObjectTypeUserServices,
     AFAServiceObjectTypeQueryServices,

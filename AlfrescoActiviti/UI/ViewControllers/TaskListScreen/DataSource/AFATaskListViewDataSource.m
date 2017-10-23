@@ -74,13 +74,13 @@
                                              __strong typeof(self) strongSelf = weakSelf;
                                              completionBlock(strongSelf, [self responseModelForTaskList:taskList
                                                                                                   error:error
-                                                                                                  pagin:paging]);
+                                                                                                  paging:paging]);
                                          } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
                                              __strong typeof(self) strongSelf = weakSelf;
                                              
                                              cacheCompletionBlock(strongSelf, [self responseModelForTaskList:taskList
                                                                                                        error:error
-                                                                                                       pagin:paging]);
+                                                                                                       paging:paging]);
                                          }];
 }
 
@@ -97,7 +97,7 @@
 
 - (AFAListResponseModel *)responseModelForTaskList:(NSArray *)taskList
                                              error:(NSError *)error
-                                             pagin:(ASDKModelPaging *)paging {
+                                             paging:(ASDKModelPaging *)paging {
     AFAListResponseModel *response = [AFAListResponseModel new];
     response.objectList = taskList;
     response.error = error;

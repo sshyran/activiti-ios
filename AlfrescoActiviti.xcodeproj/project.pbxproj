@@ -100,6 +100,8 @@
 		133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 133213BA1B8EFF8A00BF36DC /* AFATaskListStyleCell.m */; };
 		13323B5E1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */; };
 		13323B611E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = 13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */; };
+		1333B8651F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1333B8631F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.h */; };
+		1333B8661F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1333B8641F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.m */; };
 		133539F81F2F7BF20058B85E /* AFAModalDismissAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 133539F71F2F7BF20058B85E /* AFAModalDismissAnimator.m */; };
 		133539FB1F30A8010058B85E /* AFAPushFadeAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 133539FA1F30A8010058B85E /* AFAPushFadeAnimator.m */; };
 		133539FF1F30A84C0058B85E /* AFAPopFadeAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 133539FE1F30A84C0058B85E /* AFAPopFadeAnimator.m */; };
@@ -316,6 +318,7 @@
 		1395C1721DD2087400CC2AB3 /* ProcessDefinitionListResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 1395C16F1DD207ED00CC2AB3 /* ProcessDefinitionListResponse.json */; };
 		1395C1751DD20E2E00CC2AB3 /* ProcessInstanceListResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 1395C1731DD20A7400CC2AB3 /* ProcessInstanceListResponse.json */; };
 		1395CD9B1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1395CD9A1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h */; };
+		139886541F9780EC00BB5742 /* ASDKMOProcessInstanceFilterMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 139886521F9780EC00BB5742 /* ASDKMOProcessInstanceFilterMap.m */; };
 		13997EFF1DC0EEED00EB9ACB /* ASDKServiceLocatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */; };
 		139DF5BA1C5A40C10062D01D /* AFAAppServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DF5B91C5A40C10062D01D /* AFAAppServices.m */; };
 		139DF5BE1C5A63740062D01D /* AFAProfileServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 139DF5BD1C5A63740062D01D /* AFAProfileServices.m */; };
@@ -908,6 +911,8 @@
 		13323B5D1E9E252900D45ABB /* AFAContentPickerTaskAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerTaskAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerTaskAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
 		13323B5F1E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.h; sourceTree = "<group>"; };
 		13323B601E9E255000D45ABB /* AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; path = UI/ViewControllers/ContentPickerController/DataSource/Behaviors/AFAContentPickerProcessInstanceAuditLogDownloadBehavior.m; sourceTree = "<group>"; };
+		1333B8631F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceFilterMapCacheMapper.h; path = CacheServices/CacheModelMappers/ProcessInstanceFilterMapCacheMapper/ASDKProcessInstanceFilterMapCacheMapper.h; sourceTree = "<group>"; };
+		1333B8641F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceFilterMapCacheMapper.m; path = CacheServices/CacheModelMappers/ProcessInstanceFilterMapCacheMapper/ASDKProcessInstanceFilterMapCacheMapper.m; sourceTree = "<group>"; };
 		133539F61F2F7BF20058B85E /* AFAModalDismissAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalDismissAnimator.h; path = UI/Animators/ModalDismissAnimator/AFAModalDismissAnimator.h; sourceTree = "<group>"; };
 		133539F71F2F7BF20058B85E /* AFAModalDismissAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalDismissAnimator.m; path = UI/Animators/ModalDismissAnimator/AFAModalDismissAnimator.m; sourceTree = "<group>"; };
 		133539F91F30A8010058B85E /* AFAPushFadeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAPushFadeAnimator.h; path = UI/Animators/PushFadeAnimator/AFAPushFadeAnimator.h; sourceTree = "<group>"; };
@@ -1177,6 +1182,8 @@
 		1395C1731DD20A7400CC2AB3 /* ProcessInstanceListResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ProcessInstanceListResponse.json; path = Resources/JSONResponses/ProcessInstanceListResponse.json; sourceTree = "<group>"; };
 		1395C1761DD22FF200CC2AB3 /* ProcessInstanceDetailsResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = ProcessInstanceDetailsResponse.json; path = Resources/JSONResponses/ProcessInstanceDetailsResponse.json; sourceTree = "<group>"; };
 		1395CD9A1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFormRenderEngineDataSourceProtocol.h; path = FormRenderEngine/Protocol/ASDKFormRenderEngineDataSourceProtocol.h; sourceTree = "<group>"; };
+		1398864F1F9780EB00BB5742 /* ASDKMOProcessInstanceFilterMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKMOProcessInstanceFilterMap.h; path = "/Users/p3700545/CurrentProjects/activiti-ios/ASDKMOProcessInstanceFilterMap.h"; sourceTree = "<absolute>"; };
+		139886521F9780EC00BB5742 /* ASDKMOProcessInstanceFilterMap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKMOProcessInstanceFilterMap.m; path = "/Users/p3700545/CurrentProjects/activiti-ios/ASDKMOProcessInstanceFilterMap.m"; sourceTree = "<absolute>"; };
 		13997EFD1DC0EE8700EB9ACB /* ASDKServiceLocatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKServiceLocatorTest.m; sourceTree = "<group>"; };
 		139DF5B81C5A40C10062D01D /* AFAAppServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAppServices.h; path = Business/ServiceRepository/Services/AFAAppServices.h; sourceTree = "<group>"; };
 		139DF5B91C5A40C10062D01D /* AFAAppServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAppServices.m; path = Business/ServiceRepository/Services/AFAAppServices.m; sourceTree = "<group>"; };
@@ -2282,6 +2289,15 @@
 				13CD88361F7CD53E001A16D4 /* ReachabilityStore */,
 			);
 			name = Business;
+			sourceTree = "<group>";
+		};
+		1333B8671F978CF300E65956 /* ProcessInstanceFilterMapCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				1333B8631F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.h */,
+				1333B8641F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.m */,
+			);
+			name = ProcessInstanceFilterMapCacheMapper;
 			sourceTree = "<group>";
 		};
 		133539FC1F30A8050058B85E /* PushFadeAnimator */ = {
@@ -3525,6 +3541,7 @@
 				132C5AF51F5854920077059E /* CommentCacheMapper */,
 				132C5AFF1F59521D0077059E /* TaskCommentMapCacheMapper */,
 				1350289F1F87B4D600771787 /* ProcessInstanceCacheMapper */,
+				1333B8671F978CF300E65956 /* ProcessInstanceFilterMapCacheMapper */,
 			);
 			name = CacheModelMappers;
 			sourceTree = "<group>";
@@ -4402,6 +4419,8 @@
 				13BCADAE1F010AC700146E7E /* ASDKMONetwork.m */,
 				13BCADB11F010AC700146E7E /* ASDKMOProcessInstanceContentField.h */,
 				13BCADB21F010AC700146E7E /* ASDKMOProcessInstanceContentField.m */,
+				1398864F1F9780EB00BB5742 /* ASDKMOProcessInstanceFilterMap.h */,
+				139886521F9780EC00BB5742 /* ASDKMOProcessInstanceFilterMap.m */,
 				13BCADB51F010AC700146E7E /* ASDKMOProcessInstance.h */,
 				13BCADB61F010AC700146E7E /* ASDKMOProcessInstance.m */,
 				1301721A1F50565300D570F5 /* ASDKMOCurrentProfile.h */,
@@ -5950,6 +5969,7 @@
 				8DB3998F1C98762A0089E0AB /* ASDKNoContentView.h in Headers */,
 				13E8307A1B6A45640028901A /* ASDKAPIEndpointDefinitionList.h in Headers */,
 				13CE5C691B99817C002E5172 /* ASDKFilterNetworkServices.h in Headers */,
+				1333B8651F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.h in Headers */,
 				13A2E7E61F18B35300E15064 /* ASDKDataAccessorResponseProgress.h in Headers */,
 				13F240301B6B753600533B37 /* ASDKServiceLocator.h in Headers */,
 				137B94451BD671BA00134BF1 /* ASDKTaskFormParserOperationWorker.h in Headers */,
@@ -6750,6 +6770,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				139886541F9780EC00BB5742 /* ASDKMOProcessInstanceFilterMap.m in Sources */,
 				1363A24B1D6724D0009EAC54 /* ASDKAuthenticateRequestRepresentation.m in Sources */,
 				13BA5C061BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.m in Sources */,
 				1319EF531C157EE7003FA6C1 /* NSString+ASDKFontGlyphicons.m in Sources */,
@@ -6799,6 +6820,7 @@
 				13BCADCE1F010AC700146E7E /* ASDKMOComment.m in Sources */,
 				134594291BDA4B7C00A234BD /* ASDKFormTextFieldCollectionViewCell.m in Sources */,
 				8D9D988B1C9C4D1F002C0F81 /* ASDKUserFilterModel.m in Sources */,
+				1333B8661F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.m in Sources */,
 				131375131B6F963A00D2268E /* ASDKProfileNetworkServices.m in Sources */,
 				1394F67A1F04E552005C8C32 /* ASDKDataAccessorResponseModel.m in Sources */,
 				138F0A471C6CC6C900DA9414 /* ASDKFormFooterCollectionReusableView.m in Sources */,

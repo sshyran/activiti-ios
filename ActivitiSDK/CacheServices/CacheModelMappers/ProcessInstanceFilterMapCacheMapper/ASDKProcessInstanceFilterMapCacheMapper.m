@@ -16,18 +16,23 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKProcessInstanceFilterMapCacheMapper.h"
 
-@class ASDKMOProfile,
-ASDKMOProcessInstanceFilterMap;
+// Models
+#import "ASDKMOProcessInstanceFilterMap.h"
+#import "ASDKFilterRequestRepresentation.h"
+#import "ASDKModelFilter.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation ASDKProcessInstanceFilterMapCacheMapper
 
-@interface ASDKMOProcessInstance : ASDKMOAttributable
++ (ASDKMOProcessInstanceFilterMap *)mapProcessInstanceList:(NSArray *)processInstanceList
+                                                withFilter:(ASDKFilterRequestRepresentation *)filter
+                                                 toCacheMO:(ASDKMOProcessInstanceFilterMap *)processInstanceFilterMap {
+    processInstanceFilterMap.applicationID = filter.appDefinitionID;
+    processInstanceFilterMap.state = filter.filterModel.state;
+    [processInstanceFilterMap addProcessInstances:[NSSet setWithArray:processInstanceList]];
+    
+    return processInstanceFilterMap;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessInstance+CoreDataProperties.h"

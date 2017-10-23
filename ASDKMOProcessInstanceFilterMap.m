@@ -16,18 +16,8 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKMOProcessInstanceFilterMap.h"
 
-@class ASDKMOProfile,
-ASDKMOProcessInstanceFilterMap;
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ASDKMOProcessInstance : ASDKMOAttributable
+@implementation ASDKMOProcessInstanceFilterMap
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessInstance+CoreDataProperties.h"

@@ -27,12 +27,14 @@
 // Models
 #import "ASDKFilterRequestRepresentation.h"
 #import "ASDKMOProcessInstance.h"
+#import "ASDKMOProcessInstanceFilterMap.h"
 #import "ASDKModelPaging.h"
 #import "ASDKModelFilter.h"
 #import "ASDKModelProcessInstance.h"
 
 // Persistence
 #import "ASDKProcessInstanceCacheMapper.h"
+#import "ASDKProcessInstanceFilterMapCacheMapper.h"
 
 @implementation ASDKProcessInstanceCacheService
 
@@ -49,17 +51,23 @@
         managedObjectContext.automaticallyMergesChangesFromParent = YES;
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
         
-        // When fetching the first page of process instances for a specific application
-        // remove all references to existing process instances
+        /* When fetching the first page of process instances for a specific application
+         remove all references to existing process instances and clear the process instance filter map
+         
+         Note: The process instance filter map exists to provide membership information for
+         process instances in relation to a specific filter and application.
+         */
         NSError *error = nil;
-        if (!filter.page) {
+        if (!filter.page &&
+            ASDKModelFilterStateTypeAll != filter.filterModel.state) {
             error = [strongSelf cleanStalledProcessInstancesInContext:managedObjectContext
                                                             forFilter:filter];
         }
         
         if (!error) {
-            error = [strongSelf saveProcessInstanceList:processInstanceList
-                                              inContext:managedObjectContext];
+            error = [strongSelf saveProcessInstanceListAndGenerateFilterMap:processInstanceList
+                                                                  forFilter:filter
+                                                                  inContext:managedObjectContext];
         }
         
         if (!error) {
@@ -82,12 +90,31 @@
         NSError *error = nil;
         NSArray *pagedProcessInstanceArr = nil;
         
-        NSFetchRequest *processInstanceFilterRequest = [ASDKMOProcessInstance fetchRequest];
-        processInstanceFilterRequest.predicate = [self processInstancePredicateForFilter:filter];
-        NSArray *matchingProcessInstanceArr = [managedObjectContext executeFetchRequest:processInstanceFilterRequest
+        NSFetchRequest *processInstanceFilterMapRequest = [ASDKMOProcessInstanceFilterMap fetchRequest];
+        if (ASDKModelFilterStateTypeAll == filter.filterModel.state) {
+            processInstanceFilterMapRequest.predicate = [self allFilterMapsOnCurrentApplicationForFilter:filter];
+        } else {
+            processInstanceFilterMapRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
+        }
+        
+        NSArray *processInstanceFilterMapArr = [managedObjectContext executeFetchRequest:processInstanceFilterMapRequest
                                                                                   error:&error];
         if (!error) {
-            NSArray *sortedProcessInstances = [matchingProcessInstanceArr sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
+            NSMutableArray *allProcessInstancesOfCurrentApp = [NSMutableArray array];
+            
+            for (ASDKMOProcessInstanceFilterMap *processInstanceFilterMap in processInstanceFilterMapArr) {
+                [allProcessInstancesOfCurrentApp addObjectsFromArray:processInstanceFilterMap.processInstances.allObjects];
+            }
+            
+            NSArray *sortedProcessInstances = [allProcessInstancesOfCurrentApp sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
+            NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
+            
+            NSArray *matchingProcessInstanceArr = nil;
+            if (namePredicate) {
+                matchingProcessInstanceArr = [sortedProcessInstances filteredArrayUsingPredicate:namePredicate];
+            } else {
+                matchingProcessInstanceArr = sortedProcessInstances;
+            }
             
             NSUInteger fetchOffset = filter.size * filter.page;
             NSUInteger count = MIN(sortedProcessInstances.count - fetchOffset, filter.size);
@@ -122,14 +149,14 @@
                                          forFilter:(ASDKFilterRequestRepresentation *)filter {
     NSError *internalError = nil;
     
-    NSFetchRequest *oldProcessInstancesRequest = [ASDKMOProcessInstance fetchRequest];
-    oldProcessInstancesRequest.predicate = [self processInstancePredicateForFilter:filter];
+    NSFetchRequest *oldProcessInstancesRequest = [ASDKMOProcessInstanceFilterMap fetchRequest];
+    oldProcessInstancesRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
     oldProcessInstancesRequest.resultType = NSManagedObjectIDResultType;
     
     NSBatchDeleteRequest *removeOldProcessInstancesRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldProcessInstancesRequest];
     removeOldProcessInstancesRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
     NSBatchDeleteResult *removeOldProcessInstancesResult = [managedObjectContext executeRequest:removeOldProcessInstancesRequest
-                                                                                         error:&internalError];
+                                                                                          error:&internalError];
     NSArray *moIDArr = removeOldProcessInstancesResult.result;
     [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
                                                  intoContexts:@[managedObjectContext]];
@@ -140,14 +167,37 @@
     return nil;
 }
 
-- (NSError *)saveProcessInstanceList:(NSArray *)processInstanceList
-                           inContext:(NSManagedObjectContext *)managedObjectContext {
+- (NSError *)saveProcessInstanceListAndGenerateFilterMap:(NSArray *)processInstanceList
+                                               forFilter:(ASDKFilterRequestRepresentation *)filter
+                                               inContext:(NSManagedObjectContext *)managedObjectContext {
     NSError *error = nil;
-    [ASDKProcessInstanceCacheModelUpsert upsertProcessInstanceListToCache:processInstanceList
-                                                                    error:&error
-                                                              inMOContext:managedObjectContext];
+    NSArray *moProcessInstanceList = [ASDKProcessInstanceCacheModelUpsert upsertProcessInstanceListToCache:processInstanceList
+                                                                                                     error:&error
+                                                                                               inMOContext:managedObjectContext];
+    if (error) {
+        return error;
+    }
     
-    return error;
+    if (ASDKModelFilterStateTypeAll != filter.filterModel.state) {
+        NSFetchRequest *processInstanceFilterMapFetchRequest = [ASDKMOProcessInstanceFilterMap fetchRequest];
+        processInstanceFilterMapFetchRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
+        NSArray *fetchResults = [managedObjectContext executeFetchRequest:processInstanceFilterMapFetchRequest
+                                                                    error:&error];
+        if (error) {
+            return error;
+        }
+        
+        ASDKMOProcessInstanceFilterMap *processInstanceFilterMap = fetchResults.firstObject;
+        if (!processInstanceFilterMap) {
+            processInstanceFilterMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProcessInstanceFilterMap entityName]
+                                                                     inManagedObjectContext:managedObjectContext];
+        }
+        [ASDKProcessInstanceFilterMapCacheMapper mapProcessInstanceList:moProcessInstanceList
+                                                             withFilter:filter
+                                                              toCacheMO:processInstanceFilterMap];
+    }
+    
+    return nil;
 }
 
 - (ASDKModelPaging *)paginationWithStartIndex:(NSUInteger)startIndex
@@ -165,62 +215,20 @@
 #pragma mark -
 #pragma mark Predicate construction
 
-- (NSPredicate *)processInstancePredicateForFilter:(ASDKFilterRequestRepresentation *)filter {
-    NSPredicate *predicate = nil;
-    
-    switch (filter.filterModel.state) {
-        case ASDKModelFilterStateTypeCompleted: {
-            predicate = [self completedProcessInstancePredicateForFilter:filter];
-        }
-            break;
-            
-        case ASDKModelFilterStateTypeRunning: {
-            predicate = [self runningProcessInstancesPredicateForFiter:filter];
-        }
-            break;
-            
-        default: break;
-    }
-    
-    return predicate;
+- (NSPredicate *)filterMapMembershipPredicateForFilter:(ASDKFilterRequestRepresentation *)filter {
+    return [NSPredicate predicateWithFormat:@"applicationID == %@ && state == %ld", filter.appDefinitionID, filter.filterModel.state];
 }
 
-- (NSPredicate *)runningProcessInstancesPredicateForFiter:(ASDKFilterRequestRepresentation *)filter {
-    NSMutableArray *subpredicates = [NSMutableArray array];
-    
-    NSPredicate *endDatePredicate = [NSPredicate predicateWithFormat:@"endDate == nil"];
-    [subpredicates addObject:endDatePredicate];
-    
-    if (filter.appDefinitionID) {
-        NSPredicate *applicationPredicate = [NSPredicate predicateWithFormat:@"applicationID == %@", filter.appDefinitionID];
-        [subpredicates addObject:applicationPredicate];
-    }
-    if (filter.filterModel.name.length) {
-        NSPredicate *namePredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", filter.filterModel.name];
-        [subpredicates addObject:namePredicate];
-    }
-    
-    return [[NSCompoundPredicate alloc] initWithType:NSAndPredicateType
-                                       subpredicates:subpredicates];
+- (NSPredicate *)allFilterMapsOnCurrentApplicationForFilter:(ASDKFilterRequestRepresentation *)filter {
+    return [NSPredicate predicateWithFormat:@"applicationID == %@", filter.appDefinitionID];
 }
 
-- (NSPredicate *)completedProcessInstancePredicateForFilter:(ASDKFilterRequestRepresentation *)filter {
-    NSMutableArray *subpredicates = [NSMutableArray array];
-    
-    NSPredicate *endDatePredicate = [NSPredicate predicateWithFormat:@"endDate != nil"];
-    [subpredicates addObject:endDatePredicate];
-    
-    if (filter.appDefinitionID) {
-        NSPredicate *applicationPredicate = [NSPredicate predicateWithFormat:@"applicationID == %@", filter.appDefinitionID];
-        [subpredicates addObject:applicationPredicate];
-    }
+- (NSPredicate *)namePredicateForFilter:(ASDKFilterRequestRepresentation *)filter {
     if (filter.filterModel.name.length) {
-        NSPredicate *namePredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", filter.filterModel.name];
-        [subpredicates addObject:namePredicate];
+        return [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", filter.filterModel.name];
     }
     
-    return [[NSCompoundPredicate alloc] initWithType:NSAndPredicateType
-                                       subpredicates:subpredicates];
+    return nil;
 }
 
 
@@ -232,12 +240,12 @@
     
     switch (filter.filterModel.sortType) {
         case ASDKModelFilterSortTypeCreatedDesc: {
-            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"creationDate"
+            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"startDate"
                                                          ascending:NO];
         }
             break;
         case ASDKModelFilterSortTypeCreatedAsc: {
-            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"creationDate"
+            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"startDate"
                                                          ascending:YES];
         }
             break;

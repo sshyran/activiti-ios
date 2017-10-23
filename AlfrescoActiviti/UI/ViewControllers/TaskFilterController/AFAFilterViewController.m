@@ -55,7 +55,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (weak, nonatomic) IBOutlet UITableView                            *filterTableView;
 @property (weak, nonatomic) IBOutlet UIButton                               *searchButton;
 
-
 // Internal properties
 @property (strong, nonatomic) NSArray                                       *filterListArr;
 @property (strong, nonatomic) NSArray                                       *sortOptionArr;
@@ -64,8 +63,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (assign, nonatomic) AFAGenericFilterModelSortType                 sortType;
 @property (assign, nonatomic) AFAGenericFilterAssignmentType                assignmentType;
 @property (strong, nonatomic) NSString                                      *filterID;
-@property (strong, nonatomic) AFAFilterServicesFilterListCompletionBlock    processInstanceFilterListResponseCompletionBlock;
 @property (strong, nonatomic) UIColor                                       *applicationThemeColor;
+
+// Services
+@property (strong, nonatomic) AFAFilterServices                             *fetchTaskFilterListService;
+@property (strong, nonatomic) AFAFilterServices                             *fetchProcessInstanceFilterListService;
 
 @end
 
@@ -84,6 +86,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                NSLocalizedString(kLocalizationListScreenSortOldestFirstText, @"Oldest first"),
                                NSLocalizedString(kLocalizationListScreenSortDueFirstText, @"Due first"),
                                NSLocalizedString(kLocalizationListScreenSortDueLastText, @"Due Last"),];
+        _fetchTaskFilterListService = [AFAFilterServices new];
+        _fetchProcessInstanceFilterListService = [AFAFilterServices new];
     }
     return self;
 }
@@ -104,15 +108,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     [self.filterTableView registerClass:[AFAFilterHeaderView class]
      forHeaderFooterViewReuseIdentifier:kCellIDFilterHeader];
     
-    __weak typeof(self) weakSelf = self;
-    self.processInstanceFilterListResponseCompletionBlock = ^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-        __strong typeof(self) strongSelf = weakSelf;
-        [strongSelf handleFilterResponseFor:filterList
-                                      error:error
-                                 filterType:AFAFilterTypeProcessInstance
-                           isCachedResponse:NO];
-    };
-    
     // Fetch filter values from server
     [self loadTaskFilterList];
 }
@@ -127,11 +122,79 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark Public interface
 
 - (void)loadTaskFilterList {
-    [self fetchTaskFilterList];
+    // If there's an app defined fetch the filters for it,
+    // otherwise fetch the filter list for ad-hoc tasks
+    __weak typeof(self) weakSelf = self;
+    if (self.currentApp) {
+        [self.fetchTaskFilterListService
+         requestTaskFilterListForAppID:self.currentApp.modelID
+         withCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeTask
+                                isCachedResponse:NO];
+         } cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeTask
+                                isCachedResponse:YES];
+         }];
+    } else {
+        [self.fetchTaskFilterListService
+         requestTaskFilterListWithCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeTask
+                                isCachedResponse:NO];
+         } cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeTask
+                                isCachedResponse:YES];
+         }];
+    }
 }
 
 - (void)loadProcessInstanceFilterList {
-    [self fetchProcessInstanceFilterListWithCompletionBlock:self.processInstanceFilterListResponseCompletionBlock];
+    // If there's an app defined fetch the filters for it,
+    // otherwise fetch the filter list for ad-hoc tasks
+    __weak typeof(self) weakSelf = self;
+    if (self.currentApp) {
+        [self.fetchProcessInstanceFilterListService
+         requestProcessInstanceFilterListForAppID:self.currentApp.modelID
+         withCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeProcessInstance
+                                isCachedResponse:NO];
+         } cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeProcessInstance
+                                isCachedResponse:YES];
+         }];
+    } else {
+        [self.fetchProcessInstanceFilterListService
+         requestProcessInstanceFilterListWithCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeProcessInstance
+                                isCachedResponse:NO];
+         } cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleFilterResponseFor:filterList
+                                           error:error
+                                      filterType:AFAFilterTypeProcessInstance
+                                isCachedResponse:YES];
+         }];
+    }
 }
 
 - (CGSize)contentSizeForFilterView {
@@ -161,65 +224,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     if ([self.delegate respondsToSelector:@selector(searchWithFilterModel:)]) {
         [self.delegate searchWithFilterModel:filter];
-    }
-}
-
-
-#pragma mark -
-#pragma mark Service integration
-
-- (void)fetchTaskFilterList {
-    AFAFilterServices *filterServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFilterServices];
-    
-    // If there's an app defined fetch the filters for it,
-    // otherwise fetch the filter list for ad-hoc tasks
-    __weak typeof(self) weakSelf = self;
-    if (self.currentApp) {
-        [filterServices requestTaskFilterListForAppID:self.currentApp.modelID
-                                  withCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-                                      __strong typeof(self) strongSelf = weakSelf;
-                                      [strongSelf handleFilterResponseFor:filterList
-                                                                    error:error
-                                                               filterType:AFAFilterTypeTask
-                                                         isCachedResponse:NO];
-                                  } cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-                                      __strong typeof(self) strongSelf = weakSelf;
-                                      [strongSelf handleFilterResponseFor:filterList
-                                                                    error:error
-                                                               filterType:AFAFilterTypeTask
-                                                         isCachedResponse:YES];
-                                  }];
-    } else {
-        [filterServices requestTaskFilterListWithCompletionBlock:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-            __strong typeof(self) strongSelf = weakSelf;
-            [strongSelf handleFilterResponseFor:filterList
-                                          error:error
-                                     filterType:AFAFilterTypeTask
-                               isCachedResponse:NO];
-        } cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-            __strong typeof(self) strongSelf = weakSelf;
-            [strongSelf handleFilterResponseFor:filterList
-                                          error:error
-                                     filterType:AFAFilterTypeTask
-                               isCachedResponse:YES];
-        }];
-    }
-}
-
-- (void)fetchProcessInstanceFilterListWithCompletionBlock:(AFAFilterServicesFilterListCompletionBlock)completionBlock {
-    AFAFilterServices *filterServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFilterServices];
-    
-    // If there's an app defined fetch the filters for it,
-    // otherwise fetch the filter list for ad-hoc tasks
-    if (self.currentApp) {
-        [filterServices requestProcessInstanceFilterListForAppID:self.currentApp.modelID
-                                             withCompletionBlock:completionBlock cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-                                                 
-                                             }];
-    } else {
-        [filterServices requestProcessInstanceFilterListWithCompletionBlock:completionBlock cachedResults:^(NSArray *filterList, NSError *error, ASDKModelPaging *paging) {
-            
-        }];
     }
 }
 
@@ -294,7 +298,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     return sectionCount;
 }
 
--(UIView *)tableView:(UITableView *)tableView
+- (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
     AFAFilterHeaderView *filterHeaderView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:kCellIDFilterHeader];
     filterHeaderView.delegate = self;

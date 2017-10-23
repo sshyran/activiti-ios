@@ -30,7 +30,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @interface AFAProcessServices() <ASDKDataAccessorDelegate>
 
 // Process instance list
-@property (strong, nonatomic) ASDKProcessDataAccessor                           *fetchProcessInstanceList;
+@property (strong, nonatomic) ASDKProcessDataAccessor                           *fetchProcessInstanceListDataAccessor;
 @property (copy, nonatomic) AFAProcessServiceProcessInstanceListCompletionBlock processInstanceListCompletionBlock;
 @property (copy, nonatomic) AFAProcessServiceProcessInstanceListCompletionBlock processInstanceCachedResultsBlock;
 
@@ -92,8 +92,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     filterRequestRepresentation.page = filter.page;
     filterRequestRepresentation.size = filter.size;
     
-    self.fetchProcessInstanceList = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
-    [self.fetchProcessInstanceList fetchProcessInstancesWithFilter:filterRequestRepresentation];
+    self.fetchProcessInstanceListDataAccessor = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProcessInstanceListDataAccessor fetchProcessInstancesWithFilter:filterRequestRepresentation];
 }
 
 - (void)requestProcessDefinitionListWithCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock {
@@ -327,7 +327,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
-    if (self.fetchProcessInstanceList == dataAccessor) {
+    if (self.fetchProcessInstanceListDataAccessor == dataAccessor) {
         [self handleFetchProcessInstanceListDataAccessorResponse:response];
     }
 }

@@ -17,17 +17,13 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
 
-@class ASDKMOProfile,
-ASDKMOProcessInstanceFilterMap;
+@class ASDKMOProcessInstanceFilterMap, ASDKFilterRequestRepresentation;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKProcessInstanceFilterMapCacheMapper : NSObject
 
-@interface ASDKMOProcessInstance : ASDKMOAttributable
++ (ASDKMOProcessInstanceFilterMap *)mapProcessInstanceList:(NSArray *)taskList
+                                                withFilter:(ASDKFilterRequestRepresentation *)filter
+                                                 toCacheMO:(ASDKMOProcessInstanceFilterMap *)taskFilterMap;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessInstance+CoreDataProperties.h"

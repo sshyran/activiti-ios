@@ -110,9 +110,9 @@
     } else if (self.fetchTaskFilterListDataAccessor == dataAccessor) {
         [self handleFetchTaskFilterListDataAccessorResponse:response];
     } else if (self.fetchDefaultProcessInstanceFilterListDataAccessor == dataAccessor) {
-        
+        [self handleFetchDefaultProcessInstanceFilterListDataAccessorResponse:response];
     } else if (self.fetchProcessInstanceFilterListDataAccessor == dataAccessor) {
-        
+        [self handleFetchProcessInstanceFilterListDataAccessorResponse:response];
     }
 }
 

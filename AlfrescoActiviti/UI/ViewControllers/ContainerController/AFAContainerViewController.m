@@ -92,10 +92,6 @@
         [serviceRepository registerServiceObject:processServices
                                       forPurpose:AFAServiceObjectTypeProcessServices];
         
-        AFAFilterServices *filterServices = [AFAFilterServices new];
-        [serviceRepository registerServiceObject:filterServices
-                                      forPurpose:AFAServiceObjectTypeFilterServices];
-        
         AFAFormServices *formService = [AFAFormServices new];
         [serviceRepository registerServiceObject:formService
                                       forPurpose:AFAServiceObjectTypeFormServices];

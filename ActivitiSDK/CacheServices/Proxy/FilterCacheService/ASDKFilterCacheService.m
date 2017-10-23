@@ -108,7 +108,7 @@
         __strong typeof(self) strongSelf = weakSelf;
         
         [strongSelf cacheProcessInstanceFilterList:filterList
-                                    usingPredicate:[strongSelf appTaskFilterPredicateForAppID:filter.appID] inManagedObjectContext:managedObjectContext
+                                    usingPredicate:[strongSelf appProcessInstanceFilterPredicateForAppID:filter.appID] inManagedObjectContext:managedObjectContext
                                withCompletionBlock:completionBlock];
     }];
 }
@@ -132,7 +132,7 @@
     [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        [strongSelf fetchFilterListUsingPredicate:[strongSelf appTaskFilterPredicateForAppID:filter.appID]
+        [strongSelf fetchFilterListUsingPredicate:[strongSelf appProcessInstanceFilterPredicateForAppID:filter.appID]
                            inManagedObjectContext:managedObjectContext
                               withCompletionBlock:completionBlock];
     }];
