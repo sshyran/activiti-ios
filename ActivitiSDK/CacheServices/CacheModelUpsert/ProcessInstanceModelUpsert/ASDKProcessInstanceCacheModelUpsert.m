@@ -33,6 +33,34 @@
 
 @implementation ASDKProcessInstanceCacheModelUpsert
 
++ (ASDKMOProcessInstance *)upsertProcessInstanceToCache:(ASDKModelProcessInstance *)processInstance
+                                                  error:(NSError **)error
+                                            inMOContext:(NSManagedObjectContext *)moContext {
+    NSError *internalError = nil;
+    ASDKMOProcessInstance *moProcessInstance = nil;
+    
+    NSFetchRequest *fetchProcessInstanceRequest = [ASDKMOProcessInstance fetchRequest];
+    fetchProcessInstanceRequest.predicate = [self predicateMatchingModelID:processInstance.modelID];
+    NSArray *processInstanceResults = [moContext executeFetchRequest:fetchProcessInstanceRequest
+                                                               error:&internalError];
+    if (!internalError) {
+        moProcessInstance = processInstanceResults.firstObject;
+        if (!moProcessInstance) {
+            moProcessInstance = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProcessInstance entityName]
+                                                              inManagedObjectContext:moContext];
+        }
+        
+        // Map process instance properties to managed object
+        [self populateMOProcessInstance:moProcessInstance
+      withPropertiesFromProcessInstance:processInstance
+                            inMOContext:moContext
+                                  error:&internalError];
+    }
+    
+    *error = internalError;
+    return moProcessInstance;
+}
+
 + (NSArray *)upsertProcessInstanceListToCache:(NSArray *)processInstanceList
                                         error:(NSError **)error
                                   inMOContext:(NSManagedObjectContext *)moContext {

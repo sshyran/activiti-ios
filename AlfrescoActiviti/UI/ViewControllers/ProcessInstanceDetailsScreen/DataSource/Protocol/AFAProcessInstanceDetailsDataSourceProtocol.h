@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsSectionType) {
     AFAProcessInstanceDetailsSectionTypeEnumCount
 };
 
+typedef void (^AFAProcessInstanceDetailsDataSourceCompletionBlock)  (NSError *error, BOOL registerCellActions);
+
 @protocol AFAProcessInstanceDetailsDataSourceProtocol <NSObject>
 
 @property (strong, nonatomic, readonly) NSString  *processInstanceID;
@@ -36,12 +38,14 @@ typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsSectionType) {
 @property (strong, nonatomic) NSMutableDictionary *sectionModels;
 @property (strong, nonatomic) NSMutableDictionary *cellFactories;
 @property (strong, nonatomic) AFATableController  *tableController;
+@property (assign, nonatomic) BOOL                 isConnectivityAvailable;
 
 
 - (instancetype)initWithProcessInstanceID:(NSString *)processInstanceID
                                themeColor:(UIColor *)themeColor;
 
-- (void)processInstanceDetailsWithCompletionBlock:(void (^)(NSError *error, BOOL registerCellActions))completionBlock;
+- (void)processInstanceDetailsWithCompletionBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)completionBlock
+                               cachedResultsBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)cachedResultsBlock;
 - (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 - (void)processInstanceContentWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 - (void)processInstanceCommentsWithCompletionBlock:(void (^)(NSError *error))completionBlock;

@@ -18,9 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class ASDKFilterRequestRepresentation, ASDKModelPaging;
+@class ASDKFilterRequestRepresentation, ASDKModelPaging, ASDKModelProcessInstance;
 
 typedef void  (^ASDKCacheServiceProcessInstanceListCompletionBlock) (NSArray *processes, NSError *error, ASDKModelPaging *paging);
+typedef void  (^ASDKCacheServiceProcessInstanceDetailsCompletionBlock) (ASDKModelProcessInstance *processInstance, NSError *error);
 
 @protocol ASDKProcessInstanceCacheServiceProtocol <NSObject>
 
@@ -51,5 +52,26 @@ typedef void  (^ASDKCacheServiceProcessInstanceListCompletionBlock) (NSArray *pr
  */
 - (void)fetchProcessInstanceList:(ASDKCacheServiceProcessInstanceListCompletionBlock)completionBlock
           usingFilter:(ASDKFilterRequestRepresentation *)filter;
+
+
+/**
+ * Caches provided process instance details and reports the operation success over a completion block.
+ *
+ * @param processInstance Process instance model to be cached
+ * @param completionBlock Completion block indicating the success of the operation
+ */
+- (void)cacheProcessInstanceDetails:(ASDKModelProcessInstance *)processInstance
+                withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+
+/**
+ * Fetches and reports via a completion block the process instance details for the specified id.
+ *
+ * @param processInstanceID Process instance id for which the details are requested
+ * @param completionBlock   Completion block providing a process instance model object and an optional
+ *                          error reason
+ */
+- (void)fetchProcesInstanceDetailsForID:(NSString *)processInstanceID
+                    withCompletionBlock:(ASDKCacheServiceProcessInstanceDetailsCompletionBlock)completionBlock;
 
 @end

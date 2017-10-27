@@ -62,7 +62,8 @@
 #pragma mark -
 #pragma mark Public interface
 
-- (void)processInstanceDetailsWithCompletionBlock:(void (^)(NSError *error, BOOL registerCellActions))completionBlock {
+- (void)processInstanceDetailsWithCompletionBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)completionBlock
+                               cachedResultsBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)cachedResultsBlock {
     AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
     
     __weak typeof(self) weakSelf = self;
@@ -73,17 +74,22 @@
                                             BOOL registerCellActions = NO;
                                             
                                             if (!error) {
-                                                AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [AFATableControllerProcessInstanceDetailsModel new];
-                                                processInstanceDetailsModel.currentProcessInstance = processInstance;
-                                                
-                                                if (!strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeDetails)]) {
-                                                    registerCellActions = YES;
-                                                }
-                                                
-                                                strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsModel;
-                                                [strongSelf updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+                                                registerCellActions = [strongSelf registerProcessInstanceDetailsCellActionsForModel:processInstance];
                                             }
                                             
+                                            if (completionBlock) {
+                                                completionBlock(error, registerCellActions);
+                                            }
+                                            
+                                        } cachedResults:^(ASDKModelProcessInstance *processInstance, NSError *error) {
+                                            __strong typeof(self) strongSelf = weakSelf;
+                                            
+                                            BOOL registerCellActions = NO;
+                                            
+                                            if (!error) {
+                                                registerCellActions = [strongSelf registerProcessInstanceDetailsCellActionsForModel:processInstance];
+                                            }
+
                                             if (completionBlock) {
                                                 completionBlock(error, registerCellActions);
                                             }
@@ -259,6 +265,29 @@
 - (void)updateTableControllerForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType {
     self.tableController.model = [self reusableTableControllerModelForSectionType:sectionType];
     self.tableController.cellFactory = [self cellFactoryForSectionType:sectionType];
+}
+
+
+#pragma mark -
+#pragma mark Response handlers
+
+- (BOOL)registerProcessInstanceDetailsCellActionsForModel:(ASDKModelProcessInstance *)processInstance {
+    BOOL registerCellActions = NO;
+    
+    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [AFATableControllerProcessInstanceDetailsModel new];
+    processInstanceDetailsModel.isConnectivityAvailable = self.isConnectivityAvailable;
+    processInstanceDetailsModel.currentProcessInstance = processInstance;
+    
+    if (!self.sectionModels[@(AFAProcessInstanceDetailsSectionTypeDetails)]) {
+        // Cell actions for all the cell factories are registered after the initial process instance
+        // details are loaded
+        registerCellActions = YES;
+    }
+    
+    self.sectionModels[@(AFAProcessInstanceDetailsSectionTypeDetails)] = processInstanceDetailsModel;
+    [self updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+    
+    return registerCellActions;
 }
 
 

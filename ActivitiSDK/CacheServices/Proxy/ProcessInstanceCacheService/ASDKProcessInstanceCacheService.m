@@ -200,6 +200,50 @@
     return nil;
 }
 
+- (void)cacheProcessInstanceDetails:(ASDKModelProcessInstance *)processInstance
+                withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        [ASDKProcessInstanceCacheModelUpsert upsertProcessInstanceToCache:processInstance
+                                                                    error:&error
+                                                              inMOContext:managedObjectContext];
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchProcesInstanceDetailsForID:(NSString *)processInstanceID
+                    withCompletionBlock:(ASDKCacheServiceProcessInstanceDetailsCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        NSFetchRequest *fetchRequest = [ASDKMOProcessInstance fetchRequest];
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"modelID == %@", processInstanceID];
+        
+        NSError *error = nil;
+        NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
+                                                                    error:&error];
+        
+        if (completionBlock) {
+            ASDKMOProcessInstance *moProcessInstance = fetchResults.firstObject;
+            
+            if (error || !moProcessInstance) {
+                completionBlock(nil, error);
+            } else {
+                ASDKModelProcessInstance *processInstance = [ASDKProcessInstanceCacheMapper mapCacheMOToProcessInstance:moProcessInstance];
+                completionBlock(processInstance, nil);
+            }
+        }
+    }];
+}
+
 - (ASDKModelPaging *)paginationWithStartIndex:(NSUInteger)startIndex
                             forTotalTaskCount:(NSUInteger)taskTotalCount
                            remainingTaskCount:(NSUInteger)remainingTaskCount {

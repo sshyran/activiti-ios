@@ -314,10 +314,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     self.editBarButtonItem.enabled = isConnected;
 }
 
-- (BOOL)isNetworkReachable {
-    return (self.reachabilityStore.reachability == AFAReachabilityStoreTypeReachableViaWANOrWiFi) ? YES : NO;
-}
-
 
 #pragma mark -
 #pragma mark Actions

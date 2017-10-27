@@ -23,6 +23,7 @@
 @interface AFATableControllerProcessInstanceDetailsModel : AFABaseModel <AFATableViewModelDelegate>
 
 @property (strong, nonatomic) ASDKModelProcessInstance *currentProcessInstance;
+@property (assign, nonatomic) BOOL                      isConnectivityAvailable;
 
 - (BOOL)isCompletedProcessInstance;
 

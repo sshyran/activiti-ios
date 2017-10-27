@@ -164,4 +164,8 @@
     // Override in child classes
 }
 
+- (BOOL)isNetworkReachable {
+    return (self.reachabilityStore.reachability == AFAReachabilityStoreTypeReachableViaWANOrWiFi) ? YES : NO;
+}
+
 @end

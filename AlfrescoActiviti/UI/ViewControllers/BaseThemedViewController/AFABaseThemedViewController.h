@@ -32,5 +32,6 @@
 - (void)showConfirmationMessage:(NSString *)confirmationMessage;
 - (void)didRestoredNetworkConnectivity;
 - (void)didLoseNetworkConnectivity;
+- (BOOL)isNetworkReachable;
 
 @end

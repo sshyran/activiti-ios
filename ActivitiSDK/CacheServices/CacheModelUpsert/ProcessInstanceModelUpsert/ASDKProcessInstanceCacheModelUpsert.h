@@ -19,10 +19,16 @@
 #import <Foundation/Foundation.h>
 @import CoreData;
 
+@class ASDKModelProcessInstance, ASDKMOProcessInstance;
+
 @interface ASDKProcessInstanceCacheModelUpsert : NSObject
 
 + (NSArray *)upsertProcessInstanceListToCache:(NSArray *)processInstanceList
                                         error:(NSError **)error
                                   inMOContext:(NSManagedObjectContext *)moContext;
+
++ (ASDKMOProcessInstance *)upsertProcessInstanceToCache:(ASDKModelProcessInstance *)processInstance
+                                                  error:(NSError **)error
+                                            inMOContext:(NSManagedObjectContext *)moContext;
 
 @end

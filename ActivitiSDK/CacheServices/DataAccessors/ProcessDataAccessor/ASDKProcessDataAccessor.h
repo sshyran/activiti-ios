@@ -32,6 +32,14 @@
 - (void)fetchProcessInstancesWithFilter:(ASDKFilterRequestRepresentation *)filter;
 
 /**
+ * Requests the details of a process instance and reports network or cached data through
+ * the designated data accessor delegate.
+ *
+ * @param processInstanceID The ID of the process instance for which the details are requested
+ */
+- (void)fetchProcessInstanceDetailsForProcessInstanceID:(NSString *)processInstanceID;
+
+/**
  * Cancels ongoing operations for the current data accessor.
  */
 - (void)cancelOperations;
