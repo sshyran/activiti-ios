@@ -57,6 +57,7 @@ extern NSString *kLocalizationListScreenTaskAppText;
 extern NSString *kLocalizationListScreenSearchFieldPlaceholderFormat;
 extern NSString *kLocalizationListScreenTasksText;
 extern NSString *kLocalizationListScreenProcessInstancesText;
+extern NSString *kLocalizationListScreenMissingFiltersFormat;
 
 // Process instance screen
 extern NSString *kLocalizationProcessInstanceScreenStartedOnFormat;

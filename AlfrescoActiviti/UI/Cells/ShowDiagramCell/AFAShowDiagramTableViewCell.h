@@ -37,5 +37,6 @@
 
 - (void)setUpWithThemeColor:(UIColor *)themeColor;
 - (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance;
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable;
 
 @end

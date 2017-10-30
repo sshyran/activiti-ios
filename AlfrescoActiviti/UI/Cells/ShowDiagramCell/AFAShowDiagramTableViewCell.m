@@ -57,6 +57,11 @@
     }
 }
 
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable {
+    self.processControlButton.enabled = isConnectivityAvailable;
+}
+
+
 #pragma mark -
 #pragma mark Actions
 

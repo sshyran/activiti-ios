@@ -145,7 +145,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     [super viewDidLoad];
     
     // Bind table view's delegates to table controller
-    self.dataSource.isConnectivityAvailable = [self isNetworkReachable];
     self.taskDetailsTableView.dataSource = self.dataSource.tableController;
     self.taskDetailsTableView.delegate = self.dataSource.tableController;
     self.navigationBarThemeColor = self.dataSource.themeColor;
@@ -198,8 +197,13 @@ AFAModalPeoplePickerViewControllerDelegate>
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    BOOL isConnectivityAvailable = [self isNetworkReachable];
+    
+    self.dataSource.isConnectivityAvailable = isConnectivityAvailable;
+    [self refreshUIForConnectivity:isConnectivityAvailable];
+    
     [self refreshContentForCurrentSection];
-    [self refreshUIForConnectivity:[self isNetworkReachable]];
 }
 
 

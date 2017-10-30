@@ -462,23 +462,65 @@ UITableViewDelegate>
 #pragma mark AFAFilterViewController Delegate
 
 - (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel
-                                  filterType:(AFAFilterType)filterType {
-    // If no filter information is found don't continue with further requests
+                                  filterType:(AFAFilterType)filterType
+                            isCachedResponse:(BOOL)isCachedResponse
+                                       error:(NSError *)error {
+    // Pre-compute missing filters error
+    NSString *formattedMissingFiltersString = nil;
+    
     if (!filterModel) {
-        if (!self.currentFilter) {
-            self.controllerState = AFAListControllerStateEmptyList;
-            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        NSString *filterTypeString = nil;
+        if (filterType == AFAFilterTypeTask) {
+            filterTypeString = NSLocalizedString(kLocalizationListScreenTasksText, @"Tasks text");
+        } else {
+            filterTypeString = NSLocalizedString(kLocalizationListScreenProcessInstancesText, @"Process instances text");
+        }
+        
+        formattedMissingFiltersString = [NSString stringWithFormat:NSLocalizedString(kLocalizationListScreenMissingFiltersFormat, @"Missing filters error"), filterTypeString, filterTypeString];
+    }
+    
+    if (error) {
+        if (!filterModel) {
+            // If no cached data is available notify the user, otherwise fail silently
+            BOOL isSilentFail = NO;
+            
+            if (!isCachedResponse) {
+                if (!self.currentFilter) {
+                    self.controllerState = AFAListControllerStateEmptyList;
+                    [self showErrorMessage:formattedMissingFiltersString];
+                } else { // Faily silently
+                    isSilentFail = YES;
+                }
+            } else { // Fail silently
+                isSilentFail = YES;
+            }
+            
+            if (isSilentFail) {
+                self.controllerState = AFAListControllerStateIdle;
+            }
         }
     } else {
-        if ((AFAFilterTypeTask == filterType &&
-             [self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) ||
-            (AFAFilterTypeProcessInstance == filterType &&
-             [self.dataSource isKindOfClass:[AFAProcessListViewDataSource class]])) {
-                // Store the filter reference for further reuse
-                self.currentFilter = filterModel;
-                
-                [self fetchContentList];
+        if (!filterModel) {
+            // Remote filters are missing, notify the user
+            if (!isCachedResponse) {
+                self.controllerState = AFAListControllerStateEmptyList;
+                [self showErrorMessage:formattedMissingFiltersString];
+                self.currentFilter = nil;
+            } else {
+                self.controllerState = AFAListControllerStateEmptyList;
+                self.currentFilter = nil;
             }
+        } else { // Positive flow
+            if ((AFAFilterTypeTask == filterType &&
+                 [self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) ||
+                (AFAFilterTypeProcessInstance == filterType &&
+                 [self.dataSource isKindOfClass:[AFAProcessListViewDataSource class]])) {
+                    // Store the filter reference for further reuse
+                    self.currentFilter = filterModel;
+                    
+                    [self fetchContentList];
+                }
+        }
     }
 }
 

@@ -66,6 +66,7 @@ NSString *kLocalizationListScreenTaskAppText                     = @"listScreenT
 NSString *kLocalizationListScreenSearchFieldPlaceholderFormat    = @"listScreenSearchFieldPlaceholderFormat";
 NSString *kLocalizationListScreenTasksText                       = @"listScreenTasksText";
 NSString *kLocalizationListScreenProcessInstancesText            = @"listScreenProcessInstancesText";
+NSString *kLocalizationListScreenMissingFiltersFormat            = @"listScreenMissingFiltersFormat";
 
 
 #pragma mark -

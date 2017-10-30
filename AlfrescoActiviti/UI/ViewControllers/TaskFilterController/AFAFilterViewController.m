@@ -29,7 +29,6 @@
 
 // Managers
 #import "AFAServiceRepository.h"
-#import "AFALogConfiguration.h"
 #import "AFAFilterServices.h"
 @import ActivitiSDK;
 
@@ -47,8 +46,6 @@ typedef NS_ENUM(NSInteger, AFAFilterSectionType) {
     AFAFilterSectionTypeEnumCount
 };
 
-
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 @interface AFAFilterViewController () <AFAFilterOptionTableViewcellProtocol, AFAFilterHeaderViewProtocol>
 
@@ -360,17 +357,21 @@ viewForHeaderInSection:(NSInteger)section {
 #pragma mark Utilities
 
 - (AFAGenericFilterModel *)buildFilterFromModel:(ASDKModelFilter *)filterModel {
-    self.filterID = filterModel.modelID;
-    self.assignmentType = (NSInteger)filterModel.assignmentType;
-    self.state = (NSInteger)filterModel.state;
-    self.sortType = (NSInteger)filterModel.sortType;
+    AFAGenericFilterModel *filter = nil;
     
-    AFAGenericFilterModel *filter = [AFAGenericFilterModel new];
-    filter.state = self.state;
-    filter.assignmentType = self.assignmentType;
-    filter.sortType = self.sortType;
-    filter.filterID = self.filterID;
-    filter.appDefinitionID = self.currentApp.modelID;
+    if (filterModel) {
+        self.filterID = filterModel.modelID;
+        self.assignmentType = (NSInteger)filterModel.assignmentType;
+        self.state = (NSInteger)filterModel.state;
+        self.sortType = (NSInteger)filterModel.sortType;
+        
+        filter = [AFAGenericFilterModel new];
+        filter.state = self.state;
+        filter.assignmentType = self.assignmentType;
+        filter.sortType = self.sortType;
+        filter.filterID = self.filterID;
+        filter.appDefinitionID = self.currentApp.modelID;
+    }
     
     return filter;
 }
@@ -386,7 +387,7 @@ viewForHeaderInSection:(NSInteger)section {
                      filterType:(AFAFilterType)filterType
                isCachedResponse:(BOOL)isCachedResponse {
     __weak typeof(self) weakSelf = self;
-    if (!error && filterList.count) {
+    if (!error) {
         // Save the results
         self.filterListArr = filterList ;
         
@@ -394,28 +395,18 @@ viewForHeaderInSection:(NSInteger)section {
         ASDKModelFilter *currentSelectedFilter =(ASDKModelFilter *)self.filterListArr.firstObject;
         self.currentFilterModel = [self buildFilterFromModel:currentSelectedFilter];
         
-        // Notify the delegate that a filter has been parsed and marked as default
-        if ([self.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:filterType:)]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                [strongSelf.delegate filterModelsDidLoadWithDefaultFilter:strongSelf.currentFilterModel
-                                                               filterType:filterType];
-            });
-        }
-        
         [self.filterTableView reloadData];
-    } else if (!isCachedResponse) {
-        AFALogError(@"There are no selectable filter options available for the user to choose");
-        
-        // Notify the delegate about the missing filter data
-        if ([self.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:filterType:)]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                [strongSelf.delegate filterModelsDidLoadWithDefaultFilter:nil
-                                                               filterType:filterType];
-            });
-        }
-        
+    } 
+    
+    // Notify the delegate that a filter has been parsed and marked as default
+    if ([self.delegate respondsToSelector:@selector(filterModelsDidLoadWithDefaultFilter:filterType:isCachedResponse:error:)]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            [strongSelf.delegate filterModelsDidLoadWithDefaultFilter:strongSelf.currentFilterModel
+                                                           filterType:filterType
+                                                     isCachedResponse:isCachedResponse
+                                                                error:error];
+        });
     }
 }
 

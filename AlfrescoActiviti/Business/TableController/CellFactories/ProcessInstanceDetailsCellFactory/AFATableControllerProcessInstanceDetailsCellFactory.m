@@ -213,6 +213,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     showDiagramCell.delegate = self;
     [showDiagramCell setupWithProcessInstance:[model itemAtIndexPath:indexPath]];
     [showDiagramCell setUpWithThemeColor:self.appThemeColor];
+    [showDiagramCell updateStateForConnectivity:[(AFATableControllerProcessInstanceDetailsModel *)model isConnectivityAvailable]];
     
     return showDiagramCell;
 }
