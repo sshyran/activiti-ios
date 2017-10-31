@@ -1,4 +1,4 @@
-platform :ios, '8.0'
+platform :ios, '10.0'
 use_frameworks!
 
 # Shared pods
@@ -14,7 +14,7 @@ abstract_target 'Shared' do
 
 	target 'AlfrescoActiviti' do
         pod 'Fabric'
-        pod 'Crashlytics'
+        pod 'Crashlytics', '~>  3.9'
         pod 'Buglife'
 	end
 

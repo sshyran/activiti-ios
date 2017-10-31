@@ -23,9 +23,9 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (3.0.0):
     - CocoaLumberjack/Default
-  - Crashlytics (3.8.3):
-    - Fabric (~> 1.6.3)
-  - Fabric (1.6.10)
+  - Crashlytics (3.9.3):
+    - Fabric (~> 1.7.2)
+  - Fabric (1.7.2)
   - JGProgressHUD (1.4)
   - Mantle (2.1.0):
     - Mantle/extobjc (= 2.1.0)
@@ -36,7 +36,7 @@ DEPENDENCIES:
   - AFNetworking
   - Buglife
   - CocoaLumberjack
-  - Crashlytics
+  - Crashlytics (~> 3.9)
   - Fabric
   - JGProgressHUD
   - Mantle
@@ -46,12 +46,12 @@ SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   Buglife: 2be3b9a3088096592bc913f8c69ba1191619053a
   CocoaLumberjack: c823149bccc5519a9447aeb433be7b1212a7d6a5
-  Crashlytics: 2b6dbe138a42395577cfa73dfa1aa7248cadf39e
-  Fabric: c73f371ee543e3f0b80608f2674750e4910d1669
+  Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
+  Fabric: 9cd6a848efcf1b8b07497e0b6a2e7d336353ba15
   JGProgressHUD: 1617b0940cf80bb53e8f7d6f0fd69252ea45d6d4
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
   OCMock: f3f61e6eaa16038c30caa5798c5e49d3307b6f22
 
-PODFILE CHECKSUM: d99473e1dac4de0b059f437ff683cbbf5f89bac8
+PODFILE CHECKSUM: 28f62a79d3304046112c0932dd9033217e906cc5
 
-COCOAPODS: 1.0.0
+COCOAPODS: 1.3.1
