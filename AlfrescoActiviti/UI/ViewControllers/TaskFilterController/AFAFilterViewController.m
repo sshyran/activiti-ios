@@ -79,10 +79,6 @@ typedef NS_ENUM(NSInteger, AFAFilterSectionType) {
     
     if (self) {
         self.filterListArr = [NSArray array];
-        self.sortOptionArr = @[NSLocalizedString(kLocalizationListScreenSortNewestFirstText, @"Newest first"),
-                               NSLocalizedString(kLocalizationListScreenSortOldestFirstText, @"Oldest first"),
-                               NSLocalizedString(kLocalizationListScreenSortDueFirstText, @"Due first"),
-                               NSLocalizedString(kLocalizationListScreenSortDueLastText, @"Due Last"),];
         _fetchTaskFilterListService = [AFAFilterServices new];
         _fetchProcessInstanceFilterListService = [AFAFilterServices new];
     }
@@ -98,7 +94,11 @@ typedef NS_ENUM(NSInteger, AFAFilterSectionType) {
     self.searchButton.backgroundColor = self.applicationThemeColor;
     
     // Set up the filter list table view to adjust it's size automatically
-    self.filterTableView.estimatedRowHeight = 44.0f;
+    // but don't use size estimations 
+    self.filterTableView.estimatedRowHeight = 0;
+    self.filterTableView.estimatedSectionFooterHeight = 0;
+    self.filterTableView.estimatedSectionHeaderHeight = 0;
+    
     self.filterTableView.rowHeight = UITableViewAutomaticDimension;
     
     // Register the header section
@@ -119,6 +119,8 @@ typedef NS_ENUM(NSInteger, AFAFilterSectionType) {
 #pragma mark Public interface
 
 - (void)loadTaskFilterList {
+    self.sortOptionArr = [self taskSortOptions];
+    
     // If there's an app defined fetch the filters for it,
     // otherwise fetch the filter list for ad-hoc tasks
     __weak typeof(self) weakSelf = self;
@@ -157,6 +159,8 @@ typedef NS_ENUM(NSInteger, AFAFilterSectionType) {
 }
 
 - (void)loadProcessInstanceFilterList {
+    self.sortOptionArr = [self processInstanceSortOptions];
+    
     // If there's an app defined fetch the filters for it,
     // otherwise fetch the filter list for ad-hoc tasks
     __weak typeof(self) weakSelf = self;
@@ -198,7 +202,9 @@ typedef NS_ENUM(NSInteger, AFAFilterSectionType) {
     CGSize tableContentSize = self.filterTableView.contentSize;
     // Besides the height of the table content size return also the height
     // of the search button and it's vertical constraints values
-    tableContentSize.height += CGRectGetHeight(self.searchButton.frame) + 70;
+    
+    tableContentSize.height += CGRectGetHeight(self.searchButton.frame) + 50;
+    
     return tableContentSize;
 }
 
@@ -408,6 +414,18 @@ viewForHeaderInSection:(NSInteger)section {
                                                                 error:error];
         });
     }
+}
+
+- (NSArray *)taskSortOptions {
+    return @[NSLocalizedString(kLocalizationListScreenSortNewestFirstText, @"Newest first"),
+             NSLocalizedString(kLocalizationListScreenSortOldestFirstText, @"Oldest first"),
+             NSLocalizedString(kLocalizationListScreenSortDueFirstText, @"Due first"),
+             NSLocalizedString(kLocalizationListScreenSortDueLastText, @"Due Last")];
+}
+
+- (NSArray *)processInstanceSortOptions {
+    return @[NSLocalizedString(kLocalizationListScreenSortNewestFirstText, @"Newest first"),
+             NSLocalizedString(kLocalizationListScreenSortOldestFirstText, @"Oldest first")];
 }
 
 @end
