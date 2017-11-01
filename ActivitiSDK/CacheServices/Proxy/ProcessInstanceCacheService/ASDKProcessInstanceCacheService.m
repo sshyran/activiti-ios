@@ -31,6 +31,7 @@
 #import "ASDKModelPaging.h"
 #import "ASDKModelFilter.h"
 #import "ASDKModelProcessInstance.h"
+#import "ASDKMOProcessInstanceFilterMapPlaceholder.h"
 
 // Persistence
 #import "ASDKProcessInstanceCacheMapper.h"
@@ -99,30 +100,43 @@
         
         NSArray *processInstanceFilterMapArr = [managedObjectContext executeFetchRequest:processInstanceFilterMapRequest
                                                                                   error:&error];
+        
         if (!error) {
-            NSMutableArray *allProcessInstancesOfCurrentApp = [NSMutableArray array];
+            NSMutableArray *allProcessInstanceFilterMapPlaceholdersOfCurrentApp = [NSMutableArray array];
+            NSArray *processInstances = nil;
             
             for (ASDKMOProcessInstanceFilterMap *processInstanceFilterMap in processInstanceFilterMapArr) {
-                [allProcessInstancesOfCurrentApp addObjectsFromArray:processInstanceFilterMap.processInstances.allObjects];
+                [allProcessInstanceFilterMapPlaceholdersOfCurrentApp addObjectsFromArray:processInstanceFilterMap.processInstancePlaceholders.allObjects];
             }
             
-            NSArray *sortedProcessInstances = [allProcessInstancesOfCurrentApp sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
-            NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
+            NSArray *processInstancesIDs = [allProcessInstanceFilterMapPlaceholdersOfCurrentApp valueForKey:@"modelID"];
             
-            NSArray *matchingProcessInstanceArr = nil;
-            if (namePredicate) {
-                matchingProcessInstanceArr = [sortedProcessInstances filteredArrayUsingPredicate:namePredicate];
-            } else {
-                matchingProcessInstanceArr = sortedProcessInstances;
+            if (processInstancesIDs.count) {
+                NSFetchRequest *processInstanceFetchRequest = [ASDKMOProcessInstance fetchRequest];
+                processInstanceFetchRequest.predicate = [NSPredicate predicateWithFormat:@"modelID IN %@", processInstancesIDs];
+                processInstances = [managedObjectContext executeFetchRequest:processInstanceFetchRequest
+                                                                       error:&error];
             }
             
-            NSUInteger fetchOffset = filter.size * filter.page;
-            NSUInteger count = MIN(sortedProcessInstances.count - fetchOffset, filter.size);
-            pagedProcessInstanceArr = [sortedProcessInstances subarrayWithRange:NSMakeRange(fetchOffset, count)];
-            
-            paging = [strongSelf paginationWithStartIndex:filter.size * filter.page
-                                        forTotalTaskCount:sortedProcessInstances.count
-                                       remainingTaskCount:count];
+            if (!error) {
+                NSArray *sortedProcessInstances = [processInstances sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
+                NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
+                
+                NSArray *matchingProcessInstanceArr = nil;
+                if (namePredicate) {
+                    matchingProcessInstanceArr = [sortedProcessInstances filteredArrayUsingPredicate:namePredicate];
+                } else {
+                    matchingProcessInstanceArr = sortedProcessInstances;
+                }
+                
+                NSUInteger fetchOffset = filter.size * filter.page;
+                NSUInteger count = MIN(sortedProcessInstances.count - fetchOffset, filter.size);
+                pagedProcessInstanceArr = [sortedProcessInstances subarrayWithRange:NSMakeRange(fetchOffset, count)];
+                
+                paging = [strongSelf paginationWithStartIndex:filter.size * filter.page
+                                            forTotalTaskCount:sortedProcessInstances.count
+                                           remainingTaskCount:count];
+            }
         }
         
         if (completionBlock) {
@@ -139,65 +153,6 @@
             }
         }
     }];
-}
-
-
-#pragma mark -
-#pragma mark Operations
-
-- (NSError *)cleanStalledProcessInstancesInContext:(NSManagedObjectContext *)managedObjectContext
-                                         forFilter:(ASDKFilterRequestRepresentation *)filter {
-    NSError *internalError = nil;
-    
-    NSFetchRequest *oldProcessInstancesRequest = [ASDKMOProcessInstanceFilterMap fetchRequest];
-    oldProcessInstancesRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
-    oldProcessInstancesRequest.resultType = NSManagedObjectIDResultType;
-    
-    NSBatchDeleteRequest *removeOldProcessInstancesRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldProcessInstancesRequest];
-    removeOldProcessInstancesRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
-    NSBatchDeleteResult *removeOldProcessInstancesResult = [managedObjectContext executeRequest:removeOldProcessInstancesRequest
-                                                                                          error:&internalError];
-    NSArray *moIDArr = removeOldProcessInstancesResult.result;
-    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
-                                                 intoContexts:@[managedObjectContext]];
-    if (internalError) {
-        return [self clearCacheStalledDataError];
-    }
-    
-    return nil;
-}
-
-- (NSError *)saveProcessInstanceListAndGenerateFilterMap:(NSArray *)processInstanceList
-                                               forFilter:(ASDKFilterRequestRepresentation *)filter
-                                               inContext:(NSManagedObjectContext *)managedObjectContext {
-    NSError *error = nil;
-    NSArray *moProcessInstanceList = [ASDKProcessInstanceCacheModelUpsert upsertProcessInstanceListToCache:processInstanceList
-                                                                                                     error:&error
-                                                                                               inMOContext:managedObjectContext];
-    if (error) {
-        return error;
-    }
-    
-    if (ASDKModelFilterStateTypeAll != filter.filterModel.state) {
-        NSFetchRequest *processInstanceFilterMapFetchRequest = [ASDKMOProcessInstanceFilterMap fetchRequest];
-        processInstanceFilterMapFetchRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
-        NSArray *fetchResults = [managedObjectContext executeFetchRequest:processInstanceFilterMapFetchRequest
-                                                                    error:&error];
-        if (error) {
-            return error;
-        }
-        
-        ASDKMOProcessInstanceFilterMap *processInstanceFilterMap = fetchResults.firstObject;
-        if (!processInstanceFilterMap) {
-            processInstanceFilterMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProcessInstanceFilterMap entityName]
-                                                                     inManagedObjectContext:managedObjectContext];
-        }
-        [ASDKProcessInstanceFilterMapCacheMapper mapProcessInstanceList:moProcessInstanceList
-                                                             withFilter:filter
-                                                              toCacheMO:processInstanceFilterMap];
-    }
-    
-    return nil;
 }
 
 - (void)cacheProcessInstanceDetails:(ASDKModelProcessInstance *)processInstance
@@ -242,6 +197,76 @@
             }
         }
     }];
+}
+
+
+#pragma mark -
+#pragma mark Operations
+
+- (NSError *)cleanStalledProcessInstancesInContext:(NSManagedObjectContext *)managedObjectContext
+                                         forFilter:(ASDKFilterRequestRepresentation *)filter {
+    NSError *internalError = nil;
+    
+    NSFetchRequest *oldProcessInstanceFilterMapRequest = [ASDKMOProcessInstanceFilterMap fetchRequest];
+    oldProcessInstanceFilterMapRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
+    oldProcessInstanceFilterMapRequest.resultType = NSManagedObjectIDResultType;
+    
+    NSBatchDeleteRequest *removeOldProcessInstanceFilterMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldProcessInstanceFilterMapRequest];
+    removeOldProcessInstanceFilterMapRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+    NSBatchDeleteResult *removeOldProcessInstanceFilterMapResult = [managedObjectContext executeRequest:removeOldProcessInstanceFilterMapRequest
+                                                                                                  error:&internalError];
+    NSArray *moIDArr = removeOldProcessInstanceFilterMapResult.result;
+    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                 intoContexts:@[managedObjectContext]];
+    if (internalError) {
+        return [self clearCacheStalledDataError];
+    }
+    
+    return nil;
+}
+
+- (NSError *)saveProcessInstanceListAndGenerateFilterMap:(NSArray *)processInstanceList
+                                               forFilter:(ASDKFilterRequestRepresentation *)filter
+                                               inContext:(NSManagedObjectContext *)managedObjectContext {
+    // Upsert process instances
+    NSError *error = nil;
+    NSArray *moProcessInstanceList = [ASDKProcessInstanceCacheModelUpsert upsertProcessInstanceListToCache:processInstanceList
+                                                                                                     error:&error
+                                                                                               inMOContext:managedObjectContext];
+    if (error) {
+        return error;
+    }
+    
+    // Fetch existing or create a process instance filter map
+    NSFetchRequest *processInstanceFilterMapFetchRequest = [ASDKMOProcessInstanceFilterMap fetchRequest];
+    processInstanceFilterMapFetchRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
+    NSArray *fetchResults = [managedObjectContext executeFetchRequest:processInstanceFilterMapFetchRequest
+                                                                error:&error];
+    if (error) {
+        return error;
+    }
+    
+    ASDKMOProcessInstanceFilterMap *processInstanceFilterMap = fetchResults.firstObject;
+    if (!processInstanceFilterMap) {
+        processInstanceFilterMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProcessInstanceFilterMap entityName]
+                                                                 inManagedObjectContext:managedObjectContext];
+    }
+    
+    // Populate the process instance filter map with placeholders pointing to the actual entities
+    NSMutableArray *processInstanceFilterMapPlaceholders = [NSMutableArray array];
+    for (ASDKMOProcessInstance *moProcessInstance in moProcessInstanceList) {
+        ASDKMOProcessInstanceFilterMapPlaceholder *processInstanceFilterMapPlaceholder =
+        [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProcessInstanceFilterMapPlaceholder entityName]
+                                      inManagedObjectContext:managedObjectContext];
+        processInstanceFilterMapPlaceholder.modelID = moProcessInstance.modelID;
+        [processInstanceFilterMapPlaceholders addObject:processInstanceFilterMapPlaceholder];
+    }
+    
+    [ASDKProcessInstanceFilterMapCacheMapper mapProcessInstancePlaceholderList:processInstanceFilterMapPlaceholders
+                                                                    withFilter:filter
+                                                                     toCacheMO:processInstanceFilterMap];
+    
+    return nil;
 }
 
 - (ASDKModelPaging *)paginationWithStartIndex:(NSUInteger)startIndex

@@ -16,14 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "ASDKMOTaskFilterMapPlaceholder.h"
 
-@class ASDKMOProcessInstanceFilterMap, ASDKFilterRequestRepresentation, ASDKMOProcessInstanceFilterMapPlaceholder;
+@implementation ASDKMOTaskFilterMapPlaceholder
 
-@interface ASDKProcessInstanceFilterMapCacheMapper : NSObject
-
-+ (ASDKMOProcessInstanceFilterMap *)mapProcessInstancePlaceholderList:(NSArray *)processInstancePlaceholderList
-                                                            withFilter:(ASDKFilterRequestRepresentation *)filter
-                                                             toCacheMO:(ASDKMOProcessInstanceFilterMap *)processInstanceFilterMap;
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
 
 @end

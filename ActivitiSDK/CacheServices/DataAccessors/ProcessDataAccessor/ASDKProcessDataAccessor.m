@@ -158,17 +158,15 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             }
             
             if (!error) {
-                if (processes.count) {
-                    ASDKLogVerbose(@"Process instance list information successfully fetched from the cache for filter.\nFilter:%@", filter);
-                    
-                    ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:processes
-                                                                                                                           paging:paging
-                                                                                                                     isCachedData:YES
-                                                                                                                            error:error];
-                    if (weakSelf.delegate) {
-                        [weakSelf.delegate dataAccessor:weakSelf
-                                    didLoadDataResponse:response];
-                    }
+                ASDKLogVerbose(@"Process instance list information successfully fetched from the cache for filter.\nFilter:%@", filter);
+                
+                ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:processes
+                                                                                                                       paging:paging
+                                                                                                                 isCachedData:YES
+                                                                                                                        error:error];
+                if (weakSelf.delegate) {
+                    [weakSelf.delegate dataAccessor:weakSelf
+                                didLoadDataResponse:response];
                 }
             } else {
                 ASDKLogError(@"An error occured while fetching cache process instance list information. Reason: %@", error.localizedDescription);
@@ -353,7 +351,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                     
                                                                     [operation complete];
                                                                 }
-            }];
+                                                            }];
         }
     }];
     

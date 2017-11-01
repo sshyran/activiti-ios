@@ -105,7 +105,6 @@
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="tenantID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="initiator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="processInstances" inverseEntity="ASDKMOProfile" syncable="YES"/>
-        <relationship name="processInstanceFilterMap" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceFilterMap" inverseName="processInstances" inverseEntity="ASDKMOProcessInstanceFilterMap" syncable="YES"/>
     </entity>
     <entity name="ASDKMOProcessInstanceContent" representedClassName="ASDKMOProcessInstanceContent" syncable="YES" codeGenerationType="category">
         <relationship name="contentList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOContent" inverseName="processInstanceContent" inverseEntity="ASDKMOContent" syncable="YES"/>
@@ -116,7 +115,11 @@
         <relationship name="processInstanceContent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceContent" inverseName="processInstanceContentField" inverseEntity="ASDKMOProcessInstanceContent" syncable="YES"/>
     </entity>
     <entity name="ASDKMOProcessInstanceFilterMap" representedClassName="ASDKMOProcessInstanceFilterMap" parentEntity="ASDKMOFilterMap" syncable="YES" codeGenerationType="category">
-        <relationship name="processInstances" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOProcessInstance" inverseName="processInstanceFilterMap" inverseEntity="ASDKMOProcessInstance" syncable="YES"/>
+        <relationship name="processInstancePlaceholders" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOProcessInstanceFilterMapPlaceholder" inverseName="processInstanceFilterMap" inverseEntity="ASDKMOProcessInstanceFilterMapPlaceholder" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOProcessInstanceFilterMapPlaceholder" representedClassName="ASDKMOProcessInstanceFilterMapPlaceholder" syncable="YES" codeGenerationType="category">
+        <attribute name="modelID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="processInstanceFilterMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceFilterMap" inverseName="processInstancePlaceholders" inverseEntity="ASDKMOProcessInstanceFilterMap" syncable="YES"/>
     </entity>
     <entity name="ASDKMOProfile" representedClassName="ASDKMOProfile" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="companyName" optional="YES" attributeType="String" syncable="YES"/>
@@ -171,7 +174,6 @@
         <attribute name="taskDescription" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="assignee" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="tasks" inverseEntity="ASDKMOProfile" syncable="YES"/>
         <relationship name="involvedPeople" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="involvedTasks" inverseEntity="ASDKMOProfile" syncable="YES"/>
-        <relationship name="taskFilterMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOTaskFilterMap" inverseName="tasks" inverseEntity="ASDKMOTaskFilterMap" syncable="YES"/>
     </entity>
     <entity name="ASDKMOTaskCommentMap" representedClassName="ASDKMOTaskCommentMap" syncable="YES" codeGenerationType="category">
         <attribute name="taskID" optional="YES" attributeType="String" syncable="YES"/>
@@ -182,7 +184,11 @@
         <relationship name="taskContentList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOContent" inverseName="taskContentMap" inverseEntity="ASDKMOContent" syncable="YES"/>
     </entity>
     <entity name="ASDKMOTaskFilterMap" representedClassName="ASDKMOTaskFilterMap" parentEntity="ASDKMOFilterMap" syncable="YES" codeGenerationType="category">
-        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOTask" inverseName="taskFilterMap" inverseEntity="ASDKMOTask" syncable="YES"/>
+        <relationship name="taskPlaceholders" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOTaskFilterMapPlaceholder" inverseName="taskFilterMap" inverseEntity="ASDKMOTaskFilterMapPlaceholder" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOTaskFilterMapPlaceholder" representedClassName="ASDKMOTaskFilterMapPlaceholder" syncable="YES" codeGenerationType="category">
+        <attribute name="modelID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="taskFilterMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOTaskFilterMap" inverseName="taskPlaceholders" inverseEntity="ASDKMOTaskFilterMap" syncable="YES"/>
     </entity>
     <entity name="ASDKMOUser" representedClassName="ASDKMOUser" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="companyName" optional="YES" attributeType="String" syncable="YES"/>
@@ -207,17 +213,19 @@
         <element name="ASDKMOIntegrationContent" positionX="504" positionY="27" width="162" height="90"/>
         <element name="ASDKMONetwork" positionX="504" positionY="-36" width="162" height="45"/>
         <element name="ASDKMOProcessDefinition" positionX="504" positionY="153" width="162" height="165"/>
-        <element name="ASDKMOProcessInstance" positionX="504" positionY="336" width="162" height="253"/>
+        <element name="ASDKMOProcessInstance" positionX="504" positionY="336" width="162" height="238"/>
         <element name="ASDKMOProcessInstanceContent" positionX="-441" positionY="-261" width="225" height="73"/>
         <element name="ASDKMOProcessInstanceContentField" positionX="-441" positionY="-126" width="216" height="75"/>
         <element name="ASDKMOProcessInstanceFilterMap" positionX="72" positionY="846" width="198" height="58"/>
+        <element name="ASDKMOProcessInstanceFilterMapPlaceholder" positionX="189" positionY="711" width="261" height="73"/>
         <element name="ASDKMOProfile" positionX="-135" positionY="72" width="128" height="343"/>
         <element name="ASDKMOServerConfiguration" positionX="-648" positionY="-558" width="198" height="135"/>
         <element name="ASDKMOSite" positionX="504" positionY="-117" width="162" height="60"/>
-        <element name="ASDKMOTask" positionX="-765" positionY="198" width="162" height="343"/>
+        <element name="ASDKMOTask" positionX="-765" positionY="198" width="162" height="330"/>
         <element name="ASDKMOTaskCommentMap" positionX="-378" positionY="351" width="162" height="73"/>
         <element name="ASDKMOTaskContentMap" positionX="-765" positionY="-207" width="162" height="73"/>
-        <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="58"/>
+        <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="60"/>
         <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="135"/>
+        <element name="ASDKMOTaskFilterMapPlaceholder" positionX="-558" positionY="-405" width="128" height="75"/>
     </elements>
 </model>

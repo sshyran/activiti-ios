@@ -33,6 +33,7 @@
 #import "ASDKMOTaskContentMap.h"
 #import "ASDKMOTaskCommentMap.h"
 #import "ASDKMOComment.h"
+#import "ASDKMOTaskFilterMapPlaceholder.h"
 
 // Model upsert
 #import "ASDKTaskCacheModelUpsert.h"
@@ -110,23 +111,35 @@
                                                                         error:&error];
         if (!error) {
             NSArray *matchingTaskArr = nil;
+            NSArray *tasks = nil;
             
             ASDKMOTaskFilterMap *taskFilterMap = taskFilterMapArr.firstObject;
-            NSArray *sortedTasks = [taskFilterMap.tasks sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
-            NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
-            if (namePredicate) {
-                matchingTaskArr = [sortedTasks filteredArrayUsingPredicate:namePredicate];
-            } else {
-                matchingTaskArr = sortedTasks;
+            NSArray *taskIDs = [taskFilterMap.taskPlaceholders valueForKey:@"modelID"];
+            
+            if (taskIDs.count) {
+                NSFetchRequest *taskFetchRequest = [ASDKMOTask fetchRequest];
+                taskFetchRequest.predicate = [NSPredicate predicateWithFormat:@"modelID IN %@", taskIDs];
+                tasks = [managedObjectContext executeFetchRequest:taskFetchRequest
+                                                            error:&error];
             }
             
-            NSUInteger fetchOffset = filter.size * filter.page;
-            NSUInteger count = MIN(matchingTaskArr.count - fetchOffset, filter.size);
-            pagedTaskArr = [matchingTaskArr subarrayWithRange:NSMakeRange(fetchOffset, count)];
-            
-            paging = [strongSelf paginationWithStartIndex:filter.size * filter.page
-                                        forTotalTaskCount:sortedTasks.count
-                                       remainingTaskCount:count];
+            if (!error) {
+                NSArray *sortedTasks = [tasks sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
+                NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
+                if (namePredicate) {
+                    matchingTaskArr = [sortedTasks filteredArrayUsingPredicate:namePredicate];
+                } else {
+                    matchingTaskArr = sortedTasks;
+                }
+                
+                NSUInteger fetchOffset = filter.size * filter.page;
+                NSUInteger count = MIN(matchingTaskArr.count - fetchOffset, filter.size);
+                pagedTaskArr = [matchingTaskArr subarrayWithRange:NSMakeRange(fetchOffset, count)];
+                
+                paging = [strongSelf paginationWithStartIndex:filter.size * filter.page
+                                            forTotalTaskCount:sortedTasks.count
+                                           remainingTaskCount:count];
+            }
         }
         
         if (completionBlock) {
@@ -446,6 +459,7 @@
 - (NSError *)saveTasksAndGenerateFilterMap:(NSArray *)taskList
                                  forFilter:(ASDKFilterRequestRepresentation *)filter
                                  inContext:(NSManagedObjectContext *)managedObjectContext {
+    // Upsert tasks
     NSError *error = nil;
     NSArray *moTasks = [ASDKTaskCacheModelUpsert upsertTaskListToCache:taskList
                                                                  error:&error
@@ -454,6 +468,7 @@
         return error;
     }
     
+    // Fetch existing or create a task filter map
     NSFetchRequest *taskFilterMapFetchRequest = [ASDKMOTaskFilterMap fetchRequest];
     taskFilterMapFetchRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
     NSArray *fetchResults = [managedObjectContext executeFetchRequest:taskFilterMapFetchRequest
@@ -461,14 +476,25 @@
     if (error) {
         return error;
     }
+    
     ASDKMOTaskFilterMap *taskFilterMap = fetchResults.firstObject;
     if (!taskFilterMap) {
         taskFilterMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOTaskFilterMap entityName]
                                                       inManagedObjectContext:managedObjectContext];
     }
-    [ASDKTaskFilterMapCacheMapper mapTaskList:moTasks
-                                   withFilter:filter
-                                    toCacheMO:taskFilterMap];
+    
+    // Populate the task filter map with placeholders pointing to the actual entities
+    NSMutableArray *taskFilterMapPlaceholders = [NSMutableArray array];
+    for (ASDKMOTask *moTask in moTasks) {
+        ASDKMOTaskFilterMapPlaceholder *taskFilterMapPlaceholder = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOTaskFilterMapPlaceholder entityName]
+                                                                                                 inManagedObjectContext:managedObjectContext];
+        taskFilterMapPlaceholder.modelID = moTask.modelID;
+        [taskFilterMapPlaceholders addObject:taskFilterMapPlaceholder];
+    }
+    
+    [ASDKTaskFilterMapCacheMapper mapTaskPlaceholderList:taskFilterMapPlaceholders
+                                              withFilter:filter
+                                               toCacheMO:taskFilterMap];
     
     return nil;
 }

@@ -26,13 +26,13 @@
 
 @implementation ASDKTaskFilterMapCacheMapper
 
-+ (ASDKMOTaskFilterMap *)mapTaskList:(NSArray *)taskList
-                          withFilter:(ASDKFilterRequestRepresentation *)filter
-                           toCacheMO:(ASDKMOTaskFilterMap *)taskFilterMap {
++ (ASDKMOTaskFilterMap *)mapTaskPlaceholderList:(NSArray *)taskPlaceholderList
+                                     withFilter:(ASDKFilterRequestRepresentation *)filter
+                                      toCacheMO:(ASDKMOTaskFilterMap *)taskFilterMap {
     taskFilterMap.applicationID = filter.appDefinitionID;
     taskFilterMap.assignmentType = filter.filterModel.assignmentType;
     taskFilterMap.state = filter.filterModel.state;
-    [taskFilterMap addTasks:[NSSet setWithArray:taskList]];
+    [taskFilterMap addTaskPlaceholders:[NSSet setWithArray:taskPlaceholderList]];
     
     return taskFilterMap;
 }

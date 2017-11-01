@@ -25,12 +25,12 @@
 
 @implementation ASDKProcessInstanceFilterMapCacheMapper
 
-+ (ASDKMOProcessInstanceFilterMap *)mapProcessInstanceList:(NSArray *)processInstanceList
-                                                withFilter:(ASDKFilterRequestRepresentation *)filter
-                                                 toCacheMO:(ASDKMOProcessInstanceFilterMap *)processInstanceFilterMap {
++ (ASDKMOProcessInstanceFilterMap *)mapProcessInstancePlaceholderList:(NSArray *)processInstancePlaceholderList
+                                                           withFilter:(ASDKFilterRequestRepresentation *)filter
+                                                            toCacheMO:(ASDKMOProcessInstanceFilterMap *)processInstanceFilterMap; {
     processInstanceFilterMap.applicationID = filter.appDefinitionID;
     processInstanceFilterMap.state = filter.filterModel.state;
-    [processInstanceFilterMap addProcessInstances:[NSSet setWithArray:processInstanceList]];
+    [processInstanceFilterMap addProcessInstancePlaceholders:[NSSet setWithArray:processInstancePlaceholderList]];
     
     return processInstanceFilterMap;
 }

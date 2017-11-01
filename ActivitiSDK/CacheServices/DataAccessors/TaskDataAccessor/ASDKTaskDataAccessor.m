@@ -61,9 +61,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         _processingQueue = [self serialOperationQueue];
         _cachePolicy = ASDKServiceDataAccessorCachingPolicyHybrid;
         dispatch_queue_t taskUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue",
-                                                                                 [NSBundle bundleForClass:[self class]].bundleIdentifier,
-                                                                                 NSStringFromClass([self class])] UTF8String],
-                                                                               DISPATCH_QUEUE_SERIAL);
+                                                                              [NSBundle bundleForClass:[self class]].bundleIdentifier,
+                                                                              NSStringFromClass([self class])] UTF8String],
+                                                                            DISPATCH_QUEUE_SERIAL);
         
         // Acquire and set up the task network service
         ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
@@ -169,19 +169,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
             }
             
             if (!error) {
-                if (taskList.count) {
-                    ASDKLogVerbose(@"Task list information successfully fetched from cache for filter.\nFilter:%@", filter);
-                    
-                    ASDKDataAccessorResponseCollection *response =
-                    [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskList
-                                                                            paging:paging
-                                                                      isCachedData:YES
-                                                                             error:error];
-                    
-                    if (weakSelf.delegate) {
-                        [weakSelf.delegate dataAccessor:weakSelf
-                                    didLoadDataResponse:response];
-                    }
+                ASDKLogVerbose(@"Task list information successfully fetched from cache for filter.\nFilter:%@", filter);
+                
+                ASDKDataAccessorResponseCollection *response =
+                [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskList
+                                                                        paging:paging
+                                                                  isCachedData:YES
+                                                                         error:error];
+                
+                if (weakSelf.delegate) {
+                    [weakSelf.delegate dataAccessor:weakSelf
+                                didLoadDataResponse:response];
                 }
             } else {
                 ASDKLogError(@"An error occured while fetching cache task list information. Reason: %@", error.localizedDescription);
@@ -465,16 +463,14 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                        }
                                                        
                                                        if (!error) {
-                                                           if (taskContentList.count) {
-                                                               ASDKLogVerbose(@"Task content list successfully fetched from cache for taskID:%@", taskID);
-                                                               ASDKDataAccessorResponseCollection *response =
-                                                               [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskContentList
-                                                                                                                 isCachedData:YES
-                                                                                                                        error:error];
-                                                               if (weakSelf.delegate) {
-                                                                   [weakSelf.delegate dataAccessor:weakSelf
-                                                                               didLoadDataResponse:response];
-                                                               }
+                                                           ASDKLogVerbose(@"Task content list successfully fetched from cache for taskID:%@", taskID);
+                                                           ASDKDataAccessorResponseCollection *response =
+                                                           [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskContentList
+                                                                                                             isCachedData:YES
+                                                                                                                    error:error];
+                                                           if (weakSelf.delegate) {
+                                                               [weakSelf.delegate dataAccessor:weakSelf
+                                                                           didLoadDataResponse:response];
                                                            }
                                                        } else {
                                                            ASDKLogError(@"An Error occured while fetching the cached task content list. Reason: %@", error.localizedDescription);
@@ -611,19 +607,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                        }
                                                        
                                                        if (!error) {
-                                                           if (commentList.count) {
-                                                               ASDKLogVerbose(@"Task comment list successfully fetched from cache for taskID: %@.", taskID);
-                                                               
-                                                               ASDKDataAccessorResponseCollection *response =
-                                                               [[ASDKDataAccessorResponseCollection alloc] initWithCollection:commentList
-                                                                                                                       paging:paging
-                                                                                                                 isCachedData:YES
-                                                                                                                        error:error];
-                                                               
-                                                               if (weakSelf.delegate) {
-                                                                   [weakSelf.delegate dataAccessor:weakSelf
-                                                                               didLoadDataResponse:response];
-                                                               }
+                                                           ASDKLogVerbose(@"Task comment list successfully fetched from cache for taskID: %@.", taskID);
+                                                           
+                                                           ASDKDataAccessorResponseCollection *response =
+                                                           [[ASDKDataAccessorResponseCollection alloc] initWithCollection:commentList
+                                                                                                                   paging:paging
+                                                                                                             isCachedData:YES
+                                                                                                                    error:error];
+                                                           
+                                                           if (weakSelf.delegate) {
+                                                               [weakSelf.delegate dataAccessor:weakSelf
+                                                                           didLoadDataResponse:response];
                                                            }
                                                        } else {
                                                            ASDKLogError(@"An error occured while fetching cached task comments. Reason: %@", error.localizedDescription);
@@ -761,19 +755,17 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                      }
                                                      
                                                      if (!error) {
-                                                         if (taskList.count) {
-                                                             ASDKLogVerbose(@"Task checklist successfully fetched from cache for taskID:%@", taskID);
-                                                             
-                                                             ASDKDataAccessorResponseCollection *response =
-                                                             [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskList
-                                                                                                                     paging:paging
-                                                                                                               isCachedData:YES
-                                                                                                                      error:error];
-                                                             
-                                                             if (weakSelf.delegate) {
-                                                                 [weakSelf.delegate dataAccessor:weakSelf
-                                                                             didLoadDataResponse:response];
-                                                             }
+                                                         ASDKLogVerbose(@"Task checklist successfully fetched from cache for taskID:%@", taskID);
+                                                         
+                                                         ASDKDataAccessorResponseCollection *response =
+                                                         [[ASDKDataAccessorResponseCollection alloc] initWithCollection:taskList
+                                                                                                                 paging:paging
+                                                                                                           isCachedData:YES
+                                                                                                                  error:error];
+                                                         
+                                                         if (weakSelf.delegate) {
+                                                             [weakSelf.delegate dataAccessor:weakSelf
+                                                                         didLoadDataResponse:response];
                                                          }
                                                      } else {
                                                          ASDKLogError(@"An error occured while fetching the task checklist for taskID:%@. Reason: %@", taskID, error.localizedDescription);
@@ -1286,7 +1278,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                                                                      error:error];
                                                         if (strongSelf.delegate) {
                                                             [strongSelf.delegate dataAccessor:strongSelf
-                                                                    didLoadDataResponse:confirmationResponse];
+                                                                          didLoadDataResponse:confirmationResponse];
                                                             
                                                             [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
                                                         }

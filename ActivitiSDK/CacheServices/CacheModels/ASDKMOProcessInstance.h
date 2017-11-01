@@ -19,8 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "ASDKMOAttributable.h"
 
-@class ASDKMOProfile,
-ASDKMOProcessInstanceFilterMap;
+@class ASDKMOProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 

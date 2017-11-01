@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "ASDKMOFilterMap.h"
 
-@class ASDKMOTask;
+@class ASDKMOTaskFilterMapPlaceholder;
 
 NS_ASSUME_NONNULL_BEGIN
 
