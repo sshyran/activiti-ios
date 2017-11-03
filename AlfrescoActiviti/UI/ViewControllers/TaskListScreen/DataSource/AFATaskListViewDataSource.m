@@ -89,8 +89,14 @@
     _tasks = [self processAdditionalEntries:additionalEntriesArr
                          forExistingEntries:self.tasks
                                      paging:paging];
-    _totalPages = [self totalPagesForPaging:paging
-                                dataEntries:_tasks];
+    
+    // When loading a new list, compute the total number of pages
+    // but reset it only when completely loading another list
+    if (!paging.start) {
+        _totalPages = [self totalPagesForPaging:paging
+                                    dataEntries:_tasks];
+    }
+    
     _preloadCellIdx = [self preloadCellIndexForPaging:paging
                                           dataEntries:_tasks];
 }

@@ -130,12 +130,15 @@
                 }
                 
                 NSUInteger fetchOffset = filter.size * filter.page;
-                NSUInteger count = MIN(sortedProcessInstances.count - fetchOffset, filter.size);
-                pagedProcessInstanceArr = [sortedProcessInstances subarrayWithRange:NSMakeRange(fetchOffset, count)];
+                NSInteger location = matchingProcessInstanceArr.count - fetchOffset;
+                NSInteger length = MIN(location, filter.size);
+                if (length >= 0) {
+                    pagedProcessInstanceArr = [matchingProcessInstanceArr subarrayWithRange:NSMakeRange(fetchOffset, length)];
+                }
                 
                 paging = [strongSelf paginationWithStartIndex:filter.size * filter.page
                                             forTotalTaskCount:sortedProcessInstances.count
-                                           remainingTaskCount:count];
+                                           remainingTaskCount:length];
             }
         }
         

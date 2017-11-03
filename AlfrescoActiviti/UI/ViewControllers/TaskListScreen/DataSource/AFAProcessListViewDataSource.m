@@ -92,8 +92,14 @@
     _processInstances = [self processAdditionalEntries:additionalEntriesArr
                                     forExistingEntries:self.processInstances
                                                 paging:paging];
-    _totalPages = [self totalPagesForPaging:paging
-                                dataEntries:_processInstances];
+    
+    // When loading a new list, compute the total number of pages
+    // but reset it only when completely loading another list
+    if (!paging.start) {
+        _totalPages = [self totalPagesForPaging:paging
+                                    dataEntries:_processInstances];
+    }
+    
     _preloadCellIdx = [self preloadCellIndexForPaging:paging
                                           dataEntries:_processInstances];
 }
