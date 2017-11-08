@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "AFAModalTaskDetailsUpdateTaskAction.h"
+#import "AFATaskUpdateModel.h"
 
 @interface AFAModalTaskDetailsUpdateTaskAction ()
 
@@ -37,7 +38,9 @@
 
 - (void)executeAlertActionWithModel:(id)modelObject
                     completionBlock:(id)completionBlock {
-    [self.updateTaskService requestTaskUpdateWithRepresentation:modelObject
+    AFATaskUpdateModel *taskUpdateModel = (AFATaskUpdateModel *)modelObject;
+    taskUpdateModel.taskDueDate = self.dueDate;
+    [self.updateTaskService requestTaskUpdateWithRepresentation:taskUpdateModel
                                                       forTaskID:self.currentTaskID
                                             withCompletionBlock:completionBlock];
 }

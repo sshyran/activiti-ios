@@ -399,6 +399,7 @@ AFAModalPeoplePickerViewControllerDelegate>
     
     AFAModalTaskDetailsUpdateTaskAction *updateTaskAction = [AFAModalTaskDetailsUpdateTaskAction new];
     updateTaskAction.currentTaskID = self.dataSource.taskID;
+    updateTaskAction.dueDate = [self.dataSource taskDueDate];
     editTaskController.confirmAlertAction = updateTaskAction;
     
     editTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
