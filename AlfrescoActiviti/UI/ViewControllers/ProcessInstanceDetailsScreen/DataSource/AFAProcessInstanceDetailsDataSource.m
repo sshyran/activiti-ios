@@ -36,6 +36,20 @@
 #import "AFAServiceRepository.h"
 #import "AFAQueryServices.h"
 
+@interface AFAProcessInstanceDetailsDataSource ()
+
+// Services
+@property (strong, nonatomic) AFAQueryServices *fetchActiveTaskListService;
+@property (strong, nonatomic) AFAQueryServices *fetchCompletedTaskListService;
+
+// Models
+@property (strong, nonatomic) AFATableControllerProcessInstanceTasksModel *cachedProcessInstanceTasksModel;
+@property (strong, nonatomic) AFATableControllerProcessInstanceTasksModel *remoteProcessInstanceTasksModel;
+@property (strong, nonatomic) NSError *cachedTaskListError;
+@property (strong, nonatomic) NSError *remoteTaskListError;
+
+@end
+
 @implementation AFAProcessInstanceDetailsDataSource
 
 - (instancetype)initWithProcessInstanceID:(NSString *)processInstanceID
@@ -48,6 +62,9 @@
         _sectionModels = [NSMutableDictionary dictionary];
         _cellFactories = [NSMutableDictionary dictionary];
         _tableController = [AFATableController new];
+        
+        _fetchActiveTaskListService = [AFAQueryServices new];
+        _fetchCompletedTaskListService = [AFAQueryServices new];
         
         [self setUpCellFactoriesWithThemeColor:themeColor];
         
@@ -89,77 +106,78 @@
                                             if (!error) {
                                                 registerCellActions = [strongSelf registerProcessInstanceDetailsCellActionsForModel:processInstance];
                                             }
-
+                                            
                                             if (completionBlock) {
                                                 completionBlock(error, registerCellActions);
                                             }
                                         }];
 }
 
-- (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(void (^)(NSError *error))completionBlock {
-    AFAQueryServices *queryServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeQueryServices];
+- (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(AFAProcessInstanceActiveAndCompletedTasksCompletionBlock)completionBlock
+                                               cachedResultsBlock:(AFAProcessInstanceActiveAndCompletedTasksCompletionBlock)cachedResultsBlock {
+    /* Active and completed tasks information is comprised out of multiple services
+     * aggregations
+     * 1. Fetch the active tasks for the current process instance
+     * 2. Fetch the completed tasks for the current process instance
+     */
+    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
     
-    dispatch_group_t activeAndCompletedTasksGroup = dispatch_group_create();
+    self.cachedProcessInstanceTasksModel = [AFATableControllerProcessInstanceTasksModel new];
+    self.cachedProcessInstanceTasksModel.isStartFormDefined = processInstanceDetailsModel.currentProcessInstance.isStartFormDefined;
+    
+    self.remoteProcessInstanceTasksModel = [AFATableControllerProcessInstanceTasksModel new];
+    self.remoteProcessInstanceTasksModel.isStartFormDefined = processInstanceDetailsModel.currentProcessInstance.isStartFormDefined;
+    
+    dispatch_group_t remoteTaskListGroup = dispatch_group_create();
+    dispatch_group_t cachedTaskListGroup = dispatch_group_create();
+    
+    // 1
+    dispatch_group_enter(remoteTaskListGroup);
+    dispatch_group_enter(cachedTaskListGroup);
     
     AFAGenericFilterModel *activeTasksFilter = [AFAGenericFilterModel new];
     activeTasksFilter.processInstanceID = self.processInstanceID;
+    [self fetchProcessInstanceActiveTasksWithFilter:activeTasksFilter
+                                remoteDispatchGroup:remoteTaskListGroup
+                                cachedDispatchGroup:cachedTaskListGroup];
     
-    AFATableControllerProcessInstanceTasksModel *processInstanceTasksModel = [AFATableControllerProcessInstanceTasksModel new];
-    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-    processInstanceTasksModel.isStartFormDefined = processInstanceDetailsModel.currentProcessInstance.isStartFormDefined;
-    
-    __block BOOL hadEncounteredAnError = NO;
-    dispatch_group_enter(activeAndCompletedTasksGroup);
-    [queryServices requestTaskListWithFilter:activeTasksFilter
-                             completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                                 if (hadEncounteredAnError) {
-                                     return;
-                                 } else {
-                                     hadEncounteredAnError = error ? YES : NO;
-                                     if (!hadEncounteredAnError) {
-                                         processInstanceTasksModel.activeTasks = taskList;
-                                     } else {
-                                         if (completionBlock) {
-                                             completionBlock(error);
-                                         }
-                                     }
-                                     dispatch_group_leave(activeAndCompletedTasksGroup);
-                                 }
-                             }];
-    
-    dispatch_group_enter(activeAndCompletedTasksGroup);
+    // 2
+    dispatch_group_enter(remoteTaskListGroup);
+    dispatch_group_enter(cachedTaskListGroup);
     
     AFAGenericFilterModel *completedTasksFilter = [AFAGenericFilterModel new];
     completedTasksFilter.processInstanceID = self.processInstanceID;
     completedTasksFilter.state = AFAGenericFilterStateTypeCompleted;
     
-    [queryServices requestTaskListWithFilter:completedTasksFilter
-                             completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                                 if (hadEncounteredAnError) {
-                                     return;
-                                 } else {
-                                     hadEncounteredAnError = error ? YES : NO;
-                                     if (!hadEncounteredAnError) {
-                                         processInstanceTasksModel.completedTasks = taskList;
-                                     } else {
-                                         if (completionBlock) {
-                                             completionBlock(error);
-                                         }
-                                     }
-                                     dispatch_group_leave(activeAndCompletedTasksGroup);
-                                 }
-                             }];
+    [self fetchProcessInstanceCompletedTasksWithFilter:completedTasksFilter
+                                   remoteDispatchGroup:remoteTaskListGroup
+                                   cachedDispatchGroup:cachedTaskListGroup];
     
+    // Report result once all prerequisites are met
     __weak typeof(self) weakSelf = self;
-    dispatch_group_notify(activeAndCompletedTasksGroup, dispatch_get_main_queue(),^{
+    dispatch_group_notify(cachedTaskListGroup, dispatch_get_main_queue(), ^{
         __strong typeof(self) strongSelf = weakSelf;
-        if (!hadEncounteredAnError) {
-            strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = processInstanceTasksModel;
-            [strongSelf updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
+        
+        if ([strongSelf.cachedProcessInstanceTasksModel hasTaskListAvailable]) {
+            strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = strongSelf.cachedProcessInstanceTasksModel;
         }
+        [strongSelf updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
+        
+        if (cachedResultsBlock) {
+            cachedResultsBlock(strongSelf.cachedTaskListError);
+        }
+    });
+    
+    dispatch_group_notify(remoteTaskListGroup, dispatch_get_main_queue(), ^{
+         __strong typeof(self) strongSelf = weakSelf;
+        
+        if ([strongSelf.remoteProcessInstanceTasksModel hasTaskListAvailable]) {
+            strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = strongSelf.remoteProcessInstanceTasksModel;
+        }
+        [strongSelf updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
         
         if (completionBlock) {
-            completionBlock(nil);
+            completionBlock(strongSelf.remoteTaskListError);
         }
     });
 }
@@ -314,6 +332,64 @@
     self.cellFactories[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = processInstanceTasksCellFactory;
     self.cellFactories[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentCellFactory;
     self.cellFactories[@(AFAProcessInstanceDetailsSectionTypeComments)] = processInstanceDetailsCommentCellFactory;
+}
+
+- (void)fetchProcessInstanceActiveTasksWithFilter:(AFAGenericFilterModel *)filter
+                              remoteDispatchGroup:(dispatch_group_t)remoteDispatchGroup
+                              cachedDispatchGroup:(dispatch_group_t)cachedDispatchGroup {
+    __weak typeof(self) weakSelf = self;
+    
+    [self.fetchActiveTaskListService requestTaskListWithFilter:filter
+                                               completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                                   __strong typeof(self) strongSelf = weakSelf;
+                                                   
+                                                   strongSelf.remoteTaskListError = error;
+                                                   
+                                                   if (!error) {
+                                                       strongSelf.remoteProcessInstanceTasksModel.activeTasks = taskList;
+                                                   }
+                                                   
+                                                   dispatch_group_leave(remoteDispatchGroup);
+                                               } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                                   __strong typeof(self) strongSelf = weakSelf;
+                                                   
+                                                   strongSelf.cachedTaskListError = error;
+                                                   
+                                                   if (!error) {
+                                                       strongSelf.cachedProcessInstanceTasksModel.activeTasks = taskList;
+                                                   }
+                                                   
+                                                   dispatch_group_leave(cachedDispatchGroup);
+                                               }];
+}
+
+- (void)fetchProcessInstanceCompletedTasksWithFilter:(AFAGenericFilterModel *)filter
+                                 remoteDispatchGroup:(dispatch_group_t)remoteDispatchGroup
+                                 cachedDispatchGroup:(dispatch_group_t)cachedDispatchGroup {
+    __weak typeof(self) weakSelf = self;
+    
+    [self.fetchCompletedTaskListService requestTaskListWithFilter:filter
+                                                  completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                                      __strong typeof(self) strongSelf = weakSelf;
+                                                      
+                                                      strongSelf.remoteTaskListError = error;
+                                                      
+                                                      if (!error) {
+                                                          strongSelf.remoteProcessInstanceTasksModel.completedTasks = taskList;
+                                                      }
+                                                      
+                                                      dispatch_group_leave(remoteDispatchGroup);
+                                                  } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                                      __strong typeof(self) strongSelf = weakSelf;
+                                                      
+                                                      strongSelf.cachedTaskListError = error;
+                                                      
+                                                      if (!error) {
+                                                          strongSelf.cachedProcessInstanceTasksModel.completedTasks = taskList;
+                                                      }
+                                                      
+                                                      dispatch_group_leave(cachedDispatchGroup);
+                                                  }];
 }
 
 @end

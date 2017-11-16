@@ -66,11 +66,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock
               formCompletionBlock:(AFAFormServicesEngineCompletionBlock)formCompletionBlock
                     formSaveBlock:(AFAFormServicesEngineSaveBlock)formSaveBlock {
-    NSParameterAssert(task);
-    NSParameterAssert(renderCompletionBlock);
-    NSParameterAssert(formCompletionBlock);
-    NSParameterAssert(formSaveBlock);
-    
     [self.formRenderEngine setupWithTaskModel:task
                         renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                             if (formController && !error) {
@@ -112,10 +107,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 - (void)requestSetupWithProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
                     renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock
                       formCompletionBlock:(AFAStartFormServicesEngineCompletionBlock)formCompletionBlock {
-    NSParameterAssert(processDefinition);
-    NSParameterAssert(renderCompletionBlock);
-    NSParameterAssert(formCompletionBlock);
-    
     [self.formRenderEngine setupWithProcessDefinition:processDefinition
                                 renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                     if (formController && !error) {
@@ -149,9 +140,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 - (void)requestSetupWithProcessInstance:(ASDKModelProcessInstance *)processInstance
                   renderCompletionBlock:(AFAFormServicesEngineSetupCompletionBlock)renderCompletionBlock {
-    NSParameterAssert(processInstance);
-    NSParameterAssert(renderCompletionBlock);
-    
     [self.formRenderEngine setupWithProcessInstance:processInstance
                               renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
                                   if (formController && !error) {

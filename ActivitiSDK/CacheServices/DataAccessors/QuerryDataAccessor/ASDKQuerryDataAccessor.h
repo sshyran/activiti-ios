@@ -16,19 +16,19 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+#import "ASDKDataAccessor.h"
 
-@class ASDKMOTaskFilterMap, ASDKMOProcessTaskFilterMap;
+@class ASDKTaskListQuerryRequestRepresentation;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKQuerryDataAccessor : ASDKDataAccessor
 
-@interface ASDKMOTaskFilterMapPlaceholder : NSManagedObject
-
-+ (NSString *)entityName;
+/**
+ * Requests a list of tasks for the current logged in user conforming to the properties
+ * of a provided filter and reports network or cahed data through the designated data
+ * accessor delegate.
+ *
+ * @param filter Filter object describing which subset of the task list should be fetched
+ */
+- (void)fetchTasksWithFilter:(ASDKTaskListQuerryRequestRepresentation *)filter;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOTaskFilterMapPlaceholder+CoreDataProperties.h"

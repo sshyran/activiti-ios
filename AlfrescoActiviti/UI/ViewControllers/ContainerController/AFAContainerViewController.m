@@ -100,10 +100,6 @@
         [serviceRepository registerServiceObject:userService
                                       forPurpose:AFAServiceObjectTypeUserServices];
         
-        AFAQueryServices *queryService = [AFAQueryServices new];
-        [serviceRepository registerServiceObject:queryService
-                                      forPurpose:AFAServiceObjectTypeQueryServices];
-        
         AFAIntegrationServices *integrationService = [AFAIntegrationServices new];
         [serviceRepository registerServiceObject:integrationService
                                       forPurpose:AFAServiceObjectTypeIntegrationServices];

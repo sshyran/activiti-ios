@@ -17,18 +17,13 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 
-@class ASDKMOTaskFilterMap, ASDKMOProcessTaskFilterMap;
+@class ASDKMOProcessTaskFilterMap, ASDKTaskListQuerryRequestRepresentation;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKProcessTaskFilterMapCacheMapper : NSObject
 
-@interface ASDKMOTaskFilterMapPlaceholder : NSManagedObject
-
-+ (NSString *)entityName;
++ (ASDKMOProcessTaskFilterMap *)mapTaskPlaceholderList:(NSArray *)taskPlaceholderList
+                                            withFilter:(ASDKTaskListQuerryRequestRepresentation *)filter
+                                             toCacheMO:(ASDKMOProcessTaskFilterMap *)processTaskFilterMap;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOTaskFilterMapPlaceholder+CoreDataProperties.h"

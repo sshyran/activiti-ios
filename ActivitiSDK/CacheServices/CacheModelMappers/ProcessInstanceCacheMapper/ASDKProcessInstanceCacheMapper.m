@@ -42,7 +42,16 @@
     moProcessInstance.processDefinitionID = processInstance.processDefinitionID;
     moProcessInstance.processDefinitionKey = processInstance.processDefinitionKey;
     moProcessInstance.processDefinitionName = processInstance.processDefinitionName;
-    moProcessInstance.isStartFormDefined = processInstance.isStartFormDefined;
+    
+    /* Ignore start form flag set up if it has been previously set to true. The API provides this
+     * value just when requesting the process instance details and if the cached data comes
+     * from a process instance list REST API call it will have the flag set to false overriding
+     * cached values. Technically if a process instance has been started with a form it will always
+     * return true so the assumption to ignore the flag is valid in this case.
+     */
+    if (!moProcessInstance.isStartFormDefined) {
+        moProcessInstance.isStartFormDefined = processInstance.isStartFormDefined;
+    }
     
     return moProcessInstance;
 }

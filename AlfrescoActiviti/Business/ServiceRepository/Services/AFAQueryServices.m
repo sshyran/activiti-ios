@@ -22,15 +22,12 @@
 // Models
 #import "AFAGenericFilterModel.h"
 
-// Configurations
-#import "AFALogConfiguration.h"
+@interface AFAQueryServices () <ASDKDataAccessorDelegate>
 
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
-
-@interface AFAQueryServices ()
-
-@property (strong, nonatomic) dispatch_queue_t                      queryUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKQuerryNetworkServices             *queryNetworkService;
+// Active task list
+@property (strong, nonatomic) ASDKQuerryDataAccessor            *fetchTaskListDataAccessor;
+@property (copy, nonatomic) AFAQuerryTaskListCompletionBlock    taskListCompletionBlock;
+@property (copy, nonatomic) AFAQuerryTaskListCompletionBlock    taskListCachedResultsBlock;
 
 @end
 
@@ -38,54 +35,72 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 
 #pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        self.queryUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        
-        // Acquire and set up the app network service
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.queryNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKQuerryNetworkServiceProtocol)];
-        self.queryNetworkService.resultsQueue = self.queryUpdatesProcessingQueue;
-    }
-    
-    return self;
-}
-
-
-#pragma mark -
 #pragma mark Public interface
 
 - (void)requestTaskListWithFilter:(AFAGenericFilterModel *)taskFilter
-                  completionBlock:(AFAQuerryTaskListCompletionBlock)completionBlock {
-    NSParameterAssert(taskFilter);
+                  completionBlock:(AFAQuerryTaskListCompletionBlock)completionBlock
+                    cachedResults:(AFAQuerryTaskListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(completionBlock);
+    
+    self.taskListCompletionBlock = completionBlock;
+    self.taskListCachedResultsBlock = cacheCompletionBlock;
     
     // Create request representation for the filter model
     ASDKTaskListQuerryRequestRepresentation *queryRequestRepresentation = [ASDKTaskListQuerryRequestRepresentation new];
     queryRequestRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
     queryRequestRepresentation.processInstanceID = taskFilter.processInstanceID;
-    queryRequestRepresentation.requestTaskState = (NSInteger)taskFilter.state;
+    queryRequestRepresentation.requestTaskState = (ASDKTaskListQuerryStateType)taskFilter.state;
     
-    [self.queryNetworkService fetchTaskListWithFilterRepresentation:queryRequestRepresentation
-                                                    completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                                                        if (!error && taskList) {
-                                                            AFALogVerbose(@"Fetched %lu task entries", (unsigned long)taskList.count);
-                                                            
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                completionBlock (taskList, nil, paging);
-                                                            });
-                                                        } else {
-                                                            AFALogError(@"An error occured while fetching the task list with filter:%@. Reason:%@", taskFilter.description, error.localizedDescription);
-                                                            
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                completionBlock(nil, error, nil);
-                                                            });
-                                                        }
-    }];
+    self.fetchTaskListDataAccessor = [[ASDKQuerryDataAccessor alloc] initWithDelegate:self];
+    [self.fetchTaskListDataAccessor fetchTasksWithFilter:queryRequestRepresentation];
+}
+
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchTaskListDataAccessor == dataAccessor) {
+        [self handleFetchActiveTaskListDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleFetchActiveTaskListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *taskListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *taskList = taskListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!taskListResponse.error) {
+        if (taskListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.taskListCachedResultsBlock) {
+                    strongSelf.taskListCachedResultsBlock(taskList, nil, taskListResponse.paging);
+                    strongSelf.taskListCachedResultsBlock = nil;
+                }
+            });
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.taskListCompletionBlock) {
+            strongSelf.taskListCompletionBlock(taskList, taskListResponse.error, taskListResponse.paging);
+            strongSelf.taskListCompletionBlock = nil;
+        }
+    });
 }
 
 @end

@@ -20,6 +20,7 @@
 
 @class ASDKModelPaging,
 ASDKFilterRequestRepresentation,
+ASDKTaskListQuerryRequestRepresentation,
 ASDKModelTask;
 
 typedef void (^ASDKCacheServiceTaskListCompletionBlock) (NSArray *taskList, NSError *error, ASDKModelPaging *paging);
@@ -49,12 +50,41 @@ typedef void (^ASDKCacheServiceTaskCommentListCompletionBlock) (NSArray *comment
  * The filter contains information such as to which application are the tasks afiliated to
  * the page at which the tasks are retrieved and so on.
  *
- * @param filter:           Filter object describing the rules of selection from the total available set
  * @param completionBlock   Completion block providing a list of model objects, paging
  *                          information and an optional error reason
+ * @param filter:           Filter object describing the rules of selection from the total available set
  */
 - (void)fetchTaskList:(ASDKCacheServiceTaskListCompletionBlock)completionBlock
           usingFilter:(ASDKFilterRequestRepresentation *)filter;
+
+/**
+ * Caches provided tasks by leveraging information from the filter that was provided
+ * to the actual network request and repots the operation success over a completion block.
+ * Note that this implementation uses querry API filter representations. The filter is
+ * provided to identify which tasks are affiliated to which process instances and also
+ * describe the state of the affiliated tasks.
+ *
+ * @param taskList          List of tasks to be cached
+ * @param filter            Filter object describing the membership of tasks in relation to
+ *                          process instances and task states
+ * @param completionBlock   Completion block indicating the success of the operation
+ */
+- (void)cacheTaskList:(NSArray *)taskList
+    usingQuerryFilter:(ASDKTaskListQuerryRequestRepresentation *)filter
+  withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+/**
+ * Fetches a subset of the task list conforming to the passed filter description.
+ * Note that this implementation uses querry API filter representations. The filter is
+ * provided to identify which tasks are affiliated to which process instances and also
+ * describe the state of the affiliated tasks.
+ *
+ * @param completionBlock   Completion block providing a list of model objects, paging
+ *                          information and an optional error reason
+ * @param filter            Filter object describing the rules of selection from the total available set
+ */
+- (void)fetchTaskList:(ASDKCacheServiceTaskListCompletionBlock)completionBlock
+    usingQuerryFilter:(ASDKTaskListQuerryRequestRepresentation *)filter;
 
 /**
  * Caches provided task details and reports the operation success over a completion block.

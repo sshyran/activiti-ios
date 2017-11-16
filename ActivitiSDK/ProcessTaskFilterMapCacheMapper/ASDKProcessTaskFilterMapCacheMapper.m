@@ -16,19 +16,22 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+#import "ASDKProcessTaskFilterMapCacheMapper.h"
 
-@class ASDKMOTaskFilterMap, ASDKMOProcessTaskFilterMap;
+// Models
+#import "ASDKMOProcessTaskFilterMap.h"
+#import "ASDKTaskListQuerryRequestRepresentation.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation ASDKProcessTaskFilterMapCacheMapper
 
-@interface ASDKMOTaskFilterMapPlaceholder : NSManagedObject
-
-+ (NSString *)entityName;
++ (ASDKMOProcessTaskFilterMap *)mapTaskPlaceholderList:(NSArray *)taskPlaceholderList
+                                            withFilter:(ASDKTaskListQuerryRequestRepresentation *)filter
+                                             toCacheMO:(ASDKMOProcessTaskFilterMap *)processTaskFilterMap {
+    processTaskFilterMap.processInstanceID = filter.processInstanceID;
+    processTaskFilterMap.taskState = filter.requestTaskState;
+    [processTaskFilterMap addTaskPlaceholders:[NSSet setWithArray:taskPlaceholderList]];
+    
+    return processTaskFilterMap;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOTaskFilterMapPlaceholder+CoreDataProperties.h"

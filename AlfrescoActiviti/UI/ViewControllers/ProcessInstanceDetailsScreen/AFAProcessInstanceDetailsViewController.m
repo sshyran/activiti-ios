@@ -299,8 +299,6 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 }
 
 - (void)refreshProcessInstanceDetails {
-    self.controllerState = AFAProcessInstanceDetailsLoadingStateInProgress;
-    
     __weak typeof(self) weakSelf = self;
     [self.dataSource processInstanceDetailsWithCompletionBlock:^(NSError *error, BOOL registerCellActions) {
         __strong typeof(self) strongSelf = weakSelf;
@@ -314,33 +312,13 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 }
 
 - (void)refreshProcessInstanceActiveAndCompletedTasks {
-    self.controllerState = AFAProcessInstanceDetailsLoadingStateInProgress;
-    
     __weak typeof(self) weakSelf = self;
     [self.dataSource processInstanceActiveAndCompletedTasksWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (error) {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        } else {
-            [strongSelf.processTableView reloadData];
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        self.controllerState = AFAProcessInstanceDetailsLoadingStateIdle;
-        
-        AFATableControllerProcessInstanceTasksModel *processInstanceTaskModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
-        strongSelf.noContentView.hidden = ([processInstanceTaskModel hasTaskListAvailable] || processInstanceTaskModel.isStartFormDefined);
-        strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"tasks-large-icon"];
-        strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenNoTasksAvailableText, @"No tasks available text");
+        [strongSelf handleProcessInstanceActiveAndCompletedTasksResponseWithErrorStatus:error];
+    } cachedResultsBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleProcessInstanceActiveAndCompletedTasksResponseWithErrorStatus:error];
     }];
 }
 
@@ -477,8 +455,10 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
             [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceTaskDetails
                                             sender:currentTask];
         } else if (processInstanceTasks.isStartFormDefined) {
-            [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceViewCompletedStartForm
-                                            sender:nil];
+            if (strongSelf.dataSource.isConnectivityAvailable) {
+                [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceViewCompletedStartForm
+                                                sender:nil];
+            }
         }
     } forCellType:[processInstanceTasksCellFactory cellTypeForTaskDetails]];
     
@@ -545,6 +525,33 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     [self endRefreshOnRefreshControl];
     
     BOOL isContentAvailable = processInstanceDetailsModel.currentProcessInstance ? YES : NO;
+    self.controllerState = isContentAvailable ? AFAProcessInstanceDetailsLoadingStateIdle : AFAProcessInstanceDetailsLoadingStateEmptyList;
+}
+
+- (void)handleProcessInstanceActiveAndCompletedTasksResponseWithErrorStatus:(NSError *)error {
+    AFATableControllerProcessInstanceTasksModel *processInstanceTaskModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeTaskStatus];
+    
+    if (!error) {
+        [self.processTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    }
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"tasks-large-icon"];
+    self.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationProcessInstanceDetailsScreenNoTasksAvailableText, @"No tasks available text");
+
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = ([processInstanceTaskModel hasTaskListAvailable] || processInstanceTaskModel.isStartFormDefined) ? YES : NO;
     self.controllerState = isContentAvailable ? AFAProcessInstanceDetailsLoadingStateIdle : AFAProcessInstanceDetailsLoadingStateEmptyList;
 }
 

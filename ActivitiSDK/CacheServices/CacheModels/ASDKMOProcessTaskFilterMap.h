@@ -19,11 +19,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class ASDKMOTaskFilterMap, ASDKMOProcessTaskFilterMap;
+@class ASDKMOTaskFilterMapPlaceholder;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ASDKMOTaskFilterMapPlaceholder : NSManagedObject
+@interface ASDKMOProcessTaskFilterMap : NSManagedObject
 
 + (NSString *)entityName;
 
@@ -31,4 +31,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#import "ASDKMOTaskFilterMapPlaceholder+CoreDataProperties.h"
+#import "ASDKMOProcessTaskFilterMap+CoreDataProperties.h"

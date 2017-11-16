@@ -16,19 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+#import "ASDKMOProcessTaskFilterMap.h"
 
-@class ASDKMOTaskFilterMap, ASDKMOProcessTaskFilterMap;
+@implementation ASDKMOProcessTaskFilterMap
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ASDKMOTaskFilterMapPlaceholder : NSManagedObject
-
-+ (NSString *)entityName;
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOTaskFilterMapPlaceholder+CoreDataProperties.h"

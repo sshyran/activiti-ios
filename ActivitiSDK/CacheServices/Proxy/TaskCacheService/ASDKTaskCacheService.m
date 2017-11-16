@@ -34,6 +34,8 @@
 #import "ASDKMOTaskCommentMap.h"
 #import "ASDKMOComment.h"
 #import "ASDKMOTaskFilterMapPlaceholder.h"
+#import "ASDKMOProcessTaskFilterMap.h"
+#import "ASDKTaskListQuerryRequestRepresentation.h"
 
 // Model upsert
 #import "ASDKTaskCacheModelUpsert.h"
@@ -47,6 +49,7 @@
 #import "ASDKTaskContentMapCacheMapper.h"
 #import "ASDKContentCacheMapper.h"
 #import "ASDKTaskCommentMapCacheMapper.h"
+#import "ASDKProcessTaskFilterMapCacheMapper.h"
 
 @implementation ASDKTaskCacheService
 
@@ -106,7 +109,7 @@
         NSArray *pagedTaskArr = nil;
         
         NSFetchRequest *taskFilterMapRequest = [ASDKMOTaskFilterMap fetchRequest];
-        taskFilterMapRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
+        taskFilterMapRequest.predicate = [self taskFilterMapMembershipPredicateForFilter:filter];
         NSArray *taskFilterMapArr = [managedObjectContext executeFetchRequest:taskFilterMapRequest
                                                                         error:&error];
         if (!error) {
@@ -118,7 +121,7 @@
             
             if (taskIDs.count) {
                 NSFetchRequest *taskFetchRequest = [ASDKMOTask fetchRequest];
-                taskFetchRequest.predicate = [NSPredicate predicateWithFormat:@"modelID IN %@", taskIDs];
+                taskFetchRequest.predicate = [self predicateMatchingModelIDList:taskIDs];
                 tasks = [managedObjectContext executeFetchRequest:taskFetchRequest
                                                             error:&error];
             }
@@ -151,6 +154,82 @@
             } else {
                 NSMutableArray *tasks = [NSMutableArray array];
                 for (ASDKMOTask *moTask in pagedTaskArr) {
+                    ASDKModelTask *task = [ASDKTaskCacheMapper mapCacheMOToTask:moTask];
+                    [tasks addObject:task];
+                }
+                
+                completionBlock(tasks, nil, paging);
+            }
+        }
+    }];
+}
+
+- (void)cacheTaskList:(NSArray *)taskList
+    usingQuerryFilter:(ASDKTaskListQuerryRequestRepresentation *)filter
+  withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = [strongSelf cleanStalledTasksAndProcessTaskFilterMapInContext:managedObjectContext
+                                                                             forFilter:filter];
+        
+        if (!error) {
+            error = [strongSelf saveTasksAndGenerateProcessTaskFilterMap:taskList
+                                                               forFilter:filter
+                                                               inContext:managedObjectContext];
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchTaskList:(ASDKCacheServiceTaskListCompletionBlock)completionBlock
+    usingQuerryFilter:(ASDKTaskListQuerryRequestRepresentation *)filter {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKModelPaging *paging = nil;
+        NSError *error = nil;
+        NSArray *moTaskArr = nil;
+        
+        NSFetchRequest *processTaskFilterMapRequest = [ASDKMOProcessTaskFilterMap fetchRequest];
+        processTaskFilterMapRequest.predicate = [self processTaskFilterMapMembershipPredicateForFilter:filter];
+        NSArray *processTaskFilterMapArr = [managedObjectContext executeFetchRequest:processTaskFilterMapRequest
+                                                                               error:&error];
+        if (!error) {
+            ASDKMOProcessTaskFilterMap *processTaskFilterMap = processTaskFilterMapArr.firstObject;
+            NSArray *taskIDs = [processTaskFilterMap.taskPlaceholders valueForKey:@"modelID"];
+            
+            if (taskIDs.count) {
+                NSFetchRequest *taskFetchRequest = [ASDKMOTask fetchRequest];
+                taskFetchRequest.predicate = [self predicateMatchingModelIDList:taskIDs];
+                moTaskArr = [managedObjectContext executeFetchRequest:taskFetchRequest
+                                                            error:&error];
+            }
+            
+            if (!error) {
+                paging = [strongSelf paginationWithStartIndex:0
+                                            forTotalTaskCount:moTaskArr.count
+                                           remainingTaskCount:moTaskArr.count];
+            }
+        }
+        
+        if (completionBlock) {
+            if (error || !moTaskArr.count) {
+                completionBlock(nil, error, paging);
+            } else {
+                NSMutableArray *tasks = [NSMutableArray array];
+                for (ASDKMOTask *moTask in moTaskArr) {
                     ASDKModelTask *task = [ASDKTaskCacheMapper mapCacheMOToTask:moTask];
                     [tasks addObject:task];
                 }
@@ -417,7 +496,7 @@
                                           forFilter:(ASDKFilterRequestRepresentation *)filter {
     NSError *internalError = nil;
     NSFetchRequest *oldTaskFilterMapRequest = [ASDKMOTaskFilterMap fetchRequest];
-    oldTaskFilterMapRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
+    oldTaskFilterMapRequest.predicate = [self taskFilterMapMembershipPredicateForFilter:filter];
     oldTaskFilterMapRequest.resultType = NSManagedObjectIDResultType;
     
     NSBatchDeleteRequest *removeOldTaskFilterMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldTaskFilterMapRequest];
@@ -473,7 +552,7 @@
     
     // Fetch existing or create a task filter map
     NSFetchRequest *taskFilterMapFetchRequest = [ASDKMOTaskFilterMap fetchRequest];
-    taskFilterMapFetchRequest.predicate = [self filterMapMembershipPredicateForFilter:filter];
+    taskFilterMapFetchRequest.predicate = [self taskFilterMapMembershipPredicateForFilter:filter];
     NSArray *fetchResults = [managedObjectContext executeFetchRequest:taskFilterMapFetchRequest
                                                                 error:&error];
     if (error) {
@@ -501,6 +580,72 @@
     
     return nil;
 }
+
+- (NSError *)cleanStalledTasksAndProcessTaskFilterMapInContext:(NSManagedObjectContext *)managedObjectContext
+                                                     forFilter:(ASDKTaskListQuerryRequestRepresentation *)filter {
+    NSError *internalError = nil;
+    NSFetchRequest *oldTaskFilterMapRequest = [ASDKMOProcessTaskFilterMap fetchRequest];
+    oldTaskFilterMapRequest.predicate = [self processTaskFilterMapMembershipPredicateForFilter:filter];
+    oldTaskFilterMapRequest.resultType = NSManagedObjectIDResultType;
+    
+    NSBatchDeleteRequest *removeOldTaskFilterMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldTaskFilterMapRequest];
+    removeOldTaskFilterMapRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+    NSBatchDeleteResult *taskFilterMapDeletionResult = [managedObjectContext executeRequest:removeOldTaskFilterMapRequest
+                                                                                      error:&internalError];
+    NSArray *moIDArr = taskFilterMapDeletionResult.result;
+    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                 intoContexts:@[managedObjectContext]];
+    
+    if (internalError) {
+        return [self clearCacheStalledDataError];
+    }
+    
+    return nil;
+}
+
+- (NSError *)saveTasksAndGenerateProcessTaskFilterMap:(NSArray *)taskList
+                                            forFilter:(ASDKTaskListQuerryRequestRepresentation *)filter
+                                            inContext:(NSManagedObjectContext *)managedObjectContext {
+    // Upsert tasks
+    NSError *error = nil;
+    NSArray *moTasks = [ASDKTaskCacheModelUpsert upsertTaskListToCache:taskList
+                                                                 error:&error
+                                                           inMOContext:managedObjectContext];
+    if (error) {
+        return error;
+    }
+    
+    // Fetch existing or create process task filter map
+    NSFetchRequest *processTaskFilterMapFetchRequest = [ASDKMOProcessTaskFilterMap fetchRequest];
+    processTaskFilterMapFetchRequest.predicate = [self processTaskFilterMapMembershipPredicateForFilter:filter];
+    NSArray *fetchResults = [managedObjectContext executeFetchRequest:processTaskFilterMapFetchRequest
+                                                                error:&error];
+    if (error) {
+        return error;
+    }
+    
+    ASDKMOProcessTaskFilterMap *processInstanceFilterMap = fetchResults.firstObject;
+    if (!processInstanceFilterMap) {
+        processInstanceFilterMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProcessTaskFilterMap entityName]
+                                                                 inManagedObjectContext:managedObjectContext];
+    }
+    
+    // Populate the process task filter map with placeholders pointing to the actual entities
+    NSMutableArray *processTaskFilterMapPlaceholders = [NSMutableArray array];
+    for (ASDKMOTask *moTask in moTasks) {
+        ASDKMOTaskFilterMapPlaceholder *taskFilterMapPlaceholder = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOTaskFilterMapPlaceholder entityName]
+                                                                                                 inManagedObjectContext:managedObjectContext];
+        taskFilterMapPlaceholder.modelID = moTask.modelID;
+        [processTaskFilterMapPlaceholders addObject:taskFilterMapPlaceholder];
+    }
+    
+    [ASDKProcessTaskFilterMapCacheMapper mapTaskPlaceholderList:processTaskFilterMapPlaceholders
+                                                     withFilter:filter
+                                                      toCacheMO:processInstanceFilterMap];
+    
+    return nil;
+}
+
 
 - (NSError *)cleanStalledTaskContentAndContentMapForTaskID:(NSString *)taskID
                                                  inContext:(NSManagedObjectContext *)managedObjectContext {
@@ -632,13 +777,17 @@
 #pragma mark -
 #pragma mark Predicate construction
 
-- (NSPredicate *)filterMapMembershipPredicateForFilter:(ASDKFilterRequestRepresentation *)filter {
+- (NSPredicate *)taskFilterMapMembershipPredicateForFilter:(ASDKFilterRequestRepresentation *)filter {
     NSPredicate *appIDPredicate = [NSPredicate predicateWithFormat:@"applicationID == %@", filter.appDefinitionID];
     NSPredicate *assignmentTypePredicate = [NSPredicate predicateWithFormat:@"assignmentType == %ld", filter.filterModel.assignmentType];
     NSPredicate *statePredicate = [NSPredicate predicateWithFormat:@"state == %ld", filter.filterModel.state];
     
     return [[NSCompoundPredicate alloc] initWithType:NSAndPredicateType
                                        subpredicates:@[appIDPredicate, assignmentTypePredicate, statePredicate]];
+}
+
+- (NSPredicate *)processTaskFilterMapMembershipPredicateForFilter:(ASDKTaskListQuerryRequestRepresentation *)filter {
+    return [NSPredicate predicateWithFormat:@"processInstanceID == %@ && taskState == %ld", filter.processInstanceID, filter.requestTaskState];
 }
 
 - (NSPredicate *)namePredicateForFilter:(ASDKFilterRequestRepresentation *)filter {
@@ -651,6 +800,10 @@
 
 - (NSPredicate *)predicateMatchingModelID:(NSString *)modelID {
     return [NSPredicate predicateWithFormat:@"modelID == %@", modelID];
+}
+
+- (NSPredicate *)predicateMatchingModelIDList:(NSArray *)modelIDList {
+    return [NSPredicate predicateWithFormat:@"modelID IN %@", modelIDList];
 }
 
 
