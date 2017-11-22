@@ -119,7 +119,15 @@
             }
             
             if (!error) {
-                NSArray *sortedProcessInstances = [processInstances sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
+                NSArray *sortedProcessInstances = nil;
+                NSSortDescriptor *sortDescriptorForFilter = [strongSelf sortDescriptorForFilter:filter];
+                
+                if (sortDescriptorForFilter) {
+                    sortedProcessInstances = [processInstances sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
+                } else {
+                    sortedProcessInstances = processInstances;
+                }
+
                 NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
                 
                 NSArray *matchingProcessInstanceArr = nil;

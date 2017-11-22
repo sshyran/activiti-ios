@@ -127,7 +127,15 @@
             }
             
             if (!error) {
-                NSArray *sortedTasks = [tasks sortedArrayUsingDescriptors:@[[strongSelf sortDescriptorForFilter:filter]]];
+                NSArray *sortedTasks = nil;
+                NSSortDescriptor *sortDescriptorForFilter = [strongSelf sortDescriptorForFilter:filter];
+                
+                if (sortDescriptorForFilter) {
+                    sortedTasks = [tasks sortedArrayUsingDescriptors:@[sortDescriptorForFilter]];
+                } else {
+                    sortedTasks = tasks;
+                }
+                
                 NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
                 if (namePredicate) {
                     matchingTaskArr = [sortedTasks filteredArrayUsingPredicate:namePredicate];

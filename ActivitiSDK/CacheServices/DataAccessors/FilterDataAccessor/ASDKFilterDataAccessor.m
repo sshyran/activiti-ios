@@ -202,6 +202,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                       
                                                       [operation complete];
                                                   }];
+        } else {
+            [operation complete];
         }
     }];
     
@@ -382,6 +384,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                
                                                [operation complete];
                                            }];
+        } else {
+            [operation complete];
         }
     }];
     
@@ -433,7 +437,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         myTasksFilter.appID = appID;
         myTasksFilter.icon = kASDKAPIIconNameMy;
         myTasksFilter.index = 1;
-        myTasksFilter.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFilterInvolvedTasksText, ASDKLocalizationTable, "My tasks text");
+        myTasksFilter.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFilterMyTasksText, ASDKLocalizationTable, "My tasks text");
         
         ASDKModelFilter *myFilter = [ASDKModelFilter new];
         myFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
@@ -468,7 +472,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         queuedTasksFilter.appID = appID;
         queuedTasksFilter.icon = kASDKAPIIconNameQueued;
         queuedTasksFilter.index = 2;
-        queuedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterQueuedTasksText, @"Queued tasks text");
+        queuedTasksFilter.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFilterQueuedTasksText, ASDKLocalizationTable, @"Queued tasks text");
         
         ASDKModelFilter *queuedFilter = [ASDKModelFilter new];
         queuedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
@@ -503,7 +507,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         completedTasksFilter.appID = appID;
         completedTasksFilter.icon = kASDKAPIIconNameCompleted;
         completedTasksFilter.index = 3;
-        completedTasksFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedTasksText, @"Completed tasks text");
+        completedTasksFilter.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFilterCompletedTasksText, ASDKLocalizationTable, @"Completed tasks text");
         
         ASDKModelFilter *completedFilter = [ASDKModelFilter new];
         completedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
@@ -676,6 +680,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                  
                                                                  [operation complete];
                                                              }];
+        } else {
+            [operation complete];
         }
     }];
     
@@ -852,6 +858,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                           
                                                           [operation complete];
                                                       }];
+        } else {
+            [operation complete];
         }
     }];
     
@@ -868,7 +876,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         runningProcessInstancesFilter.appID = appID;
         runningProcessInstancesFilter.icon = kASDKAPIIconNameRunning;
         runningProcessInstancesFilter.index = 0;
-        runningProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterRunningProcessText, @"Running process instances text");
+        runningProcessInstancesFilter.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFilterRunningProcessText, ASDKLocalizationTable, @"Running process instances text");
         
         ASDKModelFilter *runningFilter = [ASDKModelFilter new];
         runningFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
@@ -902,7 +910,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         completedProcessInstancesFilter.appID = appID;
         completedProcessInstancesFilter.icon = kASDKAPIIconNameCompleted;
         completedProcessInstancesFilter.index = 1;
-        completedProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterCompletedProcessesText, @"Completed process instances text");
+        completedProcessInstancesFilter.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFilterCompletedProcessesText, ASDKLocalizationTable, @"Completed process instances text");
         
         ASDKModelFilter *completedFilter = [ASDKModelFilter new];
         completedFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
@@ -936,7 +944,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         allProcessInstancesFilter.appID = appID;
         allProcessInstancesFilter.icon = kASDKAPIIconNameAll;
         allProcessInstancesFilter.index = 2;
-        allProcessInstancesFilter.name = NSLocalizedString(kLocalizationDefaultFilterAllProcessesText, @"All process instances text");
+        allProcessInstancesFilter.name = ASDKLocalizedStringFromTable(kLocalizationDefaultFilterAllProcessesText, ASDKLocalizationTable, @"All process instances text");
         
         ASDKModelFilter *allFilter = [ASDKModelFilter new];
         allFilter.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
