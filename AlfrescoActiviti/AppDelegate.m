@@ -20,6 +20,7 @@
 
 // Constants
 #import "AFABusinessConstants.h"
+#import "AFALocalizationConstants.h"
 
 // Categories
 #import "UIColor+AFATheme.h"
@@ -69,7 +70,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // Add your API key to receive bug reports
     [[Buglife sharedBuglife] startWithAPIKey:@"YOUR_KEY"];
     [Buglife sharedBuglife].invocationOptions = LIFEInvocationOptionsShake;
-    [Buglife sharedBuglife].userEmailField.visible = YES;
     [Buglife sharedBuglife].delegate = self;
     
     application.delegate.window.backgroundColor = [UIColor windowBackgroundColor];
@@ -90,7 +90,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     }];
 }
 
-- (void)buglife:(nonnull Buglife *)buglife handleAttachmentRequestWithCompletionHandler:(nonnull void (^)())completionHandler {
+- (void)buglife:(nonnull Buglife *)buglife handleAttachmentRequestWithCompletionHandler:(nonnull void (^)(void))completionHandler {
     for (DDLogFileInfo *fileInfo in [self.fileLogger.logFileManager unsortedLogFileInfos]) {
         NSData *fileData = [NSData dataWithContentsOfFile:fileInfo.filePath];
         
@@ -109,7 +109,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (NSString *)buglife:(Buglife *)buglife titleForPromptWithInvocation:(LIFEInvocationOptions)invocation {
-    return @"Help us make Alfresco Activiti better";
+    return NSLocalizedString(kLocalizationBugReportingSheetDescriptionText, "Bug reporting text description");
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

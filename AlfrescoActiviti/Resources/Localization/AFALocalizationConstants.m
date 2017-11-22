@@ -294,3 +294,9 @@ NSString *kLocalizationProfileScreenConfirmCredentialsText       = @"profileScre
 #pragma mark Settings screen
 
 NSString *kLocalizationSettingsScreenBugReportingText            = @"settingsScreenBugReportingText";
+
+
+#pragma mark -
+#pragma mark Bug reporting
+
+NSString *kLocalizationBugReportingSheetDescriptionText          = @"bugReportingSheetDescriptionText";

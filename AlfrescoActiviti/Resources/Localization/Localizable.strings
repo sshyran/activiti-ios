@@ -240,3 +240,7 @@
 // Settings screen
 "profileScreenReportToolText"                            = "Report a bug overlay";
 "settingsScreenBugReportingText"                         = "Problem reporting";
+
+// Bug reporting
+"bugReportingSheetDescriptionText"                       = "Help us make Alfresco Process Services better";
+

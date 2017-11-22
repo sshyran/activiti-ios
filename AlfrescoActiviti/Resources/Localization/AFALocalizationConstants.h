@@ -241,3 +241,7 @@ extern NSString *kLocalizationProfileScreenConfirmCredentialsText;
 
 // Settings screen
 extern NSString *kLocalizationSettingsScreenBugReportingText;
+
+// Bug reporting
+extern NSString *kLocalizationBugReportingSheetDescriptionText;
+
