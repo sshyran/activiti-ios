@@ -23,7 +23,7 @@
 static const CGFloat kTopMargin = 10.f;
 static const NSTimeInterval kHideTimeout = 2.f;
 
-typedef void  (^AFANavigationBarBannerAlertHideCompletionBlock) ();
+typedef void  (^AFANavigationBarBannerAlertHideCompletionBlock) (void);
 
 @interface AFANavigationBarBannerAlertView()
 

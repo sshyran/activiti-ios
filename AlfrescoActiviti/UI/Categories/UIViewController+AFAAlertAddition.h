@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void  (^AFAAlertAdditionConfirmationBlock) ();
+typedef void  (^AFAAlertAdditionConfirmationBlock) (void);
 
 @interface UIViewController (AFAAlertAddition)
 

@@ -62,7 +62,6 @@
 }
 
 - (IBAction)hyperlinkTapped:(id)sender {
-#warning not working properly, investigate!
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.formField.hyperlinkURL]
                                        options:@{}
                              completionHandler:nil];

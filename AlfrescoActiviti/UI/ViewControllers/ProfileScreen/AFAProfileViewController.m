@@ -269,7 +269,7 @@ UITableViewDelegate>
 - (void)fetchProfileInformation {
     __weak typeof(self) weakSelf = self;
     
-    void (^updateProfileDataSourceBlock)() = ^(ASDKModelProfile *profile) {
+    void (^updateProfileDataSourceBlock)(ASDKModelProfile *) = ^(ASDKModelProfile *profile) {
         __strong typeof(self) strongSelf = weakSelf;
         
         // Display the last update date

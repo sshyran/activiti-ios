@@ -163,7 +163,7 @@
     [sdkBootstrap setupServicesWithServerConfiguration:serverConfiguration];
     
     __weak typeof(self) weakSelf = self;
-    void (^errorHandlingBlock)() = ^(NSError *error) {
+    void (^errorHandlingBlock)(NSError *) = ^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
         // An error occured
