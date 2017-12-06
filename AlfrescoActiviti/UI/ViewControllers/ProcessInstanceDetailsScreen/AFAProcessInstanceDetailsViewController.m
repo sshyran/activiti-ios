@@ -328,30 +328,10 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     __weak typeof(self) weakSelf = self;
     [self.dataSource processInstanceContentWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            [strongSelf.processTableView reloadData];
-            
-            // Display the no content view if appropiate
-            AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
-            
-            strongSelf.noContentView.hidden = !processInstanceContentModel.attachedContentArr.count ? NO : YES;
-            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
-            strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable");
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        strongSelf.controllerState = AFAProcessInstanceDetailsLoadingStateIdle;
+        [strongSelf handleProcessInstanceContentListResponseWithErrorStatus:error];
+    } cachedResultsBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleProcessInstanceContentListResponseWithErrorStatus:error];
     }];
 }
 
@@ -478,6 +458,8 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
             [weakSelf.contentPickerViewController dowloadContent:contentToDownload
                                               allowCachedContent:YES];
             strongSelf.controllerState = AFAProcessInstanceDetailsLoadingStateIdle;
+        } cachedResultsBlock:^(NSError *error) {
+            
         }];
     } forCellType:[processInstanceContentCellFactory cellTypeForDownloadContent]];
     
@@ -552,6 +534,33 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     [self endRefreshOnRefreshControl];
     
     BOOL isContentAvailable = ([processInstanceTaskModel hasTaskListAvailable] || processInstanceTaskModel.isStartFormDefined) ? YES : NO;
+    self.controllerState = isContentAvailable ? AFAProcessInstanceDetailsLoadingStateIdle : AFAProcessInstanceDetailsLoadingStateEmptyList;
+}
+
+- (void)handleProcessInstanceContentListResponseWithErrorStatus:(NSError *)error {
+    AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
+    
+    if (!error) {
+        [self.processTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+        }
+    }
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
+    self.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable");
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = processInstanceContentModel.attachedContentArr.count ? YES : NO;
     self.controllerState = isContentAvailable ? AFAProcessInstanceDetailsLoadingStateIdle : AFAProcessInstanceDetailsLoadingStateEmptyList;
 }
 

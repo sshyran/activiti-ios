@@ -18,10 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class ASDKFilterRequestRepresentation, ASDKModelPaging, ASDKModelProcessInstance;
+@class ASDKFilterRequestRepresentation, ASDKModelPaging, ASDKModelProcessInstance, ASDKModelProcessInstanceContent;
 
 typedef void  (^ASDKCacheServiceProcessInstanceListCompletionBlock) (NSArray *processes, NSError *error, ASDKModelPaging *paging);
 typedef void  (^ASDKCacheServiceProcessInstanceDetailsCompletionBlock) (ASDKModelProcessInstance *processInstance, NSError *error);
+typedef void  (^ASDKCacheServiceProcessInstanceContentListCompletionBlock) (NSArray *contentList, NSError *error);
 
 @protocol ASDKProcessInstanceCacheServiceProtocol <NSObject>
 
@@ -51,7 +52,7 @@ typedef void  (^ASDKCacheServiceProcessInstanceDetailsCompletionBlock) (ASDKMode
  *                          information and an optional error reason
  */
 - (void)fetchProcessInstanceList:(ASDKCacheServiceProcessInstanceListCompletionBlock)completionBlock
-          usingFilter:(ASDKFilterRequestRepresentation *)filter;
+                     usingFilter:(ASDKFilterRequestRepresentation *)filter;
 
 
 /**
@@ -73,5 +74,27 @@ typedef void  (^ASDKCacheServiceProcessInstanceDetailsCompletionBlock) (ASDKMode
  */
 - (void)fetchProcesInstanceDetailsForID:(NSString *)processInstanceID
                     withCompletionBlock:(ASDKCacheServiceProcessInstanceDetailsCompletionBlock)completionBlock;
+
+
+/**
+ * Caches provided process instance content list and reports the operation success over a completion block.
+ *
+ * @param contentList               List of process instance content to be cached
+ * @param processInstanceID         Process instance id describing the membership of process instance content
+ *                                  items
+ * @param completionBlock           Completion block indicating the success of the operation
+ */
+- (void)cacheProcessInstanceContent:(NSArray *)contentList
+               forProcessInstanceID:(NSString *)processInstanceID
+                withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+/**
+ * Fetches and reports via a completion block the process instance content list for the specified id.
+ *
+ * @param processInstanceID Process instance ID for which the content list is requested
+ * @param completionBlock   Completion block providing a list of model objects and an optional error reason
+ */
+- (void)fetchProcessInstanceContentForID:(NSString *)processInstanceID
+                     withCompletionBlock:(ASDKCacheServiceProcessInstanceContentListCompletionBlock)completionBlock;
 
 @end

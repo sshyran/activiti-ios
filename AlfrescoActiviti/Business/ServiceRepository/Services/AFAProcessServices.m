@@ -39,6 +39,11 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (copy, nonatomic) AFAProcessInstanceCompletionBlock                   processInstanceDetailsCompletionBlock;
 @property (copy, nonatomic) AFAProcessInstanceCompletionBlock                   processInstanceDetailsCachedResultsBlock;
 
+// Process instance content
+@property (strong, nonatomic) ASDKProcessDataAccessor                           *fetchProcessInstanceContentDataAccessor;
+@property (copy, nonatomic) AFAProcessInstanceContentCompletionBlock            processInstanceContentCompletionBlock;
+@property (copy, nonatomic) AFAProcessInstanceContentCompletionBlock            processInstanceContentCachedResultsBlock;
+
 @property (strong, nonatomic) dispatch_queue_t                      processUpdatesProcessingQueue;
 @property (strong, nonatomic) ASDKProcessInstanceNetworkServices    *processInstanceNetworkService;
 @property (strong, nonatomic) ASDKProcessDefinitionNetworkServices  *processDefinitionNetworkService;
@@ -187,27 +192,15 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID
-                                          completionBlock:(AFAProcessInstanceContentCompletionBlock)completionBlock {
-    NSParameterAssert(processInstanceID);
+                                          completionBlock:(AFAProcessInstanceContentCompletionBlock)completionBlock
+                                            cachedResults:(AFAProcessInstanceContentCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(completionBlock);
     
-    [self.processInstanceNetworkService
-     fetchProcesInstanceContentForProcessInstanceID:processInstanceID
-     completionBlock:^(NSArray *contentList, NSError *error) {
-         if (!error) {
-             AFALogVerbose(@"Fetched content collection for process with ID:%@", processInstanceID);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock (contentList, nil);
-             });
-         } else {
-             AFALogError(@"An error occured while fetching the content collection for process with ID:%@. Reason:%@", processInstanceID, error.localizedDescription);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock(nil, error);
-             });
-         }
-     }];
+    self.processInstanceContentCompletionBlock = completionBlock;
+    self.processInstanceContentCachedResultsBlock = cacheCompletionBlock;
+    
+    self.fetchProcessInstanceContentDataAccessor = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProcessInstanceContentDataAccessor fetchProcessInstanceContentForProcessInstanceID:processInstanceID];
 }
 
 - (void)requestProcessInstanceCommentsForID:(NSString *)processInstanceID
@@ -324,6 +317,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         [self handleFetchProcessInstanceListDataAccessorResponse:response];
     } else if (self.fetchProcessInstanceDetailsDataAccessor == dataAccessor) {
         [self handleFetchProcessInstanceDetailsDataAccessorResponese:response];
+    } else if (self.fetchProcessInstanceContentDataAccessor == dataAccessor) {
+        [self handleFetchProcessInstanceContentListDataAccessorResponse:response];
     }
 }
 
@@ -360,6 +355,36 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         if (strongSelf.processInstanceListCompletionBlock) {
             strongSelf.processInstanceListCompletionBlock(processInstanceList, processInstanceListResponse.error, processInstanceListResponse.paging);
             strongSelf.processInstanceListCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleFetchProcessInstanceContentListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *processInstanceContentListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *processInstanceContentList = processInstanceContentListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!processInstanceContentListResponse.error) {
+        if (processInstanceContentListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.processInstanceContentCachedResultsBlock) {
+                    strongSelf.processInstanceContentCachedResultsBlock(processInstanceContentList, processInstanceContentListResponse.error);
+                    strongSelf.processInstanceContentCachedResultsBlock = nil;
+                }
+            });
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.processInstanceContentCompletionBlock) {
+            strongSelf.processInstanceContentCompletionBlock(processInstanceContentList, processInstanceContentListResponse.error);
+            strongSelf.processInstanceContentCompletionBlock = nil;
         }
     });
 }

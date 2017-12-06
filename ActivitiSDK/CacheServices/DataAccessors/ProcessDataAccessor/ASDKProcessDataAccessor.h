@@ -40,6 +40,14 @@
 - (void)fetchProcessInstanceDetailsForProcessInstanceID:(NSString *)processInstanceID;
 
 /**
+ * Requests the content associated with a process instance and reports network or cached data
+ * through the designated data accessor delegate.
+ *
+ * @param processInstanceID The ID of the process instance for which the details are requested
+ */
+- (void)fetchProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID;
+
+/**
  * Cancels ongoing operations for the current data accessor.
  */
 - (void)cancelOperations;

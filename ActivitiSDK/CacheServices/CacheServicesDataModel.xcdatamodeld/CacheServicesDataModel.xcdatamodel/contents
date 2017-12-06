@@ -107,6 +107,7 @@
         <relationship name="initiator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProfile" inverseName="processInstances" inverseEntity="ASDKMOProfile" syncable="YES"/>
     </entity>
     <entity name="ASDKMOProcessInstanceContent" representedClassName="ASDKMOProcessInstanceContent" syncable="YES" codeGenerationType="category">
+        <attribute name="processInstanceID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="contentList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ASDKMOContent" inverseName="processInstanceContent" inverseEntity="ASDKMOContent" syncable="YES"/>
         <relationship name="processInstanceContentField" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessInstanceContentField" inverseName="processInstanceContent" inverseEntity="ASDKMOProcessInstanceContentField" syncable="YES"/>
     </entity>
@@ -220,19 +221,19 @@
         <element name="ASDKMONetwork" positionX="504" positionY="-36" width="162" height="45"/>
         <element name="ASDKMOProcessDefinition" positionX="504" positionY="153" width="162" height="165"/>
         <element name="ASDKMOProcessInstance" positionX="504" positionY="336" width="162" height="238"/>
-        <element name="ASDKMOProcessInstanceContent" positionX="-441" positionY="-261" width="225" height="73"/>
-        <element name="ASDKMOProcessInstanceContentField" positionX="-441" positionY="-126" width="216" height="75"/>
+        <element name="ASDKMOProcessInstanceContent" positionX="-441" positionY="-208" width="225" height="88"/>
+        <element name="ASDKMOProcessInstanceContentField" positionX="-441" positionY="-81" width="216" height="75"/>
         <element name="ASDKMOProcessInstanceFilterMap" positionX="72" positionY="846" width="198" height="58"/>
         <element name="ASDKMOProcessInstanceFilterMapPlaceholder" positionX="324" positionY="927" width="261" height="73"/>
+        <element name="ASDKMOProcessTaskFilterMap" positionX="-54" positionY="965" width="173" height="88"/>
         <element name="ASDKMOProfile" positionX="-135" positionY="72" width="128" height="343"/>
         <element name="ASDKMOServerConfiguration" positionX="-648" positionY="-558" width="198" height="135"/>
         <element name="ASDKMOSite" positionX="504" positionY="-117" width="162" height="60"/>
         <element name="ASDKMOTask" positionX="-765" positionY="198" width="162" height="330"/>
-        <element name="ASDKMOTaskCommentMap" positionX="-378" positionY="351" width="162" height="73"/>
+        <element name="ASDKMOTaskCommentMap" positionX="-360" positionY="629" width="162" height="73"/>
         <element name="ASDKMOTaskContentMap" positionX="-765" positionY="-207" width="162" height="73"/>
         <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="60"/>
         <element name="ASDKMOTaskFilterMapPlaceholder" positionX="-405" positionY="927" width="207" height="88"/>
         <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="135"/>
-        <element name="ASDKMOProcessTaskFilterMap" positionX="-54" positionY="965" width="173" height="88"/>
     </elements>
 </model>

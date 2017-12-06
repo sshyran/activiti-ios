@@ -113,8 +113,8 @@
                                         }];
 }
 
-- (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(AFAProcessInstanceActiveAndCompletedTasksCompletionBlock)completionBlock
-                                               cachedResultsBlock:(AFAProcessInstanceActiveAndCompletedTasksCompletionBlock)cachedResultsBlock {
+- (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
+                                               cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock {
     /* Active and completed tasks information is comprised out of multiple services
      * aggregations
      * 1. Fetch the active tasks for the current process instance
@@ -182,7 +182,8 @@
     });
 }
 
-- (void)processInstanceContentWithCompletionBlock:(void (^)(NSError *error))completionBlock {
+- (void)processInstanceContentWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
+                               cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock {
     AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
     
     __weak typeof(self) weakSelf = self;
@@ -192,17 +193,22 @@
          __strong typeof(self) strongSelf = weakSelf;
          
          if (!error) {
-             AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [AFATableControllerProcessInstanceContentModel new];
-             processInstanceContentModel.attachedContentArr = contentList;
-             strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentModel;
-             [strongSelf updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
-             strongSelf.tableController.isEditable = NO;
+             [strongSelf handleProcessInstanceContentListResponse:contentList];
          }
          
          if (completionBlock) {
              completionBlock(error);
          }
+     } cachedResults:^(NSArray *contentList, NSError *error) {
+         __strong typeof(self) strongSelf = weakSelf;
          
+         if (!error) {
+             [strongSelf handleProcessInstanceContentListResponse:contentList];
+         }
+         
+         if (cachedResultsBlock) {
+             cachedResultsBlock(error);
+         }
      }];
 }
 
@@ -306,6 +312,14 @@
     [self updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
     
     return registerCellActions;
+}
+
+- (void)handleProcessInstanceContentListResponse:(NSArray *)contentList {
+    AFATableControllerProcessInstanceContentModel *processInstanceContentModel = [AFATableControllerProcessInstanceContentModel new];
+    processInstanceContentModel.attachedContentArr = contentList;
+    self.sectionModels[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentModel;
+    [self updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
+    self.tableController.isEditable = NO;
 }
 
 

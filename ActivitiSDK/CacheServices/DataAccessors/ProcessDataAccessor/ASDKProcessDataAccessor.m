@@ -360,6 +360,156 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 
 
 #pragma mark -
+#pragma mark Service - Process instance content
+
+- (void)fetchProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID {
+    NSParameterAssert(processInstanceID);
+    
+    // Define operations
+    ASDKAsyncBlockOperation *remoteProcessInstanceContentOperation = [self remoteProcessInstanceContentForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *cachedProcessInstanceContentOperation = [self cachedProcessInstanceContentForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *storeInCacheProcessInstanceContentOperation = [self processInstanceContentStoreInCacheOperationForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedProcessInstanceContentOperation];
+            [self.processingQueue addOperations:@[cachedProcessInstanceContentOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteProcessInstanceContentOperation];
+            [self.processingQueue addOperations:@[remoteProcessInstanceContentOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteProcessInstanceContentOperation addDependency:cachedProcessInstanceContentOperation];
+            [storeInCacheProcessInstanceContentOperation addDependency:remoteProcessInstanceContentOperation];
+            [completionOperation addDependency:storeInCacheProcessInstanceContentOperation];
+            [self.processingQueue addOperations:@[cachedProcessInstanceContentOperation,
+                                                  remoteProcessInstanceContentOperation,
+                                                  storeInCacheProcessInstanceContentOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteProcessInstanceContentOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation * operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.processInstanceNetworkService
+         fetchProcesInstanceContentForProcessInstanceID:processInstanceID
+         completionBlock:^(NSArray *contentList, NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             ASDKDataAccessorResponseCollection *responseCollection =
+             [[ASDKDataAccessorResponseCollection alloc] initWithCollection:contentList
+                                                               isCachedData:NO
+                                                                      error:error];
+             
+             if (weakSelf.delegate) {
+                 [weakSelf.delegate dataAccessor:weakSelf
+                             didLoadDataResponse:responseCollection];
+             }
+             
+             operation.result = responseCollection;
+             [operation complete];
+         }];
+    }];
+    
+    return remoteProcessInstanceContentOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedProcessInstanceContentListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.processInstanceCacheService
+         fetchProcessInstanceContentForID:processInstanceID
+         withCompletionBlock:^(NSArray *contentList, NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Process instance content list information successfully fetched from the cache for processInstanceID:%@", processInstanceID);
+                 
+                 ASDKDataAccessorResponseCollection *response =
+                 [[ASDKDataAccessorResponseCollection alloc] initWithCollection:contentList
+                                                                   isCachedData:YES
+                                                                          error:error];
+                 if (weakSelf.delegate) {
+                     [weakSelf.delegate dataAccessor:weakSelf
+                                 didLoadDataResponse:response];
+                 }
+             } else {
+                 ASDKLogError(@"An error occured while fetching cache process instance content list information. Reason: %@", error.localizedDescription);
+             }
+             
+             [operation complete];
+         }];
+    }];
+    
+    return cachedProcessInstanceContentListOperation;
+}
+
+- (ASDKAsyncBlockOperation *)processInstanceContentStoreInCacheOperationForProcessInstanceID:(NSString *)processInstanceID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseCollection *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.collection) {
+            [strongSelf.processInstanceCacheService cacheProcessInstanceContent:remoteResponse.collection
+                                                           forProcessInstanceID:processInstanceID
+                                                            withCompletionBlock:^(NSError *error) {
+                                                                if (operation.isCancelled) {
+                                                                    [operation complete];
+                                                                    return;
+                                                                }
+                                                                
+                                                                if (!error) {
+                                                                    ASDKLogVerbose(@"Process intance content list was successfully cached for processInstanceID:%@", processInstanceID);
+                                                                    
+                                                                    [weakSelf.processInstanceCacheService saveChanges];
+                                                                } else {
+                                                                    ASDKLogError(@"Encountered an error while caching the process instance content list for processInstanceID:%@. Reason:%@", processInstanceID, error.localizedDescription);
+                                                                }
+                                                                
+                                                                [operation complete];
+                                                            }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
 #pragma mark Cancel operations
 
 - (void)cancelOperations {

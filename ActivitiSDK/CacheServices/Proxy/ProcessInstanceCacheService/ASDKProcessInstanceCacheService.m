@@ -23,6 +23,7 @@
 
 // Model upsert
 #import "ASDKProcessInstanceCacheModelUpsert.h"
+#import "ASDKProcessInstanceContentCacheModelUpsert.h"
 
 // Models
 #import "ASDKFilterRequestRepresentation.h"
@@ -32,10 +33,12 @@
 #import "ASDKModelFilter.h"
 #import "ASDKModelProcessInstance.h"
 #import "ASDKMOProcessInstanceFilterMapPlaceholder.h"
+#import "ASDKMOProcessInstanceContent.h"
 
 // Persistence
 #import "ASDKProcessInstanceCacheMapper.h"
 #import "ASDKProcessInstanceFilterMapCacheMapper.h"
+#import "ASDKProcessInstanceContentCacheMapper.h"
 
 @implementation ASDKProcessInstanceCacheService
 
@@ -99,7 +102,7 @@
         }
         
         NSArray *processInstanceFilterMapArr = [managedObjectContext executeFetchRequest:processInstanceFilterMapRequest
-                                                                                  error:&error];
+                                                                                   error:&error];
         
         if (!error) {
             NSMutableArray *allProcessInstanceFilterMapPlaceholdersOfCurrentApp = [NSMutableArray array];
@@ -127,7 +130,7 @@
                 } else {
                     sortedProcessInstances = processInstances;
                 }
-
+                
                 NSPredicate *namePredicate = [strongSelf namePredicateForFilter:filter];
                 
                 NSArray *matchingProcessInstanceArr = nil;
@@ -210,6 +213,60 @@
     }];
 }
 
+- (void)cacheProcessInstanceContent:(NSArray *)contentList
+               forProcessInstanceID:(NSString *)processInstanceID
+                withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = [strongSelf cleanStalledProcessInstanceContentInContext:managedObjectContext
+                                                            forProcessInstanceID:processInstanceID];
+        
+        if (!error) {
+            [ASDKProcessInstanceContentCacheModelUpsert upsertProcessInstanceContentListToCache:contentList
+                                                                           forProcessInstanceID:processInstanceID
+                                                                                          error:&error
+                                                                                    inMOContext:managedObjectContext];
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchProcessInstanceContentForID:(NSString *)processInstanceID
+                     withCompletionBlock:(ASDKCacheServiceProcessInstanceContentListCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        NSFetchRequest *fetchRequest = [ASDKMOProcessInstanceContent fetchRequest];
+        fetchRequest.predicate = [self processInstancePredicateForProcessInstanceID:processInstanceID];
+        
+        NSError *error = nil;
+        NSArray *moProcessInstanceContentArr = [managedObjectContext executeFetchRequest:fetchRequest
+                                                                                   error:&error];
+        if (completionBlock) {
+            if (error || !moProcessInstanceContentArr.count) {
+                completionBlock(nil, error);
+            } else {
+                NSMutableArray *processInstanceContentArr = [NSMutableArray array];
+                for (ASDKMOProcessInstanceContent *moContent in moProcessInstanceContentArr) {
+                    ASDKModelProcessInstanceContent *content = [ASDKProcessInstanceContentCacheMapper mapCacheMOToProcessInstanceContent:moContent];
+                    [processInstanceContentArr addObject:content];
+                }
+                
+                completionBlock(processInstanceContentArr, nil);
+            }
+        }
+    }];
+}
+
 
 #pragma mark -
 #pragma mark Operations
@@ -280,6 +337,29 @@
     return nil;
 }
 
+- (NSError *)cleanStalledProcessInstanceContentInContext:(NSManagedObjectContext *)managedObjectContext
+                                    forProcessInstanceID:(NSString *)processInstanceID {
+    NSError *internalError = nil;
+    
+    NSFetchRequest *oldProcessInstanceContentRequest = [ASDKMOProcessInstanceContent fetchRequest];
+    oldProcessInstanceContentRequest.predicate = [self processInstancePredicateForProcessInstanceID:processInstanceID];
+    oldProcessInstanceContentRequest.resultType = NSManagedObjectIDResultType;
+    
+    NSBatchDeleteRequest *removeOldProcessInstanceContentRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldProcessInstanceContentRequest];
+    removeOldProcessInstanceContentRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+    NSBatchDeleteResult *removeOldProcessInstanceContentResult =
+    [managedObjectContext executeRequest:removeOldProcessInstanceContentRequest
+                                   error:&internalError];
+    NSArray *moIDArr = removeOldProcessInstanceContentResult.result;
+    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                 intoContexts:@[managedObjectContext]];
+    if (internalError) {
+        return [self clearCacheStalledDataError];
+    }
+    
+    return nil;
+}
+
 - (ASDKModelPaging *)paginationWithStartIndex:(NSUInteger)startIndex
                             forTotalTaskCount:(NSUInteger)taskTotalCount
                            remainingTaskCount:(NSUInteger)remainingTaskCount {
@@ -309,6 +389,10 @@
     }
     
     return nil;
+}
+
+- (NSPredicate *)processInstancePredicateForProcessInstanceID:(NSString *)processInstanceID {
+    return [NSPredicate predicateWithFormat:@"processInstanceID == %@", processInstanceID];
 }
 
 

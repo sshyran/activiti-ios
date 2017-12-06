@@ -16,15 +16,15 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKMOProcessInstanceContent.h"
-#import "ASDKMOContent.h"
+#import <Foundation/Foundation.h>
 
-#import "ASDKMOProcessInstanceContentField.h"
+@class ASDKModelProcessInstanceContentField, ASDKMOProcessInstanceContentField;
 
-@implementation ASDKMOProcessInstanceContent
+@interface ASDKProcessInstanceContentFieldCacheMapper : NSObject
 
-+ (NSString *)entityName {
-    return NSStringFromClass([self class]);
-}
++ (ASDKMOProcessInstanceContentField *)mapProcessInstanceContentField:(ASDKModelProcessInstanceContentField *)processInstanceContentField
+                                                            toCacheMO:(ASDKMOProcessInstanceContentField *)moProcessInstanceContentField;
+
++ (ASDKModelProcessInstanceContentField *)mapCacheMOToProcessInstanceContentField:(ASDKMOProcessInstanceContentField *)moProcessInstanceContentField;
 
 @end

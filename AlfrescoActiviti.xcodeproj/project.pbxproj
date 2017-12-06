@@ -73,6 +73,14 @@
 		1328D34D1BB91CAC0010757C /* AFATableController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D34C1BB91CAC0010757C /* AFATableController.m */; };
 		1328D3511BB92D540010757C /* AFATableControllerTaskDetailsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3501BB92D540010757C /* AFATableControllerTaskDetailsModel.m */; };
 		1328D3561BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */; };
+		132906091FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.h in Headers */ = {isa = PBXBuildFile; fileRef = 132906071FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.h */; };
+		1329060A1FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.m in Sources */ = {isa = PBXBuildFile; fileRef = 132906081FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.m */; };
+		1329060E1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1329060C1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.h */; };
+		1329060F1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1329060D1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.m */; };
+		132906131FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 132906111FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.h */; };
+		132906141FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 132906121FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.m */; };
+		132906181FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.h in Headers */ = {isa = PBXBuildFile; fileRef = 132906161FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.h */; };
+		132906191FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.m in Sources */ = {isa = PBXBuildFile; fileRef = 132906171FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.m */; };
 		132A18F51F273BB500966D49 /* ASDKCacheService.h in Headers */ = {isa = PBXBuildFile; fileRef = 132A18F31F273BB500966D49 /* ASDKCacheService.h */; };
 		132A18F61F273BB500966D49 /* ASDKCacheService.m in Sources */ = {isa = PBXBuildFile; fileRef = 132A18F41F273BB500966D49 /* ASDKCacheService.m */; };
 		132BB7671D48AEB200757493 /* AFAStartFormTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 132BB7661D48AEB200757493 /* AFAStartFormTableViewCell.m */; };
@@ -852,8 +860,8 @@
 		1318FECE1FB98F4B0097CFEB /* ASDKQuerryDataAccessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASDKQuerryDataAccessor.m; sourceTree = "<group>"; };
 		1318FED21FBAEEEA0097CFEB /* ASDKMOProcessTaskFilterMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKMOProcessTaskFilterMap.h; path = ActivitiSDK/CacheServices/CacheModels/ASDKMOProcessTaskFilterMap.h; sourceTree = "<group>"; };
 		1318FED31FBAEEEA0097CFEB /* ASDKMOProcessTaskFilterMap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKMOProcessTaskFilterMap.m; path = ActivitiSDK/CacheServices/CacheModels/ASDKMOProcessTaskFilterMap.m; sourceTree = "<group>"; };
-		1318FEDA1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessTaskFilterMapCacheMapper.h; path = ../CacheServices/CacheModelMappers/ProcessTaskFilterMapCacheMapper/ASDKProcessTaskFilterMapCacheMapper.h; sourceTree = "<group>"; };
-		1318FEDB1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessTaskFilterMapCacheMapper.m; path = ../CacheServices/CacheModelMappers/ProcessTaskFilterMapCacheMapper/ASDKProcessTaskFilterMapCacheMapper.m; sourceTree = "<group>"; };
+		1318FEDA1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKProcessTaskFilterMapCacheMapper.h; sourceTree = "<group>"; };
+		1318FEDB1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessTaskFilterMapCacheMapper.m; sourceTree = "<group>"; };
 		131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKTaskNetworkServicesTest.m; sourceTree = "<group>"; };
 		131DCF411DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsCreateChecklistAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.h; sourceTree = "<group>"; };
 		131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsCreateChecklistAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.m; sourceTree = "<group>"; };
@@ -888,6 +896,14 @@
 		1328D3501BB92D540010757C /* AFATableControllerTaskDetailsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerTaskDetailsModel.m; path = Model/TableControllerTaskDetailsModel/AFATableControllerTaskDetailsModel.m; sourceTree = "<group>"; };
 		1328D3541BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerTaskDetailsCellFactory.h; path = Business/TableController/CellFactories/TaskDetailsCellFactory/AFATableControllerTaskDetailsCellFactory.h; sourceTree = "<group>"; };
 		1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerTaskDetailsCellFactory.m; path = Business/TableController/CellFactories/TaskDetailsCellFactory/AFATableControllerTaskDetailsCellFactory.m; sourceTree = "<group>"; };
+		132906071FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceContentCacheModelUpsert.h; path = CacheServices/CacheModelUpsert/ProcessInstanceContentModelUpsert/ASDKProcessInstanceContentCacheModelUpsert.h; sourceTree = "<group>"; };
+		132906081FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceContentCacheModelUpsert.m; path = CacheServices/CacheModelUpsert/ProcessInstanceContentModelUpsert/ASDKProcessInstanceContentCacheModelUpsert.m; sourceTree = "<group>"; };
+		1329060C1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceContentCacheMapper.h; path = CacheServices/CacheModelMappers/ProcessInstanceContentCacheMapper/ASDKProcessInstanceContentCacheMapper.h; sourceTree = "<group>"; };
+		1329060D1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceContentCacheMapper.m; path = CacheServices/CacheModelMappers/ProcessInstanceContentCacheMapper/ASDKProcessInstanceContentCacheMapper.m; sourceTree = "<group>"; };
+		132906111FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKProcessInstanceContentFieldCacheMapper.h; sourceTree = "<group>"; };
+		132906121FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessInstanceContentFieldCacheMapper.m; sourceTree = "<group>"; };
+		132906161FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceContentFieldCacheModelUpsert.h; path = CacheServices/CacheModelUpsert/ProcessInstanceContentFieldModelUpsert/ASDKProcessInstanceContentFieldCacheModelUpsert.h; sourceTree = "<group>"; };
+		132906171FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceContentFieldCacheModelUpsert.m; path = CacheServices/CacheModelUpsert/ProcessInstanceContentFieldModelUpsert/ASDKProcessInstanceContentFieldCacheModelUpsert.m; sourceTree = "<group>"; };
 		132A18F31F273BB500966D49 /* ASDKCacheService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKCacheService.h; path = CacheServices/CacheService/ASDKCacheService.h; sourceTree = "<group>"; };
 		132A18F41F273BB500966D49 /* ASDKCacheService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKCacheService.m; path = CacheServices/CacheService/ASDKCacheService.m; sourceTree = "<group>"; };
 		132BB7651D48AEB200757493 /* AFAStartFormTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAStartFormTableViewCell.h; path = UI/Cells/StartFormCell/AFAStartFormTableViewCell.h; sourceTree = "<group>"; };
@@ -1993,7 +2009,8 @@
 				1318FEDA1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.h */,
 				1318FEDB1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.m */,
 			);
-			path = ProcessTaskFilterMapCacheMapper;
+			name = ProcessTaskFilterMapCacheMapper;
+			path = CacheServices/CacheModelMappers/ProcessTaskFilterMapCacheMapper;
 			sourceTree = "<group>";
 		};
 		1319EF571C15827D003FA6C1 /* Resources */ = {
@@ -2214,6 +2231,43 @@
 				1328D3551BB930BE0010757C /* AFATableControllerTaskDetailsCellFactory.m */,
 			);
 			name = TaskDetailsCellFactory;
+			sourceTree = "<group>";
+		};
+		1329060B1FCC56AC00F50F6F /* ProcessInstanceContentModelUpsert */ = {
+			isa = PBXGroup;
+			children = (
+				132906071FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.h */,
+				132906081FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.m */,
+			);
+			name = ProcessInstanceContentModelUpsert;
+			sourceTree = "<group>";
+		};
+		132906101FCC694500F50F6F /* ProcessInstanceContentCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				1329060C1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.h */,
+				1329060D1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.m */,
+			);
+			name = ProcessInstanceContentCacheMapper;
+			sourceTree = "<group>";
+		};
+		132906151FCD957000F50F6F /* ProcessInstanceContentFieldCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				132906111FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.h */,
+				132906121FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.m */,
+			);
+			name = ProcessInstanceContentFieldCacheMapper;
+			path = CacheServices/CacheModelMappers/ProcessInstanceContentFieldCacheMapper;
+			sourceTree = "<group>";
+		};
+		1329061A1FD5BE0C00F50F6F /* ProcessInstanceContentFieldModelUpsert */ = {
+			isa = PBXGroup;
+			children = (
+				132906161FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.h */,
+				132906171FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.m */,
+			);
+			name = ProcessInstanceContentFieldModelUpsert;
 			sourceTree = "<group>";
 		};
 		132A18F71F273BBF00966D49 /* CacheService */ = {
@@ -2540,6 +2594,8 @@
 				133DDD0C1F56E9ED001DDF26 /* ContentModelUpsert */,
 				132C5AFA1F58565E0077059E /* CommentModelUpsert */,
 				1350289A1F8770FD00771787 /* ProcessModelUpsert */,
+				1329060B1FCC56AC00F50F6F /* ProcessInstanceContentModelUpsert */,
+				1329061A1FD5BE0C00F50F6F /* ProcessInstanceContentFieldModelUpsert */,
 			);
 			name = CacheModelUpsert;
 			sourceTree = "<group>";
@@ -3582,6 +3638,8 @@
 				1350289F1F87B4D600771787 /* ProcessInstanceCacheMapper */,
 				1333B8671F978CF300E65956 /* ProcessInstanceFilterMapCacheMapper */,
 				1318FEDE1FBB22DA0097CFEB /* ProcessTaskFilterMapCacheMapper */,
+				132906101FCC694500F50F6F /* ProcessInstanceContentCacheMapper */,
+				132906151FCD957000F50F6F /* ProcessInstanceContentFieldCacheMapper */,
 			);
 			name = CacheModelMappers;
 			sourceTree = "<group>";
@@ -5978,10 +6036,12 @@
 				137B94591BD794FB00134BF1 /* ASDKFormRenderEngine.h in Headers */,
 				8D3A51E41C8089A300FF9A00 /* ASDKModelUser.h in Headers */,
 				13B7E1FD1B749473002CBDF4 /* ASDKTaskNetworkServiceProtocol.h in Headers */,
+				132906131FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.h in Headers */,
 				13B7E2071B749A07002CBDF4 /* ASDKTaskNetworkServices.h in Headers */,
 				13F07EF71CBFC8C400002FEB /* ASDKKVOManager.h in Headers */,
 				13A7842C1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.h in Headers */,
 				13BA5C051BE0D0C90091D6C9 /* ASDKFormOutcomeCollectionViewCell.h in Headers */,
+				132906181FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.h in Headers */,
 				138DEE881D814A700031ED01 /* NSURLSessionTask+ASDKAdditions.h in Headers */,
 				8D6ABE6C1CBB9AF8008FACB4 /* ASDKFormDynamicTableFieldCollectionViewCell.h in Headers */,
 				8D3B50E81C86E258005BEEEB /* ASDKModelRestFormField.h in Headers */,
@@ -6016,6 +6076,7 @@
 				13EBECA71CF8474F00EC8F96 /* ASDKFormEngineActionHandlerProtocol.h in Headers */,
 				8DB3998F1C98762A0089E0AB /* ASDKNoContentView.h in Headers */,
 				13E8307A1B6A45640028901A /* ASDKAPIEndpointDefinitionList.h in Headers */,
+				132906091FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.h in Headers */,
 				13CE5C691B99817C002E5172 /* ASDKFilterNetworkServices.h in Headers */,
 				1333B8651F978CEE00E65956 /* ASDKProcessInstanceFilterMapCacheMapper.h in Headers */,
 				13A2E7E61F18B35300E15064 /* ASDKDataAccessorResponseProgress.h in Headers */,
@@ -6155,6 +6216,7 @@
 				132C5AEA1F57107C0077059E /* ASDKTaskContentMapCacheMapper.h in Headers */,
 				13A5786A1CEDF7F70014B6FD /* ASDKIntegrationNodeContentRequestRepresentation.h in Headers */,
 				13CD88391F7D19B7001A16D4 /* ASDKProcessDataAccessor.h in Headers */,
+				1329060E1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.h in Headers */,
 				13BCADCD1F010AC700146E7E /* ASDKMOComment.h in Headers */,
 				1317C34E1BCBA57500F0B03F /* ASDKDiskServiceProtocol.h in Headers */,
 				137194831B6924DE00D4E1F0 /* ActivitiSDK.h in Headers */,
@@ -6313,6 +6375,7 @@
 					1371944C1B6922DE00D4E1F0 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = W8N95J537P;
+						ProvisioningStyle = Automatic;
 					};
 					137194681B6922DE00D4E1F0 = {
 						CreatedOnToolsVersion = 6.4;
@@ -6322,7 +6385,7 @@
 					1371947D1B6924DE00D4E1F0 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = W8N95J537P;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					137194871B6924DF00D4E1F0 = {
 						CreatedOnToolsVersion = 6.4;
@@ -6895,6 +6958,7 @@
 				13BCADC21F010AC700146E7E /* ASDKMOProcessDefinition.m in Sources */,
 				13BCAE0A1F010AC700146E7E /* ASDKMOProfile.m in Sources */,
 				131375181B6F993000D2268E /* ASDKBootstrap.m in Sources */,
+				132906141FCD950B00F50F6F /* ASDKProcessInstanceContentFieldCacheMapper.m in Sources */,
 				133DDCF91F544378001DDF26 /* ASDKGroupCacheModelUpsert.m in Sources */,
 				139050F51CB68F8C004FEA89 /* ASDKModelFormVariable.m in Sources */,
 				8D8F85FC1C8DD3D100356A5B /* UIViewController+ASDKAlertAddition.m in Sources */,
@@ -6914,11 +6978,13 @@
 				13FF67A21CEC4E7C00A8C95F /* UIFont+ASDKGlyphiconsFiletypes.m in Sources */,
 				8D3A51E01C80868500FF9A00 /* ASDKModelProcessDefinition.m in Sources */,
 				1393C9601F0E26C700E9635B /* ASDKGroupCacheMapper.m in Sources */,
+				132906191FD5BE0200F50F6F /* ASDKProcessInstanceContentFieldCacheModelUpsert.m in Sources */,
 				13BCAE021F010AC700146E7E /* ASDKMOProcessInstanceContentField.m in Sources */,
 				1394F6921F0A705C005C8C32 /* ASDKAsyncBlockOperation.m in Sources */,
 				138F0A371C6B9D3100DA9414 /* ASDKRadioFieldCollectionViewCell.m in Sources */,
 				13E830811B6A4A9B0028901A /* ASDKServicePathFactory.m in Sources */,
 				13CCEEB61F0CDBF900F30337 /* ASDKCoreDataCacheService.m in Sources */,
+				1329060F1FCC694100F50F6F /* ASDKProcessInstanceContentCacheMapper.m in Sources */,
 				1347E4FD1F3C474100EC277F /* ASDKMOFilterMap.m in Sources */,
 				1320B2511E44B6CA00991B7A /* ASDKFormThemedCollectionViewCell.m in Sources */,
 				137C12331D421E3400B87B34 /* ASDKModelFormTabDescription.m in Sources */,
@@ -7051,6 +7117,7 @@
 				139050F01CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m in Sources */,
 				8D3A51ED1C8089F200FF9A00 /* ASDKUserNetworkServices.m in Sources */,
 				133F053D1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m in Sources */,
+				1329060A1FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.m in Sources */,
 				13F9BA311B739C290068BB8C /* ASDKProfilePasswordRequestRepresentation.m in Sources */,
 				8D3B50E91C86E258005BEEEB /* ASDKModelRestFormField.m in Sources */,
 				135028991F8770F900771787 /* ASDKProcessInstanceCacheModelUpsert.m in Sources */,
@@ -7295,10 +7362,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AlfrescoActiviti/AlfrescoActiviti.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = AlfrescoActiviti/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alfresco.activiti;
 				PRODUCT_NAME = AlfrescoActiviti;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -7308,10 +7380,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AlfrescoActiviti/AlfrescoActiviti.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = AlfrescoActiviti/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alfresco.activiti;
 				PRODUCT_NAME = AlfrescoActiviti;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -7355,12 +7432,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EC312161980F1E807A9C95B2 /* Pods-Shared-ActivitiSDK.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = W8N95J537P;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -7385,12 +7463,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AAA4DC332CB4E934BFB7DBF5 /* Pods-Shared-ActivitiSDK.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = W8N95J537P;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -7499,10 +7578,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AlfrescoActiviti/AlfrescoActiviti.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = AlfrescoActiviti/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alfresco.activiti;
 				PRODUCT_NAME = AlfrescoActiviti;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = AppStore;
 		};
@@ -7526,12 +7609,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 28522234EFEA7F8BB6062D0A /* Pods-Shared-ActivitiSDK.appstore.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = W8N95J537P;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";

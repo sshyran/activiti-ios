@@ -92,11 +92,14 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
 /**
  *  Performs a request for the process instance associated content given it's process instance ID
  *
- *  @param processInstanceID The process instance ID for which the content is requested
- *  @param completionBlock   Completion block providing the process instace content list and an optional error reason
+ *  @param processInstanceID    The process instance ID for which the content is requested
+ *  @param completionBlock      Completion block providing the process instace content list and an optional error reason
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the porcess instance content list
+ *                              and optional error reason
  */
 - (void)requestProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID
-                                          completionBlock:(AFAProcessInstanceContentCompletionBlock)completionBlock;
+                                          completionBlock:(AFAProcessInstanceContentCompletionBlock)completionBlock
+                                            cachedResults:(AFAProcessInstanceContentCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the comment list attached to the specified process instance.

@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, AFAProcessInstanceDetailsSectionType) {
 };
 
 typedef void (^AFAProcessInstanceDetailsDataSourceCompletionBlock)  (NSError *error, BOOL registerCellActions);
-typedef void (^AFAProcessInstanceActiveAndCompletedTasksCompletionBlock) (NSError *error);
+typedef void (^AFAProcessInstanceDataSourceErrorCompletionBlock) (NSError *error);
 
 @protocol AFAProcessInstanceDetailsDataSourceProtocol <NSObject>
 
@@ -47,9 +47,10 @@ typedef void (^AFAProcessInstanceActiveAndCompletedTasksCompletionBlock) (NSErro
 
 - (void)processInstanceDetailsWithCompletionBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)completionBlock
                                cachedResultsBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)cachedResultsBlock;
-- (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(AFAProcessInstanceActiveAndCompletedTasksCompletionBlock)completionBlock
-                                               cachedResultsBlock:(AFAProcessInstanceActiveAndCompletedTasksCompletionBlock)cachedResultsBlock;
-- (void)processInstanceContentWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+- (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
+                                               cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock;
+- (void)processInstanceContentWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
+                               cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock;
 - (void)processInstanceCommentsWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 - (void)deleteCurrentProcessInstanceWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 
