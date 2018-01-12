@@ -24,6 +24,7 @@
 // Model upsert
 #import "ASDKProcessInstanceCacheModelUpsert.h"
 #import "ASDKProcessInstanceContentCacheModelUpsert.h"
+#import "ASDKCommentCacheModelUpsert.h"
 
 // Models
 #import "ASDKFilterRequestRepresentation.h"
@@ -34,11 +35,14 @@
 #import "ASDKModelProcessInstance.h"
 #import "ASDKMOProcessInstanceFilterMapPlaceholder.h"
 #import "ASDKMOProcessInstanceContent.h"
+#import "ASDKMOProcessInstanceCommentMap.h"
 
 // Persistence
 #import "ASDKProcessInstanceCacheMapper.h"
 #import "ASDKProcessInstanceFilterMapCacheMapper.h"
 #import "ASDKProcessInstanceContentCacheMapper.h"
+#import "ASDKProcessInstanceCommentMapCacheMapper.h"
+#import "ASDKCommentCacheMapper.h"
 
 @implementation ASDKProcessInstanceCacheService
 
@@ -267,6 +271,77 @@
     }];
 }
 
+- (void)cacheProcessInstanceCommentList:(NSArray *)commentList
+                   forProcessInstanceID:(NSString *)processInstanceID
+                    withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = [strongSelf cleanStalledCommentsAndProcessInstanceCommentMapForProcessInstanceID:processInstanceID
+                                                                                                inContext:managedObjectContext];
+        
+        if (!error) {
+            /* The comment map exists to provide membership information for comments
+             * in relation to a specific process instance. Just the state of the comment
+             * objects do not provide sufficient information to assign them to a task.
+             */
+            error = [strongSelf saveProcessInstanceCommentsAndGenerateCommentMap:commentList
+                                                            forProcessInstanceID:processInstanceID
+                                                                       inContext:managedObjectContext];
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchProcessInstanceCommentListForID:(NSString *)processInstanceID
+                         withCompletionBlock:(ASDKCacheServiceProcessInstanceCommentListCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKModelPaging *paging = nil;
+        NSError *error = nil;
+        NSArray *matchingCommentsArr = nil;
+        
+        NSFetchRequest *processInstanceCommentMapRequest = [ASDKMOProcessInstanceCommentMap fetchRequest];
+        processInstanceCommentMapRequest.predicate = [NSPredicate predicateWithFormat:@"processInstanceID == %@", processInstanceID];
+        NSArray *processInstanceCommentMapArr = [managedObjectContext executeFetchRequest:processInstanceCommentMapRequest
+                                                                                    error:&error];
+        
+        if (!error) {
+            ASDKMOProcessInstanceCommentMap *processInstanceCommentMap = processInstanceCommentMapArr.firstObject;
+            matchingCommentsArr = [processInstanceCommentMap.processInstanceCommentList allObjects];
+            paging = [strongSelf paginationWithStartIndex:0
+                                        forTotalTaskCount:matchingCommentsArr.count
+                                       remainingTaskCount:matchingCommentsArr.count];
+        }
+        
+        if (completionBlock) {
+            if (error || !matchingCommentsArr.count) {
+                completionBlock(nil, error, nil);
+            } else {
+                NSMutableArray *comments = [NSMutableArray array];
+                for (ASDKMOComment *moComment in matchingCommentsArr) {
+                    ASDKModelComment *comment = [ASDKCommentCacheMapper mapCacheMOToComment:moComment];
+                    [comments addObject:comment];
+                }
+                
+                completionBlock(comments, nil, paging);
+            }
+        }
+    }];
+}
+
 
 #pragma mark -
 #pragma mark Operations
@@ -356,6 +431,60 @@
     if (internalError) {
         return [self clearCacheStalledDataError];
     }
+    
+    return nil;
+}
+
+- (NSError *)cleanStalledCommentsAndProcessInstanceCommentMapForProcessInstanceID:(NSString *)processInstanceID
+                                                                        inContext:(NSManagedObjectContext *)managedObjectContext {
+    NSError *internalError = nil;
+    NSFetchRequest *oldProcessInstanceCommentMapRequest = [ASDKMOProcessInstanceCommentMap fetchRequest];
+    oldProcessInstanceCommentMapRequest.predicate = [NSPredicate predicateWithFormat:@"processInstanceID == %@", processInstanceID];
+    oldProcessInstanceCommentMapRequest.resultType = NSManagedObjectIDResultType;
+    
+    NSBatchDeleteRequest *removeOldProcessInstanceCommentMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldProcessInstanceCommentMapRequest];
+    removeOldProcessInstanceCommentMapRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+    NSBatchDeleteResult *processInstanceCommentMapDeletionResult = [managedObjectContext executeRequest:removeOldProcessInstanceCommentMapRequest
+                                                                                                  error:&internalError];
+    NSArray *moIDArr = processInstanceCommentMapDeletionResult.result;
+    [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                 intoContexts:@[managedObjectContext]];
+    
+    if (internalError) {
+        return [self clearCacheStalledDataError];
+    }
+    
+    return nil;
+}
+
+- (NSError *)saveProcessInstanceCommentsAndGenerateCommentMap:(NSArray *)processInstanceCommentList
+                                         forProcessInstanceID:(NSString *)processInstanceID
+                                                    inContext:(NSManagedObjectContext *)managedObjectContext {
+    NSError *internalError = nil;
+    NSArray *moCommentList = [ASDKCommentCacheModelUpsert upsertCommentListToCache:processInstanceCommentList
+                                                                             error:&internalError
+                                                                       inMOContext:managedObjectContext];
+    if (internalError) {
+        return internalError;
+    }
+    
+    NSFetchRequest *commentMapFetchRequest = [ASDKMOProcessInstanceCommentMap fetchRequest];
+    commentMapFetchRequest.predicate = [NSPredicate predicateWithFormat:@"processInstanceID == %@", processInstanceID];
+    NSArray *fetchResult = [managedObjectContext executeFetchRequest:commentMapFetchRequest
+                                                               error:&internalError];
+    if (internalError) {
+        return internalError;
+    }
+    
+    ASDKMOProcessInstanceCommentMap *processInstanceCommentMap = fetchResult.firstObject;
+    if (!processInstanceCommentMap) {
+        processInstanceCommentMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOProcessInstanceCommentMap entityName]
+                                                                  inManagedObjectContext:managedObjectContext];
+    }
+    
+    [ASDKProcessInstanceCommentMapCacheMapper mapProcessInstanceCommentList:moCommentList
+                                                       forProcessInstanceID:processInstanceID
+                                                                  toCacheMO:processInstanceCommentMap];
     
     return nil;
 }

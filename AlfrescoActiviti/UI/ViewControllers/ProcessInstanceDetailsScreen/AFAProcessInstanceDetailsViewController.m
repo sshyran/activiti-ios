@@ -144,6 +144,10 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    BOOL isConnectivityAvailable = [self isNetworkReachable];
+    [self refreshUIForConnectivity:isConnectivityAvailable];
+    
     [self refreshContentForCurrentSection];
 }
 
@@ -341,32 +345,10 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     __weak typeof(self) weakSelf = self;
     [self.dataSource processInstanceCommentsWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            [strongSelf.processTableView reloadData];
-            
-            AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
-            AFATableControllerCommentModel *processInstanceCommentModel = [self.dataSource reusableTableControllerModelForSectionType:
-                                                                           AFAProcessInstanceDetailsSectionTypeComments];
-            
-            // Display the no content view if appropiate
-            strongSelf.noContentView.hidden = !processInstanceCommentModel.commentListArr.count ? NO : YES;
-            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
-            strongSelf.noContentView.descriptionLabel.text = [processInstanceDetailsModel isCompletedProcessInstance] ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        strongSelf.controllerState = AFAProcessInstanceDetailsLoadingStateIdle;
+        [strongSelf handleProcessInstanceCommentListResponseWithErrorStatus:error];
+    } cachedResultsBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleProcessInstanceCommentListResponseWithErrorStatus:error];
     }];
 }
 
@@ -561,6 +543,35 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     [self endRefreshOnRefreshControl];
     
     BOOL isContentAvailable = processInstanceContentModel.attachedContentArr.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFAProcessInstanceDetailsLoadingStateIdle : AFAProcessInstanceDetailsLoadingStateEmptyList;
+}
+
+- (void)handleProcessInstanceCommentListResponseWithErrorStatus:(NSError *)error {
+    AFATableControllerProcessInstanceDetailsModel *processInstanceDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFAProcessInstanceDetailsSectionTypeDetails];
+    AFATableControllerCommentModel *processInstanceCommentModel = [self.dataSource reusableTableControllerModelForSectionType:
+                                                                   AFAProcessInstanceDetailsSectionTypeComments];
+    
+    if (!error) {
+        [self.processTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+        }
+    }
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
+    self.noContentView.descriptionLabel.text = [processInstanceDetailsModel isCompletedProcessInstance] ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = processInstanceCommentModel.commentListArr.count ? YES : NO;
     self.controllerState = isContentAvailable ? AFAProcessInstanceDetailsLoadingStateIdle : AFAProcessInstanceDetailsLoadingStateEmptyList;
 }
 

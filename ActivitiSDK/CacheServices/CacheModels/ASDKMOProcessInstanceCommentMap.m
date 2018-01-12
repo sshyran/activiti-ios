@@ -16,17 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKMOProcessInstanceCommentMap.h"
 
-@class ASDKMOProfile, ASDKMOTaskCommentMap, ASDKMOProcessInstanceCommentMap;
+@implementation ASDKMOProcessInstanceCommentMap
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ASDKMOComment : ASDKMOAttributable
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOComment+CoreDataProperties.h"

@@ -16,17 +16,20 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKProcessInstanceCommentMapCacheMapper.h"
 
-@class ASDKMOProfile, ASDKMOTaskCommentMap, ASDKMOProcessInstanceCommentMap;
+// Models
+#import "ASDKMOProcessInstanceCommentMap.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation ASDKProcessInstanceCommentMapCacheMapper
 
-@interface ASDKMOComment : ASDKMOAttributable
++ (ASDKMOProcessInstanceCommentMap *)mapProcessInstanceCommentList:(NSArray *)processInstanceCommentList
+                                              forProcessInstanceID:(NSString *)processInstanceID
+                                                         toCacheMO:(ASDKMOProcessInstanceCommentMap *)moProcessInstanceCommentMap {
+    moProcessInstanceCommentMap.processInstanceID = processInstanceID;
+    [moProcessInstanceCommentMap addProcessInstanceCommentList:[NSSet setWithArray:processInstanceCommentList]];
+    
+    return moProcessInstanceCommentMap;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOComment+CoreDataProperties.h"

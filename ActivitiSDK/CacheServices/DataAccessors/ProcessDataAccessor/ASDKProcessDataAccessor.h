@@ -48,6 +48,40 @@
 - (void)fetchProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID;
 
 /**
+ * Deletes a specific process instance and reports the result through the designated
+ * data accessor delegate.
+ *
+ * @param processInstanceID The ID of the process instance which is to be deleted
+ */
+- (void)deleteProcessInstanceWithID:(NSString *)processInstanceID;
+
+/**
+ * Requests a list of process instance comments for a specific process instance and reports
+ * the result through the designated data accessor delegate.
+ *
+ @param processInstanceID The ID of the process instance for which the comments are requested
+ */
+- (void)fetchProcessInstanceCommentsForProcessInstanceID:(NSString *)processInstanceID;
+
+/**
+* Creates a comment for the specified process instance and reports the result through the designated
+* data accessor delegate.
+*
+* @param comment   Comment to be created
+* @param taskID    The ID of the process instance for which the comment is to be created
+*/
+- (void)createComment:(NSString *)comment
+ forProcessInstanceID:(NSString *)processInstanceID;
+
+/**
+ * Requests the audit log that is associated with a process instance an reports network or cached data
+ * through the designated data accessor delegate.
+ *
+ * @param processInstanceID The ID of the process instance for which the download audit is requested
+ */
+- (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID;
+
+/**
  * Cancels ongoing operations for the current data accessor.
  */
 - (void)cancelOperations;

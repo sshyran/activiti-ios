@@ -51,7 +51,8 @@ typedef void (^AFAProcessInstanceDataSourceErrorCompletionBlock) (NSError *error
                                                cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock;
 - (void)processInstanceContentWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
                                cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock;
-- (void)processInstanceCommentsWithCompletionBlock:(void (^)(NSError *error))completionBlock;
+- (void)processInstanceCommentsWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
+                                cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock;
 - (void)deleteCurrentProcessInstanceWithCompletionBlock:(void (^)(NSError *error))completionBlock;
 
 - (id)cellFactoryForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType;

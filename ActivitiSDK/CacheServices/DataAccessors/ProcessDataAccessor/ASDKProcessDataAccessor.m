@@ -33,6 +33,8 @@
 // Model
 #import "ASDKDataAccessorResponseCollection.h"
 #import "ASDKDataAccessorResponseModel.h"
+#import "ASDKDataAccessorResponseConfirmation.h"
+#import "ASDKDataAccessorResponseProgress.h"
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
@@ -128,10 +130,10 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                  return;
              }
              
-             ASDKDataAccessorResponseCollection *responseCollection =[[ASDKDataAccessorResponseCollection alloc] initWithCollection:processes
-                                                                                                                             paging:paging
-                                                                                                                       isCachedData:NO
-                                                                                                                              error:error];
+             ASDKDataAccessorResponseCollection *responseCollection = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:processes
+                                                                                                                              paging:paging
+                                                                                                                        isCachedData:NO
+                                                                                                                               error:error];
              
              if (weakSelf.delegate) {
                  [weakSelf.delegate dataAccessor:weakSelf
@@ -506,6 +508,252 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }];
     
     return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Delete process instance
+
+- (void)deleteProcessInstanceWithID:(NSString *)processInstanceID {
+    NSParameterAssert(processInstanceID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.processInstanceNetworkService deleteProcessInstanceWithID:processInstanceID
+                                                    completionBlock:^(BOOL isProcessInstanceDeleted, NSError *error) {
+                                                        __strong typeof(self) strongSelf = weakSelf;
+                                                        
+                                                        ASDKDataAccessorResponseConfirmation *confirmationResponse = [[ASDKDataAccessorResponseConfirmation alloc] initWithConfirmation:isProcessInstanceDeleted
+                                                                                                                                                                           isCachedData:NO
+                                                                                                                                                                                  error:error];
+                                                        if (strongSelf.delegate) {
+                                                            [strongSelf.delegate dataAccessor:strongSelf
+                                                                          didLoadDataResponse:confirmationResponse];
+                                                            [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                                        }
+                                                    }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Process instance comments
+
+- (void)fetchProcessInstanceCommentsForProcessInstanceID:(NSString *)processInstanceID {
+    NSParameterAssert(processInstanceID);
+    
+    // Define operations
+    ASDKAsyncBlockOperation *remoteProcessInstanceCommentListOperation = [self remoteProcessInstanceCommentListOperationForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *cachedProcessInstanceCommentListOperation = [self cachedProcessInstanceCommentListOperationForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *storeInCacheProcessInstanceCommentListOperation = [self processInstanceCommentListStoreInCacheOperationWithFilter:processInstanceID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedProcessInstanceCommentListOperation];
+            [self.processingQueue addOperations:@[cachedProcessInstanceCommentListOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteProcessInstanceCommentListOperation];
+            [self.processingQueue addOperations:@[remoteProcessInstanceCommentListOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteProcessInstanceCommentListOperation addDependency:cachedProcessInstanceCommentListOperation];
+            [storeInCacheProcessInstanceCommentListOperation addDependency:remoteProcessInstanceCommentListOperation];
+            [completionOperation addDependency:storeInCacheProcessInstanceCommentListOperation];
+            [self.processingQueue addOperations:@[cachedProcessInstanceCommentListOperation,
+                                                  remoteProcessInstanceCommentListOperation,
+                                                  storeInCacheProcessInstanceCommentListOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteProcessInstanceCommentListOperationForProcessInstanceID:(NSString *)processInstanceID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteProcessInstanceCommentListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation * operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.processInstanceNetworkService
+         fetchProcessInstanceCommentsForProcessInstanceID:processInstanceID
+         completionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             ASDKDataAccessorResponseCollection *responseCollection =
+             [[ASDKDataAccessorResponseCollection alloc] initWithCollection:commentList
+                                                                     paging:paging
+                                                               isCachedData:NO
+                                                                      error:error];
+             
+             if (weakSelf.delegate) {
+                 [weakSelf.delegate dataAccessor:weakSelf
+                             didLoadDataResponse:responseCollection];
+             }
+             
+             operation.result = responseCollection;
+             [operation complete];
+         }];
+    }];
+    
+    return remoteProcessInstanceCommentListOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedProcessInstanceCommentListOperationForProcessInstanceID:(NSString *)processInstanceID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedProcessInstanceCommentListOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.processInstanceCacheService
+         fetchProcessInstanceCommentListForID:processInstanceID
+         withCompletionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+             if (operation.isCancelled) {
+                 [operation complete];
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Process instance comment list information successfully fetched from cache for processInstanceID:%@", processInstanceID);
+                 
+                 ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:commentList
+                                                                                                                        paging:paging
+                                                                                                                  isCachedData:YES
+                                                                                                                         error:error];
+                 if (weakSelf.delegate) {
+                     [weakSelf.delegate dataAccessor:weakSelf
+                                 didLoadDataResponse:response];
+                 }
+             } else {
+                 ASDKLogError(@"An error occured while fetching cache process instance comment list information. Reason: %@", error.localizedDescription);
+             }
+             
+             [operation complete];
+         }];
+    }];
+    
+    return cachedProcessInstanceCommentListOperation;
+}
+
+- (ASDKAsyncBlockOperation *)processInstanceCommentListStoreInCacheOperationWithFilter:(NSString *)processInstanceID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseCollection *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.collection) {
+            [strongSelf.processInstanceCacheService cacheProcessInstanceCommentList:remoteResponse.collection
+                                                               forProcessInstanceID:processInstanceID
+                                                                withCompletionBlock:^(NSError *error) {
+                                                                    if (operation.isCancelled) {
+                                                                        [operation complete];
+                                                                    }
+                                                                    
+                                                                    if (!error) {
+                                                                        ASDKLogVerbose(@"Process instance content list was successfully cached for processInstanceID: %@", processInstanceID);
+                                                                    } else {
+                                                                        ASDKLogError(@"Encountered an error while caching the process instance content list for processInstanceID: %@. Reason: %@", processInstanceID, error.localizedDescription);
+                                                                    }
+                                                                    
+                                                                    [operation complete];
+                                                                }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Create process instance comment
+
+- (void)createComment:(NSString *)comment
+ forProcessInstanceID:(NSString *)processInstanceID {
+    NSParameterAssert(comment);
+    NSParameterAssert(processInstanceID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.processInstanceNetworkService createComment:comment
+                                forProcessInstanceID :processInstanceID
+                                      completionBlock:^(ASDKModelComment *comment, NSError *error) {
+                                          __strong typeof(self) strongSelf = weakSelf;
+                                          
+                                          ASDKDataAccessorResponseModel *response =
+                                          [[ASDKDataAccessorResponseModel alloc] initWithModel:comment
+                                                                                  isCachedData:NO
+                                                                                         error:error];
+                                          if (weakSelf.delegate) {
+                                              [weakSelf.delegate dataAccessor:weakSelf
+                                                          didLoadDataResponse:response];
+                                              
+                                              [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                          }
+                                      }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Download process instance audit log
+
+- (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID {
+    NSParameterAssert(processInstanceID);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.processInstanceNetworkService downloadAuditLogForProcessInstanceWithID:processInstanceID
+                                                              allowCachedResults:(self.cachePolicy == ASDKServiceDataAccessorCachingPolicyAPIOnly) ? NO : YES
+                                                                   progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
+                                                                       __strong typeof(self) strongSelf = weakSelf;
+                                                                       
+                                                                       ASDKDataAccessorResponseProgress *responseProgress =
+                                                                       [[ASDKDataAccessorResponseProgress alloc] initWithFormattedProgressString:formattedReceivedBytesString
+                                                                                                                                           error:error];
+                                                                       if (strongSelf.delegate) {
+                                                                           [strongSelf.delegate dataAccessor:strongSelf
+                                                                                         didLoadDataResponse:responseProgress];
+                                                                       }
+                                                                   }
+                                                                 completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
+                                                                     __strong typeof(self) strongSelf = weakSelf;
+                                                                     
+                                                                     ASDKDataAccessorResponseModel *responseModel =
+                                                                     [[ASDKDataAccessorResponseModel alloc] initWithModel:downloadedContentURL
+                                                                                                             isCachedData:isLocalContent
+                                                                                                                    error:error];
+                                                                     if (strongSelf.delegate) {
+                                                                         [strongSelf.delegate dataAccessor:strongSelf
+                                                                                       didLoadDataResponse:responseModel];
+                                                                         
+                                                                         [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+                                                                     }
+                                                                 }];
 }
 
 

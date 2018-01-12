@@ -276,6 +276,7 @@
 		137FC4311C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 137FC4301C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h */; };
 		1380854A1E02C30800455FAE /* ASDKFilterNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */; };
 		13891CAA1D00258800A61015 /* AFAConfirmationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 13891CA91D00258800A61015 /* AFAConfirmationView.m */; };
+		138B358F1FE2B54900CD2F15 /* ASDKMOProcessInstanceCommentMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 138B358D1FE2B54800CD2F15 /* ASDKMOProcessInstanceCommentMap.m */; };
 		138C48B51C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 138C48B41C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		138C48BA1C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 138C48B81C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		138C48BB1C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 138C48B91C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.m */; };
@@ -401,6 +402,8 @@
 		13AAD3BF1CDB824800818537 /* AFAProfileDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3BE1CDB824800818537 /* AFAProfileDetailTableViewCell.m */; };
 		13AAD3C31CDB82A900818537 /* AFAProfileSimpleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3C21CDB82A900818537 /* AFAProfileSimpleTableViewCell.m */; };
 		13AAD3C71CDB82F600818537 /* AFAProfileActionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */; };
+		13ABCD471FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 13ABCD451FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h */; };
+		13ABCD481FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 13ABCD461FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m */; };
 		13ACE37C1C9996B900693A29 /* AFAAddCommentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */; };
 		13AE35531C43B61700BEB477 /* glyphicons-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 13AE35521C43B61700BEB477 /* glyphicons-regular.otf */; };
 		13AE35571C43BA9700BEB477 /* AFAApplicationListStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13AE35561C43BA9700BEB477 /* AFAApplicationListStyleCell.m */; };
@@ -1157,6 +1160,8 @@
 		138085491E02C30800455FAE /* ASDKFilterNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKFilterNetworkServicesTest.m; sourceTree = "<group>"; };
 		13891CA81D00258800A61015 /* AFAConfirmationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAConfirmationView.h; path = UI/Components/ConfirmationView/AFAConfirmationView.h; sourceTree = "<group>"; };
 		13891CA91D00258800A61015 /* AFAConfirmationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAConfirmationView.m; path = UI/Components/ConfirmationView/AFAConfirmationView.m; sourceTree = "<group>"; };
+		138B358D1FE2B54800CD2F15 /* ASDKMOProcessInstanceCommentMap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKMOProcessInstanceCommentMap.m; path = "/Users/p3700545/CurrentProjects/activiti-ios/ActivitiSDK/CacheServices/CacheModels/ASDKMOProcessInstanceCommentMap.m"; sourceTree = "<absolute>"; };
+		138B358E1FE2B54900CD2F15 /* ASDKMOProcessInstanceCommentMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKMOProcessInstanceCommentMap.h; path = "/Users/p3700545/CurrentProjects/activiti-ios/ActivitiSDK/CacheServices/CacheModels/ASDKMOProcessInstanceCommentMap.h"; sourceTree = "<absolute>"; };
 		138C48B41C50DC2B00B4F4FB /* ASDKProcessInstanceNetworkServiceProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceNetworkServiceProtocol.h; path = NetworkServices/Proxy/ProcessInstanceNetworkServices/Protocol/ASDKProcessInstanceNetworkServiceProtocol.h; sourceTree = "<group>"; };
 		138C48B81C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceNetworkServices.h; path = NetworkServices/Proxy/ProcessInstanceNetworkServices/ASDKProcessInstanceNetworkServices.h; sourceTree = "<group>"; };
 		138C48B91C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceNetworkServices.m; path = NetworkServices/Proxy/ProcessInstanceNetworkServices/ASDKProcessInstanceNetworkServices.m; sourceTree = "<group>"; };
@@ -1306,6 +1311,8 @@
 		13AAD3C21CDB82A900818537 /* AFAProfileSimpleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileSimpleTableViewCell.m; path = UI/Cells/ProfileSimpleCell/AFAProfileSimpleTableViewCell.m; sourceTree = "<group>"; };
 		13AAD3C51CDB82F600818537 /* AFAProfileActionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileActionTableViewCell.h; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.h; sourceTree = "<group>"; };
 		13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileActionTableViewCell.m; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.m; sourceTree = "<group>"; };
+		13ABCD451FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKProcessInstanceCommentMapCacheMapper.h; sourceTree = "<group>"; };
+		13ABCD461FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessInstanceCommentMapCacheMapper.m; sourceTree = "<group>"; };
 		13ACE37A1C9996B900693A29 /* AFAAddCommentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddCommentsViewController.h; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.h; sourceTree = "<group>"; };
 		13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddCommentsViewController.m; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.m; sourceTree = "<group>"; };
 		13AE35521C43B61700BEB477 /* glyphicons-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "glyphicons-regular.otf"; path = "../ActivitiSDK/Resources/glyphicons-regular.otf"; sourceTree = "<group>"; };
@@ -3640,6 +3647,7 @@
 				1318FEDE1FBB22DA0097CFEB /* ProcessTaskFilterMapCacheMapper */,
 				132906101FCC694500F50F6F /* ProcessInstanceContentCacheMapper */,
 				132906151FCD957000F50F6F /* ProcessInstanceContentFieldCacheMapper */,
+				13ABCD491FE2C65400ED0654 /* ProcessInstanceCommentMapCacheMapper */,
 			);
 			name = CacheModelMappers;
 			sourceTree = "<group>";
@@ -4189,6 +4197,15 @@
 			name = ProfileActionCell;
 			sourceTree = "<group>";
 		};
+		13ABCD491FE2C65400ED0654 /* ProcessInstanceCommentMapCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				13ABCD451FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h */,
+				13ABCD461FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m */,
+			);
+			path = ProcessInstanceCommentMapCacheMapper;
+			sourceTree = "<group>";
+		};
 		13ACE37D1C9996BE00693A29 /* AddCommentsScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -4488,6 +4505,8 @@
 				13BCAD7A1F010AC600146E7E /* ASDKMOTask.m */,
 				132C5AED1F584E2E0077059E /* ASDKMOTaskCommentMap.h */,
 				132C5AEE1F584E2E0077059E /* ASDKMOTaskCommentMap.m */,
+				138B358E1FE2B54900CD2F15 /* ASDKMOProcessInstanceCommentMap.h */,
+				138B358D1FE2B54800CD2F15 /* ASDKMOProcessInstanceCommentMap.m */,
 				13BCAD7D1F010AC600146E7E /* ASDKMOComment.h */,
 				13BCAD7E1F010AC600146E7E /* ASDKMOComment.m */,
 				13BCAD811F010AC600146E7E /* ASDKMOFileContent.h */,
@@ -5991,6 +6010,7 @@
 				13F1AE1E1F45846D00BA0686 /* ASDKFilterCacheServiceProtocol.h in Headers */,
 				136E11491CEB113800047E38 /* ASDKIntegrationNetworksDataSource.h in Headers */,
 				13A784311CE46DB300DBE648 /* ASDKModelIntegrationAccount.h in Headers */,
+				13ABCD471FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h in Headers */,
 				1395CD9B1BE7AF73004C320D /* ASDKFormRenderEngineDataSourceProtocol.h in Headers */,
 				133F053C1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h in Headers */,
 				13667FFE1C8995C7005E4AEA /* ASDKTaskListQuerryRequestRepresentation.h in Headers */,
@@ -7112,6 +7132,7 @@
 				8DEA25451C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.m in Sources */,
 				13F1AE1B1F4582E800BA0686 /* ASDKFilterDataAccessor.m in Sources */,
 				13BCADC61F010AC700146E7E /* ASDKMOServerConfiguration.m in Sources */,
+				13ABCD481FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m in Sources */,
 				8D6ABE7D1CBD1597008FACB4 /* ASDKModelDynamicTableColumnDefinitionFormField.m in Sources */,
 				138C48BB1C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.m in Sources */,
 				139050F01CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m in Sources */,
@@ -7126,6 +7147,7 @@
 				130D5ED11E5AE95200B77139 /* NSString+ASDKEmailValidation.m in Sources */,
 				8D25F0541C73522000B5B475 /* ASDKFormBooleanFieldCollectionViewCell.m in Sources */,
 				13CD883A1F7D19B7001A16D4 /* ASDKProcessDataAccessor.m in Sources */,
+				138B358F1FE2B54900CD2F15 /* ASDKMOProcessInstanceCommentMap.m in Sources */,
 				13B22C541C931CF60043D8A4 /* ASDKModelProcessInstanceContentField.m in Sources */,
 				13B8E6361BD7BC01005E95B6 /* ASDKFormRenderEngineConstants.m in Sources */,
 				13BCADDE1F010AC700146E7E /* ASDKMOSite.m in Sources */,

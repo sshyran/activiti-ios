@@ -212,7 +212,8 @@
      }];
 }
 
-- (void)processInstanceCommentsWithCompletionBlock:(void (^)(NSError *error))completionBlock {
+- (void)processInstanceCommentsWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
+                                cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock {
     AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
     
     __weak typeof(self) weakSelf = self;
@@ -222,20 +223,23 @@
          __strong typeof(self) strongSelf = weakSelf;
          
          if (!error) {
-             // Extract the updated result
-             AFATableControllerCommentModel *processInstanceCommentModel = [AFATableControllerCommentModel new];
-             
-             NSSortDescriptor *newestCommentsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(creationDate))
-                                                                                            ascending:NO];
-             processInstanceCommentModel.commentListArr = [commentList sortedArrayUsingDescriptors:@[newestCommentsSortDescriptor]];
-             processInstanceCommentModel.paging = paging;
-             
-             strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeComments)] = processInstanceCommentModel;
-             [strongSelf updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeComments];
+             [strongSelf handleProcessInstanceCommentListResponse:commentList
+                                                           paging:paging];
          }
          
          if (completionBlock) {
              completionBlock(error);
+         }
+     } cachedResults:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         if (!error) {
+             [strongSelf handleProcessInstanceCommentListResponse:commentList
+                                                           paging:paging];
+         }
+         
+         if (cachedResultsBlock) {
+             cachedResultsBlock(error);
          }
      }];
 }
@@ -320,6 +324,19 @@
     self.sectionModels[@(AFAProcessInstanceDetailsSectionTypeContent)] = processInstanceContentModel;
     [self updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeContent];
     self.tableController.isEditable = NO;
+}
+
+- (void)handleProcessInstanceCommentListResponse:(NSArray *)commentList
+                                          paging:(ASDKModelPaging *)paging {
+    // Extract the updated result
+    AFATableControllerCommentModel *processInstanceCommentModel = [AFATableControllerCommentModel new];
+    
+    NSSortDescriptor *newestCommentsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(creationDate))
+                                                                                   ascending:NO];
+    processInstanceCommentModel.commentListArr = [commentList sortedArrayUsingDescriptors:@[newestCommentsSortDescriptor]];
+    processInstanceCommentModel.paging = paging;
+    self.sectionModels[@(AFAProcessInstanceDetailsSectionTypeComments)] = processInstanceCommentModel;
+    [self updateTableControllerForSectionType:AFAProcessInstanceDetailsSectionTypeComments];
 }
 
 

@@ -77,7 +77,7 @@
                                                        error:&internalError];
     
     if (!internalError) {
-        NSArray *oldIDs = [contentResults valueForKey:@"processInstanceContentField.modelID"];
+        NSArray *oldIDs = [contentResults valueForKeyPath:@"processInstanceContentField.modelID"];
         
         // Elements to update
         NSPredicate *intersectPredicate = [NSPredicate predicateWithFormat:@"SELF IN %@", newIDs];
@@ -92,7 +92,7 @@
         
         // Perform delete operations
         for (NSString *idString in deletedIDsArr) {
-            NSArray *contentListToBeDeleted = [contentResults filteredArrayUsingPredicate:[self predicateMatchingProcessInstanceContentFieldID:idString]];
+            NSArray *contentListToBeDeleted = [contentResults filteredArrayUsingPredicate:[self predicateMatchingMOProcessInstanceContentFieldID:idString]];
             ASDKMOProcessInstanceContent *contentToBeDeleted = contentListToBeDeleted.firstObject;
             [moContext deleteObject:contentToBeDeleted];
         }
@@ -120,7 +120,7 @@
         if (!internalError) {
             // Perform update operations
             for (NSString *idString in updatedIDsArr) {
-                NSArray *contentListToBeUpdated = [contentResults filteredArrayUsingPredicate:[self predicateMatchingProcessInstanceContentFieldID:idString]];
+                NSArray *contentListToBeUpdated = [contentResults filteredArrayUsingPredicate:[self predicateMatchingMOProcessInstanceContentFieldID:idString]];
                 for (ASDKMOProcessInstanceContent *moContent in contentListToBeUpdated) {
                     NSArray *correspondentContentList = [contentList filteredArrayUsingPredicate:[self predicateMatchingProcessInstanceContentFieldID:moContent.processInstanceContentField.modelID]];
                     ASDKModelProcessInstanceContent *content = correspondentContentList.firstObject;
@@ -173,6 +173,10 @@
 
 + (NSPredicate *)predicateMatchingProcessInstanceContentFieldID:(NSString *)fieldID {
     return [NSPredicate predicateWithFormat:@"field.modelID == %@", fieldID];
+}
+
++ (NSPredicate *)predicateMatchingMOProcessInstanceContentFieldID:(NSString *)fieldID {
+    return [NSPredicate predicateWithFormat:@"processInstanceContentField.modelID == %@", fieldID];
 }
 
 @end

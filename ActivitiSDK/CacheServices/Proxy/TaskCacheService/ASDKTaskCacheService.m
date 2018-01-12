@@ -372,9 +372,9 @@
         NSError *error = [strongSelf cleanStalledTaskCommentAndCommentMapForTaskID:taskID
                                                                          inContext:managedObjectContext];
         if (!error) {
-            /* The content map exists to provide membership information for
-             * content in relation to a specific task. Just the state of the
-             * content objects do not provide sufficient information to assign
+            /* The comment map exists to provide membership information for
+             * comment in relation to a specific task. Just the state of the
+             * comment objects do not provide sufficient information to assign
              * them to a task.
              */
             error = [strongSelf saveTaskCommentAndGenerateCommentMap:taskCommentList

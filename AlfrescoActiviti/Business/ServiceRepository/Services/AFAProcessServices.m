@@ -44,6 +44,24 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 @property (copy, nonatomic) AFAProcessInstanceContentCompletionBlock            processInstanceContentCompletionBlock;
 @property (copy, nonatomic) AFAProcessInstanceContentCompletionBlock            processInstanceContentCachedResultsBlock;
 
+// Delete process instance
+@property (strong, nonatomic) ASDKProcessDataAccessor                           *deleteProcessInstanceDataAccessor;
+@property (copy, nonatomic) AFAProcessInstanceDeleteCompletionBlock             deleteProcessInstanceCompletionBlock;
+
+// Create process instance comment
+@property (strong, nonatomic) ASDKProcessDataAccessor                           *createProcessInstanceCommentDataAccessor;
+@property (copy, nonatomic) AFAProcessInstanceCreateCommentCompletionBlock      createprocessInstanceCommentCompletionBlock;
+
+// Process instance comment list
+@property (strong, nonatomic) ASDKProcessDataAccessor                           *fetchProcessInstanceCommentListDataAccessor;
+@property (copy, nonatomic)  AFAProcessInstanceCommentsCompletionBlock          processInstanceCommentsCompletionBlock;
+@property (copy, nonatomic)  AFAProcessInstanceCommentsCompletionBlock          processInstanceCommentsCachedResultsBlock;
+
+// Process instance audit log
+@property (strong, nonatomic) ASDKProcessDataAccessor                           *processInstanceAuditLogDownloadDataAccessor;
+@property (copy, nonatomic) AFAProcessInstanceContentDownloadProgressBlock      processInstanceAuditLogDownloadProgressBlock;
+@property (copy, nonatomic) AFAProcessInstanceContentDownloadCompletionBlock    processInstanceAuditLogDownloadCompletionBlock;
+
 @property (strong, nonatomic) dispatch_queue_t                      processUpdatesProcessingQueue;
 @property (strong, nonatomic) ASDKProcessInstanceNetworkServices    *processInstanceNetworkService;
 @property (strong, nonatomic) ASDKProcessDefinitionNetworkServices  *processDefinitionNetworkService;
@@ -124,7 +142,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                  completionBlock(nil, error, nil);
              });
          }
-    }];
+     }];
 }
 
 - (void)requestProcessDefinitionListForAppID:(NSString *)appID
@@ -204,76 +222,37 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (void)requestProcessInstanceCommentsForID:(NSString *)processInstanceID
-                        withCompletionBlock:(AFAProcessInstanceCommentsCompletionBlock)completionBlock {
-    NSParameterAssert(processInstanceID);
+                        withCompletionBlock:(AFAProcessInstanceCommentsCompletionBlock)completionBlock
+                              cachedResults:(AFAProcessInstanceCommentsCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(completionBlock);
     
-    [self.processInstanceNetworkService fetchProcessInstanceCommentsForProcessInstanceID:processInstanceID
-                                        completionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
-                                            if (!error) {
-                                                AFALogVerbose(@"Fetched comment list for process instance with ID:%@", processInstanceID);
-                                                
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    completionBlock (commentList, nil, paging);
-                                                });
-                                            } else {
-                                                AFALogError(@"An error occured while fetching the comment list for process instance with ID:%@. Reason:%@", processInstanceID, error.localizedDescription);
-                                                
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    completionBlock(nil, error, nil);
-                                                });
-                                            }
-                                        }];
+    self.processInstanceCommentsCompletionBlock = completionBlock;
+    self.processInstanceCommentsCachedResultsBlock = cacheCompletionBlock;
+    
+    self.fetchProcessInstanceCommentListDataAccessor = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProcessInstanceCommentListDataAccessor fetchProcessInstanceCommentsForProcessInstanceID:processInstanceID];
 }
 
 - (void)requestCreateComment:(NSString *)comment
         forProcessInstanceID:(NSString *)processInstanceID
              completionBlock:(AFAProcessInstanceCreateCommentCompletionBlock)completionBlock {
-    NSParameterAssert(comment);
-    NSParameterAssert(processInstanceID);
     NSParameterAssert(completionBlock);
     
-    [self.processInstanceNetworkService
-     createComment:comment
-     forProcessInstanceID :processInstanceID
-     completionBlock:^(ASDKModelComment *comment, NSError *error) {
-         if (!error && comment) {
-             AFALogVerbose(@"Comment for process instance ID :%@ created successfully.", processInstanceID);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock(comment, nil);
-             });
-         } else {
-             AFALogError(@"An error occured creating comment for process instance ID %@. Reason:%@", processInstanceID, error.localizedDescription);
-             
-             dispatch_async(dispatch_get_main_queue(), ^{
-                 completionBlock(nil, error);
-             });
-         }
-     }];
+    self.createprocessInstanceCommentCompletionBlock = completionBlock;
+    
+    self.createProcessInstanceCommentDataAccessor = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
+    [self.createProcessInstanceCommentDataAccessor createComment:comment
+                                            forProcessInstanceID:processInstanceID];
 }
 
 - (void)requestDeleteProcessInstanceWithID:(NSString *)processInstanceID
                            completionBlock:(AFAProcessInstanceDeleteCompletionBlock)completionBlock {
-    NSParameterAssert(processInstanceID);
     NSParameterAssert(completionBlock);
     
-    [self.processInstanceNetworkService deleteProcessInstanceWithID:processInstanceID
-                                                    completionBlock:^(BOOL isProcessInstanceDeleted, NSError *error) {
-                                                        if (!error && isProcessInstanceDeleted) {
-                                                            AFALogVerbose(@"Process instance with ID:%@ has been deleted successfully.", processInstanceID);
-                                                            
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                completionBlock(YES, nil);
-                                                            });
-                                                        } else {
-                                                            AFALogError(@"An error occured while deleting the process instance with ID:%@. Reason:%@", processInstanceID, error.localizedDescription);
-                                                            
-                                                            dispatch_async(dispatch_get_main_queue(), ^{
-                                                                completionBlock(NO, error);
-                                                            });
-                                                        }
-    }];
+    self.deleteProcessInstanceCompletionBlock = completionBlock;
+    
+    self.deleteProcessInstanceDataAccessor = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
+    [self.deleteProcessInstanceDataAccessor deleteProcessInstanceWithID:processInstanceID];
 }
 
 - (void)requestDownloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID
@@ -281,30 +260,13 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                           progressBlock:(AFAProcessInstanceContentDownloadProgressBlock)progressBlock
                                         completionBlock:(AFAProcessInstanceContentDownloadCompletionBlock)completionBlock {
     NSParameterAssert(processInstanceID);
-    NSParameterAssert(completionBlock);
     
-    [self.processInstanceNetworkService downloadAuditLogForProcessInstanceWithID:processInstanceID
-                                        allowCachedResults:allowCachedResults
-                                             progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                                 AFALogVerbose(@"Downloaded %@ of content for the audit log of task with ID:%@ ", formattedReceivedBytesString, processInstanceID);
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     progressBlock (formattedReceivedBytesString, error);
-                                                 });
-                                             } completionBlock:^(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                                 if (!error && downloadedContentURL) {
-                                                     AFALogVerbose(@"Audit log content for task with ID:%@ was downloaded successfully.", processInstanceID);
-                                                     
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock(downloadedContentURL, isLocalContent,nil);
-                                                     });
-                                                 } else {
-                                                     AFALogError(@"An error occured while downloading audit log content for task with ID:%@. Reason:%@", processInstanceID, error.localizedDescription);
-                                                     
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         completionBlock(nil, NO, error);
-                                                     });
-                                                 }
-                                             }];
+    self.processInstanceAuditLogDownloadProgressBlock = progressBlock;
+    self.processInstanceAuditLogDownloadCompletionBlock = completionBlock;
+    
+    self.processInstanceAuditLogDownloadDataAccessor = [[ASDKProcessDataAccessor alloc] initWithDelegate:self];
+    self.processInstanceAuditLogDownloadDataAccessor.cachePolicy = allowCachedResults ? ASDKServiceDataAccessorCachingPolicyHybrid : ASDKServiceDataAccessorCachingPolicyAPIOnly;
+    [self.processInstanceAuditLogDownloadDataAccessor downloadAuditLogForProcessInstanceWithID:processInstanceID];
 }
 
 
@@ -316,9 +278,17 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     if (self.fetchProcessInstanceListDataAccessor == dataAccessor) {
         [self handleFetchProcessInstanceListDataAccessorResponse:response];
     } else if (self.fetchProcessInstanceDetailsDataAccessor == dataAccessor) {
-        [self handleFetchProcessInstanceDetailsDataAccessorResponese:response];
+        [self handleFetchProcessInstanceDetailsDataAccessorResponse:response];
     } else if (self.fetchProcessInstanceContentDataAccessor == dataAccessor) {
         [self handleFetchProcessInstanceContentListDataAccessorResponse:response];
+    } else if (self.deleteProcessInstanceDataAccessor == dataAccessor) {
+        [self handleDeleteProcessInstanceDataAccessorResponse:response];
+    } else if (self.createProcessInstanceCommentDataAccessor == dataAccessor) {
+        [self handleCreateProcessInstanceCommentDataAccessorResponse:response];
+    } else if (self.fetchProcessInstanceCommentListDataAccessor == dataAccessor) {
+        [self handleFetchProcessInstanceInstanceCommentListDataAccessorResponse:response];
+    } else if (self.processInstanceAuditLogDownloadDataAccessor == dataAccessor) {
+        [self handleProcessInstanceAuditLogDownloadDataAccessorResponse:response];
     }
 }
 
@@ -389,7 +359,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     });
 }
 
-- (void)handleFetchProcessInstanceDetailsDataAccessorResponese:(ASDKDataAccessorResponseBase *)response {
+- (void)handleFetchProcessInstanceDetailsDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
     ASDKDataAccessorResponseModel *processInstanceResponse = (ASDKDataAccessorResponseModel *)response;
     
     __weak typeof(self) weakSelf = self;
@@ -416,6 +386,90 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             strongSelf.processInstanceDetailsCompletionBlock = nil;
         }
     });
+}
+
+- (void)handleDeleteProcessInstanceDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *processInstanceDeleteResponse = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.deleteProcessInstanceCompletionBlock) {
+            strongSelf.deleteProcessInstanceCompletionBlock(processInstanceDeleteResponse.isConfirmation, processInstanceDeleteResponse.error);
+        }
+    });
+}
+
+- (void)handleCreateProcessInstanceCommentDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *processInstanceCommentResponse = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.createprocessInstanceCommentCompletionBlock) {
+            strongSelf.createprocessInstanceCommentCompletionBlock(processInstanceCommentResponse.model, processInstanceCommentResponse.error);
+        }
+    });
+}
+
+- (void)handleFetchProcessInstanceInstanceCommentListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *processInstanceCommentListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *processInstanceCommentList = processInstanceCommentListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!processInstanceCommentListResponse.error) {
+        if (processInstanceCommentListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.processInstanceCommentsCachedResultsBlock) {
+                    strongSelf.processInstanceCommentsCachedResultsBlock(processInstanceCommentList, processInstanceCommentListResponse.error, processInstanceCommentListResponse.paging);
+                    strongSelf.processInstanceCommentsCachedResultsBlock = nil;
+                }
+            });
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.processInstanceCommentsCompletionBlock) {
+            strongSelf.processInstanceCommentsCompletionBlock(processInstanceCommentList, processInstanceCommentListResponse.error, processInstanceCommentListResponse.paging);
+            strongSelf.processInstanceCommentsCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleProcessInstanceAuditLogDownloadDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSString *formattedProgressString = progressResponse.formattedProgressString;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.processInstanceAuditLogDownloadProgressBlock) {
+                strongSelf.processInstanceAuditLogDownloadProgressBlock(formattedProgressString, progressResponse.error);
+            }
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
+        ASDKDataAccessorResponseModel *auditLogResponse = (ASDKDataAccessorResponseModel *)response;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.processInstanceAuditLogDownloadCompletionBlock) {
+                strongSelf.processInstanceAuditLogDownloadCompletionBlock(auditLogResponse.model, auditLogResponse.isCachedData, auditLogResponse.error);
+                strongSelf.processInstanceAuditLogDownloadCompletionBlock = nil;
+                strongSelf.processInstanceAuditLogDownloadProgressBlock = nil;
+            }
+        });
+    }
 }
 
 @end

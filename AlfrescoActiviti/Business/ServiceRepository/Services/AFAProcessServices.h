@@ -94,7 +94,7 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
  *
  *  @param processInstanceID    The process instance ID for which the content is requested
  *  @param completionBlock      Completion block providing the process instace content list and an optional error reason
- *  @param cacheCompletionBlock Completion block providing a cached reference to the porcess instance content list
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance content list
  *                              and optional error reason
  */
 - (void)requestProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID
@@ -107,9 +107,12 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
  *  @param processInstanceID    The ID of the process instance for which the comment list is requested
  *  @param completionBlock      Completion block providing the comment list, an optional error reason
  *                              and pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance comment list, an
+ *                              optional error reason and pagination information
  */
 - (void)requestProcessInstanceCommentsForID:(NSString *)processInstanceID
-                        withCompletionBlock:(AFAProcessInstanceCommentsCompletionBlock)completionBlock;
+                        withCompletionBlock:(AFAProcessInstanceCommentsCompletionBlock)completionBlock
+                              cachedResults:(AFAProcessInstanceCommentsCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request to create a comment for a specified process instance ID

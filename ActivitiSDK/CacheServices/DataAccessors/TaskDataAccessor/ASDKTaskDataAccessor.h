@@ -145,7 +145,7 @@ ASDKTaskChecklistOrderRequestRepresentation;
             fromTaskWithID:(NSString *)taskID;
 
 /**
- * Creates a comment a comment for the specified task and reports the result through the designated
+ * Creates a comment for the specified task and reports the result through the designated
  * data accessor delegate.
  *
  * @param comment   Comment to be created
