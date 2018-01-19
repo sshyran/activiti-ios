@@ -46,10 +46,10 @@
 #import "AFAProcessStartFormViewController.h"
 #import "AFAProcessInstanceDetailsViewController.h"
 
-typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
-    AFAStartProcessInstanceLoadingStateIdle                          = 1<<0,
-    AFAStartProcessInstanceLoadingStatePullToRefreshInProgress       = 1<<1,
-    AFAStartProcessInstanceLoadingStateGeneralRefreshInProgress      = 1<<2
+typedef NS_ENUM(NSUInteger, AFAStartProcessInstanceLoadingState) {
+    AFAStartProcessInstanceLoadingStateIdle = 0,
+    AFAStartProcessInstanceLoadingStateInProgress,
+    AFAStartProcessInstanceLoadingStateEmptyList
 };
 
 @interface AFAStartProcessInstanceViewController () <AFAProcessStartFormViewControllerDelegate>
@@ -66,7 +66,11 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
 // Internal state properties
 @property (strong, nonatomic) NSArray                                   *processDefinitionsArr;
 @property (assign, nonatomic) AFAStartProcessInstanceLoadingState       controllerState;
-@property (strong, nonatomic) AFAProcessDefinitionListCompletionBlock   processDefinitionCompletionBlock;
+
+// Services
+@property (strong, nonatomic) AFAProcessServices                        *fetchAdhocProcessDefinitionListService;
+@property (strong, nonatomic) AFAProcessServices                        *fetchProcessDefinitionListService;
+@property (strong, nonatomic) AFAProcessServices                        *startProcessInstanceService;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                             *kvoManager;
@@ -79,12 +83,16 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
 #pragma mark -
 #pragma mark Life cycle
 
--(instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.controllerState |= AFAStartProcessInstanceLoadingStateIdle;
-        self.progressHUD = [self configureProgressHUD];
+        _controllerState = AFAStartProcessInstanceLoadingStateIdle;
+        _progressHUD = [self configureProgressHUD];
+        
+        _fetchAdhocProcessDefinitionListService = [AFAProcessServices new];
+        _fetchProcessDefinitionListService = [AFAProcessServices new];
+        _startProcessInstanceService = [AFAProcessServices new];
         
         // Set up state bindings
         [self handleBindingsForStartProcessInstanceViewController];
@@ -104,8 +112,9 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
                                                      NSForegroundColorAttributeName: [UIColor whiteColor]}
                                           forState:UIControlStateNormal];
     self.backBarButtonItem.title = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft];
-    self.navigationBarTitle = NSLocalizedString(kLocalizationProcessInstanceStartNewInstanceTitleText, @"Start process screen title");
-    self.noRecordsLabel.text = NSLocalizedString(kLocalizationStartProcessInstanceScreenNoResultsText, @"No records available text");
+    
+    // Update UI for current localization
+    [self setupLocalization];
     
     // Set up the refresh control
     UITableViewController *tableViewController = [[UITableViewController alloc] init];
@@ -113,54 +122,15 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
     tableViewController.tableView = self.processTableView;
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self
-                            action:@selector(onPullToRefresh)
+                            action:@selector(refreshContentForCurrentSection)
                   forControlEvents:UIControlEventValueChanged];
     tableViewController.refreshControl = self.refreshControl;
-
-    __weak typeof(self) weakSelf = self;
-    self.processDefinitionCompletionBlock = ^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            strongSelf.processDefinitionsArr = processDefinitions;
-            
-            // Check if we got an empty list
-            strongSelf.noRecordsLabel.hidden = processDefinitions.count ? YES : NO;
-            strongSelf.processTableView.hidden = processDefinitions.count ? NO : YES;
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-            
-            // Reload table data
-            [strongSelf.processTableView reloadData];
-        } else {
-            strongSelf.noRecordsLabel.hidden = NO;
-            strongSelf.processTableView.hidden = YES;
-            
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        strongSelf.controllerState &= ~AFAStartProcessInstanceLoadingStatePullToRefreshInProgress;
-        strongSelf.controllerState &= ~AFAStartProcessInstanceLoadingStateGeneralRefreshInProgress;
-    };
-    
-    if (self.appID) {
-        [self fetchProcessDefinitionsForAppID:self.appID
-                          withCompletionBlock:self.processDefinitionCompletionBlock];
-    } else {
-        [self fetchProcessDefinitionsWithCompletionBlock:self.processDefinitionCompletionBlock];
-    }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self refreshContentForCurrentSection];
 }
 
 
@@ -188,6 +158,22 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
 
 
 #pragma mark -
+#pragma mark Connectivity notifications
+
+- (void)didRestoredNetworkConnectivity {
+    [super didRestoredNetworkConnectivity];
+    
+    [self refreshContentForCurrentSection];
+}
+
+- (void)didLoseNetworkConnectivity {
+    [super didLoseNetworkConnectivity];
+    
+    [self refreshContentForCurrentSection];
+}
+
+
+#pragma mark -
 #pragma mark Actions
 
 - (IBAction)onBack:(UIBarButtonItem *)sender {
@@ -195,15 +181,101 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
                               sender:sender];
 }
 
-- (void)onPullToRefresh {
-    self.controllerState |= AFAStartProcessInstanceLoadingStatePullToRefreshInProgress;
-    
+- (void)refreshContentForCurrentSection {
+    __weak typeof(self) weakSelf = self;
     if (self.appID) {
-        [self fetchProcessDefinitionsForAppID:self.appID
-                          withCompletionBlock:self.processDefinitionCompletionBlock];
+        [self.fetchProcessDefinitionListService requestProcessDefinitionListForAppID:self.appID
+                                                                 withCompletionBlock:^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
+                                                                     __strong typeof(self) strongSelf = weakSelf;
+                                                                     [strongSelf handleProcessDefinitionResponseForProcessDefinitions:processDefinitions
+                                                                                                                               paging:paging
+                                                                                                                                error:error];
+                                                                 } cachedResults:^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
+                                                                     __strong typeof(self) strongSelf = weakSelf;
+                                                                     [strongSelf handleProcessDefinitionResponseForProcessDefinitions:processDefinitions
+                                                                                                                               paging:paging
+                                                                                                                                error:error];
+                                                                 }];
     } else {
-        [self fetchProcessDefinitionsWithCompletionBlock:self.processDefinitionCompletionBlock];
+        [self.fetchAdhocProcessDefinitionListService requestProcessDefinitionListWithCompletionBlock:^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
+            __strong typeof(self) strongSelf = weakSelf;
+            [strongSelf handleProcessDefinitionResponseForProcessDefinitions:processDefinitions
+                                                                      paging:paging
+                                                                       error:error];
+        } cachedResults:^(NSArray *processDefinitions, NSError *error, ASDKModelPaging *paging) {
+            __strong typeof(self) strongSelf = weakSelf;
+            [strongSelf handleProcessDefinitionResponseForProcessDefinitions:processDefinitions
+                                                                      paging:paging
+                                                                       error:error];
+        }];
     }
+}
+
+- (void)startProcessInstanceForProcessDefinition:(ASDKModelProcessDefinition *)processDefinition {
+    // Update the name of the process definition so that the process instance
+    // name can include the change
+    processDefinition.name = [processDefinition.name stringByAppendingFormat:@" - %@", [[NSDate date] processInstanceCreationDate]];
+    if (processDefinition.hasStartForm) {
+        self.formViewContainer.hidden = NO;
+        self.navigationBarTitle = processDefinition.name;
+        [self.processStartFormController setupStartFormForProcessDefinitionObject:processDefinition];
+    } else {
+        [self showStarProcessProgressHUD];
+        __weak typeof(self) weakSelf = self;
+        [self.startProcessInstanceService
+         requestProcessInstanceStartForProcessDefinition:processDefinition
+         completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
+             __strong typeof(self) strongSelf = weakSelf;
+             
+             if (!error) {
+                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                     weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                     weakSelf.progressHUD.detailTextLabel.text = nil;
+                     
+                     weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                     weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                 });
+                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                     [weakSelf.progressHUD dismiss];
+                     [self onBack:nil];
+                 });
+             } else {
+                 [strongSelf.progressHUD dismiss];
+                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+             }
+         }];
+    }
+}
+
+
+#pragma mark -
+#pragma mark Content handling
+
+- (void)handleProcessDefinitionResponseForProcessDefinitions:(NSArray *)processDefinitions
+                                                      paging:(ASDKModelPaging *)paging
+                                                       error:(NSError *)error {
+    if (!error) {
+        self.processDefinitionsArr = processDefinitions;
+        
+        // Reload table data
+        [self.processTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+        }
+    }
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = self.processDefinitionsArr.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFAStartProcessInstanceLoadingStateIdle : AFAStartProcessInstanceLoadingStateEmptyList;
 }
 
 
@@ -218,68 +290,7 @@ typedef NS_OPTIONS(NSUInteger, AFAStartProcessInstanceLoadingState) {
 
 
 #pragma mark -
-#pragma mark Service integration
-
-- (void)fetchProcessDefinitionsWithCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock {
-    if (!(AFAStartProcessInstanceLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFAStartProcessInstanceLoadingStateGeneralRefreshInProgress;
-    }
-    
-    AFAProcessServices *processService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    [processService requestProcessDefinitionListWithCompletionBlock:completionBlock];
-}
-
-- (void)fetchProcessDefinitionsForAppID:(NSString *)appID
-                    withCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock {
-    if (!(AFAStartProcessInstanceLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFAStartProcessInstanceLoadingStateGeneralRefreshInProgress;
-    }
-    
-    AFAProcessServices *processService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    [processService requestProcessDefinitionListForAppID:appID
-                                     withCompletionBlock:completionBlock];
-}
-
-- (void)startProcessInstanceForProcessDefinition:(ASDKModelProcessDefinition *)processDefinition {
-    // Update the name of the process definition so that the process instance
-    // name can include the change
-    processDefinition.name = [processDefinition.name stringByAppendingFormat:@" - %@", [[NSDate date] processInstanceCreationDate]];
-    if (processDefinition.hasStartForm) {
-        self.formViewContainer.hidden = NO;
-        self.navigationBarTitle = processDefinition.name;
-        [self.processStartFormController setupStartFormForProcessDefinitionObject:processDefinition];
-    } else {
-        AFAProcessServices *processService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-        
-        [self showStarProcessProgressHUD];
-        __weak typeof(self) weakSelf = self;
-        [processService requestProcessInstanceStartForProcessDefinition:processDefinition
-                                                        completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
-                                                            __strong typeof(self) strongSelf = weakSelf;
-                                                            
-                                                            if (!error) {
-                                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                    weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                                                                    weakSelf.progressHUD.detailTextLabel.text = nil;
-                                                                    
-                                                                    weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                                                    weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                                                });
-                                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                    [weakSelf.progressHUD dismiss];
-                                                                    [self onBack:nil];
-                                                                });
-                                                            } else {
-                                                                [strongSelf.progressHUD dismiss];
-                                                                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                                            }
-                                                        }];
-    }
-}
-
-
-#pragma mark -
-#pragma mark - Progress hud setup
+#pragma mark Progress hud setup
 
 - (JGProgressHUD *)configureProgressHUD {
     JGProgressHUD *hud = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
@@ -336,7 +347,31 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self startProcessInstanceForProcessDefinition:self.processDefinitionsArr[indexPath.row]];
+    if (self.isNetworkReachable) {
+        [self startProcessInstanceForProcessDefinition:self.processDefinitionsArr[indexPath.row]];
+    } else {
+        [self showWarningMessage:NSLocalizedString(kLocalizationOfflineFunctionalityNotAvailableText, @"Functionality not available offline text")];
+    }
+    
+    [tableView deselectRowAtIndexPath:indexPath
+                             animated:NO];
+}
+
+
+#pragma mark -
+#pragma mark Convenience methods
+
+- (void)setupLocalization {
+    self.navigationBarTitle = NSLocalizedString(kLocalizationProcessInstanceStartNewInstanceTitleText, @"Start process screen title");
+    self.noRecordsLabel.text = NSLocalizedString(kLocalizationStartProcessInstanceScreenNoResultsText, @"No records available text");
+}
+
+- (void)endRefreshOnRefreshControl {
+    __weak typeof(self) weakSelf = self;
+    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.refreshControl endRefreshing];
+    }];
 }
 
 
@@ -351,15 +386,27 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                         forKeyPath:NSStringFromSelector(@selector(controllerState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
+                                 AFAStartProcessInstanceLoadingState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     strongSelf.processTableView.hidden = (AFAStartProcessInstanceLoadingStateGeneralRefreshInProgress & strongSelf.controllerState) ? YES : NO;
-                                     strongSelf.loadingActivityView.hidden = (AFAStartProcessInstanceLoadingStateGeneralRefreshInProgress & strongSelf.controllerState) ? NO : YES;
-                                     strongSelf.loadingActivityView.animating = (AFAStartProcessInstanceLoadingStateGeneralRefreshInProgress & strongSelf.controllerState) ? YES : NO;
+                                     if (AFAStartProcessInstanceLoadingStateIdle == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.processTableView.hidden = NO;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else if (AFAStartProcessInstanceLoadingStateInProgress == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = NO;
+                                         weakSelf.loadingActivityView.animating = YES;
+                                         weakSelf.processTableView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else if (AFAStartProcessInstanceLoadingStateEmptyList == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.processTableView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = NO;
+                                     }
                                  });
                              }];
 }
-
 
 @end

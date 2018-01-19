@@ -16,7 +16,7 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKProcessDataAccessor.h"
+#import "ASDKProcessInstanceDataAccessor.h"
 
 // Constants
 #import "ASDKLogConfiguration.h"
@@ -38,13 +38,13 @@
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
-@interface ASDKProcessDataAccessor ()
+@interface ASDKProcessInstanceDataAccessor ()
 
 @property (strong, nonatomic) NSOperationQueue *processingQueue;
 
 @end
 
-@implementation ASDKProcessDataAccessor
+@implementation ASDKProcessInstanceDataAccessor
 
 - (instancetype)initWithDelegate:(id<ASDKDataAccessorDelegate>)delegate {
     self = [super initWithDelegate:delegate];
@@ -754,6 +754,34 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                          [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
                                                                      }
                                                                  }];
+}
+
+
+#pragma mark -
+#pragma mark Service - Start a process instance
+
+- (void)startProcessInstanceWithStartProcessRequestRepresentation:(ASDKStartProcessRequestRepresentation *)startProcessRequestRepresentation {
+    NSParameterAssert(startProcessRequestRepresentation);
+    
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [self.processInstanceNetworkService
+     startProcessInstanceWithStartProcessRequestRepresentation:startProcessRequestRepresentation
+     completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
+         __strong typeof(self) strongSelf = weakSelf;
+         ASDKDataAccessorResponseModel *responseModel = [[ASDKDataAccessorResponseModel alloc] initWithModel:processInstance
+                                                                                                isCachedData:NO
+                                                                                                       error:error];
+         if (strongSelf.delegate) {
+             [strongSelf.delegate dataAccessor:strongSelf
+                           didLoadDataResponse:responseModel];
+             
+             [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
+         }
+     }];
 }
 
 

@@ -53,20 +53,26 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
 /**
  *  Performs a request for the process definition list.
  *
- *  @param completionBlock Completion block providing the process definition list, an optional error reason and
- *                         pagination information
+ *  @param completionBlock      Completion block providing the process definition list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process definition list, an
+ *                              optional error reason and pagination information
  */
-- (void)requestProcessDefinitionListWithCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock;
+- (void)requestProcessDefinitionListWithCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock
+                                           cachedResults:(AFAProcessDefinitionListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the process definition list that's associated with an application.
  *
- *  @param appID           The application for which the process definition list is fetched back
- *  @param completionBlock Completion block providing the process definition list, an optional error reason and
- *                         pagination information
+ *  @param appID                The application for which the process definition list is fetched back
+ *  @param completionBlock      Completion block providing the process definition list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process definition list, an
+ *                              optional error reason and pagination information
  */
 - (void)requestProcessDefinitionListForAppID:(NSString *)appID
-                         withCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock;
+                         withCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock
+                               cachedResults:(AFAProcessDefinitionListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request to start a process instance given it's process definition ID and the name of the instance.

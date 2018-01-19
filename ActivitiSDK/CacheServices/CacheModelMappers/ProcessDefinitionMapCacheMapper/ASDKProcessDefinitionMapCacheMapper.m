@@ -16,17 +16,20 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKProcessDefinitionMapCacheMapper.h"
 
-@class ASDKMOProcessDefinitionMap;
+// Models
+#import "ASDKMOProcessDefinitionMap.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation ASDKProcessDefinitionMapCacheMapper
 
-@interface ASDKMOProcessDefinition : ASDKMOAttributable
++ (ASDKMOProcessDefinitionMap *)mapProcessDefinitionList:(NSArray *)processDefinitionList
+                                                forAppID:(NSString *)applicationID
+                                               toCacheMO:(ASDKMOProcessDefinitionMap *)moProcessDefinitionMap {
+    moProcessDefinitionMap.appID = applicationID;
+    [moProcessDefinitionMap addProcessDefinitionList:[NSSet setWithArray:processDefinitionList]];
+    
+    return moProcessDefinitionMap;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessDefinition+CoreDataProperties.h"

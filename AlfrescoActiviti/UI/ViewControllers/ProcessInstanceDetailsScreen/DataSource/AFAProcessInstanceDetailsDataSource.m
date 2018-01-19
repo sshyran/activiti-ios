@@ -39,14 +39,18 @@
 @interface AFAProcessInstanceDetailsDataSource ()
 
 // Services
-@property (strong, nonatomic) AFAQueryServices *fetchActiveTaskListService;
-@property (strong, nonatomic) AFAQueryServices *fetchCompletedTaskListService;
+@property (strong, nonatomic) AFAQueryServices      *fetchActiveTaskListService;
+@property (strong, nonatomic) AFAQueryServices      *fetchCompletedTaskListService;
+@property (strong, nonatomic) AFAProcessServices    *fetchProcessInstanceDetailsService;
+@property (strong, nonatomic) AFAProcessServices    *fetchProcessInstanceContentService;
+@property (strong, nonatomic) AFAProcessServices    *fetchProcessInstanceCommentsService;
+@property (strong, nonatomic) AFAProcessServices    *deleteProcessInstanceService;
 
 // Models
 @property (strong, nonatomic) AFATableControllerProcessInstanceTasksModel *cachedProcessInstanceTasksModel;
 @property (strong, nonatomic) AFATableControllerProcessInstanceTasksModel *remoteProcessInstanceTasksModel;
-@property (strong, nonatomic) NSError *cachedTaskListError;
-@property (strong, nonatomic) NSError *remoteTaskListError;
+@property (strong, nonatomic) NSError               *cachedTaskListError;
+@property (strong, nonatomic) NSError               *remoteTaskListError;
 
 @end
 
@@ -65,6 +69,10 @@
         
         _fetchActiveTaskListService = [AFAQueryServices new];
         _fetchCompletedTaskListService = [AFAQueryServices new];
+        _fetchProcessInstanceDetailsService = [AFAProcessServices new];
+        _fetchProcessInstanceContentService = [AFAProcessServices new];
+        _fetchProcessInstanceCommentsService = [AFAProcessServices new];
+        _deleteProcessInstanceService = [AFAProcessServices new];
         
         [self setUpCellFactoriesWithThemeColor:themeColor];
         
@@ -81,36 +89,35 @@
 
 - (void)processInstanceDetailsWithCompletionBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)completionBlock
                                cachedResultsBlock:(AFAProcessInstanceDetailsDataSourceCompletionBlock)cachedResultsBlock {
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    
     __weak typeof(self) weakSelf = self;
-    [processServices requestProcessInstanceDetailsForID:self.processInstanceID
-                                        completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
-                                            __strong typeof(self) strongSelf = weakSelf;
-                                            
-                                            BOOL registerCellActions = NO;
-                                            
-                                            if (!error) {
-                                                registerCellActions = [strongSelf registerProcessInstanceDetailsCellActionsForModel:processInstance];
-                                            }
-                                            
-                                            if (completionBlock) {
-                                                completionBlock(error, registerCellActions);
-                                            }
-                                            
-                                        } cachedResults:^(ASDKModelProcessInstance *processInstance, NSError *error) {
-                                            __strong typeof(self) strongSelf = weakSelf;
-                                            
-                                            BOOL registerCellActions = NO;
-                                            
-                                            if (!error) {
-                                                registerCellActions = [strongSelf registerProcessInstanceDetailsCellActionsForModel:processInstance];
-                                            }
-                                            
-                                            if (completionBlock) {
-                                                completionBlock(error, registerCellActions);
-                                            }
-                                        }];
+    [self.fetchProcessInstanceDetailsService
+     requestProcessInstanceDetailsForID:self.processInstanceID
+     completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         BOOL registerCellActions = NO;
+         
+         if (!error) {
+             registerCellActions = [strongSelf registerProcessInstanceDetailsCellActionsForModel:processInstance];
+         }
+         
+         if (completionBlock) {
+             completionBlock(error, registerCellActions);
+         }
+         
+     } cachedResults:^(ASDKModelProcessInstance *processInstance, NSError *error) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         BOOL registerCellActions = NO;
+         
+         if (!error) {
+             registerCellActions = [strongSelf registerProcessInstanceDetailsCellActionsForModel:processInstance];
+         }
+         
+         if (completionBlock) {
+             completionBlock(error, registerCellActions);
+         }
+     }];
 }
 
 - (void)processInstanceActiveAndCompletedTasksWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
@@ -169,7 +176,7 @@
     });
     
     dispatch_group_notify(remoteTaskListGroup, dispatch_get_main_queue(), ^{
-         __strong typeof(self) strongSelf = weakSelf;
+        __strong typeof(self) strongSelf = weakSelf;
         
         if ([strongSelf.remoteProcessInstanceTasksModel hasTaskListAvailable]) {
             strongSelf.sectionModels[@(AFAProcessInstanceDetailsSectionTypeTaskStatus)] = strongSelf.remoteProcessInstanceTasksModel;
@@ -184,10 +191,8 @@
 
 - (void)processInstanceContentWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
                                cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock {
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    
     __weak typeof(self) weakSelf = self;
-    [processServices
+    [self.fetchProcessInstanceContentService
      requestProcessInstanceContentForProcessInstanceID:self.processInstanceID
      completionBlock:^(NSArray *contentList, NSError *error) {
          __strong typeof(self) strongSelf = weakSelf;
@@ -214,10 +219,8 @@
 
 - (void)processInstanceCommentsWithCompletionBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)completionBlock
                                 cachedResultsBlock:(AFAProcessInstanceDataSourceErrorCompletionBlock)cachedResultsBlock {
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    
     __weak typeof(self) weakSelf = self;
-    [processServices
+    [self.fetchProcessInstanceCommentsService
      requestProcessInstanceCommentsForID:self.processInstanceID
      withCompletionBlock:^(NSArray *commentList, NSError *error, ASDKModelPaging *paging) {
          __strong typeof(self) strongSelf = weakSelf;
@@ -245,13 +248,12 @@
 }
 
 - (void)deleteCurrentProcessInstanceWithCompletionBlock:(void (^)(NSError *error))completionBlock {
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    [processServices requestDeleteProcessInstanceWithID:self.processInstanceID
-                                        completionBlock:^(BOOL isProcessInstanceDeleted, NSError *error) {
-                                            if (completionBlock) {
-                                                completionBlock(error);
-                                            }
-                                        }];
+    [self.deleteProcessInstanceService requestDeleteProcessInstanceWithID:self.processInstanceID
+                                                          completionBlock:^(BOOL isProcessInstanceDeleted, NSError *error) {
+                                                              if (completionBlock) {
+                                                                  completionBlock(error);
+                                                              }
+                                                          }];
 }
 
 - (id)cellFactoryForSectionType:(AFAProcessInstanceDetailsSectionType)sectionType {

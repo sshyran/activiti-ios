@@ -20,7 +20,22 @@
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
 
+@interface AFAContentPickerProcessInstanceAuditLogDownloadBehavior ()
+
+@property (strong, nonatomic) AFAProcessServices *downloadProcessInstanceAuditLogService;
+
+@end
+
 @implementation AFAContentPickerProcessInstanceAuditLogDownloadBehavior
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _downloadProcessInstanceAuditLogService = [AFAProcessServices new];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
@@ -30,11 +45,10 @@
             allowCachedResults:(BOOL)allowCachedResults
              withProgressBlock:(void (^)(NSString *formattedReceivedBytesString, NSError *error))progressBlock
                completionBlock:(void (^)(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error))completionBlock {
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-    [processServices requestDownloadAuditLogForProcessInstanceWithID:resourceID
-                                                  allowCachedResults:allowCachedResults
-                                                       progressBlock:progressBlock
-                                                     completionBlock:completionBlock];
+    [self.downloadProcessInstanceAuditLogService requestDownloadAuditLogForProcessInstanceWithID:resourceID
+                                                                              allowCachedResults:allowCachedResults
+                                                                                   progressBlock:progressBlock
+                                                                                 completionBlock:completionBlock];
 }
 
 @end

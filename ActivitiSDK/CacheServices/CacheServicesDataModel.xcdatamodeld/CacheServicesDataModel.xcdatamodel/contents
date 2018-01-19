@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13533" systemVersion="16G1036" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1114" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="ASDKMOApp" representedClassName="ASDKMOApp" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="applicationDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="applicationModelID" optional="YES" attributeType="String" syncable="YES"/>
@@ -91,6 +91,11 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tenantID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="version" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="processDefinitionMap" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ASDKMOProcessDefinitionMap" inverseName="processDefinitionList" inverseEntity="ASDKMOProcessDefinitionMap" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOProcessDefinitionMap" representedClassName="ASDKMOProcessDefinitionMap" syncable="YES" codeGenerationType="category">
+        <attribute name="appID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="processDefinitionList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ASDKMOProcessDefinition" inverseName="processDefinitionMap" inverseEntity="ASDKMOProcessDefinition" syncable="YES"/>
     </entity>
     <entity name="ASDKMOProcessInstance" representedClassName="ASDKMOProcessInstance" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -224,8 +229,9 @@
         <element name="ASDKMOIntegrationAccount" positionX="504" positionY="-249" width="162" height="105"/>
         <element name="ASDKMOIntegrationContent" positionX="504" positionY="27" width="162" height="90"/>
         <element name="ASDKMONetwork" positionX="504" positionY="-36" width="162" height="45"/>
-        <element name="ASDKMOProcessDefinition" positionX="504" positionY="153" width="162" height="165"/>
+        <element name="ASDKMOProcessDefinition" positionX="504" positionY="153" width="162" height="178"/>
         <element name="ASDKMOProcessInstance" positionX="504" positionY="336" width="162" height="238"/>
+        <element name="ASDKMOProcessInstanceCommentMap" positionX="-540" positionY="630" width="225" height="73"/>
         <element name="ASDKMOProcessInstanceContent" positionX="-441" positionY="-208" width="225" height="88"/>
         <element name="ASDKMOProcessInstanceContentField" positionX="-441" positionY="-81" width="216" height="75"/>
         <element name="ASDKMOProcessInstanceFilterMap" positionX="72" positionY="846" width="198" height="58"/>
@@ -240,6 +246,6 @@
         <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="60"/>
         <element name="ASDKMOTaskFilterMapPlaceholder" positionX="-405" positionY="927" width="207" height="88"/>
         <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="133"/>
-        <element name="ASDKMOProcessInstanceCommentMap" positionX="-540" positionY="630" width="225" height="73"/>
+        <element name="ASDKMOProcessDefinitionMap" positionX="718" positionY="153" width="182" height="73"/>
     </elements>
 </model>

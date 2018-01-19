@@ -17,16 +17,14 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+@import CoreData;
 
-@class ASDKMOProcessDefinitionMap;
+@class ASDKModelProcessDefinition, ASDKMOProcessDefinition;
 
-NS_ASSUME_NONNULL_BEGIN
+@interface ASDKProcessDefinitionCacheMapper : NSObject
 
-@interface ASDKMOProcessDefinition : ASDKMOAttributable
++ (ASDKMOProcessDefinition *)mapProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
+                                        toCacheMO:(ASDKMOProcessDefinition *)moProcessDefinition;
++ (ASDKModelProcessDefinition *)mapCacheMOToProcessInstance:(ASDKMOProcessDefinition *)moProcessDefinition;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessDefinition+CoreDataProperties.h"

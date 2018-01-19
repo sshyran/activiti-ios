@@ -156,6 +156,7 @@ extern NSString *kLocalizationPaswordText;
 extern NSString *kLocalizationOfflineProvidingCachedResultsText;
 extern NSString *kLocalizationOfflineConnectivityRetryText;
 extern NSString *kLocalizationOfflineConnectivityConnectedRefreshingText;
+extern NSString *kLocalizationOfflineFunctionalityNotAvailableText;
 
 // Alert dialogs use
 extern NSString *kLocalizationAlertDialogOopsTitleText;

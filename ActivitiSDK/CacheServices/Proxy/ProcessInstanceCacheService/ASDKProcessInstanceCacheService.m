@@ -314,7 +314,7 @@
         NSArray *matchingCommentsArr = nil;
         
         NSFetchRequest *processInstanceCommentMapRequest = [ASDKMOProcessInstanceCommentMap fetchRequest];
-        processInstanceCommentMapRequest.predicate = [NSPredicate predicateWithFormat:@"processInstanceID == %@", processInstanceID];
+        processInstanceCommentMapRequest.predicate = [self processInstancePredicateForProcessInstanceID:processInstanceID];
         NSArray *processInstanceCommentMapArr = [managedObjectContext executeFetchRequest:processInstanceCommentMapRequest
                                                                                     error:&error];
         
@@ -439,7 +439,7 @@
                                                                         inContext:(NSManagedObjectContext *)managedObjectContext {
     NSError *internalError = nil;
     NSFetchRequest *oldProcessInstanceCommentMapRequest = [ASDKMOProcessInstanceCommentMap fetchRequest];
-    oldProcessInstanceCommentMapRequest.predicate = [NSPredicate predicateWithFormat:@"processInstanceID == %@", processInstanceID];
+    oldProcessInstanceCommentMapRequest.predicate = [self processInstancePredicateForProcessInstanceID:processInstanceID];
     oldProcessInstanceCommentMapRequest.resultType = NSManagedObjectIDResultType;
     
     NSBatchDeleteRequest *removeOldProcessInstanceCommentMapRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldProcessInstanceCommentMapRequest];
@@ -469,7 +469,7 @@
     }
     
     NSFetchRequest *commentMapFetchRequest = [ASDKMOProcessInstanceCommentMap fetchRequest];
-    commentMapFetchRequest.predicate = [NSPredicate predicateWithFormat:@"processInstanceID == %@", processInstanceID];
+    commentMapFetchRequest.predicate = [self processInstancePredicateForProcessInstanceID:processInstanceID];
     NSArray *fetchResult = [managedObjectContext executeFetchRequest:commentMapFetchRequest
                                                                error:&internalError];
     if (internalError) {

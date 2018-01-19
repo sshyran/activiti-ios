@@ -189,6 +189,7 @@ NSString *kLocalizationPaswordText                               = @"passwordTex
 NSString *kLocalizationOfflineProvidingCachedResultsText         = @"offlineProvidingCachedResultsText";
 NSString *kLocalizationOfflineConnectivityRetryText              = @"offlineConnectivityRetryText";
 NSString *kLocalizationOfflineConnectivityConnectedRefreshingText= @"offlineConnectivityConnectedRefreshingText";
+NSString *kLocalizationOfflineFunctionalityNotAvailableText      = @"offlineFunctionalityNotAvailableText";
 
 
 #pragma mark -

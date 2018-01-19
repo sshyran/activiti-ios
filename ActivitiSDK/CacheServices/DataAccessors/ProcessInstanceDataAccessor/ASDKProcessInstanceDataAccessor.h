@@ -18,9 +18,9 @@
 
 #import "ASDKDataAccessor.h"
 
-@class ASDKFilterRequestRepresentation;
+@class ASDKFilterRequestRepresentation, ASDKStartProcessRequestRepresentation;
 
-@interface ASDKProcessDataAccessor : ASDKDataAccessor
+@interface ASDKProcessInstanceDataAccessor : ASDKDataAccessor
 
 /**
  * Requests a list of process instances for the current logged in user conforming to
@@ -80,6 +80,15 @@
  * @param processInstanceID The ID of the process instance for which the download audit is requested
  */
 - (void)downloadAuditLogForProcessInstanceWithID:(NSString *)processInstanceID;
+
+/**
+ * Starts a process instance given a request representation and reports the result through the designated
+ * data accessor delegate.
+ *
+ * @param startProcessRequestRepresentation Request representation containing the process definition ID and
+ *                                          the name of the instance.
+ */
+- (void)startProcessInstanceWithStartProcessRequestRepresentation:(ASDKStartProcessRequestRepresentation *)startProcessRequestRepresentation;
 
 /**
  * Cancels ongoing operations for the current data accessor.

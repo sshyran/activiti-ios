@@ -46,7 +46,8 @@
 @property (strong, nonatomic) JGProgressHUD                     *progressHUD;
 
 // Services
-@property (strong, nonatomic) AFATaskServices                   *createCommentService;
+@property (strong, nonatomic) AFATaskServices                   *createTaskCommentService;
+@property (strong, nonatomic) AFAProcessServices                *createProcessInstanceCommentService;
 
 @end
 
@@ -57,7 +58,8 @@
     
     if (self) {
         _progressHUD = [self configureProgressHUD];
-        _createCommentService = [AFATaskServices new];
+        _createTaskCommentService = [AFATaskServices new];
+        _createProcessInstanceCommentService = [AFAProcessServices new];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(keyboardWillChange:)
@@ -147,14 +149,13 @@
         
         // Check whether we need to add a task or process instance comment
         if (self.taskID) {
-            [self.createCommentService requestCreateComment:self.commentsTextView.text
-                                                  forTaskID:self.taskID
-                                            completionBlock:commentCompletionBlock];
+            [self.createTaskCommentService requestCreateComment:self.commentsTextView.text
+                                                      forTaskID:self.taskID
+                                                completionBlock:commentCompletionBlock];
         } else {
-            AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-            [processServices requestCreateComment:self.commentsTextView.text
-                             forProcessInstanceID:self.processInstanceID
-                                  completionBlock:commentCompletionBlock];
+            [self.createProcessInstanceCommentService requestCreateComment:self.commentsTextView.text
+                                                      forProcessInstanceID:self.processInstanceID
+                                                           completionBlock:commentCompletionBlock];
         }
     } else {
         [self showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAddCommentScreenEmptyCommentErrorText, @"Add some text error text")];

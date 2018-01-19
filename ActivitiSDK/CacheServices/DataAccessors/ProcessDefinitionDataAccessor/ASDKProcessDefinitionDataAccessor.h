@@ -16,17 +16,27 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import "ASDKMOAttributable.h"
+#import "ASDKDataAccessor.h"
 
-@class ASDKMOProcessDefinitionMap;
+@interface ASDKProcessDefinitionDataAccessor : ASDKDataAccessor
 
-NS_ASSUME_NONNULL_BEGIN
+/**
+ * Requests a list of ad-hoc process definitions and reports the results through the designated data
+ * accessor delegate.
+ */
+- (void)fetchProcessDefinitionList;
 
-@interface ASDKMOProcessDefinition : ASDKMOAttributable
+/**
+ * Performs a request for process definitions associated with a specific application and reports the results
+ * through the designated data accessor delegate.
+ *
+ * @param appID The application ID for which the process definition list is fetched
+ */
+- (void)fetchProcessDefinitionListForAppID:(NSString *)appID;
+
+/**
+ * Cancels ongoing operations for the current data accessor.
+ */
+- (void)cancelOperations;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOProcessDefinition+CoreDataProperties.h"
