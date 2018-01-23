@@ -191,8 +191,7 @@ UITableViewDelegate>
     [super viewWillAppear:animated];
     [self searchWithTerm:self.searchTextField.text];
     
-    BOOL isReachable = (self.reachabilityStore.reachability == AFAReachabilityStoreTypeReachableViaWANOrWiFi) ? YES : NO;
-    [self refreshUIForConnectivity:isReachable];
+    [self refreshUIForConnectivity:[self isNetworkReachable]];
 }
 
 

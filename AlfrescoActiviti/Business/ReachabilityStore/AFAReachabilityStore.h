@@ -19,12 +19,15 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, AFAReachabilityStoreType) {
-    AFAReachabilityStoreTypeReachableViaWANOrWiFi,
+    AFAReachabilityStoreTypeUndefined = -1,
+    AFAReachabilityStoreTypeReachableViaWANOrWiFi = 0,
     AFAReachabilityStoreTypeNotReachable
 };
 
 @interface AFAReachabilityStore : NSObject
 
 @property (assign, nonatomic) AFAReachabilityStoreType reachability;
+
+- (void)requestInitialReachabilityStatus;
 
 @end

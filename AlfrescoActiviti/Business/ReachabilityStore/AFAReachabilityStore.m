@@ -31,6 +31,10 @@
     self = [super init];
     if (self) {
         __weak typeof(self) weakSelf = self;
+        
+        
+        _reachability = AFAReachabilityStoreTypeUndefined;
+        
         _reachabilityChangeObserver =
         [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceNoInternetConnection
                                                           object:nil
@@ -56,6 +60,24 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityChangeObserver];
+}
+
+- (void)requestInitialReachabilityStatus {
+    ASDKProfileDataAccessor *profileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:nil];
+    switch ([profileDataAccessor.networkService.requestOperationManager.reachabilityManager networkReachabilityStatus]) {
+        case AFNetworkReachabilityStatusReachableViaWWAN:
+        case AFNetworkReachabilityStatusReachableViaWiFi: {
+            _reachability = AFAReachabilityStoreTypeReachableViaWANOrWiFi;
+        }
+            break;
+            
+        case AFNetworkReachabilityStatusNotReachable: {
+            _reachability = AFAReachabilityStoreTypeNotReachable;
+        }
+            break;
+            
+        default: break;
+    }
 }
 
 @end

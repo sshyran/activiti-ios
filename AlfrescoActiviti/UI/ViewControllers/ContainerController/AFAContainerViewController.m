@@ -107,6 +107,7 @@
         
         // Register the reachability store to get notified or querry for network outages
         AFAReachabilityStore *reachabilityStore = [AFAReachabilityStore new];
+        [reachabilityStore requestInitialReachabilityStatus];
         [serviceRepository registerServiceObject:reachabilityStore
                                       forPurpose:AFAServiceObjectTypeReachabilityStore];
         

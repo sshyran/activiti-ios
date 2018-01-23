@@ -1337,8 +1337,8 @@
 		13AAD3C21CDB82A900818537 /* AFAProfileSimpleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileSimpleTableViewCell.m; path = UI/Cells/ProfileSimpleCell/AFAProfileSimpleTableViewCell.m; sourceTree = "<group>"; };
 		13AAD3C51CDB82F600818537 /* AFAProfileActionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAProfileActionTableViewCell.h; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.h; sourceTree = "<group>"; };
 		13AAD3C61CDB82F600818537 /* AFAProfileActionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAProfileActionTableViewCell.m; path = UI/Cells/ProfileActionCell/AFAProfileActionTableViewCell.m; sourceTree = "<group>"; };
-		13ABCD451FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceCommentMapCacheMapper.h; path = ../CacheServices/CacheModelMappers/ProcessInstanceCommentMapCacheMapper/ASDKProcessInstanceCommentMapCacheMapper.h; sourceTree = "<group>"; };
-		13ABCD461FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceCommentMapCacheMapper.m; path = ../CacheServices/CacheModelMappers/ProcessInstanceCommentMapCacheMapper/ASDKProcessInstanceCommentMapCacheMapper.m; sourceTree = "<group>"; };
+		13ABCD451FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKProcessInstanceCommentMapCacheMapper.h; sourceTree = "<group>"; };
+		13ABCD461FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessInstanceCommentMapCacheMapper.m; sourceTree = "<group>"; };
 		13ACE37A1C9996B900693A29 /* AFAAddCommentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAAddCommentsViewController.h; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.h; sourceTree = "<group>"; };
 		13ACE37B1C9996B900693A29 /* AFAAddCommentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAAddCommentsViewController.m; path = UI/ViewControllers/AddCommentsScreen/AFAAddCommentsViewController.m; sourceTree = "<group>"; };
 		13AE35521C43B61700BEB477 /* glyphicons-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "glyphicons-regular.otf"; path = "../ActivitiSDK/Resources/glyphicons-regular.otf"; sourceTree = "<group>"; };
@@ -4287,7 +4287,8 @@
 				13ABCD451FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.h */,
 				13ABCD461FE2C65000ED0654 /* ASDKProcessInstanceCommentMapCacheMapper.m */,
 			);
-			path = ProcessInstanceCommentMapCacheMapper;
+			name = ProcessInstanceCommentMapCacheMapper;
+			path = CacheServices/CacheModelMappers/ProcessInstanceCommentMapCacheMapper;
 			sourceTree = "<group>";
 		};
 		13ACE37D1C9996BE00693A29 /* AddCommentsScreen */ = {
