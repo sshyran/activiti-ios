@@ -323,7 +323,7 @@
 		1393C95A1F0D06E400E9635B /* ASDKProfileCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1393C9581F0D06E400E9635B /* ASDKProfileCacheMapper.m */; };
 		1393C95F1F0E26C700E9635B /* ASDKGroupCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1393C95D1F0E26C700E9635B /* ASDKGroupCacheMapper.h */; };
 		1393C9601F0E26C700E9635B /* ASDKGroupCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1393C95E1F0E26C700E9635B /* ASDKGroupCacheMapper.m */; };
-		1394F66A1F028A68005C8C32 /* ASDKPersistenceStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F6681F028A68005C8C32 /* ASDKPersistenceStack.h */; };
+		1394F66A1F028A68005C8C32 /* ASDKPersistenceStack.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F6681F028A68005C8C32 /* ASDKPersistenceStack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1394F66B1F028A68005C8C32 /* ASDKPersistenceStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F6691F028A68005C8C32 /* ASDKPersistenceStack.m */; };
 		1394F66E1F03F260005C8C32 /* ASDKPersistenceStackConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F66C1F03F260005C8C32 /* ASDKPersistenceStackConstants.h */; };
 		1394F66F1F03F260005C8C32 /* ASDKPersistenceStackConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F66D1F03F260005C8C32 /* ASDKPersistenceStackConstants.m */; };

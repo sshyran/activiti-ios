@@ -82,8 +82,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     // As a precaution to keep the users safe from entering a possible crash-loop
     // if a previous crash was detected disable the auto sign-in function to at least
     // give time for the crash reports to be delivered
-    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
-    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    [standardUserDefaults removeObjectForKey:kCloudUsernameCredentialIdentifier];
+    [standardUserDefaults removeObjectForKey:kPremiseUsernameCredentialIdentifier];
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         completionHandler(YES);

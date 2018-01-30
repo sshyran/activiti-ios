@@ -452,7 +452,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 - (void)setupPersistenceStack {
-    ASDKPersistenceStack *persistenceStack = [[ASDKPersistenceStack alloc] initWithErrorHandler:^(NSError *error) {
+    ASDKPersistenceStack *persistenceStack = [[ASDKPersistenceStack alloc] initWithServerConfiguration:self.serverConfiguration
+                                                                                          errorHandler:^(NSError *error) {
         ASDKLogVerbose(@"Persistence stack...%@", error ? @"NOT_OK" : @"OK");
         if (error) {
             ASDKLogError(@"Reason:%@", error.localizedDescription);

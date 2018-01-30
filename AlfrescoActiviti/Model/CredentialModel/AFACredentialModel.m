@@ -17,7 +17,32 @@
  ******************************************************************************/
 
 #import "AFACredentialModel.h"
+@import ActivitiSDK;
 
 @implementation AFACredentialModel
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _serverConfiguration = [ASDKModelServerConfiguration new];
+    }
+    
+    return self;
+}
+
+
+#pragma mark -
+#pragma mark Getters
+
+- (ASDKModelServerConfiguration *)serverConfiguration {
+    _serverConfiguration.hostAddressString = _hostname;
+    _serverConfiguration.username = _username;
+    _serverConfiguration.password = _password;
+    _serverConfiguration.port = _port;
+    _serverConfiguration.serviceDocument = _serviceDocument;
+    _serverConfiguration.isCommunicationOverSecureLayer = _isCommunicationOverSecureLayer;
+    
+    return _serverConfiguration;
+}
 
 @end

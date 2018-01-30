@@ -106,6 +106,10 @@
     return self.credentialModel.rememberCredentials;
 }
 
+- (ASDKModelServerConfiguration *)serverConfiguration {
+    return self.credentialModel.serverConfiguration;
+}
+
 
 #pragma mark -
 #pragma mark Public interface
@@ -149,18 +153,11 @@
     // Authorization in progress
     self.authState = AFALoginAuthenticationStateInProgress;
     
-    // Create the server configuration for the SDK bootstrap
-    ASDKModelServerConfiguration *serverConfiguration = [ASDKModelServerConfiguration new];
-    serverConfiguration.hostAddressString = self.credentialModel.hostname;
-    serverConfiguration.username = self.credentialModel.username;
-    serverConfiguration.password = self.credentialModel.password;
-    serverConfiguration.port = self.credentialModel.port;
-    serverConfiguration.serviceDocument = self.credentialModel.serviceDocument;
-    serverConfiguration.isCommunicationOverSecureLayer = self.credentialModel.isCommunicationOverSecureLayer;
-    
     // Initiate the Activiti SDK bootstrap with the given server configuration
+    ASDKModelServerConfiguration *serverConfiguration = self.credentialModel.serverConfiguration;
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
     [sdkBootstrap setupServicesWithServerConfiguration:serverConfiguration];
+    NSString *persistenceStackModelName = [self persistenceStackModelName];
     
     __weak typeof(self) weakSelf = self;
     void (^errorHandlingBlock)(NSError *) = ^(NSError *error) {
@@ -168,10 +165,6 @@
         
         // An error occured
         strongSelf.authState = AFALoginAuthenticationStateFailed;
-        
-        [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
-        [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
-        
         completionBlock(NO, error);
     };
     
@@ -187,44 +180,16 @@
                 // and store them in the keychain
                 if (strongSelf.credentialModel.rememberCredentials) {
                     
-                    // Store in the user defaults which type of login is to be performed in the future
-                    NSString *currentAuthentificationIdentifier = (strongSelf.authentificationType == AFALoginAuthenticationTypeCloud) ? kCloudAuthetificationCredentialIdentifier : kPremiseAuthentificationCredentialIdentifier;
-                    
-                    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                    [userDefaults setObject:currentAuthentificationIdentifier
-                                     forKey:kAuthentificationTypeCredentialIdentifier];
-                    
-                    if (AFALoginAuthenticationTypeCloud == strongSelf.authentificationType) {
-                        [userDefaults setObject:serverConfiguration.hostAddressString
-                                         forKey:kCloudHostNameCredentialIdentifier];
-                        [userDefaults setBool:serverConfiguration.isCommunicationOverSecureLayer
-                                       forKey:kCloudSecureLayerCredentialIdentifier];
-                    } else {
-                        [userDefaults setObject:serverConfiguration.hostAddressString
-                                         forKey:kPremiseHostNameCredentialIdentifier];
-                        [userDefaults setObject:serverConfiguration.serviceDocument
-                                         forKey:kPremiseServiceDocumentCredentialIdentifier];
-                        [userDefaults setBool:serverConfiguration.isCommunicationOverSecureLayer
-                                       forKey:kPremiseSecureLayerCredentialIdentifier];
-                        if (serverConfiguration.port.length) {
-                            [userDefaults setObject:serverConfiguration.port
-                                             forKey:kPremisePortCredentialIdentifier];
-                        }
-                    }
-                    [userDefaults synchronize];
+                    // Store in the user defaults details of the current login
+                    [strongSelf synchronizeToUserDefaultsServerConfiguration:serverConfiguration];
                     
                     // Former credentials are registered, will update them
-                    if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier] &&
-                        [AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]) {
-                        [AFAKeychainWrapper updateKeychainValue:serverConfiguration.username
-                                                  forIdentifier:kUsernameCredentialIdentifier];
+                    if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:persistenceStackModelName]) {
                         [AFAKeychainWrapper updateKeychainValue:serverConfiguration.password
-                                                  forIdentifier:kPasswordCredentialIdentifier];
+                                                  forIdentifier:persistenceStackModelName];
                     } else { // Insert new values in the keychain
-                        [AFAKeychainWrapper createKeychainValue:serverConfiguration.username
-                                                  forIdentifier:kUsernameCredentialIdentifier];
                         [AFAKeychainWrapper createKeychainValue:serverConfiguration.password
-                                                  forIdentifier:kPasswordCredentialIdentifier];
+                                                  forIdentifier:persistenceStackModelName];
                     }
                 }
                 
@@ -241,8 +206,18 @@
         if (AFALoginAuthenticationStateCanceled != strongSelf.authState &&
             AFALoginAuthenticationStatePreparing != strongSelf.authState) {
             if (!error && profile) {
-                strongSelf.authState = AFALoginAuthenticationStateAuthorized;
-                completionBlock(YES, nil);
+                // Store in the user defaults details of the current login
+                [strongSelf synchronizeToUserDefaultsServerConfiguration:serverConfiguration];
+                
+                if ([[AFAKeychainWrapper keychainStringFromMatchingIdentifier:persistenceStackModelName] isEqualToString:serverConfiguration.password]) {
+                    strongSelf.authState = AFALoginAuthenticationStateAuthorized;
+                    completionBlock(YES, nil);
+                } else {
+                    NSError *invalidCredentialsError = [NSError errorWithDomain:AFALoginViewModelErrorDomain
+                                                                           code:kAFALoginViewModelInvalidCredentialErrorCode
+                                                                       userInfo:nil];
+                    errorHandlingBlock(invalidCredentialsError);
+                }
             } else {
                 errorHandlingBlock(error);
             }
@@ -251,17 +226,23 @@
 }
 
 - (void)requestLogout {
-    // Logout is successful - remove also any remembered credentials from the keychain
-    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kUsernameCredentialIdentifier];
-    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:kPasswordCredentialIdentifier];
     [self updateUserNameEntry:nil];
     [self updatePasswordEntry:nil];
+    
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    [standardUserDefaults removeObjectForKey:kCloudUsernameCredentialIdentifier];
+    [standardUserDefaults removeObjectForKey:kPremiseUsernameCredentialIdentifier];
     
     for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
     }
     
     self.authState = AFALoginAuthenticationStateLoggedOut;
+}
+
+- (void)requestLogoutForUnauthorizedAccess {
+    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:[self persistenceStackModelName]];
+    [self requestLogout];
 }
 
 - (void)cancelLoginRequest {
@@ -273,6 +254,46 @@
     
     // Cancel also the request
     [self.requestProfileService cancellProfileNetworkRequests];
+}
+
+- (NSString *)persistenceStackModelName {
+    return [ASDKPersistenceStack persistenceStackModelNameForServerConfiguration:self.credentialModel.serverConfiguration];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)synchronizeToUserDefaultsServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration {
+    // Store in the user defaults which type of login is to be performed in the future
+    NSString *currentAuthentificationIdentifier = (self.authentificationType == AFALoginAuthenticationTypeCloud) ? kCloudAuthetificationCredentialIdentifier : kPremiseAuthentificationCredentialIdentifier;
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:currentAuthentificationIdentifier
+                     forKey:kAuthentificationTypeCredentialIdentifier];
+    
+    if (AFALoginAuthenticationTypeCloud == self.authentificationType) {
+        [userDefaults setObject:serverConfiguration.hostAddressString
+                         forKey:kCloudHostNameCredentialIdentifier];
+        [userDefaults setBool:serverConfiguration.isCommunicationOverSecureLayer
+                       forKey:kCloudSecureLayerCredentialIdentifier];
+        [userDefaults setObject:serverConfiguration.username
+                         forKey:kCloudUsernameCredentialIdentifier];
+    } else {
+        [userDefaults setObject:serverConfiguration.hostAddressString
+                         forKey:kPremiseHostNameCredentialIdentifier];
+        [userDefaults setObject:serverConfiguration.serviceDocument
+                         forKey:kPremiseServiceDocumentCredentialIdentifier];
+        [userDefaults setBool:serverConfiguration.isCommunicationOverSecureLayer
+                       forKey:kPremiseSecureLayerCredentialIdentifier];
+        [userDefaults setObject:serverConfiguration.username
+                         forKey:kPremiseUsernameCredentialIdentifier];
+        if (serverConfiguration.port.length) {
+            [userDefaults setObject:serverConfiguration.port
+                             forKey:kPremisePortCredentialIdentifier];
+        }
+    }
+    [userDefaults synchronize];
 }
 
 @end

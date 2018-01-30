@@ -22,6 +22,9 @@
 #import "ASDKPersistenceStackConstants.h"
 #import "ASDKLogConfiguration.h"
 
+// Models
+#import "ASDKModelServerConfiguration.h"
+
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
@@ -34,11 +37,11 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 #pragma mark -
 #pragma mark Life cycle
 
-- (instancetype)initWithErrorHandler:(ASDKPersistenceErrorHandlerBlock)errorHandlerBlock {
+- (instancetype)initWithServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration
+                               errorHandler:(ASDKPersistenceErrorHandlerBlock)errorHandlerBlock {
     self = [super init];
     if (self) {
-        NSString *persistenceStackModelName = @"CacheServicesDataModel";
-        NSURL *modelURL = [[NSBundle bundleForClass:[self class]] URLForResource:persistenceStackModelName
+        NSURL *modelURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"CacheServicesDataModel"
                                                                    withExtension:@"momd"];
         if (!modelURL) {
             ASDKLogError(@"Cannot initialize persistence stack. Reason:%@", [self persistenceStackInitializationError]);
@@ -46,8 +49,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
         
         NSManagedObjectModel *managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-        NSPersistentContainer *persistentContainer = [[NSPersistentContainer alloc] initWithName:persistenceStackModelName
-                                                        managedObjectModel:managedObjectModel];
+        NSPersistentContainer *persistentContainer = [[NSPersistentContainer alloc] initWithName:[ASDKPersistenceStack persistenceStackModelNameForServerConfiguration: serverConfiguration]
+                                                                              managedObjectModel:managedObjectModel];
         
         [persistentContainer loadPersistentStoresWithCompletionHandler:^(NSPersistentStoreDescription *description, NSError *error) {
             persistentContainer.viewContext.automaticallyMergesChangesFromParent = YES;
@@ -61,6 +64,34 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     }
     
     return self;
+}
+
++ (NSString *)persistenceStackModelNameForServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration {
+    if (serverConfiguration.hostAddressString.length &&
+        serverConfiguration.username.length &&
+        serverConfiguration.serviceDocument.length) {
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^a-zA-Z0-9_]+"
+                                                                               options:kNilOptions
+                                                                                 error:nil];
+        
+        
+        NSString *normalizedHostName = [regex stringByReplacingMatchesInString:serverConfiguration.hostAddressString
+                                                                       options:kNilOptions
+                                                                         range:NSMakeRange(0, serverConfiguration.hostAddressString.length)
+                                                                  withTemplate:@""];
+        NSString *normalizedUserName = [regex stringByReplacingMatchesInString:serverConfiguration.username
+                                                                       options:kNilOptions
+                                                                         range:NSMakeRange(0, serverConfiguration.username.length)
+                                                                  withTemplate:@""];
+        NSString *normalizedServiceDocument = [regex stringByReplacingMatchesInString:serverConfiguration.serviceDocument
+                                                                              options:kNilOptions
+                                                                                range:NSMakeRange(0, serverConfiguration.serviceDocument.length)
+                                                                         withTemplate:@""];
+        
+        return [NSString stringWithFormat:@"%@@%@@%@", normalizedHostName, normalizedServiceDocument, normalizedUserName];
+    }
+    
+    return nil;
 }
 
 

@@ -123,25 +123,16 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *authenticationIdentifier = [userDefaults objectForKey:kAuthentificationTypeCredentialIdentifier];
-    AFALoginAuthenticationType lastAuthetificationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginAuthenticationTypeCloud : AFALoginAuthenticationTypePremise;
+    AFALoginAuthenticationType lastAuthenticationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginAuthenticationTypeCloud : AFALoginAuthenticationTypePremise;
     
-    // Check if we have registered credentials and if so login the user
-    // without showing the menu
-    // Note: If no previous successfull attempt to login is recorded in the user defaults
-    // this means the app is freshly installed and even if credentials are registered with
-    // the keychain do not fetch them
-    if (authenticationIdentifier.length) {
-        [self.loginViewModel updateUserNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]];
-        [self.loginViewModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]];
-    }
-    
-    BOOL areCredentialsAvailableFromKeychain = self.loginViewModel.username.length && self.loginViewModel.password.length;
-    
-    if (AFALoginAuthenticationTypeCloud == lastAuthetificationType &&
-        areCredentialsAvailableFromKeychain) {
+    if (AFALoginAuthenticationTypeCloud == lastAuthenticationType) {
+        self.loginViewModel.authentificationType = AFALoginAuthenticationTypeCloud;
         [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kCloudHostNameCredentialIdentifier]];
         [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kCloudSecureLayerCredentialIdentifier]];
+        [self.loginViewModel updateUserNameEntry:[userDefaults objectForKey:kCloudUsernameCredentialIdentifier]];
+        [self.loginViewModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:[self.loginViewModel persistenceStackModelName]]];
     } else {
+        self.loginViewModel.authentificationType = AFALoginAuthenticationTypePremise;
         [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kPremiseHostNameCredentialIdentifier]];
         [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kPremiseSecureLayerCredentialIdentifier]];
         NSString *cachedPortString = [userDefaults objectForKey:kPremisePortCredentialIdentifier];
@@ -156,6 +147,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
         if (serviceDocumentValue.length) {
             [self.loginViewModel updateServiceDocument:serviceDocumentValue];
         }
+        
+        [self.loginViewModel updateUserNameEntry:[userDefaults objectForKey:kPremiseUsernameCredentialIdentifier]];
+        [self.loginViewModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:[self.loginViewModel persistenceStackModelName]]];
     }
     
     if ([self.loginViewModel canUserSignIn]) {

@@ -232,31 +232,6 @@
                      completion:nil];
 }
 
-- (void)requestUserLogout {
-    [self.loginViewModel requestLogout];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
-                                  sender:nil];
-    });
-}
-
-- (void)handleUnAuthorizedRequestNotification {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:NSLocalizedString(kLocalizationLoginUnauthorizedRequestErrorText, @"Unauthorized request text")
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-    __weak typeof(self) weakSelf = self;
-    UIAlertAction *okButtonAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogOkButtonText, @"OK button title")
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction *action) {
-                                                               __strong typeof(self) strongSelf = weakSelf;
-                                                               [strongSelf requestUserLogout];
-                                                           }];
-    [alertController addAction:okButtonAction];
-    [self presentViewController:alertController
-                       animated:YES
-                     completion:nil];
-}
-
 - (void)showUserProfile {
     [self toggleDrawerMenu];
     
@@ -345,6 +320,43 @@
                              self.menuContainerView.hidden = YES;
                          }
                      }];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleUnAuthorizedRequestNotification {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:NSLocalizedString(kLocalizationLoginUnauthorizedRequestErrorText, @"Unauthorized request text")
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    UIAlertAction *okButtonAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogOkButtonText, @"OK button title")
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *action) {
+                                                               __strong typeof(self) strongSelf = weakSelf;
+                                                               [strongSelf requestUserUnauthorizedLogout];
+                                                           }];
+    [alertController addAction:okButtonAction];
+    [self presentViewController:alertController
+                       animated:YES
+                     completion:nil];
+}
+
+- (void)requestUserLogout {
+    [self.loginViewModel requestLogout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
+                                  sender:nil];
+    });
+}
+
+- (void)requestUserUnauthorizedLogout {
+    [self.loginViewModel requestLogoutForUnauthorizedAccess];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
+                                  sender:nil];
+    });
 }
 
 @end

@@ -146,6 +146,9 @@
 #import <ActivitiSDK/ASDKQuerryDataAccessor.h>
 #import <ActivitiSDK/ASDKProcessDefinitionDataAccessor.h>
 
+// Persistence
+#import <ActivitiSDK/ASDKPersistenceStack.h>
+
 // Service categories
 #import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>
 #import <ActivitiSDK/NSString+ASDKEmailValidation.h>

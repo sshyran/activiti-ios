@@ -130,15 +130,22 @@
             // Notify the user about the error
             NSInteger responseCode = 0;
             if (error) {
-                NSError *underlayingError = error.userInfo[NSUnderlyingErrorKey];
-                if (underlayingError) {
-                    responseCode = [[underlayingError.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
-                    if (!responseCode) {
-                        responseCode = underlayingError.code;
+                // Handle internal generated errors
+                if (AFALoginViewModelErrorDomain == error.domain) {
+                    if (kAFALoginViewModelInvalidCredentialErrorCode == error.code) {
+                        responseCode = ASDKHTTPCode401Unauthorised;
                     }
-                } else {
-                    NSHTTPURLResponse *urlResponse = error.userInfo[AFNetworkingOperationFailingURLResponseErrorKey];
-                    responseCode = urlResponse.statusCode;
+                } else { // Handle network generated errors
+                    NSError *underlayingError = error.userInfo[NSUnderlyingErrorKey];
+                    if (underlayingError) {
+                        responseCode = [[underlayingError.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
+                        if (!responseCode) {
+                            responseCode = underlayingError.code;
+                        }
+                    } else {
+                        NSHTTPURLResponse *urlResponse = error.userInfo[AFNetworkingOperationFailingURLResponseErrorKey];
+                        responseCode = urlResponse.statusCode;
+                    }
                 }
                 
                 NSString *networkErrorMessage = nil;

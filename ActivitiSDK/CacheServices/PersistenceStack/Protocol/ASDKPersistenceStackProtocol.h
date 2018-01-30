@@ -19,7 +19,8 @@
 #import <Foundation/Foundation.h>
 
 @class NSPersistentContainer,
-NSManagedObjectContext;
+NSManagedObjectContext,
+ASDKModelServerConfiguration;
 
 typedef void (^ASDKPersistenceTaskBlock) (NSManagedObjectContext *managedObjectContext);
 typedef void (^ASDKPersistenceErrorHandlerBlock) (NSError *error);
@@ -33,15 +34,27 @@ typedef void (^ASDKPersistenceErrorHandlerBlock) (NSError *error);
 
 
 /**
- * Initializez, configures and loads a persistence store dedicated to caching and
+ * Initializes, configures and loads a persistence store dedicated to caching and
  * fetching cached data.
  *
- * @param errorHandlerBlock Error reporting block that gets called if the persistence 
- *                          stack cannot be properly set up.
+ * @param serverConfiguration   Server configuration data structure used to diferentiate
+ *                              the same data model but on different persistence stores
+ * @param errorHandlerBlock     Error reporting block that gets called if the persistence
+ *                              stack cannot be properly set up.
  * @return Initialized instance
  */
-- (instancetype)initWithErrorHandler:(ASDKPersistenceErrorHandlerBlock)errorHandlerBlock;
+- (instancetype)initWithServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration
+                               errorHandler:(ASDKPersistenceErrorHandlerBlock)errorHandlerBlock;
 
+/**
+ * Computed persistence stack model name based on the unique combination of server configuration
+ * items.
+ *
+ * @param serverConfiguration   Server configuration data structure used to encapsulate information like
+ *                              hostname, username, port numbers etc
+ * @return String uniquelly identifying a persistence stack based on a given server configuration
+ */
++ (NSString *)persistenceStackModelNameForServerConfiguration:(ASDKModelServerConfiguration *)serverConfiguration;
 
 /**
  * Returns managed object context associated with the main queue.

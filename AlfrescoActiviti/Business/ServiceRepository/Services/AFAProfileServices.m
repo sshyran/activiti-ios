@@ -216,24 +216,18 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     ASDKDataAccessorResponseModel *profileResponse = (ASDKDataAccessorResponseModel *)response;
     ASDKModelProfile *profile = (ASDKModelProfile *)profileResponse.model;
     
-    __weak typeof(self) weakSelf = self;
     if (!profileResponse.error) {
         
         // If the user updated the email address (username) then replace the authentication provider in the
         // SDK with the new username and also update the keychain values if the user checked the remember
         // credentials option
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        if (![profile.email isEqualToString:sdkBootstrap.serverConfiguration.username]) {
-            [sdkBootstrap updateServerConfigurationCredentialsForUsername:profile.email
-                                                                 password:sdkBootstrap.serverConfiguration.password];
-            
-            if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]) {
-                [AFAKeychainWrapper updateKeychainValue:profile.email
-                                          forIdentifier:kUsernameCredentialIdentifier];
-            }
+        if (![profile.email isEqualToString:[self currentServerConfiguration].username]) {
+            [self handleCredentialUpdateRequestForUsername:profile.email
+                                                  password:[self currentServerConfiguration].password];
         }
     }
     
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(self) strongSelf = weakSelf;
         
@@ -248,24 +242,18 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     ASDKDataAccessorResponseModel *profileResponse = (ASDKDataAccessorResponseModel *)response;
     NSString *newPassword = profileResponse.model;
     
-    __weak typeof(self) weakSelf = self;
     if (!profileResponse.error) {
         
         // If the password has been updated replace the authentication provider in the SDK with
         // the new password and also update the keychain values if the user checked the remember
         // credentials option
         if (newPassword.length) {
-            ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-            [sdkBootstrap updateServerConfigurationCredentialsForUsername:sdkBootstrap.serverConfiguration.username
-                                                                 password:newPassword];
-            
-            if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]) {
-                [AFAKeychainWrapper updateKeychainValue:newPassword
-                                          forIdentifier:kPasswordCredentialIdentifier];
-            }
+            [self handleCredentialUpdateRequestForUsername:[self currentServerConfiguration].username
+                                                  password:newPassword];
         }
     }
     
+    __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(self) strongSelf = weakSelf;
         
@@ -303,6 +291,38 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
             }
         });
     }
+}
+
+- (void)handleCredentialUpdateRequestForUsername:(NSString *)userName
+                                        password:(NSString *)password {
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    [sdkBootstrap updateServerConfigurationCredentialsForUsername:userName
+                                                         password:password];
+    NSString *persistenceStackModelName = [ASDKPersistenceStack persistenceStackModelNameForServerConfiguration:sdkBootstrap.serverConfiguration];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *currentAuthentificationIdentifier = [userDefaults objectForKey:kAuthentificationTypeCredentialIdentifier];
+    if ([currentAuthentificationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier]) {
+        [userDefaults setObject:userName
+                         forKey:kCloudUsernameCredentialIdentifier];
+    } else if ([currentAuthentificationIdentifier isEqualToString:kPremiseAuthentificationCredentialIdentifier]) {
+        [userDefaults setObject:userName
+                         forKey:kPremiseUsernameCredentialIdentifier];
+    }
+    [userDefaults synchronize];
+    
+    if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:persistenceStackModelName]) {
+        [AFAKeychainWrapper updateKeychainValue:password
+                                  forIdentifier:persistenceStackModelName];
+    } else {
+        [AFAKeychainWrapper createKeychainValue:password
+                                  forIdentifier:persistenceStackModelName];
+    }
+}
+
+- (ASDKModelServerConfiguration *)currentServerConfiguration {
+    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+    return sdkBootstrap.serverConfiguration;
 }
 
 @end
