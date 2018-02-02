@@ -24,6 +24,10 @@
 #import "AFAUIConstants.h"
 #import "AFABusinessConstants.h"
 
+// Managers
+#import "AFAServiceRepository.h"
+#import "AFAReachabilityStore.h"
+
 // Cells
 #import "AFACredentialTextFieldTableViewCell.h"
 #import "AFASignInTableViewCell.h"
@@ -128,12 +132,22 @@
             }
             
             // Notify the user about the error
-            NSInteger responseCode = 0;
             if (error) {
+                NSInteger responseCode = 0;
+                BOOL disregardError = NO;
+                
                 // Handle internal generated errors
                 if (AFALoginViewModelErrorDomain == error.domain) {
-                    if (kAFALoginViewModelInvalidCredentialErrorCode == error.code) {
+                    AFAReachabilityStore *reachabilityStore =
+                    [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeReachabilityStore];
+                    
+                    // If reachability exists but the error is triggered by a cached data value mismatch disregard
+                    // the error and fall back to the server response
+                    if (kAFALoginViewModelInvalidCredentialErrorCode == error.code &&
+                        AFAReachabilityStoreTypeNotReachable == reachabilityStore.reachability) {
                         responseCode = ASDKHTTPCode401Unauthorised;
+                    } else {
+                        disregardError = YES;
                     }
                 } else { // Handle network generated errors
                     NSError *underlayingError = error.userInfo[NSUnderlyingErrorKey];
@@ -148,34 +162,34 @@
                     }
                 }
                 
-                NSString *networkErrorMessage = nil;
-                
-                switch (responseCode) {
-                    case ASDKHTTPCode401Unauthorised:
-                    case ASDKHTTPCode403Forbidden: {
-                        networkErrorMessage = NSLocalizedString(kLocalizationLoginInvalidCredentialsText, @"Invalid credentials text");
+                if (!disregardError) {
+                    NSString *networkErrorMessage = nil;
+                    switch (responseCode) {
+                        case ASDKHTTPCode401Unauthorised:
+                        case ASDKHTTPCode403Forbidden: {
+                            networkErrorMessage = NSLocalizedString(kLocalizationLoginInvalidCredentialsText, @"Invalid credentials text");
+                        }
+                            break;
+                            
+                        case NSURLErrorCannotConnectToHost: {
+                            networkErrorMessage = NSLocalizedString(kLocalizationLoginUnreachableHostText, @"Unreachable host text");
+                        }
+                            break;
+                            
+                        case NSURLErrorTimedOut: {
+                            networkErrorMessage = NSLocalizedString(kLocalizationLoginTimedOutText, @"Login timed out text");
+                        }
+                            break;
+                            
+                        default: break;
                     }
-                        break;
-                        
-                    case NSURLErrorCannotConnectToHost: {
-                        networkErrorMessage = NSLocalizedString(kLocalizationLoginUnreachableHostText, @"Unreachable host text");
+                    
+                    if ([strongSelf.delegate respondsToSelector:@selector(handleNetworkErrorWithMessage:)]) {
+                        [strongSelf.delegate handleNetworkErrorWithMessage:networkErrorMessage];
                     }
-                        break;
-                        
-                    case NSURLErrorTimedOut: {
-                        networkErrorMessage = NSLocalizedString(kLocalizationLoginTimedOutText, @"Login timed out text");
-                    }
-                        break;
-                        
-                    default:
-                        break;
+                    
+                    [(AFASignInTableViewCell *)cell shakeSignInButton];
                 }
-                
-                if ([strongSelf.delegate respondsToSelector:@selector(handleNetworkErrorWithMessage:)]) {
-                    [strongSelf.delegate handleNetworkErrorWithMessage:networkErrorMessage];
-                }
-                
-                [(AFASignInTableViewCell *)cell shakeSignInButton];
             }
         }];
     } else {

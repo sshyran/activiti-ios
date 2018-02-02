@@ -400,6 +400,15 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                      }
                                      
                                      if (AFALoginAuthenticationStateAuthorized == authState) {
+                                         AFALoginViewModel *authorizedLoginModel = (AFALoginViewModel *)object;
+                                         [weakSelf.loginViewModel updateUserNameEntry:authorizedLoginModel.username];
+                                         [weakSelf.loginViewModel updatePasswordEntry:authorizedLoginModel.password];
+                                         [weakSelf.loginViewModel updateHostNameEntry:authorizedLoginModel.hostName];
+                                         [weakSelf.loginViewModel updatePortEntry:authorizedLoginModel.port];
+                                         [weakSelf.loginViewModel updateCommunicationOverSecureLayer:authorizedLoginModel.isSecureLayer];
+                                         [weakSelf.loginViewModel updateServiceDocument:authorizedLoginModel.serviceDocument];
+                                         [weakSelf.loginViewModel updateRememberCredentials:authorizedLoginModel.rememberCredentials];
+                                         
                                          [weakSelf performSegueWithIdentifier:kSegueIDLoginAuthorized
                                                                    sender:nil];
                                      }
