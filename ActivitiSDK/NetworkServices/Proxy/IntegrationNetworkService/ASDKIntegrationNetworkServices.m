@@ -486,7 +486,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
 }
 
 
-- (void)cancelAllTaskNetworkOperations {
+- (void)cancelAllNetworkOperations {
     [self.networkOperations makeObjectsPerformSelector:@selector(cancel)];
     [self.networkOperations removeAllObjects];
 }

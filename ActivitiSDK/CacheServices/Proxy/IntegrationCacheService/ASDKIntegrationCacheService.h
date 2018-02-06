@@ -16,17 +16,9 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+#import "ASDKCoreDataCacheService.h"
+#import "ASDKIntegrationCacheServiceProtocol.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ASDKMOIntegrationAccount : NSManagedObject
-
-+ (NSString *)entityName;
+@interface ASDKIntegrationCacheService : ASDKCoreDataCacheService <ASDKIntegrationCacheServiceProtocol>
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOIntegrationAccount+CoreDataProperties.h"

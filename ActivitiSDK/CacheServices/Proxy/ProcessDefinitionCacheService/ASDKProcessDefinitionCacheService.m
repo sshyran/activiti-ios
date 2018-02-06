@@ -135,7 +135,7 @@
 - (NSError *)saveProcessDefinitionListAndGenerateProcessDefinitionMap:(NSArray *)processDefinitionList
                                                              forAppID:(NSString *)applicationID
                                                             inContext:(NSManagedObjectContext *)managedObjectContext {
-    // Upsert process instances
+    // Upsert process definitions
     NSError *error = nil;
     NSArray *moProcessDefinitionList = [ASDKProcessDefinitionCacheModelUpsert upsertProcessDefinitionListToCache:processDefinitionList
                                                                                                            error:&error

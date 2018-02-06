@@ -17,16 +17,15 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 
-NS_ASSUME_NONNULL_BEGIN
+@class ASDKMOIntegrationAccount,
+ASDKModelIntegrationAccount;
 
-@interface ASDKMOIntegrationAccount : NSManagedObject
+@interface ASDKIntegrationCacheMapper : NSObject
 
-+ (NSString *)entityName;
++ (ASDKMOIntegrationAccount *)mapIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount
+                                          toCacheMO:(ASDKMOIntegrationAccount *)moIntegrationAccount;
+
++ (ASDKModelIntegrationAccount *)mapCacheMOToIntegrationAccount:(ASDKMOIntegrationAccount *)moIntegrationAccount;
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#import "ASDKMOIntegrationAccount+CoreDataProperties.h"

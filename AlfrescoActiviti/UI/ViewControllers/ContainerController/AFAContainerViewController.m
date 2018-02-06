@@ -96,10 +96,6 @@
         [serviceRepository registerServiceObject:userService
                                       forPurpose:AFAServiceObjectTypeUserServices];
         
-        AFAIntegrationServices *integrationService = [AFAIntegrationServices new];
-        [serviceRepository registerServiceObject:integrationService
-                                      forPurpose:AFAServiceObjectTypeIntegrationServices];
-        
         // Register the thumbnail manager with the service repository
         AFAThumbnailManager *thumbnailManager = [AFAThumbnailManager new];
         [serviceRepository registerServiceObject:thumbnailManager

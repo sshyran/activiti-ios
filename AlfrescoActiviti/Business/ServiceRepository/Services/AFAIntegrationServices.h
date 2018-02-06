@@ -33,7 +33,8 @@ typedef void  (^AFAIntegrationContentUploadCompletionBlock)(ASDKModelContent *co
  *  @param completionBlock Completion block providing an integration account list, an optional
  *                         error reason and paging information
  */
-- (void)requestIntegrationAccountsWithCompletionBlock:(AFAIntegrationAccountListCompletionBlock)completionBlock;
+- (void)requestIntegrationAccountsWithCompletionBlock:(AFAIntegrationAccountListCompletionBlock)completionBlock
+                                        cachedResults:(AFAIntegrationAccountListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request to upload content for a specified task from an external integration service that is described inside the

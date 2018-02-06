@@ -20,4 +20,8 @@
 
 @implementation ASDKMOIntegrationAccount
 
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
+
 @end

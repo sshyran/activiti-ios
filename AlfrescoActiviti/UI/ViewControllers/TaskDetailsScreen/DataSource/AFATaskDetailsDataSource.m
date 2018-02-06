@@ -46,19 +46,20 @@
 @interface AFATaskDetailsDataSource ()
 
 // Services
-@property (strong, nonatomic) AFAProfileServices    *requestProfileService;
-@property (strong, nonatomic) AFATaskServices       *fetchTaskDetailsService;
-@property (strong, nonatomic) AFATaskServices       *fetchParentTaskService;
-@property (strong, nonatomic) AFATaskServices       *deleteTaskContentService;
-@property (strong, nonatomic) AFATaskServices       *removeUserService;
-@property (strong, nonatomic) AFATaskServices       *fetchTaskContentService;
-@property (strong, nonatomic) AFATaskServices       *fetchTaskCommentsService;
-@property (strong, nonatomic) AFATaskServices       *fetchTaskChecklistService;
-@property (strong, nonatomic) AFATaskServices       *updateTaskService;
-@property (strong, nonatomic) AFATaskServices       *completeTaskService;
-@property (strong, nonatomic) AFATaskServices       *claimTaskService;
-@property (strong, nonatomic) AFATaskServices       *unclaimTaskService;
-@property (strong, nonatomic) AFATaskServices       *updateChecklistOrderService;
+@property (strong, nonatomic) AFAProfileServices        *requestProfileService;
+@property (strong, nonatomic) AFATaskServices           *fetchTaskDetailsService;
+@property (strong, nonatomic) AFATaskServices           *fetchParentTaskService;
+@property (strong, nonatomic) AFATaskServices           *deleteTaskContentService;
+@property (strong, nonatomic) AFATaskServices           *removeUserService;
+@property (strong, nonatomic) AFATaskServices           *fetchTaskContentService;
+@property (strong, nonatomic) AFATaskServices           *fetchTaskCommentsService;
+@property (strong, nonatomic) AFATaskServices           *fetchTaskChecklistService;
+@property (strong, nonatomic) AFATaskServices           *updateTaskService;
+@property (strong, nonatomic) AFATaskServices           *completeTaskService;
+@property (strong, nonatomic) AFATaskServices           *claimTaskService;
+@property (strong, nonatomic) AFATaskServices           *unclaimTaskService;
+@property (strong, nonatomic) AFATaskServices           *updateChecklistOrderService;
+@property (strong, nonatomic) AFAIntegrationServices    *uploadIntegrationTaskContentService;
 
 // Models
 @property (strong, nonatomic) AFATableControllerTaskDetailsModel *cachedTaskDetailsModel;
@@ -96,6 +97,7 @@
         _claimTaskService = [AFATaskServices new];
         _unclaimTaskService = [AFATaskServices new];
         _updateChecklistOrderService = [AFATaskServices new];
+        _uploadIntegrationTaskContentService = [AFAIntegrationServices new];
         
         [self setupCellFactoriesWithThemeColor:themeColor];
         
@@ -113,11 +115,11 @@
 - (void)taskDetailsWithCompletionBlock:(AFATaskDetailsDataSourceCompletionBlock)completionBlock
                     cachedResultsBlock:(AFATaskDetailsDataSourceCompletionBlock)cachedResultsBlock {
     /* Task details information is comprised out of multiple services aggregations
-       1. Fetch the task details for the current task ID
-       2. Fetch the parent task if applicable
-       3. If the current task is claimable and has an assignee then fetch the
-       current user profile to also check if the task is already claimed and
-       can be dequeued.
+     1. Fetch the task details for the current task ID
+     2. Fetch the parent task if applicable
+     3. If the current task is claimable and has an assignee then fetch the
+     current user profile to also check if the task is already claimed and
+     can be dequeued.
      */
     self.cachedTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
     self.remoteTaskDetailsModel = [AFATableControllerTaskDetailsModel new];
@@ -140,8 +142,8 @@
         dispatch_group_enter(remoteTaskDetailsGroup);
         dispatch_group_enter(cachedTaskDetailsGroup);
         [self fetchDetailsForParentTaskWithID:self.parentTaskID
-                    remoteDispatchGroup:remoteTaskDetailsGroup
-                    cachedDispatchGroup:cachedTaskDetailsGroup];
+                          remoteDispatchGroup:remoteTaskDetailsGroup
+                          cachedDispatchGroup:cachedTaskDetailsGroup];
     }
     
     // 3
@@ -377,15 +379,13 @@
 
 - (void)uploadIntegrationContentForNode:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
                     withCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock {
-    AFAIntegrationServices *integrationService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeIntegrationServices];
-    
-    [integrationService requestUploadIntegrationContentForTaskID:self.taskID
-                                              withRepresentation:nodeContentRepresentation
-                                                  completionBloc:^(ASDKModelContent *contentModel, NSError *error) {
-                                                      if (completionBlock) {
-                                                          completionBlock(error);
-                                                      }
-                                                  }];
+    [self.uploadIntegrationTaskContentService requestUploadIntegrationContentForTaskID:self.taskID
+                                                                    withRepresentation:nodeContentRepresentation
+                                                                        completionBloc:^(ASDKModelContent *contentModel, NSError *error) {
+                                                                            if (completionBlock) {
+                                                                                completionBlock(error);
+                                                                            }
+                                                                        }];
 }
 
 - (NSDate *)taskDueDate {

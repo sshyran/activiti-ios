@@ -38,7 +38,7 @@ typedef void (^ASDKCacheServiceProcessDefinitionListCompletionBlock) (NSArray *p
                withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
 
 /**
- * Fetches and reports via a completion block the process definition IDs for the specified id.
+ * Fetches and reports via a completion block the process definition IDs for the specified ID.
  *
  * @param applicationID     Application ID for which the process definition list is requested
  * @param completionBlock   Completion block providing a list of process definitions, an optional

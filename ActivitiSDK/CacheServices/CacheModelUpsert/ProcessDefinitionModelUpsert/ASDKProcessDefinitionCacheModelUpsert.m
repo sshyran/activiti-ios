@@ -71,33 +71,24 @@
               withPropertiesFromProcessDefinition:processDefinition
                                       inMOContext:moContext];
                 
-                if (internalError) {
-                    break;
-                } else {
-                    [moProcessDefinitions addObject:moProcessDefinition];
-                }
+                [moProcessDefinitions addObject:moProcessDefinition];
             }
         }
         
-        if (!internalError) {
-            // Perform update operations
-            for (NSString *idString in updatedIDsArr) {
-                NSPredicate *modelIDMatchingPredicate = [self predicateMatchingModelID:idString];
-                NSArray *processDefinitionsToBeUpdated = [processDefinitionResults filteredArrayUsingPredicate:modelIDMatchingPredicate];
-                for (ASDKMOProcessDefinition *moProcessDefinition in processDefinitionsToBeUpdated) {
-                    modelIDMatchingPredicate = [self predicateMatchingModelID:moProcessDefinition.modelID];
-                    NSArray *correspondentProcessDefinitions = [processDefinitionList filteredArrayUsingPredicate:modelIDMatchingPredicate];
-                    ASDKModelProcessDefinition *processDefinition = correspondentProcessDefinitions.firstObject;
-                    
-                    [self populateMOProcessDefinition:moProcessDefinition
-                  withPropertiesFromProcessDefinition:processDefinition
-                                          inMOContext:moContext];
-                    if (internalError) {
-                        break;
-                    } else {
-                        [moProcessDefinitions addObject:moProcessDefinition];
-                    }
-                }
+        // Perform update operations
+        for (NSString *idString in updatedIDsArr) {
+            NSPredicate *modelIDMatchingPredicate = [self predicateMatchingModelID:idString];
+            NSArray *processDefinitionsToBeUpdated = [processDefinitionResults filteredArrayUsingPredicate:modelIDMatchingPredicate];
+            for (ASDKMOProcessDefinition *moProcessDefinition in processDefinitionsToBeUpdated) {
+                modelIDMatchingPredicate = [self predicateMatchingModelID:moProcessDefinition.modelID];
+                NSArray *correspondentProcessDefinitions = [processDefinitionList filteredArrayUsingPredicate:modelIDMatchingPredicate];
+                ASDKModelProcessDefinition *processDefinition = correspondentProcessDefinitions.firstObject;
+                
+                [self populateMOProcessDefinition:moProcessDefinition
+              withPropertiesFromProcessDefinition:processDefinition
+                                      inMOContext:moContext];
+                
+                [moProcessDefinitions addObject:moProcessDefinition];
             }
         }
     }

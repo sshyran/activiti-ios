@@ -24,6 +24,10 @@
 		130A6FF21E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF11E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m */; };
 		130A6FF41E083F260086936C /* ASDKQuerryNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF31E083F260086936C /* ASDKQuerryNetworkServicesTest.m */; };
 		130A6FF61E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130A6FF51E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m */; };
+		130B84DC202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.h in Headers */ = {isa = PBXBuildFile; fileRef = 130B84DA202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.h */; };
+		130B84DD202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.m in Sources */ = {isa = PBXBuildFile; fileRef = 130B84DB202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.m */; };
+		130B84E12029A4E0006FF9CF /* ASDKIntegrationCacheMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 130B84DF2029A4E0006FF9CF /* ASDKIntegrationCacheMapper.h */; };
+		130B84E22029A4E0006FF9CF /* ASDKIntegrationCacheMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 130B84E02029A4E0006FF9CF /* ASDKIntegrationCacheMapper.m */; };
 		130D5ED01E5AE95200B77139 /* NSString+ASDKEmailValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = 130D5ECE1E5AE95200B77139 /* NSString+ASDKEmailValidation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		130D5ED11E5AE95200B77139 /* NSString+ASDKEmailValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 130D5ECF1E5AE95200B77139 /* NSString+ASDKEmailValidation.m */; };
 		130F063E1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */; };
@@ -517,6 +521,11 @@
 		13C444131BBA6CDB00868904 /* AFATableControllerCommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444121BBA6CDB00868904 /* AFATableControllerCommentModel.m */; };
 		13C444171BBA744400868904 /* AFATableControllerCommentCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */; };
 		13C4441B1BBAD8C100868904 /* AFATableControllerCellFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C4441A1BBAD8C100868904 /* AFATableControllerCellFactory.m */; };
+		13C5A1B32021FA890058AEF7 /* ASDKIntegrationDataAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C5A1B12021FA890058AEF7 /* ASDKIntegrationDataAccessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13C5A1B42021FA890058AEF7 /* ASDKIntegrationDataAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C5A1B22021FA890058AEF7 /* ASDKIntegrationDataAccessor.m */; };
+		13C5A1B8202202B80058AEF7 /* ASDKIntegrationCacheService.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C5A1B6202202B80058AEF7 /* ASDKIntegrationCacheService.h */; };
+		13C5A1B9202202B80058AEF7 /* ASDKIntegrationCacheService.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C5A1B7202202B80058AEF7 /* ASDKIntegrationCacheService.m */; };
+		13C5A1BC202203200058AEF7 /* ASDKIntegrationCacheServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C5A1BB202203200058AEF7 /* ASDKIntegrationCacheServiceProtocol.h */; };
 		13C711EB1D0996F700E8550D /* AFACredentialSectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C711EA1D0996F700E8550D /* AFACredentialSectionTableViewCell.m */; };
 		13C855BA1C4D197600F84422 /* ASDKFilterListRequestRepresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C855B81C4D197600F84422 /* ASDKFilterListRequestRepresentation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13C855BB1C4D197600F84422 /* ASDKFilterListRequestRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = 13C855B91C4D197600F84422 /* ASDKFilterListRequestRepresentation.m */; };
@@ -850,6 +859,10 @@
 		130A6FF11E081FA60086936C /* ASDKProcessInstanceNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessInstanceNetworkServicesTest.m; sourceTree = "<group>"; };
 		130A6FF31E083F260086936C /* ASDKQuerryNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKQuerryNetworkServicesTest.m; sourceTree = "<group>"; };
 		130A6FF51E0928D60086936C /* ASDKIntegrationNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKIntegrationNetworkServicesTest.m; sourceTree = "<group>"; };
+		130B84DA202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationCacheModelUpsert.h; path = CacheServices/CacheModelUpsert/IntegrationModelUpsert/ASDKIntegrationCacheModelUpsert.h; sourceTree = "<group>"; };
+		130B84DB202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationCacheModelUpsert.m; path = CacheServices/CacheModelUpsert/IntegrationModelUpsert/ASDKIntegrationCacheModelUpsert.m; sourceTree = "<group>"; };
+		130B84DF2029A4E0006FF9CF /* ASDKIntegrationCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationCacheMapper.h; path = CacheServices/CacheModelMappers/IntegrationCacheMapper/ASDKIntegrationCacheMapper.h; sourceTree = "<group>"; };
+		130B84E02029A4E0006FF9CF /* ASDKIntegrationCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationCacheMapper.m; path = CacheServices/CacheModelMappers/IntegrationCacheMapper/ASDKIntegrationCacheMapper.m; sourceTree = "<group>"; };
 		130D5ECE1E5AE95200B77139 /* NSString+ASDKEmailValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+ASDKEmailValidation.h"; path = "ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKEmailValidation.h"; sourceTree = SOURCE_ROOT; };
 		130D5ECF1E5AE95200B77139 /* NSString+ASDKEmailValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+ASDKEmailValidation.m"; path = "ActivitiSDK/FormRenderEngine/Categories/NSString+ASDKEmailValidation.m"; sourceTree = SOURCE_ROOT; };
 		130F063D1DD0C0460042E17F /* ASDKMantleJSONAdapterCustomPolicyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKMantleJSONAdapterCustomPolicyTest.m; sourceTree = "<group>"; };
@@ -1458,6 +1471,11 @@
 		13C444161BBA744400868904 /* AFATableControllerCommentCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCommentCellFactory.m; path = Business/TableController/CellFactories/TaskCommentCellFactory/AFATableControllerCommentCellFactory.m; sourceTree = "<group>"; };
 		13C444191BBAD8C100868904 /* AFATableControllerCellFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATableControllerCellFactory.h; path = Business/TableController/CellFactories/BaseCellFactory/AFATableControllerCellFactory.h; sourceTree = "<group>"; };
 		13C4441A1BBAD8C100868904 /* AFATableControllerCellFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATableControllerCellFactory.m; path = Business/TableController/CellFactories/BaseCellFactory/AFATableControllerCellFactory.m; sourceTree = "<group>"; };
+		13C5A1B12021FA890058AEF7 /* ASDKIntegrationDataAccessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationDataAccessor.h; path = CacheServices/DataAccessors/IntegrationDataAccessor/ASDKIntegrationDataAccessor.h; sourceTree = "<group>"; };
+		13C5A1B22021FA890058AEF7 /* ASDKIntegrationDataAccessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationDataAccessor.m; path = CacheServices/DataAccessors/IntegrationDataAccessor/ASDKIntegrationDataAccessor.m; sourceTree = "<group>"; };
+		13C5A1B6202202B80058AEF7 /* ASDKIntegrationCacheService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKIntegrationCacheService.h; path = CacheServices/Proxy/IntegrationCacheService/ASDKIntegrationCacheService.h; sourceTree = "<group>"; };
+		13C5A1B7202202B80058AEF7 /* ASDKIntegrationCacheService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKIntegrationCacheService.m; path = CacheServices/Proxy/IntegrationCacheService/ASDKIntegrationCacheService.m; sourceTree = "<group>"; };
+		13C5A1BB202203200058AEF7 /* ASDKIntegrationCacheServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKIntegrationCacheServiceProtocol.h; sourceTree = "<group>"; };
 		13C711E91D0996F700E8550D /* AFACredentialSectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFACredentialSectionTableViewCell.h; path = UI/Cells/CredentialSectionCell/AFACredentialSectionTableViewCell.h; sourceTree = "<group>"; };
 		13C711EA1D0996F700E8550D /* AFACredentialSectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFACredentialSectionTableViewCell.m; path = UI/Cells/CredentialSectionCell/AFACredentialSectionTableViewCell.m; sourceTree = "<group>"; };
 		13C855B81C4D197600F84422 /* ASDKFilterListRequestRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterListRequestRepresentation.h; path = NetworkServices/RequestRepresentations/FilterListInformation/ASDKFilterListRequestRepresentation.h; sourceTree = "<group>"; };
@@ -1855,6 +1873,24 @@
 				130A3FC41D93F878000A41C3 /* ASDKModelAttributable.m */,
 			);
 			name = Attributable;
+			sourceTree = "<group>";
+		};
+		130B84DE202851ED006FF9CF /* IntegrationModelUpsert */ = {
+			isa = PBXGroup;
+			children = (
+				130B84DA202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.h */,
+				130B84DB202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.m */,
+			);
+			name = IntegrationModelUpsert;
+			sourceTree = "<group>";
+		};
+		130B84E32029A4E4006FF9CF /* IntegrationCacheMapper */ = {
+			isa = PBXGroup;
+			children = (
+				130B84DF2029A4E0006FF9CF /* ASDKIntegrationCacheMapper.h */,
+				130B84E02029A4E0006FF9CF /* ASDKIntegrationCacheMapper.m */,
+			);
+			name = IntegrationCacheMapper;
 			sourceTree = "<group>";
 		};
 		1313750A1B6F678400D2268E /* Protocol */ = {
@@ -2630,6 +2666,7 @@
 				1329060B1FCC56AC00F50F6F /* ProcessInstanceContentModelUpsert */,
 				1329061A1FD5BE0C00F50F6F /* ProcessInstanceContentFieldModelUpsert */,
 				13771D26200DFA3B00AA3160 /* ProcessDefinitionModelUpsert */,
+				130B84DE202851ED006FF9CF /* IntegrationModelUpsert */,
 			);
 			name = CacheModelUpsert;
 			sourceTree = "<group>";
@@ -3731,6 +3768,7 @@
 				13ABCD491FE2C65400ED0654 /* ProcessInstanceCommentMapCacheMapper */,
 				13771D2B200E218800AA3160 /* ProcessDefinitionCacheMapper */,
 				13771D30200E34C200AA3160 /* ProcessDefinitionMapCacheMaper */,
+				130B84E32029A4E4006FF9CF /* IntegrationCacheMapper */,
 			);
 			name = CacheModelMappers;
 			sourceTree = "<group>";
@@ -3821,6 +3859,7 @@
 				13CD883B1F7D19BB001A16D4 /* ProcessInstanceDataAccessor */,
 				13771D11200CDA6B00AA3160 /* ProcessDefinitionDataAccessor */,
 				1318FED11FB98F4F0097CFEB /* QuerryDataAccessor */,
+				13C5A1B52021FA8D0058AEF7 /* IntegrationDataAccessor */,
 			);
 			name = Proxy;
 			sourceTree = "<group>";
@@ -4748,6 +4787,33 @@
 			name = TaskCommentCellFactory;
 			sourceTree = "<group>";
 		};
+		13C5A1B52021FA8D0058AEF7 /* IntegrationDataAccessor */ = {
+			isa = PBXGroup;
+			children = (
+				13C5A1B12021FA890058AEF7 /* ASDKIntegrationDataAccessor.h */,
+				13C5A1B22021FA890058AEF7 /* ASDKIntegrationDataAccessor.m */,
+			);
+			name = IntegrationDataAccessor;
+			sourceTree = "<group>";
+		};
+		13C5A1BA202202BD0058AEF7 /* IntegrationCacheService */ = {
+			isa = PBXGroup;
+			children = (
+				13C5A1BD202203250058AEF7 /* Protocol */,
+				13C5A1B6202202B80058AEF7 /* ASDKIntegrationCacheService.h */,
+				13C5A1B7202202B80058AEF7 /* ASDKIntegrationCacheService.m */,
+			);
+			name = IntegrationCacheService;
+			sourceTree = "<group>";
+		};
+		13C5A1BD202203250058AEF7 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				13C5A1BB202203200058AEF7 /* ASDKIntegrationCacheServiceProtocol.h */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
 		13C711EC1D0997A100E8550D /* CredentialSectionCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -4842,6 +4908,7 @@
 				13F1AE1F1F45847200BA0686 /* FilterCacheService */,
 				13CD88401F7D1CF5001A16D4 /* ProcessInstanceCacheService */,
 				13771D16200CE09700AA3160 /* ProcessDefinitionCacheService */,
+				13C5A1BA202202BD0058AEF7 /* IntegrationCacheService */,
 			);
 			name = Proxy;
 			sourceTree = "<group>";
@@ -6104,6 +6171,7 @@
 				133F053C1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.h in Headers */,
 				13667FFE1C8995C7005E4AEA /* ASDKTaskListQuerryRequestRepresentation.h in Headers */,
 				138F0A3A1C6C835100DA9414 /* ASDKRadioOptionTableViewCell.h in Headers */,
+				13C5A1B8202202B80058AEF7 /* ASDKIntegrationCacheService.h in Headers */,
 				13F1AE1A1F4582E800BA0686 /* ASDKFilterDataAccessor.h in Headers */,
 				13C94BE41B99C1DE000AB3F4 /* ASDKFilterRequestRepresentation.h in Headers */,
 				138F0A411C6CC29100DA9414 /* ASDKFormHeaderCollectionReusableView.h in Headers */,
@@ -6123,9 +6191,11 @@
 				13B7E2101B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.h in Headers */,
 				13BCADED1F010AC700146E7E /* ASDKMOUser.h in Headers */,
 				133DDD041F56DA1E001DDF26 /* ASDKMOTaskContentMap.h in Headers */,
+				130B84E12029A4E0006FF9CF /* ASDKIntegrationCacheMapper.h in Headers */,
 				1319EF541C157EEB003FA6C1 /* UIFont+ASDKGlyphicons.h in Headers */,
 				13CC99BD1FA8B06400FD3DF6 /* ASDKMOProcessInstanceFilterMapPlaceholder.h in Headers */,
 				13B22C4E1C931BED0043D8A4 /* ASDKModelProcessInstanceContent.h in Headers */,
+				13C5A1BC202203200058AEF7 /* ASDKIntegrationCacheServiceProtocol.h in Headers */,
 				138C48BA1C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.h in Headers */,
 				137FC4311C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h in Headers */,
 				1347E50A1F3C8EB900EC277F /* ASDKTaskFilterMapCacheMapper.h in Headers */,
@@ -6163,6 +6233,7 @@
 				1301721E1F50565300D570F5 /* ASDKMOCurrentProfile.h in Headers */,
 				13EBECB31CFC7C8300EC8F96 /* ASDKTaskChecklistOrderRequestRepresentation.h in Headers */,
 				8DB399941C99ADCD0089E0AB /* ASDKFormPeopleFieldCollectionViewCell.h in Headers */,
+				13C5A1B32021FA890058AEF7 /* ASDKIntegrationDataAccessor.h in Headers */,
 				13DC2BFD1F28CAB30016CFB6 /* ASDKApplicationCacheServiceProtocol.h in Headers */,
 				13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */,
 				8D8F85FF1C8DEE3A00356A5B /* ASDKAddContentTableViewCell.h in Headers */,
@@ -6358,6 +6429,7 @@
 				1363A2411D64474E009EAC54 /* ASDKCSRFTokenStorageProtocol.h in Headers */,
 				130D5ED01E5AE95200B77139 /* NSString+ASDKEmailValidation.h in Headers */,
 				13C9B57E1B9497B90009BD27 /* ASDKModelPaging.h in Headers */,
+				130B84DC202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.h in Headers */,
 				13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */,
 				132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */,
 				13CCEEA91F0CD56500F30337 /* ASDKProfileCacheServiceProtocol.h in Headers */,
@@ -7051,6 +7123,7 @@
 				136E113B1CEA11A500047E38 /* ASDKModelNetwork.m in Sources */,
 				132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */,
 				13BCADF61F010AC700146E7E /* ASDKMOIntegrationContent.m in Sources */,
+				130B84E22029A4E0006FF9CF /* ASDKIntegrationCacheMapper.m in Sources */,
 				1394F68E1F0A6139005C8C32 /* ASDKProfileDataAccessor.m in Sources */,
 				8D3B50ED1C873108005BEEEB /* ASDKFormPreProcessor.m in Sources */,
 				130A3FC61D93F878000A41C3 /* ASDKModelAttributable.m in Sources */,
@@ -7112,11 +7185,13 @@
 				13CC99BC1FA8B06400FD3DF6 /* ASDKMOProcessInstanceFilterMapPlaceholder.m in Sources */,
 				13BCADDA1F010AC700146E7E /* ASDKMOProcessInstanceContent.m in Sources */,
 				13F07EF81CBFC8C400002FEB /* ASDKKVOManager.m in Sources */,
+				130B84DD202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.m in Sources */,
 				13AAC7D91BBD45BC0024C108 /* ASDKMantleJSONAdapterCustomPolicy.m in Sources */,
 				8DB399A71C9C31420089E0AB /* ASDKPeopleTableViewCell.m in Sources */,
 				13F07EFA1CBFC8C400002FEB /* ASDKKVOManagerInfo.m in Sources */,
 				13A7842D1CE46AC600DBE648 /* ASDKIntegrationParserOperationWorker.m in Sources */,
 				8D8F85F61C8D8E7000356A5B /* ASDKAttachFormFieldDetailsViewController.m in Sources */,
+				13C5A1B9202202B80058AEF7 /* ASDKIntegrationCacheService.m in Sources */,
 				13B7E2111B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.m in Sources */,
 				136680041C89982D005E4AEA /* ASDKQuerryNetworkServices.m in Sources */,
 				133D090E1F331AA7007A717A /* ASDKTaskCacheService.m in Sources */,
@@ -7237,6 +7312,7 @@
 				139050F01CB53315004FEA89 /* ASDKModelFormVisibilityCondition.m in Sources */,
 				13771D25200DFA3500AA3160 /* ASDKProcessDefinitionCacheModelUpsert.m in Sources */,
 				8D3A51ED1C8089F200FF9A00 /* ASDKUserNetworkServices.m in Sources */,
+				13C5A1B42021FA890058AEF7 /* ASDKIntegrationDataAccessor.m in Sources */,
 				133F053D1BD4D1E300C22CFD /* ASDKProfileParserOperationWorker.m in Sources */,
 				1329060A1FCC568400F50F6F /* ASDKProcessInstanceContentCacheModelUpsert.m in Sources */,
 				13F9BA311B739C290068BB8C /* ASDKProfilePasswordRequestRepresentation.m in Sources */,

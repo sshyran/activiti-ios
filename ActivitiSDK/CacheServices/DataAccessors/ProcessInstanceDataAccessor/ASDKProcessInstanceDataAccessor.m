@@ -706,8 +706,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                           [[ASDKDataAccessorResponseModel alloc] initWithModel:comment
                                                                                   isCachedData:NO
                                                                                          error:error];
-                                          if (weakSelf.delegate) {
-                                              [weakSelf.delegate dataAccessor:weakSelf
+                                          if (strongSelf.delegate) {
+                                              [strongSelf.delegate dataAccessor:weakSelf
                                                           didLoadDataResponse:response];
                                               
                                               [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];

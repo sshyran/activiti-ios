@@ -20,6 +20,8 @@
 
 @class ASDKModelPaging;
 
+typedef void (^AFAContentPickerIntegrationAccountsDataSourceCompletionBlock) (NSArray *accounts, NSError *error, ASDKModelPaging *paging);
+
 @protocol AFAContentPickerDataSourceUploadBehavior <NSObject>
 
 - (void)uploadContentAtFileURL:(NSURL *)fileURL
@@ -45,6 +47,7 @@
 @property (strong, nonatomic) id<AFAContentPickerDataSourceDownloadBehavior>    downloadBehavior;
 @property (strong, nonatomic, readonly) NSArray                                 *integrationAccounts;
 
-- (void)fetchIntegrationAccountsWithCompletionBlock:(void (^)(NSArray *accounts, NSError *error, ASDKModelPaging *paging))completionBlock;
+- (void)fetchIntegrationAccountsWithCompletionBlock:(AFAContentPickerIntegrationAccountsDataSourceCompletionBlock)completionBlock
+                                 cachedResultsBlock:(AFAContentPickerIntegrationAccountsDataSourceCompletionBlock)cachedResultsBlock;
 
 @end

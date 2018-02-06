@@ -316,6 +316,11 @@ AFAModalPeoplePickerViewControllerDelegate>
 - (void)refreshUIForConnectivity:(BOOL)isConnected {
     self.addBarButtonItem.enabled = isConnected;
     self.editBarButtonItem.enabled = isConnected;
+    if (!isConnected) {
+        if (!self.contentPickerContainer.hidden) {
+            [self onFullscreenOverlayTap:nil];
+        }
+    }
 }
 
 
