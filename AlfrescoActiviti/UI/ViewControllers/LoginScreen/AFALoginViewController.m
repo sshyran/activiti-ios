@@ -34,7 +34,6 @@
 #import "AFAContainerViewController.h"
 
 // Managers
-#import "AFAKeychainWrapper.h"
 #import "AFALogConfiguration.h"
 @import ActivitiSDK;
 
@@ -121,36 +120,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self.activitiLogoCenterConstraint.active = NO;
     self.activitiLogoCenterPaddedConstraint.active = YES;
     
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *authenticationIdentifier = [userDefaults objectForKey:kAuthentificationTypeCredentialIdentifier];
-    AFALoginAuthenticationType lastAuthenticationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginAuthenticationTypeCloud : AFALoginAuthenticationTypePremise;
-    
-    if (AFALoginAuthenticationTypeCloud == lastAuthenticationType) {
-        self.loginViewModel.authentificationType = AFALoginAuthenticationTypeCloud;
-        [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kCloudHostNameCredentialIdentifier]];
-        [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kCloudSecureLayerCredentialIdentifier]];
-        [self.loginViewModel updateUserNameEntry:[userDefaults objectForKey:kCloudUsernameCredentialIdentifier]];
-        [self.loginViewModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:[self.loginViewModel persistenceStackModelName]]];
-    } else {
-        self.loginViewModel.authentificationType = AFALoginAuthenticationTypePremise;
-        [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kPremiseHostNameCredentialIdentifier]];
-        [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kPremiseSecureLayerCredentialIdentifier]];
-        NSString *cachedPortString = [userDefaults objectForKey:kPremisePortCredentialIdentifier];
-        if (!cachedPortString.length) {
-            cachedPortString = [@(kDefaultLoginUnsecuredPort) stringValue];
-        }
-        [self.loginViewModel updatePortEntry:cachedPortString];
-        
-        // If there is no stored value for the service document key, then fallback to the one provided inside the login model
-        // at initialization time
-        NSString *serviceDocumentValue = [userDefaults objectForKey:kPremiseServiceDocumentCredentialIdentifier];
-        if (serviceDocumentValue.length) {
-            [self.loginViewModel updateServiceDocument:serviceDocumentValue];
-        }
-        
-        [self.loginViewModel updateUserNameEntry:[userDefaults objectForKey:kPremiseUsernameCredentialIdentifier]];
-        [self.loginViewModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:[self.loginViewModel persistenceStackModelName]]];
-    }
+    [self.loginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:[AFALoginViewModel lastAuthenticationType]];
     
     if ([self.loginViewModel canUserSignIn]) {
         [self handleBindingsForLoginViewModel:self.loginViewModel];
@@ -227,6 +197,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark Actions
 
 - (IBAction)onActivitiCloud:(id)sender {
+    [self.loginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypeCloud];
+    [self.credentialsPageViewController updateCloudLoginViewModel:self.loginViewModel];
+    
     [self performCredentialPageAnimationInReverse:NO
                                   completionBlock:^(BOOL finished) {
         [self.credentialsPageViewController showCloudLoginCredentials];
@@ -234,6 +207,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (IBAction)onActivitiPremise:(id)sender {
+    [self.loginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypePremise];
+    [self.credentialsPageViewController updatePremiseLoginViewModel:self.loginViewModel];
+    
     [self performCredentialPageAnimationInReverse:NO
                                   completionBlock:^(BOOL finished) {
         [self.credentialsPageViewController showPremiseLoginCredentials];
@@ -255,12 +231,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     // Cancel possible ongoing login request
     [loginViewModels makeObjectsPerformSelector:@selector(cancelLoginRequest)];
-    
-    // Clear credential information
-    [loginViewModels makeObjectsPerformSelector:@selector(updateUserNameEntry:)
-                                     withObject:nil];
-    [loginViewModels makeObjectsPerformSelector:@selector(updatePasswordEntry:)
-                                     withObject:nil];
     
     [self showEnvironmentPageAnimation];
 }

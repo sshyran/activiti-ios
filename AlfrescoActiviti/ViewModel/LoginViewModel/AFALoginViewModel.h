@@ -69,5 +69,8 @@ typedef NS_ENUM(NSUInteger, AFALoginAuthenticationState) {
 - (void)requestLogoutForUnauthorizedAccess;
 - (void)cancelLoginRequest;
 - (NSString *)persistenceStackModelName;
+- (void)restoreLastSuccessfullSessionLoginCredentialsForType:(AFALoginAuthenticationType)authenticationType;
+
++ (AFALoginAuthenticationType)lastAuthenticationType;
 
 @end

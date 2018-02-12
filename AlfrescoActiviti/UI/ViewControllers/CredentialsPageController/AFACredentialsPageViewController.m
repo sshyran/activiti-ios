@@ -101,6 +101,22 @@ typedef NS_ENUM(NSInteger, AFACredentialsPageType) {
 #pragma mark -
 #pragma mark Public interface
 
+- (void)updateCloudLoginViewModel:(AFALoginViewModel *)cloudLoginViewModel {
+    _cloudLoginViewModel = cloudLoginViewModel;
+    
+    AFALoginCredentialsViewController *cloudLoginCredentialViewController = self.viewControllersList[AFACredentialsPageTypeCloudCredentials];
+    AFALoginCredentialsViewControllerDataSource *cloudDataSource = [[AFALoginCredentialsViewControllerDataSource alloc] initWithLoginModel:self.cloudLoginViewModel];
+    cloudLoginCredentialViewController.dataSource = cloudDataSource;
+}
+
+- (void)updatePremiseLoginViewModel:(AFALoginViewModel *)premiseLoginViewModel {
+    _premiseLoginViewModel = premiseLoginViewModel;
+    
+    AFALoginCredentialsViewController *premiseLoginCredentialViewController = self.viewControllersList[AFACredentialsPageTypePremiseCredentials];
+    AFALoginCredentialsViewControllerDataSource *premiseDataSource = [[AFALoginCredentialsViewControllerDataSource alloc] initWithLoginModel:self.premiseLoginViewModel];
+    premiseLoginCredentialViewController.dataSource = premiseDataSource;
+}
+
 - (void)showCloudLoginCredentials {
     [self setViewControllers:@[self.viewControllersList[AFACredentialsPageTypeCloudCredentials]]
                    direction:UIPageViewControllerNavigationDirectionForward

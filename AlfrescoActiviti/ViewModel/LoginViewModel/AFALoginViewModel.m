@@ -226,12 +226,7 @@
 }
 
 - (void)requestLogout {
-    [self updateUserNameEntry:nil];
-    [self updatePasswordEntry:nil];
-    
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    [standardUserDefaults removeObjectForKey:kCloudUsernameCredentialIdentifier];
-    [standardUserDefaults removeObjectForKey:kPremiseUsernameCredentialIdentifier];
+    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:[self persistenceStackModelName]];
     
     for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
@@ -258,6 +253,45 @@
 
 - (NSString *)persistenceStackModelName {
     return [ASDKPersistenceStack persistenceStackModelNameForServerConfiguration:self.credentialModel.serverConfiguration];
+}
+
++ (AFALoginAuthenticationType)lastAuthenticationType {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *authenticationIdentifier = [userDefaults objectForKey:kAuthentificationTypeCredentialIdentifier];
+    AFALoginAuthenticationType lastAuthenticationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginAuthenticationTypeCloud : AFALoginAuthenticationTypePremise;
+    
+    return lastAuthenticationType;
+}
+
+- (void)restoreLastSuccessfullSessionLoginCredentialsForType:(AFALoginAuthenticationType)authenticationType {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    if (AFALoginAuthenticationTypeCloud == authenticationType) {
+        self.authentificationType = AFALoginAuthenticationTypeCloud;
+        [self updateHostNameEntry:[userDefaults objectForKey:kCloudHostNameCredentialIdentifier]];
+        [self updateCommunicationOverSecureLayer:[userDefaults boolForKey:kCloudSecureLayerCredentialIdentifier]];
+        [self updateUserNameEntry:[userDefaults objectForKey:kCloudUsernameCredentialIdentifier]];
+        [self updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:[self persistenceStackModelName]]];
+    } else {
+        self.authentificationType = AFALoginAuthenticationTypePremise;
+        [self updateHostNameEntry:[userDefaults objectForKey:kPremiseHostNameCredentialIdentifier]];
+        [self updateCommunicationOverSecureLayer:[userDefaults boolForKey:kPremiseSecureLayerCredentialIdentifier]];
+        NSString *cachedPortString = [userDefaults objectForKey:kPremisePortCredentialIdentifier];
+        if (!cachedPortString.length) {
+            cachedPortString = [@(kDefaultLoginUnsecuredPort) stringValue];
+        }
+        [self updatePortEntry:cachedPortString];
+        
+        // If there is no stored value for the service document key, then fallback to the one provided inside the login model
+        // at initialization time
+        NSString *serviceDocumentValue = [userDefaults objectForKey:kPremiseServiceDocumentCredentialIdentifier];
+        if (serviceDocumentValue.length) {
+            [self updateServiceDocument:serviceDocumentValue];
+        }
+        
+        [self updateUserNameEntry:[userDefaults objectForKey:kPremiseUsernameCredentialIdentifier]];
+        [self updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:[self persistenceStackModelName]]];
+    }
 }
 
 

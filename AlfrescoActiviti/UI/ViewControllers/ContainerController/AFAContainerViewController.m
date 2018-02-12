@@ -334,9 +334,12 @@
                                                                [strongSelf requestUserUnauthorizedLogout];
                                                            }];
     [alertController addAction:okButtonAction];
-    [self presentViewController:alertController
-                       animated:YES
-                     completion:nil];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:alertController
+                           animated:YES
+                         completion:nil];
+    });
 }
 
 - (void)requestUserLogout {
