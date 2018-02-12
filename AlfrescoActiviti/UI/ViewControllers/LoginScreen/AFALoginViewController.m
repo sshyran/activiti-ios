@@ -197,8 +197,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark Actions
 
 - (IBAction)onActivitiCloud:(id)sender {
-    [self.loginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypeCloud];
-    [self.credentialsPageViewController updateCloudLoginViewModel:self.loginViewModel];
+    [self.credentialsPageViewController.cloudLoginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypeCloud];
     
     [self performCredentialPageAnimationInReverse:NO
                                   completionBlock:^(BOOL finished) {
@@ -207,8 +206,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (IBAction)onActivitiPremise:(id)sender {
-    [self.loginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypePremise];
-    [self.credentialsPageViewController updatePremiseLoginViewModel:self.loginViewModel];
+    [self.credentialsPageViewController.premiseLoginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypePremise];
     
     [self performCredentialPageAnimationInReverse:NO
                                   completionBlock:^(BOOL finished) {

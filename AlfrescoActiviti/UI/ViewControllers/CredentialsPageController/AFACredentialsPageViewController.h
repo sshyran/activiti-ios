@@ -24,8 +24,6 @@
 @property (strong, nonatomic, readonly) AFALoginViewModel *cloudLoginViewModel;
 @property (strong, nonatomic, readonly) AFALoginViewModel *premiseLoginViewModel;
 
-- (void)updateCloudLoginViewModel:(AFALoginViewModel *)cloudLoginViewModel;
-- (void)updatePremiseLoginViewModel:(AFALoginViewModel *)premiseLoginViewModel;
 - (void)showCloudLoginCredentials;
 - (void)showPremiseLoginCredentials;
 - (void)hideCurrentPageWithCompletionBlock:(void (^)(BOOL finished))completionBlock;
