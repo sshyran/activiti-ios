@@ -92,10 +92,6 @@
         [serviceRepository registerServiceObject:formService
                                       forPurpose:AFAServiceObjectTypeFormServices];
         
-        AFAUserServices *userService = [AFAUserServices new];
-        [serviceRepository registerServiceObject:userService
-                                      forPurpose:AFAServiceObjectTypeUserServices];
-        
         // Register the thumbnail manager with the service repository
         AFAThumbnailManager *thumbnailManager = [AFAThumbnailManager new];
         [serviceRepository registerServiceObject:thumbnailManager

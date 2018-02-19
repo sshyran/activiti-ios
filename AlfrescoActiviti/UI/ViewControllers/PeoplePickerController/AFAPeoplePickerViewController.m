@@ -74,6 +74,9 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 @property (strong, nonatomic) AFATaskServices                   *removeUserService;
 @property (strong, nonatomic) AFATaskServices                   *assignTaskService;
 
+// User services
+@property (strong, nonatomic) AFAUserServices                   *fetchUsersService;
+
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                     *kvoManager;
@@ -96,6 +99,8 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
         _involveUserService = [AFATaskServices new];
         _assignTaskService = [AFATaskServices new];
         _removeUserService = [AFATaskServices new];
+        
+        _fetchUsersService = [AFAUserServices new];
         
         // Set up state bindings
         [self handleBindingsForPeoplePickerViewController];
@@ -194,26 +199,24 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
         userFilterModel.excludeTaskID = self.taskID;
     }
     
-    AFAUserServices *userService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
-    
     __weak typeof(self) weakSelf = self;
-    [userService requestUsersWithUserFilter:userFilterModel
-                            completionBlock:^(NSArray *users, NSError *error, ASDKModelPaging *paging) {
-                                __strong typeof(self) strongSelf = weakSelf;
-                                
-                                BOOL isContentAvailable = users.count ? YES : NO;
-                                strongSelf.controllerState = isContentAvailable ? AFAPeoplePickerControllerStateIdle : AFAPeoplePickerControllerStateEmptyList;
-                                self.instructionsView.hidden = isContentAvailable;
-                                
-                                if (!error) {
-                                    strongSelf.contributorsArr = users;
-
-                                    // Reload table data
-                                    [strongSelf.contributorsTableView reloadData];
-                                } else {
-                                    [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                }
-                            }];
+    [self.fetchUsersService requestUsersWithUserFilter:userFilterModel
+                                       completionBlock:^(NSArray *users, NSError *error, ASDKModelPaging *paging) {
+                                           __strong typeof(self) strongSelf = weakSelf;
+                                           
+                                           BOOL isContentAvailable = users.count ? YES : NO;
+                                           strongSelf.controllerState = isContentAvailable ? AFAPeoplePickerControllerStateIdle : AFAPeoplePickerControllerStateEmptyList;
+                                           self.instructionsView.hidden = isContentAvailable;
+                                           
+                                           if (!error) {
+                                               strongSelf.contributorsArr = users;
+                                               
+                                               // Reload table data
+                                               [strongSelf.contributorsTableView reloadData];
+                                           } else {
+                                               [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                           }
+                                       }];
 }
 
 - (void)involveUserForCurrentTask:(ASDKModelUser *)user {

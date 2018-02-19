@@ -437,8 +437,7 @@ AFAModalPeoplePickerViewControllerDelegate>
                            animated:YES
                          completion:nil];
     } else if (AFATaskDetailsSectionTypeContributors == self.currentSelectedSection) {
-        AFAUserServices *userServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
-        if ([userServices isLoggedInOnCloud]) {
+        if ([AFAUserServices isLoggedInOnCloud]) {
             AFAModalPeoplePickerViewController *addContributorController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalPeoplePickerViewController];
             addContributorController.alertTitle = NSLocalizedString(kLocalizationPeoplePickerControllerTitleText, @"Add contributor title");
             addContributorController.appThemeColor = self.navigationBarThemeColor;

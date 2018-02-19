@@ -51,7 +51,7 @@
 
 
 #pragma mark -
-#pragma mark Private interface
+#pragma mark ASDKDataAccessorDelegate
 
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {

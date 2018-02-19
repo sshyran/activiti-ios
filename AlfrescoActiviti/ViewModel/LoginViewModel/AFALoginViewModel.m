@@ -158,6 +158,7 @@
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
     [sdkBootstrap setupServicesWithServerConfiguration:serverConfiguration];
     NSString *persistenceStackModelName = [self persistenceStackModelName];
+    NSString *offlinePersistenceStackModelName = [self offlinePersistenceStackModelName];
     
     __weak typeof(self) weakSelf = self;
     void (^errorHandlingBlock)(NSError *) = ^(NSError *error) {
@@ -191,6 +192,15 @@
                         [AFAKeychainWrapper createKeychainValue:serverConfiguration.password
                                                   forIdentifier:persistenceStackModelName];
                     }
+                    
+                    // Store credentials to match checks when offline
+                    if ([AFAKeychainWrapper keychainStringFromMatchingIdentifier:offlinePersistenceStackModelName]) {
+                        [AFAKeychainWrapper updateKeychainValue:serverConfiguration.password
+                                                  forIdentifier:offlinePersistenceStackModelName];
+                    } else {
+                        [AFAKeychainWrapper createKeychainValue:serverConfiguration.password
+                                                  forIdentifier:offlinePersistenceStackModelName];
+                    }
                 }
                 
                 strongSelf.authState = AFALoginAuthenticationStateAuthorized;
@@ -209,7 +219,7 @@
                 // Store in the user defaults details of the current login
                 [strongSelf synchronizeToUserDefaultsServerConfiguration:serverConfiguration];
                 
-                if ([[AFAKeychainWrapper keychainStringFromMatchingIdentifier:persistenceStackModelName] isEqualToString:serverConfiguration.password]) {
+                if ([[AFAKeychainWrapper keychainStringFromMatchingIdentifier:offlinePersistenceStackModelName] isEqualToString:serverConfiguration.password]) {
                     strongSelf.authState = AFALoginAuthenticationStateAuthorized;
                     completionBlock(YES, nil);
                 } else {
@@ -253,6 +263,10 @@
 
 - (NSString *)persistenceStackModelName {
     return [ASDKPersistenceStack persistenceStackModelNameForServerConfiguration:self.credentialModel.serverConfiguration];
+}
+
+- (NSString *)offlinePersistenceStackModelName {
+    return [NSString stringWithFormat:@"%@-offline", [self persistenceStackModelName]];
 }
 
 + (AFALoginAuthenticationType)lastAuthenticationType {

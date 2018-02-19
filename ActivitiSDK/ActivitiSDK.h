@@ -146,6 +146,7 @@
 #import <ActivitiSDK/ASDKQuerryDataAccessor.h>
 #import <ActivitiSDK/ASDKProcessDefinitionDataAccessor.h>
 #import <ActivitiSDK/ASDKIntegrationDataAccessor.h>
+#import <ActivitiSDK/ASDKUserDataAccessor.h>
 
 // Persistence
 #import <ActivitiSDK/ASDKPersistenceStack.h>

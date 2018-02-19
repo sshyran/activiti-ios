@@ -18,17 +18,24 @@
 
 #import "ASDKDataAccessor.h"
 
-@class ASDKTaskListQuerryRequestRepresentation;
+@class ASDKUserRequestRepresentation;
 
-@interface ASDKQuerryDataAccessor : ASDKDataAccessor
+@interface ASDKUserDataAccessor : ASDKDataAccessor
 
 /**
- * Requests a list of tasks for the current logged in user conforming to the properties
- * of a provided filter and reports network or cached data through the designated data
- * accessor delegate.
+ * Requests a list of users conforming to the properties of a provided filter and reports
+ * network data through the designated data accessor delegate.
  *
- * @param filter Filter object describing which subset of the task list should be fetched
+ * @param filter Filter object describing the matching system users
  */
-- (void)fetchTasksWithFilter:(ASDKTaskListQuerryRequestRepresentation *)filter;
+- (void)fetchUsersWithUserFilter:(ASDKUserRequestRepresentation *)filter;
+
+/**
+ * Requests the profile picture for a particular user and reports network data through the
+ * designated data accessor delegate.
+ *
+ * @param userID ID of the user for which the picture is requested
+ */
+- (void)fetchProfilePictureForUserWithID:(NSString *)userID;
 
 @end

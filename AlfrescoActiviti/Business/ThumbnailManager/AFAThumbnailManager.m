@@ -20,6 +20,10 @@
 #import "AFAThumbnailManager.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "UIImage+AFAThumbnailCreation.h"
+#import "AFALogConfiguration.h"
+
+static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
+static NSString * const cachedThumbnailsPath = @"CachedThumbnails";
 
 @interface AFAThumbnailManager ()
 
@@ -105,6 +109,8 @@
                         if (cachedImageData.length != largeImageData.length) {
                             [self storeImage:thumbnailImageForLargeImage
                                       forKey:imageIdentifier];
+                            [self cacheImageToDisk:thumbnailImageForLargeImage
+                                     forIdentifier:imageIdentifier];
                             completionBlock(thumbnailImageForLargeImage);
                         }
                     }
@@ -116,6 +122,8 @@
                         if (cachedImageData.length != largeImageData.length) {
                             [self storeImage:thumbnailImageForLargeImage
                                       forKey:imageIdentifier];
+                            [self cacheImageToDisk:thumbnailImageForLargeImage
+                                     forIdentifier:imageIdentifier];
                             completionBlock(thumbnailImageForLargeImage);
                         }
                     }
@@ -134,6 +142,8 @@
                                                                        withSize:imageSize];
                         [self storeImage:processedImage
                                   forKey:imageIdentifier];
+                        [self cacheImageToDisk:processedImage
+                                 forIdentifier:imageIdentifier];
                         
                         completionBlock(processedImage);
                     }
@@ -147,6 +157,10 @@
 
 - (UIImage *)thumbnailImageForIdentifier:(NSString *)imageIdentifier {
     UIImage *thumbnailImage = [self cachedImageForForKey:imageIdentifier];
+    
+    if (!thumbnailImage) {
+        thumbnailImage = [self cachedDiskImageForIdentifier:imageIdentifier];
+    }
     
     if (!thumbnailImage) {
         thumbnailImage = self.placeholderThumbnailImage;
@@ -202,6 +216,58 @@
                           r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], r[11], r[12], r[13], r[14], r[15]];
     
     return filename;
+}
+
+- (void)cacheImageToDisk:(UIImage *)image
+           forIdentifier:(NSString *)identifier {
+    NSString *thumbnailDownloadPath = [self thumbnailDownloadPathForIdentifier:identifier];
+    NSData *imageData = UIImagePNGRepresentation(image);
+    
+    BOOL doesFileExist = [[NSFileManager defaultManager] fileExistsAtPath:thumbnailDownloadPath];
+    if (!doesFileExist) {
+        [self createIntermediateDirectoryStructureForPath:thumbnailDownloadPath];
+    }
+    
+    if (![imageData writeToFile:thumbnailDownloadPath
+                     atomically:NO]) {
+        AFALogError(@"Cannot cache to disk image with identifier: %@", identifier);
+    }
+}
+
+- (UIImage *)cachedDiskImageForIdentifier:(NSString *)identifier {
+    NSString *thumbnailDownloadPath = [self thumbnailDownloadPathForIdentifier:identifier];
+    NSError *error = nil;
+    NSData *imageData = [NSData dataWithContentsOfFile:thumbnailDownloadPath
+                                               options:NSDataReadingUncached
+                                                 error:&error];
+    if (error.code != NSFileReadNoSuchFileError) {
+        AFALogError(@"Encountered an error while loading disk cached image with identifier: %@", identifier);
+    }
+    
+    if (imageData) {
+      return [UIImage imageWithData:imageData];
+    } else {
+        return nil;
+    }
+}
+
+- (NSString *)thumbnailDownloadPathForIdentifier:(NSString *)identifier {
+    NSArray *documentsPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = documentsPaths.firstObject;
+    NSString *thumbnailPath = [[documentsPath stringByAppendingPathComponent:cachedThumbnailsPath] stringByAppendingPathComponent:identifier];
+    
+    return thumbnailPath;
+}
+
+- (void)createIntermediateDirectoryStructureForPath:(NSString *)path {
+    NSError *error = nil;
+    [[NSFileManager defaultManager] createDirectoryAtPath:[path stringByDeletingLastPathComponent]
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:&error];
+    if (error) {
+        AFALogError(@"Encountered an error while generating the folder structure for content with path :%@. Reason:%@", path, error.localizedDescription);
+    }
 }
 
 @end
