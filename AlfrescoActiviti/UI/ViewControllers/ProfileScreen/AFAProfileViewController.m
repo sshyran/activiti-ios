@@ -325,13 +325,15 @@ UITableViewDelegate>
     __weak typeof(self) weakSelf = self;
     [self.profileImageService requestProfileImageWithCompletionBlock:^(UIImage *profileImage, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
+        
+        AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
+        
         if (!error) {
             strongSelf.profileImage = profileImage;
             
             // If we don't have loaded a thumbnail image use a placeholder instead
             // otherwise look in the cache or compute the image and set it once
             // available
-            AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
             strongSelf.profileImage = [thumbnailManager thumbnailForImage:self.profileImage
                                                            withIdentifier:kProfileImageThumbnailIdentifier
                                                                  withSize:CGRectGetHeight(strongSelf.avatarView.frame) * [UIScreen mainScreen].scale
@@ -340,9 +342,11 @@ UITableViewDelegate>
                                                         weakSelf.avatarView.profileImage = processedThumbnailImage;
                                                     });
                                                 }];
-            
-            strongSelf.avatarView.profileImage = self.profileImage;
+        } else {
+            strongSelf.profileImage = [thumbnailManager thumbnailImageForIdentifier:kProfileImageThumbnailIdentifier];
         }
+        
+        strongSelf.avatarView.profileImage = self.profileImage;
     }];
 }
 
