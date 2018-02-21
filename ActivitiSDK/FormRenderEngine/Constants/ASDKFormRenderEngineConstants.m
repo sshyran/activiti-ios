@@ -86,7 +86,8 @@ NSString *kASDKFormFieldEmptyStringValue                        = @"empty";
 
 NSString *kASDKFormRenderEngineErrorDomain                      = @"kASDKFormRenderEngineErrorDomain";
 NSInteger kASDKFormRenderEngineSetupErrorCode                   = 1;
-NSInteger kASDKFormVisibilityConditionProcessorErrorCode        = 2;
+NSInteger kASDKFormRenderEngineUnsupportedFormFieldsCode        = 2;
+NSInteger kASDKFormVisibilityConditionProcessorErrorCode        = 3;
 
 
 #pragma mark - 

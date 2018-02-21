@@ -174,6 +174,7 @@ extern NSString *kLocalizationAlertDialogDeleteContributorQuestionFormat;
 extern NSString *kLocalizationAlertDialogTaskContentUploadErrorText;
 extern NSString *kLocalizationAlertDialogTaskContentDownloadErrorText;
 extern NSString *kLocalizationAlertDialogTaskFormCannotSetUpErrorText;
+extern NSString *kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText;
 
 // Time formatting strings
 extern NSString *kLocalizationTimeInFutureTextFormat;

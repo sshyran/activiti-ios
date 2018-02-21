@@ -65,4 +65,29 @@
     return [MTLJSONAdapter arrayTransformerWithModelClass:ASDKModelFormVariable.class];
 }
 
+
+#pragma mark -
+#pragma mark Public interface
+
+- (BOOL)doesFormDescriptionContainSupportedFormFields {
+    NSArray *containerList = self.formFields;
+    for (ASDKModelFormField *formField in containerList) {
+        if (ASDKModelFormFieldRepresentationTypeUndefined == formField.representationType) {
+            return NO;
+        }
+        NSArray *formFields = formField.formFields;
+        for (ASDKModelFormField *childFormField in formFields) {
+            if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.representationType) {
+                return NO;
+            }
+            
+            if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.formFieldParams.representationType) {
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
+}
+
 @end

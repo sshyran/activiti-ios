@@ -276,8 +276,10 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
                         
                         NSInteger newRowFormFieldValuesIndex = [self getIndexFromObjectProperty:columnId
                                                                                         inArray:dynamicTableFormField.columnDefinitions];
-                        [newRowFormFieldValues replaceObjectAtIndex:newRowFormFieldValuesIndex
-                                                         withObject:columnDefinitionWithValue];
+                        if (newRowFormFieldValuesIndex != NSNotFound) {
+                            [newRowFormFieldValues replaceObjectAtIndex:newRowFormFieldValuesIndex
+                                                             withObject:columnDefinitionWithValue];
+                        }
                     }
                     [newFormFieldValues addObject:newRowFormFieldValues];
                 }

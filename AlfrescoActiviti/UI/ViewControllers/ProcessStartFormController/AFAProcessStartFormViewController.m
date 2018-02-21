@@ -33,6 +33,7 @@
 
 // Views
 #import "AFAActivityView.h"
+#import "AFANoContentView.h"
 
 typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
     AFAProcessStartFormQueueOperationTypeUndefined         = -1,
@@ -44,6 +45,7 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
 @interface AFAProcessStartFormViewController () <ASDKFormControllerNavigationProtocol>
 
 @property (weak, nonatomic) IBOutlet AFAActivityView                    *activityView;
+@property (weak, nonatomic) IBOutlet AFANoContentView                   *noContentView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem                    *backBarButtonItem;
 
 // Internal state properties
@@ -112,7 +114,13 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
                                                      metrics:nil
                                                        views:views]];
         } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+            if (kASDKFormRenderEngineUnsupportedFormFieldsCode == error.code) {
+                strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"form-warning-icon"];
+                strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText, @"Unsupported form fields error");
+                strongSelf.noContentView.hidden = NO;
+            } else {
+                [strongSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+            }
         }
         
         strongSelf.activityView.animating = NO;

@@ -195,21 +195,22 @@ NSString *kLocalizationOfflineFunctionalityNotAvailableText      = @"offlineFunc
 #pragma mark -
 #pragma mark Alert dialog use
 
-NSString *kLocalizationAlertDialogOopsTitleText                  = @"alertDialogOopsTitleText";
-NSString *kLocalizationAlertDialogGenericNetworkErrorText        = @"alertDialogGenericNetworkErrorText";
-NSString *kLocalizationAlertDialogOkButtonText                   = @"alertDialogOkButtonText";
-NSString *kLocalizationAlertDialogYesButtonText                  = @"alertDialogYesButtonText";
-NSString *kLocalizationAlertDialogCancelButtonText               = @"alertDialogCancelButtonText";
-NSString *kLocalizationAlertDialogSignOutDescriptionText         = @"alertDialogSignOutDescriptionText";
-NSString *kLocalizationAlertDialogTaskContentFetchErrorText      = @"alertDialogTaskContentFetchErrorText";
-NSString *kLocalizationAlertDialogTaskUpdateErrorText            = @"alertDialogTaskDetailsUpdateErrorText";
-NSString *kLocalizationAlertDialogTaskContentDeleteErrorText     = @"alertDialogTaskContentDeleteErrorText";
-NSString *kLocalizationAlertDialogConfirmText                    = @"alertDialogConfirmText";
-NSString *kLocalizationAlertDialogDeleteContentQuestionFormat    = @"alertDialogDeleteContentQuestionFormat";
-NSString *kLocalizationAlertDialogDeleteContributorQuestionFormat= @"alertDialogDeleteContributorQuestionFormat";
-NSString *kLocalizationAlertDialogTaskContentUploadErrorText     = @"alertDialogTaskContentUploadErrorText";
-NSString *kLocalizationAlertDialogTaskContentDownloadErrorText   = @"alertDialogTaskContentDownloadErrorText";
-NSString *kLocalizationAlertDialogTaskFormCannotSetUpErrorText   = @"alertDialogTaskFormCannotSetupErrorText";
+NSString *kLocalizationAlertDialogOopsTitleText                      = @"alertDialogOopsTitleText";
+NSString *kLocalizationAlertDialogGenericNetworkErrorText            = @"alertDialogGenericNetworkErrorText";
+NSString *kLocalizationAlertDialogOkButtonText                       = @"alertDialogOkButtonText";
+NSString *kLocalizationAlertDialogYesButtonText                      = @"alertDialogYesButtonText";
+NSString *kLocalizationAlertDialogCancelButtonText                   = @"alertDialogCancelButtonText";
+NSString *kLocalizationAlertDialogSignOutDescriptionText             = @"alertDialogSignOutDescriptionText";
+NSString *kLocalizationAlertDialogTaskContentFetchErrorText          = @"alertDialogTaskContentFetchErrorText";
+NSString *kLocalizationAlertDialogTaskUpdateErrorText                = @"alertDialogTaskDetailsUpdateErrorText";
+NSString *kLocalizationAlertDialogTaskContentDeleteErrorText         = @"alertDialogTaskContentDeleteErrorText";
+NSString *kLocalizationAlertDialogConfirmText                        = @"alertDialogConfirmText";
+NSString *kLocalizationAlertDialogDeleteContentQuestionFormat        = @"alertDialogDeleteContentQuestionFormat";
+NSString *kLocalizationAlertDialogDeleteContributorQuestionFormat    = @"alertDialogDeleteContributorQuestionFormat";
+NSString *kLocalizationAlertDialogTaskContentUploadErrorText         = @"alertDialogTaskContentUploadErrorText";
+NSString *kLocalizationAlertDialogTaskContentDownloadErrorText       = @"alertDialogTaskContentDownloadErrorText";
+NSString *kLocalizationAlertDialogTaskFormCannotSetUpErrorText       = @"alertDialogTaskFormCannotSetupErrorText";
+NSString *kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText  = @"alertDialogTaskFormUnsupportedFormFieldsText";
 
 #pragma mark -
 #pragma mark Time formatting strings

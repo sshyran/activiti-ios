@@ -185,6 +185,7 @@
 // Constants
 #import <ActivitiSDK/ASDKNetworkServiceConstants.h>
 #import <ActivitiSDK/ASDKAPIEndpointDefinitionList.h>
+#import <ActivitiSDK/ASDKFormRenderEngineConstants.h>
 
 // Authentication providers
 #import <ActivitiSDK/ASDKBasicAuthentificationProvider.h>

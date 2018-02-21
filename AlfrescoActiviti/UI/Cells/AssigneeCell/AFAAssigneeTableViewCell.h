@@ -34,8 +34,8 @@ ASDKModelProcessInstance;
 @property (weak, nonatomic) IBOutlet UILabel        *assigneeLabel;
 @property (weak, nonatomic) IBOutlet UIButton       *assigneeNameButton;
 
-- (void)setUpCellWithTask:(ASDKModelTask *)task;
+- (void)setUpCellWithTask:(ASDKModelTask *)task
+  isConnectivityAvailable:(BOOL)isConnectivityAvailable;
 - (void)setupCellWithProcessInstance:(ASDKModelProcessInstance *)processInstance;
-- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable;
 
 @end

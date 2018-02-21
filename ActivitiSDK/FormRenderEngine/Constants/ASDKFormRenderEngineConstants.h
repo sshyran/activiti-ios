@@ -71,6 +71,7 @@ extern NSString *kASDKFormFieldEmptyStringValue;
 // Form errors
 extern NSString *kASDKFormRenderEngineErrorDomain;
 extern NSInteger kASDKFormRenderEngineSetupErrorCode;
+extern NSInteger kASDKFormRenderEngineUnsupportedFormFieldsCode; 
 extern NSInteger kASDKFormVisibilityConditionProcessorErrorCode;
 
 // Notifications

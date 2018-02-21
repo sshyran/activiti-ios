@@ -565,8 +565,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                            withModel:(id<AFATableViewModelDelegate>)model {
     AFAAssigneeTableViewCell *assigneeCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsAssignee
                                                                              forIndexPath:indexPath];
-    [assigneeCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
-    [assigneeCell updateStateForConnectivity:[(AFATableControllerTaskDetailsModel *)model isConnectivityAvailable]];
+    [assigneeCell setUpCellWithTask:[model itemAtIndexPath:indexPath]
+            isConnectivityAvailable:[(AFATableControllerTaskDetailsModel *)model isConnectivityAvailable]];
     assigneeCell.delegate = self;
     
     return assigneeCell;

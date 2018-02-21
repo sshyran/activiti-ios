@@ -1269,11 +1269,12 @@ AFAModalPeoplePickerViewControllerDelegate>
 #pragma mark -
 #pragma mark AFATaskFormViewControllerDelegate
 
-- (void)formDidLoad {
+- (void)formDidLoadWithError:(NSError *)error {
     AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
     ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
     
-    if ([formEngineActionHandler isSaveFormActionAvailable]) {
+    if (!error &&
+        [formEngineActionHandler isSaveFormActionAvailable]) {
         UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"save-icon"]
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self

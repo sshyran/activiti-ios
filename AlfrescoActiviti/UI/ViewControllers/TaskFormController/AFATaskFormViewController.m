@@ -32,6 +32,7 @@
 
 // Views
 #import <JGProgressHUD/JGProgressHUD.h>
+#import "AFANoContentView.h"
 
 // Views
 #import "AFAActivityView.h"
@@ -42,6 +43,7 @@
 @property (strong, nonatomic) ASDKModelTask                 *task;
 @property (strong, nonatomic) UICollectionViewController    *formViewController;
 @property (weak, nonatomic)   IBOutlet AFAActivityView      *activityView;
+@property (weak, nonatomic)   IBOutlet AFANoContentView     *noContentView;
 @property (strong, nonatomic) JGProgressHUD                 *progressHUD;
 
 @end
@@ -113,14 +115,20 @@
                                                                           metrics:nil
                                                                             views:views]];
                              } else {
-                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+                                 if (kASDKFormRenderEngineUnsupportedFormFieldsCode == error.code) {
+                                     strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"form-warning-icon"];
+                                     strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText, @"Unsupported form fields error");
+                                     strongSelf.noContentView.hidden = NO;
+                                 } else {
+                                     [strongSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+                                 }
                              }
                              
                              strongSelf.activityView.animating = NO;
                              strongSelf.activityView.hidden = YES;
                              
-                             if ([strongSelf.delegate respondsToSelector:@selector(formDidLoad)]) {
-                                 [strongSelf.delegate formDidLoad];
+                             if ([strongSelf.delegate respondsToSelector:@selector(formDidLoadWithError:)]) {
+                                 [strongSelf.delegate formDidLoadWithError:error];
                              }
                          } formCompletionBlock:^(BOOL isFormCompleted, NSError *error) {
                              __strong typeof(self) strongSelf = weakSelf;
@@ -153,8 +161,8 @@
                              }
                          }];
     } else {
-        if ([self.delegate respondsToSelector:@selector(formDidLoad)]) {
-            [self.delegate formDidLoad];
+        if ([self.delegate respondsToSelector:@selector(formDidLoadWithError:)]) {
+            [self.delegate formDidLoadWithError:nil];
         }
     }
 }
