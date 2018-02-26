@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "ASDKServiceDataAccessorProtocol.h"
 
 @class ASDKModelFormDescription,
 ASDKModelFormTabDescription,
@@ -33,7 +34,7 @@ typedef void  (^ASDKFormRenderEngineCompletionBlock)      (BOOL isFormCompleted,
 typedef void  (^ASDKFormRenderEngineSaveBlock)            (BOOL isFormSaved, NSError *error);
 typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInstance *processInstance, NSError *error);
 
-@protocol ASDKFormRenderEngineProtocol <NSObject>
+@protocol ASDKFormRenderEngineProtocol <ASDKDataAccessorDelegate>
 
 /**
  *  Holds a reference to the form network service used in conjucture with the 

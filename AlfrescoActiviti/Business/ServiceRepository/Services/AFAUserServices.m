@@ -22,13 +22,8 @@
 // Constants
 #import "AFABusinessConstants.h"
 
-// Configurations
-#import "AFALogConfiguration.h"
-
 // Models
 #import "AFAUserFilterModel.h"
-
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
 @interface AFAUserServices () <ASDKDataAccessorDelegate>
 

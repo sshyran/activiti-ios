@@ -81,8 +81,10 @@
                 return NO;
             }
             
-            if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.formFieldParams.representationType) {
-                return NO;
+            if ([childFormField.formFieldParams respondsToSelector:@selector(representationType)]) {
+                if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.formFieldParams.representationType) {
+                    return NO;
+                }
             }
         }
     }

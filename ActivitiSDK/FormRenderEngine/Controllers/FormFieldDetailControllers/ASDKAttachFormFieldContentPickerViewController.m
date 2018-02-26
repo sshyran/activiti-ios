@@ -32,6 +32,9 @@
 #import "ASDKModelFileContent.h"
 #import "ASDKModelFormFieldAttachParameter.h"
 #import "ASDKModelIntegrationAccount.h"
+#import "ASDKDataAccessorResponseProgress.h"
+#import "ASDKDataAccessorResponseModel.h"
+#import "ASDKDataAccessorResponseFileContent.h"
 
 // Cells
 #import "ASDKAddContentTableViewCell.h"
@@ -46,8 +49,9 @@
 // Managers
 #import "ASDKBootstrap.h"
 #import "ASDKIntegrationNetworkServices.h"
-#import "ASDKFormNetworkServices.h"
 #import "ASDKServiceLocator.h"
+#import "ASDKServiceDataAccessorProtocol.h"
+#import "ASDKFormDataAccessor.h"
 @import Photos;
 @import QuickLook;
 
@@ -64,15 +68,20 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 };
 
 @interface ASDKAttachFormFieldContentPickerViewController () <UINavigationControllerDelegate,
-UIImagePickerControllerDelegate,
-QLPreviewControllerDataSource,
-QLPreviewControllerDelegate>
+                                                              UIImagePickerControllerDelegate,
+                                                              QLPreviewControllerDataSource,
+                                                              QLPreviewControllerDelegate,
+                                                              ASDKDataAccessorDelegate>
 
 @property (weak, nonatomic)   IBOutlet UITableView                          *actionsTableView;
 @property (strong, nonatomic) JGProgressHUD                                 *progressHUD;
 @property (strong, nonatomic) UIImagePickerController                       *imagePickerController;
 @property (strong, nonatomic) QLPreviewController                           *previewController;
 @property (strong, nonatomic) ASDKIntegrationLoginWebViewViewController     *integrationLoginController;
+
+// Data accessors
+@property (strong, nonatomic) ASDKFormDataAccessor                          *uploadFormContentDataAccessor;
+@property (strong, nonatomic) ASDKFormDataAccessor                          *downloadFormContentDataAccessor;
 
 // Internal state properties
 @property (strong, nonatomic) NSURL                                         *currentSelectedUploadResourceURL;
@@ -92,11 +101,6 @@ QLPreviewControllerDelegate>
     }
     
     return self;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)viewDidLoad {
@@ -144,119 +148,9 @@ QLPreviewControllerDelegate>
     
     [self showDownloadProgressHUD];
     
-    __weak typeof(self) weakSelf = self;
-    [self requestFormFieldContentDownloadForContent:content
-                                 allowCachedResults:allowCachedContent
-                                  withProgressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                      __strong typeof(self) strongSelf = weakSelf;
-                                      
-                                      if (!error) {
-                                          strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDownloadProgressFormat, ASDKLocalizationTable, @"Download progress format"), formattedReceivedBytesString];
-                                      } else {
-                                          [strongSelf.progressHUD dismiss];
-                                          [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Content download error")];
-                                      }
-                                  } withCompletionBlock:^(NSString *contentID, NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                      __strong typeof(self) strongSelf = weakSelf;
-                                      
-                                      if (!error) {
-                                          
-                                          // If local content is available ask the user how he would like to preview it
-                                          if (isLocalContent) {
-                                              
-                                              [strongSelf.progressHUD dismiss];
-                                              
-                                              // if local content is uploaded then do not show modal
-                                              if ([strongSelf.uploadedContentIDs containsObject:contentID]) {
-                                                  weakSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
-                                                  [weakSelf previewDownloadedContent];
-                                              } else {
-                                                  [strongSelf showMultipleChoiceAlertControllerWithTitle:nil
-                                                                                                 message:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentLocalVersionAvailableText, ASDKLocalizationTable, @"Local content available")
-                                                                             choiceButtonTitlesAndBlocks:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentPreviewLocalVersionText, ASDKLocalizationTable, @"Preview local content"),
-                                                   // Preview local content option
-                                                   ^(UIAlertAction *action) {
-                                                       weakSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
-                                                       [weakSelf previewDownloadedContent];
-                                                   },
-                                                   ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentGetLatestVersionText, ASDKLocalizationTable, @"Get latest version"),
-                                                   // Get latest version from the server
-                                                   ^(UIAlertAction *action) {
-                                                       [weakSelf dowloadContent:content
-                                                             allowCachedContent:NO];
-                                                   }, nil];
-                                              }
-                                              
-                                              return;
-                                          }
-                                          
-                                          if (downloadedContentURL &&
-                                              content) {
-                                              strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
-                                              
-                                              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                  weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
-                                                  weakSelf.progressHUD.detailTextLabel.text = nil;
-                                                  
-                                                  weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                                  weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                              });
-                                              
-                                              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                  [weakSelf.progressHUD dismiss];
-                                                  
-                                                  if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedDownloadingAtURL:)]) {
-                                                      [weakSelf.delegate pickedContentHasFinishedDownloadingAtURL:downloadedContentURL];
-                                                  }
-                                                  
-                                                  // Present the quick look controller
-                                                  [weakSelf previewDownloadedContent];
-                                              });
-                                          } else {
-                                              [strongSelf showGenericNetworkErrorAlertControllerWithMessage:@"Content download error"];
-                                          }
-                                      } else {
-                                          [strongSelf.progressHUD dismiss];
-                                          [strongSelf showGenericNetworkErrorAlertControllerWithMessage:@"Content download error"];
-                                      }
-                                  }];
-    
-}
-
-- (void)requestFormFieldContentDownloadForContent:(ASDKModelContent *)content
-                               allowCachedResults:(BOOL)allowCachedResults
-                                withProgressBlock:(ASDKFormFieldContentDownloadProgressBlock)progressBlock
-                              withCompletionBlock:(ASDKFormFieldContentDownloadCompletionBlock)completionBlock {
-    
-    NSParameterAssert(content);
-    NSParameterAssert(completionBlock);
-    
-    // Acquire and set up the app network service
-    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKFormNetworkServices *formNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
-    
-    [formNetworkService downloadContentWithModel:content
-                              allowCachedResults:allowCachedResults
-                                   progressBlock:^(NSString *formattedReceivedBytesString, NSError *error) {
-                                       ASDKLogVerbose(@"Downloaded %@ of content for task with ID:%@ ", formattedReceivedBytesString, content.modelID);
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           progressBlock (formattedReceivedBytesString, error);
-                                       });
-                                   } completionBlock:^(NSString *contentID, NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error) {
-                                       if (!error && downloadedContentURL) {
-                                           ASDKLogVerbose(@"Content with ID:%@ was downloaded successfully.", content.modelID);
-                                           
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               completionBlock(contentID, downloadedContentURL, isLocalContent, nil);
-                                           });
-                                       } else {
-                                           ASDKLogError(@"An error occured while downloading content with ID:%@. Reason:%@", content.modelID, error.localizedDescription);
-                                           
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               completionBlock(nil, nil, NO, error);
-                                           });
-                                       }
-                                   }];
+    self.downloadFormContentDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+    self.downloadFormContentDataAccessor.cachePolicy = allowCachedContent ? ASDKServiceDataAccessorCachingPolicyCacheOnly : ASDKServiceDataAccessorCachingPolicyAPIOnly;
+    [self.downloadFormContentDataAccessor downloadContentWithModel:content];
 }
 
 - (void)previewDownloadedContent {
@@ -394,71 +288,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 
 - (void)uploadFormFieldContentForCurrentSelectedResource {
-    // Acquire and set up the app network service
-    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKFormNetworkServices *formNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
-    
     ASDKModelFileContent *fileContentModel = [ASDKModelFileContent new];
     fileContentModel.modelFileURL = self.currentSelectedUploadResourceURL;
     
-    __weak typeof(self) weakSelf = self;
-    [formNetworkService uploadContentWithModel:fileContentModel
-                                   contentData:self.currentSelectedResourceData
-                                 progressBlock:^(NSUInteger progress, NSError *error) {
-                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                         [weakSelf.progressHUD setProgress:progress / 100.0f
-                                                                  animated:YES];
-                                         weakSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Percent format"), progress];
-                                     });
-                                 } completionBlock:^(ASDKModelContent *modelContent, NSError *error) {
-                                     __strong typeof(self) strongSelf = weakSelf;
-                                     
-                                     BOOL didContentUploadSucceeded = modelContent.isModelContentAvailable && !error;
-                                     
-                                     if (didContentUploadSucceeded) {
-                                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                             weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
-                                             weakSelf.progressHUD.detailTextLabel.text = nil;
-                                             
-                                             weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                             weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                         });
-                                         
-                                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                             [weakSelf.progressHUD dismiss];
-                                             
-                                             // add content to attach field
-                                             //
-                                             // if multiple files allowed -> add
-                                             // otherwise -> replace
-                                             
-                                             ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)self.currentFormField.formFieldParams;
-                                             NSMutableArray *currentValuesArray = nil;
-                                             
-                                             if (formFieldParameters.allowMultipleFiles) {
-                                                 currentValuesArray = [NSMutableArray arrayWithArray:self.currentFormField.values];
-                                             } else {
-                                                 currentValuesArray = [NSMutableArray array];
-                                             }
-                                             
-                                             [currentValuesArray addObject:modelContent];
-                                             self.currentFormField.values = [currentValuesArray copy];
-                                             
-                                             // store uploaded content id
-                                             // used for automatic selection local storage version instead of remote version
-                                             [self.uploadedContentIDs addObject:modelContent.modelID];
-                                             
-                                             if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
-                                                 [weakSelf.delegate pickedContentHasFinishedUploading];
-                                             }
-                                         });
-                                     } else {
-                                         dispatch_async(dispatch_get_main_queue(), ^{
-                                             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
-                                             [strongSelf.progressHUD dismiss];
-                                         });
-                                     }
-                                 }];
+    self.uploadFormContentDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+    [self.uploadFormContentDataAccessor uploadContentWithModel:fileContentModel
+                                                   contentData:self.currentSelectedResourceData];
 }
 
 
@@ -628,6 +463,181 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             }
         }
             break;
+    }
+}
+
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.uploadFormContentDataAccessor == dataAccessor) {
+        [self handleFormContentUploadDataAccessorResponse:response];
+    } else if (self.downloadFormContentDataAccessor == dataAccessor) {
+        [self handleFormContentDownloadDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
+#pragma mark Data accessor response handlers
+
+- (void)handleFormContentUploadDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSUInteger progress = progressResponse.progress;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf.progressHUD setProgress:progress / 100.0f
+                                       animated:YES];
+            strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Percent format"), progress];
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseModel class]]) {
+        ASDKDataAccessorResponseModel *contentResponse = (ASDKDataAccessorResponseModel *)response;
+        ASDKModelContent *modelContent = contentResponse.model;
+        
+        BOOL didContentUploadSucceeded = modelContent.isModelContentAvailable && !contentResponse.error;
+        if (didContentUploadSucceeded) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                strongSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
+                strongSelf.progressHUD.detailTextLabel.text = nil;
+                
+                strongSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+            });
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                [strongSelf.progressHUD dismiss];
+                
+                // add content to attach field
+                //
+                // if multiple files allowed -> add
+                // otherwise -> replace
+                
+                ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *)strongSelf.currentFormField.formFieldParams;
+                NSMutableArray *currentValuesArray = nil;
+                
+                if (formFieldParameters.allowMultipleFiles) {
+                    currentValuesArray = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                } else {
+                    currentValuesArray = [NSMutableArray array];
+                }
+                
+                [currentValuesArray addObject:modelContent];
+                strongSelf.currentFormField.values = [currentValuesArray copy];
+                
+                // store uploaded content id
+                // used for automatic selection local storage version instead of remote version
+                [strongSelf.uploadedContentIDs addObject:modelContent.modelID];
+                
+                if ([strongSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedUploading)]) {
+                    [strongSelf.delegate pickedContentHasFinishedUploading];
+                }
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Failed title")];
+                [strongSelf.progressHUD dismiss];
+            });
+        }
+    }
+}
+
+- (void)handleFormContentDownloadDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    __weak typeof(self) weakSelf = self;
+    if ([response isKindOfClass:[ASDKDataAccessorResponseProgress class]]) {
+        ASDKDataAccessorResponseProgress *progressResponse = (ASDKDataAccessorResponseProgress *)response;
+        NSString *formattedProgressString = progressResponse.formattedProgressString;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (!progressResponse.error) {
+                strongSelf.progressHUD.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDownloadProgressFormat, ASDKLocalizationTable, @"Download progress format"), formattedProgressString];
+            } else {
+                [strongSelf.progressHUD dismiss];
+                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentFailedText, ASDKLocalizationTable, @"Content download error")];
+            }
+        });
+    } else if ([response isKindOfClass:[ASDKDataAccessorResponseFileContent class]]) {
+        ASDKDataAccessorResponseFileContent *fileContentResponse = (ASDKDataAccessorResponseFileContent *)response;
+        
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (!fileContentResponse.error) {
+                // If local content is available ask the user how he would like to preview it
+                if (fileContentResponse.isCachedData) {
+                    [strongSelf.progressHUD dismiss];
+                    
+                    // if local content is uploaded then do not show modal
+                    if ([strongSelf.uploadedContentIDs containsObject:fileContentResponse.content.modelID]) {
+                        strongSelf.currentSelectedDownloadResourceURL = fileContentResponse.contentURL;
+                        [strongSelf previewDownloadedContent];
+                    } else {
+                        [strongSelf showMultipleChoiceAlertControllerWithTitle:nil
+                                                                       message:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentLocalVersionAvailableText, ASDKLocalizationTable, @"Local content available")
+                                                   choiceButtonTitlesAndBlocks:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentPreviewLocalVersionText, ASDKLocalizationTable, @"Preview local content"),
+                         // Preview local content option
+                         ^(UIAlertAction *action) {
+                             weakSelf.currentSelectedDownloadResourceURL = fileContentResponse.contentURL;
+                             [weakSelf previewDownloadedContent];
+                         },
+                         ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentGetLatestVersionText, ASDKLocalizationTable, @"Get latest version"),
+                         // Get latest version from the server
+                         ^(UIAlertAction *action) {
+                             [weakSelf dowloadContent:fileContentResponse.content
+                                   allowCachedContent:NO];
+                         }, nil];
+                    }
+                    
+                    return;
+                }
+                
+                if (fileContentResponse.contentURL &&
+                    fileContentResponse.content) {
+                    strongSelf.currentSelectedDownloadResourceURL = fileContentResponse.contentURL;
+                    
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
+                        weakSelf.progressHUD.detailTextLabel.text = nil;
+                        
+                        weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                        weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                    });
+                    
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [weakSelf.progressHUD dismiss];
+                        
+                        if ([weakSelf.delegate respondsToSelector:@selector(pickedContentHasFinishedDownloadingAtURL:)]) {
+                            [weakSelf.delegate pickedContentHasFinishedDownloadingAtURL:fileContentResponse.contentURL];
+                        }
+                        
+                        // Present the quick look controller
+                        [weakSelf previewDownloadedContent];
+                    });
+                } else {
+                    [strongSelf showGenericNetworkErrorAlertControllerWithMessage:@"Content download error"];
+                }
+            } else {
+                [strongSelf.progressHUD dismiss];
+                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:@"Content download error"];
+            }
+        });
     }
 }
 

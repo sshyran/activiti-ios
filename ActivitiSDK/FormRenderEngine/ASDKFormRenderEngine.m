@@ -37,7 +37,7 @@
 #import "ASDKFormRenderDataSource.h"
 #import "ASDKDynamicTableRenderDataSource.h"
 #import "ASDKFormEngineActionHandler.h"
-
+#import "ASDKFormDataAccessor.h"
 #import "ASDKFormPreProcessor.h"
 
 #if ! __has_feature(objc_arc)
@@ -68,6 +68,13 @@
  *  when the user saves a form.
  */
 @property (strong, nonatomic) ASDKFormRenderEngineSaveBlock             saveFormCompletionBlock;
+
+/**
+ * Data accessors responsable with fetching network or cached data
+ */
+@property (strong, nonatomic) ASDKFormDataAccessor                      *completeTaskFormDataAccessor;
+@property (strong, nonatomic) ASDKFormDataAccessor                      *completeProcessDefinitionFormDataAccessor;
+@property (strong, nonatomic) ASDKFormDataAccessor                      *saveFormDataAccessor;
 
 @end
 
@@ -349,58 +356,25 @@
 }
 
 - (void)completeFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
-    __weak typeof(self) weakSelf = self;
-    
     // Check which complete method should be used i.e tasks or process definitions based on the
     // initialised content
     if (self.task) {
-        [self.formNetworkServices completeFormForTaskID:self.task.modelID
-                withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation
-                                        completionBlock:^(BOOL isFormCompleted, NSError *error) {
-                                            __strong typeof(self) strongSelf = weakSelf;
-                                            
-                                            if (strongSelf.formCompletionBlock) {
-                                                strongSelf.formCompletionBlock(isFormCompleted, error);
-                                            }
-                                            
-                                            // After a successfull form completion clean up the engine
-                                            // and prepare it for reuse
-                                            if (isFormCompleted) {
-                                                [self performEngineCleanup];
-                                            }
-                                        }];
+        self.completeTaskFormDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+        [self.completeTaskFormDataAccessor completeFormForTaskID:self.task.modelID
+                         withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation];
     } else if (self.processDefinition) {
-        [self.formNetworkServices completeFormForProcessDefinition:self.processDefinition
-                          withFormFieldValuesRequestrepresentation:formFieldValueRequestRepresentation
-                                                   completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
-                                                       __strong typeof(self) strongSelf = weakSelf;
-                                                       
-                                                       if (strongSelf.startFormCompletionBlock) {
-                                                           strongSelf.startFormCompletionBlock(processInstance, error);
-                                                       }
-                                                       
-                                                       // After a successfull form completion clean up the engine
-                                                       // and prepare it for reuse
-                                                       if (processInstance) {
-                                                           [self performEngineCleanup];
-                                                       }
-                                                   }];
+        self.completeProcessDefinitionFormDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+        [self.completeProcessDefinitionFormDataAccessor completeFormForProcessDefinition:self.processDefinition
+                                                withFormFieldValuesRequestRepresentation:formFieldValueRequestRepresentation];
     }
     
 }
 
 - (void)saveFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
-    __weak typeof(self) weakSelf = self;
     
-    [self.formNetworkServices saveFormForTaskID:self.task.modelID
-       withFormFieldValuesRequestrepresentation:formFieldValueRequestRepresentation
-                                completionBlock:^(BOOL isFormSaved, NSError *error) {
-                                    __strong typeof(self) strongSelf = weakSelf;
-                                    
-                                    if (strongSelf.saveFormCompletionBlock) {
-                                        strongSelf.saveFormCompletionBlock(isFormSaved, error);
-                                    }
-                                }];
+    self.saveFormDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+    [self.saveFormDataAccessor saveFormForTaskID:self.task.modelID
+         withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation];
 }
 
 - (void)performEngineCleanup {
@@ -427,6 +401,65 @@
     return formCollectionViewController;
 }
 
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.completeTaskFormDataAccessor == dataAccessor) {
+        [self handleTaskFormCompletionDataAccessorResponse:response];
+    } else if (self.completeProcessDefinitionFormDataAccessor == dataAccessor) {
+        [self handleProcessDefinitionFormCompletionDataAccessorResponse:response];
+    } else if (self.saveFormDataAccessor == dataAccessor) {
+        [self handleSaveFormDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
+#pragma mark Data accessor response handlers
+
+- (void)handleTaskFormCompletionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *responseConfirmation = (ASDKDataAccessorResponseConfirmation *)response;
+    BOOL isFormCompleted = responseConfirmation.isConfirmation;
+    
+    if (self.formCompletionBlock) {
+        self.formCompletionBlock(isFormCompleted, responseConfirmation.error);
+    }
+    
+    // After a successfull form completion clean up the engine
+    // and prepare it for reuse
+    if (isFormCompleted) {
+        [self performEngineCleanup];
+    }
+}
+
+- (void)handleProcessDefinitionFormCompletionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *responseModel = (ASDKDataAccessorResponseModel *)response;
+    ASDKModelProcessInstance *processInstance = responseModel.model;
+
+    if (self.startFormCompletionBlock) {
+        self.startFormCompletionBlock(processInstance, responseModel.error);
+    }
+    
+    // After a successfull form completion clean up the engine
+    // and prepare it for reuse
+    if (processInstance) {
+        [self performEngineCleanup];
+    }
+}
+
+- (void)handleSaveFormDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseConfirmation *responseConfirmation = (ASDKDataAccessorResponseConfirmation *)response;
+    
+    if (self.saveFormCompletionBlock) {
+        self.saveFormCompletionBlock(responseConfirmation.isConfirmation, responseConfirmation.error);
+    }
+}
 
 #pragma mark -
 #pragma mark Errors
