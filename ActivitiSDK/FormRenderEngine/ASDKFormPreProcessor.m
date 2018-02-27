@@ -291,7 +291,6 @@ preProcessCompletionBlock:(ASDKFormPreProcessCompletionBlock)preProcessCompletio
         default:
             break;
     }
-    
 }
 
 - (NSInteger)getIndexFromObjectProperty:(NSString *)property

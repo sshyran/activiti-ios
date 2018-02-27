@@ -53,6 +53,7 @@
 @property (assign, nonatomic) NSInteger                 selectedRowIndex;
 @property (strong, nonatomic) NSArray                   *visibleRowColumns;
 @property (strong, nonatomic) NSDictionary              *columnDefinitions;
+@property (strong, nonatomic) ASDKFormRenderEngine      *dynamicTableRenderEngine;
 
 - (IBAction)addDynamicTableRow:(id)sender;
 - (void)deleteCurrentDynamicTableRow;
@@ -209,7 +210,7 @@
                                                                   strongSelf.currentFormField.values = [NSArray arrayWithArray:rowEntries];
                                                                   
                                                                   [[self.navigationDelegate formNavigationController] popViewControllerAnimated:YES];
-        }];
+                                                              }];
         
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:ASDKLocalizedStringFromTable(kLocalizationCancelButtonText, ASDKLocalizationTable, @"Cancel button title") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
@@ -288,9 +289,9 @@ viewForHeaderInSection:(NSInteger)section {
 - (void)didEditRow:(NSInteger)section {
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
     ASDKFormRenderEngine *currentFormRenderEngine = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormRenderEngineProtocol)];
-    ASDKFormRenderEngine *newFormRenderEngine = [ASDKFormRenderEngine new];
+    self.dynamicTableRenderEngine = [ASDKFormRenderEngine new];
     
-    newFormRenderEngine.formNetworkServices = currentFormRenderEngine.formNetworkServices;
+    self.dynamicTableRenderEngine.formNetworkServices = currentFormRenderEngine.formNetworkServices;
     
     // If the user is browsing a completed start form of a process instance then
     // recreate the process definition object from the process instance one
@@ -298,77 +299,77 @@ viewForHeaderInSection:(NSInteger)section {
         currentFormRenderEngine.processInstance) {
         ASDKModelProcessDefinition *processDefinition = [ASDKModelProcessDefinition new];
         processDefinition.modelID = currentFormRenderEngine.processInstance.processDefinitionID;
-        newFormRenderEngine.processDefinition = processDefinition;
+        self.dynamicTableRenderEngine.processDefinition = processDefinition;
     } else {
-        newFormRenderEngine.processDefinition = currentFormRenderEngine.processDefinition;
+        self.dynamicTableRenderEngine.processDefinition = currentFormRenderEngine.processDefinition;
     }
-    newFormRenderEngine.task = currentFormRenderEngine.task;
+    self.dynamicTableRenderEngine.task = currentFormRenderEngine.task;
     
     self.blurEffectView.hidden = NO;
     self.activityView.hidden = NO;
     self.activityView.animating = YES;
     
     __weak typeof(self) weakSelf = self;
-    if (newFormRenderEngine.task) {
-        [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
-                                        dynamicTableFormFieldID:self.currentFormField.modelID
-                                                      taskModel:newFormRenderEngine.task
-                                          renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-                                              __strong typeof(self) strongSelf = weakSelf;
-                                              
-                                              if (formController && !error) {
-                                                  strongSelf.selectedRowIndex = section;
-                                                  
-                                                  if (ASDKModelFormFieldRepresentationTypeReadOnly != strongSelf.currentFormField.representationType) {
-                                                      formController.navigationItem.rightBarButtonItem = [self deleteRowBarButtonItemForDynamicTableController];
-                                                  }
-                                                  formController.navigationItem.titleView = [self dynamicTableControllerTitleViewForRow:section];
-                                                  formController.navigationItem.leftBarButtonItem = [self dynamicTableControllerBackBarButtonItem];
-                                                  
-                                                  // If there is controller assigned to the selected form field notify the delegate
-                                                  // that it can begin preparing for presentation
-                                                  formController.navigationDelegate = strongSelf.navigationDelegate;
-                                                  [self.navigationDelegate prepareToPresentDetailController:formController];
-                                              }
-                                              
-                                              strongSelf.activityView.animating = NO;
-                                              strongSelf.activityView.hidden = YES;
-                                              strongSelf.blurEffectView.hidden = YES;
-                                          } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
-                                          }];
+    if (self.dynamicTableRenderEngine.task) {
+        [self.dynamicTableRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
+                                                  dynamicTableFormFieldID:self.currentFormField.modelID
+                                                                taskModel:self.dynamicTableRenderEngine.task
+                                                    renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                                        __strong typeof(self) strongSelf = weakSelf;
+                                                        
+                                                        if (formController && !error) {
+                                                            strongSelf.selectedRowIndex = section;
+                                                            
+                                                            if (ASDKModelFormFieldRepresentationTypeReadOnly != strongSelf.currentFormField.representationType) {
+                                                                formController.navigationItem.rightBarButtonItem = [self deleteRowBarButtonItemForDynamicTableController];
+                                                            }
+                                                            formController.navigationItem.titleView = [self dynamicTableControllerTitleViewForRow:section];
+                                                            formController.navigationItem.leftBarButtonItem = [self dynamicTableControllerBackBarButtonItem];
+                                                            
+                                                            // If there is controller assigned to the selected form field notify the delegate
+                                                            // that it can begin preparing for presentation
+                                                            formController.navigationDelegate = strongSelf.navigationDelegate;
+                                                            [self.navigationDelegate prepareToPresentDetailController:formController];
+                                                        }
+                                                        
+                                                        strongSelf.activityView.animating = NO;
+                                                        strongSelf.activityView.hidden = YES;
+                                                        strongSelf.blurEffectView.hidden = YES;
+                                                    } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
+                                                    }];
     } else {
-        [newFormRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
-                                        dynamicTableFormFieldID:self.currentFormField.modelID
-                                              processDefinition:newFormRenderEngine.processDefinition
-                                          renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-                                              __strong typeof(self) strongSelf = weakSelf;
-                                              
-                                              if (formController && !error) {
-                                                  if (ASDKModelFormFieldRepresentationTypeReadOnly != strongSelf.currentFormField.representationType) {
-                                                      formController.navigationItem.rightBarButtonItem = [self deleteRowBarButtonItemForDynamicTableController];
-                                                  }
-                                                  formController.navigationItem.titleView = [self dynamicTableControllerTitleViewForRow:section];
-                                                  formController.navigationItem.leftBarButtonItem = [self dynamicTableControllerBackBarButtonItem];
-                                                  
-                                                  // If there is controller assigned to the selected form field notify the delegate
-                                                  // that it can begin preparing for presentation
-                                                  formController.navigationDelegate = strongSelf.navigationDelegate;
-                                                  [strongSelf.navigationDelegate prepareToPresentDetailController:formController];
-                                              }
-                                              
-                                              strongSelf.activityView.animating = NO;
-                                              strongSelf.activityView.hidden = YES;
-                                              strongSelf.blurEffectView.hidden = YES;
-                                          } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
-                                              __strong typeof(self) strongSelf = weakSelf;
-                                              
-                                              // delete current row
-                                              NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
-                                              [formFieldValues removeObjectAtIndex:section];
-                                              strongSelf.currentFormField.values = [formFieldValues copy];
-                                              [strongSelf determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
-                                              [strongSelf.navigationController popToViewController:self animated:YES];
-                                          }];
+        [self.dynamicTableRenderEngine setupWithDynamicTableRowFormFields:self.currentFormField.values[section]
+                                                  dynamicTableFormFieldID:self.currentFormField.modelID
+                                                        processDefinition:self.dynamicTableRenderEngine.processDefinition
+                                                    renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
+                                                        __strong typeof(self) strongSelf = weakSelf;
+                                                        
+                                                        if (formController && !error) {
+                                                            if (ASDKModelFormFieldRepresentationTypeReadOnly != strongSelf.currentFormField.representationType) {
+                                                                formController.navigationItem.rightBarButtonItem = [self deleteRowBarButtonItemForDynamicTableController];
+                                                            }
+                                                            formController.navigationItem.titleView = [self dynamicTableControllerTitleViewForRow:section];
+                                                            formController.navigationItem.leftBarButtonItem = [self dynamicTableControllerBackBarButtonItem];
+                                                            
+                                                            // If there is controller assigned to the selected form field notify the delegate
+                                                            // that it can begin preparing for presentation
+                                                            formController.navigationDelegate = strongSelf.navigationDelegate;
+                                                            [strongSelf.navigationDelegate prepareToPresentDetailController:formController];
+                                                        }
+                                                        
+                                                        strongSelf.activityView.animating = NO;
+                                                        strongSelf.activityView.hidden = YES;
+                                                        strongSelf.blurEffectView.hidden = YES;
+                                                    } formCompletionBlock:^(BOOL isRowDeleted, NSError *error) {
+                                                        __strong typeof(self) strongSelf = weakSelf;
+                                                        
+                                                        // delete current row
+                                                        NSMutableArray *formFieldValues = [NSMutableArray arrayWithArray:strongSelf.currentFormField.values];
+                                                        [formFieldValues removeObjectAtIndex:section];
+                                                        strongSelf.currentFormField.values = [formFieldValues copy];
+                                                        [strongSelf determineVisibleRowColumnsWithFormFieldValues:self.currentFormField.values];
+                                                        [strongSelf.navigationController popToViewController:self animated:YES];
+                                                    }];
     }
 }
 
