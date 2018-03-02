@@ -81,6 +81,7 @@
     
     UIImageView *snapshotImageView = [[UIImageView alloc] initWithImage:snapshot];
     UIView *snapshotView = [[UIView alloc] init];
+    snapshotView.backgroundColor = [UIColor whiteColor];
     [snapshotView addSubview:snapshotImageView];
     
     return snapshotView;

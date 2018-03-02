@@ -24,12 +24,12 @@
 #import "ASDKLocalizationConstants.h"
 
 // Models
-#import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
+#import "ASDKModelDateFormField.h"
 
 @interface ASDKFormDateFieldCollectionViewCell ()
 
-@property (strong, nonatomic) ASDKModelFormField            *formField;
+@property (strong, nonatomic) ASDKModelDateFormField        *currentFormField;
 @property (assign, nonatomic) BOOL                          isRequired;
 
 @end
@@ -37,7 +37,7 @@
 @implementation ASDKFormDateFieldCollectionViewCell
 
 - (void)setSelected:(BOOL)selected {
-    if (ASDKModelFormFieldRepresentationTypeReadOnly != self.formField.representationType) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly != self.currentFormField.representationType) {
         [UIView animateWithDuration:kASDKSetSelectedAnimationTime animations:^{
             self.backgroundColor = selected ? self.colorSchemeManager.formViewHighlightedCellBackgroundColor : [UIColor whiteColor];
         }];
@@ -49,7 +49,7 @@
 #pragma mark ASDKFormCellProtocol
 
 - (void)setupCellWithFormField:(ASDKModelFormField *)formField {
-    self.formField = formField;
+    self.currentFormField = (ASDKModelDateFormField *)formField;
     self.descriptionLabel.text = formField.fieldName;
     
     if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
@@ -82,7 +82,6 @@
         dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         dateFormatter.dateFormat = kASDKServerLongDateFormat;
-        
         NSDate *storedDate = [dateFormatter dateFromString:dateValue];
         
         // try other date formatter
@@ -97,9 +96,26 @@
             storedDate = [dateFormatter dateFromString:dateValue];
         }
         
+        // Select the appropiate display date formatter
         NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
-        [displayDateFormatter setDateFormat:kASDKServerShortDateFormat];
-        
+        displayDateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+        if (self.currentFormField.dateDisplayFormat.length) {
+            displayDateFormatter.dateFormat = self.currentFormField.dateDisplayFormat;
+        } else {
+            if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+                if (ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.formFieldParams.representationType) {
+                    displayDateFormatter.dateFormat = kASDKServerMediumDateFormat;
+                } else {
+                    displayDateFormatter.dateFormat = kASDKServerShortDateFormat;
+                }
+            } else {
+                if (ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType) {
+                    displayDateFormatter.dateFormat = kASDKServerMediumDateFormat;
+                } else {
+                    displayDateFormatter.dateFormat = kASDKServerShortDateFormat;
+                }
+            }
+        }
         labelText = [displayDateFormatter stringFromDate:storedDate];
     }
     

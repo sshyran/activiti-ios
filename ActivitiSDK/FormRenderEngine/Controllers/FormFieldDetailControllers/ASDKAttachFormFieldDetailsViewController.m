@@ -108,11 +108,6 @@
                                                  animated:YES];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)refreshContent {
     // Display the no content view if appropiate
     self.noContentView.hidden = (self.currentFormField.values.count > 0) ? YES : NO;

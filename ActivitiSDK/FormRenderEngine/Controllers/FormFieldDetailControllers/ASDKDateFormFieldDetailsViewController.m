@@ -24,16 +24,21 @@
 #import "ASDKModelConfiguration.h"
 
 // Models
-#import "ASDKModelFormField.h"
+#import "ASDKModelDateFormField.h"
 #import "ASDKModelFormFieldOption.h"
 #import "ASDKModelFormFieldValue.h"
 
 @interface ASDKDateFormFieldDetailsViewController ()
 
+@property (strong, nonatomic) ASDKModelDateFormField    *currentFormField;
+@property (weak, nonatomic) IBOutlet UILabel            *selectedDate;
+@property (weak, nonatomic) IBOutlet UIDatePicker       *datePicker;
+@property (weak, nonatomic) IBOutlet UIDatePicker       *timePicker;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *timePickerWidthConstraint;
+
+
+
 - (IBAction)datePickerAction:(id)sender;
-@property (strong, nonatomic) ASDKModelFormField    *currentFormField;
-@property (weak, nonatomic) IBOutlet UILabel        *selectedDate;
-@property (weak, nonatomic) IBOutlet UIDatePicker   *datePicker;
 
 @end
 
@@ -52,48 +57,36 @@
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
+    if (ASDKModelFormFieldRepresentationTypeDate == self.currentFormField.representationType) {
+        self.timePickerWidthConstraint.constant = 0;
+        [self.datePicker setNeedsLayout];
+    }
+    
+    BOOL isUserInteractionEnabled = self.currentFormField.isReadOnly ? NO : YES;
+    self.datePicker.userInteractionEnabled = isUserInteractionEnabled;
+    self.timePicker.userInteractionEnabled = isUserInteractionEnabled;
+    
+    [self updateRightBarButtonState];
+    
     // Setup label and date picker
     if (self.currentFormField.metadataValue) {
         self.selectedDate.text = self.currentFormField.metadataValue.attachedValue;
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-        [dateFormatter setDateFormat:kASDKServerShortDateFormat];
-        
-        NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.metadataValue.attachedValue];
-        [self.datePicker setDate:storedDate];
+        NSDate *storedDate = [self dateFromString:self.currentFormField.metadataValue.attachedValue];
+        if (storedDate) {
+            [self.datePicker setDate:storedDate];
+            [self.timePicker setDate:storedDate];
+        }
     } else if (self.currentFormField.values){
         //format date in saved form (2016-02-23T23:00:Z)
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-        dateFormatter.dateFormat = kASDKServerLongDateFormat;
-        
-        NSDate *storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
-        
-        // try other date formatter
-        if (!storedDate) {
-            dateFormatter.dateFormat = kASDKServerFullDateFormat;
-            storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
+        NSDate *storedDate = [self dateFromString:self.currentFormField.values.firstObject];
+        if (storedDate) {
+            [self.datePicker setDate:storedDate];
+            [self.timePicker setDate:storedDate];
         }
-        
-        if (!storedDate) {
-            dateFormatter.dateFormat = kBaseModelDateFormat;
-            storedDate = [dateFormatter dateFromString:self.currentFormField.values.firstObject];
-        }
-        
-        NSDateFormatter *displayDateFormatter = [[NSDateFormatter alloc] init];
-        [displayDateFormatter setDateFormat:kASDKServerShortDateFormat];
-        
-        self.selectedDate.text = [displayDateFormatter stringFromDate:storedDate];
-        [self.datePicker setDate:storedDate];
+        self.selectedDate.text = [self stringFromDate:storedDate];
     } else {
         self.selectedDate.text = ASDKLocalizedStringFromTable(kLocalizationFormDateComponentPickDateLabelText, ASDKLocalizationTable, @"Pick a date");
     }
-    
-    self.datePicker.userInteractionEnabled = self.currentFormField.isReadOnly ? NO : YES;
-    [self updateRightBarButtonState];
 }
 
 - (void)updateRightBarButtonState {
@@ -118,16 +111,12 @@
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 #pragma mark -
 #pragma mark ASDKFormFieldDetailsControllerProtocol
 
 - (void)setupWithFormFieldModel:(ASDKModelFormField *)formFieldModel {
-    self.currentFormField = formFieldModel;
+    self.currentFormField = (ASDKModelDateFormField *)formFieldModel;
 }
 
 
@@ -139,10 +128,7 @@
         self.selectedDate.text = ASDKLocalizedStringFromTable(kLocalizationFormDateComponentPickDateLabelText, ASDKLocalizationTable, @"Pick a date");
         self.currentFormField.metadataValue = nil;
     } else {
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:kASDKServerShortDateFormat];
-        
-        NSString *formatedDate = [dateFormatter stringFromDate:date];
+        NSString *formatedDate = [self stringFromDate:date];
         self.selectedDate.text = formatedDate;
         
         // Propagate the change after the state of the checkbox has changed
@@ -162,7 +148,24 @@
 }
 
 - (IBAction)datePickerAction:(id)sender {
-    [self reportDateForCurrentFormField:self.datePicker.date];
+    NSDate *pickedDate = nil;
+    
+    if (self.currentFormField.dateDisplayFormat.length ||
+        ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType) {
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *dateComponents = [calendar components:(NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear)
+                                                       fromDate:self.datePicker.date];
+        NSDateComponents *timeComponents = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute)
+                                                       fromDate:self.timePicker.date];
+        [dateComponents setHour:timeComponents.hour];
+        [dateComponents setMinute:timeComponents.minute];
+        
+        pickedDate = [calendar dateFromComponents:dateComponents];
+    } else {
+        pickedDate = self.datePicker.date;
+    }
+    
+    [self reportDateForCurrentFormField:pickedDate];
 }
 
 - (void)onPickTodayDateOption {
@@ -170,10 +173,77 @@
     [self reportDateForCurrentFormField:today];
     [self.datePicker setDate:today
                     animated:YES];
+    [self.timePicker setDate:today
+                    animated:YES];
 }
 
 - (void)onCleanCurrentDateOption {
     [self reportDateForCurrentFormField:nil];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (NSString *)stringFromDate:(NSDate *)date {
+    NSString *dateFormat = nil;
+    if (self.currentFormField.dateDisplayFormat.length) {
+        dateFormat = self.currentFormField.dateDisplayFormat;
+    } else if(ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType) {
+        dateFormat = kASDKServerMediumDateFormat;
+    } else {
+        dateFormat = kASDKServerShortDateFormat;
+    }
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:dateFormat];
+    NSString *formatedDate = [dateFormatter stringFromDate:date];
+    
+    return formatedDate;
+}
+
+- (NSDate *)dateFromString:(NSString *)dateString {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.timeZone = [NSTimeZone systemTimeZone];
+    
+    if (self.currentFormField.dateDisplayFormat.length) {
+        dateFormatter.dateFormat = self.currentFormField.dateDisplayFormat;
+    }
+    
+    NSDate *storedDate = [dateFormatter dateFromString:dateString];
+    
+    if (!storedDate) {
+        dateFormatter.dateFormat = kASDKServerFullDateFormat;
+        storedDate = [dateFormatter dateFromString:dateString];
+    }
+    
+    if (!storedDate) {
+        dateFormatter.dateFormat = kASDKServerLongDateFormat;
+        storedDate = [dateFormatter dateFromString:dateString];
+    }
+    
+    if (!storedDate) {
+        dateFormatter.dateFormat = kASDKServerMediumDateFormat;
+        storedDate = [dateFormatter dateFromString:dateString];
+    }
+    
+    if (!storedDate) {
+        dateFormatter.dateFormat = kASDKServerShortDateFormat;
+        storedDate = [dateFormatter dateFromString:dateString];
+    }
+    
+    if (!storedDate) {
+        dateFormatter.dateFormat = kBaseModelDateFormat;
+        storedDate = [dateFormatter dateFromString:dateString];
+    }
+    
+    if (storedDate) {
+        NSDate *localDate = [[NSDate alloc] initWithTimeInterval:0
+                                                       sinceDate:storedDate];
+        return localDate;
+    } else {
+        return nil;
+    }
 }
 
 @end

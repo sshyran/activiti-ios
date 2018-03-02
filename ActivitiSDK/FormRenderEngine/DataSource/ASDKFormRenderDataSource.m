@@ -514,7 +514,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
-        case ASDKModelFormFieldRepresentationTypeDate: {
+        case ASDKModelFormFieldRepresentationTypeDate:
+        case ASDKModelFormFieldRepresentationTypeDateTime: {
             cellIdentifier = kASDKCellIDFormFieldDateRepresentation;
         }
             break;
@@ -582,7 +583,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
-        case ASDKModelFormFieldRepresentationTypeDate: {
+        case ASDKModelFormFieldRepresentationTypeDate:
+        case ASDKModelFormFieldRepresentationTypeDateTime: {
             controllerIdentifierString = kASDKStoryboardIDDateFormFieldDetailController;
         }
             break;

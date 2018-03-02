@@ -16,11 +16,10 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <ActivitiSDK/ActivitiSDK.h>
 
-// Accepted date format string that will be used to parse dates
-extern NSString * const kBaseModelDateFormat;
-extern NSString * const kASDKServerFullDateFormat;
-extern NSString * const kASDKServerLongDateFormat;
-extern NSString * const kASDKServerMediumDateFormat;
-extern NSString * const kASDKServerShortDateFormat;
+@interface ASDKModelDateFormField : ASDKModelFormField
+
+@property (strong, nonatomic) NSString *dateDisplayFormat;
+
+@end
