@@ -57,14 +57,28 @@
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
-    if (ASDKModelFormFieldRepresentationTypeDate == self.currentFormField.representationType) {
+    BOOL displayTimePicker = (ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType ||
+                              ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.formFieldParams.representationType) ? YES : NO;
+    
+    if (!displayTimePicker) {
         self.timePickerWidthConstraint.constant = 0;
         [self.datePicker setNeedsLayout];
     }
     
-    BOOL isUserInteractionEnabled = self.currentFormField.isReadOnly ? NO : YES;
+    BOOL isUserInteractionEnabled = (self.currentFormField.isReadOnly ||
+                                     ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) ? NO : YES;
     self.datePicker.userInteractionEnabled = isUserInteractionEnabled;
     self.timePicker.userInteractionEnabled = isUserInteractionEnabled;
+    
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+        NSTimeZone *timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+        self.datePicker.timeZone = timeZone;
+        self.timePicker.timeZone = timeZone;
+    } else {
+        NSTimeZone *timeZone = [NSTimeZone systemTimeZone];
+        self.datePicker.timeZone = timeZone;
+        self.timePicker.timeZone = timeZone;
+    }
     
     [self updateRightBarButtonState];
     
@@ -90,7 +104,8 @@
 }
 
 - (void)updateRightBarButtonState {
-    if (self.currentFormField.isReadOnly) {
+    if (self.currentFormField.isReadOnly ||
+        ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         return;
     }
     
@@ -187,16 +202,32 @@
 
 - (NSString *)stringFromDate:(NSDate *)date {
     NSString *dateFormat = nil;
+    
     if (self.currentFormField.dateDisplayFormat.length) {
         dateFormat = self.currentFormField.dateDisplayFormat;
-    } else if(ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType) {
-        dateFormat = kASDKServerMediumDateFormat;
     } else {
-        dateFormat = kASDKServerShortDateFormat;
+        if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+            if (ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.formFieldParams.representationType) {
+                dateFormat = kASDKServerMediumDateFormat;
+            } else {
+                dateFormat = kASDKServerShortDateFormat;
+            }
+        } else {
+            if (ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType) {
+                dateFormat = kASDKServerMediumDateFormat;
+            } else {
+                dateFormat = kASDKServerShortDateFormat;
+            }
+        }
     }
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:dateFormat];
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+    } else {
+        dateFormatter.timeZone = [NSTimeZone systemTimeZone];
+    }
+    dateFormatter.dateFormat = dateFormat;
     NSString *formatedDate = [dateFormatter stringFromDate:date];
     
     return formatedDate;
@@ -204,7 +235,12 @@
 
 - (NSDate *)dateFromString:(NSString *)dateString {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.timeZone = [NSTimeZone systemTimeZone];
+    
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+    } else {
+        dateFormatter.timeZone = [NSTimeZone systemTimeZone];
+    }
     
     if (self.currentFormField.dateDisplayFormat.length) {
         dateFormatter.dateFormat = self.currentFormField.dateDisplayFormat;
@@ -237,13 +273,7 @@
         storedDate = [dateFormatter dateFromString:dateString];
     }
     
-    if (storedDate) {
-        NSDate *localDate = [[NSDate alloc] initWithTimeInterval:0
-                                                       sinceDate:storedDate];
-        return localDate;
-    } else {
-        return nil;
-    }
+    return storedDate;
 }
 
 @end
