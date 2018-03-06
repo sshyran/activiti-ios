@@ -31,7 +31,9 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
     [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property           JSON property
-                                                      @"dateDisplayFormat"    : @"dateDisplayFormat"}];
+                                                      @"dateDisplayFormat"    : @"dateDisplayFormat",
+                                                      @"minValue"             : @"minValue",
+                                                      @"maxValue"             : @"maxValue"}];
     
     return inheretedPropertyKeys;
 }

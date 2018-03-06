@@ -57,19 +57,22 @@
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
     
+    // Show or hide the time picker component
     BOOL displayTimePicker = (ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType ||
                               ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.formFieldParams.representationType) ? YES : NO;
     
     if (!displayTimePicker) {
-        self.timePickerWidthConstraint.constant = 0;
-        [self.datePicker setNeedsLayout];
+        self.timePickerWidthConstraint.constant = -1000;
+        [self.view layoutIfNeeded];
     }
     
+    // Enable or disable user interaction
     BOOL isUserInteractionEnabled = (self.currentFormField.isReadOnly ||
                                      ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) ? NO : YES;
     self.datePicker.userInteractionEnabled = isUserInteractionEnabled;
     self.timePicker.userInteractionEnabled = isUserInteractionEnabled;
     
+    // Adjust date picker time zones if values read through a display form field
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         NSTimeZone *timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
         self.datePicker.timeZone = timeZone;
@@ -78,6 +81,25 @@
         NSTimeZone *timeZone = [NSTimeZone systemTimeZone];
         self.datePicker.timeZone = timeZone;
         self.timePicker.timeZone = timeZone;
+    }
+    
+    // Set min and max values for date picker components if applicable
+    if (self.currentFormField.minValue.length) {
+        NSDate *minimumDate = [self dateFromString:self.currentFormField.minValue];
+        
+        self.datePicker.minimumDate = minimumDate;
+        if (displayTimePicker) {
+            self.timePicker.minimumDate = minimumDate;
+        }
+    }
+    
+    if (self.currentFormField.maxValue.length) {
+        NSDate *maximumDate = [self dateFromString:self.currentFormField.maxValue];
+        
+        self.datePicker.maximumDate = maximumDate;
+        if (displayTimePicker) {
+            self.timePicker.maximumDate = maximumDate;
+        }
     }
     
     [self updateRightBarButtonState];
@@ -179,6 +201,9 @@
     } else {
         pickedDate = self.datePicker.date;
     }
+    
+    self.datePicker.date = pickedDate;
+    self.timePicker.date = pickedDate;
     
     [self reportDateForCurrentFormField:pickedDate];
 }

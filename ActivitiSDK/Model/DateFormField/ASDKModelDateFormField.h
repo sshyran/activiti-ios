@@ -21,5 +21,7 @@
 @interface ASDKModelDateFormField : ASDKModelFormField
 
 @property (strong, nonatomic) NSString *dateDisplayFormat;
+@property (strong, nonatomic) NSString *minValue;
+@property (strong, nonatomic) NSString *maxValue;
 
 @end

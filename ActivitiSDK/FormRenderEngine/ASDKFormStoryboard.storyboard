@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -1074,7 +1075,7 @@
                                 <color key="backgroundColor" red="0.90711690030000003" green="0.92525923830000001" blue="0.92525923830000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="fXc-QS-pDI">
-                                <rect key="frame" x="-5" y="808" width="643" height="216"/>
+                                <rect key="frame" x="-5" y="808" width="505" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="477494819.29671198">
                                     <!--2016-02-18 13:26:59 +0000-->
                                 </date>
@@ -1082,11 +1083,8 @@
                                     <action selector="datePickerAction:" destination="oy9-8K-TDr" eventType="valueChanged" id="Idh-h6-deR"/>
                                 </connections>
                             </datePicker>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="JbT-Pd-fcv">
-                                <rect key="frame" x="633" y="808" width="140" height="216"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" priority="900" constant="140" id="eFX-Wi-9b0"/>
-                                </constraints>
+                            <datePicker contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="JbT-Pd-fcv">
+                                <rect key="frame" x="498.5" y="808" width="279.5" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="541514341.59985399">
                                     <!--2018-02-28 12:39:01 +0000-->
                                 </date>
@@ -1115,17 +1113,18 @@
                             <constraint firstItem="GAN-ki-6UX" firstAttribute="trailing" secondItem="pui-WE-WV5" secondAttribute="trailing" id="RFc-xd-pir"/>
                             <constraint firstItem="pui-WE-WV5" firstAttribute="bottom" secondItem="GAN-ki-6UX" secondAttribute="bottom" id="TS1-JZ-3iH"/>
                             <constraint firstAttribute="trailing" secondItem="GAN-ki-6UX" secondAttribute="trailing" id="UIR-Zg-Z4F"/>
+                            <constraint firstItem="JbT-Pd-fcv" firstAttribute="width" secondItem="v6r-aR-2mM" secondAttribute="width" multiplier="1:2.75" priority="900" id="f7y-eu-FYg"/>
                             <constraint firstItem="bTu-o0-fzM" firstAttribute="top" secondItem="JbT-Pd-fcv" secondAttribute="bottom" id="ib4-pQ-iUL"/>
-                            <constraint firstItem="JbT-Pd-fcv" firstAttribute="leading" secondItem="fXc-QS-pDI" secondAttribute="trailing" constant="-5" id="llP-E8-b61"/>
+                            <constraint firstItem="JbT-Pd-fcv" firstAttribute="leading" secondItem="fXc-QS-pDI" secondAttribute="trailing" constant="-2" id="llP-E8-b61"/>
                             <constraint firstItem="bTu-o0-fzM" firstAttribute="top" secondItem="fXc-QS-pDI" secondAttribute="bottom" id="r3d-4D-fop"/>
-                            <constraint firstAttribute="trailing" secondItem="JbT-Pd-fcv" secondAttribute="trailing" constant="-5" id="vTI-WL-vn2"/>
+                            <constraint firstAttribute="trailing" secondItem="JbT-Pd-fcv" secondAttribute="trailing" constant="-10" id="vTI-WL-vn2"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="datePicker" destination="fXc-QS-pDI" id="ZI3-rr-m51"/>
                         <outlet property="selectedDate" destination="pui-WE-WV5" id="It6-OE-pXV"/>
                         <outlet property="timePicker" destination="JbT-Pd-fcv" id="Wdg-Cn-j4W"/>
-                        <outlet property="timePickerWidthConstraint" destination="eFX-Wi-9b0" id="oX7-KC-p8I"/>
+                        <outlet property="timePickerWidthConstraint" destination="f7y-eu-FYg" id="Wgv-mB-mOy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nKa-um-rtR" userLabel="First Responder" sceneMemberID="firstResponder"/>
