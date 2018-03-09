@@ -18,6 +18,12 @@
 
 #import "ASDKDateFormFieldDetailsViewController.h"
 
+typedef NS_ENUM(NSInteger, ASDKDatePickerComponentType) {
+    ASDKDatePickerComponentTypeUndefined = -1,
+    ASDKDatePickerComponentTypeDate = 0,
+    ASDKDatePickerComponentTypeDateTime
+};
+
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLocalizationConstants.h"
@@ -34,9 +40,7 @@
 @property (weak, nonatomic) IBOutlet UILabel            *selectedDate;
 @property (weak, nonatomic) IBOutlet UIDatePicker       *datePicker;
 @property (weak, nonatomic) IBOutlet UIDatePicker       *timePicker;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *timePickerWidthConstraint;
-
-
+@property (weak, nonatomic) IBOutlet UIToolbar          *segmentedControlToolbar;
 
 - (IBAction)datePickerAction:(id)sender;
 
@@ -60,10 +64,8 @@
     // Show or hide the time picker component
     BOOL displayTimePicker = (ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.representationType ||
                               ASDKModelFormFieldRepresentationTypeDateTime == self.currentFormField.formFieldParams.representationType) ? YES : NO;
-    
-    if (!displayTimePicker) {
-        self.timePickerWidthConstraint.constant = -1000;
-        [self.view layoutIfNeeded];
+    if (displayTimePicker) {
+        self.segmentedControlToolbar.hidden = NO;
     }
     
     // Enable or disable user interaction
@@ -221,6 +223,14 @@
     [self reportDateForCurrentFormField:nil];
 }
 
+- (IBAction)didChangedTimeComponent:(UISegmentedControl *)sender {
+    if (ASDKDatePickerComponentTypeDate == sender.selectedSegmentIndex) {
+        [self showTimePickerComponent:NO];
+    } else if (ASDKDatePickerComponentTypeDateTime == sender.selectedSegmentIndex) {
+        [self showTimePickerComponent:YES];
+    }
+}
+
 
 #pragma mark -
 #pragma mark Private interface
@@ -299,6 +309,16 @@
     }
     
     return storedDate;
+}
+
+- (void)showTimePickerComponent:(BOOL)showTimePicker {
+    if (showTimePicker) {
+        self.datePicker.hidden = YES;
+        self.timePicker.hidden = NO;
+    } else {
+        self.timePicker.hidden = YES;
+        self.datePicker.hidden = NO;
+    }
 }
 
 @end
