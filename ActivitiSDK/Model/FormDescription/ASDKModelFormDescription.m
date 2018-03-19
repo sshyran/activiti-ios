@@ -75,6 +75,7 @@
         if (ASDKModelFormFieldRepresentationTypeUndefined == formField.representationType) {
             return NO;
         }
+        
         NSArray *formFields = formField.formFields;
         for (ASDKModelFormField *childFormField in formFields) {
             if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.representationType) {
@@ -82,7 +83,10 @@
             }
             
             if ([childFormField.formFieldParams respondsToSelector:@selector(representationType)]) {
-                if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.formFieldParams.representationType) {
+                // Exclude unrecognized representation types but ignore the representation type when the form field
+                // qualifies as a readonly field
+                if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.formFieldParams.representationType &&
+                    ASDKModelFormFieldRepresentationTypeReadOnly != childFormField.representationType) {
                     return NO;
                 }
             }

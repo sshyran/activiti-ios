@@ -17,13 +17,12 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+@import CoreData;
 
-@class ASDKModelProcessDefinition, ASDKMOProcessDefinition;
+@interface ASDKFormFieldOptionCacheModelUpsert : NSObject
 
-@interface ASDKProcessDefinitionCacheMapper : NSObject
-
-+ (ASDKMOProcessDefinition *)mapProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-                                        toCacheMO:(ASDKMOProcessDefinition *)moProcessDefinition;
-+ (ASDKModelProcessDefinition *)mapCacheMOToProcessInstance:(ASDKMOProcessDefinition *)moProcessDefinition;
++ (NSArray *)upsertFormFieldOptionListToCache:(NSArray *)formFieldOptionList
+                                        error:(NSError **)error
+                                  inMOContext:(NSManagedObjectContext *)moContext;
 
 @end

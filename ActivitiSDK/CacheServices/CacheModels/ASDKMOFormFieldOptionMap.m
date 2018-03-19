@@ -16,14 +16,12 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "ASDKMOFormFieldOptionMap.h"
 
-@class ASDKModelProcessDefinition, ASDKMOProcessDefinition;
+@implementation ASDKMOFormFieldOptionMap
 
-@interface ASDKProcessDefinitionCacheMapper : NSObject
-
-+ (ASDKMOProcessDefinition *)mapProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-                                        toCacheMO:(ASDKMOProcessDefinition *)moProcessDefinition;
-+ (ASDKModelProcessDefinition *)mapCacheMOToProcessInstance:(ASDKMOProcessDefinition *)moProcessDefinition;
++ (NSString *)entityName {
+    return NSStringFromClass([self class]);
+}
 
 @end

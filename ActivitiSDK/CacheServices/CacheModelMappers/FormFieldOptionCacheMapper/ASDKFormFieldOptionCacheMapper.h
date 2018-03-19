@@ -18,12 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class ASDKModelProcessDefinition, ASDKMOProcessDefinition;
+@class ASDKMOFormFieldOption, ASDKModelFormFieldOption;
 
-@interface ASDKProcessDefinitionCacheMapper : NSObject
+@interface ASDKFormFieldOptionCacheMapper : NSObject
 
-+ (ASDKMOProcessDefinition *)mapProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-                                        toCacheMO:(ASDKMOProcessDefinition *)moProcessDefinition;
-+ (ASDKModelProcessDefinition *)mapCacheMOToProcessInstance:(ASDKMOProcessDefinition *)moProcessDefinition;
++ (ASDKMOFormFieldOption *)mapFormFieldOption:(ASDKModelFormFieldOption *)formFieldOption
+                                   toCacheMO:(ASDKMOFormFieldOption *)moFormFieldOption;
++ (ASDKModelFormFieldOption *)mapCacheMOToFormFieldOption:(ASDKMOFormFieldOption *)moFormFieldOption;
 
 @end

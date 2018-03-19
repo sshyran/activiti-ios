@@ -71,4 +71,48 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
  */
 - (void)downloadContentWithModel:(ASDKModelContent *)content;
 
+/**
+ * Requests option values for REST based form fields and reports the result through the designated data
+ * accessor delegate.
+ *
+ * @param taskID    Task ID for which the values are requested
+ * @param fieldID   Form field ID from the task attached form for which the values are requested
+ */
+- (void)fetchRestFieldValuesForTaskID:(NSString *)taskID
+                      withFormFieldID:(NSString *)fieldID;
+
+/**
+ * Requests option values for REST based form fields in a start form and reports the result via the
+ * designated data accessor delegate.
+ *
+ * @param processDefinitionID   Process definition ID for which the values are requested
+ * @param fieldID               Form field ID from the process definition attached form for which the values are requested
+ */
+- (void)fetchRestFieldValuesOfStartFormForProcessDefinitionID:(NSString *)processDefinitionID
+                                              withFormFieldID:(NSString *)fieldID;
+
+/**
+ * Requests option values for REST based columns in dynamic table form fields and reports the result via
+ * the designated data accessor delegate.
+ *
+ * @param taskID    Task ID for which the values are requested
+ * @param fieldID   Form field ID from the task attached form for which the values are requested
+ * @param columnID  Dynamic table column ID for which the values are requested
+ */
+- (void)fetchRestFieldValuesForTaskID:(NSString *)taskID
+                      withFormFieldID:(NSString *)fieldID
+                         withColumnID:(NSString *)columnID;
+
+/**
+ * Requests option values for REST based columns in dynamic table form fields that are part of a start form and reports
+ * the result via the designated data accessor delegate.
+ *
+ * @param processDefinitionID   Process definition ID for which the values are requested
+ * @param fieldID               Form field ID from the process definition attached form for which the values are requested
+ * @param columnID              Dynamic table column ID for which the values are requested
+ */
+- (void)fetchRestFieldValuesOfStartFormWithProcessDefinitionID:(NSString *)processDefinitionID
+                                                 withFormField:(NSString *)fieldID
+                                                  withColumnID:(NSString *)columnID;
+
 @end

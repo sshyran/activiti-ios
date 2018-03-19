@@ -17,13 +17,18 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@class ASDKModelProcessDefinition, ASDKMOProcessDefinition;
+@class ASDKMOFormFieldOption;
 
-@interface ASDKProcessDefinitionCacheMapper : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-+ (ASDKMOProcessDefinition *)mapProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-                                        toCacheMO:(ASDKMOProcessDefinition *)moProcessDefinition;
-+ (ASDKModelProcessDefinition *)mapCacheMOToProcessInstance:(ASDKMOProcessDefinition *)moProcessDefinition;
+@interface ASDKMOFormFieldOptionMap : NSManagedObject
+
++ (NSString *)entityName;
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "ASDKMOFormFieldOptionMap+CoreDataProperties.h"

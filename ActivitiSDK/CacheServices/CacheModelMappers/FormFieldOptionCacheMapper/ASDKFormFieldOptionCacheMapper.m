@@ -16,14 +16,28 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "ASDKFormFieldOptionCacheMapper.h"
 
-@class ASDKModelProcessDefinition, ASDKMOProcessDefinition;
+// Models
+#import "ASDKMOFormFieldOption.h"
+#import "ASDKModelFormFieldOption.h"
 
-@interface ASDKProcessDefinitionCacheMapper : NSObject
+@implementation ASDKFormFieldOptionCacheMapper
 
-+ (ASDKMOProcessDefinition *)mapProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-                                        toCacheMO:(ASDKMOProcessDefinition *)moProcessDefinition;
-+ (ASDKModelProcessDefinition *)mapCacheMOToProcessInstance:(ASDKMOProcessDefinition *)moProcessDefinition;
++ (ASDKMOFormFieldOption *)mapFormFieldOption:(ASDKModelFormFieldOption *)formFieldOption
+                                    toCacheMO:(ASDKMOFormFieldOption *)moFormFieldOption {
+    moFormFieldOption.modelID = formFieldOption.modelID;
+    moFormFieldOption.name = formFieldOption.name;
+    
+    return moFormFieldOption;
+}
+
++ (ASDKModelFormFieldOption *)mapCacheMOToFormFieldOption:(ASDKMOFormFieldOption *)moFormFieldOption {
+    ASDKModelFormFieldOption *modelFormFieldOption = [ASDKModelFormFieldOption new];
+    modelFormFieldOption.modelID = moFormFieldOption.modelID;
+    modelFormFieldOption.name = moFormFieldOption.name;
+    
+    return modelFormFieldOption;
+}
 
 @end
