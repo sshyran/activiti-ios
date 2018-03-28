@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class ASDKModelTask;
+@class ASDKModelTask, ASDKFormRenderEngine;
 
 @protocol AFATaskFormViewControllerDelegate <NSObject>
 
@@ -31,8 +31,10 @@
 
 @interface AFATaskFormViewController : UIViewController
 
-@property (weak, nonatomic) id<AFATaskFormViewControllerDelegate> delegate;
+@property (weak, nonatomic) id<AFATaskFormViewControllerDelegate>   delegate;
+@property (strong, nonatomic) ASDKFormRenderEngine                  *taskFormRenderEngine;
 
-- (void)startTaskFormForTaskObject:(ASDKModelTask *)task;
+- (void)formForTask:(ASDKModelTask *)task;
+- (void)saveForm;
 
 @end

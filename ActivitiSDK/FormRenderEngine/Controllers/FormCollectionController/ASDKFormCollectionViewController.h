@@ -20,12 +20,16 @@
 #import "ASDKFormRenderEngineDataSourceProtocol.h"
 #import "ASDKFormRenderEngineProtocol.h"
 #import "ASDKFormControllerNavigationProtocol.h"
+#import "ASDKModelFormConfiguration.h"
 
 @interface ASDKFormCollectionViewController : UICollectionViewController <ASDKFormControllerNavigationProtocol,
                                                                           ASDKFormRenderEngineDataSourceDelegate>
 
+@property (strong, nonatomic) ASDKModelFormConfiguration                *formConfiguration;
 @property (weak, nonatomic)   id<ASDKFormControllerNavigationProtocol>  navigationDelegate;
 @property (weak, nonatomic)   id<ASDKFormRenderEngineProtocol>          renderDelegate;
 @property (strong, nonatomic) id<ASDKFormRenderEngineDataSourceProtocol>dataSource;
+
+- (void)replaceExistingDataSource:(id<ASDKFormRenderEngineDataSourceProtocol>)dataSource;
 
 @end

@@ -18,10 +18,13 @@
 
 #import <Foundation/Foundation.h>
 #import "ASDKFormPreProcessorProtocol.h"
-#import "ASDKFormNetworkServices.h"
+#import "ASDKServiceDataAccessorProtocol.h"
 
-@interface ASDKFormPreProcessor : NSObject <ASDKFormPreProcessorProtocol>
+@interface ASDKFormPreProcessor : NSObject <ASDKFormPreProcessorProtocol,
+                                            ASDKDataAccessorDelegate>
 
-@property (strong, nonatomic) ASDKFormNetworkServices *formNetworkServices;
+- (instancetype)initWithDelegate:(id<ASDKFormPreProcessorDelegate>)delegate;
+
+@property (weak, nonatomic) id<ASDKFormPreProcessorDelegate> delegate;
 
 @end

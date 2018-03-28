@@ -36,7 +36,6 @@
 #import "AFAAppServices.h"
 #import "AFAProcessServices.h"
 #import "AFAFilterServices.h"
-#import "AFAFormServices.h"
 #import "AFAUserServices.h"
 #import "AFAQueryServices.h"
 #import "AFAIntegrationServices.h"
@@ -86,11 +85,6 @@
     
     if (self) {
         AFAServiceRepository *serviceRepository = [AFAServiceRepository sharedRepository];
-        
-        // Register SDK integration services
-        AFAFormServices *formService = [AFAFormServices new];
-        [serviceRepository registerServiceObject:formService
-                                      forPurpose:AFAServiceObjectTypeFormServices];
         
         // Register the thumbnail manager with the service repository
         AFAThumbnailManager *thumbnailManager = [AFAThumbnailManager new];

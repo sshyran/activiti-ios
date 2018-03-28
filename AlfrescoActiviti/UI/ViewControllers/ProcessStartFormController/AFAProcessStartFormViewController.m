@@ -29,7 +29,6 @@
 
 // Managers
 #import "AFAServiceRepository.h"
-#import "AFAFormServices.h"
 
 // Views
 #import "AFAActivityView.h"
@@ -42,7 +41,8 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
     AFAProcessStartFormQueueOperationTypeProcessInstance
 };
 
-@interface AFAProcessStartFormViewController () <ASDKFormControllerNavigationProtocol>
+@interface AFAProcessStartFormViewController () <ASDKFormControllerNavigationProtocol,
+                                                 ASDKFormRenderEngineDelegate>
 
 @property (weak, nonatomic) IBOutlet AFAActivityView                    *activityView;
 @property (weak, nonatomic) IBOutlet AFANoContentView                   *noContentView;
@@ -51,9 +51,7 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
 // Internal state properties
 @property (strong, nonatomic) ASDKModelProcessDefinition                *processDefinition;
 @property (strong, nonatomic) ASDKModelProcessInstance                  *processInstance;
-@property (strong, nonatomic) UICollectionViewController                *formViewController;
-@property (strong, nonatomic) AFAFormServicesEngineSetupCompletionBlock renderCompletionBlock;
-@property (strong, nonatomic) AFAStartFormServicesEngineCompletionBlock formCompletionBlock;
+
 @property (assign, nonatomic) AFAProcessStartFormQueueOperationType     queuedOperationType;
 
 @end
@@ -64,6 +62,15 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
+        dispatch_queue_t formUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
+        
+        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+        ASDKFormNetworkServices *formNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
+        formNetworkService.resultsQueue = formUpdatesProcessingQueue;
+        
+        _startFormRenderEngine = [[ASDKFormRenderEngine alloc] initWithDelegate:self];
+        _startFormRenderEngine.formNetworkServices = formNetworkService;
+        
         self.queuedOperationType = AFAProcessStartFormQueueOperationTypeUndefined;
     }
     
@@ -77,68 +84,6 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
                                                      NSForegroundColorAttributeName: [UIColor whiteColor]}
                                           forState:UIControlStateNormal];
     self.backBarButtonItem.title = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft];
-    
-    __weak typeof(self) weakSelf = self;
-    self.renderCompletionBlock =
-    ^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            // Make sure we remove any references of old versions of the form controller
-            for (id childController in strongSelf.childViewControllers) {
-                if ([childController isKindOfClass:[UICollectionViewController class]]) {
-                    [((UICollectionViewController *)childController).view removeFromSuperview];
-                    [(UICollectionViewController *)childController removeFromParentViewController];
-                }
-            }
-            
-            formController.navigationDelegate = strongSelf;
-            strongSelf.formViewController = formController;
-            [strongSelf addChildViewController:formController];
-            
-            UIView *formView = formController.view;
-            formView.frame = strongSelf.view.bounds;
-            [formView setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [strongSelf.view addSubview:formController.view];
-            
-            NSDictionary *views = NSDictionaryOfVariableBindings(formView);
-            
-            [strongSelf.view addConstraints:
-             [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[formView]|"
-                                                     options:0
-                                                     metrics:nil
-                                                       views:views]];
-            [strongSelf.view addConstraints:
-             [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[formView]-%d-|", 0]
-                                                     options:0
-                                                     metrics:nil
-                                                       views:views]];
-        } else {
-            if (kASDKFormRenderEngineUnsupportedFormFieldsCode == error.code) {
-                strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"form-warning-icon"];
-                strongSelf.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText, @"Unsupported form fields error");
-                strongSelf.noContentView.hidden = NO;
-            } else {
-                [strongSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
-            }
-        }
-        
-        strongSelf.activityView.animating = NO;
-        strongSelf.activityView.hidden = YES;
-    };
-    
-    self.formCompletionBlock =
-    ^(ASDKModelProcessInstance *processInstance, NSError *error) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (error) {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
-        } else {
-            if ([strongSelf.delegate respondsToSelector:@selector(didCompleteFormWithProcessInstance:)]) {
-                [strongSelf.delegate didCompleteFormWithProcessInstance:processInstance];
-            }
-        }
-    };
     
     switch (self.queuedOperationType) {
         case AFAProcessStartFormQueueOperationTypeProcessDefinition: {
@@ -158,11 +103,6 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
     }
     
     self.queuedOperationType = AFAProcessStartFormQueueOperationTypeNone;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -188,10 +128,7 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
             self.activityView.hidden = NO;
             self.activityView.animating = YES;
             
-            AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-            [formService requestSetupWithProcessDefinition:processDefinition
-                                     renderCompletionBlock:self.renderCompletionBlock
-                                       formCompletionBlock:self.formCompletionBlock];
+            [self.startFormRenderEngine setupWithProcessDefinition:processDefinition];
         }
     }
 }
@@ -210,9 +147,67 @@ typedef NS_ENUM(NSInteger, AFAProcessStartFormQueueOperationType) {
             self.activityView.hidden = NO;
             self.activityView.animating = YES;
             
-            AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-            [formService requestSetupWithProcessInstance:processInstance
-                                   renderCompletionBlock:self.renderCompletionBlock];
+            
+            [self.startFormRenderEngine setupWithProcessInstance:processInstance];
+        }
+    }
+}
+
+
+#pragma mark -
+#pragma mark ASDKFormRenderEngineDelegate
+
+- (void)didRenderedFormController:(UICollectionViewController<ASDKFormControllerNavigationProtocol> *)formController
+                            error:(NSError *)error {
+    if (!error) {
+        // Make sure we remove any references of old versions of the form controller
+        for (id childController in self.childViewControllers) {
+            if ([childController isKindOfClass:[UICollectionViewController class]]) {
+                [((UICollectionViewController *)childController).view removeFromSuperview];
+                [(UICollectionViewController *)childController removeFromParentViewController];
+            }
+        }
+        
+        formController.navigationDelegate = self;
+        [self addChildViewController:formController];
+        
+        UIView *formView = formController.view;
+        formView.frame = self.view.bounds;
+        [formView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addSubview:formController.view];
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(formView);
+        [self.view addConstraints:
+         [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[formView]|"
+                                                 options:0
+                                                 metrics:nil
+                                                   views:views]];
+        [self.view addConstraints:
+         [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[formView]-%d-|", 0]
+                                                 options:0
+                                                 metrics:nil
+                                                   views:views]];
+    } else {
+        if (kASDKFormRenderEngineUnsupportedFormFieldsCode == error.code) {
+            self.noContentView.iconImageView.image = [UIImage imageNamed:@"form-warning-icon"];
+            self.noContentView.descriptionLabel.text = NSLocalizedString(kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText, @"Unsupported form fields error");
+            self.noContentView.hidden = NO;
+        } else {
+            [self showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+        }
+    }
+    
+    self.activityView.animating = NO;
+    self.activityView.hidden = YES;
+}
+
+- (void)didCompleteStartForm:(ASDKModelProcessInstance *)processInstance
+                       error:(NSError *)error {
+    if (error) {
+        [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+    } else {
+        if (self.delegate) {
+            [self.delegate didCompleteFormWithProcessInstance:processInstance];
         }
     }
 }

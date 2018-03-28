@@ -38,4 +38,10 @@
                                        withColumnID:(NSString *)columnID
                                           toCacheMO:(ASDKMOFormFieldOptionMap *)moFormFieldOptionMap;
 
++ (ASDKMOFormFieldOptionMap *)mapRestFieldValueList:(NSArray *)restFieldValueList
+                             forProcessDefinitionID:(NSString *)processDefinitionID
+                                    withFormFieldID:(NSString *)fieldID
+                                       withColumnID:(NSString *)columnID
+                                          toCacheMO:(ASDKMOFormFieldOptionMap *)moFormFieldOptionMap;
+
 @end

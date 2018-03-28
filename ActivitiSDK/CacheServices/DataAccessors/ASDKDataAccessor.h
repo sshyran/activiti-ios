@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import "ASDKServiceDataAccessorProtocol.h"
 
-@interface ASDKDataAccessor : NSObject <ASDKServiceDataAccessorProtocol> {
+@interface ASDKDataAccessor : NSObject <ASDKServiceDataAccessorProtocol, NSCopying> {
     @protected
     ASDKServiceDataAccessorCachingPolicy  _cachePolicy;
     ASDKNetworkService                    *_networkService;

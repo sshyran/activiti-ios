@@ -84,23 +84,18 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Set the action handler to point to the active form controller instance
-    self.renderDelegate.actionHandler.dataSourceActionDelegate = (id<ASDKFormEngineDataSourceActionHandlerDelegate>)self.dataSource;
-    self.renderDelegate.actionHandler.formControllerActionDelegate = self;
-    
-    NSArray *selectedItemsIndexPaths = [self.collectionView indexPathsForSelectedItems];
-    for (NSIndexPath *indexPath in selectedItemsIndexPaths) {
-        [self.collectionView deselectItemAtIndexPath:indexPath
-                                            animated:NO];
-        [self refreshContentForCellAtIndexPath:indexPath];
-    }
-    
-    [self.collectionViewLayout invalidateLayout];
+    [self refreshContentInCollectionView];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+#pragma mark -
+#pragma mark Public interface
+
+- (void)replaceExistingDataSource:(id<ASDKFormRenderEngineDataSourceProtocol>)dataSource {
+    NSAssert(_renderDelegate, @"Render delegate property must be set first to meet dependency conditions");
+    
+    self.dataSource = dataSource;
+    [self refreshContentInCollectionView];
 }
 
 
@@ -301,6 +296,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                 
                 if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
                     ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
+                    dynamicTableDetailsViewController.formConfiguration = self.formConfiguration;
                     dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
                 }
                 
@@ -358,6 +354,21 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         [cell setupCellWithFormOutcome:(ASDKModelFormOutcome *)modelObject
                      enableFormOutcome:isFormOutcomeEnabled];
     }
+}
+
+- (void)refreshContentInCollectionView {
+    // Set the action handler to point to the active form controller instance
+    _renderDelegate.actionHandler.dataSourceActionDelegate = (id<ASDKFormEngineDataSourceActionHandlerDelegate>)_dataSource;
+    _renderDelegate.actionHandler.formControllerActionDelegate = self;
+    
+    NSArray *selectedItemsIndexPaths = [self.collectionView indexPathsForSelectedItems];
+    for (NSIndexPath *indexPath in selectedItemsIndexPaths) {
+        [self.collectionView deselectItemAtIndexPath:indexPath
+                                            animated:NO];
+        [self refreshContentForCellAtIndexPath:indexPath];
+    }
+    
+    [self.collectionViewLayout invalidateLayout];
 }
 
 @end

@@ -158,6 +158,42 @@
 
 }
 
+- (void)cacheRestFieldValues:(NSArray *)restFieldValues
+      forProcessDefinitionID:(NSString *)processDefinitionID
+             withFormFieldID:(NSString *)fieldID
+                withColumnID:(NSString *)columnID
+         withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    __weak typeof(self) weakSelf = self;
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        __strong typeof(self) strongSelf = weakSelf;
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = [strongSelf cleanStalledRestFieldValuesInContext:managedObjectContext
+                                                             forPredicate:[self restFieldValuesPredicateForProcessDefinitionID:processDefinitionID
+                                                                                                                   formFieldID:fieldID
+                                                                                                                      columnID:columnID]];
+        if (!error) {
+            
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchRestFieldValuesForProcessDefinition:(NSString *)processDefinitionID
+                                 withFormFieldID:(NSString *)fieldID
+                                    withColumnID:(NSString *)columnID
+                             withCompletionBlock:(ASDKCacheServiceTaskRestFieldValuesCompletionBlock)completionBlock {
+    
+}
+
 
 #pragma mark -
 #pragma mark Operations
@@ -328,6 +364,45 @@
     return nil;
 }
 
+- (NSError *)saveRestFieldValuesAndGenerateFormFieldOptionMap:(NSArray *)formFieldOptionList
+                                       forProcessDefinitionID:(NSString *)processDefinitionID
+                                              withFormFieldID:(NSString *)formFieldID
+                                                 withColumnID:(NSString *)columnID
+                                                    inContext:(NSManagedObjectContext *)managedObjectContext {
+    // Upsert rest field values
+    NSError *error = nil;
+    NSArray *moFormFieldOptionList = [ASDKFormFieldOptionCacheModelUpsert upsertFormFieldOptionListToCache:formFieldOptionList
+                                                                                                     error:&error
+                                                                                               inMOContext:managedObjectContext];
+    if (error) {
+        return error;
+    }
+    
+    // Fetch existing or create form field option map
+    NSFetchRequest *formFieldOptionMapRequest = [ASDKMOFormFieldOptionMap fetchRequest];
+    formFieldOptionMapRequest.predicate = [self restFieldValuesPredicateForProcessDefinitionID:processDefinitionID
+                                                                                   formFieldID:formFieldID
+                                                                                      columnID:columnID];
+    NSArray *fetchResults = [managedObjectContext executeFetchRequest:formFieldOptionMapRequest
+                                                                error:&error];
+    if (error) {
+        return error;
+    }
+    
+    ASDKMOFormFieldOptionMap *formFieldOptionMap = fetchResults.firstObject;
+    if (!formFieldOptionMap) {
+        formFieldOptionMap = [NSEntityDescription insertNewObjectForEntityForName:[ASDKMOFormFieldOptionMap entityName]
+                                                           inManagedObjectContext:managedObjectContext];
+    }
+    
+    [ASDKFormFieldOptionMapCacheMapper mapRestFieldValueList:moFormFieldOptionList
+                                      forProcessDefinitionID:processDefinitionID
+                                             withFormFieldID:formFieldID
+                                                withColumnID:columnID
+                                                   toCacheMO:formFieldOptionMap];
+    return nil;
+}
+
 
 #pragma mark -
 #pragma mark Predicate construction
@@ -357,6 +432,16 @@
         return nil;
     } else {
         return [NSPredicate predicateWithFormat:@"taskID == %@ && formFieldID == %@ && columnID == %@", taskID, formFieldID, columnID];
+    }
+}
+
+- (NSPredicate *)restFieldValuesPredicateForProcessDefinitionID:(NSString *)processDefinitionID
+                                                    formFieldID:(NSString *)formFieldID
+                                                       columnID:(NSString *)columnID {
+    if (!processDefinitionID.length || formFieldID.length || columnID.length) {
+        return nil;
+    } else {
+        return [NSPredicate predicateWithFormat:@"processDefinitionID == %@ && formFieldID == %@ && columnID == %@", processDefinitionID, formFieldID, columnID];
     }
 }
 

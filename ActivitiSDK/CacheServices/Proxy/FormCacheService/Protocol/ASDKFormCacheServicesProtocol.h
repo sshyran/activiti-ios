@@ -106,4 +106,36 @@ typedef void (^ASDKCacheServiceTaskRestFieldValuesCompletionBlock) (NSArray *res
                          withColumnID:(NSString *)columnID
                   withCompletionBlock:(ASDKCacheServiceTaskRestFieldValuesCompletionBlock)completionBlock;
 
+/**
+ * Caches provided rest field value list for the specified dynamic table attached to
+ * a start form and reports the operation success over a completion block.
+ *
+ * @param restFieldValues       List of rest field values to be cached
+ * @param processDefinitionID   Process definition ID of the start form for which the rest
+ *                              field values are cached
+ * @param fieldID               ID of the form field the rest values are assigned to
+ * @param columnID              ID of the dynamic table column the rest values are assigned to
+ * @param completionBlock       Completion block indicating the success of the operation
+ */
+- (void)cacheRestFieldValues:(NSArray *)restFieldValues
+      forProcessDefinitionID:(NSString *)processDefinitionID
+             withFormFieldID:(NSString *)fieldID
+                withColumnID:(NSString *)columnID
+         withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+/**
+ * Fetches and reports via a completion block the rest field values assigned to the
+ * specified dynamic table that is part of a start form.
+ *
+ * @param processDefinitionID   Process definition ID of the start form for which the rest
+ *                              field values are retrieved from cache
+ * @param fieldID               ID of the form field the rest values are assigned to
+ * @param columnID              ID of the dynamic table column the rest values are assigned to
+ * @param completionBlock       Completion block returning the rest field values
+ */
+- (void)fetchRestFieldValuesForProcessDefinition:(NSString *)processDefinitionID
+                                 withFormFieldID:(NSString *)fieldID
+                                    withColumnID:(NSString *)columnID
+                             withCompletionBlock:(ASDKCacheServiceTaskRestFieldValuesCompletionBlock)completionBlock;
+
 @end

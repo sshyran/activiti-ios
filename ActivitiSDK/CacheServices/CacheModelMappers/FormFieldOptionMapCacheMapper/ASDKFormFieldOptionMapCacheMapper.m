@@ -59,4 +59,17 @@
     return moFormFieldOptionMap;
 }
 
++ (ASDKMOFormFieldOptionMap *)mapRestFieldValueList:(NSArray *)restFieldValueList
+                             forProcessDefinitionID:(NSString *)processDefinitionID
+                                    withFormFieldID:(NSString *)fieldID
+                                       withColumnID:(NSString *)columnID
+                                          toCacheMO:(ASDKMOFormFieldOptionMap *)moFormFieldOptionMap {
+    moFormFieldOptionMap.processDefinitionID = processDefinitionID;
+    moFormFieldOptionMap.formFieldID = fieldID;
+    moFormFieldOptionMap.columnID = columnID;
+    
+    [moFormFieldOptionMap addRestFieldValueList:[NSSet setWithArray:restFieldValueList]];
+    return moFormFieldOptionMap;
+}
+
 @end

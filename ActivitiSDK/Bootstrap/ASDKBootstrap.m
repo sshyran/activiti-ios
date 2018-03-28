@@ -51,7 +51,6 @@
 #import "ASDKIntegrationParserOperationWorker.h"
 #import "ASDKDiskServices.h"
 #import "ASDKFormRenderEngine.h"
-#import "ASDKFormRenderEngineProtocol.h"
 #import "ASDKFormColorSchemeManager.h"
 #import "ASDKFormColorSchemeManagerProtocol.h"
 #import "ASDKCSRFTokenStorage.h"
@@ -179,7 +178,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                        diskServices:diskService];
     
     // Set up form services
-    [self setupFormRenderEngine];
     [self setupFormColorSchemeManager];
     
     // Set up persistence services
@@ -416,17 +414,6 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [_serviceLocator addService:integrationNetworkService];
     
     ASDKLogVerbose(@"Integration network services...%@", integrationNetworkService ? @"OK" : @"NOT_OK");
-}
-
-- (void)setupFormRenderEngine {
-    ASDKFormRenderEngine *formRenderEngine = [ASDKFormRenderEngine new];
-    formRenderEngine.formNetworkServices = [self.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
-    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormRenderEngineProtocol)]) {
-        [_serviceLocator removeService:formRenderEngine];
-    }
-    [_serviceLocator addService:formRenderEngine];
-    
-    ASDKLogVerbose(@"Form render engine services...%@", formRenderEngine ? @"OK" : @"NOT_OK");
 }
 
 - (void)setupFormColorSchemeManager {

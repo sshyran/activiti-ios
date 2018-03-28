@@ -32,6 +32,10 @@
 #import "ASDKModelRestFormField.h"
 #import "ASDKModelFormDescription.h"
 #import "ASDKModelFormTabDescription.h"
+#import "ASDKModelFormConfiguration.h"
+#import "ASDKModelFormPreProcessorResponse.h"
+#import "ASDKModelTaskFormPreProcessorResponse.h"
+#import "ASDKModelStartFormPreProcessorResponse.h"
 
 // Managers
 #import "ASDKFormRenderDataSource.h"
@@ -39,12 +43,14 @@
 #import "ASDKFormEngineActionHandler.h"
 #import "ASDKFormDataAccessor.h"
 #import "ASDKFormPreProcessor.h"
+#import "ASDKServiceDataAccessorProtocol.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface ASDKFormRenderEngine ()
+@interface ASDKFormRenderEngine () <ASDKDataAccessorDelegate,
+                                    ASDKFormPreProcessorDelegate>
 
 /**
  *  Property meant to hold a reference to the form data source
@@ -52,22 +58,21 @@
 @property (strong, nonatomic) ASDKFormRenderDataSource                  *dataSource;
 
 /**
- *  Property meant to hold a reference to the form completion block invoked
- *  when the user completes a form.
+ * Property meant to hold a reference to the form controller
  */
-@property (strong, nonatomic) ASDKFormRenderEngineCompletionBlock       formCompletionBlock;
+@property (strong, nonatomic) ASDKFormCollectionViewController          *formViewController;
 
 /**
- *  Property meant to hold a reference to the start form completion block invoked
- *  when the user completes the a process instance associated start form.
+ * Property meant to hold a reference to the form description model.
  */
-@property (strong, nonatomic) ASDKStartFormRenderEngineCompletionBlock  startFormCompletionBlock;
+@property (strong, nonatomic) ASDKModelFormDescription                  *formDescription;
+
 
 /**
- *  Property meant to hold a reference to the save form completion block invoked
- *  when the user saves a form.
+ * Property meant to hold a reference to a subset of elements from the form description mode
+ * which describes the structure of a dynamic table.
  */
-@property (strong, nonatomic) ASDKFormRenderEngineSaveBlock             saveFormCompletionBlock;
+@property (strong, nonatomic) NSArray                                   *dynamicTableRowFormFields;
 
 /**
  * Data accessors responsable with fetching network or cached data
@@ -84,11 +89,12 @@
 #pragma mark -
 #pragma mark Life cycle
 
-- (instancetype)init {
+- (instancetype)initWithDelegate:(id<ASDKFormRenderEngineDelegate>)delegate {
     self = [super init];
     
     if (self) {
-        self.actionHandler = [ASDKFormEngineActionHandler new];
+        _actionHandler = [ASDKFormEngineActionHandler new];
+        _delegate = delegate;
     }
     
     return self;
@@ -96,32 +102,11 @@
 
 
 #pragma mark -
-#pragma mark ASDKFormRenderEngine Protocol
+#pragma mark ASDKFormRenderEngineProtocol
 
-- (UICollectionViewController *)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields {
-    // Load from nib the form collection view controller and link it's data source
-    UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
-                                                             bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
-    ASDKFormCollectionViewController *formCollectionViewController = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
-    formCollectionViewController.dataSource = self.dataSource;
-    formCollectionViewController.renderDelegate = self;
-    
-    return formCollectionViewController;
-}
-
-- (void)setupWithTaskModel:(ASDKModelTask *)task
-     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock
-             formSaveBlock:(ASDKFormRenderEngineSaveBlock)formSaveBlock {
-    // Check mandatory parameteres
+- (void)setupWithTaskModel:(ASDKModelTask *)task {
     NSParameterAssert(task);
-    NSParameterAssert(renderCompletionBlock);
-    NSParameterAssert(formCompletionBlock);
-    NSParameterAssert(formSaveBlock);
-    
     self.task = task;
-    self.formCompletionBlock = formCompletionBlock;
-    self.saveFormCompletionBlock = formSaveBlock;
     
     __weak typeof(self) weakSelf = self;
     [self.formNetworkServices
@@ -131,100 +116,26 @@
          
          // Check for form description errors first
          if (error) {
-             renderCompletionBlock(nil, error);
+             if (strongSelf.delegate) {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     [strongSelf.delegate didRenderedFormController:nil
+                                                              error:error];
+                 });
+             }
              return;
          }
          
-         strongSelf.formPreProcessor = [ASDKFormPreProcessor new];
-         strongSelf.formPreProcessor.formNetworkServices = strongSelf.formNetworkServices;
+         strongSelf.formDescription = formDescription;
          
+         strongSelf.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
          [strongSelf.formPreProcessor setupWithTaskID:task.modelID
-                                 withFormFields:formDescription.formFields
-                        withDynamicTableFieldID:nil
-                      preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                          formDescription.formFields = processedFormFields;
-                          
-                          if ([formDescription doesFormDescriptionContainSupportedFormFields]) {
-                              // Set up the data source for the form collection view controller
-                              weakSelf.dataSource = [[ASDKFormRenderDataSource alloc] initWithTaskFormDescription:formDescription];
-                              weakSelf.dataSource.isReadOnlyForm = weakSelf.task.endDate ? YES : NO;
-                              
-                              // Always dispath on the main queue results related to the form view
-                              dispatch_async(dispatch_get_main_queue(), ^{
-                                  UICollectionViewController *formCollectionViewController = [weakSelf prepareWithFormDescription:formDescription];
-                                  
-                                  // First check for integrity errors
-                                  if (!formCollectionViewController) {
-                                      renderCompletionBlock(nil, [weakSelf renderEngineSetupError]);
-                                  } else {
-                                      renderCompletionBlock(formCollectionViewController, nil);
-                                  }
-                              });
-                          } else {
-                              renderCompletionBlock(nil, [weakSelf renderEngineSetupUnsupportedFormFieldsError]);
-                          }
-                      }];
+                                       withFormFields:formDescription.formFields
+                              withDynamicTableFieldID:nil];
      }];
 }
 
-- (void)setupWithProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-             renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-               formCompletionBlock:(ASDKStartFormRenderEngineCompletionBlock)formCompletionBlock {
-    NSParameterAssert(processDefinition);
-    NSParameterAssert(renderCompletionBlock);
-    NSParameterAssert(formCompletionBlock);
-    
-    self.processDefinition = processDefinition;
-    self.startFormCompletionBlock = formCompletionBlock;
-    
-    __weak typeof(self) weakSelf = self;
-    [self.formNetworkServices
-     startFormForProcessDefinitionID:processDefinition.modelID
-     completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         // Check for form description errors first
-         if (error) {
-             renderCompletionBlock(nil, error);
-         }
-         
-         strongSelf.formPreProcessor = [ASDKFormPreProcessor new];
-         strongSelf.formPreProcessor.formNetworkServices = strongSelf.formNetworkServices;
-         
-         [strongSelf.formPreProcessor setupWithProcessDefinitionID:processDefinition.modelID
-                                              withFormFields:formDescription.formFields
-                                     withDynamicTableFieldID:nil
-                                   preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                                       formDescription.formFields = processedFormFields;
-                                       
-                                       if ([formDescription doesFormDescriptionContainSupportedFormFields]) {
-                                           // Set up the data source for the form collection view controller
-                                           weakSelf.dataSource = [[ASDKFormRenderDataSource alloc] initWithProcessDefinitionFormDescription:formDescription];
-                                           weakSelf.dataSource.isReadOnlyForm = weakSelf.task.endDate ? YES : NO;
-                                           
-                                           // Always dispath on the main queue results related to the form view
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               UICollectionViewController *formCollectionViewController = [weakSelf prepareWithFormDescription:formDescription];
-                                               
-                                               // First check for integrity errors
-                                               if (!formCollectionViewController) {
-                                                   renderCompletionBlock(nil, [weakSelf renderEngineSetupError]);
-                                               } else {
-                                                   renderCompletionBlock(formCollectionViewController, nil);
-                                               }
-                                           });
-                                       } else {
-                                           renderCompletionBlock(nil, [weakSelf renderEngineSetupUnsupportedFormFieldsError]);
-                                       }
-                                   }];
-     }];
-}
-
-- (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance
-           renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock {
+- (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance {
     NSParameterAssert(processInstance);
-    NSParameterAssert(renderCompletionBlock);
-    
     self.processInstance = processInstance;
     
     __weak typeof(self) weakSelf = self;
@@ -235,124 +146,97 @@
          
          // Check for form description errors first
          if (error) {
-             renderCompletionBlock(nil, error);
+             if (strongSelf.delegate) {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     [strongSelf.delegate didRenderedFormController:nil
+                                                              error:error];
+                 });
+             }
+             return ;
          }
          
-         strongSelf.formPreProcessor = [ASDKFormPreProcessor new];
-         strongSelf.formPreProcessor.formNetworkServices = strongSelf.formNetworkServices;
+         strongSelf.formDescription = formDescription;
          
+         strongSelf.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
          [strongSelf.formPreProcessor setupWithProcessDefinitionID:processInstance.processDefinitionID
-                                              withFormFields:formDescription.formFields
-                                     withDynamicTableFieldID:nil
-                                   preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                                       formDescription.formFields = processedFormFields;
-                                       
-                                       if ([formDescription doesFormDescriptionContainSupportedFormFields]) {
-                                           // Set up the data source for the form collection view controller
-                                           weakSelf.dataSource = [[ASDKFormRenderDataSource alloc] initWithProcessDefinitionFormDescription:formDescription];
-                                           weakSelf.dataSource.isReadOnlyForm = YES;
-                                           
-                                           // Always dispath on the main queue results related to the form view
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               UICollectionViewController *formCollectionViewController = [weakSelf prepareWithFormDescription:formDescription];
-                                               
-                                               // First check for integrity errors
-                                               if (!formCollectionViewController) {
-                                                   renderCompletionBlock(nil, [weakSelf renderEngineSetupError]);
-                                               } else {
-                                                   renderCompletionBlock(formCollectionViewController, nil);
-                                               }
-                                           });
-                                       } else {
-                                           renderCompletionBlock(nil, [weakSelf renderEngineSetupUnsupportedFormFieldsError]);
-                                       }
-                                   }];
+                                                    withFormFields:formDescription.formFields
+                                           withDynamicTableFieldID:nil];
+     }];
+}
+
+- (void)setupWithProcessDefinition:(ASDKModelProcessDefinition *)processDefinition {
+    NSParameterAssert(processDefinition);
+    self.processDefinition = processDefinition;
+    
+    __weak typeof(self) weakSelf = self;
+    [self.formNetworkServices
+     startFormForProcessDefinitionID:processDefinition.modelID
+     completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         // Check for form description errors first
+         if (error) {
+             if (strongSelf.delegate) {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     [strongSelf.delegate didRenderedFormController:nil
+                                                              error:error];
+                 });
+             }
+             return;
+         }
+         
+         strongSelf.formDescription = formDescription;
+         
+         strongSelf.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
+         [strongSelf.formPreProcessor setupWithProcessDefinitionID:processDefinition.modelID
+                                                    withFormFields:formDescription.formFields
+                                           withDynamicTableFieldID:nil];
      }];
 }
 
 - (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
                    dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
-                                 taskModel:(ASDKModelTask *)task
-                     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-                       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock {
+                                 taskModel:(ASDKModelTask *)task {
     // Check mandatory parameteres
     NSParameterAssert(dynamicTableRowFormFields);
     NSParameterAssert(dynamicTableFormFieldID);
     NSParameterAssert(task);
-    NSParameterAssert(renderCompletionBlock);
-    NSParameterAssert(formCompletionBlock);
     
     self.task = task;
-    self.formCompletionBlock = formCompletionBlock;
     
-    // Set up the data source for the form collection view controller
-    self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields];
-    self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
-    self.formPreProcessor = [ASDKFormPreProcessor new];
-    self.formPreProcessor.formNetworkServices = self.formNetworkServices;
+    self.dynamicTableRowFormFields = dynamicTableRowFormFields;
     
-    __weak typeof(self) weakSelf = self;
+    self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
     [self.formPreProcessor setupWithTaskID:task.modelID
                             withFormFields:dynamicTableRowFormFields
-                   withDynamicTableFieldID:dynamicTableFormFieldID
-                 preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                     // Always dispath on the main queue results related to the form views
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         UICollectionViewController *formCollectionViewController = [weakSelf setupWithDynamicTableRowFormFields:processedFormFields];
-                         // First check for integrity errors
-                         if (!formCollectionViewController) {
-                             renderCompletionBlock(nil, [weakSelf renderEngineSetupError]);
-                         } else {
-                             renderCompletionBlock(formCollectionViewController, nil);
-                         }
-                     });
-                 }];
+                   withDynamicTableFieldID:dynamicTableFormFieldID];
 }
 
 - (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
                    dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
-                         processDefinition:(ASDKModelProcessDefinition *)processDefinition
-                     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-                       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock {
+                         processDefinition:(ASDKModelProcessDefinition *)processDefinition {
     // Check mandatory parameteres
     NSParameterAssert(dynamicTableRowFormFields);
     NSParameterAssert(processDefinition);
     NSParameterAssert(dynamicTableFormFieldID);
-    NSParameterAssert(renderCompletionBlock);
-    NSParameterAssert(formCompletionBlock);
     
     self.processDefinition = processDefinition;
-    self.formCompletionBlock = formCompletionBlock;
     
     // Set up the data source for the form collection view controller
     self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields];
     self.dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
-    self.formPreProcessor = [ASDKFormPreProcessor new];
-    self.formPreProcessor.formNetworkServices = self.formNetworkServices;
     
-    __weak typeof(self) weakSelf = self;
+    self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
     [self.formPreProcessor setupWithProcessDefinitionID:processDefinition.modelID
                                          withFormFields:dynamicTableRowFormFields
-                                withDynamicTableFieldID:dynamicTableFormFieldID
-                              preProcessCompletionBlock:^(NSArray *processedFormFields, NSError *error) {
-                                  // Always dispath on the main queue results related to the form views
-                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                      UICollectionViewController *formCollectionViewController = [weakSelf setupWithDynamicTableRowFormFields:processedFormFields];
-                                      
-                                      // First check for integrity errors
-                                      if (!formCollectionViewController) {
-                                          renderCompletionBlock(nil, [weakSelf renderEngineSetupError]);
-                                      } else {
-                                          renderCompletionBlock(formCollectionViewController, nil);
-                                      }
-                                  });
-                              }];
+                                withDynamicTableFieldID:dynamicTableFormFieldID];
 }
 
 - (UICollectionViewController *)setupWithTabFormDescription:(ASDKModelFormTabDescription *)formDescription {
-    self.dataSource = [[ASDKFormRenderDataSource alloc] initWithTabFormDescription:formDescription];
-    self.dataSource.isReadOnlyForm = formDescription.isReadOnlyForm;
-    return [self prepareWithFormDescription:formDescription];
+    ASDKFormRenderDataSource *dataSource = [[ASDKFormRenderDataSource alloc] initWithTabFormDescription:formDescription];
+    dataSource.isReadOnlyForm = formDescription.isReadOnlyForm;
+    
+    return [self formWithDataSource:dataSource];
 }
 
 - (void)completeFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
@@ -377,30 +261,6 @@
          withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation];
 }
 
-- (void)performEngineCleanup {
-    self.task = nil;
-    self.processDefinition = nil;
-    self.dataSource = nil;
-    self.formCompletionBlock = nil;
-    self.startFormCompletionBlock = nil;
-}
-
-
-#pragma mark -
-#pragma mark Private API
-
-- (UICollectionViewController *)prepareWithFormDescription:(ASDKModelFormDescription *)formDescription {
-    // Load from nib the form collection view controller and link it's data source
-    UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
-                                                             bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
-    ASDKFormCollectionViewController *formCollectionViewController = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
-    self.dataSource.delegate = formCollectionViewController;
-    formCollectionViewController.dataSource = self.dataSource;
-    formCollectionViewController.renderDelegate = self;
-    
-    return formCollectionViewController;
-}
-
 
 #pragma mark -
 #pragma mark ASDKDataAccessorDelegate
@@ -421,45 +281,226 @@
 
 
 #pragma mark -
+#pragma mark ASDKFormPreProcessorDelegate
+
+- (void)didProcessedFormFieldsWithResponse:(ASDKModelFormPreProcessorResponse *)preProcessorResponse {
+    [self handleGenericPreProcessorResponse:preProcessorResponse];
+}
+
+- (void)didProcessedCachedFormFieldsWithResponse:(ASDKModelFormPreProcessorResponse *)preProcessorResponse {
+    [self handleGenericPreProcessorResponse:preProcessorResponse];
+}
+
+
+#pragma mark -
 #pragma mark Data accessor response handlers
 
 - (void)handleTaskFormCompletionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
     ASDKDataAccessorResponseConfirmation *responseConfirmation = (ASDKDataAccessorResponseConfirmation *)response;
-    BOOL isFormCompleted = responseConfirmation.isConfirmation;
     
-    if (self.formCompletionBlock) {
-        self.formCompletionBlock(isFormCompleted, responseConfirmation.error);
-    }
-    
-    // After a successfull form completion clean up the engine
-    // and prepare it for reuse
-    if (isFormCompleted) {
-        [self performEngineCleanup];
+    if (self.delegate) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+           [self.delegate didCompleteFormWithError:responseConfirmation.error];
+        });
     }
 }
 
 - (void)handleProcessDefinitionFormCompletionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
     ASDKDataAccessorResponseModel *responseModel = (ASDKDataAccessorResponseModel *)response;
     ASDKModelProcessInstance *processInstance = responseModel.model;
-
-    if (self.startFormCompletionBlock) {
-        self.startFormCompletionBlock(processInstance, responseModel.error);
-    }
     
-    // After a successfull form completion clean up the engine
-    // and prepare it for reuse
-    if (processInstance) {
-        [self performEngineCleanup];
+    if (self.delegate) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate didCompleteStartForm:processInstance
+                                          error:responseModel.error];
+        });
     }
 }
 
 - (void)handleSaveFormDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
     ASDKDataAccessorResponseConfirmation *responseConfirmation = (ASDKDataAccessorResponseConfirmation *)response;
     
-    if (self.saveFormCompletionBlock) {
-        self.saveFormCompletionBlock(responseConfirmation.isConfirmation, responseConfirmation.error);
+    if (self.delegate) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate didSaveFormWithError:responseConfirmation.error];
+        });
     }
 }
+
+
+#pragma mark -
+#pragma mark Form preprocessor handlers
+
+- (void)handleGenericPreProcessorResponse:(ASDKModelFormPreProcessorResponse *)preProcessorResponse {
+    if (preProcessorResponse.dynamicTableFieldID.length) {
+        [self handleDynamicTableFormPreprocessorResponse:preProcessorResponse];
+    } else if ([preProcessorResponse isKindOfClass:[ASDKModelTaskFormPreProcessorResponse class]]) {
+        [self handleTaskFormPreprocessorResponse:preProcessorResponse];
+    } else if ([preProcessorResponse isKindOfClass:[ASDKModelStartFormPreProcessorResponse class]]) {
+        [self handleStartFormPreprocessorResponse:preProcessorResponse];
+    }
+}
+
+- (void)handleTaskFormPreprocessorResponse:(ASDKModelFormPreProcessorResponse *)preProcessorResponse {
+    self.formDescription.formFields = preProcessorResponse.processedFormFields;
+    
+    if ([self.formDescription doesFormDescriptionContainSupportedFormFields]) {
+        // Set up the data source for the form collection view controller
+        ASDKFormRenderDataSource *dataSource = [[ASDKFormRenderDataSource alloc] initWithTaskFormDescription:self.formDescription];
+        dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
+        
+        // Always dispatch on the main queue results related to the form view
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            NSError *error = nil;
+            UICollectionViewController<ASDKFormControllerNavigationProtocol> *formCollectionViewController =
+            [strongSelf formWithDataSource:dataSource];
+            
+            if (!formCollectionViewController &&
+                !strongSelf.formViewController) {
+                error = [strongSelf renderEngineSetupError];
+            }
+            
+            /* Report results only if dealing with an error or if it is
+             * the first render of a form.
+             * Note: When returning cached data along with network data
+             * subsequent controllers are not provided. Only the data source
+             * is updated for the already existing one
+             */
+            if (formCollectionViewController ||
+                error) {
+                if (strongSelf.delegate) {
+                    [strongSelf.delegate didRenderedFormController:formCollectionViewController
+                                                             error:error];
+                }
+            }
+        });
+    } else {
+        if (self.delegate) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate didRenderedFormController:nil
+                                                   error:[self renderEngineSetupUnsupportedFormFieldsError]];
+            });
+        }
+    }
+}
+
+- (void)handleStartFormPreprocessorResponse:(ASDKModelFormPreProcessorResponse *)preProcessorResponse {
+    self.formDescription.formFields = preProcessorResponse.processedFormFields;
+    
+    if ([self.formDescription doesFormDescriptionContainSupportedFormFields]) {
+        // Set up the data source for the form collection view controller
+        ASDKFormRenderDataSource *dataSource = [[ASDKFormRenderDataSource alloc] initWithProcessDefinitionFormDescription:self.formDescription];
+        dataSource.isReadOnlyForm = self.processDefinition ? YES : NO;
+        
+        // Always dispatch on the main queue results related to the form view
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            NSError *error = nil;
+            UICollectionViewController<ASDKFormControllerNavigationProtocol> *formCollectionViewController =
+            [strongSelf formWithDataSource:dataSource];
+            
+            if (!formCollectionViewController &&
+                !strongSelf.formViewController) {
+                error = [strongSelf renderEngineSetupError];
+            }
+            
+            /* Report results only if dealing with an error or if it is
+             * the first render of a form.
+             * Note: When returning cached data along with network data
+             * subsequent controllers are not provided. Only the data source
+             * is updated for the already existing one
+             */
+            if (formCollectionViewController ||
+                error) {
+                if (strongSelf.delegate) {
+                    [strongSelf.delegate didRenderedFormController:formCollectionViewController
+                                                             error:error];
+                }
+            }
+        });
+    } else {
+        if (self.delegate) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate didRenderedFormController:nil
+                                                   error:[self renderEngineSetupUnsupportedFormFieldsError]];
+            });
+        }
+    }
+}
+
+- (void)handleDynamicTableFormPreprocessorResponse:(ASDKModelFormPreProcessorResponse *)preProcessorResponse {
+    // Set up the data source for the form collection view controller
+    ASDKDynamicTableRenderDataSource *dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:self.dynamicTableRowFormFields];
+    dataSource.isReadOnlyForm = self.task.endDate ? YES : NO;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+       __strong typeof(self) strongSelf = weakSelf;
+        
+        NSError *error = nil;
+        UICollectionViewController<ASDKFormControllerNavigationProtocol> *formCollectionViewController = [strongSelf formWithDataSource:dataSource];
+        
+        if (!formCollectionViewController &&
+            !strongSelf.formViewController) {
+            error = [strongSelf renderEngineSetupError];
+        }
+        
+        /* Report results only if dealing with an error or if it is
+         * the first render of a form.
+         * Note: When returning cached data along with network data
+         * subsequent controllers are not provided. Only the data source
+         * is updated for the already existing one
+         */
+        if (formCollectionViewController ||
+            error) {
+            if (strongSelf.delegate) {
+                [strongSelf.delegate didRenderedFormController:formCollectionViewController
+                                                         error:error];
+            }
+        }
+    });
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (ASDKFormCollectionViewController *)formWithDataSource:(ASDKFormRenderDataSource *)dataSource {
+    BOOL justReplaceControllerDataSource = NO;
+    
+    self.dataSource = dataSource;
+    
+    if (!self.formViewController) {
+        UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
+                                                                 bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
+        self.formViewController = [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
+        self.formViewController.renderDelegate = self;
+        self.formViewController.dataSource = self.dataSource;
+        
+    } else {
+        self.formViewController.renderDelegate = self;
+        [self.formViewController replaceExistingDataSource:dataSource];
+        justReplaceControllerDataSource = YES;
+    }
+    
+    self.dataSource.delegate = self.formViewController;
+    
+    // Pass on the form configuration for subsequent querries
+    ASDKModelFormConfiguration *formConfiguration = [ASDKModelFormConfiguration new];
+    formConfiguration.task = self.task;
+    formConfiguration.processInstance = self.processInstance;
+    formConfiguration.processDefinition = self.processDefinition;
+    
+    self.formViewController.formConfiguration = formConfiguration;
+    
+    return justReplaceControllerDataSource ? nil : self.formViewController;
+}
+
 
 #pragma mark -
 #pragma mark Errors

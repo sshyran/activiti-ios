@@ -43,7 +43,6 @@
 #import "AFATableControllerTaskContributorsCellFactory.h"
 #import "AFATableControllerContentCellFactory.h"
 #import "AFATableControllerCommentCellFactory.h"
-#import "AFAFormServices.h"
 #import "AFAProfileServices.h"
 #import "AFAIntegrationServices.h"
 #import "AFAUserServices.h"
@@ -273,11 +272,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     }
 }
 
-#warning Clean form engine on dismiss
-// Clear the form engine once the screen is dismissed
-//AFAFormServices *formServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-//[formServices requestEngineCleanup];
-
 - (IBAction)unwindPeoplePickerController:(UIStoryboardSegue *)segue {
 }
 
@@ -388,7 +382,7 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (void)onFormSave {
-    [self.dataSource saveTaskForm];
+    [self.taskFormViewController saveForm];
 }
 
 - (void)onTaskDetailsEdit:(id)sender {
@@ -511,7 +505,7 @@ AFAModalPeoplePickerViewControllerDelegate>
             self.navigationBarTitle = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormTitleText, @"Task form title");
             displayTaskFormContainerView = YES;
             AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            [self.taskFormViewController startTaskFormForTaskObject:taskDetailsModel.currentTask];
+            [self.taskFormViewController formForTask:taskDetailsModel.currentTask];
         }
             break;
             
@@ -1270,11 +1264,8 @@ AFAModalPeoplePickerViewControllerDelegate>
 #pragma mark AFATaskFormViewControllerDelegate
 
 - (void)formDidLoadWithError:(NSError *)error {
-    AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-    ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
-    
     if (!error &&
-        [formEngineActionHandler isSaveFormActionAvailable]) {
+        [self.taskFormViewController.taskFormRenderEngine.actionHandler isSaveFormActionAvailable]) {
         UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"save-icon"]
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self

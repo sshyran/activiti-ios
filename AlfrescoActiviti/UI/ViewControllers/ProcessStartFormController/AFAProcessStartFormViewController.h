@@ -19,8 +19,7 @@
 #import <UIKit/UIKit.h>
 #import "AFABaseThemedViewController.h"
 
-@class ASDKModelProcessDefinition,
-ASDKModelProcessInstance;
+@class ASDKModelProcessDefinition, ASDKModelProcessInstance, ASDKFormRenderEngine;
 
 @protocol AFAProcessStartFormViewControllerDelegate <NSObject>
 
@@ -31,6 +30,7 @@ ASDKModelProcessInstance;
 @interface AFAProcessStartFormViewController : AFABaseThemedViewController
 
 @property (weak, nonatomic)   id<AFAProcessStartFormViewControllerDelegate> delegate;
+@property (strong, nonatomic) ASDKFormRenderEngine                          *startFormRenderEngine;
 
 - (void)setupStartFormForProcessDefinitionObject:(ASDKModelProcessDefinition *)processDefinition;
 - (void)setupStartFormForProcessInstanceObject:(ASDKModelProcessInstance *)processInstance;

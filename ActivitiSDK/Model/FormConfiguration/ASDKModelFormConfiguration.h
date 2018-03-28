@@ -16,43 +16,16 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "ASDKDataAccessor.h"
+#import <Foundation/Foundation.h>
 
-// Managers
-#import "ASDKCacheService.h"
+@class ASDKModelTask,
+ASDKModelProcessInstance,
+ASDKModelProcessDefinition;
 
-@implementation ASDKDataAccessor
+@interface ASDKModelFormConfiguration : NSObject
 
-
-#pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)initWithDelegate:(id<ASDKDataAccessorDelegate>)delegate {
-    self = [super init];
-    if (self) {
-        _delegate = delegate;
-    }
-    
-    return self;
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-    return self;
-}
-
-
-#pragma mark - 
-#pragma mark Public interface
-
-- (NSOperationQueue *)serialOperationQueue {
-    NSOperationQueue *operationQueue = [NSOperationQueue new];
-    operationQueue.maxConcurrentOperationCount = 1;
-    
-    return operationQueue;
-}
-
-- (void)cancelOperations {
-    // Implement in sublcasses.
-}
+@property (strong, nonatomic) ASDKModelTask                 *task;
+@property (strong, nonatomic) ASDKModelProcessInstance      *processInstance;
+@property (strong, nonatomic) ASDKModelProcessDefinition    *processDefinition;
 
 @end

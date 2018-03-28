@@ -737,7 +737,165 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
 - (void)fetchRestFieldValuesOfStartFormWithProcessDefinitionID:(NSString *)processDefinitionID
                                                  withFormField:(NSString *)fieldID
                                                   withColumnID:(NSString *)columnID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteRestFieldValuesOperation = [self remoteRestFieldValuesOperationForProcessDefinitionID:processDefinitionID
+                                                                                                         withFormFieldID:fieldID
+                                                                                                            withColumnID:columnID];
+    ASDKAsyncBlockOperation *cachedRestFieldValuesOperation = [self cachedRestFieldValuesOperationForProcessDefinitionID:processDefinitionID
+                                                                                                         withFormFieldID:fieldID
+                                                                                                            withColumnID:columnID];
+    ASDKAsyncBlockOperation *storeInCacheRestFieldValuesOperation =
+    [self restFieldValuesStoreInCacheOperationForProcessDefinitionID:processDefinitionID
+                                                     withFormFieldID:fieldID
+                                                        withColumnID:columnID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
     
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedRestFieldValuesOperation];
+            [self.processingQueue addOperations:@[cachedRestFieldValuesOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteRestFieldValuesOperation];
+            [self.processingQueue addOperations:@[remoteRestFieldValuesOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteRestFieldValuesOperation addDependency:cachedRestFieldValuesOperation];
+            [storeInCacheRestFieldValuesOperation addDependency:remoteRestFieldValuesOperation];
+            [completionOperation addDependency:storeInCacheRestFieldValuesOperation];
+            [self.processingQueue addOperations:@[cachedRestFieldValuesOperation,
+                                                  remoteRestFieldValuesOperation,
+                                                  storeInCacheRestFieldValuesOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default:break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteRestFieldValuesOperationForProcessDefinitionID:(NSString *)processDefinitionID
+                                                                  withFormFieldID:(NSString *)fieldID
+                                                                     withColumnID:(NSString *)columnID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteRestFieldValuesOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formNetworkService
+         fetchRestFieldValuesForStartFormWithProcessDefinitionID:processDefinitionID
+         withFieldID:fieldID
+         withColumnID:columnID
+         completionBlock:^(NSArray *restFieldValues, NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             ASDKDataAccessorResponseCollection *responseCollection =
+             [[ASDKDataAccessorResponseCollection alloc] initWithCollection:restFieldValues
+                                                               isCachedData:NO
+                                                                      error:error];
+             
+             if (weakSelf.delegate) {
+                 [weakSelf.delegate dataAccessor:weakSelf
+                             didLoadDataResponse:responseCollection];
+             }
+             
+             operation.result = responseCollection;
+             [operation complete];
+         }];
+    }];
+    
+    return remoteRestFieldValuesOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedRestFieldValuesOperationForProcessDefinitionID:(NSString *)processDefinitionID
+                                                                  withFormFieldID:(NSString *)fieldID
+                                                                     withColumnID:(NSString *)columnID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedRestFieldValuesOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formCacheService
+         fetchRestFieldValuesForProcessDefinition:processDefinitionID
+         withFormFieldID:fieldID
+         withColumnID:columnID
+         withCompletionBlock:^(NSArray *restFieldValues, NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Rest field values fetched succesfully from cache for processDefinitionID:%@ , formFieldID:%@ and columnID:%@", processDefinitionID, fieldID, columnID);
+                 
+                 ASDKDataAccessorResponseCollection *response = [[ASDKDataAccessorResponseCollection alloc] initWithCollection:restFieldValues
+                                                                                                                  isCachedData:YES
+                                                                                                                         error:error];
+                 if (weakSelf.delegate) {
+                     [weakSelf.delegate dataAccessor:weakSelf
+                                 didLoadDataResponse:response];
+                 } else {
+                     ASDKLogError(@"An error occured while fetching cached rest field values for processDefinitionID:%@ , formFieldID:%@ and columnID:%@ . Reason: %@", processDefinitionID, fieldID, columnID, error.localizedDescription);
+                 }
+                 
+                 [operation complete];
+             }
+         }];
+    }];
+    
+    return cachedRestFieldValuesOperation;
+}
+
+- (ASDKAsyncBlockOperation *)restFieldValuesStoreInCacheOperationForProcessDefinitionID:(NSString *)processDefinitionID
+                                                                        withFormFieldID:(NSString *)fieldID
+                                                                           withColumnID:(NSString *)columnID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseCollection *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.collection) {
+            [strongSelf.formCacheService
+             cacheRestFieldValues:remoteResponse.collection
+             forProcessDefinitionID:processDefinitionID
+             withFormFieldID:fieldID
+             withColumnID:columnID
+             withCompletionBlock:^(NSError *error) {
+                 if (operation.isCancelled) {
+                     [operation complete];
+                     return;
+                 }
+                 
+                 if (!error) {
+                     ASDKLogVerbose(@"Rest field values cached successfully for processDefinitionID:%@ , formFieldID:%@ and columnID:%@.", processDefinitionID, fieldID, columnID);
+                     [weakSelf.formCacheService saveChanges];
+                 } else {
+                     ASDKLogError(@"Encountered an error while caching rest field values for processDefinitionID:%@ , formFieldID:%@ and columnID:%@", processDefinitionID, fieldID, columnID);
+                 }
+                 
+                 [operation complete];
+            }];
+        }
+    }];
+    
+    return storeInCacheOperation;
 }
 
 

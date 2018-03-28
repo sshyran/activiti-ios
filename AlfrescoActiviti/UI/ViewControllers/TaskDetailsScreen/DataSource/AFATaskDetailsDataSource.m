@@ -39,7 +39,6 @@
 #import "AFATableController.h"
 #import "AFATaskServices.h"
 #import "AFAServiceRepository.h"
-#import "AFAFormServices.h"
 #import "AFAProfileServices.h"
 #import "AFAIntegrationServices.h"
 
@@ -229,12 +228,6 @@
                                                        completionBlock(isUserInvolved, error);
                                                    }
                                                }];
-}
-
-- (void)saveTaskForm {
-    AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-    ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
-    [formEngineActionHandler saveForm];
 }
 
 - (void)taskContentWithCompletionBlock:(AFATaskDataSourceErrorCompletionBlock)completionBlock
