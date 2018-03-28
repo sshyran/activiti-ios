@@ -236,7 +236,16 @@
     ASDKFormRenderDataSource *dataSource = [[ASDKFormRenderDataSource alloc] initWithTabFormDescription:formDescription];
     dataSource.isReadOnlyForm = formDescription.isReadOnlyForm;
     
-    return [self formWithDataSource:dataSource];
+    UIStoryboard *formStoryboard = [UIStoryboard storyboardWithName:kASDKFormStoryboardBundleName
+                                                             bundle:[NSBundle bundleForClass:[ASDKFormCollectionViewController class]]];
+    ASDKFormCollectionViewController *formCollectionViewController =
+    [formStoryboard instantiateViewControllerWithIdentifier:kASDKStoryboardIDCollectionController];
+    dataSource.delegate = formCollectionViewController;
+    formCollectionViewController.dataSource = dataSource;
+    formCollectionViewController.renderDelegate = self;
+    formCollectionViewController.formConfiguration = [self formConfiguration];
+    
+    return formCollectionViewController;
 }
 
 - (void)completeFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
@@ -491,14 +500,18 @@
     self.dataSource.delegate = self.formViewController;
     
     // Pass on the form configuration for subsequent querries
+    self.formViewController.formConfiguration = [self formConfiguration];
+    
+    return justReplaceControllerDataSource ? nil : self.formViewController;
+}
+
+- (ASDKModelFormConfiguration *)formConfiguration {
     ASDKModelFormConfiguration *formConfiguration = [ASDKModelFormConfiguration new];
     formConfiguration.task = self.task;
     formConfiguration.processInstance = self.processInstance;
     formConfiguration.processDefinition = self.processDefinition;
     
-    self.formViewController.formConfiguration = formConfiguration;
-    
-    return justReplaceControllerDataSource ? nil : self.formViewController;
+    return formConfiguration;
 }
 
 
