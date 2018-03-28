@@ -21,7 +21,6 @@
 // Constants
 #import "ASDKFormRenderEngineConstants.h"
 #import "ASDKLocalizationConstants.h"
-#import "ASDKLogConfiguration.h"
 #import "ASDKNetworkServiceConstants.h"
 
 // Categories
@@ -35,6 +34,7 @@
 #import "ASDKDataAccessorResponseProgress.h"
 #import "ASDKDataAccessorResponseModel.h"
 #import "ASDKDataAccessorResponseFileContent.h"
+#import "ASDKDataAccessorResponseCollection.h"
 
 // Cells
 #import "ASDKAddContentTableViewCell.h"
@@ -47,19 +47,15 @@
 #import "ASDKIntegrationLoginWebViewViewController.h"
 
 // Managers
-#import "ASDKBootstrap.h"
-#import "ASDKIntegrationNetworkServices.h"
-#import "ASDKServiceLocator.h"
-#import "ASDKServiceDataAccessorProtocol.h"
 #import "ASDKFormDataAccessor.h"
+#import "ASDKIntegrationDataAccessor.h"
+#import "ASDKDiskServices.h"
 @import Photos;
 @import QuickLook;
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
-
-static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
 
 typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
     ASDKAttachFormFieldDetailsCellTypeLocalContent = 0,
@@ -82,6 +78,7 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 // Data accessors
 @property (strong, nonatomic) ASDKFormDataAccessor                          *uploadFormContentDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                          *downloadFormContentDataAccessor;
+@property (strong, nonatomic) ASDKIntegrationDataAccessor                   *fetchIntegrationAccountListDataAccessor;
 
 // Internal state properties
 @property (strong, nonatomic) NSURL                                         *currentSelectedUploadResourceURL;
@@ -257,34 +254,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 #pragma mark Service integration
 
 - (void)fetchIntegrationAccounts {
-    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKIntegrationNetworkServices *integrationNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)];
-    
-    __weak typeof(self) weakSelf = self;
-    [integrationNetworkService fetchIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            ASDKLogVerbose(@"Successfully fetched the integration account list:%@.", accounts);
-            
-            // Filter out all but the Alfresco cloud services - development in progress
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
-            NSArray *filtereAccountsdArr = [accounts filteredArrayUsingPredicate:searchPredicate];
-            strongSelf.integrationAccounts = filtereAccountsdArr;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([weakSelf.delegate respondsToSelector:@selector(contentPickerHasBeenPresentedWithNumberOfOptions:cellHeight:)]) {
-                    [weakSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + filtereAccountsdArr.count
-                                                                             cellHeight:weakSelf.actionsTableView.rowHeight];
-                }
-                
-                [weakSelf.actionsTableView reloadData];
-            });
-        } else {
-            ASDKLogError(@"An error occured while fetching the integration account list. Reason:%@", error.localizedDescription);
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingNoIntegrationAccountText, ASDKLocalizationTable, @"Failed title")];
-        }
-    }];
+    self.fetchIntegrationAccountListDataAccessor = [[ASDKIntegrationDataAccessor alloc] initWithDelegate:self];
+    [self.fetchIntegrationAccountListDataAccessor fetchIntegrationAccounts];
 }
 
 - (void)uploadFormFieldContentForCurrentSelectedResource {
@@ -476,6 +447,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [self handleFormContentUploadDataAccessorResponse:response];
     } else if (self.downloadFormContentDataAccessor == dataAccessor) {
         [self handleFormContentDownloadDataAccessorResponse:response];
+    } else if (self.fetchIntegrationAccountListDataAccessor == dataAccessor) {
+        [self handleIntegrationAccountListDataAccessorResponse:response];
     }
 }
 
@@ -638,6 +611,31 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:@"Content download error"];
             }
         });
+    }
+}
+
+- (void)handleIntegrationAccountListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *integrationAccountListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *integrationAccountList = integrationAccountListResponse.collection;
+    
+    if (!integrationAccountListResponse.error) {
+        // Filter out all but the Alfresco cloud services - development in progress
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
+        NSArray *filtereAccountsdArr = [integrationAccountList filteredArrayUsingPredicate:searchPredicate];
+        self.integrationAccounts = filtereAccountsdArr;
+        
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            if (strongSelf.delegate) {
+                [strongSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + filtereAccountsdArr.count
+                                                                           cellHeight:weakSelf.actionsTableView.rowHeight];
+            }
+            [strongSelf.actionsTableView reloadData];
+        });
+    } else {
+        [self showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingNoIntegrationAccountText, ASDKLocalizationTable, @"Failed title")];
     }
 }
 
