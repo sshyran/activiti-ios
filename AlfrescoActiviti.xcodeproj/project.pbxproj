@@ -1305,8 +1305,8 @@
 		1394F6901F0A705C005C8C32 /* ASDKAsyncBlockOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKAsyncBlockOperation.m; path = AsyncBlockOperation/ASDKAsyncBlockOperation.m; sourceTree = "<group>"; };
 		1394F6971F0BBC94005C8C32 /* ASDKDataAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKDataAccessor.h; path = CacheServices/DataAccessors/ASDKDataAccessor.h; sourceTree = "<group>"; };
 		1394F6981F0BBC94005C8C32 /* ASDKDataAccessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKDataAccessor.m; path = CacheServices/DataAccessors/ASDKDataAccessor.m; sourceTree = "<group>"; };
-		139525EA203D6CB400591343 /* ASDKFormDataAccessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKFormDataAccessor.h; path = ../CacheServices/DataAccessors/FormDataAccessor/ASDKFormDataAccessor.h; sourceTree = "<group>"; };
-		139525EB203D6CB400591343 /* ASDKFormDataAccessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKFormDataAccessor.m; path = ../CacheServices/DataAccessors/FormDataAccessor/ASDKFormDataAccessor.m; sourceTree = "<group>"; };
+		139525EA203D6CB400591343 /* ASDKFormDataAccessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKFormDataAccessor.h; sourceTree = "<group>"; };
+		139525EB203D6CB400591343 /* ASDKFormDataAccessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASDKFormDataAccessor.m; sourceTree = "<group>"; };
 		139525EF203D7D5F00591343 /* ASDKFormCacheService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKFormCacheService.h; path = CacheServices/Proxy/FormCacheService/ASDKFormCacheService.h; sourceTree = "<group>"; };
 		139525F0203D7D5F00591343 /* ASDKFormCacheService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKFormCacheService.m; path = CacheServices/Proxy/FormCacheService/ASDKFormCacheService.m; sourceTree = "<group>"; };
 		139525F4203D894A00591343 /* ASDKFormCacheServicesProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKFormCacheServicesProtocol.h; path = CacheServices/Proxy/FormCacheService/Protocol/ASDKFormCacheServicesProtocol.h; sourceTree = "<group>"; };
@@ -4016,7 +4016,8 @@
 				139525EA203D6CB400591343 /* ASDKFormDataAccessor.h */,
 				139525EB203D6CB400591343 /* ASDKFormDataAccessor.m */,
 			);
-			path = FormDataAccessor;
+			name = FormDataAccessor;
+			path = CacheServices/DataAccessors/FormDataAccessor;
 			sourceTree = "<group>";
 		};
 		139525F3203D7D6600591343 /* FormCacheService */ = {

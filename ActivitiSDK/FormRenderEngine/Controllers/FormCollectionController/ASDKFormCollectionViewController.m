@@ -96,6 +96,7 @@
     
     self.dataSource = dataSource;
     [self refreshContentInCollectionView];
+    [self.collectionView reloadData];
 }
 
 

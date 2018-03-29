@@ -45,6 +45,7 @@
 @property (assign, nonatomic) ASDKServiceDataAccessorCachingPolicy  cachingPolicy;
 @property (strong, nonatomic) dispatch_group_t                      firstTrackDependenciesGroup;
 @property (strong, nonatomic) dispatch_group_t                      secondTrackDependenciesGroup;
+@property (strong, nonatomic) dispatch_queue_t                      preprocessorProcessingQueue;
 
 // Services
 @property (strong, nonatomic) ASDKFormDataAccessor                  *fetchRestFieldValuesForTaskFormDataAccessor;
@@ -66,6 +67,9 @@
         _cachingPolicy = ASDKServiceDataAccessorCachingPolicyHybrid;
         _formFieldOptionDataAccessorMap = [NSMutableDictionary dictionary];
         _delegate = delegate;
+        _preprocessorProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue",
+                                                                              [NSBundle bundleForClass:[self class]].bundleIdentifier,
+                                                                              NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
     }
     
     return self;
@@ -224,7 +228,7 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
 - (void)handleDelegateNotificationWithResponse:(ASDKModelFormPreProcessorResponse *)formPreProcessorResponse {
     // Dispatch groups finished
     __weak typeof(self) weakSelf = self;
-    dispatch_group_notify(self.firstTrackDependenciesGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, kNilOptions),^{
+    dispatch_group_notify(self.firstTrackDependenciesGroup, self.preprocessorProcessingQueue,^{
         __strong typeof(self) strongSelf = weakSelf;
         
         if (strongSelf.delegate) {
@@ -232,7 +236,7 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
         }
     });
     
-    dispatch_group_notify(self.secondTrackDependenciesGroup, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, kNilOptions), ^{
+    dispatch_group_notify(self.secondTrackDependenciesGroup, self.preprocessorProcessingQueue, ^{
        __strong typeof(self) strongSelf = weakSelf;
         
         if (strongSelf.delegate) {

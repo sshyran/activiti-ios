@@ -402,7 +402,7 @@
     if ([self.formDescription doesFormDescriptionContainSupportedFormFields]) {
         // Set up the data source for the form collection view controller
         ASDKFormRenderDataSource *dataSource = [[ASDKFormRenderDataSource alloc] initWithProcessDefinitionFormDescription:self.formDescription];
-        dataSource.isReadOnlyForm = self.processDefinition ? YES : NO;
+        dataSource.isReadOnlyForm = self.processInstance ? YES : NO;
         
         // Always dispatch on the main queue results related to the form view
         __weak typeof(self) weakSelf = self;
