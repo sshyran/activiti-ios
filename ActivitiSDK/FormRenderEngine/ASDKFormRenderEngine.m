@@ -203,7 +203,6 @@
     NSParameterAssert(task);
     
     self.task = task;
-    
     self.dynamicTableRowFormFields = dynamicTableRowFormFields;
     
     self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
@@ -221,6 +220,7 @@
     NSParameterAssert(dynamicTableFormFieldID);
     
     self.processDefinition = processDefinition;
+    self.dynamicTableRowFormFields = dynamicTableRowFormFields;
     
     // Set up the data source for the form collection view controller
     self.dataSource = [[ASDKDynamicTableRenderDataSource alloc] initWithFormFields:dynamicTableRowFormFields];
