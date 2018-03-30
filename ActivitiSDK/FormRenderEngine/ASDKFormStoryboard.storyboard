@@ -1692,7 +1692,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dmu-oF-0eV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3422" y="875"/>
+            <point key="canvasLocation" x="3563" y="883"/>
         </scene>
         <!--People Form Field People Picker View Controller-->
         <scene sceneID="wRP-y7-sHg">
@@ -1976,7 +1976,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4284" y="1125"/>
+            <point key="canvasLocation" x="4787" y="1125"/>
         </scene>
         <!--People Form Field Details View Controller-->
         <scene sceneID="ASe-6U-c75">
@@ -2156,7 +2156,7 @@
                         <outlet property="addBarButtonItem" destination="OUh-q4-u40" id="Lwd-m1-oXq"/>
                         <outlet property="noContentView" destination="ChG-fr-KXn" id="4rN-21-GXP"/>
                         <outlet property="peopleTableView" destination="B7t-ZE-21N" id="wMg-gh-OfS"/>
-                        <segue destination="cnc-hJ-r2G" kind="custom" identifier="FormPeoplePickerSegueID" customClass="ASDKPushFadeSegue" id="uKz-t5-QvB"/>
+                        <segue destination="cnc-hJ-r2G" kind="show" identifier="FormPeoplePickerSegueID" id="uKz-t5-QvB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1fC-8Q-MLT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2166,7 +2166,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="4042" y="339"/>
+            <point key="canvasLocation" x="4787" y="338"/>
         </scene>
     </scenes>
     <resources>

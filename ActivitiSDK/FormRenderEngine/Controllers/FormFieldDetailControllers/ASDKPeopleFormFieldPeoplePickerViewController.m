@@ -25,7 +25,7 @@
 #import "UIView+ASDKViewAnimations.h"
 #import "UIViewController+ASDKAlertAddition.h"
 
-// views
+// Views
 #import "ASDKActivityView.h"
 #import <JGProgressHUD/JGProgressHUD.h>
 
@@ -34,16 +34,14 @@
 #import "ASDKLocalizationConstants.h"
 
 // Services
-#import "ASDKBootstrap.h"
-#import "ASDKServiceLocator.h"
-#import "ASDKUserNetworkServices.h"
-#import "ASDKUserNetworkServiceProtocol.h"
+#import "ASDKUserDataAccessor.h"
 
 // Models
 #import "ASDKUserFilterModel.h"
 #import "ASDKUserRequestRepresentation.h"
 #import "ASDKModelUser.h"
 #import "ASDKModelFormField.h"
+#import "ASDKDataAccessorResponseCollection.h"
 
 // Cells
 #import "ASDKPeopleTableViewCell.h"
@@ -51,8 +49,6 @@
 // Logging
 #import "ASDKLogConfiguration.h"
 
-// Segues
-#import "ASDKPushFadeSegueUnwind.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -66,7 +62,7 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 };
 
 
-@interface ASDKPeopleFormFieldPeoplePickerViewController ()
+@interface ASDKPeopleFormFieldPeoplePickerViewController () <ASDKDataAccessorDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem            *backBarButtonItem;
 @property (weak, nonatomic) IBOutlet UIView                     *searchOverlayView;
@@ -78,10 +74,14 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 @property (weak, nonatomic) IBOutlet UITextField                *peopleSearchField;
 @property (strong, nonatomic) JGProgressHUD                     *progressHUD;
 
+// Internal state
 @property (assign, nonatomic) BOOL                              isSearchInProgress;
 @property (strong, nonatomic) NSArray                           *usersArr;
 @property (strong, nonatomic) ASDKModelUser                     *selectedUser;
 @property (assign, nonatomic) ASDKPeoplePickerControllerState   controllerState;
+
+// Services
+@property (strong, nonatomic) ASDKUserDataAccessor              *fetchUsersDataAccessor;
 
 @end
 
@@ -118,32 +118,6 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.peopleSearchField becomeFirstResponder];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
-#pragma mark -
-#pragma mark Navigation
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDFormFieldPeopleAddPeopleUnwind isEqualToString:identifier]) {
-        ASDKPushFadeSegueUnwind *unwindSegue = [ASDKPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                     source:fromViewController
-                                                                                destination:toViewController
-                                                                             performHandler:^{}];
-        return unwindSegue;
-    }
-
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 
@@ -221,45 +195,13 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
         userFilterModel.name = searchText;
     }
     
-    // Acquire and set up the user network service
-    ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    ASDKUserNetworkServices *userNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKUserNetworkServiceProtocol)];
-    
     ASDKUserRequestRepresentation *userRequestRepresentation = [ASDKUserRequestRepresentation new];
     userRequestRepresentation.filter = userFilterModel.name;
     userRequestRepresentation.email = userFilterModel.email;
     userRequestRepresentation.jsonAdapterType = ASDKModelJSONAdapterTypeExcludeNilValues;
     
-    __weak typeof(self) weakSelf = self;
-    [userNetworkService fetchUsersWithUserRequestRepresentation:userRequestRepresentation
-                                                completionBlock:^(NSArray *users, NSError *error, ASDKModelPaging *paging) {
-                                                    __strong typeof(self) strongSelf = weakSelf;
-                                                    
-                                                    if (!error && users) {
-                                                        ASDKLogVerbose(@"Fetched %lu user entries", (unsigned long)users.count);
-                                                        
-                                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                                            strongSelf.usersArr = users;
-                                                            
-                                                            // Check if we got an empty list
-                                                            strongSelf.noRecordsLabel.hidden = users.count ? YES : NO;
-                                                            strongSelf.contributorsTableView.hidden = users.count ? NO : YES;
-                                                            
-                                                            // Reload table data
-                                                            [strongSelf.contributorsTableView reloadData];
-                                                        });
-                                                    } else {
-                                                        ASDKLogError(@"An error occured while fetching the user list. Reason:%@", error.localizedDescription);
-                                                        
-                                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                                            strongSelf.noRecordsLabel.hidden = NO;
-                                                            strongSelf.contributorsTableView.hidden = YES;
-                                                            
-                                                            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormAlertDialogGenericNetworkErrorText, ASDKLocalizationTable, @"Generic network error")];
-                                                        });
-                                                    }
-                                                }];
-    
+    self.fetchUsersDataAccessor = [[ASDKUserDataAccessor alloc] initWithDelegate:self];
+    [self.fetchUsersDataAccessor fetchUsersWithUserFilter:userRequestRepresentation];
 }
 
 - (void)addUserToCurrentFormField:(ASDKModelUser *)user {
@@ -272,7 +214,7 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 }
 
 #pragma mark -
-#pragma mark - Progress hud setup
+#pragma mark Progress hud setup
 
 - (JGProgressHUD *)configureProgressHUD {
     JGProgressHUD *hud = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
@@ -291,6 +233,50 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     [indicatorView setColor:[UIColor whiteColor]];
     self.progressHUD.indicatorView = indicatorView;
     [self.progressHUD showInView:self.navigationController.view];
+}
+
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchUsersDataAccessor == dataAccessor) {
+        [self handleUserDataAccessorResponse:response];
+    }
+}
+
+
+#pragma mark -
+#pragma mark Content handlers
+
+- (void)handleUserDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *userListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *userList = userListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (userListResponse.error) {
+            strongSelf.noRecordsLabel.hidden = NO;
+            strongSelf.contributorsTableView.hidden = YES;
+            
+            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormAlertDialogGenericNetworkErrorText, ASDKLocalizationTable, @"Generic network error")];
+        } else {
+            strongSelf.usersArr = userList;
+            
+            // Check if we got an empty list
+            strongSelf.noRecordsLabel.hidden = userList.count ? YES : NO;
+            strongSelf.contributorsTableView.hidden = userList.count ? NO : YES;
+            
+            // Reload table data
+            [strongSelf.contributorsTableView reloadData];
+        }
+    });
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
 }
 
 

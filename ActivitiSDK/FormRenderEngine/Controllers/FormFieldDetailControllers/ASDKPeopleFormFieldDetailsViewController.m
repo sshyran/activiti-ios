@@ -93,11 +93,6 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     [self refreshContent];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)refreshContent {
     // Display the no content view if appropiate
     self.noContentView.hidden = (self.currentFormField.values.count > 0) ? YES : NO;
@@ -145,9 +140,11 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     } else {
         UIBarButtonItem *rightBarButtonItem = nil;
         if (self.currentFormField.values.count > 0) {
-            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(onAdd:)];
+            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                               target:self action:@selector(onAdd:)];
         } else {
-            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(onAdd:)];
+            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                               target:self action:@selector(onAdd:)];
         }
         rightBarButtonItem.tintColor = [UIColor whiteColor];
         self.navigationItem.rightBarButtonItem = rightBarButtonItem;
