@@ -43,6 +43,7 @@
 @property (assign, nonatomic) BOOL                                  isStartForm;
 @property (strong, nonatomic) NSMutableDictionary                   *formFieldOptionDataAccessorMap;
 @property (assign, nonatomic) ASDKServiceDataAccessorCachingPolicy  cachingPolicy;
+@property (strong, nonatomic) NSArray                               *processingFormFields;
 @property (strong, nonatomic) dispatch_group_t                      firstTrackDependenciesGroup;
 @property (strong, nonatomic) dispatch_group_t                      secondTrackDependenciesGroup;
 @property (strong, nonatomic) dispatch_queue_t                      preprocessorProcessingQueue;
@@ -88,6 +89,7 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
     self.isStartForm = NO;
     self.taskID = taskID;
     self.dynamicTableFieldID = dynamicTableFieldID;
+    self.processingFormFields = formFields;
     
     /**
      * Create dispatch groups for all the augmenting calls needed to complete the
@@ -104,8 +106,12 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
             [self preProcessFormField:formField];
         }
     }
-
-    [self handleDelegateNotificationForTaskFormFields:formFields];
+    
+    ASDKModelTaskFormPreProcessorResponse *taskFormPreProcessorResponse = [ASDKModelTaskFormPreProcessorResponse new];
+    taskFormPreProcessorResponse.taskID = self.taskID;
+    taskFormPreProcessorResponse.dynamicTableFieldID = self.dynamicTableFieldID;
+    
+    [self handleDelegateNotificationWithResponse:taskFormPreProcessorResponse];
 }
 
 - (void)setupWithProcessDefinitionID:(NSString *)processDefinitionID
@@ -117,6 +123,7 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
     self.isStartForm = YES;
     self.processDefinitionID = processDefinitionID;
     self.dynamicTableFieldID = dynamicTableFieldID;
+    self.processingFormFields = formFields;
     
     /**
      * Create dispatch groups for all the augmenting calls needed to complete the
@@ -134,7 +141,11 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
         }
     }
     
-    [self handleDelegateNotificationForProcessDefinitionFormFields:formFields];
+    ASDKModelStartFormPreProcessorResponse *startFormPreProcessorResponse = [ASDKModelStartFormPreProcessorResponse new];
+    startFormPreProcessorResponse.processDefinitionID = self.processDefinitionID;
+    startFormPreProcessorResponse.dynamicTableFieldID = self.dynamicTableFieldID;
+    
+    [self handleDelegateNotificationWithResponse:startFormPreProcessorResponse];
 }
 
 
@@ -207,24 +218,6 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
     }
 }
 
-- (void)handleDelegateNotificationForTaskFormFields:(NSArray *)formFields {
-    ASDKModelTaskFormPreProcessorResponse *taskFormPreProcessorResponse = [ASDKModelTaskFormPreProcessorResponse new];
-    taskFormPreProcessorResponse.taskID = self.taskID;
-    taskFormPreProcessorResponse.processedFormFields = formFields;
-    taskFormPreProcessorResponse.dynamicTableFieldID = self.dynamicTableFieldID;
-    
-    [self handleDelegateNotificationWithResponse:taskFormPreProcessorResponse];
-}
-
-- (void)handleDelegateNotificationForProcessDefinitionFormFields:(NSArray *)formFields {
-    ASDKModelStartFormPreProcessorResponse *startFormPreProcessorResponse = [ASDKModelStartFormPreProcessorResponse new];
-    startFormPreProcessorResponse.processDefinitionID = self.processDefinitionID;
-    startFormPreProcessorResponse.processedFormFields = formFields;
-    startFormPreProcessorResponse.dynamicTableFieldID = self.dynamicTableFieldID;
-    
-    [self handleDelegateNotificationWithResponse:startFormPreProcessorResponse];
-}
-
 - (void)handleDelegateNotificationWithResponse:(ASDKModelFormPreProcessorResponse *)formPreProcessorResponse {
     // Dispatch groups finished
     __weak typeof(self) weakSelf = self;
@@ -232,6 +225,11 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
         __strong typeof(self) strongSelf = weakSelf;
         
         if (strongSelf.delegate) {
+            // Deep copy all form fields so that the initial collection remains untouched by future mutations
+            NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject:strongSelf.processingFormFields];
+            NSArray *processedFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
+            formPreProcessorResponse.processedFormFields = processedFormFieldsCopy;
+            
             [strongSelf.delegate didProcessedFormFieldsWithResponse:formPreProcessorResponse];
         }
     });
@@ -240,6 +238,11 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
        __strong typeof(self) strongSelf = weakSelf;
         
         if (strongSelf.delegate) {
+            // Deep copy all form fields so that the initial collection remains untouched by future mutations
+            NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject:strongSelf.processingFormFields];
+            NSArray *processedFormFieldsCopy = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
+            formPreProcessorResponse.processedFormFields = processedFormFieldsCopy;
+            
             [strongSelf.delegate didProcessedCachedFormFieldsWithResponse:formPreProcessorResponse];
         }
     });
