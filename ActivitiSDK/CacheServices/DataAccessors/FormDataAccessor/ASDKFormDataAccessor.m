@@ -362,12 +362,12 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                  if (weakSelf.delegate) {
                      [weakSelf.delegate dataAccessor:weakSelf
                                  didLoadDataResponse:response];
-                 } else {
-                     ASDKLogError(@"An error occured while fetching cached rest field values for taskID:%@ and formFieldID:%@. Reason: %@", taskID, fieldID, error.localizedDescription);
                  }
-                 
-                 [operation complete];
+             } else {
+                 ASDKLogError(@"An error occured while fetching cached rest field values for taskID:%@ and formFieldID:%@. Reason: %@", taskID, fieldID, error.localizedDescription);
              }
+             
+             [operation complete];
          }];
     }];
     
@@ -518,12 +518,12 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                  if (weakSelf.delegate) {
                      [weakSelf.delegate dataAccessor:weakSelf
                                  didLoadDataResponse:response];
-                 } else {
-                     ASDKLogError(@"An error occured while fetching cached rest field values for processDefinitionID:%@ and formFieldID:%@. Reason: %@", processDefinitionID, fieldID, error.localizedDescription);
                  }
-                 
-                 [operation complete];
+             } else {
+                 ASDKLogError(@"An error occured while fetching cached rest field values for processDefinitionID:%@ and formFieldID:%@. Reason: %@", processDefinitionID, fieldID, error.localizedDescription);
              }
+             
+             [operation complete];
          }];
     }];
     
@@ -682,12 +682,12 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                  if (weakSelf.delegate) {
                      [weakSelf.delegate dataAccessor:weakSelf
                                  didLoadDataResponse:response];
-                 } else {
-                     ASDKLogError(@"An error occured while fetching cached rest field values for taskID:%@ , formFieldID:%@ and columnID:%@ . Reason: %@", taskID, fieldID, columnID, error.localizedDescription);
                  }
-                 
-                 [operation complete];
+             } else {
+                 ASDKLogError(@"An error occured while fetching cached rest field values for taskID:%@ , formFieldID:%@ and columnID:%@ . Reason: %@", taskID, fieldID, columnID, error.localizedDescription);
              }
+             
+             [operation complete];
          }];
     }];
     
@@ -849,12 +849,12 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                  if (weakSelf.delegate) {
                      [weakSelf.delegate dataAccessor:weakSelf
                                  didLoadDataResponse:response];
-                 } else {
-                     ASDKLogError(@"An error occured while fetching cached rest field values for processDefinitionID:%@ , formFieldID:%@ and columnID:%@ . Reason: %@", processDefinitionID, fieldID, columnID, error.localizedDescription);
                  }
-                 
-                 [operation complete];
+             } else {
+                 ASDKLogError(@"An error occured while fetching cached rest field values for processDefinitionID:%@ , formFieldID:%@ and columnID:%@ . Reason: %@", processDefinitionID, fieldID, columnID, error.localizedDescription);
              }
+             
+             [operation complete];
          }];
     }];
     
@@ -891,6 +891,442 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                  }
                  
                  [operation complete];
+            }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Fetch task form
+
+- (void)fetchFormDescriptionForTaskID:(NSString *)taskID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteFormDescriptionOperation = [self remoteFormDescriptionOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *cachedFormDescriptionOperation = [self cachedFormDescriptionOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *storeInCacheOperation = [self formDescriptionStoreInCacheOperationForTaskID:taskID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedFormDescriptionOperation];
+            [self.processingQueue addOperations:@[cachedFormDescriptionOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteFormDescriptionOperation];
+            [self.processingQueue addOperations:@[remoteFormDescriptionOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteFormDescriptionOperation addDependency:cachedFormDescriptionOperation];
+            [storeInCacheOperation addDependency:remoteFormDescriptionOperation];
+            [completionOperation addDependency:storeInCacheOperation];
+            [self.processingQueue addOperations:@[cachedFormDescriptionOperation,
+                                                  remoteFormDescriptionOperation,
+                                                  storeInCacheOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteFormDescriptionOperationForTaskID:(NSString *)taskID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteFormDescriptionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.formNetworkService fetchFormForTaskWithID:taskID
+                                              completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+                                                  if (operation.isCancelled) {
+                                                      [operation complete];
+                                                      return;
+                                                  }
+                                                  
+                                                  ASDKDataAccessorResponseModel *responseModel =
+                                                  [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
+                                                                                          isCachedData:NO
+                                                                                                 error:error];
+                                                  
+                                                  if (weakSelf.delegate) {
+                                                      [weakSelf.delegate dataAccessor:weakSelf
+                                                                  didLoadDataResponse:responseModel];
+                                                  }
+                                                  
+                                                  operation.result = responseModel;
+                                                  [operation complete];
+                                              }];
+    }];
+    
+    return remoteFormDescriptionOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedFormDescriptionOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedFormDescriptionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formCacheService fetchTaskFormDescriptionForTaskID:taskID
+                                                   withCompletionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+                                                       if (operation.isCancelled) {
+                                                           [operation complete];
+                                                           return;
+                                                       }
+                                                       
+                                                       if (!error) {
+                                                           ASDKLogVerbose(@"Form description fetched successfully from cache for taskID: %@", taskID);
+                                                           
+                                                           ASDKDataAccessorResponseModel *response =
+                                                           [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
+                                                                                                   isCachedData:YES
+                                                                                                          error:error];
+                                                           if (weakSelf.delegate) {
+                                                               [weakSelf.delegate dataAccessor:weakSelf
+                                                                           didLoadDataResponse:response];
+                                                           }
+                                                       } else {
+                                                           ASDKLogError(@"An error occured while fetching cached form description for taskID: %@. Reason: %@", taskID, error.localizedDescription);
+                                                       }
+                                                       
+                                                       [operation complete];
+        }];
+    }];
+    
+    return cachedFormDescriptionOperation;
+}
+
+- (ASDKAsyncBlockOperation *)formDescriptionStoreInCacheOperationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseModel *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.model) {
+            [strongSelf.formCacheService cacheTaskFormDescription:remoteResponse.model
+                                                        forTaskID:taskID
+                                              withCompletionBlock:^(NSError *error) {
+                                                  if (operation.isCancelled) {
+                                                      [operation complete];
+                                                      return;
+                                                  }
+                                                  
+                                                  if (!error) {
+                                                      ASDKLogVerbose(@"Form description for task: %@ cached successfully", taskID);
+                                                      [weakSelf.formCacheService saveChanges];
+                                                  } else {
+                                                      ASDKLogError(@"Encountered an error while caching form description for task: %@", taskID);
+                                                  }
+                                                  
+                                                  [operation complete];
+            }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Fetch process instance form
+
+- (void)fetchFormDescriptionForProcessInstanceID:(NSString *)processInstanceID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteFormDescriptionOperation = [self remoteFormDescriptionOperationForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *cachedFormDescriptionOperation = [self cachedFormDescriptionOperationForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *storeInCacheOperation = [self formDescriptionStoreInCacheOperationForProcessInstanceID:processInstanceID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedFormDescriptionOperation];
+            [self.processingQueue addOperations:@[cachedFormDescriptionOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteFormDescriptionOperation];
+            [self.processingQueue addOperations:@[remoteFormDescriptionOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteFormDescriptionOperation addDependency:cachedFormDescriptionOperation];
+            [storeInCacheOperation addDependency:remoteFormDescriptionOperation];
+            [completionOperation addDependency:storeInCacheOperation];
+            [self.processingQueue addOperations:@[cachedFormDescriptionOperation,
+                                                  remoteFormDescriptionOperation,
+                                                  storeInCacheOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteFormDescriptionOperationForProcessInstanceID:(NSString *)processInstanceID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteFormDescriptionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.formNetworkService startFormForProcessInstanceID:processInstanceID
+                                                     completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+                                                         if (operation.isCancelled) {
+                                                             [operation complete];
+                                                             return;
+                                                         }
+                                                         
+                                                         ASDKDataAccessorResponseModel *responseModel =
+                                                         [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
+                                                                                                 isCachedData:NO
+                                                                                                        error:error];
+                                                         
+                                                         if (weakSelf.delegate) {
+                                                             [weakSelf.delegate dataAccessor:weakSelf
+                                                                         didLoadDataResponse:responseModel];
+                                                         }
+                                                         
+                                                         operation.result = responseModel;
+                                                         [operation complete];
+        }];
+    }];
+    
+    return remoteFormDescriptionOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedFormDescriptionOperationForProcessInstanceID:(NSString *)processInstanceID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedFormDescriptionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formCacheService
+         fetchProcessInstanceFormDescriptionForProcessInstance:processInstanceID
+         withCompletionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Form description fetched successfully from cache for processInstanceID: %@", processInstanceID);
+                 
+                 ASDKDataAccessorResponseModel *response =
+                 [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
+                                                         isCachedData:YES
+                                                                error:error];
+                 if (weakSelf.delegate) {
+                     [weakSelf.delegate dataAccessor:weakSelf
+                                 didLoadDataResponse:response];
+                 }
+             } else {
+                 ASDKLogError(@"An error occured while fetching cached form description for processInstanceID: %@. Reason: %@", processInstanceID, error.localizedDescription);
+             }
+             
+             [operation complete];
+         }];
+    }];
+    
+    return cachedFormDescriptionOperation;
+}
+
+- (ASDKAsyncBlockOperation *)formDescriptionStoreInCacheOperationForProcessInstanceID:(NSString *)processInstanceID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseModel *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.model) {
+            [strongSelf.formCacheService cacheProcessInstanceFormDescription:remoteResponse.model
+                                                        forProcessInstanceID:processInstanceID
+                                                         withCompletionBlock:^(NSError *error) {
+                                                             if (operation.isCancelled) {
+                                                                 [operation complete];
+                                                                 return;
+                                                             }
+                                                             
+                                                             if (!error) {
+                                                                 ASDKLogVerbose(@"Form description for process instance: %@ cached successfully", processInstanceID);
+                                                                 [weakSelf.formCacheService saveChanges];
+                                                             } else {
+                                                                 ASDKLogError(@"Encountered an error while caching form description for process instance: %@", processInstanceID);
+                                                             }
+                                                             
+                                                             [operation complete];
+            }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+
+#pragma mark -
+#pragma mark Service - Fetch process definition form
+
+- (void)fetchFormDescriptionForProcessDefinitionID:(NSString *)processDefinitionID {
+    // Define operations
+    ASDKAsyncBlockOperation *remoteFormDescriptionOperation = [self remoteFormDescriptionOperationForProcessDefinitionID:processDefinitionID];
+    ASDKAsyncBlockOperation *cachedFormDescriptionOperation = [self cachedFormDescriptionOperationforProcessDefinitionID:processDefinitionID];
+    ASDKAsyncBlockOperation *storeInCacheOperation = [self formDescriptionStoreInCacheOperationForProcessDefinitionID:processDefinitionID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:cachedFormDescriptionOperation];
+            [self.processingQueue addOperations:@[cachedFormDescriptionOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteFormDescriptionOperation];
+            [self.processingQueue addOperations:@[remoteFormDescriptionOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [remoteFormDescriptionOperation addDependency:cachedFormDescriptionOperation];
+            [storeInCacheOperation addDependency:remoteFormDescriptionOperation];
+            [completionOperation addDependency:storeInCacheOperation];
+            [self.processingQueue addOperations:@[cachedFormDescriptionOperation,
+                                                  remoteFormDescriptionOperation,
+                                                  storeInCacheOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteFormDescriptionOperationForProcessDefinitionID:(NSString *)processDefinitionID {
+    if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
+        [self.delegate dataAccessorDidStartFetchingRemoteData:self];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *remoteFormDescriptionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formNetworkService startFormForProcessDefinitionID:processDefinitionID
+                                                       completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+                                                           if (operation.isCancelled) {
+                                                               [operation complete];
+                                                               return;
+                                                           }
+                                                           
+                                                           ASDKDataAccessorResponseModel *responseModel =
+                                                           [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
+                                                                                                   isCachedData:NO
+                                                                                                          error:error];
+                                                           
+                                                           if (weakSelf.delegate) {
+                                                               [weakSelf.delegate dataAccessor:weakSelf
+                                                                           didLoadDataResponse:responseModel];
+                                                           }
+                                                           
+                                                           operation.result = responseModel;
+                                                           [operation complete];
+
+        }];
+    }];
+    
+    return remoteFormDescriptionOperation;
+}
+
+- (ASDKAsyncBlockOperation *)cachedFormDescriptionOperationforProcessDefinitionID:(NSString *)processDefinitionID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedFormDescriptionOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formCacheService
+         fetchProcessDefinitionFormDescriptionForProcessDefinitionID:processDefinitionID
+         withCompletionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Form description fetched successfully from cache for process definition: %@", processDefinitionID);
+                 
+                 ASDKDataAccessorResponseModel *response =
+                 [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
+                                                         isCachedData:YES
+                                                                error:error];
+                 if (weakSelf.delegate) {
+                     [weakSelf.delegate dataAccessor:weakSelf
+                                 didLoadDataResponse:response];
+                 }
+             } else {
+                 ASDKLogError(@"An error occured while fetching cached form description for process definition: %@. Reason: %@", processDefinitionID, error.localizedDescription);
+             }
+             
+             [operation complete];
+         }];
+    }];
+    
+    return cachedFormDescriptionOperation;
+}
+
+- (ASDKAsyncBlockOperation *)formDescriptionStoreInCacheOperationForProcessDefinitionID:(NSString *)processDefinitionID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseModel *remoteResponse = dependencyOperation.result;
+        
+        if (remoteResponse.model) {
+            [strongSelf.formCacheService cacheProcessDefinitionFormDescription:remoteResponse.model
+                                                        forProcessDefinitionID:processDefinitionID
+                                                           withCompletionBlock:^(NSError *error) {
+                                                               if (operation.isCancelled) {
+                                                                   [operation complete];
+                                                                   return;
+                                                               }
+                                                               
+                                                               if (!error) {
+                                                                   ASDKLogVerbose(@"Form description for process definition: %@ cached successfully", processDefinitionID);
+                                                                   [weakSelf.formCacheService saveChanges];
+                                                               } else {
+                                                                   ASDKLogError(@"Encountered an error while caching form description for process definition: %@", processDefinitionID);
+                                                               }
+                                                               
+                                                               [operation complete];
             }];
         }
     }];

@@ -24,13 +24,17 @@
 // Models
 #import "ASDKMOFormFieldOptionMap.h"
 #import "ASDKMOFormFieldOption.h"
+#import "ASDKMOFormDescription.h"
 
 // Model upsert
 #import "ASDKFormFieldOptionCacheModelUpsert.h"
+#import "ASDKFormDescriptionCacheModelUpsert.h"
 
 // Mappers
 #import "ASDKFormFieldOptionMapCacheMapper.h"
 #import "ASDKFormFieldOptionCacheMapper.h"
+#import "ASDKFormDescriptionCacheMapper.h"
+
 
 @implementation ASDKFormCacheService
 
@@ -72,7 +76,7 @@
                       withFormFieldID:(NSString *)fieldID
                   withCompletionBlock:(ASDKCacheServiceTaskRestFieldValuesCompletionBlock)completionBlock {
     [self fetchRestFieldValuesWithPredicate:[self restFieldValuesPredicateForTaskID:taskID
-                                                                              formFieldID:fieldID]
+                                                                        formFieldID:fieldID]
                         withCompletionBlock:completionBlock];
 }
 
@@ -155,7 +159,6 @@
                                                                         formFieldID:fieldID
                                                                            columnID:columnID]
                         withCompletionBlock:completionBlock];
-
 }
 
 - (void)cacheRestFieldValues:(NSArray *)restFieldValues
@@ -174,7 +177,11 @@
                                                                                                                    formFieldID:fieldID
                                                                                                                       columnID:columnID]];
         if (!error) {
-            
+            error = [strongSelf saveRestFieldValuesAndGenerateFormFieldOptionMap:restFieldValues
+                                                          forProcessDefinitionID:processDefinitionID
+                                                                 withFormFieldID:fieldID
+                                                                    withColumnID:columnID
+                                                                       inContext:managedObjectContext];
         }
         
         if (!error) {
@@ -191,7 +198,126 @@
                                  withFormFieldID:(NSString *)fieldID
                                     withColumnID:(NSString *)columnID
                              withCompletionBlock:(ASDKCacheServiceTaskRestFieldValuesCompletionBlock)completionBlock {
-    
+    [self fetchRestFieldValuesWithPredicate:[self restFieldValuesPredicateForProcessDefinitionID:processDefinitionID
+                                                                                     formFieldID:fieldID
+                                                                                        columnID:columnID]
+                        withCompletionBlock:completionBlock];
+}
+
+- (void)cacheTaskFormDescription:(ASDKModelFormDescription *)formDescription
+                       forTaskID:(NSString *)taskID
+             withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        
+        [ASDKFormDescriptionCacheModelUpsert upsertTaskFormDescriptionToCache:formDescription
+                                                                    forTaskID:taskID
+                                                                        error:&error
+                                                                  inMOContext:managedObjectContext];
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchTaskFormDescriptionForTaskID:(NSString *)taskID
+                      withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock {
+    [self fetchFormDescriptionWithPredicate:[ASDKFormDescriptionCacheModelUpsert formDescriptionPredicateForTaskID:taskID]
+                        withCompletionBlock:completionBlock];
+}
+
+- (void)cacheProcessInstanceFormDescription:(ASDKModelFormDescription *)formDescription
+                       forProcessInstanceID:(NSString *)processInstanceID
+                        withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        
+        [ASDKFormDescriptionCacheModelUpsert upsertProcessInstanceFormDescriptionToCache:formDescription
+                                                                    forProcessInstanceID:processInstanceID
+                                                                                   error:&error
+                                                                             inMOContext:managedObjectContext];
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchProcessInstanceFormDescriptionForProcessInstance:(NSString *)processInstanceID
+                                          withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock {
+    [self fetchFormDescriptionWithPredicate:[ASDKFormDescriptionCacheModelUpsert formDescriptionPredicateForProcessInstanceID:processInstanceID]
+                        withCompletionBlock:completionBlock];
+}
+
+- (void)cacheProcessDefinitionFormDescription:(ASDKModelFormDescription *)formDescription
+                       forProcessDefinitionID:(NSString *)processDefinitionID
+                          withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        
+        [ASDKFormDescriptionCacheModelUpsert upsertProcessDefinitionFormDescriptionToCache:formDescription
+                                                                    forProcessDefinitionID:processDefinitionID
+                                                                                     error:&error
+                                                                               inMOContext:managedObjectContext];
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchProcessDefinitionFormDescriptionForProcessDefinitionID:(NSString *)processDefinitionID
+                                                withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock {
+    [self fetchFormDescriptionWithPredicate:[ASDKFormDescriptionCacheModelUpsert formDescriptionPredicateForProcessDefinitionID:processDefinitionID]
+                        withCompletionBlock:completionBlock];
+}
+
+- (void)fetchFormDescriptionWithPredicate:(NSPredicate *)predicate
+                      withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        
+        NSFetchRequest *fetchRequest = [ASDKMOFormDescription fetchRequest];
+        fetchRequest.predicate = predicate;
+        NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
+                                                                    error:&error];
+        
+        if (completionBlock) {
+            ASDKMOFormDescription *moFormDescription = fetchResults.firstObject;
+            
+            if (error || !moFormDescription) {
+                completionBlock(nil, error);
+            } else {
+                ASDKModelFormDescription *formDescription = [ASDKFormDescriptionCacheMapper mapCacheMOToFormDescription:moFormDescription];
+                completionBlock(formDescription, nil);
+            }
+        }
+    }];
 }
 
 
@@ -409,40 +535,48 @@
 
 - (NSPredicate *)restFieldValuesPredicateForTaskID:(NSString *)taskID
                                        formFieldID:(NSString *)formFieldID {
-    if (!taskID.length || !formFieldID.length) {
-        return nil;
-    } else {
-        return [NSPredicate predicateWithFormat:@"taskID == %@ && formFieldID == %@", taskID, formFieldID];
+    NSPredicate *predicate = nil;
+    
+    if (taskID.length || formFieldID.length) {
+        predicate = [NSPredicate predicateWithFormat:@"taskID == %@ && formFieldID == %@", taskID, formFieldID];
     }
+    
+    return predicate;
 }
 
 - (NSPredicate *)restFieldValuesPredicateForProcessDefinitionID:(NSString *)processDefinitionID
                                                     formFieldID:(NSString *)formFieldID {
-    if (!processDefinitionID.length || !formFieldID.length) {
-        return nil;
-    } else {
-        return [NSPredicate predicateWithFormat:@"processDefinitionID == %@ && formFieldID == %@", processDefinitionID, formFieldID];
+    NSPredicate *predicate = nil;
+    
+    if (processDefinitionID.length || formFieldID.length) {
+        predicate = [NSPredicate predicateWithFormat:@"processDefinitionID == %@ && formFieldID == %@", processDefinitionID, formFieldID];
     }
+    
+    return predicate;
 }
 
 - (NSPredicate *)restFieldValuesPredicateForTaskID:(NSString *)taskID
                                        formFieldID:(NSString *)formFieldID
                                           columnID:(NSString *)columnID {
-    if (!taskID.length || formFieldID.length || columnID.length) {
-        return nil;
-    } else {
-        return [NSPredicate predicateWithFormat:@"taskID == %@ && formFieldID == %@ && columnID == %@", taskID, formFieldID, columnID];
+    NSPredicate *predicate = nil;
+    
+    if (taskID.length || formFieldID.length || columnID.length) {
+        predicate = [NSPredicate predicateWithFormat:@"taskID == %@ && formFieldID == %@ && columnID == %@", taskID, formFieldID, columnID];
     }
+    
+    return predicate;
 }
 
 - (NSPredicate *)restFieldValuesPredicateForProcessDefinitionID:(NSString *)processDefinitionID
                                                     formFieldID:(NSString *)formFieldID
                                                        columnID:(NSString *)columnID {
-    if (!processDefinitionID.length || formFieldID.length || columnID.length) {
-        return nil;
-    } else {
-        return [NSPredicate predicateWithFormat:@"processDefinitionID == %@ && formFieldID == %@ && columnID == %@", processDefinitionID, formFieldID, columnID];
+    NSPredicate *predicate = nil;
+    
+    if (processDefinitionID.length || formFieldID.length || columnID.length) {
+        predicate = [NSPredicate predicateWithFormat:@"processDefinitionID == %@ && formFieldID == %@ && columnID == %@", processDefinitionID, formFieldID, columnID];
     }
+    
+    return predicate;
 }
 
 

@@ -18,7 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class ASDKModelFormDescription;
+
 typedef void (^ASDKCacheServiceTaskRestFieldValuesCompletionBlock) (NSArray *restFieldValues, NSError *error);
+typedef void (^ASDKCacheServiceFormDescriptionCompletionBlock) (ASDKModelFormDescription *formDescription, NSError *error);
 
 @protocol ASDKFormCacheServicesProtocol <NSObject>
 
@@ -137,5 +140,74 @@ typedef void (^ASDKCacheServiceTaskRestFieldValuesCompletionBlock) (NSArray *res
                                  withFormFieldID:(NSString *)fieldID
                                     withColumnID:(NSString *)columnID
                              withCompletionBlock:(ASDKCacheServiceTaskRestFieldValuesCompletionBlock)completionBlock;
+
+/**
+ * Caches provided form description for the specified task and reports the operation success
+ * over a completion block.
+ *
+ * @param formDescription   Top level container model encapsulating all the fields and
+ *                          particularities of a form
+ * @param taskID            ID of the task for which the form is cached
+ * @param completionBlock   Completion block indicating the success of the operation
+ */
+- (void)cacheTaskFormDescription:(ASDKModelFormDescription *)formDescription
+                       forTaskID:(NSString *)taskID
+             withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+/**
+ * Fetches and reports via a completion block the task form field that's corresponding to
+ * the specified task.
+ *
+ * @param taskID            ID of the task for which form is retrieved
+ * @param completionBlock   Completion block returning the task form
+ */
+- (void)fetchTaskFormDescriptionForTaskID:(NSString *)taskID
+                      withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock;
+
+/**
+ * Caches provided start form description for the specified process instance and reports the operation
+ * success over a completion block.
+ *
+ * @param formDescription   Top level container model encapsulating all the fields and
+ *                          particularities of a form
+ * @param processInstanceID ID of the process instance for which the form description is cached
+ * @param completionBlock   Completion block indicating the success of the operation
+ */
+- (void)cacheProcessInstanceFormDescription:(ASDKModelFormDescription *)formDescription
+                       forProcessInstanceID:(NSString *)processInstanceID
+                        withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+/**
+ * Fetches and reports via a completion block the process instance start form that's corresponding
+ * to the specified process instance.
+ *
+ * @param processInstanceID ID of the process instance for which the form description is retrieved
+ * @param completionBlock   Completion block returning the process instance start form
+ */
+- (void)fetchProcessInstanceFormDescriptionForProcessInstance:(NSString *)processInstanceID
+                                          withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock;
+
+/**
+ * Caches provided start form description for the specified process definition and reports the operation
+ * success over a completion block.
+ *
+ * @param formDescription       Top level container model encapsulating all the fields and particularities
+ *                              of a form
+ * @param processDefinitionID   ID of the process definition for which the form description is cached
+ * @param completionBlock       Completion block indicating the success of the operation
+ */
+- (void)cacheProcessDefinitionFormDescription:(ASDKModelFormDescription *)formDescription
+                       forProcessDefinitionID:(NSString *)processDefinitionID
+                          withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock;
+
+/**
+ * Fetches and reports via a completion block the process definition start form that's corresponding
+ * to the specified process definition.
+ *
+ * @param processDefinitionID   ID of the process definition for which the form is retrieved
+ * @param completionBlock       Completion block returning the process definition start form
+ */
+- (void)fetchProcessDefinitionFormDescriptionForProcessDefinitionID:(NSString *)processDefinitionID
+                                                withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock;
 
 @end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17D102" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E199" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="ASDKMOApp" representedClassName="ASDKMOApp" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="applicationDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="applicationModelID" optional="YES" attributeType="String" syncable="YES"/>
@@ -59,6 +59,12 @@
     <entity name="ASDKMOFilterModel" representedClassName="ASDKMOFilterModel" syncable="YES" codeGenerationType="category">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ASDKMOFormDescription" representedClassName="ASDKMOFormDescription" syncable="YES" codeGenerationType="category">
+        <attribute name="formDescription" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="processDefinitionID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="processInstanceID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskID" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="ASDKMOFormFieldOption" representedClassName="ASDKMOFormFieldOption" parentEntity="ASDKMOAttributable" syncable="YES" codeGenerationType="category">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -236,6 +242,9 @@
         <element name="ASDKMOFilter" positionX="16" positionY="-558" width="128" height="133"/>
         <element name="ASDKMOFilterMap" positionX="-29" positionY="711" width="128" height="90"/>
         <element name="ASDKMOFilterModel" positionX="-423" positionY="-486" width="128" height="75"/>
+        <element name="ASDKMOFormDescription" positionX="-722" positionY="983" width="146" height="105"/>
+        <element name="ASDKMOFormFieldOption" positionX="630" positionY="927" width="146" height="73"/>
+        <element name="ASDKMOFormFieldOptionMap" positionX="630" positionY="801" width="180" height="118"/>
         <element name="ASDKMOGroup" positionX="36" positionY="467" width="128" height="163"/>
         <element name="ASDKMOIntegrationAccount" positionX="504" positionY="-249" width="162" height="105"/>
         <element name="ASDKMOIntegrationContent" positionX="504" positionY="27" width="162" height="90"/>
@@ -258,7 +267,5 @@
         <element name="ASDKMOTaskFilterMap" positionX="-126" positionY="846" width="135" height="60"/>
         <element name="ASDKMOTaskFilterMapPlaceholder" positionX="-405" positionY="927" width="207" height="88"/>
         <element name="ASDKMOUser" positionX="178" positionY="-558" width="128" height="133"/>
-        <element name="ASDKMOFormFieldOption" positionX="630" positionY="927" width="146" height="73"/>
-        <element name="ASDKMOFormFieldOptionMap" positionX="630" positionY="801" width="180" height="118"/>
     </elements>
 </model>

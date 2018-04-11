@@ -115,4 +115,25 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                                  withFormField:(NSString *)fieldID
                                                   withColumnID:(NSString *)columnID;
 
+/**
+ * Requests form description for specified task and reports the result via the designated data accessor delegate.
+ *
+ * @param taskID Task ID for which the description is requested
+ */
+- (void)fetchFormDescriptionForTaskID:(NSString *)taskID;
+
+/**
+ * Requests the start form for a specified process instance ID and reports the result via the designated data accessor delegate.
+ *
+ * @param processInstanceID Process instance ID for which the description is requested
+ */
+- (void)fetchFormDescriptionForProcessInstanceID:(NSString *)processInstanceID;
+
+/**
+ * Requests the start form for a specified process definition ID and reports the result via the designated data accessor delegate.
+ *
+ * @param processDefinitionID Process definition ID for which the description is requested
+ */
+- (void)fetchFormDescriptionForProcessDefinitionID:(NSString *)processDefinitionID;
+
 @end

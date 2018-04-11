@@ -80,6 +80,9 @@
 @property (strong, nonatomic) ASDKFormDataAccessor                      *completeTaskFormDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                      *completeProcessDefinitionFormDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                      *saveFormDataAccessor;
+@property (strong, nonatomic) ASDKFormDataAccessor                      *fetchTaskFormDescriptionDataAccessor;
+@property (strong, nonatomic) ASDKFormDataAccessor                      *fetchProcessInstanceFormDescriptionDataAccessor;
+@property (strong, nonatomic) ASDKFormDataAccessor                      *fetchProcessDefinitionFormDescriptionDataAccessor;
 
 @end
 
@@ -108,90 +111,24 @@
     NSParameterAssert(task);
     self.task = task;
     
-    __weak typeof(self) weakSelf = self;
-    [self.formNetworkServices
-     fetchFormForTaskWithID:task.modelID
-     completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         // Check for form description errors first
-         if (error) {
-             if (strongSelf.delegate) {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     [strongSelf.delegate didRenderedFormController:nil
-                                                              error:error];
-                 });
-             }
-             return;
-         }
-         
-         strongSelf.formDescription = formDescription;
-         
-         strongSelf.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
-         [strongSelf.formPreProcessor setupWithTaskID:task.modelID
-                                       withFormFields:formDescription.formFields
-                              withDynamicTableFieldID:nil];
-     }];
+    self.fetchTaskFormDescriptionDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+    [self.fetchTaskFormDescriptionDataAccessor fetchFormDescriptionForTaskID:task.modelID];
 }
 
 - (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance {
     NSParameterAssert(processInstance);
     self.processInstance = processInstance;
     
-    __weak typeof(self) weakSelf = self;
-    [self.formNetworkServices
-     startFormForProcessInstanceID:processInstance.modelID
-     completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         // Check for form description errors first
-         if (error) {
-             if (strongSelf.delegate) {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     [strongSelf.delegate didRenderedFormController:nil
-                                                              error:error];
-                 });
-             }
-             return ;
-         }
-         
-         strongSelf.formDescription = formDescription;
-         
-         strongSelf.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
-         [strongSelf.formPreProcessor setupWithProcessDefinitionID:processInstance.processDefinitionID
-                                                    withFormFields:formDescription.formFields
-                                           withDynamicTableFieldID:nil];
-     }];
+    self.fetchProcessInstanceFormDescriptionDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProcessInstanceFormDescriptionDataAccessor fetchFormDescriptionForProcessInstanceID:processInstance.modelID];
 }
 
 - (void)setupWithProcessDefinition:(ASDKModelProcessDefinition *)processDefinition {
     NSParameterAssert(processDefinition);
     self.processDefinition = processDefinition;
     
-    __weak typeof(self) weakSelf = self;
-    [self.formNetworkServices
-     startFormForProcessDefinitionID:processDefinition.modelID
-     completionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         // Check for form description errors first
-         if (error) {
-             if (strongSelf.delegate) {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     [strongSelf.delegate didRenderedFormController:nil
-                                                              error:error];
-                 });
-             }
-             return;
-         }
-         
-         strongSelf.formDescription = formDescription;
-         
-         strongSelf.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
-         [strongSelf.formPreProcessor setupWithProcessDefinitionID:processDefinition.modelID
-                                                    withFormFields:formDescription.formFields
-                                           withDynamicTableFieldID:nil];
-     }];
+    self.fetchProcessDefinitionFormDescriptionDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProcessDefinitionFormDescriptionDataAccessor fetchFormDescriptionForProcessDefinitionID:processDefinition.modelID];
 }
 
 - (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
@@ -264,7 +201,6 @@
 }
 
 - (void)saveFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
-    
     self.saveFormDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
     [self.saveFormDataAccessor saveFormForTaskID:self.task.modelID
          withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation];
@@ -282,6 +218,12 @@
         [self handleProcessDefinitionFormCompletionDataAccessorResponse:response];
     } else if (self.saveFormDataAccessor == dataAccessor) {
         [self handleSaveFormDataAccessorResponse:response];
+    } else if (self.fetchTaskFormDescriptionDataAccessor == dataAccessor) {
+        [self handleTaskFormDescriptionDataAccessorResponse:response];
+    } else if (self.fetchProcessInstanceFormDescriptionDataAccessor == dataAccessor) {
+        [self handleProcessInstanceFormDescriptionDataAccessorResponse:response];
+    } else if (self.fetchProcessDefinitionFormDescriptionDataAccessor == dataAccessor) {
+        [self handleProcessDefinitionFormDescriptionDataAccessorResponse:response];
     }
 }
 
@@ -333,6 +275,68 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate didSaveFormWithError:responseConfirmation.error];
         });
+    }
+}
+
+- (void)handleTaskFormDescriptionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    [self handleFormDescriptionDataAccessorResponse:response];
+    
+    if (self.formDescription) {
+        self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
+        [self.formPreProcessor setupWithTaskID:self.task.modelID
+                                withFormFields:self.formDescription.formFields
+                       withDynamicTableFieldID:nil];
+    }
+}
+
+- (void)handleProcessInstanceFormDescriptionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    [self handleFormDescriptionDataAccessorResponse:response];
+    
+    if (self.formDescription) {
+        self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
+        [self.formPreProcessor setupWithProcessDefinitionID:self.processInstance.processDefinitionID
+                                             withFormFields:self.formDescription.formFields
+                                    withDynamicTableFieldID:nil];
+    }
+}
+
+- (void)handleProcessDefinitionFormDescriptionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    [self handleFormDescriptionDataAccessorResponse:response];
+    
+    if (self.formDescription) {
+        self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
+        [self.formPreProcessor setupWithProcessDefinitionID:self.processDefinition.modelID
+                                             withFormFields:self.formDescription.formFields
+                                    withDynamicTableFieldID:nil];
+    }
+}
+
+- (void)handleFormDescriptionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *responseModel = (ASDKDataAccessorResponseModel *)response;
+    
+    // Check for form description errors first
+    if (responseModel.error || (!responseModel.model && !responseModel.isCachedData)) {
+        if (self.delegate) {
+            __weak typeof(self) weakSelf = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                [strongSelf.delegate didRenderedFormController:nil
+                                                         error:responseModel.error];
+            });
+        }
+        return;
+    } else {
+        // If dealing with an empty cache response ignore and wait for network data
+        if (responseModel.model) {
+            ASDKModelFormDescription *formDescription = responseModel.model;
+            
+            // Deep copy all form fields so that the initial collection remains untouched by future mutations
+            NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject:formDescription];
+            ASDKModelFormDescription *formDescriptionCopy = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
+            
+            self.formDescription = formDescriptionCopy;
+        }
     }
 }
 
