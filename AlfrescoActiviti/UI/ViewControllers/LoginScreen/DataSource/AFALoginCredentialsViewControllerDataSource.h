@@ -79,6 +79,7 @@ typedef NS_OPTIONS(NSUInteger, AFALoginCredentialEditing) {
    toNextTextFieldWithTag:(NSUInteger)tag;
 - (void)lockInterface:(BOOL)lockInterface;
 - (void)handleNetworkErrorWithMessage:(NSString *)errorMessage;
+- (BOOL)isNetworkReachable;
 
 @end
 

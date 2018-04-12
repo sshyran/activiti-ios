@@ -111,6 +111,10 @@ UITableViewDelegate>
     [self showGenericNetworkErrorAlertControllerWithMessage:errorMessage];
 }
 
+- (BOOL)isNetworkReachable {
+    return (self.networkReachabilityStatus == ASDKNetworkReachabilityStatusReachableViaWWANOrWifi) ? YES : NO;
+}
+
 
 #pragma mark -
 #pragma mark UITableViewDelegate

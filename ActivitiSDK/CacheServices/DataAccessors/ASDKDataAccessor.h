@@ -19,6 +19,12 @@
 #import <Foundation/Foundation.h>
 #import "ASDKServiceDataAccessorProtocol.h"
 
+typedef NS_ENUM(NSInteger, ASDKNetworkReachabilityStatus) {
+    ASDKNetworkReachabilityStatusUnknown          = -1,
+    ASDKNetworkReachabilityStatusNotReachable     = 0,
+    ASDKNetworkReachabilityStatusReachableViaWWANOrWifi = 1
+};
+
 @interface ASDKDataAccessor : NSObject <ASDKServiceDataAccessorProtocol, NSCopying> {
     @protected
     ASDKServiceDataAccessorCachingPolicy  _cachePolicy;
@@ -37,6 +43,12 @@
  * Creates and returns a serial operation queue.
  */
 - (NSOperationQueue *)serialOperationQueue;
+
+/**
+ * Returns the network reachability status at a given moment.
+ @return Enum integer corresponding to a reachability status.
+ */
+- (ASDKNetworkReachabilityStatus)networkReachabilityStatus;
 
 /**
  * Requests cancelation for all domain specific operations.

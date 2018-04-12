@@ -138,6 +138,7 @@
 #import <ActivitiSDK/ASDKIntegrationNetworkServices.h>
 
 // Data accessors
+#import <ActivitiSDK/ASDKDataAccessor.h>
 #import <ActivitiSDK/ASDKProfileDataAccessor.h>
 #import <ActivitiSDK/ASDKApplicationsDataAccessor.h>
 #import <ActivitiSDK/ASDKTaskDataAccessor.h>
@@ -175,6 +176,7 @@
 #import <ActivitiSDK/ASDKAvatarInitialsView.h>
 #import <ActivitiSDK/ASDKIntegrationLoginWebViewViewController.h>
 #import <ActivitiSDK/ASDKIntegrationBrowsingViewController.h>
+#import <ActivitiSDK/ASDKReachabilityViewController.h>
 
 // UI Categories
 #import <ActivitiSDK/NSString+ASDKFontGlyphicons.h>

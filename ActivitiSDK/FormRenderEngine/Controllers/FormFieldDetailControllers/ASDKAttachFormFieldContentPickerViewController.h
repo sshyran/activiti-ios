@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ASDKModelFormField.h"
+#import "ASDKReachabilityViewController.h"
 
 @class ASDKModelContent,
 ASDKModelIntegrationAccount;
@@ -38,7 +39,7 @@ typedef void  (^ASDKFormFieldContentDownloadCompletionBlock)(NSString *contentID
 
 @end
 
-@interface ASDKAttachFormFieldContentPickerViewController : UIViewController
+@interface ASDKAttachFormFieldContentPickerViewController : ASDKReachabilityViewController
 
 @property (weak, nonatomic)   id<ASDKAttachFormFieldContentPickerViewControllerDelegate>  delegate;
 @property (strong, nonatomic) ASDKModelFormField                                          *currentFormField;

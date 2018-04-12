@@ -24,10 +24,6 @@
 #import "AFAUIConstants.h"
 #import "AFABusinessConstants.h"
 
-// Managers
-#import "AFAServiceRepository.h"
-#import "AFAReachabilityStore.h"
-
 // Cells
 #import "AFACredentialTextFieldTableViewCell.h"
 #import "AFASignInTableViewCell.h"
@@ -138,13 +134,10 @@
                 
                 // Handle internal generated errors
                 if (AFALoginViewModelErrorDomain == error.domain) {
-                    AFAReachabilityStore *reachabilityStore =
-                    [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeReachabilityStore];
-                    
                     // If reachability exists but the error is triggered by a cached data value mismatch disregard
                     // the error and fall back to the server response
                     if (kAFALoginViewModelInvalidCredentialErrorCode == error.code &&
-                        AFAReachabilityStoreTypeNotReachable == reachabilityStore.reachability) {
+                        !strongSelf.delegate.isNetworkReachable) {
                         responseCode = ASDKHTTPCode401Unauthorised;
                     } else {
                         disregardError = YES;

@@ -23,7 +23,6 @@
 #import "AFALocalizationConstants.h"
 
 // Managers
-#import "AFAServiceRepository.h"
 @import ActivitiSDK;
 
 @interface AFABaseThemedViewController ()
@@ -39,47 +38,44 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        AFAServiceRepository *serviceRepository = [AFAServiceRepository sharedRepository];
-        _reachabilityStore = [serviceRepository serviceObjectForPurpose:AFAServiceObjectTypeReachabilityStore];
-        
         _kvoManager = [ASDKKVOManager managerWithObserver:self];
         
         __weak typeof(self) weakSelf = self;
-        [_kvoManager observeObject:_reachabilityStore
-                            forKeyPath:NSStringFromSelector(@selector(reachability))
-                               options:NSKeyValueObservingOptionNew
-                                 block:^(id observer, id object, NSDictionary *change) {
-                                     __strong typeof(self) strongSelf = weakSelf;
-                                     
-                                     AFAReachabilityStoreType reachability = [change[NSKeyValueChangeNewKey] integerValue];
-                                     
-                                     switch (reachability) {
-                                         case AFAReachabilityStoreTypeNotReachable: {
-                                             if (strongSelf.isControllerViewVisible) {
-                                                 [self didLoseNetworkConnectivity];
-                                             }
+        [_kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 
+                                 ASDKNetworkReachabilityStatus reachability = [change[NSKeyValueChangeNewKey] integerValue];
+                                 
+                                 switch (reachability) {
+                                     case ASDKNetworkReachabilityStatusNotReachable: {
+                                         if (strongSelf.isControllerViewVisible) {
+                                             [self didLoseNetworkConnectivity];
                                          }
-                                             break;
-                                             
-                                         case AFAReachabilityStoreTypeReachableViaWANOrWiFi: {
-                                             if (strongSelf.isControllerViewVisible) {
-                                                 [strongSelf showWarningMessage:NSLocalizedString(kLocalizationOfflineConnectivityRetryText, @"Reconnect text")];
-                                                 [strongSelf didRestoredNetworkConnectivity];
-                                             }
-                                         }
-                                             break;
-                                             
-                                         default: break;
                                      }
-                                 }];
+                                         break;
+                                         
+                                     case ASDKNetworkReachabilityStatusReachableViaWWANOrWifi: {
+                                         if (strongSelf.isControllerViewVisible) {
+                                             [strongSelf showWarningMessage:NSLocalizedString(kLocalizationOfflineConnectivityRetryText, @"Reconnect text")];
+                                             [strongSelf didRestoredNetworkConnectivity];
+                                         }
+                                     }
+                                         break;
+                                         
+                                     default: break;
+                                 }
+                             }];
     }
     
     return self;
 }
 
 - (void)dealloc {
-    [ASDKKVOManager removeObserver:self.reachabilityStore
-                        forKeyPath:NSStringFromSelector(@selector(reachability))];
+    [ASDKKVOManager removeObserver:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
 }
 
 - (void)viewDidLoad {
@@ -165,7 +161,7 @@
 }
 
 - (BOOL)isNetworkReachable {
-    return (self.reachabilityStore.reachability == AFAReachabilityStoreTypeReachableViaWANOrWiFi) ? YES : NO;
+    return (self.networkReachabilityStatus == ASDKNetworkReachabilityStatusReachableViaWWANOrWifi) ? YES : NO;
 }
 
 @end

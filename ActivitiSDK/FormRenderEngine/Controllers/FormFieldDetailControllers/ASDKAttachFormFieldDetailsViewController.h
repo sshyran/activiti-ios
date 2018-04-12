@@ -18,8 +18,10 @@
 
 #import <UIKit/UIKit.h>
 #import "ASDKFormFieldDetailsControllerProtocol.h"
+#import "ASDKReachabilityViewController.h"
 
-@interface ASDKAttachFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol>
+
+@interface ASDKAttachFormFieldDetailsViewController : ASDKReachabilityViewController <ASDKFormFieldDetailsControllerProtocol>
 
 @property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> valueTransactionDelegate;
 

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile iOS App.
+ * This file is part of the Alfresco Activiti Mobile SDK.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,33 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import "AFAReachabilityStore.h"
-@import ActivitiSDK;
+#import "ASDKReachabilityViewController.h"
+#import "ASDKNetworkServiceConstants.h"
+#import "ASDKProfileDataAccessor.h"
 
-@interface AFAReachabilityStore ()
+@interface ASDKReachabilityViewController ()
 
-@property (strong, nonatomic) id reachabilityChangeObserver;
+@property (strong, nonatomic) id reachabilityObserver;
 
 @end
 
-@implementation AFAReachabilityStore
+@implementation ASDKReachabilityViewController
 
-- (instancetype)init {
-    self = [super init];
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     if (self) {
         __weak typeof(self) weakSelf = self;
         
+        _networkReachabilityStatus = [self requestInitialReachabilityStatus];
         
-        _reachability = AFAReachabilityStoreTypeUndefined;
-        
-        _reachabilityChangeObserver =
+        _reachabilityObserver =
         [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceNoInternetConnection
                                                           object:nil
                                                            queue:[NSOperationQueue mainQueue]
                                                       usingBlock:^(NSNotification * _Nonnull note) {
                                                           __strong typeof(self) strongSelf = weakSelf;
                                                           
-                                                          strongSelf.reachability = AFAReachabilityStoreTypeNotReachable;
+                                                          strongSelf.networkReachabilityStatus = ASDKNetworkReachabilityStatusNotReachable;
                                                       }];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceInternetConnectionAvailable
@@ -51,7 +51,7 @@
                                                       usingBlock:^(NSNotification * _Nonnull note) {
                                                           __strong typeof(self) strongSelf = weakSelf;
                                                           
-                                                          strongSelf.reachability = AFAReachabilityStoreTypeReachableViaWANOrWiFi;
+                                                          strongSelf.networkReachabilityStatus = ASDKNetworkReachabilityStatusReachableViaWWANOrWifi;
                                                       }];
     }
     
@@ -59,25 +59,16 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityChangeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityObserver];
 }
 
-- (void)requestInitialReachabilityStatus {
+- (ASDKNetworkReachabilityStatus)requestInitialReachabilityStatus {
     ASDKProfileDataAccessor *profileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:nil];
-    switch ([profileDataAccessor.networkService.requestOperationManager.reachabilityManager networkReachabilityStatus]) {
-        case AFNetworkReachabilityStatusReachableViaWWAN:
-        case AFNetworkReachabilityStatusReachableViaWiFi: {
-            _reachability = AFAReachabilityStoreTypeReachableViaWANOrWiFi;
-        }
-            break;
-            
-        case AFNetworkReachabilityStatusNotReachable: {
-            _reachability = AFAReachabilityStoreTypeNotReachable;
-        }
-            break;
-            
-        default: break;
-    }
+    return [profileDataAccessor networkReachabilityStatus];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
 }
 
 @end

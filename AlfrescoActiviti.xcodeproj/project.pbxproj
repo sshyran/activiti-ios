@@ -106,6 +106,8 @@
 		132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132C8D391D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m in Sources */ = {isa = PBXBuildFile; fileRef = 132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */; };
 		132DC47F1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 132DC47E1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m */; };
+		132E5A44207F45F300DD48F8 /* ASDKReachabilityViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E5A42207F45F300DD48F8 /* ASDKReachabilityViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		132E5A45207F45F300DD48F8 /* ASDKReachabilityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E5A43207F45F300DD48F8 /* ASDKReachabilityViewController.m */; };
 		132E60321C2314F1000A2CA5 /* ASDKModelProcessInstance.h in Headers */ = {isa = PBXBuildFile; fileRef = 132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		132E60331C2314F1000A2CA5 /* ASDKModelProcessInstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */; };
 		133070E11DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */; };
@@ -367,7 +369,7 @@
 		1394F68E1F0A6139005C8C32 /* ASDKProfileDataAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F68C1F0A6139005C8C32 /* ASDKProfileDataAccessor.m */; };
 		1394F6911F0A705C005C8C32 /* ASDKAsyncBlockOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F68F1F0A705C005C8C32 /* ASDKAsyncBlockOperation.h */; };
 		1394F6921F0A705C005C8C32 /* ASDKAsyncBlockOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F6901F0A705C005C8C32 /* ASDKAsyncBlockOperation.m */; };
-		1394F6991F0BBC94005C8C32 /* ASDKDataAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F6971F0BBC94005C8C32 /* ASDKDataAccessor.h */; };
+		1394F6991F0BBC94005C8C32 /* ASDKDataAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1394F6971F0BBC94005C8C32 /* ASDKDataAccessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1394F69A1F0BBC94005C8C32 /* ASDKDataAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1394F6981F0BBC94005C8C32 /* ASDKDataAccessor.m */; };
 		139525EC203D6CB400591343 /* ASDKFormDataAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 139525EA203D6CB400591343 /* ASDKFormDataAccessor.h */; };
 		139525ED203D6CB400591343 /* ASDKFormDataAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 139525EB203D6CB400591343 /* ASDKFormDataAccessor.m */; };
@@ -576,7 +578,6 @@
 		13CCEEAE1F0CD5A700F30337 /* ASDKProfileCacheServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCEEAC1F0CD5A700F30337 /* ASDKProfileCacheServices.m */; };
 		13CCEEB51F0CDBF900F30337 /* ASDKCoreDataCacheService.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CCEEB31F0CDBF900F30337 /* ASDKCoreDataCacheService.h */; };
 		13CCEEB61F0CDBF900F30337 /* ASDKCoreDataCacheService.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CCEEB41F0CDBF900F30337 /* ASDKCoreDataCacheService.m */; };
-		13CD88351F7CD539001A16D4 /* AFAReachabilityStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CD88341F7CD539001A16D4 /* AFAReachabilityStore.m */; };
 		13CD88391F7D19B7001A16D4 /* ASDKProcessInstanceDataAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CD88371F7D19B7001A16D4 /* ASDKProcessInstanceDataAccessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13CD883A1F7D19B7001A16D4 /* ASDKProcessInstanceDataAccessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 13CD88381F7D19B7001A16D4 /* ASDKProcessInstanceDataAccessor.m */; };
 		13CD883E1F7D1CF0001A16D4 /* ASDKProcessInstanceCacheService.h in Headers */ = {isa = PBXBuildFile; fileRef = 13CD883C1F7D1CF0001A16D4 /* ASDKProcessInstanceCacheService.h */; };
@@ -987,6 +988,8 @@
 		132C8D361D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKFilterParserOperationWorker.h; path = NetworkServices/ParserOperationManager/ASDKFilterParserOperationWorker/ASDKFilterParserOperationWorker.h; sourceTree = "<group>"; };
 		132C8D371D6F1581003AC8EE /* ASDKFilterParserOperationWorker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKFilterParserOperationWorker.m; path = NetworkServices/ParserOperationManager/ASDKFilterParserOperationWorker/ASDKFilterParserOperationWorker.m; sourceTree = "<group>"; };
 		132DC47E1E03D99400ACA6F9 /* ASDKFormNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKFormNetworkServicesTest.m; sourceTree = "<group>"; };
+		132E5A42207F45F300DD48F8 /* ASDKReachabilityViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKReachabilityViewController.h; path = FormRenderEngine/Controllers/FormFieldDetailControllers/ASDKReachabilityViewController.h; sourceTree = "<group>"; };
+		132E5A43207F45F300DD48F8 /* ASDKReachabilityViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKReachabilityViewController.m; path = FormRenderEngine/Controllers/FormFieldDetailControllers/ASDKReachabilityViewController.m; sourceTree = "<group>"; };
 		132E60301C2314F1000A2CA5 /* ASDKModelProcessInstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelProcessInstance.h; path = Model/ProcessInstance/ASDKModelProcessInstance.h; sourceTree = "<group>"; };
 		132E60311C2314F1000A2CA5 /* ASDKModelProcessInstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelProcessInstance.m; path = Model/ProcessInstance/ASDKModelProcessInstance.m; sourceTree = "<group>"; };
 		133070E01DC88FD90089CA95 /* ASDKRequestOperationManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKRequestOperationManagerTest.m; sourceTree = "<group>"; };
@@ -1561,8 +1564,6 @@
 		13CCEEAC1F0CD5A700F30337 /* ASDKProfileCacheServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKProfileCacheServices.m; path = CacheServices/Proxy/ProfileCacheService/ASDKProfileCacheServices.m; sourceTree = "<group>"; };
 		13CCEEB31F0CDBF900F30337 /* ASDKCoreDataCacheService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKCoreDataCacheService.h; path = CacheServices/CoreDataCacheService/ASDKCoreDataCacheService.h; sourceTree = "<group>"; };
 		13CCEEB41F0CDBF900F30337 /* ASDKCoreDataCacheService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKCoreDataCacheService.m; path = CacheServices/CoreDataCacheService/ASDKCoreDataCacheService.m; sourceTree = "<group>"; };
-		13CD88331F7CD539001A16D4 /* AFAReachabilityStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AFAReachabilityStore.h; path = Business/ReachabilityStore/AFAReachabilityStore.h; sourceTree = "<group>"; };
-		13CD88341F7CD539001A16D4 /* AFAReachabilityStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AFAReachabilityStore.m; path = Business/ReachabilityStore/AFAReachabilityStore.m; sourceTree = "<group>"; };
 		13CD88371F7D19B7001A16D4 /* ASDKProcessInstanceDataAccessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceDataAccessor.h; path = CacheServices/DataAccessors/ProcessInstanceDataAccessor/ASDKProcessInstanceDataAccessor.h; sourceTree = "<group>"; };
 		13CD88381F7D19B7001A16D4 /* ASDKProcessInstanceDataAccessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKProcessInstanceDataAccessor.m; path = CacheServices/DataAccessors/ProcessInstanceDataAccessor/ASDKProcessInstanceDataAccessor.m; sourceTree = "<group>"; };
 		13CD883C1F7D1CF0001A16D4 /* ASDKProcessInstanceCacheService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKProcessInstanceCacheService.h; path = CacheServices/Proxy/ProcessInstanceCacheService/ASDKProcessInstanceCacheService.h; sourceTree = "<group>"; };
@@ -2510,7 +2511,6 @@
 				13481F301B95C4D0005D3149 /* KeychainWrapper */,
 				13A8CABD1B8B49B900B7A25E /* ServiceRepository */,
 				1328D34E1BB91CB10010757C /* TableController */,
-				13CD88361F7CD53E001A16D4 /* ReachabilityStore */,
 			);
 			name = Business;
 			sourceTree = "<group>";
@@ -3770,6 +3770,8 @@
 		138F0A2C1C6B7E9400DA9414 /* FormFieldDetailControllers */ = {
 			isa = PBXGroup;
 			children = (
+				132E5A42207F45F300DD48F8 /* ASDKReachabilityViewController.h */,
+				132E5A43207F45F300DD48F8 /* ASDKReachabilityViewController.m */,
 				8DEA25421C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.h */,
 				8DEA25431C7E0D3400BF376F /* ASDKDateFormFieldDetailsViewController.m */,
 				138F0A281C6B7E9000DA9414 /* ASDKRadioFormFieldDetailsViewController.h */,
@@ -5135,15 +5137,6 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		13CD88361F7CD53E001A16D4 /* ReachabilityStore */ = {
-			isa = PBXGroup;
-			children = (
-				13CD88331F7CD539001A16D4 /* AFAReachabilityStore.h */,
-				13CD88341F7CD539001A16D4 /* AFAReachabilityStore.m */,
-			);
-			name = ReachabilityStore;
-			sourceTree = "<group>";
-		};
 		13CD883B1F7D19BB001A16D4 /* ProcessInstanceDataAccessor */ = {
 			isa = PBXGroup;
 			children = (
@@ -6386,6 +6379,7 @@
 				1394F66E1F03F260005C8C32 /* ASDKPersistenceStackConstants.h in Headers */,
 				8D3A51DF1C80868500FF9A00 /* ASDKModelProcessDefinition.h in Headers */,
 				138F0A2A1C6B7E9000DA9414 /* ASDKRadioFormFieldDetailsViewController.h in Headers */,
+				132E5A44207F45F300DD48F8 /* ASDKReachabilityViewController.h in Headers */,
 				1394F6791F04E552005C8C32 /* ASDKDataAccessorResponseModel.h in Headers */,
 				13B7E2101B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.h in Headers */,
 				13BCADED1F010AC700146E7E /* ASDKMOUser.h in Headers */,
@@ -7176,7 +7170,6 @@
 				13353A031F31B9020058B85E /* AFANavigationControllerDelegate.m in Sources */,
 				137B8DD41BB9818900F1A6DC /* AFATableControllerTaskContributorsModel.m in Sources */,
 				139DF5C61C5BB4600062D01D /* AFAProcessServices.m in Sources */,
-				13CD88351F7CD539001A16D4 /* AFAReachabilityStore.m in Sources */,
 				1328D3511BB92D540010757C /* AFATableControllerTaskDetailsModel.m in Sources */,
 				13EBEC971CF5A74200EC8F96 /* AFAAuditLogTableViewCell.m in Sources */,
 				133213BB1B8EFF8A00BF36DC /* AFATaskListStyleCell.m in Sources */,
@@ -7413,6 +7406,7 @@
 				8D8F85F61C8D8E7000356A5B /* ASDKAttachFormFieldDetailsViewController.m in Sources */,
 				13C5A1B9202202B80058AEF7 /* ASDKIntegrationCacheService.m in Sources */,
 				13B7E2111B74C880002CBDF4 /* ASDKMantleJSONAdapterExcludeZeroNil.m in Sources */,
+				132E5A45207F45F300DD48F8 /* ASDKReachabilityViewController.m in Sources */,
 				136680041C89982D005E4AEA /* ASDKQuerryNetworkServices.m in Sources */,
 				133D090E1F331AA7007A717A /* ASDKTaskCacheService.m in Sources */,
 				13EBECA41CF8470900EC8F96 /* ASDKFormEngineActionHandler.m in Sources */,

@@ -50,6 +50,7 @@
 #import "ASDKFormDataAccessor.h"
 #import "ASDKIntegrationDataAccessor.h"
 #import "ASDKDiskServices.h"
+#import "ASDKKVOManager.h"
 @import Photos;
 @import QuickLook;
 
@@ -86,6 +87,8 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 @property (strong, nonatomic) NSData                                        *currentSelectedResourceData;
 @property (strong, nonatomic) NSArray                                       *integrationAccounts;
 
+@property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
+
 @end
 
 @implementation ASDKAttachFormFieldContentPickerViewController
@@ -94,16 +97,25 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.progressHUD = [self configureProgressHUD];
+        _progressHUD = [self configureProgressHUD];
+        
+        [self handleBindingsForNetworkConnectivity];
     }
     
     return self;
 }
 
+- (void)dealloc {
+    [ASDKKVOManager removeObserver:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self fetchIntegrationAccounts];
+    if (ASDKNetworkReachabilityStatusReachableViaWWANOrWifi == self.networkReachabilityStatus) {
+        [self fetchIntegrationAccounts];
+    }
 }
 
 
@@ -637,6 +649,28 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     } else {
         [self showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingNoIntegrationAccountText, ASDKLocalizationTable, @"Failed title")];
     }
+}
+
+
+#pragma mark -
+#pragma mark KVO Bindings
+
+- (void)handleBindingsForNetworkConnectivity {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 ASDKNetworkReachabilityStatus networkReachabilityStatus = [change[NSKeyValueChangeNewKey] boolValue];
+                                 
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     if (ASDKNetworkReachabilityStatusReachableViaWWANOrWifi == networkReachabilityStatus) {
+                                         [weakSelf fetchIntegrationAccounts];
+                                     }
+                                 });
+                             }];
 }
 
 @end

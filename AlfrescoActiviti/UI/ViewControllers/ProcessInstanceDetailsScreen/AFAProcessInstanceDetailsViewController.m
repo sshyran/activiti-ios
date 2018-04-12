@@ -417,10 +417,8 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
             [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceTaskDetails
                                             sender:currentTask];
         } else if (processInstanceTasks.isStartFormDefined) {
-            if (strongSelf.dataSource.isConnectivityAvailable) {
-                [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceViewCompletedStartForm
-                                                sender:nil];
-            }
+            [strongSelf performSegueWithIdentifier:kSegueIDProcessInstanceViewCompletedStartForm
+                                            sender:nil];
         }
     } forCellType:[processInstanceTasksCellFactory cellTypeForTaskDetails]];
     

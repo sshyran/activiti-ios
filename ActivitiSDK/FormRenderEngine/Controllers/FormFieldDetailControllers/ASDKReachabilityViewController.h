@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
- * This file is part of the Alfresco Activiti Mobile iOS App.
+ * This file is part of the Alfresco Activiti Mobile SDK.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,13 @@
  *  limitations under the License.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "ASDKDataAccessor.h"
 
-typedef NS_ENUM(NSInteger, AFAReachabilityStoreType) {
-    AFAReachabilityStoreTypeUndefined = -1,
-    AFAReachabilityStoreTypeReachableViaWANOrWiFi = 0,
-    AFAReachabilityStoreTypeNotReachable
-};
+@interface ASDKReachabilityViewController : UIViewController
 
-@interface AFAReachabilityStore : NSObject
+@property (assign, nonatomic) ASDKNetworkReachabilityStatus networkReachabilityStatus;
 
-@property (assign, nonatomic) AFAReachabilityStoreType reachability;
-
-- (void)requestInitialReachabilityStatus;
+- (ASDKNetworkReachabilityStatus)requestInitialReachabilityStatus;
 
 @end

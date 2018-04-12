@@ -18,14 +18,13 @@
 
 #import <UIKit/UIKit.h>
 #import "AFANavigationBarBannerAlertView.h"
-#import "AFAReachabilityStore.h"
+@import ActivitiSDK;
 
 
-@interface AFABaseThemedViewController : UIViewController
+@interface AFABaseThemedViewController : ASDKReachabilityViewController
 
 @property (strong, nonatomic) NSString                          *navigationBarTitle;
 @property (strong, nonatomic) UIColor                           *navigationBarThemeColor;
-@property (strong, nonatomic, readonly) AFAReachabilityStore    *reachabilityStore;
 
 - (void)showWarningMessage:(NSString *)warningMessage;
 - (void)showErrorMessage:(NSString *)errorMessage;

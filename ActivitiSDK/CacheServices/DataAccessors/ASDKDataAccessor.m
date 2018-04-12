@@ -20,6 +20,7 @@
 
 // Managers
 #import "ASDKCacheService.h"
+#import "ASDKNetworkService.h"
 
 @implementation ASDKDataAccessor
 
@@ -49,6 +50,24 @@
     operationQueue.maxConcurrentOperationCount = 1;
     
     return operationQueue;
+}
+
+- (ASDKNetworkReachabilityStatus)networkReachabilityStatus {
+    switch ([self.networkService.requestOperationManager.reachabilityManager networkReachabilityStatus]) {
+        case AFNetworkReachabilityStatusReachableViaWWAN:
+        case AFNetworkReachabilityStatusReachableViaWiFi: {
+            return ASDKNetworkReachabilityStatusReachableViaWWANOrWifi;
+        }
+            break;
+            
+        case AFNetworkReachabilityStatusNotReachable: {
+            return ASDKNetworkReachabilityStatusNotReachable;
+        }
+            
+        default:break;
+    }
+    
+    return ASDKNetworkReachabilityStatusUnknown;
 }
 
 - (void)cancelOperations {
