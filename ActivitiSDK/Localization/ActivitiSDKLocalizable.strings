@@ -38,6 +38,7 @@
 "formDynamicTableDeleteRowConfirmationText"                     = "Are you sure you want to delete this dynamic table row?";
 "formValueEmpty"                                                = "(empty)";
 "formOptionClearText"                                           = "Clear date";
+"formFieldNoNetworkConnectionText"                              = "This field is not available without a network connection.";
 
 // Content picker component
 "formContentPickerComponentLocalContentText"                    = "Open from Device";

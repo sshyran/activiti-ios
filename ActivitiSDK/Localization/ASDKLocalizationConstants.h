@@ -45,6 +45,7 @@ extern NSString *kLocalizationFormDynamicTableRowHeaderText;
 extern NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText;
 extern NSString *kLocalizationFormValueEmpty;
 extern NSString *kLocalizationFormOptionClearText;
+extern NSString *kLocalizationFormFieldNoNetworkConnectionText;
 
 // Content picker component
 extern NSString *kLocalizationFormContentPickerComponentLocalContentText;

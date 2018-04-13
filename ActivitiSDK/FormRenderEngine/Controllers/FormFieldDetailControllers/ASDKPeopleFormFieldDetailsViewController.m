@@ -133,6 +133,9 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
                                    compatibleWithTraitCollection:nil];
     if ([self isReadonlyForm]) {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationPeoplePickerControllerNoContributorsNotEditableText, ASDKLocalizationTable, @"No people involved not editable text");
+    } if (ASDKNetworkReachabilityStatusNotReachable == self.networkReachabilityStatus ||
+          ASDKNetworkReachabilityStatusUnknown == self.networkReachabilityStatus) {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormFieldNoNetworkConnectionText, ASDKLocalizationTable, @"No network connection available");
     } else {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationPeoplePickerControllerNoContributorsText, ASDKLocalizationTable, @"No people involved text");
     }

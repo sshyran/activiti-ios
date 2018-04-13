@@ -17,58 +17,49 @@
  ******************************************************************************/
 
 #import "ASDKReachabilityViewController.h"
-#import "ASDKNetworkServiceConstants.h"
-#import "ASDKProfileDataAccessor.h"
+#import "ASDKReachabilityManager.h"
 
 @interface ASDKReachabilityViewController ()
 
-@property (strong, nonatomic) id reachabilityObserver;
+@property (strong, nonatomic) ASDKReachabilityManager *reachabilityManager;
 
 @end
 
 @implementation ASDKReachabilityViewController
 
+
+#pragma mark -
+#pragma mark View lifecycle
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        __weak typeof(self) weakSelf = self;
-        
-        _networkReachabilityStatus = [self requestInitialReachabilityStatus];
-        
-        _reachabilityObserver =
-        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceNoInternetConnection
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification * _Nonnull note) {
-                                                          __strong typeof(self) strongSelf = weakSelf;
-                                                          
-                                                          strongSelf.networkReachabilityStatus = ASDKNetworkReachabilityStatusNotReachable;
-                                                      }];
-        
-        [[NSNotificationCenter defaultCenter] addObserverForName:kASDKAPINetworkServiceInternetConnectionAvailable
-                                                          object:nil
-                                                           queue:[NSOperationQueue mainQueue]
-                                                      usingBlock:^(NSNotification * _Nonnull note) {
-                                                          __strong typeof(self) strongSelf = weakSelf;
-                                                          
-                                                          strongSelf.networkReachabilityStatus = ASDKNetworkReachabilityStatusReachableViaWWANOrWifi;
-                                                      }];
+        _reachabilityManager = [ASDKReachabilityManager new];
     }
     
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityObserver];
++ (NSSet *)keyPathsForValuesAffectingNetworkReachabilityStatus {
+    return [NSSet setWithObject:@"reachabilityManager.networkReachabilityStatus"];
+}
+
+
+#pragma mark -
+#pragma mark Public interface
+
+- (ASDKNetworkReachabilityStatus)networkReachabilityStatus {
+    return self.reachabilityManager.networkReachabilityStatus;
+}
+
+- (void)setNetworkReachabilityStatus:(ASDKNetworkReachabilityStatus)networkReachabilityStatus {
+    if (self.reachabilityManager.networkReachabilityStatus != networkReachabilityStatus) {
+        self.reachabilityManager.networkReachabilityStatus = networkReachabilityStatus;
+    }
 }
 
 - (ASDKNetworkReachabilityStatus)requestInitialReachabilityStatus {
-    ASDKProfileDataAccessor *profileDataAccessor = [[ASDKProfileDataAccessor alloc] initWithDelegate:nil];
-    return [profileDataAccessor networkReachabilityStatus];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
+   return [self.reachabilityManager requestInitialReachabilityStatus];
 }
 
 @end

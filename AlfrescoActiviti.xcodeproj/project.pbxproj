@@ -660,6 +660,8 @@
 		13EEC5D51C04D0E100B95740 /* ASDKModelFormFieldFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 13EEC5D31C04D0E100B95740 /* ASDKModelFormFieldFileSource.m */; };
 		13EEC5E51C05CD0700B95740 /* ASDKRoundedBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 133B7FE21B78FAD300C17D06 /* ASDKRoundedBorderView.m */; };
 		13EEC5E61C05CDFE00B95740 /* ASDKRoundedBorderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 133B7FE11B78FAD300C17D06 /* ASDKRoundedBorderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13F0295F207F977C008671A5 /* ASDKReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F0295D207F977C008671A5 /* ASDKReachabilityManager.h */; };
+		13F02960207F977C008671A5 /* ASDKReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F0295E207F977C008671A5 /* ASDKReachabilityManager.m */; };
 		13F07EF71CBFC8C400002FEB /* ASDKKVOManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF11CBFC8C400002FEB /* ASDKKVOManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13F07EF81CBFC8C400002FEB /* ASDKKVOManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13F07EF21CBFC8C400002FEB /* ASDKKVOManager.m */; };
 		13F07EF91CBFC8C400002FEB /* ASDKKVOManagerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 13F07EF31CBFC8C400002FEB /* ASDKKVOManagerInfo.h */; };
@@ -1660,6 +1662,8 @@
 		13EEC5CD1C04B5B800B95740 /* ASDKModelFormFieldAttachParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldAttachParameter.m; path = Model/AttachFormFieldOption/ASDKModelFormFieldAttachParameter.m; sourceTree = "<group>"; };
 		13EEC5D21C04D0E100B95740 /* ASDKModelFormFieldFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKModelFormFieldFileSource.h; path = Model/FormFieldFileSource/ASDKModelFormFieldFileSource.h; sourceTree = "<group>"; };
 		13EEC5D31C04D0E100B95740 /* ASDKModelFormFieldFileSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKModelFormFieldFileSource.m; path = Model/FormFieldFileSource/ASDKModelFormFieldFileSource.m; sourceTree = "<group>"; };
+		13F0295D207F977C008671A5 /* ASDKReachabilityManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKReachabilityManager.h; path = NetworkServices/ReachabilityManager/ASDKReachabilityManager.h; sourceTree = "<group>"; };
+		13F0295E207F977C008671A5 /* ASDKReachabilityManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ASDKReachabilityManager.m; path = NetworkServices/ReachabilityManager/ASDKReachabilityManager.m; sourceTree = "<group>"; };
 		13F07EF11CBFC8C400002FEB /* ASDKKVOManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManager.h; path = KVOManager/ASDKKVOManager.h; sourceTree = "<group>"; };
 		13F07EF21CBFC8C400002FEB /* ASDKKVOManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKKVOManager.m; path = KVOManager/ASDKKVOManager.m; sourceTree = "<group>"; };
 		13F07EF31CBFC8C400002FEB /* ASDKKVOManagerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKKVOManagerInfo.h; path = KVOManager/ASDKKVOManagerInfo.h; sourceTree = "<group>"; };
@@ -2045,6 +2049,7 @@
 			children = (
 				13E830771B6A44190028901A /* RequestOperationManager */,
 				1313750F1B6F928000D2268E /* ParserOperationManager */,
+				13F02961207F9780008671A5 /* ReachabilityManager */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -5627,6 +5632,15 @@
 			name = FormFieldFileSource;
 			sourceTree = "<group>";
 		};
+		13F02961207F9780008671A5 /* ReachabilityManager */ = {
+			isa = PBXGroup;
+			children = (
+				13F0295D207F977C008671A5 /* ASDKReachabilityManager.h */,
+				13F0295E207F977C008671A5 /* ASDKReachabilityManager.m */,
+			);
+			name = ReachabilityManager;
+			sourceTree = "<group>";
+		};
 		13F07EFD1CBFC8C800002FEB /* KVOManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -6639,6 +6653,7 @@
 				130B84DC202851E7006FF9CF /* ASDKIntegrationCacheModelUpsert.h in Headers */,
 				13FF67991CEB37EB00A8C95F /* ASDKIntegrationBrowsingTableViewCell.h in Headers */,
 				132C8D381D6F1581003AC8EE /* ASDKFilterParserOperationWorker.h in Headers */,
+				13F0295F207F977C008671A5 /* ASDKReachabilityManager.h in Headers */,
 				13CCEEA91F0CD56500F30337 /* ASDKProfileCacheServiceProtocol.h in Headers */,
 				13771D29200E218500AA3160 /* ASDKProcessDefinitionCacheMapper.h in Headers */,
 				13BCADD51F010AC700146E7E /* ASDKMOFilterModel.h in Headers */,
@@ -7339,6 +7354,7 @@
 				1347E4F91F3C474100EC277F /* ASDKMOTaskFilterMap.m in Sources */,
 				13C855BB1C4D197600F84422 /* ASDKFilterListRequestRepresentation.m in Sources */,
 				13F9BA351B739D290068BB8C /* ASDKBaseRequestRepresentation.m in Sources */,
+				13F02960207F977C008671A5 /* ASDKReachabilityManager.m in Sources */,
 				13E830751B6A303B0028901A /* ASDKRequestOperationManager.m in Sources */,
 				8D9E6AE01CBE4009001EA2CA /* ASDKDynamicTableRenderDataSource.m in Sources */,
 				8D6ABE711CBCDF03008FACB4 /* ASDKDynamicTableRowHeaderTableViewCell.m in Sources */,

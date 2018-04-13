@@ -37,6 +37,10 @@
 #import "ASDKFormHeaderCollectionReusableView.h"
 #import "ASDKFormFooterCollectionReusableView.h"
 
+// Managers
+#import "ASDKReachabilityManager.h"
+#import "ASDKKVOManager.h"
+
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
@@ -44,9 +48,17 @@
 @interface ASDKFormCollectionViewController () <ASDKFormRenderEngineValueTransactionsProtocol,
                                                 ASDKFormEngineControllerActionHandlerDelegate>
 
+@property (strong, nonatomic) ASDKReachabilityManager *reachabilityManager;
+@property (strong, nonatomic) ASDKKVOManager          *kvoManager;
+
 @end
 
 @implementation ASDKFormCollectionViewController
+
+- (void)dealloc {
+    [ASDKKVOManager removeObserver:_reachabilityManager
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
+}
 
 
 #pragma mark -
@@ -54,6 +66,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (!self.reachabilityManager) {
+        _reachabilityManager = [ASDKReachabilityManager new];
+        [self handleBindingsForNetworkConnectivity];
+    }
     
     // Adjust collenction's view estimated item size
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) self.collectionViewLayout;
@@ -346,7 +363,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     } else {
         BOOL isFormOutcomeEnabled = YES;
         
-        if (self.dataSource.isReadOnlyForm) {
+        if ([self isReadOnlyForm]) {
             isFormOutcomeEnabled = NO;
         } else {
             isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
@@ -370,6 +387,34 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     }
     
     [self.collectionViewLayout invalidateLayout];
+}
+
+- (BOOL)isReadOnlyForm {
+    if (self.dataSource.isReadOnlyForm ||
+        ASDKNetworkReachabilityStatusNotReachable == self.reachabilityManager.networkReachabilityStatus ||
+        ASDKNetworkReachabilityStatusUnknown == self.reachabilityManager.networkReachabilityStatus) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+
+#pragma mark -
+#pragma mark KVO Bindings
+
+- (void)handleBindingsForNetworkConnectivity {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self.reachabilityManager
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     [weakSelf.collectionView reloadData];
+                                 });
+                             }];
 }
 
 @end

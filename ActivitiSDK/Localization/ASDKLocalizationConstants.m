@@ -45,6 +45,7 @@ NSString *kLocalizationFormDynamicTableRowHeaderText             = @"formDynamic
 NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText = @"formDynamicTableDeleteRowConfirmationText";
 NSString *kLocalizationFormValueEmpty                            = @"formValueEmpty";
 NSString *kLocalizationFormOptionClearText                       = @"formOptionClearText";
+NSString *kLocalizationFormFieldNoNetworkConnectionText          = @"formFieldNoNetworkConnectionText";
 
 
 #pragma mark -

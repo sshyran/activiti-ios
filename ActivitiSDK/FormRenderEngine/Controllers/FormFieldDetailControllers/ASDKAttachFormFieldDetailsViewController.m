@@ -173,8 +173,11 @@
     self.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"
                                                         inBundle:[NSBundle bundleForClass:self.class]
                                    compatibleWithTraitCollection:nil];
-    if ([self isReadonlyForm]) {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationContentPickerComponentNoContentNotEditableText, ASDKLocalizationTable, @"No content available not editable text");
+    } else if (ASDKNetworkReachabilityStatusNotReachable == self.networkReachabilityStatus ||
+               ASDKNetworkReachabilityStatusUnknown == self.networkReachabilityStatus) {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormFieldNoNetworkConnectionText, ASDKLocalizationTable, @"No network connection available");
     } else {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationContentPickerComponentNoContentText, ASDKLocalizationTable, @"No content available text");
     }
