@@ -38,6 +38,7 @@
     ASDKFormFieldValueRequestRepresentation *formFieldValueRepresentation = [ASDKFormFieldValueRequestRepresentation new];
     formFieldValueRepresentation.outcome = moFormFieldValueRepresentation.outcome;
     formFieldValueRepresentation.formFields = (NSArray *)moFormFieldValueRepresentation.formFields;
+    formFieldValueRepresentation.jsonAdapterType = ASDKRequestRepresentationJSONAdapterTypeExcludeNilValues;
     
     return formFieldValueRepresentation;
 }

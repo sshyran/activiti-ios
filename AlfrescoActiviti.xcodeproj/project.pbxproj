@@ -68,7 +68,6 @@
 		1319EF541C157EEB003FA6C1 /* UIFont+ASDKGlyphicons.h in Headers */ = {isa = PBXBuildFile; fileRef = 1367370E1B860FF900364886 /* UIFont+ASDKGlyphicons.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1319EF551C157EEF003FA6C1 /* UIFont+ASDKGlyphicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 1367370F1B860FF900364886 /* UIFont+ASDKGlyphicons.m */; };
 		131AC4E01DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */; };
-		131BC62B208B7E2700380B08 /* ASDKNetworkDelayedOperationSaveFormServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 131BC62A208B7E2700380B08 /* ASDKNetworkDelayedOperationSaveFormServiceProtocol.h */; };
 		131DCF431DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */; };
 		131DCF471DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF461DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.m */; };
 		131DCF4E1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 131DCF4D1DAFB18E00E08798 /* AFAModalTaskDetailsUpdateTaskAction.m */; };
@@ -162,7 +161,7 @@
 		133F05461BD52A9000C22CFD /* ASDKFormNetworkServices.h in Headers */ = {isa = PBXBuildFile; fileRef = 133F05441BD52A9000C22CFD /* ASDKFormNetworkServices.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		133F05471BD52A9000C22CFD /* ASDKFormNetworkServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 133F05451BD52A9000C22CFD /* ASDKFormNetworkServices.m */; };
 		133F054A1BD52B5000C22CFD /* ASDKFormNetworkServiceProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 133F05491BD52B5000C22CFD /* ASDKFormNetworkServiceProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		13442A19208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.h in Headers */ = {isa = PBXBuildFile; fileRef = 13442A17208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.h */; };
+		13442A19208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.h in Headers */ = {isa = PBXBuildFile; fileRef = 13442A17208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13442A1A208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.m in Sources */ = {isa = PBXBuildFile; fileRef = 13442A18208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.m */; };
 		13442A1F2088F1860055790E /* ASDKDataAccessorResponseFormFieldValueRepresentations.h in Headers */ = {isa = PBXBuildFile; fileRef = 13442A1D2088F1860055790E /* ASDKDataAccessorResponseFormFieldValueRepresentations.h */; };
 		13442A202088F1860055790E /* ASDKDataAccessorResponseFormFieldValueRepresentations.m in Sources */ = {isa = PBXBuildFile; fileRef = 13442A1E2088F1860055790E /* ASDKDataAccessorResponseFormFieldValueRepresentations.m */; };
@@ -949,7 +948,6 @@
 		1318FEDA1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASDKProcessTaskFilterMapCacheMapper.h; sourceTree = "<group>"; };
 		1318FEDB1FBB22D40097CFEB /* ASDKProcessTaskFilterMapCacheMapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ASDKProcessTaskFilterMapCacheMapper.m; sourceTree = "<group>"; };
 		131AC4DF1DFEAB90000BF30C /* ASDKTaskNetworkServicesTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASDKTaskNetworkServicesTest.m; sourceTree = "<group>"; };
-		131BC62A208B7E2700380B08 /* ASDKNetworkDelayedOperationSaveFormServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ASDKNetworkDelayedOperationSaveFormServiceProtocol.h; path = ../../CacheServices/NetworkDelayedOperations/SaveFormService/Protocol/ASDKNetworkDelayedOperationSaveFormServiceProtocol.h; sourceTree = "<group>"; };
 		131DCF411DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsCreateChecklistAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.h; sourceTree = "<group>"; };
 		131DCF421DAFB02C00E08798 /* AFAModalTaskDetailsCreateChecklistAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFAModalTaskDetailsCreateChecklistAction.m; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateChecklistAction/AFAModalTaskDetailsCreateChecklistAction.m; sourceTree = "<group>"; };
 		131DCF451DAFB08400E08798 /* AFAModalTaskDetailsCreateTaskAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFAModalTaskDetailsCreateTaskAction.h; path = UI/ViewControllers/ModalTaskDetailsViewController/ModalTaskDetailsCreateTaskAction/AFAModalTaskDetailsCreateTaskAction.h; sourceTree = "<group>"; };
@@ -2207,15 +2205,6 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		131BC62C208B7E4100380B08 /* Protocol */ = {
-			isa = PBXGroup;
-			children = (
-				131BC62A208B7E2700380B08 /* ASDKNetworkDelayedOperationSaveFormServiceProtocol.h */,
-			);
-			name = Protocol;
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		131DCF441DAFB03100E08798 /* ModalTaskDetailsCreateChecklistAction */ = {
 			isa = PBXGroup;
 			children = (
@@ -2908,7 +2897,6 @@
 		13442A27208B5AB50055790E /* SaveFormService */ = {
 			isa = PBXGroup;
 			children = (
-				131BC62C208B7E4100380B08 /* Protocol */,
 				13442A17208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.h */,
 				13442A18208872340055790E /* ASDKNetworkDelayedOperationSaveFormService.m */,
 			);
@@ -6760,7 +6748,6 @@
 				1365F5471FA9B52400DFB2B3 /* ASDKMOTaskFilterMapPlaceholder.h in Headers */,
 				137B94601BD796B700134BF1 /* ASDKFormCollectionViewController.h in Headers */,
 				8D9D98861C9C37AE002C0F81 /* UIView+ASDKViewAnimations.h in Headers */,
-				131BC62B208B7E2700380B08 /* ASDKNetworkDelayedOperationSaveFormServiceProtocol.h in Headers */,
 				8DEA25481C7E0D9E00BF376F /* ASDKFormDateFieldCollectionViewCell.h in Headers */,
 				133A6BCC1D463C4E0065F252 /* NSArray+ASDKFormRenderDataSourceArrayAddition.h in Headers */,
 				13A82E401BF348E4005537A9 /* ASDKModelFormFieldOption.h in Headers */,

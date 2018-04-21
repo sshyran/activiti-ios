@@ -176,6 +176,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                                   completionOperation]
                               waitUntilFinished:NO];
         }
+            break;
             
         default: break;
     }
@@ -244,6 +245,8 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                                                 
                                                                 [operation complete];
                                                             }];
+        } else {
+            [operation complete];
         }
     }];
     

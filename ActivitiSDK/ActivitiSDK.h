@@ -149,6 +149,9 @@
 #import <ActivitiSDK/ASDKIntegrationDataAccessor.h>
 #import <ActivitiSDK/ASDKUserDataAccessor.h>
 
+// Network delayed operation services
+#import <ActivitiSDK/ASDKNetworkDelayedOperationSaveFormService.h>
+
 // Persistence
 #import <ActivitiSDK/ASDKPersistenceStack.h>
 

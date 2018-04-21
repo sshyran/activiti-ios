@@ -17,8 +17,12 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "ASDKNetworkDelayedOperationSaveFormServiceProtocol.h"
 
-@interface ASDKNetworkDelayedOperationSaveFormService : NSObject <ASDKNetworkDelayedOperationSaveFormServiceProtocol>
+@interface ASDKNetworkDelayedOperationSaveFormService : NSObject
+
+/**
+ * Method triggering all the connectivity restoration checks for a given service
+ */
+- (void)runNetworkConnectivityRestorationChecks;
 
 @end

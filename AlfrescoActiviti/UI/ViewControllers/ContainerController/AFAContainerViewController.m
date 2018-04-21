@@ -90,6 +90,11 @@
         [serviceRepository registerServiceObject:thumbnailManager
                                       forPurpose:AFAServiceObjectTypeThumbnailManager];
         
+        // Register network delayed services
+        ASDKNetworkDelayedOperationSaveFormService *saveFormService = [ASDKNetworkDelayedOperationSaveFormService new];
+        [serviceRepository registerServiceObject:saveFormService
+                                      forPurpose:AFAServiceObjectTypeNetworkDelayedSaveFormService];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleUnAuthorizedRequestNotification)
                                                      name:kADSKAPIUnauthorizedRequestNotification
