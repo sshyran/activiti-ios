@@ -95,17 +95,8 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
      * Create dispatch groups for all the augmenting calls needed to complete the
      * form description in accordance to the caching policy
      */
-    [self handleDependencyGroupCreation];
-    
-    for (ASDKModelFormField *formField in formFields) {
-        if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
-            for (ASDKModelFormField *formFieldInContainer in formField.formFields) {
-                [self preProcessFormField:formFieldInContainer];
-            }
-        } else {
-            [self preProcessFormField:formField];
-        }
-    }
+    [self handleDependencyGroupCreationForFormFields:formFields];
+    [self preprocessFormFields:formFields];
     
     ASDKModelTaskFormPreProcessorResponse *taskFormPreProcessorResponse = [ASDKModelTaskFormPreProcessorResponse new];
     taskFormPreProcessorResponse.taskID = self.taskID;
@@ -129,17 +120,8 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
      * Create dispatch groups for all the augmenting calls needed to complete the
      * form description in accordance to the caching policy
      */
-    [self handleDependencyGroupCreation];
-    
-    for (ASDKModelFormField *formField in formFields) {
-        if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
-            for (ASDKModelFormField *formFieldInContainer in formField.formFields) {
-                [self preProcessFormField:formFieldInContainer];
-            }
-        } else{
-            [self preProcessFormField:formField];
-        }
-    }
+    [self handleDependencyGroupCreationForFormFields:formFields];
+    [self preprocessFormFields:formFields];
     
     ASDKModelStartFormPreProcessorResponse *startFormPreProcessorResponse = [ASDKModelStartFormPreProcessorResponse new];
     startFormPreProcessorResponse.processDefinitionID = self.processDefinitionID;
@@ -173,6 +155,18 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
 
 #pragma mark -
 #pragma mark Private interface
+
+- (void)preprocessFormFields:(NSArray *)formFields {
+    for (ASDKModelFormField *formField in formFields) {
+        if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+            for (ASDKModelFormField *formFieldInContainer in formField.formFields) {
+                [self preProcessFormField:formFieldInContainer];
+            }
+        } else {
+            [self preProcessFormField:formField];
+        }
+    }
+}
 
 - (void)preProcessFormField:(ASDKModelFormField *)formField {
     NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
@@ -211,10 +205,46 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
     }
 }
 
-- (void)handleDependencyGroupCreation {
+- (void)handleDependencyGroupCreationForFormFields:(NSArray *)formFields {
     self.firstTrackDependenciesGroup = dispatch_group_create();
     if (ASDKServiceDataAccessorCachingPolicyHybrid == self.cachingPolicy) {
         self.secondTrackDependenciesGroup = dispatch_group_create();
+    }
+    
+    for (ASDKModelFormField *formField in formFields) {
+        if (ASDKModelFormFieldTypeContainer == formField.fieldType) {
+            for (ASDKModelFormField *formFieldInContainer in formField.formFields) {
+                [self markGroupDependencyForFormField:formFieldInContainer];
+            }
+        } else {
+            [self markGroupDependencyForFormField:formField];
+        }
+    }
+}
+
+- (void)markGroupDependencyForFormField:(ASDKModelFormField *)formField {
+    NSInteger representationType = ASDKModelFormFieldRepresentationTypeUndefined;
+    
+    // If dealing with read-only forms extract the representation type from the attached
+    // form field params model
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == formField.representationType) {
+        representationType = formField.formFieldParams.representationType;
+    } else {
+        representationType = formField.representationType;
+    }
+    
+    if (ASDKModelFormFieldRepresentationTypeDropdown == representationType ||
+        ASDKModelFormFieldRepresentationTypeRadio == representationType) {
+        ASDKModelRestFormField *restFormField = (ASDKModelRestFormField *)formField;
+        
+        if ([restFormField respondsToSelector:@selector(restURL)] &&
+            restFormField.restURL) {
+            // Marking entry to processing groups based on the set cache policy
+            if (ASDKServiceDataAccessorCachingPolicyHybrid == self.cachingPolicy) {
+                dispatch_group_enter(self.secondTrackDependenciesGroup);
+            }
+            dispatch_group_enter(self.firstTrackDependenciesGroup);
+        }
     }
 }
 
@@ -253,11 +283,6 @@ withDynamicTableFieldID:(NSString *)dynamicTableFieldID {
     
     if ([restFormField respondsToSelector:@selector(restURL)] &&
         restFormField.restURL) {
-        // Marking entry to processing groups based on the set cache policy
-        if (ASDKServiceDataAccessorCachingPolicyHybrid == self.cachingPolicy) {
-            dispatch_group_enter(self.secondTrackDependenciesGroup);
-        }
-        dispatch_group_enter(self.firstTrackDependenciesGroup);
         
         if (self.isStartForm) {
             if (self.dynamicTableFieldID) {

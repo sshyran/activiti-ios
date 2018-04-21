@@ -21,7 +21,8 @@
 @class ASDKFormFieldValueRequestRepresentation,
 ASDKModelProcessDefinition,
 ASDKModelFileContent,
-ASDKModelContent;
+ASDKModelContent,
+ASDKModelFormDescription;
 
 @interface ASDKFormDataAccessor : ASDKDataAccessor
 
@@ -54,6 +55,38 @@ withFormFieldValuesRequestRepresentation:(ASDKFormFieldValueRequestRepresentatio
  */
 - (void)saveFormForTaskID:(NSString *)taskID
 withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation;
+
+/**
+ * Removes form field value representation that have been already persisted on the server
+ *
+ * @param taskIDs An array of task ID values to be removed
+ */
+- (void)removeStalledFormFieldValueRepresentationsForTaskIDs:(NSArray *)taskIDs;
+
+/**
+ * Requests the cached form field value request representation for a specified task and reports the result via the designated
+ * data accessor delegate. This representation could then be used to complete or save a task form.
+ *
+ * @param taskID ID of the task for which the values are requested
+ */
+- (void)fetchFormFieldValueRequestRepresentationForTaskID:(NSString *)taskID;
+
+
+/**
+ * Requests all the existing cached form field value representations and reports the result via the designated
+ * data accessor delegate. This is useful to get a reference to all saved forms that need to be submited to the server.
+ */
+- (void)fetchAllFormFieldValueRequestRepresentations;
+
+/**
+ * Save the state of the form associated with a specified task given the current form description
+ * and reports through the designated data accessor delegate.
+ *
+ * @param taskID            Task ID for which the form description should be saved
+ * @param formDescription   Form description model containing user data to be saved
+ */
+- (void)saveFormForTaskID:(NSString *)taskID
+      withFormDescription:(ASDKModelFormDescription *)formDescription;
 
 /**
  * Uploads content data given a content model and reports through the designated data accessor delegate.

@@ -95,6 +95,7 @@ extern NSString *kLocalizationTaskDetailsScreenCompletedDateText;
 extern NSString *kLocalizationTaskDetailsScreenDurationText;
 extern NSString *kLocalizationTaskDetailsScreenClaimButtonText;
 extern NSString *kLocalizationTaskDetailsScreenTaskFormSavedText;
+extern NSString *kLocalizationTaskDetailsScreenTaskFormSavedOfflineText;
 extern NSString *kLocalizationTaskDetailsScreenChecklistNameText;
 extern NSString *kLocalizationTaskDetailsScreenChecklistTitleText;
 extern NSString *kLocalizationTaskDetailsScreenShowFormText;

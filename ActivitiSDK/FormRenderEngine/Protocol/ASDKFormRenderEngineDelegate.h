@@ -62,4 +62,9 @@ ASDKModelProcessInstance;
  */
 - (void)didSaveFormWithError:(NSError *)error;
 
+/**
+ * Signals that the user triggered a form save action whilst being offline.
+ */
+- (void)didSaveFormInOfflineMode;
+
 @end

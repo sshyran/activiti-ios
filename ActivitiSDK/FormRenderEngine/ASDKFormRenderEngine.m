@@ -36,6 +36,7 @@
 #import "ASDKModelFormPreProcessorResponse.h"
 #import "ASDKModelTaskFormPreProcessorResponse.h"
 #import "ASDKModelStartFormPreProcessorResponse.h"
+#import "ASDKDataAccessorResponseFormModel.h"
 
 // Managers
 #import "ASDKFormRenderDataSource.h"
@@ -80,6 +81,7 @@
 @property (strong, nonatomic) ASDKFormDataAccessor                      *completeTaskFormDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                      *completeProcessDefinitionFormDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                      *saveFormDataAccessor;
+@property (strong, nonatomic) ASDKFormDataAccessor                      *saveIntermediateFormDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                      *fetchTaskFormDescriptionDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                      *fetchProcessInstanceFormDescriptionDataAccessor;
 @property (strong, nonatomic) ASDKFormDataAccessor                      *fetchProcessDefinitionFormDescriptionDataAccessor;
@@ -197,10 +199,21 @@
         [self.completeProcessDefinitionFormDataAccessor completeFormForProcessDefinition:self.processDefinition
                                                 withFormFieldValuesRequestRepresentation:formFieldValueRequestRepresentation];
     }
-    
 }
 
 - (void)saveFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation {
+    // Cache the form description locally
+    if (ASDKNetworkReachabilityStatusNotReachable == self.saveFormDataAccessor.networkReachabilityStatus ||
+        ASDKNetworkReachabilityStatusUnknown == self.saveFormDataAccessor.networkReachabilityStatus) {
+        self.saveIntermediateFormDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
+        [self.saveIntermediateFormDataAccessor saveFormForTaskID:self.task.modelID
+                                 withFormDescription:self.formDescription];
+    }
+    
+    /*
+     * Cache the form field values request representation locally and try to submit them
+     * once the connectivity is restored.
+     */
     self.saveFormDataAccessor = [[ASDKFormDataAccessor alloc] initWithDelegate:self];
     [self.saveFormDataAccessor saveFormForTaskID:self.task.modelID
          withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation];
@@ -228,6 +241,9 @@
 }
 
 - (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+    if (self.saveIntermediateFormDataAccessor == dataAccessor) {
+        [self handleSaveIntermediateFormDataAccessorFinishResponse];
+    }
 }
 
 
@@ -278,14 +294,27 @@
     }
 }
 
+- (void)handleSaveIntermediateFormDataAccessorFinishResponse {
+    if (self.delegate) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate didSaveFormInOfflineMode];
+        });
+    }
+}
+
 - (void)handleTaskFormDescriptionDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
     [self handleFormDescriptionDataAccessorResponse:response];
     
-    if (self.formDescription) {
-        self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
-        [self.formPreProcessor setupWithTaskID:self.task.modelID
-                                withFormFields:self.formDescription.formFields
-                       withDynamicTableFieldID:nil];
+    ASDKDataAccessorResponseFormModel *formResponseModel = (ASDKDataAccessorResponseFormModel *)response;
+    if (!formResponseModel.isSavedForm) {
+        if (self.formDescription && formResponseModel.model) {
+            self.formPreProcessor = [[ASDKFormPreProcessor alloc] initWithDelegate:self];
+            [self.formPreProcessor setupWithTaskID:self.task.modelID
+                                    withFormFields:self.formDescription.formFields
+                           withDynamicTableFieldID:nil];
+        }
+    } else {
+        [self handleTaskFormCreationFromCurrentFormDescription];
     }
 }
 
@@ -356,7 +385,10 @@
 
 - (void)handleTaskFormPreprocessorResponse:(ASDKModelFormPreProcessorResponse *)preProcessorResponse {
     self.formDescription.formFields = preProcessorResponse.processedFormFields;
-    
+    [self handleTaskFormCreationFromCurrentFormDescription];
+}
+
+- (void)handleTaskFormCreationFromCurrentFormDescription {
     if ([self.formDescription doesFormDescriptionContainSupportedFormFields]) {
         // Set up the data source for the form collection view controller
         ASDKFormRenderDataSource *dataSource = [[ASDKFormRenderDataSource alloc] initWithTaskFormDescription:self.formDescription];

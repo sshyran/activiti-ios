@@ -74,8 +74,8 @@
 }
 
 - (void)dealloc {
-    [ASDKKVOManager removeObserver:self
-                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
+    [self.kvoManager removeObserver:self
+                         forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
 }
 
 - (void)viewDidLoad {

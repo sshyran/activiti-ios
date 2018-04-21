@@ -42,14 +42,12 @@ typedef NS_ENUM(NSInteger, ASDKServiceDataAccessorCachingPolicy) {
 - (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
  didLoadDataResponse:(ASDKDataAccessorResponseBase *)response;
 
-
 /**
  * Signals that all data fetching operations from the cache or remote have finished
  *
  * @param dataAccessor Reference to the data accessor that is delivering the response
  */
 - (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor;
-
 
 @optional
 /**

@@ -25,15 +25,18 @@
 #import "ASDKMOFormFieldOptionMap.h"
 #import "ASDKMOFormFieldOption.h"
 #import "ASDKMOFormDescription.h"
+#import "ASDKMOFormFieldValueRepresentation.h"
 
 // Model upsert
 #import "ASDKFormFieldOptionCacheModelUpsert.h"
 #import "ASDKFormDescriptionCacheModelUpsert.h"
+#import "ASDKFormFieldValueRepresentationCacheModelUpsert.h"
 
 // Mappers
 #import "ASDKFormFieldOptionMapCacheMapper.h"
 #import "ASDKFormFieldOptionCacheMapper.h"
 #import "ASDKFormDescriptionCacheMapper.h"
+#import "ASDKFormFieldValueRepresentationCacheMapper.h"
 
 
 @implementation ASDKFormCacheService
@@ -207,16 +210,37 @@
 - (void)cacheTaskFormDescription:(ASDKModelFormDescription *)formDescription
                        forTaskID:(NSString *)taskID
              withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self cacheTaskFormDescription:formDescription
+                         forTaskID:taskID
+             isSaveFormDescription:NO
+               withCompletionBlock:completionBlock];
+}
+
+- (void)cacheTaskFormDescriptionWithIntermediateValues:(ASDKModelFormDescription *)formDescription
+                                             forTaskID:(NSString *)taskID
+                                   withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self cacheTaskFormDescription:formDescription
+                         forTaskID:taskID
+             isSaveFormDescription:YES
+               withCompletionBlock:completionBlock];
+}
+
+- (void)cacheTaskFormDescription:(ASDKModelFormDescription *)formDescription
+                       forTaskID:(NSString *)taskID
+           isSaveFormDescription:(BOOL)isSaveFormDescription
+             withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
     [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
         managedObjectContext.automaticallyMergesChangesFromParent = YES;
         managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
         
         NSError *error = nil;
         
+        ASDKMOFormDescription *moFormDescription =
         [ASDKFormDescriptionCacheModelUpsert upsertTaskFormDescriptionToCache:formDescription
                                                                     forTaskID:taskID
                                                                         error:&error
                                                                   inMOContext:managedObjectContext];
+        moFormDescription.isSavedFormDescription = isSaveFormDescription;
         
         if (!error) {
             [managedObjectContext save:&error];
@@ -226,12 +250,33 @@
             completionBlock(error);
         }
     }];
+
 }
 
 - (void)fetchTaskFormDescriptionForTaskID:(NSString *)taskID
-                      withCompletionBlock:(ASDKCacheServiceFormDescriptionCompletionBlock)completionBlock {
-    [self fetchFormDescriptionWithPredicate:[ASDKFormDescriptionCacheModelUpsert formDescriptionPredicateForTaskID:taskID]
-                        withCompletionBlock:completionBlock];
+                      withCompletionBlock:(ASDKCacheServiceTaskSavedFormDescriptionCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        
+        NSFetchRequest *fetchRequest = [ASDKMOFormDescription fetchRequest];
+        fetchRequest.predicate = [ASDKFormDescriptionCacheModelUpsert formDescriptionPredicateForTaskID:taskID];
+        NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchRequest
+                                                                    error:&error];
+        
+        if (completionBlock) {
+            ASDKMOFormDescription *moFormDescription = fetchResults.firstObject;
+            
+            if (error || !moFormDescription) {
+                completionBlock(nil, error, NO);
+            } else {
+                ASDKModelFormDescription *formDescription = [ASDKFormDescriptionCacheMapper mapCacheMOToFormDescription:moFormDescription];
+                completionBlock(formDescription, nil, moFormDescription.isSavedFormDescription);
+            }
+        }
+    }];
 }
 
 - (void)cacheProcessInstanceFormDescription:(ASDKModelFormDescription *)formDescription
@@ -315,6 +360,116 @@
             } else {
                 ASDKModelFormDescription *formDescription = [ASDKFormDescriptionCacheMapper mapCacheMOToFormDescription:moFormDescription];
                 completionBlock(formDescription, nil);
+            }
+        }
+    }];
+}
+
+- (void)cacheTaskFormFieldValuesRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation
+                                     forTaskID:(NSString *)taskID
+                           withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        
+        [ASDKFormFieldValueRepresentationCacheModelUpsert upsertFormFieldValueToCache:formFieldValueRequestRepresentation
+                                                                            forTaskID:taskID
+                                                                                error:&error
+                                                                          inMOContext:managedObjectContext];
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchTaskFormFieldValuesRepresentationForTaskID:(NSString *)taskID
+                                    withCompletionBlock:(ASDKCacheServiceTaskFormValueRepresentationCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        NSFetchRequest *fetchFormFieldValuesRepresentationRequest = [ASDKMOFormFieldValueRepresentation fetchRequest];
+        fetchFormFieldValuesRepresentationRequest.predicate = [NSPredicate predicateWithFormat:@"taskID == %@", taskID];
+        NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchFormFieldValuesRepresentationRequest
+                                                                    error:&error];
+        
+        if (completionBlock) {
+            ASDKMOFormFieldValueRepresentation *moFormFieldValueRepresentation = fetchResults.firstObject;
+            
+            if (error || !moFormFieldValueRepresentation) {
+                completionBlock(nil, error);
+            } else {
+                ASDKFormFieldValueRequestRepresentation *formFieldValueRequestRepresentation = [ASDKFormFieldValueRepresentationCacheMapper mapCacheMOToFormFieldValueRepresentation:moFormFieldValueRepresentation];
+                completionBlock(formFieldValueRequestRepresentation, nil);
+            }
+        }
+    }];
+}
+
+- (void)removeStalledFormFieldValuesRepresentationsForTaskIDs:(NSArray *)taskIDs
+                                          withCompletionBlock:(ASDKCacheServiceCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        
+        NSFetchRequest *oldFormFieldValuesRequest = [ASDKMOFormFieldValueRepresentation fetchRequest];
+        oldFormFieldValuesRequest.predicate = [NSPredicate predicateWithFormat:@"SELF.taskID IN %@", taskIDs];
+        oldFormFieldValuesRequest.resultType = NSManagedObjectIDResultType;
+
+        NSBatchDeleteRequest *removeOldFormFieldValuesRequest = [[NSBatchDeleteRequest alloc] initWithFetchRequest:oldFormFieldValuesRequest];
+        removeOldFormFieldValuesRequest.resultType = NSBatchDeleteResultTypeObjectIDs;
+        NSBatchDeleteResult *removeOldFormFieldValuesResult = [managedObjectContext executeRequest:removeOldFormFieldValuesRequest
+                                                                                             error:&error];
+        NSArray *moIDArr = removeOldFormFieldValuesResult.result;
+        [NSManagedObjectContext mergeChangesFromRemoteContextSave:@{NSDeletedObjectsKey : moIDArr}
+                                                     intoContexts:@[managedObjectContext]];
+        if (error) {
+            error = [self clearCacheStalledDataError];
+        }
+        
+        if (!error) {
+            [managedObjectContext save:&error];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+}
+
+- (void)fetchAllTaskFormFieldValueRepresentationsWithCompletionBlock:(ASDKCacheServiceTaskFormValueRepresentationListCompletionBlock)completionBlock {
+    [self.persistenceStack performBackgroundTask:^(NSManagedObjectContext *managedObjectContext) {
+        managedObjectContext.automaticallyMergesChangesFromParent = YES;
+        managedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy;
+        
+        NSError *error = nil;
+        NSFetchRequest *fetchFormFieldValuesRepresentationRequest = [ASDKMOFormFieldValueRepresentation fetchRequest];
+        NSArray *fetchResults = [managedObjectContext executeFetchRequest:fetchFormFieldValuesRepresentationRequest
+                                                                    error:&error];
+        
+        if (completionBlock) {
+            if (error || !fetchResults.count) {
+                completionBlock(nil, nil, error);
+            } else {
+                NSMutableArray *formFieldValueList = [NSMutableArray array];
+                NSMutableArray *taskIDsList = [NSMutableArray array];
+                for (ASDKMOFormFieldValueRepresentation *moFormFieldValueRepresentation in fetchResults) {
+                    ASDKFormFieldValueRequestRepresentation *formFieldValueRequestRepresentation = [ASDKFormFieldValueRepresentationCacheMapper mapCacheMOToFormFieldValueRepresentation:moFormFieldValueRepresentation];
+                    [formFieldValueList addObject:formFieldValueRequestRepresentation];
+                    [taskIDsList addObject:moFormFieldValueRepresentation.taskID];
+                }
+                
+                completionBlock(formFieldValueList, taskIDsList, nil);
             }
         }
     }];

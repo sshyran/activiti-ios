@@ -56,8 +56,8 @@
 @implementation ASDKFormCollectionViewController
 
 - (void)dealloc {
-    [ASDKKVOManager removeObserver:_reachabilityManager
-                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
+    [self.kvoManager removeObserver:_reachabilityManager
+                         forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
 }
 
 

@@ -36,6 +36,8 @@
 #import "ASDKDataAccessorResponseProgress.h"
 #import "ASDKDataAccessorResponseFileContent.h"
 #import "ASDKDataAccessorResponseCollection.h"
+#import "ASDKDataAccessorResponseFormModel.h"
+#import "ASDKDataAccessorResponseFormFieldValueRepresentations.h"
 
 
 static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLAG_TRACE;
@@ -141,28 +143,315 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
     NSParameterAssert(taskID);
     NSParameterAssert(formFieldValuesRepresentation);
     
+    // Define operations
+    ASDKAsyncBlockOperation *remoteSaveFormOperation = [self remoteSaveFormOperationForTaskID:taskID
+                                                      withFormFieldValueRequestRepresentation:formFieldValuesRepresentation];
+    ASDKAsyncBlockOperation *storeInCacheOperation = [self taskFormValuesStoreInCacheOperationForTaskID:taskID
+                                                                withFormFieldValueRequestRepresentation:formFieldValuesRepresentation];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly: {
+            [completionOperation addDependency:storeInCacheOperation];
+            [self.processingQueue addOperations:@[storeInCacheOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyAPIOnly: {
+            [completionOperation addDependency:remoteSaveFormOperation];
+            [self.processingQueue addOperations:@[remoteSaveFormOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [storeInCacheOperation addDependency:remoteSaveFormOperation];
+            [completionOperation addDependency:storeInCacheOperation];
+            [self.processingQueue addOperations:@[remoteSaveFormOperation,
+                                                  storeInCacheOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)remoteSaveFormOperationForTaskID:(NSString *)taskID
+                      withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRepresentation {
     if ([self.delegate respondsToSelector:@selector(dataAccessorDidStartFetchingRemoteData:)]) {
         [self.delegate dataAccessorDidStartFetchingRemoteData:self];
     }
     
     __weak typeof(self) weakSelf = self;
-    [self.formNetworkService saveFormForTaskID:taskID
-      withFormFieldValuesRequestRepresentation:formFieldValuesRepresentation
-                               completionBlock:^(BOOL isFormSaved, NSError *error) {
-                                   __strong typeof(self) strongSelf = weakSelf;
-                                   
-                                   ASDKDataAccessorResponseConfirmation *responseConfirmation =
-                                   [[ASDKDataAccessorResponseConfirmation alloc] initWithConfirmation:isFormSaved
-                                                                                         isCachedData:NO
-                                                                                                error:error];
-                                   
-                                   if (strongSelf.delegate) {
-                                       [strongSelf.delegate dataAccessor:strongSelf
-                                                     didLoadDataResponse:responseConfirmation];
-                                       
-                                       [strongSelf.delegate dataAccessorDidFinishedLoadingDataResponse:strongSelf];
-                                   }
-                               }];
+    ASDKAsyncBlockOperation *remoteSaveFormOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formNetworkService saveFormForTaskID:taskID
+                withFormFieldValuesRequestRepresentation:formFieldValueRepresentation
+                                         completionBlock:^(BOOL isFormSaved, NSError *error) {
+                                             if (operation.isCancelled) {
+                                                 [operation complete];
+                                                 return;
+                                             }
+                                             
+                                             ASDKDataAccessorResponseConfirmation *responseConfirmation =
+                                             [[ASDKDataAccessorResponseConfirmation alloc] initWithConfirmation:isFormSaved
+                                                                                                   isCachedData:NO
+                                                                                                          error:error];
+                                             
+                                             if (weakSelf.delegate) {
+                                                 [weakSelf.delegate dataAccessor:weakSelf
+                                                             didLoadDataResponse:responseConfirmation];
+                                             }
+                                             
+                                             operation.result = responseConfirmation;
+                                             [operation complete];
+                                         }];
+    }];
+    
+    return remoteSaveFormOperation;
+}
+
+- (ASDKAsyncBlockOperation *)taskFormValuesStoreInCacheOperationForTaskID:(NSString *)taskID
+                                  withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRepresentation {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        ASDKAsyncBlockOperation *dependencyOperation = (ASDKAsyncBlockOperation *)operation.dependencies.firstObject;
+        ASDKDataAccessorResponseConfirmation *remoteResponse = dependencyOperation.result;
+        
+        if (!remoteResponse || !remoteResponse.isConfirmation) {
+            [strongSelf.formCacheService cacheTaskFormFieldValuesRepresentation:formFieldValueRepresentation
+                                                                      forTaskID:taskID
+                                                            withCompletionBlock:^(NSError *error) {
+                                                                if (operation.isCancelled) {
+                                                                    [operation complete];
+                                                                    return;
+                                                                }
+                                                                
+                                                                if (!error) {
+                                                                    ASDKLogVerbose(@"Form field value representation cached successfully for task: %@", taskID);
+                                                                    [weakSelf.formCacheService saveChanges];
+                                                                } else {
+                                                                    ASDKLogError(@"Encountered an error while caching form field value representation for task: %@", taskID);
+                                                                }
+                                                                
+                                                                [operation complete];
+                                                            }];
+        }
+    }];
+    
+    return storeInCacheOperation;
+}
+
+- (void)fetchFormFieldValueRequestRepresentationForTaskID:(NSString *)taskID {
+    NSParameterAssert(taskID);
+    
+    // Define operations
+    ASDKAsyncBlockOperation *cachedFormFieldValueRepresentationOperation = [self cachedFormFieldValueRepresentationForTaskID:taskID];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    if (ASDKServiceDataAccessorCachingPolicyCacheOnly == self.cachePolicy ||
+        ASDKServiceDataAccessorCachingPolicyHybrid == self.cachePolicy) {
+        [completionOperation addDependency:cachedFormFieldValueRepresentationOperation];
+        [self.processingQueue addOperations:@[cachedFormFieldValueRepresentationOperation,
+                                              completionOperation]
+                          waitUntilFinished:NO];
+    }
+}
+
+- (ASDKAsyncBlockOperation *)cachedFormFieldValueRepresentationForTaskID:(NSString *)taskID {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedFormFieldValueRepresentationOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formCacheService
+         fetchTaskFormFieldValuesRepresentationForTaskID:taskID
+         withCompletionBlock:^(ASDKFormFieldValueRequestRepresentation *formFieldValueRequestRepresentation, NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Form field value representation successfully fetched from cache for task: %@", taskID);
+                 
+                 ASDKDataAccessorResponseModel *response =
+                 [[ASDKDataAccessorResponseModel alloc] initWithModel:formFieldValueRequestRepresentation
+                                                         isCachedData:YES
+                                                                error:error];
+                 if (weakSelf.delegate) {
+                     [weakSelf.delegate dataAccessor:weakSelf
+                                 didLoadDataResponse:response];
+                 }
+             } else {
+                 ASDKLogError(@"An error occured while fetching cached form field value representation for task : %@. Reason:%@", taskID, error.localizedDescription);
+             }
+             
+             [operation complete];
+         }];
+    }];
+    
+    return cachedFormFieldValueRepresentationOperation;
+}
+
+- (void)fetchAllFormFieldValueRequestRepresentations {
+    // Define operations
+    ASDKAsyncBlockOperation *cachedFormFieldValueRepresentationOperation = [self cachedFormFieldValueRepresentations];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    if (ASDKServiceDataAccessorCachingPolicyCacheOnly == self.cachePolicy ||
+        ASDKServiceDataAccessorCachingPolicyHybrid == self.cachePolicy) {
+        [completionOperation addDependency:cachedFormFieldValueRepresentationOperation];
+        [self.processingQueue addOperations:@[cachedFormFieldValueRepresentationOperation,
+                                              completionOperation]
+                          waitUntilFinished:NO];
+    }
+}
+
+- (ASDKAsyncBlockOperation *)cachedFormFieldValueRepresentations {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *cachedFormFieldValueRepresentationOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formCacheService fetchAllTaskFormFieldValueRepresentationsWithCompletionBlock:^(NSArray *formFieldValueRepresentationList, NSArray *taskIDsList, NSError *error) {
+            if (operation.isCancelled) {
+                [operation complete];
+                return;
+            }
+            
+            if (!error) {
+                ASDKLogVerbose(@"All form field value representations successfully fetched from cache.");
+                
+                ASDKDataAccessorResponseFormFieldValueRepresentations *response =
+                [[ASDKDataAccessorResponseFormFieldValueRepresentations alloc]
+                 initWithFormFieldValueRepresentations:formFieldValueRepresentationList
+                 taskIDs:taskIDsList
+                 isCachedData:YES
+                 error:error];
+                
+                if (weakSelf.delegate) {
+                    [weakSelf.delegate dataAccessor:weakSelf
+                                didLoadDataResponse:response];
+                }
+            } else {
+                ASDKLogError(@"An error occured while fetching all cached form field value representations. Reason:%@", error.localizedDescription);
+            }
+            
+            [operation complete];
+        }];
+    }];
+    
+    return cachedFormFieldValueRepresentationOperation;
+}
+
+- (void)saveFormForTaskID:(NSString *)taskID
+      withFormDescription:(ASDKModelFormDescription *)formDescription {
+    NSParameterAssert(taskID);
+    NSParameterAssert(formDescription);
+    
+    // Define operations
+    ASDKAsyncBlockOperation *storeInCacheFormDescriptionOperation =
+    [self taskFormIntermediateValuesStoreInCacheOperationForTaskID:taskID
+                                               withFormDescription:formDescription];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly:
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [completionOperation addDependency:storeInCacheFormDescriptionOperation];
+            [self.processingQueue addOperations:@[storeInCacheFormDescriptionOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)taskFormIntermediateValuesStoreInCacheOperationForTaskID:(NSString *)taskID
+                                                                  withFormDescription:(ASDKModelFormDescription *)formDescription {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *storeInCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+
+        [strongSelf.formCacheService
+         cacheTaskFormDescriptionWithIntermediateValues:formDescription
+         forTaskID:taskID
+         withCompletionBlock:^(NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Caching temporary form values for task: %@.", taskID);
+                 [strongSelf.formCacheService saveChanges];
+             } else {
+                 ASDKLogError(@"Encountered an error while caching temporary form values for task: %@", taskID);
+             }
+             
+             [operation complete];
+         }];
+    }];
+    
+    return storeInCacheOperation;
+}
+
+- (void)removeStalledFormFieldValueRepresentationsForTaskIDs:(NSArray *)taskIDs {
+    NSParameterAssert(taskIDs);
+    
+    // Define operations
+    ASDKAsyncBlockOperation *removeFormFieldValueRepresentationOperation = [self formFieldValueRepresentationRemoveFromCacheOperationForTaskIDs:taskIDs];
+    ASDKAsyncBlockOperation *completionOperation = [self defaultCompletionOperation];
+    
+    // Handle cache policies
+    switch (self.cachePolicy) {
+        case ASDKServiceDataAccessorCachingPolicyCacheOnly:
+        case ASDKServiceDataAccessorCachingPolicyHybrid: {
+            [completionOperation addDependency:removeFormFieldValueRepresentationOperation];
+            [self.processingQueue addOperations:@[removeFormFieldValueRepresentationOperation,
+                                                  completionOperation]
+                              waitUntilFinished:NO];
+        }
+            break;
+            
+        default: break;
+    }
+}
+
+- (ASDKAsyncBlockOperation *)formFieldValueRepresentationRemoveFromCacheOperationForTaskIDs:(NSArray *)taskIDs {
+    __weak typeof(self) weakSelf = self;
+    ASDKAsyncBlockOperation *removeFromCacheOperation = [ASDKAsyncBlockOperation blockOperationWithBlock:^(ASDKAsyncBlockOperation *operation) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        [strongSelf.formCacheService
+         removeStalledFormFieldValuesRepresentationsForTaskIDs:taskIDs
+         withCompletionBlock:^(NSError *error) {
+             if (operation.isCancelled) {
+                 [operation complete];
+                 return;
+             }
+             
+             if (!error) {
+                 ASDKLogVerbose(@"Successfully removed saved form field value representations from cache for tasks: %@", taskIDs);
+             } else {
+                 ASDKLogError(@"Encountered an error while removing from cache form field value representations for tasks :%@", taskIDs);
+             }
+             
+             [operation complete];
+         }];
+    }];
+    
+    return removeFromCacheOperation;
 }
 
 
@@ -958,10 +1247,11 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                                       return;
                                                   }
                                                   
-                                                  ASDKDataAccessorResponseModel *responseModel =
-                                                  [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
-                                                                                          isCachedData:NO
-                                                                                                 error:error];
+                                                  ASDKDataAccessorResponseFormModel *responseModel =
+                                                  [[ASDKDataAccessorResponseFormModel alloc] initWithModel:formDescription
+                                                                                              isCachedData:NO
+                                                                                               isSavedForm:NO
+                                                                                                     error:error];
                                                   
                                                   if (weakSelf.delegate) {
                                                       [weakSelf.delegate dataAccessor:weakSelf
@@ -982,7 +1272,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
         __strong typeof(self) strongSelf = weakSelf;
         
         [strongSelf.formCacheService fetchTaskFormDescriptionForTaskID:taskID
-                                                   withCompletionBlock:^(ASDKModelFormDescription *formDescription, NSError *error) {
+                                                   withCompletionBlock:^(ASDKModelFormDescription *formDescription, NSError *error, BOOL isSavedForm) {
                                                        if (operation.isCancelled) {
                                                            [operation complete];
                                                            return;
@@ -991,10 +1281,15 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                                        if (!error) {
                                                            ASDKLogVerbose(@"Form description fetched successfully from cache for taskID: %@", taskID);
                                                            
-                                                           ASDKDataAccessorResponseModel *response =
-                                                           [[ASDKDataAccessorResponseModel alloc] initWithModel:formDescription
-                                                                                                   isCachedData:YES
-                                                                                                          error:error];
+                                                           /* The additional parameter isSavedForm is also required along the isCacheData
+                                                            * param to differentiate between the cases where a form description is provided with
+                                                            * or without user info
+                                                            */
+                                                           ASDKDataAccessorResponseFormModel *response =
+                                                           [[ASDKDataAccessorResponseFormModel alloc] initWithModel:formDescription
+                                                                                                       isCachedData:YES
+                                                                                                        isSavedForm:isSavedForm
+                                                                                                              error:error];
                                                            if (weakSelf.delegate) {
                                                                [weakSelf.delegate dataAccessor:weakSelf
                                                                            didLoadDataResponse:response];

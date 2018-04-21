@@ -153,7 +153,8 @@
             NSLocalizedString(kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText, @"Unsupported form fields error");
             self.noContentView.hidden = NO;
         } else {
-            [self showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+#warning Rework needed
+//            [self showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
         }
     }
     
@@ -176,27 +177,52 @@
 }
 
 - (void)didSaveFormWithError:(NSError *)error {
+    [self saveFormWithError:error
+              isOfflineForm:NO];
+}
+
+- (void)didSaveFormInOfflineMode {
+    [self saveFormWithError:nil
+              isOfflineForm:YES];
+}
+
+- (void)saveFormWithError:(NSError *)error
+            isOfflineForm:(BOOL)isOfflineForm {
     [self showFormSaveIndicatorView];
     
     if (!error) {
         __weak typeof(self) weakSelf = self;
+        
+        CGFloat messageDismissDurationInSeconds;
+        NSString *saveMessage = nil;
+        
+        if (isOfflineForm) {
+            saveMessage = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormSavedOfflineText, @"Task form is saved offline text");
+            messageDismissDurationInSeconds = 4.0;
+        } else {
+            saveMessage = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormSavedText, "Task form is saved text");
+            messageDismissDurationInSeconds = 0.3;
+        }
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
-            strongSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormSavedText, "Task form is saved text");
+            strongSelf.progressHUD.textLabel.text = saveMessage;
             strongSelf.progressHUD.detailTextLabel.text = nil;
             strongSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
             strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
         });
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(messageDismissDurationInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
             [strongSelf.progressHUD dismiss];
         });
     } else {
-        [self.progressHUD dismiss];
-        [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        if (error.code != NSURLErrorNotConnectedToInternet) {
+            [self.progressHUD dismiss];
+            [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];  
+        }
     }
 }
 

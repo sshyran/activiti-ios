@@ -106,8 +106,8 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 }
 
 - (void)dealloc {
-    [ASDKKVOManager removeObserver:self
-                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
+    [self.kvoManager removeObserver:self
+                         forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
 }
 
 - (void)viewDidLoad {

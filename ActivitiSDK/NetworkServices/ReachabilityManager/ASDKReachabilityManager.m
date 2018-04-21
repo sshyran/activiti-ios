@@ -59,7 +59,7 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:_reachabilityObserver];
 }
 
 

@@ -93,7 +93,8 @@
 "taskDetailsScreenCompletedDateText"                     = "Completed date";
 "taskDetailsScreenDurationText"                          = "Duration";
 "taskDetailsScreenClaimButtonText"                       = "Claim";
-"taskDetailsScreenTaskFormClaimedText"                   = "Task form is saved";
+"taskDetailsScreenTaskFormSavedText"                     = "Task form is saved";
+"taskDetailsScreenTaskFormSavedOfflineText"              = "You are trying to save a form whilst offline. Task form values will be stored locally until the connectivity is restored and then pushed to the server automatically.";
 "taskDetailsScreenChecklistNameText"                     = "Checklist name";
 "taskDetailsScreenChecklistTitleText"                    = "Task checklist";
 "taskDetailsScreenShowFormText"                          = "Show form";

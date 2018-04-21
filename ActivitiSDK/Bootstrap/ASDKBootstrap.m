@@ -56,6 +56,7 @@
 #import "ASDKCSRFTokenStorage.h"
 #import "ASDKFilterParserOperationWorker.h"
 #import "ASDKPersistenceStack.h"
+#import "ASDKNetworkDelayedOperationSaveFormService.h"
 
 // Configurations imports
 #import "ASDKBasicAuthentificationProvider.h"
@@ -182,6 +183,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     
     // Set up persistence services
     [self setupPersistenceStack];
+    
+    // Set up network delayed operation services
+    [self setupNetworkDelayedOperationSaveFormService];
 }
 
 - (void)updateServerConfigurationCredentialsForUsername:(NSString *)username
@@ -450,6 +454,16 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         [_serviceLocator removeService:persistenceStack];
     }
     [_serviceLocator addService:persistenceStack];
+}
+
+- (void)setupNetworkDelayedOperationSaveFormService {
+    ASDKNetworkDelayedOperationSaveFormService *saveFormService = [ASDKNetworkDelayedOperationSaveFormService new];
+    ASDKLogVerbose(@"Network delayed service - Save form ...%@", saveFormService ? @"OK" : @"NOT_OK");
+    
+    if ([_serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKNetworkDelayedOperationSaveFormServiceProtocol)]) {
+        [_serviceLocator removeService:saveFormService];
+    }
+    [_serviceLocator addService:saveFormService];
 }
 
 @end
