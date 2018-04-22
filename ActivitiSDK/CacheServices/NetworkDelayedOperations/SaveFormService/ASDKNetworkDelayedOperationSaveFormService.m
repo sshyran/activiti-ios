@@ -196,8 +196,14 @@ didFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
         failedOperation.userInfo[@(ASDKNetworkReachabilityUserInfoParamTypeFormFieldValueRequestRepresentation)];
         ASDKFormDataAccessor *dataAccessor = (ASDKFormDataAccessor *)failedOperation.dataAccessor;
         
-        [self.processingQueue addOperation:failedOperation];
-        [dataAccessor saveFormForTaskID:taskID withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation];
+        ASDKDataAccessorOperation *retryOperation = [[ASDKDataAccessorOperation alloc] initWithDataAccessor:dataAccessor
+                                                                                                          delegate:self];
+        dataAccessor.delegate = retryOperation;
+        retryOperation.userInfo = failedOperation.userInfo;
+        
+        [self.processingQueue addOperation:retryOperation];
+        [dataAccessor saveFormForTaskID:taskID
+withFormFieldValueRequestRepresentation:formFieldValueRequestRepresentation];
     }
     
     [self.operationsToRetry removeAllObjects];

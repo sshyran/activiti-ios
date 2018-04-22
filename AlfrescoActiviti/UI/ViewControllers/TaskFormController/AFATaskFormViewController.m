@@ -147,14 +147,15 @@
                                                  metrics:nil
                                                    views:views]];
     } else {
+        self.noContentView.iconImageView.image = [UIImage imageNamed:@"form-warning-icon"];
+        self.noContentView.hidden = NO;
+        
         if (kASDKFormRenderEngineUnsupportedFormFieldsCode == error.code) {
-            self.noContentView.iconImageView.image = [UIImage imageNamed:@"form-warning-icon"];
             self.noContentView.descriptionLabel.text =
             NSLocalizedString(kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText, @"Unsupported form fields error");
-            self.noContentView.hidden = NO;
         } else {
-#warning Rework needed
-//            [self showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+            self.noContentView.descriptionLabel.text =
+            NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error");
         }
     }
     

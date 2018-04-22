@@ -173,7 +173,7 @@
 "alertDialogConfirmText"                                 = "Confirm";
 "alertDialogDeleteContentQuestionFormat"                 = "Are you sure you want to delete %@?";
 "alertDialogDeleteContributorQuestionFormat"             = "Are you sure you want %@ not to be involved anymore?";
-"alertDialogTaskFormCannotSetupErrorText"                = "We've encountered an issue while setting up the internals of the form screen. Please try again...";
+"alertDialogTaskFormCannotSetupErrorText"                = "We've encountered an issue while setting up the form screen.";
 "alertDialogTaskFormUnsupportedFormFieldsText"           = "The form contains one or more unsupported form fields. Please check the form definition.";
 
 // Time formatting strings

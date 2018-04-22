@@ -68,12 +68,18 @@
  */
 @property (strong, nonatomic) ASDKModelFormDescription                  *formDescription;
 
-
 /**
  * Property meant to hold a reference to a subset of elements from the form description mode
  * which describes the structure of a dynamic table.
  */
 @property (strong, nonatomic) NSArray                                   *dynamicTableRowFormFields;
+
+
+/**
+ * Property meant to indicate whether a cache or network call has failed fetching a form description
+ * and the engine is waiting for a successful operation.
+ */
+@property (assign, nonatomic) BOOL                                      pendingSuccessfullFormDescription;
 
 /**
  * Data accessors responsable with fetching network or cached data
@@ -344,15 +350,29 @@
     ASDKDataAccessorResponseModel *responseModel = (ASDKDataAccessorResponseModel *)response;
     
     // Check for form description errors first
-    if (responseModel.error || (!responseModel.model && !responseModel.isCachedData)) {
-        if (self.delegate) {
+    if (responseModel.error || !responseModel.model) {
+        if (self.pendingSuccessfullFormDescription) {
             __weak typeof(self) weakSelf = self;
             dispatch_async(dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;
                 
                 [strongSelf.delegate didRenderedFormController:nil
-                                                         error:responseModel.error];
+                                                         error:[strongSelf renderEngineSetupError]];
             });
+        } else {
+            self.pendingSuccessfullFormDescription = YES;
+        }
+        
+        if (responseModel.error && (NSURLErrorNotConnectedToInternet != responseModel.error.code)) {
+            if (self.delegate) {
+                __weak typeof(self) weakSelf = self;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    __strong typeof(self) strongSelf = weakSelf;
+                    
+                    [strongSelf.delegate didRenderedFormController:nil
+                                                             error:responseModel.error];
+                });
+            }
         }
         return;
     } else {

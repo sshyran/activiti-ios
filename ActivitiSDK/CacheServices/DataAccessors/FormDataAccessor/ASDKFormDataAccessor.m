@@ -1334,6 +1334,8 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
                                                   
                                                   [operation complete];
             }];
+        } else {
+            [operation complete];
         }
     }];
     
