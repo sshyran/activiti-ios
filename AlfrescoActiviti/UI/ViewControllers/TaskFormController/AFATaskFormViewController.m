@@ -74,8 +74,6 @@
 #pragma mark Public interface
 
 - (void)formForTask:(ASDKModelTask *)task {
-    NSParameterAssert(task);
-    
     if (![task.modelID isEqualToString:self.task.modelID]) {
         self.task = task;
         

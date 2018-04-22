@@ -305,6 +305,15 @@ AFAModalPeoplePickerViewControllerDelegate>
     [self refreshUIForConnectivity:self.dataSource.isConnectivityAvailable];
     
     [self refreshContentForCurrentSection];
+    
+    /* When having the form controller being displayed, the SDK will not provide
+     * whether the results are cached or from the network due to the high number of
+     * possible combinations of the internal components. For that case, manually
+     * display the cached results message
+     */
+    if (AFATaskDetailsSectionTypeForm == self.currentSelectedSection) {
+        [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+    }
 }
 
 - (void)refreshUIForConnectivity:(BOOL)isConnected {
@@ -502,6 +511,9 @@ AFAModalPeoplePickerViewControllerDelegate>
             break;
             
         case AFATaskDetailsSectionTypeForm: {
+            if (!self.isNetworkReachable) {
+                [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+            }
             self.navigationBarTitle = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormTitleText, @"Task form title");
             displayTaskFormContainerView = YES;
             AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
