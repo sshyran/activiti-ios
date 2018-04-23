@@ -18,6 +18,8 @@
 
 #import "AFASliderButtonView.h"
 
+static const CGFloat kAFASliderButtonPadding = 4.0f;
+
 @interface AFASliderButtonView ()
 
 @property (assign, nonatomic) CGPoint touchStartPoint;
@@ -26,7 +28,6 @@
 
 @implementation AFASliderButtonView
 
-CGFloat kAFASliderButtonPadding = 4.0f;
 
 #pragma mark -
 #pragma mark Drawing

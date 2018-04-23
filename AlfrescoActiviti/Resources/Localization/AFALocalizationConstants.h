@@ -57,6 +57,7 @@ extern NSString *kLocalizationListScreenTaskAppText;
 extern NSString *kLocalizationListScreenSearchFieldPlaceholderFormat;
 extern NSString *kLocalizationListScreenTasksText;
 extern NSString *kLocalizationListScreenProcessInstancesText;
+extern NSString *kLocalizationListScreenMissingFiltersFormat;
 
 // Process instance screen
 extern NSString *kLocalizationProcessInstanceScreenStartedOnFormat;
@@ -94,6 +95,7 @@ extern NSString *kLocalizationTaskDetailsScreenCompletedDateText;
 extern NSString *kLocalizationTaskDetailsScreenDurationText;
 extern NSString *kLocalizationTaskDetailsScreenClaimButtonText;
 extern NSString *kLocalizationTaskDetailsScreenTaskFormSavedText;
+extern NSString *kLocalizationTaskDetailsScreenTaskFormSavedOfflineText;
 extern NSString *kLocalizationTaskDetailsScreenChecklistNameText;
 extern NSString *kLocalizationTaskDetailsScreenChecklistTitleText;
 extern NSString *kLocalizationTaskDetailsScreenShowFormText;
@@ -151,6 +153,12 @@ extern NSString *kLocalizationSignOutText;
 extern NSString *kLocalizationSettingsText;
 extern NSString *kLocalizationPaswordText;
 
+// Offline use
+extern NSString *kLocalizationOfflineProvidingCachedResultsText;
+extern NSString *kLocalizationOfflineConnectivityRetryText;
+extern NSString *kLocalizationOfflineConnectivityConnectedRefreshingText;
+extern NSString *kLocalizationOfflineFunctionalityNotAvailableText;
+
 // Alert dialogs use
 extern NSString *kLocalizationAlertDialogOopsTitleText;
 extern NSString *kLocalizationAlertDialogGenericNetworkErrorText;
@@ -167,6 +175,7 @@ extern NSString *kLocalizationAlertDialogDeleteContributorQuestionFormat;
 extern NSString *kLocalizationAlertDialogTaskContentUploadErrorText;
 extern NSString *kLocalizationAlertDialogTaskContentDownloadErrorText;
 extern NSString *kLocalizationAlertDialogTaskFormCannotSetUpErrorText;
+extern NSString *kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText;
 
 // Time formatting strings
 extern NSString *kLocalizationTimeInFutureTextFormat;
@@ -236,11 +245,6 @@ extern NSString *kLocalizationProfileScreenConfirmCredentialsText;
 // Settings screen
 extern NSString *kLocalizationSettingsScreenBugReportingText;
 
-// Default filter names
-extern NSString *kLocalizationDefaultFilterInvolvedTasksText;
-extern NSString *kLocalizationDefaultFilterMyTasksText;
-extern NSString *kLocalizationDefaultFilterQueuedTasksText;
-extern NSString *kLocalizationDefaultFilterCompletedTasksText;
-extern NSString *kLocalizationDefaultFilterRunningProcessText;
-extern NSString *kLocalizationDefaultFilterCompletedProcessesText;
-extern NSString *kLocalizationDefaultFilterAllProcessesText;
+// Bug reporting
+extern NSString *kLocalizationBugReportingSheetDescriptionText;
+

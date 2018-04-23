@@ -19,10 +19,6 @@
 #import <Foundation/Foundation.h>
 
 
-// API Endpoints
-
-extern NSString *kActivitiCloudHostName;
-
 // Login related
 extern NSUInteger kDefaultLoginUnsecuredPort;
 extern NSUInteger kDefaultLoginSecuredPort;
@@ -43,8 +39,8 @@ extern NSUInteger kTaskPreloadCellThreshold;
 // Credential related
 extern NSString *kCloudAuthetificationCredentialIdentifier;
 extern NSString *kPremiseAuthentificationCredentialIdentifier;
-extern NSString *kUsernameCredentialIdentifier;
-extern NSString *kPasswordCredentialIdentifier;
+extern NSString *kCloudUsernameCredentialIdentifier;
+extern NSString *kPremiseUsernameCredentialIdentifier;
 extern NSString *kCloudHostNameCredentialIdentifier;
 extern NSString *kPremiseHostNameCredentialIdentifier;
 extern NSString *kCloudSecureLayerCredentialIdentifier;
@@ -66,3 +62,7 @@ extern NSString *kRequestParameterOperationSucceededFlag;
 extern NSString *kCellFactoryCellParameterCellIdx;
 extern NSString *kCellFactoryCellParameterCellIndexpath;
 extern NSString *kCellFactoryCellParameterActionType;
+
+// Error domains
+extern NSString * const AFALoginViewModelErrorDomain;
+extern NSInteger const kAFALoginViewModelInvalidCredentialErrorCode;

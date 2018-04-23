@@ -65,4 +65,35 @@
     return [MTLJSONAdapter arrayTransformerWithModelClass:ASDKModelFormVariable.class];
 }
 
+
+#pragma mark -
+#pragma mark Public interface
+
+- (BOOL)doesFormDescriptionContainSupportedFormFields {
+    NSArray *containerList = self.formFields;
+    for (ASDKModelFormField *formField in containerList) {
+        if (ASDKModelFormFieldRepresentationTypeUndefined == formField.representationType) {
+            return NO;
+        }
+        
+        NSArray *formFields = formField.formFields;
+        for (ASDKModelFormField *childFormField in formFields) {
+            if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.representationType) {
+                return NO;
+            }
+            
+            if ([childFormField.formFieldParams respondsToSelector:@selector(representationType)]) {
+                // Exclude unrecognized representation types but ignore the representation type when the form field
+                // qualifies as a readonly field
+                if (ASDKModelFormFieldRepresentationTypeUndefined == childFormField.formFieldParams.representationType &&
+                    ASDKModelFormFieldRepresentationTypeReadOnly != childFormField.representationType) {
+                    return NO;
+                }
+            }
+        }
+    }
+    
+    return YES;
+}
+
 @end

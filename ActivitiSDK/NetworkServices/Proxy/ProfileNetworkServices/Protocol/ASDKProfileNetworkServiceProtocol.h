@@ -104,6 +104,6 @@ typedef void  (^ASDKProfileImageContentUploadCompletionBlock)(ASDKModelContent *
 /**
  *  Cancells all queued or running network operations
  */
-- (void)cancelAllProfileNetworkOperations;
+- (void)cancelAllNetworkOperations;
 
 @end

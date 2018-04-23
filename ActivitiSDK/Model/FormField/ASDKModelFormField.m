@@ -29,6 +29,7 @@
 #import "ASDKModelPeopleFormField.h"
 #import "ASDKModelDynamicTableFormField.h"
 #import "ASDKModelFormVisibilityCondition.h"
+#import "ASDKModelDateFormField.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -52,9 +53,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         return ASDKModelHyperlinkFormField.class;
     } else if ([formFieldTypeString isEqualToString:@"RestFieldRepresentation"]) {
         return ASDKModelRestFormField.class;
-    } else if ([formFieldTypeString isEqualToString:@"FormFieldRepresentation"] &&
-               [JSONDictionary[@"type"] isEqualToString:@"people"]) {
-        return ASDKModelPeopleFormField.class;
+    } else if ([formFieldTypeString isEqualToString:@"FormFieldRepresentation"]) {
+        if ([JSONDictionary[@"type"] isEqualToString:@"people"]) {
+            return ASDKModelPeopleFormField.class;
+        } else if ([JSONDictionary[@"type"] isEqualToString:@"datetime"] ||
+                   [JSONDictionary[@"type"] isEqualToString:@"date"]) {
+            return ASDKModelDateFormField.class;
+        }
     } else if ([formFieldTypeString isEqualToString:@"DynamicTableRepresentation"]) {
         return ASDKModelDynamicTableFormField.class;
     }
@@ -66,6 +71,9 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     if (isReadOnlyType) {
         if ([fieldTypeParameterString isEqualToString:@"people"]) {
             return ASDKModelPeopleFormField.class;
+        } else if ([fieldTypeParameterString isEqualToString:@"date"] ||
+                   [fieldTypeParameterString isEqualToString:@"datetime"]) {
+            return ASDKModelDateFormField.class;
         }
     }
     
@@ -144,7 +152,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
               @"upload"         : @(ASDKModelFormFieldRepresentationTypeAttach),
               @"hyperlink"      : @(ASDKModelFormFieldRepresentationTypeHyperlink),
               @"people"         : @(ASDKModelFormFieldRepresentationTypePeople),
-              @"dynamic-table"  : @(ASDKModelFormFieldRepresentationTypeDynamicTable)}];
+              @"dynamic-table"  : @(ASDKModelFormFieldRepresentationTypeDynamicTable),
+              @"datetime"       : @(ASDKModelFormFieldRepresentationTypeDateTime)}];
 }
 
 + (NSValueTransformer *)formFieldsJSONTransformer {

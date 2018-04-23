@@ -38,6 +38,6 @@ typedef void  (^ASDKQuerryTaskListCompletionBlock) (NSArray *taskList, NSError *
 /**
  *  Cancells all queued or running network operations
  */
-- (void)cancelAllTaskNetworkOperations;
+- (void)cancelAllNetworkOperations;
 
 @end

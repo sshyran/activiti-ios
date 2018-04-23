@@ -25,13 +25,13 @@ extern NSTimeInterval kDefaultAnimationTime;
 extern NSTimeInterval kLoginScreenBackgroundImageFadeInTime;
 extern NSTimeInterval kLoginScreenServerButtonsFadeInTime;
 extern NSTimeInterval kModalReplaceAnimationTime;
+extern NSTimeInterval kPushPopAnimationTime;
 extern NSTimeInterval kOverlayAlphaChangeTime;
 
 // Storyboard components IDs
 
 extern NSString *kStoryboardIDLoginCredentialsViewController;
 extern NSString *kStoryboardIDEmbeddedCredentialsPageController;
-extern NSString *kStoryboardIDConnectivityViewController;
 extern NSString *kStoryboardIDContentPickerViewController;
 extern NSString *kStoryboardIDModalTaskDetailsViewController;
 extern NSString *kStoryboardIDModalPeoplePickerViewController;

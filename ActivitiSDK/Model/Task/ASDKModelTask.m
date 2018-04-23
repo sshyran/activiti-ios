@@ -30,24 +30,26 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *inheretedPropertyKeys = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
-    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property               JSON property
-                                                      @"name"                       : @"name",
-                                                      @"taskDescription"            : @"description",
-                                                      @"assigneeModel"              : @"assignee",
-                                                      @"dueDate"                    : @"dueDate",
-                                                      @"endDate"                    : @"endDate",
-                                                      @"duration"                   : @"duration",
-                                                      @"priority"                   : @"priority",
-                                                      @"processInstanceID"          : @"processInstanceId",
-                                                      @"processDefinitionID"        : @"processDefinitionId",
-                                                      @"processDefinitionName"      : @"processDefinitionName",
-                                                      @"involvedPeople"             : @"involvedPeople",
-                                                      @"formKey"                    : @"formKey",
-                                                      @"isMemberOfCandidateGroup"   : @"memberOfCandidateGroup",
-                                                      @"isMemberOfCandidateUsers"   : @"memberOfCandidateUsers",
-                                                      @"isManagerOfCandidateGroup"  : @"managerOfCandidateGroup",
-                                                      @"parentTaskID"               : @"parentTaskId",
-                                                      @"creationDate"               : @"created"}];
+    [inheretedPropertyKeys addEntriesFromDictionary:@{//Objc property                   JSON property
+                                                      @"name"                           : @"name",
+                                                      @"taskDescription"                : @"description",
+                                                      @"assigneeModel"                  : @"assignee",
+                                                      @"dueDate"                        : @"dueDate",
+                                                      @"endDate"                        : @"endDate",
+                                                      @"duration"                       : @"duration",
+                                                      @"priority"                       : @"priority",
+                                                      @"processInstanceID"              : @"processInstanceId",
+                                                      @"processDefinitionID"            : @"processDefinitionId",
+                                                      @"processDefinitionName"          : @"processDefinitionName",
+                                                      @"involvedPeople"                 : @"involvedPeople",
+                                                      @"formKey"                        : @"formKey",
+                                                      @"isMemberOfCandidateGroup"       : @"memberOfCandidateGroup",
+                                                      @"isMemberOfCandidateUsers"       : @"memberOfCandidateUsers",
+                                                      @"isManagerOfCandidateGroup"      : @"managerOfCandidateGroup",
+                                                      @"parentTaskID"                   : @"parentTaskId",
+                                                      @"creationDate"                   : @"created",
+                                                      @"category"                       : @"category",
+                                                      @"processDefinitionDeploymentID"  : @"processDefinitionDeploymentId"}];
     
     return inheretedPropertyKeys;
 }
@@ -86,6 +88,10 @@
 
 + (NSValueTransformer *)creationDateJSONTransformer {
     return self.valueTransformerForDate;
+}
+
++ (NSValueTransformer *)category {
+    return self.valueTransformerForIDs;
 }
 
 

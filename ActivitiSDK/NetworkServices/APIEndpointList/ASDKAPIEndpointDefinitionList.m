@@ -31,6 +31,12 @@ NSString * const kASDKAPIEnterprisePath             = @"enterprise";
 
 
 #pragma mark -
+#pragma mark Cloud hostname
+
+NSString * const kASDKAPICloudHostnamePath          = @"activiti.alfresco.com";
+
+
+#pragma mark -
 #pragma mark Server information
 
 NSString * const kASDKAPIServerVersionPath          = @"app-version";

@@ -29,6 +29,7 @@
 @interface ASDKFilterRequestRepresentation : ASDKPagingRequestRepresentation <MTLJSONSerializing>
 
 @property (strong, nonatomic) NSString          *appDefinitionID;
+@property (strong, nonatomic) NSString          *appDeploymentID;
 @property (strong, nonatomic) NSString          *filterID;
 @property (strong, nonatomic) ASDKModelFilter   *filterModel;
 

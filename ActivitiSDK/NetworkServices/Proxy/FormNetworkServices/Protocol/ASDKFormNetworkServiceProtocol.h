@@ -88,7 +88,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
  *                                       completed and an optional error reason
  */
 - (void)completeFormForProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
+withFormFieldValuesRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
                          completionBlock:(ASDKStarFormCompletionBlock)completionBlock;
 
 /**
@@ -102,7 +102,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
  *                                       saved and an optional error reason
  */
 - (void)saveFormForTaskID:(NSString *)taskID
-withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
+withFormFieldValuesRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
           completionBlock:(ASDKFormSaveBlock)completionBlock;
 
 /**
@@ -206,6 +206,6 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
 /**
  *  Cancells all queued or running network operations
  */
-- (void)cancelAllTaskNetworkOperations;
+- (void)cancelAllNetworkOperations;
 
 @end

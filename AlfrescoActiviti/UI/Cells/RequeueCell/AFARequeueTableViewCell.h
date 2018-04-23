@@ -26,5 +26,6 @@
 @property (weak, nonatomic) IBOutlet UIButton               *requeueTaskButton;
 
 - (void)setUpWithThemeColor:(UIColor *)themeColor;
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable;
 
 @end

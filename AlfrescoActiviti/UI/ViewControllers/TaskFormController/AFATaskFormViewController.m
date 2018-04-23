@@ -27,24 +27,30 @@
 
 // Managers
 #import "AFAServiceRepository.h"
-#import "AFAFormServices.h"
 @import ActivitiSDK;
 
 // Views
 #import <JGProgressHUD/JGProgressHUD.h>
+#import "AFANoContentView.h"
 
 // Views
 #import "AFAActivityView.h"
 
-@interface AFATaskFormViewController() <ASDKFormControllerNavigationProtocol>
+@interface AFATaskFormViewController() <ASDKFormControllerNavigationProtocol,
+                                        ASDKFormRenderEngineDelegate>
 
-// Internal state properties
-@property (strong, nonatomic) ASDKModelTask                 *task;
-@property (strong, nonatomic) UICollectionViewController    *formViewController;
+// Views
 @property (weak, nonatomic)   IBOutlet AFAActivityView      *activityView;
+@property (weak, nonatomic)   IBOutlet AFANoContentView     *noContentView;
 @property (strong, nonatomic) JGProgressHUD                 *progressHUD;
 
+// Internal state
+@property (strong, nonatomic) ASDKModelTask                 *task;
+
+@property (strong, nonatomic) ASDKKVOManager                *kvoManager;
+
 @end
+
 
 @implementation AFATaskFormViewController
 
@@ -52,111 +58,49 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.progressHUD = [self configureProgressHUD];
+        dispatch_queue_t formUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
+        
+        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
+        ASDKFormNetworkServices *formNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormNetworkServiceProtocol)];
+        formNetworkService.resultsQueue = formUpdatesProcessingQueue;
+        
+        _taskFormRenderEngine = [[ASDKFormRenderEngine alloc] initWithDelegate:self];
+        _taskFormRenderEngine.formNetworkServices = formNetworkService;
+        
+        _progressHUD = [self configureProgressHUD];
     }
     
     return self;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+
+#pragma mark -
+#pragma mark Public interface
+
+- (void)formForTask:(ASDKModelTask *)task {
+    if (![task.modelID isEqualToString:self.task.modelID]) {
+        self.task = task;
+        [self setupFormForCurrentTask];
+    } else {
+        if ([self.delegate respondsToSelector:@selector(formDidLoadWithError:)]) {
+            [self.delegate formDidLoadWithError:nil];
+        }
+    }
+}
+
+- (void)saveForm {
+    [self.taskFormRenderEngine.actionHandler saveForm];
 }
 
 
 #pragma mark -
-#pragma mark Actions
+#pragma mark Private interface
 
-- (void)startTaskFormForTaskObject:(ASDKModelTask *)task {
-    NSParameterAssert(task);
+- (void)setupFormForCurrentTask {
+    self.activityView.hidden = NO;
+    self.activityView.animating = YES;
     
-    if (![task.modelID isEqualToString:self.task.modelID]) {
-        self.task = task;
-        
-        self.activityView.hidden = NO;
-        self.activityView.animating = YES;
-        
-        __weak typeof(self) weakSelf = self;
-        AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-        
-        [formService requestSetupWithTaskModel:self.task
-                         renderCompletionBlock:^(UICollectionViewController<ASDKFormControllerNavigationProtocol> *formController, NSError *error) {
-                             __strong typeof(self) strongSelf = weakSelf;
-                             
-                             if (!error) {
-                                 // Make sure we remove any references of old versions of the form controller
-                                 for (id childController in strongSelf.childViewControllers) {
-                                     if ([childController isKindOfClass:[UICollectionViewController class]]) {
-                                         [((UICollectionViewController *)childController).view removeFromSuperview];
-                                         [(UICollectionViewController *)childController removeFromParentViewController];
-                                     }
-                                 }
-                                 
-                                 formController.navigationDelegate = strongSelf;
-                                 strongSelf.formViewController = formController;
-                                 [strongSelf addChildViewController:formController];
-                                 
-                                 UIView *formView = formController.view;
-                                 formView.frame = strongSelf.view.bounds;
-                                 [formView setTranslatesAutoresizingMaskIntoConstraints:NO];
-                                 [strongSelf.view addSubview:formController.view];
-                                 
-                                 NSDictionary *views = NSDictionaryOfVariableBindings(formView);
-                                 
-                                 [strongSelf.view addConstraints:
-                                  [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[formView]|"
-                                                                          options:0
-                                                                          metrics:nil
-                                                                            views:views]];
-                                 [strongSelf.view addConstraints:
-                                  [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[formView]-%d-|", 40]
-                                                                          options:0
-                                                                          metrics:nil
-                                                                            views:views]];
-                             } else {
-                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
-                             }
-                             
-                             strongSelf.activityView.animating = NO;
-                             strongSelf.activityView.hidden = YES;
-                             
-                             if ([strongSelf.delegate respondsToSelector:@selector(formDidLoad)]) {
-                                 [strongSelf.delegate formDidLoad];
-                             }
-                         } formCompletionBlock:^(BOOL isFormCompleted, NSError *error) {
-                             __strong typeof(self) strongSelf = weakSelf;
-                             
-                             if (!isFormCompleted) {
-                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
-                             } else {
-                                 if ([strongSelf.delegate respondsToSelector:@selector(userDidCompleteForm)]) {
-                                     [strongSelf.delegate userDidCompleteForm];
-                                 }
-                             }
-                         } formSaveBlock:^(BOOL isFormSaved, NSError *error) {
-                             __strong typeof(self) strongSelf = weakSelf;
-                             
-                             [strongSelf showFormSaveIndicatorView];
-                             if (!error && isFormSaved) {
-                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                     weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormSavedText, "Task form is saved text");
-                                     weakSelf.progressHUD.detailTextLabel.text = nil;
-                                     weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                     weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                 });
-                                 
-                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                     [weakSelf.progressHUD dismiss];
-                                 });
-                             } else {
-                                 [strongSelf.progressHUD dismiss];
-                                 [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                             }
-                         }];
-    } else {
-        if ([self.delegate respondsToSelector:@selector(formDidLoad)]) {
-            [self.delegate formDidLoad];
-        }
-    }
+    [self.taskFormRenderEngine setupWithTaskModel:self.task];
 }
 
 
@@ -178,7 +122,123 @@
 
 
 #pragma mark -
-#pragma mark - Progress hud setup
+#pragma mark ASDKFormRenderEngineDelegate
+
+- (void)didRenderedFormController:(UICollectionViewController<ASDKFormControllerNavigationProtocol> *)formController
+                            error:(NSError *)error {
+    if (!error) {
+        // Make sure we remove any references of old versions of the form controller
+        for (id childController in self.childViewControllers) {
+            if ([childController isKindOfClass:[UICollectionViewController class]]) {
+                [((UICollectionViewController *)childController).view removeFromSuperview];
+                [(UICollectionViewController *)childController removeFromParentViewController];
+            }
+        }
+        
+        formController.navigationDelegate = self;
+        [self addChildViewController:formController];
+        
+        UIView *formView = formController.view;
+        formView.frame = self.view.bounds;
+        [formView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.view addSubview:formController.view];
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(formView);
+        
+        [self.view addConstraints:
+         [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[formView]|"
+                                                 options:0
+                                                 metrics:nil
+                                                   views:views]];
+        [self.view addConstraints:
+         [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[formView]-%d-|", 40]
+                                                 options:0
+                                                 metrics:nil
+                                                   views:views]];
+    } else {
+        self.noContentView.iconImageView.image = [UIImage imageNamed:@"form-warning-icon"];
+        self.noContentView.hidden = NO;
+        
+        if (kASDKFormRenderEngineUnsupportedFormFieldsCode == error.code) {
+            self.noContentView.descriptionLabel.text =
+            NSLocalizedString(kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText, @"Unsupported form fields error");
+        } else {
+            self.noContentView.descriptionLabel.text =
+            NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error");
+        }
+    }
+    
+    self.activityView.animating = NO;
+    self.activityView.hidden = YES;
+    
+    if ([self.delegate respondsToSelector:@selector(formDidLoadWithError:)]) {
+        [self.delegate formDidLoadWithError:error];
+    }
+}
+
+- (void)didCompleteFormWithError:(NSError *)error {
+    if (error) {
+        [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error")];
+    } else {
+        if ([self.delegate respondsToSelector:@selector(userDidCompleteForm)]) {
+            [self.delegate userDidCompleteForm];
+        }
+    }
+}
+
+- (void)didSaveFormWithError:(NSError *)error {
+    [self saveFormWithError:error
+              isOfflineForm:NO];
+}
+
+- (void)didSaveFormInOfflineMode {
+    [self saveFormWithError:nil
+              isOfflineForm:YES];
+}
+
+- (void)saveFormWithError:(NSError *)error
+            isOfflineForm:(BOOL)isOfflineForm {
+    [self showFormSaveIndicatorView];
+    
+    if (!error) {
+        __weak typeof(self) weakSelf = self;
+        
+        CGFloat messageDismissDurationInSeconds;
+        NSString *saveMessage = nil;
+        
+        if (isOfflineForm) {
+            saveMessage = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormSavedOfflineText, @"Task form is saved offline text");
+            messageDismissDurationInSeconds = 4.0;
+        } else {
+            saveMessage = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormSavedText, "Task form is saved text");
+            messageDismissDurationInSeconds = 0.3;
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            strongSelf.progressHUD.textLabel.text = saveMessage;
+            strongSelf.progressHUD.detailTextLabel.text = nil;
+            strongSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+            strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+        });
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(messageDismissDurationInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf.progressHUD dismiss];
+        });
+    } else {
+        if (error.code != NSURLErrorNotConnectedToInternet) {
+            [self.progressHUD dismiss];
+            [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];  
+        }
+    }
+}
+
+
+#pragma mark -
+#pragma mark Progress hud setup
 
 - (JGProgressHUD *)configureProgressHUD {
     JGProgressHUD *hud = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
@@ -197,6 +257,28 @@
     [indicatorView setColor:[UIColor whiteColor]];
     self.progressHUD.indicatorView = indicatorView;
     [self.progressHUD showInView:self.navigationController.view];
+}
+
+
+#pragma mark -
+#pragma mark KVO Bindings
+
+- (void)handleBindingsForNetworkConnectivity {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 ASDKNetworkReachabilityStatus networkReachabilityStatus = [change[NSKeyValueChangeNewKey] boolValue];
+                                 
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     if (ASDKNetworkReachabilityStatusReachableViaWWANOrWifi == networkReachabilityStatus) {
+                                         [weakSelf setupFormForCurrentTask];
+                                     }
+                                 });
+                             }];
 }
 
 @end

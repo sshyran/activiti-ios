@@ -59,7 +59,7 @@ static NSString * const kASDkHTTPS = @"https";
         }
         
         _baseURL = [NSURL URLWithString:serviceDocumentPath
-                          relativeToURL:[NSURL URLWithString:[hostAddress stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+                          relativeToURL:[NSURL URLWithString:[hostAddress stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]]];
     }
     
     return self;
@@ -71,6 +71,14 @@ static NSString * const kASDkHTTPS = @"https";
 
 - (NSString *)serverInformationServicePath {
     return [[kASDKAPIPath stringByAppendingPathComponent:kASDKAPIEnterprisePath] stringByAppendingPathComponent:kASDKAPIServerVersionPath];
+}
+
+
+#pragma mark -
+#pragma mark Cloud hostname 
+
+- (NSString *)cloudHostnamePath {
+    return kASDKAPICloudHostnamePath;
 }
 
 

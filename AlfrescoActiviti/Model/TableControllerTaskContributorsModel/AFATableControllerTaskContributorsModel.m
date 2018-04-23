@@ -20,6 +20,16 @@
 
 @implementation AFATableControllerTaskContributorsModel
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _isConnectivityAvailable = YES;
+    }
+    
+    return self;
+}
+
+
 #pragma mark -
 #pragma mark AFATableViewModel Delegate
 

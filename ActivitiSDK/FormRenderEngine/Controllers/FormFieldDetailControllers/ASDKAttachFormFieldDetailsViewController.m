@@ -46,6 +46,10 @@
 // Cells
 #import "ASDKContentFileTableViewCell.h"
 
+// Managers
+#import "ASDKKVOManager.h"
+
+
 @interface ASDKAttachFormFieldDetailsViewController () <ASDKAttachFormFieldContentPickerViewControllerDelegate,
                                                         ASDKIntegrationBrowsingDelegate>
 
@@ -64,6 +68,9 @@
 @property (strong, nonatomic) ASDKIntegrationBrowsingViewController                 *integrationBrowsingController;
 @property (strong, nonatomic) ASDKFormColorSchemeManager                            *colorSchemeManager;
 
+@property (strong, nonatomic) ASDKKVOManager                                        *kvoManager;
+
+
 @end
 
 @implementation ASDKAttachFormFieldDetailsViewController
@@ -72,12 +79,19 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.uploadedContentIDs = [NSMutableSet set];
+        _uploadedContentIDs = [NSMutableSet set];
         ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+        _colorSchemeManager = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormColorSchemeManagerProtocol)];
+        
+        [self handleBindingsForNetworkConnectivity];
     }
     
     return self;
+}
+
+- (void)dealloc {
+    [self.kvoManager removeObserver:self
+                         forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
 }
 
 - (void)viewDidLoad {
@@ -96,7 +110,6 @@
     self.attachedContentTableView.estimatedRowHeight = 61.0f;
     self.attachedContentTableView.rowHeight = UITableViewAutomaticDimension;
     
-    [self setRightBarButton];
     [self refreshContent];
     
 }
@@ -108,10 +121,51 @@
                                                  animated:YES];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([kASDKSegueIDFormContentPicker isEqualToString:segue.identifier]) {
+        self.contentPickerViewController = (ASDKAttachFormFieldContentPickerViewController *)segue.destinationViewController;
+        self.contentPickerViewController.delegate = self;
+        self.contentPickerViewController.currentFormField = self.currentFormField;
+        self.contentPickerViewController.uploadedContentIDs = self.uploadedContentIDs;
+    }
 }
+
+- (void)setRightBarButton {
+    if ([self isReadonlyForm]) {
+        [self.addBarButtonItem setEnabled:NO];
+        [self.addBarButtonItem setTitle:nil];
+    } else {
+        UIBarButtonItem *rightBarButtonItem = nil;
+        ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *) self.currentFormField.formFieldParams;
+        if (self.currentFormField.values.count > 0 && !formFieldParameters.allowMultipleFiles) {
+            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                               target:self
+                                                                               action:@selector(onAdd:)];
+        } else {
+            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                               target:self
+                                                                               action:@selector(onAdd:)];
+        }
+        rightBarButtonItem.tintColor = [UIColor whiteColor];
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+        
+        self.addBarButtonItem = rightBarButtonItem;
+    }
+}
+
+- (BOOL)isReadonlyForm {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType ||
+        ASDKNetworkReachabilityStatusNotReachable == self.networkReachabilityStatus ||
+        ASDKNetworkReachabilityStatusUnknown == self.networkReachabilityStatus) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+
+#pragma mark -
+#pragma mark Actions
 
 - (void)refreshContent {
     // Display the no content view if appropiate
@@ -121,29 +175,15 @@
                                    compatibleWithTraitCollection:nil];
     if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationContentPickerComponentNoContentNotEditableText, ASDKLocalizationTable, @"No content available not editable text");
+    } else if (ASDKNetworkReachabilityStatusNotReachable == self.networkReachabilityStatus ||
+               ASDKNetworkReachabilityStatusUnknown == self.networkReachabilityStatus) {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormFieldNoNetworkConnectionText, ASDKLocalizationTable, @"No network connection available");
     } else {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationContentPickerComponentNoContentText, ASDKLocalizationTable, @"No content available text");
     }
     
     [self setRightBarButton];
     [self.attachedContentTableView reloadData];
-}
-
-- (void)setRightBarButton {
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
-        [self.addBarButtonItem setEnabled:NO];
-        [self.addBarButtonItem setTitle:nil];
-    } else {
-        UIBarButtonItem *rightBarButtonItem = nil;
-        ASDKModelFormFieldAttachParameter *formFieldParameters = (ASDKModelFormFieldAttachParameter *) self.currentFormField.formFieldParams;
-        if (self.currentFormField.values.count > 0 && !formFieldParameters.allowMultipleFiles) {
-            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(onAdd:)];
-        } else {
-            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(onAdd:)];
-        }
-        rightBarButtonItem.tintColor = [UIColor whiteColor];
-        self.navigationItem.rightBarButtonItem = rightBarButtonItem;
-    }
 }
 
 - (void)toggleContentPickerComponent {
@@ -199,16 +239,6 @@
 }
 
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([kASDKSegueIDFormContentPicker isEqualToString:segue.identifier]) {
-        self.contentPickerViewController = (ASDKAttachFormFieldContentPickerViewController *)segue.destinationViewController;
-        self.contentPickerViewController.delegate = self;
-        self.contentPickerViewController.currentFormField = self.currentFormField;
-        self.contentPickerViewController.uploadedContentIDs = self.uploadedContentIDs;
-    }
-}
-
 #pragma mark -
 #pragma mark ASDKFormFieldDetailsControllerProtocol
 
@@ -245,7 +275,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ASDKContentFileTableViewCell *contentFileCell = [tableView dequeueReusableCellWithIdentifier:kASDKCellIDFormFieldAttachFileRepresentation];
@@ -253,7 +282,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     contentFileCell.fileTypeLabel.text = currentContent.contentName.pathExtension;
     contentFileCell.fileNameLabel.text = [currentContent.contentName stringByDeletingPathExtension];
     
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+    if ([self isReadonlyForm]) {
         contentFileCell.fileNameLabel.textColor = self.colorSchemeManager.formViewFilledInValueColor;
     }
     
@@ -275,7 +304,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (BOOL)tableView:(UITableView *)tableView
 canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return (ASDKModelFormFieldRepresentationTypeReadOnly != self.currentFormField.representationType);
+    return [self isReadonlyForm] ? NO : YES;
 }
 
 - (void)tableView:(UITableView *)tableView
@@ -283,7 +312,7 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
--(NSArray *)tableView:(UITableView *)tableView
+- (NSArray *)tableView:(UITableView *)tableView
 editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) weakSelf = self;
     UITableViewRowAction *deleteButton =
@@ -330,6 +359,7 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return @[deleteButton];
 }
+
 
 #pragma mark -
 #pragma mark AFAContentPickerViewController Delegate
@@ -428,6 +458,24 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
                                                                   });
                                                               }
     }];
+}
+
+
+#pragma mark -
+#pragma mark KVO Bindings
+
+- (void)handleBindingsForNetworkConnectivity {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     [weakSelf refreshContent];
+                                 });
+                             }];
 }
 
 @end

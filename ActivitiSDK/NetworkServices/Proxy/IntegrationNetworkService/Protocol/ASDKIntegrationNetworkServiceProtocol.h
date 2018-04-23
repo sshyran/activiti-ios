@@ -117,4 +117,9 @@ typedef void  (^ASDKIntegrationContentUploadCompletionBlock)(ASDKModelContent *c
                        withRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
                           completionBlock:(ASDKIntegrationContentUploadCompletionBlock)completionBlock;
 
+/**
+ *  Cancells all queued or running network operations
+ */
+- (void)cancelAllNetworkOperations;
+
 @end

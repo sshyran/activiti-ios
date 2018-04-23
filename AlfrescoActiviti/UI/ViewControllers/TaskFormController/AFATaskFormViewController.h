@@ -17,22 +17,25 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+@import ActivitiSDK;
 
-@class ASDKModelTask;
+@class ASDKModelTask, ASDKFormRenderEngine;
 
 @protocol AFATaskFormViewControllerDelegate <NSObject>
 
-- (void)formDidLoad;
+- (void)formDidLoadWithError:(NSError *)error;
 - (void)userDidCompleteForm;
 - (void)presentFormDetailController:(UIViewController *)controller;
 - (UINavigationController *)formNavigationController;
 
 @end
 
-@interface AFATaskFormViewController : UIViewController
+@interface AFATaskFormViewController : ASDKReachabilityViewController
 
-@property (weak, nonatomic) id<AFATaskFormViewControllerDelegate> delegate;
+@property (weak, nonatomic) id<AFATaskFormViewControllerDelegate>   delegate;
+@property (strong, nonatomic) ASDKFormRenderEngine                  *taskFormRenderEngine;
 
-- (void)startTaskFormForTaskObject:(ASDKModelTask *)task;
+- (void)formForTask:(ASDKModelTask *)task;
+- (void)saveForm;
 
 @end

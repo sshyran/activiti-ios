@@ -18,8 +18,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AFALoginCredentialsViewControllerDataSource.h"
+@import ActivitiSDK;
 
-@interface AFALoginCredentialsViewController : UIViewController
+@interface AFALoginCredentialsViewController : ASDKReachabilityViewController
 
 @property (strong, nonatomic) id<AFALoginCredentialsViewControllerDataSource> dataSource;
 

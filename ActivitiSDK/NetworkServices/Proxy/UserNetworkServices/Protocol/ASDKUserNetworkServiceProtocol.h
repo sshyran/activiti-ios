@@ -53,6 +53,6 @@ typedef void  (^ASDKUsersPictureCompletionBlock) (UIImage *profileImage, NSError
 /**
  *  Cancells all queued or running network operations
  */
-- (void)cancelAllTaskNetworkOperations;
+- (void)cancelAllNetworkOperations;
 
 @end

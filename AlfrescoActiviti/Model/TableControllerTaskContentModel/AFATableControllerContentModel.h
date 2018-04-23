@@ -23,5 +23,6 @@
 
 @property (strong, nonatomic) NSArray                           *attachedContentArr;
 @property (assign, nonatomic, getter=isRefreshInProgress) BOOL  isRefreshInProgress;
+@property (assign, nonatomic) BOOL                              isConnectivityAvailable;
 
 @end

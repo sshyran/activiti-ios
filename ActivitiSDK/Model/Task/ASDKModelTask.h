@@ -39,5 +39,7 @@
 @property (assign, nonatomic) BOOL              isManagerOfCandidateGroup;
 @property (strong, nonatomic) NSString          *parentTaskID;
 @property (strong, nonatomic) NSDate            *creationDate;
+@property (strong, nonatomic) NSString          *category;
+@property (strong, nonatomic) NSString          *processDefinitionDeploymentID;
 
 @end

@@ -47,14 +47,14 @@ typedef void  (^AFAUserPictureCompletionBlock) (UIImage *profileImage, NSError *
  *                         error reason
  */
 - (void)requestPictureForUserID:(NSString *)userID
-              completionBlock:(AFAUserPictureCompletionBlock)completionBlock;
+                completionBlock:(AFAUserPictureCompletionBlock)completionBlock;
 
 
 /**
  *  Performs a check on whether the user is logged in on cloud or premise.
  *
- @return Boolean value indicating whether the user is logged in on cloud or premise
+ *  @return Boolean value indicating whether the user is logged in on cloud or premise
  */
-- (BOOL)isLoggedInOnCloud;
++ (BOOL)isLoggedInOnCloud;
 
 @end

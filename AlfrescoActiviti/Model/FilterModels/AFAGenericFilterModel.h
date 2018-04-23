@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, AFAGenericFilterAdditionalFilterParameterType) {
 
 @property (strong, nonatomic) NSString                          *filterID;
 @property (strong, nonatomic) NSString                          *appDefinitionID;
+@property (strong, nonatomic) NSString                          *appDeploymentID;
 @property (strong, nonatomic) NSString                          *processInstanceID;
 @property (strong, nonatomic) NSString                          *text;
 @property (assign, nonatomic) AFAGenericFilterModelSortType     sortType;

@@ -40,30 +40,39 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
  *  Performs a request for process instances list with properties matching defined ones within the filter model.
  *  The underlaying implementation is using a filter representation to call the API.
  *
- *  @param filter          Filter object describing what properties should be filtered
- *  @param completionBlock Completion block providing the process instances list, an optional error reason and
- *                         pagination information
+ *  @param filter               Filter object describing what properties should be filtered
+ *  @param completionBlock      Completion block providing the process instances list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance list, an
+ *                              optional error reason and pagination information
  */
 - (void)requestProcessInstanceListWithFilter:(AFAGenericFilterModel *)filter
-                         withCompletionBlock:(AFAProcessServiceProcessInstanceListCompletionBlock)completionBlock;
+                         withCompletionBlock:(AFAProcessServiceProcessInstanceListCompletionBlock)completionBlock
+                               cachedResults:(AFAProcessServiceProcessInstanceListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the process definition list.
  *
- *  @param completionBlock Completion block providing the process definition list, an optional error reason and
- *                         pagination information
+ *  @param completionBlock      Completion block providing the process definition list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process definition list, an
+ *                              optional error reason and pagination information
  */
-- (void)requestProcessDefinitionListWithCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock;
+- (void)requestProcessDefinitionListWithCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock
+                                           cachedResults:(AFAProcessDefinitionListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the process definition list that's associated with an application.
  *
- *  @param appID           The application for which the process definition list is fetched back
- *  @param completionBlock Completion block providing the process definition list, an optional error reason and
- *                         pagination information
+ *  @param appID                The application for which the process definition list is fetched back
+ *  @param completionBlock      Completion block providing the process definition list, an optional error reason and
+ *                              pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process definition list, an
+ *                              optional error reason and pagination information
  */
 - (void)requestProcessDefinitionListForAppID:(NSString *)appID
-                         withCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock;
+                         withCompletionBlock:(AFAProcessDefinitionListCompletionBlock)completionBlock
+                               cachedResults:(AFAProcessDefinitionListCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request to start a process instance given it's process definition ID and the name of the instance.
@@ -77,20 +86,26 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
 /**
  *  Performs a request for the process instance details given it's process instance ID
  *
- *  @param processInstanceID The process instance ID for which the details are requested
- *  @param completionBlock   Completion block providing the process instace details and an optional error reason
+ *  @param processInstanceID    The process instance ID for which the details are requested
+ *  @param completionBlock      Completion block providing the process instace details and an optional error reason
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance details
+ *                              and optional error reason
  */
 - (void)requestProcessInstanceDetailsForID:(NSString *)processInstanceID
-                           completionBlock:(AFAProcessInstanceCompletionBlock)completionBlock;
+                           completionBlock:(AFAProcessInstanceCompletionBlock)completionBlock
+                             cachedResults:(AFAProcessInstanceCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the process instance associated content given it's process instance ID
  *
- *  @param processInstanceID The process instance ID for which the content is requested
- *  @param completionBlock   Completion block providing the process instace content list and an optional error reason
+ *  @param processInstanceID    The process instance ID for which the content is requested
+ *  @param completionBlock      Completion block providing the process instace content list and an optional error reason
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance content list
+ *                              and optional error reason
  */
 - (void)requestProcessInstanceContentForProcessInstanceID:(NSString *)processInstanceID
-                                          completionBlock:(AFAProcessInstanceContentCompletionBlock)completionBlock;
+                                          completionBlock:(AFAProcessInstanceContentCompletionBlock)completionBlock
+                                            cachedResults:(AFAProcessInstanceContentCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request for the comment list attached to the specified process instance.
@@ -98,9 +113,12 @@ typedef void  (^AFAProcessInstanceContentDownloadCompletionBlock)(NSURL *downloa
  *  @param processInstanceID    The ID of the process instance for which the comment list is requested
  *  @param completionBlock      Completion block providing the comment list, an optional error reason
  *                              and pagination information
+ *  @param cacheCompletionBlock Completion block providing a cached reference to the process instance comment list, an
+ *                              optional error reason and pagination information
  */
 - (void)requestProcessInstanceCommentsForID:(NSString *)processInstanceID
-                        withCompletionBlock:(AFAProcessInstanceCommentsCompletionBlock)completionBlock;
+                        withCompletionBlock:(AFAProcessInstanceCommentsCompletionBlock)completionBlock
+                              cachedResults:(AFAProcessInstanceCommentsCompletionBlock)cacheCompletionBlock;
 
 /**
  *  Performs a request to create a comment for a specified process instance ID

@@ -25,6 +25,9 @@ extern NSString * const kASDKAPIAppAuthentication;
 // Enterprise component
 extern NSString * const kASDKAPIEnterprisePath;
 
+// Cloud hostname
+extern NSString * const kASDKAPICloudHostnamePath;
+
 // Server information
 extern NSString * const kASDKAPIServerVersionPath;
 

@@ -28,4 +28,6 @@
 @property (strong, nonatomic) NSArray   *formTabs;
 @property (strong, nonatomic) NSArray   *formVariables;
 
+- (BOOL)doesFormDescriptionContainSupportedFormFields;
+
 @end

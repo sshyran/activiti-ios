@@ -31,7 +31,23 @@
 #import "AFAThumbnailManager.h"
 @import ActivitiSDK;
 
+@interface AFATableControllerCommentCellFactory ()
+
+@property (strong, nonatomic) AFAUserServices *fetchPictureForUserService;
+
+@end
+
 @implementation AFATableControllerCommentCellFactory
+
+- (instancetype)init {
+    self = [super init];
+    
+    if (self) {
+        _fetchPictureForUserService = [AFAUserServices new];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
@@ -59,19 +75,23 @@
         AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
         commentCell.avatarView.profileImage = [thumbnailManager thumbnailImageForIdentifier:comment.authorModel.modelID];
         
-        AFAUserServices *userServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
-        [userServices requestPictureForUserID:comment.authorModel.modelID
-                                   completionBlock:^(UIImage *profileImage, NSError *error) {
-                                       [thumbnailManager thumbnailForImage:profileImage
-                                                            withIdentifier:comment.authorModel.modelID
-                                                                  withSize:CGRectGetHeight(commentCell.avatarView.frame) * [UIScreen mainScreen].scale
-                                                 processingCompletionBlock:^(UIImage *processedThumbnailImage) {
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         AFACommentTableViewCell *cellToUpdate = [tableView cellForRowAtIndexPath:indexPath];
-                                                         cellToUpdate.avatarView.profileImage = processedThumbnailImage;
-                                                     });
-                                       }];
-        }];
+        [self.fetchPictureForUserService requestPictureForUserID:comment.authorModel.modelID
+                                                 completionBlock:^(UIImage *profileImage, NSError *error) {
+                                                    UIImage *cachedThumbnailImage = [thumbnailManager thumbnailForImage:profileImage
+                                                                          withIdentifier:comment.authorModel.modelID
+                                                                                withSize:CGRectGetHeight(commentCell.avatarView.frame) * [UIScreen mainScreen].scale
+                                                               processingCompletionBlock:^(UIImage *processedThumbnailImage) {
+                                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                                       [tableView reloadData];
+                                                                   });
+                                                               }];
+                                                     if (cachedThumbnailImage) {
+                                                         dispatch_async(dispatch_get_main_queue(), ^{
+                                                             AFACommentTableViewCell *cellToUpdate = [tableView cellForRowAtIndexPath:indexPath];
+                                                             cellToUpdate.avatarView.profileImage = cachedThumbnailImage;
+                                                         });
+                                                     }
+                                                 }];
         
         cell = commentCell;
     }

@@ -35,7 +35,8 @@
     // Configure the view for the selected state
 }
 
-- (void)setUpCellWithTask:(ASDKModelTask *)task {
+- (void)setUpCellWithTask:(ASDKModelTask *)task
+  isConnectivityAvailable:(BOOL)isConnectivityAvailable {
     self.assigneeLabel.text = NSLocalizedString(kLocalizationTaskDetailsScreenAssignedToText, @"Assignee text");
     
     BOOL isAssigneeButtonEnabled = YES;
@@ -48,8 +49,10 @@
     }
     
     // Assignee button can be triggered only when there is an assignee
-    // available and the task is not completed
+    // available, the task is not completed and there is connectivity available
     isAssigneeButtonEnabled = isAssigneeButtonEnabled && !task.endDate;
+    isAssigneeButtonEnabled = isAssigneeButtonEnabled && isConnectivityAvailable;
+    
     self.assigneeNameButton.enabled = isAssigneeButtonEnabled;
     [self.assigneeNameButton setTitle:assigneeName
                              forState:UIControlStateNormal];

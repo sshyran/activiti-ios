@@ -2,15 +2,19 @@
 //  Buglife.h
 //  Buglife
 //
-//  Copyright (c) 2016 Buglife, Inc. All rights reserved.
+//  Copyright (c) 2017 Buglife, Inc. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "LIFEAppearance.h"
 #import "LIFEAwesomeLogger.h"
 #import "LIFEInputField.h"
+#import "LIFETextInputField.h"
+#import "LIFEPickerInputField.h"
 
 /**
  Options for automatically invocating the bug reporter view.
+ This is an option set, and can be combined to simulatenously support multiple invocation types.
  */
 typedef NS_OPTIONS(NSUInteger, LIFEInvocationOptions) {
     /// Does not automatically invoke the bug reporter view. Use this if you wish to only manually invoke the bug reporter.
@@ -21,6 +25,19 @@ typedef NS_OPTIONS(NSUInteger, LIFEInvocationOptions) {
     LIFEInvocationOptionsScreenshot       = 1 << 1,
     /// Places a floating bug button on the screen, which can be moved by the user. Tapping this button invokes the bug reporter.
     LIFEInvocationOptionsFloatingButton   = 1 << 2
+};
+
+/**
+ The retry policy for submitting bug reports.
+ */
+typedef NS_ENUM(NSUInteger, LIFERetryPolicy) {
+    /// Automatically re-attempts to submit the bug report on the next cold application launch.
+    /// Resubmission is done a few seconds after launch, so that your app's own network requests are prioritized.
+    LIFERetryPolicyNextLaunch   = 0,
+    /// Specifies that report submission is a UI-blocking operation. Submitting a bug reporter will show a loading
+    /// indicator, and wait until the report has been successfully recieved by the Buglife API before dismissing
+    /// the bug report UI.
+    LIFERetryPolicyManualRetry
 };
 
 /**
@@ -42,6 +59,28 @@ extern LIFEAttachmentType * __nonnull const LIFEAttachmentTypeIdentifierImage;
 @protocol BuglifeDelegate;
 
 /**
+ * Name of the notification sent when the reporter will be presented. 
+ * The Buglife object will be posted with the notification so registered objects do not need to be referenced by the Buglife delegate.
+ * Objects that receive the notification can add their own context to the report via setStringValue:forAttribute:
+ *
+ * View controllers interested in this notification should consider registering in viewWillAppear: and unregistering in viewDidDisappear:.
+ * This way the context of both is available during a screenshot during a transition or segue, but view controllers further up the stack do not report irrelevant context.
+ */
+extern NSString * __nonnull const LIFENotificationWillPresentReporter;
+
+/**
+ * Name of the notification sent when the user cancels a report.
+ * Objects that receive this notification may want to remove attributes previously set; they are not cleared by Buglife.
+ */
+extern NSString * __nonnull const LIFENotificationUserCanceledReport;
+
+/**
+ * Name of the notification sent when the user successfully submits a report
+ * Objects that receive this notification may want to remove attributes previously set; they are not cleared by Buglife.
+ */
+extern NSString * __nonnull const LIFENotificationUserSubmittedReport;
+
+/**
  *  Buglife! Handles initialization and configuration of Buglife.
  */
 @interface Buglife : NSObject
@@ -57,6 +96,12 @@ extern LIFEAttachmentType * __nonnull const LIFEAttachmentTypeIdentifierImage;
  *  This returns LIFEInvocationOptionsShake by default.
  */
 @property (nonatomic) LIFEInvocationOptions invocationOptions;
+
+/**
+ *  Specifies the retry policy for submitting bug reports.
+ *  This returns LIFERetryPolicyNextLaunch by default.
+ */
+@property (nonatomic) LIFERetryPolicy retryPolicy;
 
 /**
  *  Returns the SDK version.
@@ -128,6 +173,24 @@ extern LIFEAttachmentType * __nonnull const LIFEAttachmentTypeIdentifierImage;
 - (void)setUserEmail:(nullable NSString *)email;
 
 /**
+ *  Adds custom data to bug reports. Set a `nil` value for a given attribute to delete
+ *  its current value.
+ */
+- (void)setStringValue:(nullable NSString *)value forAttribute:(nonnull NSString *)attribute;
+
+/**
+ *  Set this property if you'd like to use custom input fields. The bug reporter UI
+ *  will display fields in this same order.
+ *
+ *  Setting this property will override the default fields (i.e. "What's happening").
+ *  If you'd like to use default system fields, you can use the corresponding LIFEInputField
+ *  constructors, and include them in your array of custom input fields.
+ *
+ *  Set this property to null if you'd like to simply use the default field(s).
+ */
+@property (nonatomic, nullable) NSArray<LIFEInputField *> *inputFields;
+
+/**
  *  Represents the email address input field in the bug reporter UI.
  *
  *  If your application code cannot programmatically set the user's email
@@ -140,6 +203,12 @@ extern LIFEAttachmentType * __nonnull const LIFEAttachmentTypeIdentifierImage;
  *  @see `setUserEmail(email:)`
  */
 @property (nonatomic, readonly, nonnull) LIFEInputField *userEmailField;
+
+/**
+ *  Returns an appearance proxy that can be used to configure visual aspects
+ *  of the bug reporter.
+ */
+@property (nonatomic, readonly, nonnull) id<LIFEAppearance> appearance;
 
 /**
  *  Adds an attachment to be uploaded along with the next bug report.
@@ -206,7 +275,7 @@ extern LIFEAttachmentType * __nonnull const LIFEAttachmentTypeIdentifierImage;
  *           If the `completionHandler` isn't called, the bug report submission process
  *           will continue regardless.
  */
-- (void)buglife:(nonnull Buglife *)buglife handleAttachmentRequestWithCompletionHandler:(nonnull void (^)())completionHandler;
+- (void)buglife:(nonnull Buglife *)buglife handleAttachmentRequestWithCompletionHandler:(nonnull void (^)(void))completionHandler;
 
 /**
  *  Called when a user attempts to invoke the bug reporter UI.
@@ -219,6 +288,34 @@ extern LIFEAttachmentType * __nonnull const LIFEAttachmentTypeIdentifierImage;
  *  @param invocation The invocation type used to present the bug reporter UI.
  */
 - (nullable NSString *)buglife:(nonnull Buglife *)buglife titleForPromptWithInvocation:(LIFEInvocationOptions)invocation;
+
+/**
+ *  Called when the bug report form has been completed by the user.
+ *
+ *  If your application uses custom input fields, then this method gives your app an opportunity
+ *  to examine values submitted for these fields by the user by inspecting the `attributes` parameter.
+ *
+ *  @param attributes A dictionary of attributes submitted for a bug report, where the key is an attribute name (e.g. specified
+ *                    by your custom input field), and the dictionary value is the attribute's corresponding value,
+ *                    as inputted by the user (or its `default` value). Custom attributes set programmatically may neeed to be cleared here.
+ */
+- (void)buglifeDidCompleteReportWithAttributes:(nonnull NSDictionary<NSString *, NSString *> *)attributes;
+
+/**
+ *  Asks the delegate whether the "Thank you" dialog should be presented after a bug report is completed.
+ *  Returning YES from this method will result in the default dialog being presented after report completion.
+ *  Returning NO from this method will omit presenting any dialog. You can also use this to present your own custom completion dialog.
+ */
+- (BOOL)buglifeWillPresentReportCompletedDialog:(nonnull Buglife *)buglife;
+
+/**
+ *  Alert the delegate that the report was dismissed without sending the report.
+ *  
+ *  @param attributes A dictionary of attributes that would have been submitted for a bug report, where the key is an attribute name
+ *                    (e.g. spcified by your custom input field), and the dictionary value is the attribute's corresponding value, as inputted
+ *                    by the user (or its `default` value). Custom attributes set programmatically may need to be cleared here.
+ */
+- (void)buglife:(nonnull Buglife *)buglife userCanceledReportWithAttributes:(nonnull NSDictionary<NSString *, NSString *> *)attributes;
 
 @end
 
@@ -241,4 +338,4 @@ extern LIFEAttachmentType * __nonnull const LIFEAttachmentTypeIdentifierImage;
 
 @end
 
-
+#import "Buglife+LocalizedStrings.h"

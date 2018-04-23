@@ -30,7 +30,9 @@ typedef NS_ENUM(NSInteger, AFAFilterType) {
 
 - (void)searchWithFilterModel:(AFAGenericFilterModel *)filterModel;
 - (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel
-                                  filterType:(AFAFilterType)filterType;
+                                  filterType:(AFAFilterType)filterType
+                            isCachedResponse:(BOOL)isCachedResponse
+                                       error:(NSError *)error;
 - (void)clearFilterInputText;
 
 @end

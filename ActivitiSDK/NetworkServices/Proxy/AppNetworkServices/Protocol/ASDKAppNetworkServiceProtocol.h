@@ -36,6 +36,6 @@ typedef void  (^ASDKRuntimeAppDefinitionsCompletionBlock) (NSArray *runtimeAppDe
 /**
  *  Cancells all queued or running network operations
  */
-- (void)cancelAllAppNetworkOperations;
+- (void)cancelAllNetworkOperations;
 
 @end

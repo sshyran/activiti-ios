@@ -19,13 +19,27 @@
 #import "AFAModalTaskDetailsCreateTaskAction.h"
 #import "AFAServiceRepository.h"
 
+@interface AFAModalTaskDetailsCreateTaskAction ()
+
+@property (strong, nonatomic) AFATaskServices *createTaskService;
+
+@end
+
 @implementation AFAModalTaskDetailsCreateTaskAction
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _createTaskService = [AFATaskServices new];
+    }
+    
+    return self;
+}
 
 - (void)executeAlertActionWithModel:(id)modelObject
                     completionBlock:(id)completionBlock {
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    [taskServices requestCreateTaskWithRepresentation:modelObject
-                                      completionBlock:completionBlock];
+    [self.createTaskService requestCreateTaskWithRepresentation:modelObject
+                                                completionBlock:completionBlock];
 }
 
 @end

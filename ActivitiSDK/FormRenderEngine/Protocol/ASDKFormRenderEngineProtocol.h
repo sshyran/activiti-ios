@@ -17,6 +17,8 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "ASDKServiceDataAccessorProtocol.h"
+#import "ASDKFormRenderEngineDelegate.h"
 
 @class ASDKModelFormDescription,
 ASDKModelFormTabDescription,
@@ -28,12 +30,13 @@ ASDKFormFieldValueRequestRepresentation,
 ASDKFormPreProcessor,
 ASDKFormEngineActionHandler;
 
-typedef void  (^ASDKFormRenderEngineSetupCompletionBlock) (UICollectionViewController *formController, NSError *error);
-typedef void  (^ASDKFormRenderEngineCompletionBlock)      (BOOL isFormCompleted, NSError *error);
-typedef void  (^ASDKFormRenderEngineSaveBlock)            (BOOL isFormSaved, NSError *error);
-typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInstance *processInstance, NSError *error);
 
 @protocol ASDKFormRenderEngineProtocol <NSObject>
+
+/**
+ * Holds a reference to the form delegate used to report state changes.
+ */
+@property (weak, nonatomic) id<ASDKFormRenderEngineDelegate> delegate;
 
 /**
  *  Holds a reference to the form network service used in conjucture with the 
@@ -41,6 +44,10 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
  */
 @property (strong, nonatomic) ASDKFormNetworkServices *formNetworkServices;
 
+/**
+ * Holds a reference to the form preprocessor class used to prefetch additional
+ * information needed to render the final form.
+ */
 @property (strong, nonatomic) ASDKFormPreProcessor *formPreProcessor;
 
 /**
@@ -51,127 +58,84 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
 @property (strong, nonatomic) ASDKFormEngineActionHandler *actionHandler;
 
 /**
- *  Setup method for dynamic table rows
+ * Default initializer method
  *
- *  @param formDescription Description object containing form models that will be
- *                         displayed in the form view
- *  @return                A collection view controller instance containing the
- *                         the rendered form view
+ * @param delegate Delegate class  used to pass form state updates
+ * @return Initialized instance
  */
-- (UICollectionViewController *)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields;
+- (instancetype)initWithDelegate:(id<ASDKFormRenderEngineDelegate>)delegate;
 
 /**
  *  Designated setup method for the form render engine class when it is used
  *  to show the form associated to a task. This method relies on the internal
  *  workings of the form render engine to make the API network calls on your 
  *  behalf and you will be provided with an instance of a collection view controller 
- *  through a completion block.
+ *  via the designated delegate.
  *
  *  @param task                  Task object containing the mandatory task ID 
  *                               property.
- *  @param renderCompletionBlock Completion block providing a form controller
- *                               containing the visual representation of the
- *                               form view and additional error reason
- *  @param formCompletionBlock   Completion block providing information on
- *                               whether the form has been successfully
- *                               completed  or not and an additional error reason
- *  @param formSaveBlock         Save completion block providing information on
- *                               whether the form has been successfully saved or
- *                               not and an additional error reason
- *
  */
-- (void)setupWithTaskModel:(ASDKModelTask *)task
-     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock
-             formSaveBlock:(ASDKFormRenderEngineSaveBlock)formSaveBlock;
+- (void)setupWithTaskModel:(ASDKModelTask *)task;
+
+/**
+ *  Designated setup method for the form render engine class when it is used to show
+ *  the completed start form of a process instance. This method relies on the internal
+ *  workings of the form render engine to make the API network calls on your behalf
+ *  and you will be provided with an instance of a collection view controller via the
+ *  designated delegate.
+ *
+ *  @param processInstance       Process instance object containing the mandatory process instance
+ *                               ID property
+ */
+- (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance;
 
 /**
  *  Designated setup method for the form render engine class when it is used to
  *  show the start form of a process instance. This method relies on the internal
  *  workings of the form render engine to make the API network calls on your behalf
- *  and you will be provided with an instance of a collection view controller through
- *  a completion block.
+ *  and you will be provided with an instance of a collection view controller via
+ *  the designated delegate.
  *
  *  @param processDefinition     Process definition object containing the mandatory 
  *                               process definition ID property
- *  @param renderCompletionBlock Completion block providing a form controller
- *                               containing the visual representation of the
- *                               form view and additional error reason
- *  @param formCompletionBlock   Completion block providing information on
- *                               whether the form has been successfully
- *                               completed  or not and an additional error reason
  */
-- (void)setupWithProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-             renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-               formCompletionBlock:(ASDKStartFormRenderEngineCompletionBlock)formCompletionBlock;
-
-/**
- *  Designated setup method for the form render engine class when it is used to show 
- *  the completed start form of a process instance. This method relies on the internal
- *  workings of the form render engine to make the API network calls on your behalf
- *  and you will be provided with an instance of a collection view controller through
- *  a completion block.
- *
- *  @param processInstance       Process instance object containing the mandatory process instance
- *                               ID property
- *  @param renderCompletionBlock Completion block providing a form controller
- *                               containing the visual representation of the
- *                               form view and additional error reasons
- */
-- (void)setupWithProcessInstance:(ASDKModelProcessInstance *)processInstance
-           renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock;
+- (void)setupWithProcessDefinition:(ASDKModelProcessDefinition *)processDefinition;
 
 /**
  *  Designated setup method for the form render engine class when it is used
  *  to show the dynamic table row associated to a task. This method relies on the internal
  *  workings of the form render engine to make the API network calls on your
  *  behalf and you will be provided with an instance of a collection view controller
- *  through a completion block.
+ *  via the designated delegate.
  *
  *  @param dynamicTableRowFormFields    Array containing the columns (formfields) of a 
  *                                      dynamic table row
  *  @param dynamicTableFormFieldID      The ID of the dynamic table
  *  @param task                         Task object containing the mandatory task ID
  *                                      property.
- *  @param renderCompletionBlock        Completion block providing a form controller
- *                                      containing the visual representation of the
- *                                      form view and additional error reason
- *  @param formCompletionBlock          Completion block providing information on
- *                                      whether the form has been successfully
- *                                      completed  or not and an additional error reason
  *
  */
 - (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
                    dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
-                                 taskModel:(ASDKModelTask *)task
-                     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-                       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock;
+                                 taskModel:(ASDKModelTask *)task;
 
 /**
  *  Designated setup method for the form render engine class when it is used
  *  to show the dynamic table row associated to a task. This method relies on the internal
  *  workings of the form render engine to make the API network calls on your
  *  behalf and you will be provided with an instance of a collection view controller
- *  through a completion block.
+ *  via the designated delegate.
  *
  *  @param dynamicTableRowFormFields    Array containing the columns (formfields) of a
  *                                      dynamic table row
  *  @param dynamicTableFormFieldID      The ID of the dynamic table
  *  @param processDefinition            Process definition object containing the mandatory
  *                                      process definition ID property
- *  @param renderCompletionBlock        Completion block providing a form controller
- *                                      containing the visual representation of the
- *                                      form view and additional error reason
- *  @param formCompletionBlock          Completion block providing information on
- *                                      whether the form has been successfully
- *                                      completed  or not and an additional error reason
  *
  */
 - (void)setupWithDynamicTableRowFormFields:(NSArray *)dynamicTableRowFormFields
                    dynamicTableFormFieldID:(NSString *)dynamicTableFormFieldID
-                         processDefinition:(ASDKModelProcessDefinition *)processDefinition
-                     renderCompletionBlock:(ASDKFormRenderEngineSetupCompletionBlock)renderCompletionBlock
-                       formCompletionBlock:(ASDKFormRenderEngineCompletionBlock)formCompletionBlock;
+                         processDefinition:(ASDKModelProcessDefinition *)processDefinition;
 
 /**
  *  Designated setup method for the form render engine class when it is used to show the
@@ -205,11 +169,5 @@ typedef void  (^ASDKStartFormRenderEngineCompletionBlock) (ASDKModelProcessInsta
  *  @param formFieldValueRequestRepresentation Request representation object
  */
 - (void)saveFormWithFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValueRequestRepresentation;
-
-/**
- *  Requests the engine to perform a cleanup operation and prepare for reuse on the next 
- *  incoming form description.
- */
-- (void)performEngineCleanup;
 
 @end

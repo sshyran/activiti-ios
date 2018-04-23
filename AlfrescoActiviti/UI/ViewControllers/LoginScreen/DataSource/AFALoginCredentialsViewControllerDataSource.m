@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import "AFALoginCredentialsViewControllerDataSource.h"
+@import ActivitiSDK;
 
 // Constants
 #import "AFALocalizationConstants.h"
@@ -108,7 +109,7 @@
     // If the login type is of cloud type then update the model with
     // the default host name and security layer
     if (AFALoginAuthenticationTypeCloud == self.loginModel.authentificationType) {
-        [self.loginModel updateHostNameEntry:kActivitiCloudHostName];
+        [self.loginModel updateHostNameEntry:kASDKAPICloudHostnamePath];
         [self.loginModel updateCommunicationOverSecureLayer:YES];
         [self.loginModel updatePortEntry:nil];
     }
@@ -127,47 +128,61 @@
             }
             
             // Notify the user about the error
-            NSInteger responseCode = 0;
             if (error) {
-                NSError *underlayingError = error.userInfo[NSUnderlyingErrorKey];
-                if (underlayingError) {
-                    responseCode = [[underlayingError.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
-                    if (!responseCode) {
-                        responseCode = underlayingError.code;
+                NSInteger responseCode = 0;
+                BOOL disregardError = NO;
+                
+                // Handle internal generated errors
+                if (AFALoginViewModelErrorDomain == error.domain) {
+                    // If reachability exists but the error is triggered by a cached data value mismatch disregard
+                    // the error and fall back to the server response
+                    if (kAFALoginViewModelInvalidCredentialErrorCode == error.code &&
+                        !strongSelf.delegate.isNetworkReachable) {
+                        responseCode = ASDKHTTPCode401Unauthorised;
+                    } else {
+                        disregardError = YES;
                     }
-                } else {
-                    NSHTTPURLResponse *urlResponse = error.userInfo[AFNetworkingOperationFailingURLResponseErrorKey];
-                    responseCode = urlResponse.statusCode;
+                } else { // Handle network generated errors
+                    NSError *underlayingError = error.userInfo[NSUnderlyingErrorKey];
+                    if (underlayingError) {
+                        responseCode = [[underlayingError.userInfo objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode];
+                        if (!responseCode) {
+                            responseCode = underlayingError.code;
+                        }
+                    } else {
+                        NSHTTPURLResponse *urlResponse = error.userInfo[AFNetworkingOperationFailingURLResponseErrorKey];
+                        responseCode = urlResponse.statusCode;
+                    }
                 }
                 
-                NSString *networkErrorMessage = nil;
-                
-                switch (responseCode) {
-                    case ASDKHTTPCode401Unauthorised:
-                    case ASDKHTTPCode403Forbidden: {
-                        networkErrorMessage = NSLocalizedString(kLocalizationLoginInvalidCredentialsText, @"Invalid credentials text");
+                if (!disregardError) {
+                    NSString *networkErrorMessage = nil;
+                    switch (responseCode) {
+                        case ASDKHTTPCode401Unauthorised:
+                        case ASDKHTTPCode403Forbidden: {
+                            networkErrorMessage = NSLocalizedString(kLocalizationLoginInvalidCredentialsText, @"Invalid credentials text");
+                        }
+                            break;
+                            
+                        case NSURLErrorCannotConnectToHost: {
+                            networkErrorMessage = NSLocalizedString(kLocalizationLoginUnreachableHostText, @"Unreachable host text");
+                        }
+                            break;
+                            
+                        case NSURLErrorTimedOut: {
+                            networkErrorMessage = NSLocalizedString(kLocalizationLoginTimedOutText, @"Login timed out text");
+                        }
+                            break;
+                            
+                        default: break;
                     }
-                        break;
-                        
-                    case NSURLErrorCannotConnectToHost: {
-                        networkErrorMessage = NSLocalizedString(kLocalizationLoginUnreachableHostText, @"Unreachable host text");
+                    
+                    if ([strongSelf.delegate respondsToSelector:@selector(handleNetworkErrorWithMessage:)]) {
+                        [strongSelf.delegate handleNetworkErrorWithMessage:networkErrorMessage];
                     }
-                        break;
-                        
-                    case NSURLErrorTimedOut: {
-                        networkErrorMessage = NSLocalizedString(kLocalizationLoginTimedOutText, @"Login timed out text");
-                    }
-                        break;
-                        
-                    default:
-                        break;
+                    
+                    [(AFASignInTableViewCell *)cell shakeSignInButton];
                 }
-                
-                if ([strongSelf.delegate respondsToSelector:@selector(handleNetworkErrorWithMessage:)]) {
-                    [strongSelf.delegate handleNetworkErrorWithMessage:networkErrorMessage];
-                }
-                
-                [(AFASignInTableViewCell *)cell shakeSignInButton];
             }
         }];
     } else {

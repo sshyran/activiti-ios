@@ -259,7 +259,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
             // and / or completing the task
             if ([model isClaimableTask]) {
                 return [self dequeuedClaimCellAtIndexPath:indexPath
-                                            fromTableView:tableView];
+                                            fromTableView:tableView
+                                                withModel:model];
             } else {
                 return [self dequeuedCompleteCellAtIndexPath:indexPath
                                                fromTableView:tableView
@@ -525,6 +526,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                                              forIndexPath:indexPath];
     completeCell.delegate = self;
     [completeCell setUpWithThemeColor:self.appThemeColor];
+    [completeCell updateStateForConnectivity:[(AFATableControllerTaskDetailsModel *)model isConnectivityAvailable]];
     
     // Enable the requeue button if it's the case
     BOOL displayRequeueButton = [(AFATableControllerTaskDetailsModel *)model canBeRequeued];
@@ -541,16 +543,19 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                                                            forIndexPath:indexPath];
     requeueCell.delegate = self;
     [requeueCell setUpWithThemeColor:self.appThemeColor];
+    [requeueCell updateStateForConnectivity:[(AFATableControllerTaskDetailsModel *)model isConnectivityAvailable]];
     
     return requeueCell;
 }
 
 - (UITableViewCell *)dequeuedClaimCellAtIndexPath:(NSIndexPath *)indexPath
-                                    fromTableView:(UITableView *)tableView {
+                                    fromTableView:(UITableView *)tableView
+                                        withModel:(id<AFATableViewModelDelegate>)model {
     AFAClaimTableViewCell *claimCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsClaim
                                                                        forIndexPath:indexPath];
     claimCell.delegate = self;
     [claimCell setUpWithThemeColor:self.appThemeColor];
+    [claimCell updateStateForConnectivity:[(AFATableControllerTaskDetailsModel *)model isConnectivityAvailable]];
     
     return claimCell;
 }
@@ -560,7 +565,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
                                            withModel:(id<AFATableViewModelDelegate>)model {
     AFAAssigneeTableViewCell *assigneeCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsAssignee
                                                                              forIndexPath:indexPath];
-    [assigneeCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
+    [assigneeCell setUpCellWithTask:[model itemAtIndexPath:indexPath]
+            isConnectivityAvailable:[(AFATableControllerTaskDetailsModel *)model isConnectivityAvailable]];
     assigneeCell.delegate = self;
     
     return assigneeCell;
@@ -582,6 +588,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     AFADueTableViewCell *dueCell = [tableView dequeueReusableCellWithIdentifier:kCellIDTaskDetailsDue
                                                                    forIndexPath:indexPath];
     [dueCell setUpCellWithTask:[model itemAtIndexPath:indexPath]];
+    [dueCell updateStateForConnectivity:[(AFATableControllerTaskDetailsModel *)model isConnectivityAvailable]];
     dueCell.delegate = self;
     
     return dueCell;

@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void  (^ASDKAlertAdditionConfirmationBlock) ();
+typedef void  (^ASDKAlertAdditionConfirmationBlock) (void);
 
 @interface UIViewController (ASDKAlertAddition)
 

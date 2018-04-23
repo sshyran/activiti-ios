@@ -68,7 +68,7 @@
                                          XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                          XCTAssert([(NSArray *)parsedObject count] == 3);
                                          
-                                         XCTAssert(paging.pageCount == 3);
+                                         XCTAssert(paging.total == 3);
                                          XCTAssert(paging.size == 3);
                                          XCTAssert(!paging.start);
                                          
@@ -113,7 +113,7 @@
                                          XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                          XCTAssert([(NSArray *)parsedObject count] == 2);
                                          
-                                         XCTAssert(paging.pageCount == 2);
+                                         XCTAssert(paging.total == 2);
                                          XCTAssert(paging.size == 2);
                                          XCTAssert(!paging.start);
                                          
@@ -150,7 +150,7 @@
                                          XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                          XCTAssert([(NSArray *)parsedObject count] == 1);
                                          
-                                         XCTAssert(paging.pageCount == 1);
+                                         XCTAssert(paging.total == 1);
                                          XCTAssert(paging.size == 1);
                                          XCTAssert(!paging.start);
                                          
@@ -188,7 +188,7 @@
                                          XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                          XCTAssert([(NSArray *)parsedObject count] == 5);
                                          
-                                         XCTAssert(paging.pageCount == 5);
+                                         XCTAssert(paging.total == 5);
                                          XCTAssert(paging.size == 5);
                                          XCTAssert(!paging.start);
                                          

@@ -33,7 +33,7 @@
 #import "AFACredentialSectionTableViewCell.h"
 
 @interface AFALoginCredentialsViewController () <AFALoginCredentialsViewControllerDataSourceDelegate,
-                                                UITableViewDelegate>
+UITableViewDelegate>
 
 @property (weak, nonatomic)   IBOutlet AFAFadingTableView   *credentialsTableView;
 @property (assign, nonatomic) NSUInteger                    fieldTagIdx;
@@ -111,6 +111,10 @@
     [self showGenericNetworkErrorAlertControllerWithMessage:errorMessage];
 }
 
+- (BOOL)isNetworkReachable {
+    return (self.networkReachabilityStatus == ASDKNetworkReachabilityStatusReachableViaWWANOrWifi) ? YES : NO;
+}
+
 
 #pragma mark -
 #pragma mark UITableViewDelegate
@@ -127,7 +131,7 @@ heightForHeaderInSection:(NSInteger)section {
     return sectionHeight;
 }
 
--(UIView *)tableView:(UITableView *)tableView
+- (UIView *)tableView:(UITableView *)tableView
 viewForHeaderInSection:(NSInteger)section {
     AFACredentialSectionTableViewCell *sectionHeaderViewCell = [tableView dequeueReusableCellWithIdentifier:kCellIDLoginSection];
     sectionHeaderViewCell.sectionTitleLabel.text = [NSLocalizedString(kLocalizationLoginAdvancedSectionHeaderText, @"Advanced section text") uppercaseString];

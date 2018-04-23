@@ -66,6 +66,7 @@ NSString *kLocalizationListScreenTaskAppText                     = @"listScreenT
 NSString *kLocalizationListScreenSearchFieldPlaceholderFormat    = @"listScreenSearchFieldPlaceholderFormat";
 NSString *kLocalizationListScreenTasksText                       = @"listScreenTasksText";
 NSString *kLocalizationListScreenProcessInstancesText            = @"listScreenProcessInstancesText";
+NSString *kLocalizationListScreenMissingFiltersFormat            = @"listScreenMissingFiltersFormat";
 
 
 #pragma mark -
@@ -111,7 +112,8 @@ NSString *kLocalizationTaskDetailsScreenPartOfText               = @"taskDetails
 NSString *kLocalizationTaskDetailsScreenCompletedDateText        = @"taskDetailsScreenCompletedDateText";
 NSString *kLocalizationTaskDetailsScreenDurationText             = @"taskDetailsScreenDurationText";
 NSString *kLocalizationTaskDetailsScreenClaimButtonText          = @"taskDetailsScreenClaimButtonText";
-NSString *kLocalizationTaskDetailsScreenTaskFormSavedText        = @"taskDetailsScreenTaskFormClaimedText";
+NSString *kLocalizationTaskDetailsScreenTaskFormSavedText        = @"taskDetailsScreenTaskFormSavedText";
+NSString *kLocalizationTaskDetailsScreenTaskFormSavedOfflineText = @"taskDetailsScreenTaskFormSavedOfflineText";
 NSString *kLocalizationTaskDetailsScreenChecklistNameText        = @"taskDetailsScreenChecklistNameText";
 NSString *kLocalizationTaskDetailsScreenChecklistTitleText       = @"taskDetailsScreenChecklistTitleText";
 NSString *kLocalizationTaskDetailsScreenShowFormText             = @"taskDetailsScreenShowFormText";
@@ -183,23 +185,33 @@ NSString *kLocalizationPaswordText                               = @"passwordTex
 
 
 #pragma mark -
+#pragma mark Offline use
+
+NSString *kLocalizationOfflineProvidingCachedResultsText         = @"offlineProvidingCachedResultsText";
+NSString *kLocalizationOfflineConnectivityRetryText              = @"offlineConnectivityRetryText";
+NSString *kLocalizationOfflineConnectivityConnectedRefreshingText= @"offlineConnectivityConnectedRefreshingText";
+NSString *kLocalizationOfflineFunctionalityNotAvailableText      = @"offlineFunctionalityNotAvailableText";
+
+
+#pragma mark -
 #pragma mark Alert dialog use
 
-NSString *kLocalizationAlertDialogOopsTitleText                  = @"alertDialogOopsTitleText";
-NSString *kLocalizationAlertDialogGenericNetworkErrorText        = @"alertDialogGenericNetworkErrorText";
-NSString *kLocalizationAlertDialogOkButtonText                   = @"alertDialogOkButtonText";
-NSString *kLocalizationAlertDialogYesButtonText                  = @"alertDialogYesButtonText";
-NSString *kLocalizationAlertDialogCancelButtonText               = @"alertDialogCancelButtonText";
-NSString *kLocalizationAlertDialogSignOutDescriptionText         = @"alertDialogSignOutDescriptionText";
-NSString *kLocalizationAlertDialogTaskContentFetchErrorText      = @"alertDialogTaskContentFetchErrorText";
-NSString *kLocalizationAlertDialogTaskUpdateErrorText            = @"alertDialogTaskDetailsUpdateErrorText";
-NSString *kLocalizationAlertDialogTaskContentDeleteErrorText     = @"alertDialogTaskContentDeleteErrorText";
-NSString *kLocalizationAlertDialogConfirmText                    = @"alertDialogConfirmText";
-NSString *kLocalizationAlertDialogDeleteContentQuestionFormat    = @"alertDialogDeleteContentQuestionFormat";
-NSString *kLocalizationAlertDialogDeleteContributorQuestionFormat= @"alertDialogDeleteContributorQuestionFormat";
-NSString *kLocalizationAlertDialogTaskContentUploadErrorText     = @"alertDialogTaskContentUploadErrorText";
-NSString *kLocalizationAlertDialogTaskContentDownloadErrorText   = @"alertDialogTaskContentDownloadErrorText";
-NSString *kLocalizationAlertDialogTaskFormCannotSetUpErrorText   = @"alertDialogTaskFormCannotSetupErrorText";
+NSString *kLocalizationAlertDialogOopsTitleText                      = @"alertDialogOopsTitleText";
+NSString *kLocalizationAlertDialogGenericNetworkErrorText            = @"alertDialogGenericNetworkErrorText";
+NSString *kLocalizationAlertDialogOkButtonText                       = @"alertDialogOkButtonText";
+NSString *kLocalizationAlertDialogYesButtonText                      = @"alertDialogYesButtonText";
+NSString *kLocalizationAlertDialogCancelButtonText                   = @"alertDialogCancelButtonText";
+NSString *kLocalizationAlertDialogSignOutDescriptionText             = @"alertDialogSignOutDescriptionText";
+NSString *kLocalizationAlertDialogTaskContentFetchErrorText          = @"alertDialogTaskContentFetchErrorText";
+NSString *kLocalizationAlertDialogTaskUpdateErrorText                = @"alertDialogTaskDetailsUpdateErrorText";
+NSString *kLocalizationAlertDialogTaskContentDeleteErrorText         = @"alertDialogTaskContentDeleteErrorText";
+NSString *kLocalizationAlertDialogConfirmText                        = @"alertDialogConfirmText";
+NSString *kLocalizationAlertDialogDeleteContentQuestionFormat        = @"alertDialogDeleteContentQuestionFormat";
+NSString *kLocalizationAlertDialogDeleteContributorQuestionFormat    = @"alertDialogDeleteContributorQuestionFormat";
+NSString *kLocalizationAlertDialogTaskContentUploadErrorText         = @"alertDialogTaskContentUploadErrorText";
+NSString *kLocalizationAlertDialogTaskContentDownloadErrorText       = @"alertDialogTaskContentDownloadErrorText";
+NSString *kLocalizationAlertDialogTaskFormCannotSetUpErrorText       = @"alertDialogTaskFormCannotSetupErrorText";
+NSString *kLocalizationAlertDialogTaskFormUnsupportedFormFieldsText  = @"alertDialogTaskFormUnsupportedFormFieldsText";
 
 #pragma mark -
 #pragma mark Time formatting strings
@@ -288,13 +300,6 @@ NSString *kLocalizationSettingsScreenBugReportingText            = @"settingsScr
 
 
 #pragma mark -
-#pragma mark Default filter names
+#pragma mark Bug reporting
 
-NSString *kLocalizationDefaultFilterInvolvedTasksText            = @"defaultFilterInvolvedTasksText";
-NSString *kLocalizationDefaultFilterMyTasksText                  = @"defaultFilterMyTasksText";
-NSString *kLocalizationDefaultFilterQueuedTasksText              = @"defaultFilterQueuedTasksText";
-NSString *kLocalizationDefaultFilterCompletedTasksText           = @"defaultFilterCompletedTasksText";
-NSString *kLocalizationDefaultFilterRunningProcessText           = @"defaultFilterRunningProcessesText";
-NSString *kLocalizationDefaultFilterCompletedProcessesText       = @"defaultFilterCompletedProcessesText";
-NSString *kLocalizationDefaultFilterAllProcessesText             = @"defaultFilterAllProcessesText";
-
+NSString *kLocalizationBugReportingSheetDescriptionText          = @"bugReportingSheetDescriptionText";

@@ -21,6 +21,9 @@
 // Constants
 #import "AFAUIConstants.h"
 
+// Models
+#import "AFAListResponseModel.h"
+
 // Cells
 #import "AFATaskListStyleCell.h"
 
@@ -29,7 +32,12 @@
 
 // Managers
 #import "AFATaskServices.h"
-#import "AFAServiceRepository.h"
+
+@interface AFATaskListViewDataSource ()
+
+@property (strong, nonatomic) AFATaskServices *fetchTaskListService;
+
+@end
 
 @implementation AFATaskListViewDataSource
 
@@ -43,6 +51,7 @@
     if (self) {
         _tasks = dataEntries;
         _themeColor = themeColor;
+        _fetchTaskListService = [AFATaskServices new];
     }
     
     return self;
@@ -57,25 +66,50 @@
 }
 
 - (void)loadContentListForFilter:(AFAGenericFilterModel *)filter
-             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock
+                   cachedResults:(AFAListHandleCompletionBlock)cacheCompletionBlock {
     __weak typeof(self) weakSelf = self;
-    [taskService requestTaskListWithFilter:filter
-                       withCompletionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
-                           __strong typeof(self) strongSelf = weakSelf;
-                           completionBlock (strongSelf, taskList, error, paging);
-                       }];
+    [self.fetchTaskListService requestTaskListWithFilter:filter
+                                         completionBlock:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             completionBlock(strongSelf, [self responseModelForTaskList:taskList
+                                                                                                  error:error
+                                                                                                  paging:paging]);
+                                         } cachedResults:^(NSArray *taskList, NSError *error, ASDKModelPaging *paging) {
+                                             __strong typeof(self) strongSelf = weakSelf;
+                                             
+                                             cacheCompletionBlock(strongSelf, [self responseModelForTaskList:taskList
+                                                                                                       error:error
+                                                                                                       paging:paging]);
+                                         }];
 }
 
 - (void)processAdditionalEntries:(NSArray *)additionalEntriesArr
                        forPaging:(ASDKModelPaging *)paging {
     _tasks = [self processAdditionalEntries:additionalEntriesArr
-                        forExistingEntries:self.tasks
-                                    paging:paging];
-    _totalPages = [self totalPagesForPaging:paging
-                                dataEntries:_tasks];
+                         forExistingEntries:self.tasks
+                                     paging:paging];
+    
+    // When loading a new list, compute the total number of pages
+    // but reset it only when completely loading another list
+    if (!paging.start) {
+        _totalPages = [self totalPagesForPaging:paging
+                                    dataEntries:_tasks];
+    }
+    
     _preloadCellIdx = [self preloadCellIndexForPaging:paging
                                           dataEntries:_tasks];
+}
+
+- (AFAListResponseModel *)responseModelForTaskList:(NSArray *)taskList
+                                             error:(NSError *)error
+                                             paging:(ASDKModelPaging *)paging {
+    AFAListResponseModel *response = [AFAListResponseModel new];
+    response.objectList = taskList;
+    response.error = error;
+    response.paging = paging;
+    
+    return response;
 }
 
 

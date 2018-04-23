@@ -22,4 +22,5 @@
 extern NSString * const kBaseModelDateFormat;
 extern NSString * const kASDKServerFullDateFormat;
 extern NSString * const kASDKServerLongDateFormat;
+extern NSString * const kASDKServerMediumDateFormat;
 extern NSString * const kASDKServerShortDateFormat;

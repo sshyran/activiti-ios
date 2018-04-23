@@ -83,5 +83,5 @@ extern NSString * const kADSKAPIUnauthorizedRequestNotification;
 
 // Error doomain
 extern NSString * const ASDKNetworkServiceErrorDomain;
-extern const NSInteger ASDKNetworkServiceErrorInvalidResponseFormat;
+extern NSInteger const  ASDKNetworkServiceErrorInvalidResponseFormat;
 

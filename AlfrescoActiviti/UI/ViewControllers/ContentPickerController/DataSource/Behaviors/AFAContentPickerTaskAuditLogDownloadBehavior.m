@@ -18,9 +18,23 @@
 
 #import "AFAContentPickerTaskAuditLogDownloadBehavior.h"
 #import "AFATaskServices.h"
-#import "AFAServiceRepository.h"
+
+@interface AFAContentPickerTaskAuditLogDownloadBehavior ()
+
+@property (strong, nonatomic) AFATaskServices *downloadTaskAuditLogService;
+
+@end
 
 @implementation AFAContentPickerTaskAuditLogDownloadBehavior
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _downloadTaskAuditLogService = [AFATaskServices new];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
@@ -30,11 +44,10 @@
             allowCachedResults:(BOOL)allowCachedResults
              withProgressBlock:(void (^)(NSString *formattedReceivedBytesString, NSError *error))progressBlock
                completionBlock:(void (^)(NSURL *downloadedContentURL, BOOL isLocalContent, NSError *error))completionBlock {
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    [taskServices requestDownloadAuditLogForTaskWithID:resourceID
-                                    allowCachedResults:allowCachedResults
-                                         progressBlock:progressBlock
-                                       completionBlock:completionBlock];
+    [self.downloadTaskAuditLogService requestDownloadAuditLogForTaskWithID:resourceID
+                                                        allowCachedResults:allowCachedResults
+                                                             progressBlock:progressBlock
+                                                           completionBlock:completionBlock];
 }
 
 @end

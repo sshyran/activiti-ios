@@ -19,10 +19,13 @@
 #import <Foundation/Foundation.h>
 @import ActivitiSDK;
 
-@class AFAFilterViewController, AFAGenericFilterModel;
+@class AFAFilterViewController,
+AFAGenericFilterModel,
+AFAListResponseModel;
+
 @protocol AFAListDataSourceProtocol;
 
-typedef void (^AFAListHandleCompletionBlock) (id<AFAListDataSourceProtocol>dataSource, NSArray *objectList, NSError *error, ASDKModelPaging *paging);
+typedef void (^AFAListHandleCompletionBlock) (id<AFAListDataSourceProtocol>dataSource, AFAListResponseModel *response);
 
 @protocol AFAListDataSourceProtocol <NSObject, UITableViewDataSource>
 
@@ -35,7 +38,8 @@ typedef void (^AFAListHandleCompletionBlock) (id<AFAListDataSourceProtocol>dataS
                          themeColor:(UIColor *)themeColor;
 - (void)loadFilterListForController:(AFAFilterViewController *)filterController;
 - (void)loadContentListForFilter:(AFAGenericFilterModel *)filter
-             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock;
+             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock
+                   cachedResults:(AFAListHandleCompletionBlock)cacheCompletionBlock;
 - (void)processAdditionalEntries:(NSArray *)additionalEntriesArr
                        forPaging:(ASDKModelPaging *)paging;
 

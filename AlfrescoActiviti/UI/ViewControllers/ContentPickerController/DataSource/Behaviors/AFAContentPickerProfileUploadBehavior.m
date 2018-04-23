@@ -22,23 +22,36 @@
 #import "AFAProfileServices.h"
 #import "AFAServiceRepository.h"
 
+@interface AFAContentPickerProfileUploadBehavior ()
+
+@property (strong, nonatomic) AFAProfileServices *uploadProfileImageService;
+
+@end
+
 @implementation AFAContentPickerProfileUploadBehavior
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _uploadProfileImageService = [AFAProfileServices new];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
-#pragma mark Public interface 
+#pragma mark Public interface
 
 - (void)uploadContentAtFileURL:(NSURL *)fileURL
                withContentData:(NSData *)contentData
                 additionalData:(id)additionalData
              withProgressBlock:(void (^)(NSUInteger progress, NSError *error))progressBlock
                completionBlock:(void (^)(BOOL isContentUploaded, NSError *error))completionBlock {
-    AFAProfileServices *profileService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    
-    [profileService requestUploadProfileImageAtFileURL:fileURL
-                                           contentData:contentData
-                                         progressBlock:progressBlock
-                                       completionBlock:completionBlock];
+    [self.uploadProfileImageService requestUploadProfileImageAtFileURL:fileURL
+                                                           contentData:contentData
+                                                         progressBlock:progressBlock
+                                                       completionBlock:completionBlock];
 }
 
 @end

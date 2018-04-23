@@ -56,6 +56,7 @@
 "listScreenSearchFieldPlaceholderFormat"                 = "Search for %@...";
 "listScreenTasksText"                                    = "tasks";
 "listScreenProcessInstancesText"                         = "process instances";
+"listScreenMissingFiltersFormat"                         = "There are no %@ filters defined that could be used to fetch the %@.";
 
 // Process instance screen
 "processInstanceScreenStartedOnFormat"                   = "Started on %@";
@@ -92,7 +93,8 @@
 "taskDetailsScreenCompletedDateText"                     = "Completed date";
 "taskDetailsScreenDurationText"                          = "Duration";
 "taskDetailsScreenClaimButtonText"                       = "Claim";
-"taskDetailsScreenTaskFormClaimedText"                   = "Task form is saved";
+"taskDetailsScreenTaskFormSavedText"                     = "Task form is saved";
+"taskDetailsScreenTaskFormSavedOfflineText"              = "You are trying to save a form whilst offline. Task form values will be stored locally until the connectivity is restored and then pushed to the server automatically.";
 "taskDetailsScreenChecklistNameText"                     = "Checklist name";
 "taskDetailsScreenChecklistTitleText"                    = "Task checklist";
 "taskDetailsScreenShowFormText"                          = "Show form";
@@ -150,6 +152,12 @@
 "settingsText"                                           = "Settings";
 "passwordText"                                           = "Password";
 
+// Offline use
+"offlineProvidingCachedResultsText"                      = "No internet connection, providing cached data";
+"offlineConnectivityRetryText"                           = "Connecting";
+"offlineConnectivityConnectedRefreshingText"             = "You are now connected, refreshing data...";
+"offlineFunctionalityNotAvailableText"                   = "This feature is not available while in offline mode";
+
 // Alert dialogs use
 "alertDialogOopsTitleText"                               = "Oops...";
 "alertDialogGenericNetworkErrorText"                     = "A network error has occured while fetching your data.\nPlease try again...";
@@ -165,7 +173,8 @@
 "alertDialogConfirmText"                                 = "Confirm";
 "alertDialogDeleteContentQuestionFormat"                 = "Are you sure you want to delete %@?";
 "alertDialogDeleteContributorQuestionFormat"             = "Are you sure you want %@ not to be involved anymore?";
-"alertDialogTaskFormCannotSetupErrorText"                = "We've encountered an issue while setting up the internals of the form screen. Please try again...";
+"alertDialogTaskFormCannotSetupErrorText"                = "We've encountered an issue while setting up the form screen.";
+"alertDialogTaskFormUnsupportedFormFieldsText"           = "The form contains one or more unsupported form fields. Please check the form definition.";
 
 // Time formatting strings
 "timeInFutureTextFormat"                                 = "in %d %@";
@@ -235,11 +244,6 @@
 "profileScreenReportToolText"                            = "Report a bug overlay";
 "settingsScreenBugReportingText"                         = "Problem reporting";
 
-// Default filter names
-"defaultFilterInvolvedTasksText"                         = "Involved tasks";
-"defaultFilterMyTasksText"                               = "My tasks";
-"defaultFilterQueuedTasksText"                           = "Queued tasks";
-"defaultFilterCompletedTasksText"                        = "Completed tasks";
-"defaultFilterRunningProcessesText"                      = "Running";
-"defaultFilterCompletedProcessesText"                    = "Completed";
-"defaultFilterAllProcessesText"                          = "All";
+// Bug reporting
+"bugReportingSheetDescriptionText"                       = "Help us make Alfresco Process Services better";
+

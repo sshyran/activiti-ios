@@ -39,6 +39,7 @@
 #import "ASDKBootstrap.h"
 #import "ASDKServiceLocator.h"
 #import "ASDKFormColorSchemeManager.h"
+#import "ASDKKVOManager.h"
 
 // Cells
 #import "ASDKPeopleTableViewCell.h"
@@ -58,15 +59,34 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 
 @interface ASDKPeopleFormFieldDetailsViewController ()
 
-@property (strong, nonatomic) ASDKModelFormField                                    *currentFormField;
 @property (strong, nonatomic) ASDKPeopleFormFieldPeoplePickerViewController         *peoplePickerViewController;
 @property (weak, nonatomic) IBOutlet UITableView                                    *peopleTableView;
 @property (weak, nonatomic) IBOutlet ASDKNoContentView                              *noContentView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                              *addBarButtonItem;
 
+// Internal state properties
+@property (strong, nonatomic) ASDKModelFormField                                    *currentFormField;
+
+@property (strong, nonatomic) ASDKKVOManager                                        *kvoManager;
+
 @end
 
 @implementation ASDKPeopleFormFieldDetailsViewController
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    
+    if (self) {
+        [self handleBindingsForNetworkConnectivity];
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+    [self.kvoManager removeObserver:self
+                         forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
+}
 
 
 #pragma mark -
@@ -83,8 +103,6 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     titleLabel.textColor = [UIColor whiteColor];
     [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
-    
-    [self setRightBarButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,10 +111,19 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     [self refreshContent];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)unwindFormFieldPeoplePickerController:(UIStoryboardSegue *)segue {
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([kSegueIDFormPeoplePicker isEqualToString:segue.identifier]) {
+        self.peoplePickerViewController = (ASDKPeopleFormFieldPeoplePickerViewController *)segue.destinationViewController;
+        self.peoplePickerViewController.currentFormField = self.currentFormField;
+    }
+}
+
+
+#pragma mark -
+#pragma mark Actions
 
 - (void)refreshContent {
     // Display the no content view if appropiate
@@ -104,8 +131,11 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     self.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"
                                                         inBundle:[NSBundle bundleForClass:self.class]
                                    compatibleWithTraitCollection:nil];
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+    if ([self isReadonlyForm]) {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationPeoplePickerControllerNoContributorsNotEditableText, ASDKLocalizationTable, @"No people involved not editable text");
+    } if (ASDKNetworkReachabilityStatusNotReachable == self.networkReachabilityStatus ||
+          ASDKNetworkReachabilityStatusUnknown == self.networkReachabilityStatus) {
+        self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormFieldNoNetworkConnectionText, ASDKLocalizationTable, @"No network connection available");
     } else {
         self.noContentView.descriptionLabel.text = ASDKLocalizedStringFromTable(kLocalizationPeoplePickerControllerNoContributorsText, ASDKLocalizationTable, @"No people involved text");
     }
@@ -114,15 +144,14 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
     [self.peopleTableView reloadData];
 }
 
-- (IBAction)unwindFormFieldPeoplePickerController:(UIStoryboardSegue *)segue {
-}
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([kSegueIDFormPeoplePicker isEqualToString:segue.identifier]) {
-        self.peoplePickerViewController = (ASDKPeopleFormFieldPeoplePickerViewController *)segue.destinationViewController;
-        self.peoplePickerViewController.currentFormField = self.currentFormField;
+- (BOOL)isReadonlyForm {
+    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType ||
+        ASDKNetworkReachabilityStatusNotReachable == self.networkReachabilityStatus ||
+        ASDKNetworkReachabilityStatusUnknown == self.networkReachabilityStatus) {
+        return YES;
     }
+    
+    return NO;
 }
 
 
@@ -139,18 +168,22 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 }
 
 - (void)setRightBarButton {
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+    if ([self isReadonlyForm]) {
         [self.addBarButtonItem setEnabled:NO];
         [self.addBarButtonItem setTitle:nil];
     } else {
         UIBarButtonItem *rightBarButtonItem = nil;
         if (self.currentFormField.values.count > 0) {
-            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(onAdd:)];
+            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                                               target:self action:@selector(onAdd:)];
         } else {
-            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(onAdd:)];
+            rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                               target:self action:@selector(onAdd:)];
         }
         rightBarButtonItem.tintColor = [UIColor whiteColor];
         self.navigationItem.rightBarButtonItem = rightBarButtonItem;
+        
+        self.addBarButtonItem = rightBarButtonItem;
     }
 }
 
@@ -197,7 +230,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         [peopleCell setupCellWithUserNameString:userInformation];
     }
     
-    if (ASDKModelFormFieldRepresentationTypeReadOnly == self.currentFormField.representationType) {
+    if ([self isReadonlyForm]) {
         peopleCell.userInteractionEnabled = NO;
     }
     
@@ -254,6 +287,24 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     UIGraphicsEndImageContext();
     
     return @[deleteButton];
+}
+
+
+#pragma mark -
+#pragma mark KVO Bindings
+
+- (void)handleBindingsForNetworkConnectivity {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     [weakSelf refreshContent];
+                                 });
+                             }];
 }
 
 @end

@@ -24,6 +24,7 @@
 // Models
 #import "ASDKModelFormField.h"
 #import "ASDKModelFormFieldValue.h"
+#import "ASDKModelDynamicTableColumnDefinitionFormField.h"
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
@@ -64,9 +65,15 @@
         self.textfield.enabled = NO;
         self.textfield.textColor = self.colorSchemeManager.formViewFilledInValueColor;
     } else {
+        BOOL isEditable = YES;
         self.isRequired = formField.isRequired;
+        
+        if ([formField isKindOfClass:[ASDKModelDynamicTableColumnDefinitionFormField class]]) {
+            isEditable = ((ASDKModelDynamicTableColumnDefinitionFormField *)formField).editable;
+        }
+        isEditable = isEditable && !formField.isReadOnly;
+        self.textfield.enabled = isEditable;
         self.textfield.placeholder = formField.placeholer;
-        self.textfield.enabled = !formField.isReadOnly;
         self.textfield.keyboardType = [self keyBoardTypeForValue:self.keyBoardType];
         
         // Check for any existing metadata value that might have been attached to the form

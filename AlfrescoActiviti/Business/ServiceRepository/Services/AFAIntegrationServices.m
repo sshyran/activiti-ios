@@ -19,15 +19,17 @@
 #import "AFAIntegrationServices.h"
 @import ActivitiSDK;
 
-// Configurations
-#import "AFALogConfiguration.h"
 
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
+@interface AFAIntegrationServices () <ASDKDataAccessorDelegate>
 
-@interface AFAIntegrationServices ()
+// Fetch integration accounts
+@property (strong, nonatomic) ASDKIntegrationDataAccessor               *fetchIntegrationAccounListDataAccessor;
+@property (copy, nonatomic) AFAIntegrationAccountListCompletionBlock    integrationAccountListCompletionBlock;
+@property (copy, nonatomic) AFAIntegrationAccountListCompletionBlock    integrationAccountListCachedResultsBlock;
 
-@property (strong, nonatomic) dispatch_queue_t                  integrationUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKIntegrationNetworkServices    *integrationNetworkService;
+// Upload task integration content
+@property (strong, nonatomic) ASDKIntegrationDataAccessor               *uploadTaskIntegrationContentDataAccessor;
+@property (copy, nonatomic) AFAIntegrationContentUploadCompletionBlock  uploadTaskIntegrationContentCompletionBlock;
 
 @end
 
@@ -35,73 +37,94 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 
 
 #pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        self.integrationUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        
-        // Acquire and set up the app network service
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.integrationNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKIntegrationNetworkServiceProtocol)];
-        self.integrationNetworkService.resultsQueue = self.integrationUpdatesProcessingQueue;
-    }
-    
-    return self;
-}
-
-
-#pragma mark -
 #pragma mark Public interface
 
-- (void)requestIntegrationAccountsWithCompletionBlock:(AFAIntegrationAccountListCompletionBlock)completionBlock {
+- (void)requestIntegrationAccountsWithCompletionBlock:(AFAIntegrationAccountListCompletionBlock)completionBlock
+                                        cachedResults:(AFAIntegrationAccountListCompletionBlock)cacheCompletionBlock {
     NSParameterAssert(completionBlock);
     
-    [self.integrationNetworkService fetchIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
-        if (!error && accounts) {
-            AFALogVerbose(@"Fetched %lu integration account entries", (unsigned long)accounts.count);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock (accounts, nil, paging);
-            });
-        } else {
-            AFALogError(@"An error occured while fetching the integration accounts list. Reason:%@", error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error, nil);
-            });
-        }
-    }];
+    self.integrationAccountListCompletionBlock = completionBlock;
+    self.integrationAccountListCachedResultsBlock = cacheCompletionBlock;
+    
+    self.fetchIntegrationAccounListDataAccessor = [[ASDKIntegrationDataAccessor alloc] initWithDelegate:self];
+    [self.fetchIntegrationAccounListDataAccessor fetchIntegrationAccounts];
 }
 
 - (void)requestUploadIntegrationContentForTaskID:(NSString *)taskID
                               withRepresentation:(ASDKIntegrationNodeContentRequestRepresentation *)nodeContentRepresentation
                                   completionBloc:(AFAIntegrationContentUploadCompletionBlock)completionBlock {
-    NSParameterAssert(taskID);
-    NSParameterAssert(nodeContentRepresentation);
     NSParameterAssert(completionBlock);
     
+    self.uploadTaskIntegrationContentCompletionBlock = completionBlock;
+    
     nodeContentRepresentation.isLink = NO;
-    [self.integrationNetworkService uploadIntegrationContentForTaskID:taskID
-                                                   withRepresentation:nodeContentRepresentation
-                                                      completionBlock:^(ASDKModelContent *contentModel, NSError *error) {
-                                                          if (!error) {
-                                                              AFALogVerbose(@"Successfully uploaded integration content for task with ID:%@", taskID);
-                                                              
-                                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                                  completionBlock(contentModel, nil);
-                                                              });
-                                                          } else {
-                                                              AFALogError(@"An error occured while uploading integration content. Rason::%@", error.localizedDescription);
-                                                              
-                                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                                  completionBlock(nil, error);
-                                                              });
-                                                          }
-                                                      }];
+    
+    self.uploadTaskIntegrationContentDataAccessor = [[ASDKIntegrationDataAccessor alloc] initWithDelegate:self];
+    [self.uploadTaskIntegrationContentDataAccessor uploadIntegrationContentForTaskID:taskID
+                                                       withContentNodeRepresentation:nodeContentRepresentation];
 }
 
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchIntegrationAccounListDataAccessor == dataAccessor) {
+        [self handleFetchAccountIntegrationDataAccessorResponse:response];
+    } else if (self.uploadTaskIntegrationContentDataAccessor == dataAccessor) {
+        [self handleUploadTaskIntegrationContentDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleFetchAccountIntegrationDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *integrationAccountListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *integrationAccountList = integrationAccountListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    if (!integrationAccountListResponse.error) {
+        if (integrationAccountListResponse.isCachedData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                __strong typeof(self) strongSelf = weakSelf;
+                
+                if (strongSelf.integrationAccountListCachedResultsBlock) {
+                    strongSelf.integrationAccountListCachedResultsBlock(integrationAccountList, integrationAccountListResponse.error, integrationAccountListResponse.paging);
+                    strongSelf.integrationAccountListCachedResultsBlock = nil;
+                }
+            });
+            
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.integrationAccountListCompletionBlock) {
+            strongSelf.integrationAccountListCompletionBlock(integrationAccountList, integrationAccountListResponse.error, integrationAccountListResponse.paging);
+            strongSelf.integrationAccountListCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleUploadTaskIntegrationContentDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *contentResponseModel = (ASDKDataAccessorResponseModel *)response;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.uploadTaskIntegrationContentCompletionBlock) {
+            strongSelf.uploadTaskIntegrationContentCompletionBlock(contentResponseModel.model, contentResponseModel.error);
+        }
+    });
+}
 
 @end

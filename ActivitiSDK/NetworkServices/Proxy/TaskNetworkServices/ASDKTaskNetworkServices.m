@@ -539,12 +539,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                            if (error) {
                                                                ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                   completionBlock(NO, error);
+                                                                   completionBlock(nil, error);
                                                                });
                                                            } else {
                                                                ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
                                                                dispatch_async(weakSelf.resultsQueue, ^{
-                                                                   completionBlock(((ASDKModelContent *)parsedObject).isModelContentAvailable, nil);
+                                                                   completionBlock(parsedObject, nil);
                                                                });
                                                            }
                                                        }];
@@ -558,7 +558,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               [task stateDescriptionForError:error]);
                  
                  dispatch_async(strongSelf.resultsQueue, ^{
-                     completionBlock(NO, error);
+                     completionBlock(nil, error);
                  });
              }];
     
@@ -600,6 +600,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                  if (progressBlock) {
                      NSUInteger percentProgress = (NSUInteger) (uploadProgress.completedUnitCount * 100 / uploadProgress.totalUnitCount);
                      
+                     ASDKLogVerbose(@"Content: %@ for task with ID:%@ is %lu%% uploaded", file.modelFileURL, taskID, (unsigned long)percentProgress);
+                
                      dispatch_async(strongSelf.resultsQueue, ^{
                          progressBlock(percentProgress, nil);
                      });
@@ -623,12 +625,12 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                       if (error) {
                           ASDKLogError(kASDKAPIParserManagerConversionErrorFormat, parserContentType, error.localizedDescription);
                           dispatch_async(weakSelf.resultsQueue, ^{
-                              completionBlock(NO, error);
+                              completionBlock(nil, error);
                           });
                       } else {
                           ASDKLogVerbose(kASDKAPIParserManagerConversionFormat, parserContentType, parsedObject);
                           dispatch_async(weakSelf.resultsQueue, ^{
-                              completionBlock(((ASDKModelContent *)parsedObject).isModelContentAvailable, nil);
+                              completionBlock(parsedObject, nil);
                           });
                       }
                   }];
@@ -642,7 +644,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                               [task stateDescriptionForError:error]);
                  
                  dispatch_async(strongSelf.resultsQueue, ^{
-                     completionBlock(NO, error);
+                     completionBlock(nil, error);
                  });
              }];
     
@@ -790,6 +792,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                                                          int64_t totalBytesExpectedToWrite) {
             __strong typeof(self) strongSelf = weakSelf;
             
+            NSString *formattedSize = [weakSelf.diskServices sizeStringForByteCount:totalBytesWritten];
+            ASDKLogVerbose(@"Downloaded %@ of content with ID:%@ ", formattedSize, content.modelID);
             dispatch_async(strongSelf.resultsQueue, ^{
                 progressBlock([weakSelf.diskServices sizeStringForByteCount:totalBytesWritten] , nil);
             });
@@ -1476,7 +1480,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
     [self.networkOperations addObject:dataTask];
 }
 
-- (void)cancelAllTaskNetworkOperations {
+- (void)cancelAllNetworkOperations {
     [self.networkOperations makeObjectsPerformSelector:@selector(cancel)];
     [self.networkOperations removeAllObjects];
 }

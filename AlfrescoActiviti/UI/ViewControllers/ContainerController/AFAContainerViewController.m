@@ -20,37 +20,35 @@
 #import "AFAUIConstants.h"
 #import "AFALocalizationConstants.h"
 
+// Categories
+#import "UIViewController+AFAAlertAddition.h"
+
+// Models
+#import "AFALoginViewModel.h"
+
 // View models
 #import "AFATaskListViewModel.h"
 #import "AFAProcessListViewModel.h"
-
-// Controllers
-#import "AFAContainerViewController.h"
-#import "AFAApplicationListViewController.h"
-#import "AFADrawerMenuViewController.h"
-#import "AFANavigationController.h"
-#import "AFAListViewController.h"
-#import "AFAProfileViewController.h"
-#import "AFASettingsViewController.h"
 
 // Managers
 #import "AFAServiceRepository.h"
 #import "AFAThumbnailManager.h"
 #import "AFAAppServices.h"
-#import "AFATaskServices.h"
 #import "AFAProcessServices.h"
 #import "AFAFilterServices.h"
-#import "AFAFormServices.h"
 #import "AFAUserServices.h"
 #import "AFAQueryServices.h"
 #import "AFAIntegrationServices.h"
 @import ActivitiSDK;
 
-// Models
-#import "AFALoginViewModel.h"
+// Controllers
+#import "AFAContainerViewController.h"
+#import "AFAApplicationListViewController.h"
+#import "AFADrawerMenuViewController.h"
+#import "AFAListViewController.h"
+#import "AFAProfileViewController.h"
+#import "AFASettingsViewController.h"
 
-// Categories
-#import "UIViewController+AFAAlertAddition.h"
 
 @interface AFAContainerViewController () <AFAContainerViewControllerDelegate>
 
@@ -71,7 +69,7 @@
 
 // Controllers
 @property (strong, nonatomic) AFADrawerMenuViewController   *drawerMenuViewController;
-@property (strong, nonatomic) AFANavigationController       *detailsNavigationController;
+@property (strong, nonatomic) UINavigationController        *detailsNavigationController;
 
 @end
 
@@ -87,43 +85,15 @@
     if (self) {
         AFAServiceRepository *serviceRepository = [AFAServiceRepository sharedRepository];
         
-        // Register SDK integration services
-        AFAAppServices *appServices = [AFAAppServices new];
-        [serviceRepository registerServiceObject:appServices
-                                      forPurpose:AFAServiceObjectTypeAppServices];
-        
-        AFATaskServices *taskServices = [AFATaskServices new];
-        [serviceRepository registerServiceObject:taskServices
-                                      forPurpose:AFAServiceObjectTypeTaskServices];
-        
-        AFAProcessServices *processServices = [AFAProcessServices new];
-        [serviceRepository registerServiceObject:processServices
-                                      forPurpose:AFAServiceObjectTypeProcessServices];
-        
-        AFAFilterServices *filterServices = [AFAFilterServices new];
-        [serviceRepository registerServiceObject:filterServices
-                                      forPurpose:AFAServiceObjectTypeFilterServices];
-        
-        AFAFormServices *formService = [AFAFormServices new];
-        [serviceRepository registerServiceObject:formService
-                                      forPurpose:AFAServiceObjectTypeFormServices];
-        
-        AFAUserServices *userService = [AFAUserServices new];
-        [serviceRepository registerServiceObject:userService
-                                      forPurpose:AFAServiceObjectTypeUserServices];
-        
-        AFAQueryServices *queryService = [AFAQueryServices new];
-        [serviceRepository registerServiceObject:queryService
-                                      forPurpose:AFAServiceObjectTypeQueryServices];
-        
-        AFAIntegrationServices *integrationService = [AFAIntegrationServices new];
-        [serviceRepository registerServiceObject:integrationService
-                                      forPurpose:AFAServiceObjectTypeIntegrationServices];
-        
         // Register the thumbnail manager with the service repository
         AFAThumbnailManager *thumbnailManager = [AFAThumbnailManager new];
         [serviceRepository registerServiceObject:thumbnailManager
                                       forPurpose:AFAServiceObjectTypeThumbnailManager];
+        
+        // Register network delayed services
+        ASDKNetworkDelayedOperationSaveFormService *saveFormService = [ASDKNetworkDelayedOperationSaveFormService new];
+        [serviceRepository registerServiceObject:saveFormService
+                                      forPurpose:AFAServiceObjectTypeNetworkDelayedSaveFormService];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleUnAuthorizedRequestNotification)
@@ -160,10 +130,10 @@
                  sender:(id)sender {
     if ([kSegueIDApplicationListEmbedding isEqualToString:segue.identifier]) {
         // Check if the application list is the root controller of a navigation controller
-        if ([segue.destinationViewController isKindOfClass:[AFANavigationController class]]) {
-            self.detailsNavigationController = (AFANavigationController *)segue.destinationViewController;
+        if ([segue.destinationViewController isKindOfClass:[UINavigationController class]]) {
+            self.detailsNavigationController = (UINavigationController *)segue.destinationViewController;
             
-            AFAApplicationListViewController *applicationListViewController = ((AFANavigationController *)segue.destinationViewController).viewControllers.firstObject;
+            AFAApplicationListViewController *applicationListViewController = ((UINavigationController *)segue.destinationViewController).viewControllers.firstObject;
             applicationListViewController.delegate = self;
         }
     }
@@ -241,31 +211,6 @@
     [alertController addAction:yesButtonAction];
     [alertController addAction:cancelButtonAction];
     
-    [self presentViewController:alertController
-                       animated:YES
-                     completion:nil];
-}
-
-- (void)requestUserLogout {
-    [self.loginViewModel requestLogout];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
-                                  sender:nil];
-    });
-}
-
-- (void)handleUnAuthorizedRequestNotification {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:NSLocalizedString(kLocalizationLoginUnauthorizedRequestErrorText, @"Unauthorized request text")
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-    __weak typeof(self) weakSelf = self;
-    UIAlertAction *okButtonAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogOkButtonText, @"OK button title")
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction *action) {
-                                                               __strong typeof(self) strongSelf = weakSelf;
-                                                               [strongSelf requestUserLogout];
-                                                           }];
-    [alertController addAction:okButtonAction];
     [self presentViewController:alertController
                        animated:YES
                      completion:nil];
@@ -359,6 +304,46 @@
                              self.menuContainerView.hidden = YES;
                          }
                      }];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleUnAuthorizedRequestNotification {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:NSLocalizedString(kLocalizationLoginUnauthorizedRequestErrorText, @"Unauthorized request text")
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    UIAlertAction *okButtonAction = [UIAlertAction actionWithTitle:NSLocalizedString(kLocalizationAlertDialogOkButtonText, @"OK button title")
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *action) {
+                                                               __strong typeof(self) strongSelf = weakSelf;
+                                                               [strongSelf requestUserUnauthorizedLogout];
+                                                           }];
+    [alertController addAction:okButtonAction];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:alertController
+                           animated:YES
+                         completion:nil];
+    });
+}
+
+- (void)requestUserLogout {
+    [self.loginViewModel requestLogout];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
+                                  sender:nil];
+    });
+}
+
+- (void)requestUserUnauthorizedLogout {
+    [self.loginViewModel requestLogoutForUnauthorizedAccess];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
+                                  sender:nil];
+    });
 }
 
 @end

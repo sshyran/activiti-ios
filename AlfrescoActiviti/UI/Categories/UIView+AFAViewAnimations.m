@@ -50,4 +50,41 @@
                      }];
 }
 
+- (UIView *)snapshotViewFromCurrentView {
+    CGRect bounds = self.bounds;
+    
+    UIGraphicsBeginImageContextWithOptions(bounds.size, NO, [UIScreen mainScreen].scale);
+    [self drawViewHierarchyInRect:bounds
+               afterScreenUpdates:YES];
+    UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImageView *snapshotImageView = [[UIImageView alloc] initWithImage:snapshot];
+    UIView *snapshotView = [[UIView alloc] init];
+    [snapshotView addSubview:snapshotImageView];
+    
+    return snapshotView;
+}
+
+- (UIView *)snapshotViewFromCurrentViewsLayer {
+    CGRect bounds = self.layer.bounds;
+    
+    UIGraphicsBeginImageContextWithOptions(bounds.size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSaveGState(context);
+    [self.layer renderInContext:context];
+    CGContextRestoreGState(context);
+    
+    UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImageView *snapshotImageView = [[UIImageView alloc] initWithImage:snapshot];
+    UIView *snapshotView = [[UIView alloc] init];
+    snapshotView.backgroundColor = [UIColor whiteColor];
+    [snapshotView addSubview:snapshotImageView];
+    
+    return snapshotView;
+}
+
 @end

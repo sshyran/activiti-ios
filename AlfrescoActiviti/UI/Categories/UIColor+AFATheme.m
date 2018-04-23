@@ -163,4 +163,12 @@
     return [UIColor colorWithRed:92 / 255.0f green:184 / 255.0f blue:92 / 255.0f alpha:1.0f];
 }
 
++ (UIColor *)connectivityWarningColor {
+    return [UIColor colorWithRed:254 / 255.0f green:167 / 255.0f blue:77 / 255.0f alpha:1.0f];
+}
+
++ (UIColor *)connectivityRestoredColor {
+    return [UIColor colorWithRed:112 / 255.0f green:156 / 255.0f blue:70 / 255.0f alpha:1.0f];
+}
+
 @end

@@ -23,5 +23,6 @@
 
 @property (strong, nonatomic) NSArray                           *involvedPeople;
 @property (assign, nonatomic, getter=isRefreshInProgress) BOOL  isRefreshInProgress;
+@property (assign, nonatomic) BOOL                              isConnectivityAvailable;
 
 @end

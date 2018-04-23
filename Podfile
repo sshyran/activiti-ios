@@ -1,12 +1,12 @@
-platform :ios, '8.0'
+platform :ios, '10.0'
 use_frameworks!
 
 # Shared pods
 def shared_pods
-	pod 'CocoaLumberjack'
-	pod 'Mantle'
+	pod 'CocoaLumberjack', '~> 3.3'
+	pod 'Mantle', '~> 2.1'
 	pod 'JGProgressHUD'
-	pod 'AFNetworking'
+	pod 'AFNetworking', '~>3.1'
 end
 
 abstract_target 'Shared' do
@@ -14,7 +14,7 @@ abstract_target 'Shared' do
 
 	target 'AlfrescoActiviti' do
         pod 'Fabric'
-        pod 'Crashlytics'
+        pod 'Crashlytics', '~> 3.9'
         pod 'Buglife'
 	end
 

@@ -36,8 +36,6 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 
@@ -48,6 +46,11 @@
     self.completeTaskRoundedBorderView.fillColor = themeColor;
     self.requeueRoundedBorderView.fillColor = themeColor;
     self.backgroundColor = [themeColor colorWithAlphaComponent:.4f];
+}
+
+- (void)updateStateForConnectivity:(BOOL)isConnectivityAvailable {
+    self.completeTaskButton.enabled = isConnectivityAvailable;
+    self.requeueTaskButton.enabled = isConnectivityAvailable;
 }
 
 

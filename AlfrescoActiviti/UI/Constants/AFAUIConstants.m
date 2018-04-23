@@ -26,6 +26,7 @@ NSTimeInterval kDefaultAnimationTime                            = .45f;
 NSTimeInterval kLoginScreenServerButtonsFadeInTime              = .45f;
 NSTimeInterval kLoginScreenBackgroundImageFadeInTime            = 1.2f;
 NSTimeInterval kModalReplaceAnimationTime                       = .55f;
+NSTimeInterval kPushPopAnimationTime                            = .40f;
 NSTimeInterval kOverlayAlphaChangeTime                          = .25f;
 
 
@@ -34,7 +35,6 @@ NSTimeInterval kOverlayAlphaChangeTime                          = .25f;
 
 NSString *kStoryboardIDLoginCredentialsViewController           = @"LoginCredentialsViewControllerID";
 NSString *kStoryboardIDEmbeddedCredentialsPageController        = @"EmbeddedCredentialsPageControllerID";
-NSString *kStoryboardIDConnectivityViewController               = @"ConnectivityViewControllerID";
 NSString *kStoryboardIDContentPickerViewController              = @"ContentPickerViewControllerID";
 NSString *kStoryboardIDModalTaskDetailsViewController           = @"ModalTaskDetailsViewControllerID";
 NSString *kStoryboardIDModalPeoplePickerViewController          = @"ModalPeoplePickerViewControllerID";

@@ -42,7 +42,12 @@
 @property (weak, nonatomic) IBOutlet UIButton           *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton           *confirmButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *alertContainerViewVerticalConstraint;
+
+// Internal state properties
 @property (strong, nonatomic) JGProgressHUD             *progressHUD;
+
+// Services
+@property (strong, nonatomic) AFATaskServices           *involveUserService;
 
 @end
 
@@ -116,7 +121,7 @@
 
 
 #pragma mark -
-#pragma mark Action 
+#pragma mark Action
 
 - (IBAction)onCancel:(id)sender {
     [self dismissViewControllerAnimated:YES
@@ -131,33 +136,32 @@
     user.email = [self.emailAddressTextField.text normalizedEmailAddress];
     
     __weak typeof(self) weakSelf = self;
-    AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-    [taskServices requestTaskUserInvolvement:user
-                                   forTaskID:self.taskID
-                             completionBlock:^(BOOL isUserInvolved, NSError *error) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 if (!error) {
-                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                         weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                                         weakSelf.progressHUD.detailTextLabel.text = nil;
-                                         
-                                         weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                                         weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                                     });
-                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                         if ([weakSelf.delegate respondsToSelector:@selector(didInvolveUserWithEmailAddress:)]) {
-                                             [weakSelf.delegate didInvolveUserWithEmailAddress:user.email];
-                                         }
-                                         
-                                         [weakSelf.progressHUD dismiss];
-                                         [weakSelf dismissViewControllerAnimated:YES
-                                                                      completion:nil];
-                                     });
-                                 } else {
-                                     [strongSelf.progressHUD dismiss];
-                                     [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-                                 }
-    }];
+    [self.involveUserService requestTaskUserInvolvement:user
+                                              forTaskID:self.taskID
+                                        completionBlock:^(BOOL isUserInvolved, NSError *error) {
+                                            __strong typeof(self) strongSelf = weakSelf;
+                                            if (!error) {
+                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                    weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                                                    weakSelf.progressHUD.detailTextLabel.text = nil;
+                                                    
+                                                    weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
+                                                    weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
+                                                });
+                                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                    if ([weakSelf.delegate respondsToSelector:@selector(didInvolveUserWithEmailAddress:)]) {
+                                                        [weakSelf.delegate didInvolveUserWithEmailAddress:user.email];
+                                                    }
+                                                    
+                                                    [weakSelf.progressHUD dismiss];
+                                                    [weakSelf dismissViewControllerAnimated:YES
+                                                                                 completion:nil];
+                                                });
+                                            } else {
+                                                [strongSelf.progressHUD dismiss];
+                                                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+                                            }
+                                        }];
 }
 
 - (IBAction)onKeyboardDismiss:(UITapGestureRecognizer *)sender {

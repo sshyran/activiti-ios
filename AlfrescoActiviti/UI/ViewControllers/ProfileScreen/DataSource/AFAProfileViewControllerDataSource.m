@@ -49,6 +49,7 @@
         NSData *buffer = [NSKeyedArchiver archivedDataWithRootObject:profile];
         ASDKModelProfile *profileCopy = [NSKeyedUnarchiver unarchiveObjectWithData:buffer];
         _originalProfileInstance = profileCopy;
+        _isInputEnabled = YES;
     }
     
     return self;
@@ -269,6 +270,7 @@
                 contactInformationCell.categoryDescriptionTextField.text = self.currentProfile.companyName;
             }
             
+            contactInformationCell.categoryDescriptionTextField.enabled = self.isInputEnabled;
             cell = contactInformationCell;
         }
             break;
@@ -287,6 +289,7 @@
             changePasswordCell.delegate = self;
             [changePasswordCell.actionButton setTitle:NSLocalizedString(kLocalizationProfileScreenPasswordButtonText, @"Change password button")
                                              forState:UIControlStateNormal];
+            changePasswordCell.actionButton.enabled = self.isInputEnabled;
             
             cell = changePasswordCell;
         }

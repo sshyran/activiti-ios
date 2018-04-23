@@ -1,4 +1,4 @@
-/*******************************************************************************
+ /*******************************************************************************
  * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of the Alfresco Activiti Mobile iOS App.
@@ -34,18 +34,20 @@
 #import "AFAContainerViewController.h"
 
 // Managers
-#import "AFAKeychainWrapper.h"
 #import "AFALogConfiguration.h"
 @import ActivitiSDK;
 
 // Views
 #import "AFAActivityView.h"
-#import "AFAModalReplaceSegueUnwind.h"
+
+// Animators
+#import "AFAModalReplaceAnimator.h"
+#import "AFAModalDismissAnimator.h"
 
 
 static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
 
-@interface AFALoginViewController ()
+@interface AFALoginViewController () <UIViewControllerTransitioningDelegate>
 
 // Views
 @property (weak, nonatomic) IBOutlet UIView                     *effectViewContainer;
@@ -118,42 +120,7 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     self.activitiLogoCenterConstraint.active = NO;
     self.activitiLogoCenterPaddedConstraint.active = YES;
     
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *authenticationIdentifier = [userDefaults objectForKey:kAuthentificationTypeCredentialIdentifier];
-    AFALoginAuthenticationType lastAuthetificationType = [authenticationIdentifier isEqualToString:kCloudAuthetificationCredentialIdentifier] ? AFALoginAuthenticationTypeCloud : AFALoginAuthenticationTypePremise;
-    
-    // Check if we have registered credentials and if so login the user
-    // without showing the menu
-    // Note: If no previous successfull attempt to login is recorded in the user defaults
-    // this means the app is freshly installed and even if credentials are registered with
-    // the keychain do not fetch them
-    if (authenticationIdentifier.length) {
-        [self.loginViewModel updateUserNameEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kUsernameCredentialIdentifier]];
-        [self.loginViewModel updatePasswordEntry:[AFAKeychainWrapper keychainStringFromMatchingIdentifier:kPasswordCredentialIdentifier]];
-    }
-    
-    BOOL areCredentialsAvailableFromKeychain = self.loginViewModel.username.length && self.loginViewModel.password.length;
-    
-    if (AFALoginAuthenticationTypeCloud == lastAuthetificationType &&
-        areCredentialsAvailableFromKeychain) {
-        [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kCloudHostNameCredentialIdentifier]];
-        [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kCloudSecureLayerCredentialIdentifier]];
-    } else {
-        [self.loginViewModel updateHostNameEntry:[userDefaults objectForKey:kPremiseHostNameCredentialIdentifier]];
-        [self.loginViewModel updateCommunicationOverSecureLayer:[userDefaults boolForKey:kPremiseSecureLayerCredentialIdentifier]];
-        NSString *cachedPortString = [userDefaults objectForKey:kPremisePortCredentialIdentifier];
-        if (!cachedPortString.length) {
-            cachedPortString = [@(kDefaultLoginUnsecuredPort) stringValue];
-        }
-        [self.loginViewModel updatePortEntry:cachedPortString];
-        
-        // If there is no stored value for the service document key, then fallback to the one provided inside the login model
-        // at initialization time
-        NSString *serviceDocumentValue = [userDefaults objectForKey:kPremiseServiceDocumentCredentialIdentifier];
-        if (serviceDocumentValue.length) {
-            [self.loginViewModel updateServiceDocument:serviceDocumentValue];
-        }
-    }
+    [self.loginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:[AFALoginViewModel lastAuthenticationType]];
     
     if ([self.loginViewModel canUserSignIn]) {
         [self handleBindingsForLoginViewModel:self.loginViewModel];
@@ -187,16 +154,23 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
 
+
 #pragma mark -
 #pragma mark Navigation
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
+                                                                  presentingController:(UIViewController *)presenting
+                                                                      sourceController:(UIViewController *)source {
+    return [AFAModalReplaceAnimator new];
+}
+
+- (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    return [AFAModalDismissAnimator new];
+}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender {
@@ -209,24 +183,9 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     if ([kSegueIDLoginAuthorized isEqualToString:segue.identifier]) {
         AFAContainerViewController *containerViewController = segue.destinationViewController;
+        containerViewController.transitioningDelegate = self;
         containerViewController.loginViewModel = self.loginViewModel;
     }
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDLoginAuthorizedUnwind isEqualToString:identifier]) {
-        AFAModalReplaceSegueUnwind *unwindSegue = [AFAModalReplaceSegueUnwind segueWithIdentifier:identifier
-                                                                                           source:fromViewController
-                                                                                      destination:toViewController
-                                                                                   performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 - (IBAction)unwindToLoginController:(UIStoryboardSegue *)segue {
@@ -238,6 +197,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 #pragma mark Actions
 
 - (IBAction)onActivitiCloud:(id)sender {
+    [self.credentialsPageViewController.cloudLoginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypeCloud];
+    
     [self performCredentialPageAnimationInReverse:NO
                                   completionBlock:^(BOOL finished) {
         [self.credentialsPageViewController showCloudLoginCredentials];
@@ -245,6 +206,8 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
 }
 
 - (IBAction)onActivitiPremise:(id)sender {
+    [self.credentialsPageViewController.premiseLoginViewModel restoreLastSuccessfullSessionLoginCredentialsForType:AFALoginAuthenticationTypePremise];
+    
     [self performCredentialPageAnimationInReverse:NO
                                   completionBlock:^(BOOL finished) {
         [self.credentialsPageViewController showPremiseLoginCredentials];
@@ -266,12 +229,6 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     
     // Cancel possible ongoing login request
     [loginViewModels makeObjectsPerformSelector:@selector(cancelLoginRequest)];
-    
-    // Clear credential information
-    [loginViewModels makeObjectsPerformSelector:@selector(updateUserNameEntry:)
-                                     withObject:nil];
-    [loginViewModels makeObjectsPerformSelector:@selector(updatePasswordEntry:)
-                                     withObject:nil];
     
     [self showEnvironmentPageAnimation];
 }
@@ -411,6 +368,15 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
                                      }
                                      
                                      if (AFALoginAuthenticationStateAuthorized == authState) {
+                                         AFALoginViewModel *authorizedLoginModel = (AFALoginViewModel *)object;
+                                         [weakSelf.loginViewModel updateUserNameEntry:authorizedLoginModel.username];
+                                         [weakSelf.loginViewModel updatePasswordEntry:authorizedLoginModel.password];
+                                         [weakSelf.loginViewModel updateHostNameEntry:authorizedLoginModel.hostName];
+                                         [weakSelf.loginViewModel updatePortEntry:authorizedLoginModel.port];
+                                         [weakSelf.loginViewModel updateCommunicationOverSecureLayer:authorizedLoginModel.isSecureLayer];
+                                         [weakSelf.loginViewModel updateServiceDocument:authorizedLoginModel.serviceDocument];
+                                         [weakSelf.loginViewModel updateRememberCredentials:authorizedLoginModel.rememberCredentials];
+                                         
                                          [weakSelf performSegueWithIdentifier:kSegueIDLoginAuthorized
                                                                    sender:nil];
                                      }

@@ -70,7 +70,7 @@
                                      XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                      XCTAssert([(NSArray *)parsedObject count] == 1);
                                      
-                                     XCTAssert(paging.pageCount == 1);
+                                     XCTAssert(paging.total == 1);
                                      XCTAssert(paging.size == 1);
                                      XCTAssert(!paging.start);
                                      
@@ -114,7 +114,7 @@
                                      XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                      XCTAssert([(NSArray *)parsedObject count] == 2);
                                      
-                                     XCTAssert(paging.pageCount == 2);
+                                     XCTAssert(paging.total == 2);
                                      XCTAssert(paging.size == 2);
                                      XCTAssert(!paging.start);
                                      
@@ -124,7 +124,6 @@
                                      XCTAssertNil(processInstance.endDate);
                                      XCTAssert([processInstance.processDefinitionKey isEqualToString:@"VisiblityConditionsProcess"]);
                                      XCTAssert([processInstance.processDefinitionName isEqualToString:@"VisiblityConditionsProcess"]);
-                                     XCTAssertTrue(processInstance.graphicalNotationDefined);
                                      XCTAssert([processInstance.tenantID isEqualToString:@"tenant_1"]);
                                      XCTAssert([processInstance.initiatorModel isKindOfClass:[ASDKModelProfile class]]);
                                      XCTAssert([processInstance.processDefinitionDeploymentID isEqualToString:@"37727"]);
@@ -167,7 +166,6 @@
         XCTAssert([processInstance.modelID isEqualToString:@"37678"]);
         XCTAssert([processInstance.processDefinitionKey isEqualToString:@"StartFormProcess"]);
         XCTAssert([processInstance.processDefinitionName isEqualToString:@"StartFormProcess"]);
-        XCTAssertTrue(processInstance.graphicalNotationDefined);
         XCTAssert([processInstance.tenantID isEqualToString:@"tenant_1"]);
         XCTAssert([processInstance.initiatorModel isKindOfClass:[ASDKModelProfile class]]);
         XCTAssert([processInstance.processDefinitionDeploymentID isEqualToString:@"37674"]);
@@ -272,7 +270,7 @@
                                      XCTAssert([parsedObject isKindOfClass:[NSArray class]]);
                                      XCTAssert([(NSArray *)parsedObject count] == 1);
                                      
-                                     XCTAssert(paging.pageCount == 1);
+                                     XCTAssert(paging.total == 1);
                                      XCTAssert(paging.size == 1);
                                      XCTAssert(!paging.start);
                                      

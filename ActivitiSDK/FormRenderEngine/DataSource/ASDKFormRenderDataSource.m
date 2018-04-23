@@ -514,7 +514,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
-        case ASDKModelFormFieldRepresentationTypeDate: {
+        case ASDKModelFormFieldRepresentationTypeDate:
+        case ASDKModelFormFieldRepresentationTypeDateTime: {
             cellIdentifier = kASDKCellIDFormFieldDateRepresentation;
         }
             break;
@@ -566,10 +567,7 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         if (ASDKModelFormFieldRepresentationTypeUndefined == formField.formFieldParams.representationType) {
             representationType = ASDKModelFormFieldRepresentationTypeReadonlyText;
         } else {
-            // Don't provide a child controller for completed date form fields
-            if (ASDKModelFormFieldRepresentationTypeDate != formField.formFieldParams.representationType) {
-                representationType = formField.formFieldParams.representationType;
-            }
+            representationType = formField.formFieldParams.representationType;
         }
     } else if (ASDKModelFormFieldRepresentationTypeReadOnly != formField.representationType) {
         representationType = formField.representationType;
@@ -582,7 +580,8 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
         }
             break;
             
-        case ASDKModelFormFieldRepresentationTypeDate: {
+        case ASDKModelFormFieldRepresentationTypeDate:
+        case ASDKModelFormFieldRepresentationTypeDateTime: {
             controllerIdentifierString = kASDKStoryboardIDDateFormFieldDetailController;
         }
             break;

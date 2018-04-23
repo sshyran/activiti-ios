@@ -22,41 +22,22 @@
 // Constants
 #import "AFABusinessConstants.h"
 
-// Configurations
-#import "AFALogConfiguration.h"
-
 // Models
 #import "AFAUserFilterModel.h"
 
-static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRACE;
+@interface AFAUserServices () <ASDKDataAccessorDelegate>
 
-@interface AFAUserServices ()
+// Fetch user list
+@property (strong, nonatomic) ASDKUserDataAccessor              *fetchUserListDataAccessor;
+@property (copy, nonatomic) AFAUserServicesFetchCompletionBlock userListCompletionBlock;
 
-@property (strong, nonatomic) dispatch_queue_t              userUpdatesProcessingQueue;
-@property (strong, nonatomic) ASDKUserNetworkServices       *userNetworkService;
+// Fetch profile image
+@property (strong, nonatomic) ASDKUserDataAccessor              *fetchProfileImageDataAccessor;
+@property (copy, nonatomic) AFAUserPictureCompletionBlock        profileImageCompletionBlock;
 
 @end
 
 @implementation AFAUserServices
-
-
-#pragma mark -
-#pragma mark Life cycle
-
-- (instancetype)init {
-    self = [super init];
-    
-    if (self) {
-        self.userUpdatesProcessingQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.`%@ProcessingQueue", [NSBundle mainBundle].bundleIdentifier, NSStringFromClass([self class])] UTF8String], DISPATCH_QUEUE_SERIAL);
-        
-        // Acquire and set up the app network service
-        ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-        self.userNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKUserNetworkServiceProtocol)];
-        self.userNetworkService.resultsQueue = self.userUpdatesProcessingQueue;
-    }
-    
-    return self;
-}
 
 
 #pragma mark -
@@ -74,50 +55,75 @@ static const int activitiLogLevel = AFA_LOG_LEVEL_VERBOSE; // | AFA_LOG_FLAG_TRA
     userRequestRepresentation.excludeProcessID = filter.excludeProcessID;
     userRequestRepresentation.jsonAdapterType = ASDKModelJSONAdapterTypeExcludeNilValues;
     
-    [self.userNetworkService fetchUsersWithUserRequestRepresentation:userRequestRepresentation
-                                                     completionBlock:^(NSArray *users, NSError *error, ASDKModelPaging *paging) {
-        if (!error && users) {
-            AFALogVerbose(@"Fetched %lu user entries", (unsigned long)users.count);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock (users, nil, paging);
-            });
-        } else {
-            AFALogError(@"An error occured while fetching the user list. Reason:%@", error.localizedDescription);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completionBlock(nil, error, nil);
-            });
-        }
-    }];
+    self.userListCompletionBlock = completionBlock;
+    
+    self.fetchUserListDataAccessor = [[ASDKUserDataAccessor alloc] initWithDelegate:self];
+    [self.fetchUserListDataAccessor fetchUsersWithUserFilter:userRequestRepresentation];
 }
 
 - (void)requestPictureForUserID:(NSString *)userID
                 completionBlock:(AFAUserPictureCompletionBlock)completionBlock {
-    NSParameterAssert(userID);
     NSParameterAssert(completionBlock);
     
-    [self.userNetworkService fetchPictureForUserID:userID
-                                   completionBlock:^(UIImage *profileImage, NSError *error) {
-       if (!error && profileImage) {
-           AFALogVerbose(@"Fetched profile picture for user ID:%@", userID);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock (profileImage, nil);
-           });
-       } else {
-           AFALogError(@"An error occured while fetching the profile picture for user ID:%@. Reason:%@", userID, error.localizedDescription);
-           
-           dispatch_async(dispatch_get_main_queue(), ^{
-               completionBlock(nil, error);
-           });
-       }
-    }];
+    self.profileImageCompletionBlock = completionBlock;
+    
+    self.fetchProfileImageDataAccessor = [[ASDKUserDataAccessor alloc] initWithDelegate:self];
+    [self.fetchProfileImageDataAccessor fetchProfilePictureForUserWithID:userID];
 }
 
-- (BOOL)isLoggedInOnCloud {
++ (BOOL)isLoggedInOnCloud {
     ASDKBootstrap *sdkBootstrap = [ASDKBootstrap sharedInstance];
-    return [sdkBootstrap.serverConfiguration.hostAddressString isEqualToString:kActivitiCloudHostName];
+    ASDKUserNetworkServices *userNetworkService = [sdkBootstrap.serviceLocator serviceConformingToProtocol:@protocol(ASDKUserNetworkServiceProtocol)];
+    return [sdkBootstrap.serverConfiguration.hostAddressString isEqualToString:[userNetworkService.servicePathFactory cloudHostnamePath]];
+}
+
+
+#pragma mark -
+#pragma mark ASDKDataAccessorDelegate
+
+- (void)dataAccessor:(id<ASDKServiceDataAccessorProtocol>)dataAccessor
+ didLoadDataResponse:(ASDKDataAccessorResponseBase *)response {
+    if (self.fetchUserListDataAccessor == dataAccessor) {
+        [self handleUserDataAccessorResponse:response];
+    } else if (self.fetchProfileImageDataAccessor == dataAccessor) {
+        [self handleProfileImageDataAccessorResponse:response];
+    }
+}
+
+- (void)dataAccessorDidFinishedLoadingDataResponse:(id<ASDKServiceDataAccessorProtocol>)dataAccessor {
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)handleUserDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseCollection *userListResponse = (ASDKDataAccessorResponseCollection *)response;
+    NSArray *userList = userListResponse.collection;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (strongSelf.userListCompletionBlock) {
+            strongSelf.userListCompletionBlock(userList, userListResponse.error, userListResponse.paging);
+            strongSelf.userListCompletionBlock = nil;
+        }
+    });
+}
+
+- (void)handleProfileImageDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
+    ASDKDataAccessorResponseModel *profileImageResponse = (ASDKDataAccessorResponseModel *)response;
+    UIImage *profileImage = profileImageResponse.model;
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(self) strongSelf = weakSelf;
+        if (strongSelf.profileImageCompletionBlock) {
+            strongSelf.profileImageCompletionBlock(profileImage, profileImageResponse.error);
+            strongSelf.profileImageCompletionBlock = nil;
+        }
+    });
 }
 
 @end

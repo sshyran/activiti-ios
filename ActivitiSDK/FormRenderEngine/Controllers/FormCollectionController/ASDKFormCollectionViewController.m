@@ -37,6 +37,10 @@
 #import "ASDKFormHeaderCollectionReusableView.h"
 #import "ASDKFormFooterCollectionReusableView.h"
 
+// Managers
+#import "ASDKReachabilityManager.h"
+#import "ASDKKVOManager.h"
+
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
@@ -44,9 +48,17 @@
 @interface ASDKFormCollectionViewController () <ASDKFormRenderEngineValueTransactionsProtocol,
                                                 ASDKFormEngineControllerActionHandlerDelegate>
 
+@property (strong, nonatomic) ASDKReachabilityManager *reachabilityManager;
+@property (strong, nonatomic) ASDKKVOManager          *kvoManager;
+
 @end
 
 @implementation ASDKFormCollectionViewController
+
+- (void)dealloc {
+    [self.kvoManager removeObserver:_reachabilityManager
+                         forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))];
+}
 
 
 #pragma mark -
@@ -54,6 +66,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if (!self.reachabilityManager) {
+        _reachabilityManager = [ASDKReachabilityManager new];
+        [self handleBindingsForNetworkConnectivity];
+    }
     
     // Adjust collenction's view estimated item size
     UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *) self.collectionViewLayout;
@@ -84,23 +101,19 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Set the action handler to point to the active form controller instance
-    self.renderDelegate.actionHandler.dataSourceActionDelegate = (id<ASDKFormEngineDataSourceActionHandlerDelegate>)self.dataSource;
-    self.renderDelegate.actionHandler.formControllerActionDelegate = self;
-    
-    NSArray *selectedItemsIndexPaths = [self.collectionView indexPathsForSelectedItems];
-    for (NSIndexPath *indexPath in selectedItemsIndexPaths) {
-        [self.collectionView deselectItemAtIndexPath:indexPath
-                                            animated:NO];
-        [self refreshContentForCellAtIndexPath:indexPath];
-    }
-    
-    [self.collectionViewLayout invalidateLayout];
+    [self refreshContentInCollectionView];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+#pragma mark -
+#pragma mark Public interface
+
+- (void)replaceExistingDataSource:(id<ASDKFormRenderEngineDataSourceProtocol>)dataSource {
+    NSAssert(_renderDelegate, @"Render delegate property must be set first to meet dependency conditions");
+    
+    self.dataSource = dataSource;
+    [self refreshContentInCollectionView];
+    [self.collectionView reloadData];
 }
 
 
@@ -301,6 +314,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                 
                 if ([childController isKindOfClass:ASDKDynamicTableFormFieldDetailsViewController.class]) {
                     ASDKDynamicTableFormFieldDetailsViewController *dynamicTableDetailsViewController = (ASDKDynamicTableFormFieldDetailsViewController *) childController;
+                    dynamicTableDetailsViewController.formConfiguration = self.formConfiguration;
                     dynamicTableDetailsViewController.navigationDelegate = self.navigationDelegate;
                 }
                 
@@ -349,7 +363,7 @@ referenceSizeForHeaderInSection:(NSInteger)section {
     } else {
         BOOL isFormOutcomeEnabled = YES;
         
-        if (self.dataSource.isReadOnlyForm) {
+        if ([self isReadOnlyForm]) {
             isFormOutcomeEnabled = NO;
         } else {
             isFormOutcomeEnabled = [self.dataSource areFormFieldMetadataValuesValid];
@@ -358,6 +372,49 @@ referenceSizeForHeaderInSection:(NSInteger)section {
         [cell setupCellWithFormOutcome:(ASDKModelFormOutcome *)modelObject
                      enableFormOutcome:isFormOutcomeEnabled];
     }
+}
+
+- (void)refreshContentInCollectionView {
+    // Set the action handler to point to the active form controller instance
+    _renderDelegate.actionHandler.dataSourceActionDelegate = (id<ASDKFormEngineDataSourceActionHandlerDelegate>)_dataSource;
+    _renderDelegate.actionHandler.formControllerActionDelegate = self;
+    
+    NSArray *selectedItemsIndexPaths = [self.collectionView indexPathsForSelectedItems];
+    for (NSIndexPath *indexPath in selectedItemsIndexPaths) {
+        [self.collectionView deselectItemAtIndexPath:indexPath
+                                            animated:NO];
+        [self refreshContentForCellAtIndexPath:indexPath];
+    }
+    
+    [self.collectionViewLayout invalidateLayout];
+}
+
+- (BOOL)isReadOnlyForm {
+    if (self.dataSource.isReadOnlyForm ||
+        ASDKNetworkReachabilityStatusNotReachable == self.reachabilityManager.networkReachabilityStatus ||
+        ASDKNetworkReachabilityStatusUnknown == self.reachabilityManager.networkReachabilityStatus) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+
+#pragma mark -
+#pragma mark KVO Bindings
+
+- (void)handleBindingsForNetworkConnectivity {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self.reachabilityManager
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     [weakSelf.collectionView reloadData];
+                                 });
+                             }];
 }
 
 @end

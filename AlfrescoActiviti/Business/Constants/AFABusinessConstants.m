@@ -20,12 +20,6 @@
 
 
 #pragma mark -
-#pragma mark API Endpoints
-
-NSString *kActivitiCloudHostName                    = @"activiti.alfresco.com";
-
-
-#pragma mark -
 #pragma mark Login related
 
 NSUInteger kDefaultLoginUnsecuredPort                = 80;
@@ -46,6 +40,8 @@ NSInteger  kDefaultTaskListFetchSize                = 25;
 
 NSString *kCloudAuthetificationCredentialIdentifier     = @"kCloudAuthetificationCredentialIdentifier";
 NSString *kPremiseAuthentificationCredentialIdentifier  = @"kPremiseAuthentificationCredentialIdentifier";
+NSString *kCloudUsernameCredentialIdentifier            = @"kCloudUsernameCredentialIdentifier";
+NSString *kPremiseUsernameCredentialIdentifier          = @"kPremiseUsernameCredentialIdentifier";
 NSString *kUsernameCredentialIdentifier                 = @"kUsernameCredentialIdentifier";
 NSString *kPasswordCredentialIdentifier                 = @"kPasswordCredentialIdentifier";
 NSString *kCloudHostNameCredentialIdentifier            = @"kCloudHostNameCredentialIdentifier";
@@ -75,4 +71,11 @@ NSString *kRequestParameterOperationSucceededFlag   = @"operationSucceededFlag";
 NSString  *kCellFactoryCellParameterCellIdx         = @"kCellFactoryCellParameterCellIdx";
 NSString  *kCellFactoryCellParameterCellIndexpath   = @"kCellFactoryCellParameterCellIndexpath";
 NSString  *kCellFactoryCellParameterActionType      = @"kCellFactoryCellParameterActionType";
+
+
+#pragma mark -
+#pragma mark Error domains
+
+NSString * const AFALoginViewModelErrorDomain                   = @"AFALoginViewModelErrorDomain";
+NSInteger const kAFALoginViewModelInvalidCredentialErrorCode    = 1;
 

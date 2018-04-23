@@ -20,9 +20,23 @@
 
 // Managers
 #import "AFATaskServices.h"
-#import "AFAServiceRepository.h"
+
+@interface AFAContentPickerTaskUploadBehavior ()
+
+@property (strong, nonatomic) AFATaskServices *contentUploadService;
+
+@end
 
 @implementation AFAContentPickerTaskUploadBehavior
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.contentUploadService = [AFATaskServices new];
+    }
+    
+    return self;
+}
 
 
 #pragma mark -
@@ -33,14 +47,14 @@
                 additionalData:(id)additionalData
              withProgressBlock:(void (^)(NSUInteger progress, NSError *error))progressBlock
                completionBlock:(void (^)(BOOL isContentUploaded, NSError *error))completionBlock {
-    AFATaskServices *taskService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
+    
     NSString *taskID = (NSString *)additionalData;
     
-    [taskService requestContentUploadAtFileURL:fileURL
-                               withContentData:contentData
-                                     forTaskID:taskID
-                             withProgressBlock:progressBlock
-                               completionBlock:completionBlock];
+    [self.contentUploadService requestContentUploadAtFileURL:fileURL
+                                             withContentData:contentData
+                                                   forTaskID:taskID
+                                           withProgressBlock:progressBlock
+                                             completionBlock:completionBlock];
 }
 
 @end

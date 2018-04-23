@@ -46,7 +46,8 @@ typedef NS_ENUM(NSInteger, ASDKModelFormFieldRepresentationType) {
     ASDKModelFormFieldRepresentationTypeAttach,
     ASDKModelFormFieldRepresentationTypeHyperlink,
     ASDKModelFormFieldRepresentationTypePeople,
-    ASDKModelFormFieldRepresentationTypeDynamicTable
+    ASDKModelFormFieldRepresentationTypeDynamicTable,
+    ASDKModelFormFieldRepresentationTypeDateTime
 };
 
 @class ASDKModelFormFieldValue, ASDKModelFormVisibilityCondition;

@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, AFALoginAuthenticationState) {
 @property (assign, nonatomic, readonly) BOOL                rememberCredentials;
 @property (assign, nonatomic) AFALoginAuthenticationState   authState;
 @property (assign, nonatomic) AFALoginAuthenticationType    authentificationType;
+@property (strong, nonatomic, readonly) ASDKModelServerConfiguration *serverConfiguration;
 
 - (void)updateHostNameEntry:(NSString *)hostname;
 - (void)updateUserNameEntry:(NSString *)username;
@@ -65,6 +66,11 @@ typedef NS_ENUM(NSUInteger, AFALoginAuthenticationState) {
 - (BOOL)canUserSignIn;
 - (void)requestLoginWithCompletionBlock:(AFALoginModelCompletionBlock)completionBlock;
 - (void)requestLogout;
+- (void)requestLogoutForUnauthorizedAccess;
 - (void)cancelLoginRequest;
+- (NSString *)persistenceStackModelName;
+- (void)restoreLastSuccessfullSessionLoginCredentialsForType:(AFALoginAuthenticationType)authenticationType;
+
++ (AFALoginAuthenticationType)lastAuthenticationType;
 
 @end

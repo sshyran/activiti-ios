@@ -20,9 +20,14 @@
 #import "ASDKFormFieldDetailsControllerProtocol.h"
 #import "ASDKFormControllerNavigationProtocol.h"
 #import "ASDKDynamicTableRowHeaderNavigationProtocol.h"
+#import "ASDKModelFormConfiguration.h"
 
-@interface ASDKDynamicTableFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol, ASDKFormControllerNavigationProtocol, ASDKDynamicTableRowHeaderNavigationProtocol>
+@interface ASDKDynamicTableFormFieldDetailsViewController : UIViewController <ASDKFormFieldDetailsControllerProtocol, 
+                                                                              ASDKFormControllerNavigationProtocol,
+                                                                              ASDKDynamicTableRowHeaderNavigationProtocol>
 
+
+@property (strong, nonatomic) ASDKModelFormConfiguration                     *formConfiguration;
 @property (weak, nonatomic) id<ASDKFormControllerNavigationProtocol>          navigationDelegate;
 @property (weak, nonatomic) id<ASDKFormRenderEngineValueTransactionsProtocol> valueTransactionDelegate;
 

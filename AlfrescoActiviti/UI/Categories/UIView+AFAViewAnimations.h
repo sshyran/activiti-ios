@@ -31,4 +31,7 @@ typedef void  (^AFAAnimationCompletionBlock) (BOOL didFinished);
         withDuration:(NSTimeInterval)duration
  withCompletionBlock:(AFAAnimationCompletionBlock)completionBlock;
 
+- (UIView *)snapshotViewFromCurrentView;
+- (UIView *)snapshotViewFromCurrentViewsLayer;
+
 @end

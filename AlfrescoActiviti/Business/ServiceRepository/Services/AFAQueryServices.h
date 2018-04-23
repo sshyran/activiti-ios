@@ -25,7 +25,19 @@ typedef void  (^AFAQuerryTaskListCompletionBlock) (NSArray *taskList, NSError *e
 
 @interface AFAQueryServices : NSObject
 
+/**
+ * Performs a request for tasks with properties defined within the filter model.
+ * The underlaying implementation is using a filter representation to call the
+ * querry API.
+ *
+ * @param taskFilter            Filter object describing what properties should be considered
+ * @param completionBlock       Completion block providing the task list, an optional error reason
+ *                              and pagination information
+ * @param cacheCompletionBlock  Completion block providing a cached reference to the task list,
+ *                              an optional error and pagination information
+ */
 - (void)requestTaskListWithFilter:(AFAGenericFilterModel *)taskFilter
-                  completionBlock:(AFAQuerryTaskListCompletionBlock)completionBlock;
+                  completionBlock:(AFAQuerryTaskListCompletionBlock)completionBlock
+                    cachedResults:(AFAQuerryTaskListCompletionBlock)cacheCompletionBlock;
 
 @end

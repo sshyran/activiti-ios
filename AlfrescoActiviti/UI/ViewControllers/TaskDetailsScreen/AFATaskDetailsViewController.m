@@ -35,9 +35,6 @@
 #import "AFAProcessInstanceDetailsDataSource.h"
 #import "AFATaskDetailsDataSource.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 // Managers
 #import "AFAServiceRepository.h"
 #import "AFATableController.h"
@@ -46,8 +43,6 @@
 #import "AFATableControllerTaskContributorsCellFactory.h"
 #import "AFATableControllerContentCellFactory.h"
 #import "AFATableControllerCommentCellFactory.h"
-#import "AFATaskServices.h"
-#import "AFAFormServices.h"
 #import "AFAProfileServices.h"
 #import "AFAIntegrationServices.h"
 #import "AFAUserServices.h"
@@ -77,10 +72,10 @@
 #import "AFAModalTaskDetailsViewController.h"
 #import "AFAModalPeoplePickerViewController.h"
 
-typedef NS_OPTIONS(NSUInteger, AFATaskDetailsLoadingState) {
-    AFATaskDetailsLoadingStateIdle                          = 1<<0,
-    AFATaskDetailsLoadingStatePullToRefreshInProgress       = 1<<1,
-    AFATaskDetailsLoadingStateGeneralRefreshInProgress      = 1<<2
+typedef NS_ENUM(NSUInteger, AFATaskDetailsLoadingState) {
+    AFATaskDetailsLoadingStateIdle = 0,
+    AFATaskDetailsLoadingStateRefreshInProgress,
+    AFATaskDetailsLoadingStateEmptyList
 };
 
 @interface AFATaskDetailsViewController () <AFAContentPickerViewControllerDelegate,
@@ -136,7 +131,7 @@ AFAModalPeoplePickerViewControllerDelegate>
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.controllerState |= AFATaskDetailsLoadingStateIdle;
+        _controllerState = AFATaskDetailsLoadingStateIdle;
         
         // Set up state bindings
         [self handleBindingsForTaskListViewController];
@@ -176,7 +171,7 @@ AFAModalPeoplePickerViewControllerDelegate>
     tableViewController.tableView = self.taskDetailsTableView;
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self
-                            action:@selector(onPullToRefresh)
+                            action:@selector(refreshContentForCurrentSection)
                   forControlEvents:UIControlEventValueChanged];
     tableViewController.refreshControl = self.refreshControl;
     
@@ -196,12 +191,17 @@ AFAModalPeoplePickerViewControllerDelegate>
                                                                            action:@selector(onTaskDetailsEdit:)];
     self.editBarButtonItem.tintColor = [UIColor whiteColor];
     
-    // Set the confirmation view delegate
     self.confirmationView.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    BOOL isConnectivityAvailable = [self isNetworkReachable];
+    
+    self.dataSource.isConnectivityAvailable = isConnectivityAvailable;
+    [self refreshUIForConnectivity:isConnectivityAvailable];
+    
     [self refreshContentForCurrentSection];
 }
 
@@ -252,49 +252,24 @@ AFAModalPeoplePickerViewControllerDelegate>
         AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         
         AFATableControllerChecklistModel *checklistModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeChecklist];
-        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:((ASDKModelTask *)[checklistModel itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]).modelID
-                                                                                                themeColor:self.navigationBarThemeColor];
+        ASDKModelTask *selectedTask = ((ASDKModelTask *)[checklistModel itemAtIndexPath:[self.taskDetailsTableView indexPathForCell:(UITableViewCell *)sender]]);
         
+        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:selectedTask.modelID
+                                                                                              parentTaskID:selectedTask.parentTaskID
+                                                                                                themeColor:self.navigationBarThemeColor];
         taskDetailsViewController.dataSource = taskDetailsDataSource;
         taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
     } else if ([kSegueIDTaskDetailsViewTask isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *taskDetailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         
         AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:taskDetailsModel.currentTask.parentTaskID
-                                                                                                themeColor:self.navigationBarThemeColor];
+        AFATaskDetailsDataSource *taskDetailsDataSource =
+        [[AFATaskDetailsDataSource alloc] initWithTaskID:taskDetailsModel.currentTask.parentTaskID
+                                            parentTaskID:nil
+                                              themeColor:self.navigationBarThemeColor];
         taskDetailsViewController.dataSource = taskDetailsDataSource;
         taskDetailsViewController.unwindActionType = AFATaskDetailsUnwindActionTypeChecklist;
     }
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDTaskDetailsUnwind isEqualToString:identifier]) {
-        // Clear the form engine once the screen is dismissed
-        AFAFormServices *formServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-        [formServices requestEngineCleanup];
-        
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    if ([kSegueIDProcessInstanceTaskDetailsUnwind isEqualToString:identifier] ||
-        [kSegueIDTaskDetailsChecklistUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 - (IBAction)unwindPeoplePickerController:(UIStoryboardSegue *)segue {
@@ -307,6 +282,48 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (IBAction)unwindTaskChecklistController:(UIStoryboardSegue *)sender {
+}
+
+
+#pragma mark -
+#pragma mark Connectivity notifications
+
+- (void)didRestoredNetworkConnectivity {
+    [super didRestoredNetworkConnectivity];
+    
+    self.dataSource.isConnectivityAvailable = YES;
+    [self refreshUIForConnectivity:self.dataSource.isConnectivityAvailable];
+    
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
+    [self refreshContentForCurrentSection];
+}
+
+- (void)didLoseNetworkConnectivity {
+    [super didLoseNetworkConnectivity];
+    
+    self.dataSource.isConnectivityAvailable = NO;
+    [self refreshUIForConnectivity:self.dataSource.isConnectivityAvailable];
+    
+    [self refreshContentForCurrentSection];
+    
+    /* When having the form controller being displayed, the SDK will not provide
+     * whether the results are cached or from the network due to the high number of
+     * possible combinations of the internal components. For that case, manually
+     * display the cached results message
+     */
+    if (AFATaskDetailsSectionTypeForm == self.currentSelectedSection) {
+        [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+    }
+}
+
+- (void)refreshUIForConnectivity:(BOOL)isConnected {
+    self.addBarButtonItem.enabled = isConnected;
+    self.editBarButtonItem.enabled = isConnected;
+    if (!isConnected) {
+        if (!self.contentPickerContainer.hidden) {
+            [self onFullscreenOverlayTap:nil];
+        }
+    }
 }
 
 
@@ -353,14 +370,16 @@ AFAModalPeoplePickerViewControllerDelegate>
         UIButton *currentSectionButton = [self buttonForSection:self.currentSelectedSection];
         currentSectionButton.tintColor = [self.navigationBarThemeColor colorWithAlphaComponent:.7f];
         
+        // Exit editing mode if applicable
+        [self.taskDetailsTableView setEditing:NO
+                                     animated:YES];
+        
+        // Update the controller state and refresh the appropiate section
+        self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
+        
         [self refreshContentForCurrentSection];
         [self.taskDetailsTableView reloadData];
     }
-}
-
-- (void)onPullToRefresh {
-    self.controllerState |= AFATaskDetailsLoadingStatePullToRefreshInProgress;
-    [self refreshContentForCurrentSection];
 }
 
 - (IBAction)onFullscreenOverlayTap:(id)sender {
@@ -372,7 +391,7 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (void)onFormSave {
-    [self.dataSource saveTaskForm];
+    [self.taskFormViewController saveForm];
 }
 
 - (void)onTaskDetailsEdit:(id)sender {
@@ -388,6 +407,7 @@ AFAModalPeoplePickerViewControllerDelegate>
     
     AFAModalTaskDetailsUpdateTaskAction *updateTaskAction = [AFAModalTaskDetailsUpdateTaskAction new];
     updateTaskAction.currentTaskID = self.dataSource.taskID;
+    updateTaskAction.dueDate = [self.dataSource taskDueDate];
     editTaskController.confirmAlertAction = updateTaskAction;
     
     editTaskController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
@@ -420,8 +440,7 @@ AFAModalPeoplePickerViewControllerDelegate>
                            animated:YES
                          completion:nil];
     } else if (AFATaskDetailsSectionTypeContributors == self.currentSelectedSection) {
-        AFAUserServices *userServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeUserServices];
-        if ([userServices isLoggedInOnCloud]) {
+        if ([AFAUserServices isLoggedInOnCloud]) {
             AFAModalPeoplePickerViewController *addContributorController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDModalPeoplePickerViewController];
             addContributorController.alertTitle = NSLocalizedString(kLocalizationPeoplePickerControllerTitleText, @"Add contributor title");
             addContributorController.appThemeColor = self.navigationBarThemeColor;
@@ -446,6 +465,7 @@ AFAModalPeoplePickerViewControllerDelegate>
 
 - (IBAction)onTableLongPress:(UILongPressGestureRecognizer *)sender {
     if (AFATaskDetailsSectionTypeChecklist == self.currentSelectedSection) {
+        
         if (!self.taskDetailsTableView.editing) {
             [self.taskDetailsTableView setEditing:YES
                                          animated:YES];
@@ -470,7 +490,6 @@ AFAModalPeoplePickerViewControllerDelegate>
     
     BOOL displayTaskFormContainerView = NO;
     self.navigationItem.rightBarButtonItem = nil;
-    self.noContentView.hidden = YES;
     
     AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
     
@@ -492,10 +511,13 @@ AFAModalPeoplePickerViewControllerDelegate>
             break;
             
         case AFATaskDetailsSectionTypeForm: {
+            if (!self.isNetworkReachable) {
+                [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+            }
             self.navigationBarTitle = NSLocalizedString(kLocalizationTaskDetailsScreenTaskFormTitleText, @"Task form title");
             displayTaskFormContainerView = YES;
             AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            [self.taskFormViewController startTaskFormForTaskObject:taskDetailsModel.currentTask];
+            [self.taskFormViewController formForTask:taskDetailsModel.currentTask];
         }
             break;
             
@@ -537,13 +559,13 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (void)onContentDeleteForTaskAtIndex:(NSInteger)taskIdx {
-    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
     
     __weak typeof(self) weakSelf = self;
     [self.dataSource deleteContentForTaskAtIndex:taskIdx
                              withCompletionBlock:^(BOOL isContentDeleted, NSError *error) {
                                  __strong typeof(self) strongSelf = weakSelf;
-                                 strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                                 strongSelf.controllerState = AFATaskDetailsLoadingStateIdle;
                                  
                                  if (!isContentDeleted) {
                                      [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentDeleteErrorText, @"Task delete error")];
@@ -554,13 +576,13 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (void)onRemoveInvolvedUserForCurrentTask:(ASDKModelUser *)user {
-    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
     
     __weak typeof(self) weakSelf = self;
     [self.dataSource removeInvolvementForUser:user
                           withCompletionBlock:^(BOOL isUserInvolved, NSError *error) {
                               __strong typeof(self) strongSelf = weakSelf;
-                              strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+                              strongSelf.controllerState = AFATaskDetailsLoadingStateIdle;
                               
                               if (!error && !isUserInvolved) {
                                   [strongSelf refreshTaskContributors];
@@ -571,221 +593,75 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (void)refreshTaskDetails {
-    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    }
-    
     __weak typeof(self) weakSelf = self;
     [self.dataSource taskDetailsWithCompletionBlock:^(NSError *error, BOOL registerCellActions) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (registerCellActions) {
-            [strongSelf registerCellActions];
-        }
-        
-        if (!error) {
-            // For ad-hoc tasks expose an edit button option
-            AFATableControllerTaskDetailsModel *taskDetailsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            
-            if ([taskDetailsModel isAdhocTask] && ![taskDetailsModel isCompletedTask]) {
-                strongSelf.navigationItem.rightBarButtonItem = strongSelf.editBarButtonItem;
-            }
-            
-            // Enable the task form button if the task has a form key defined
-            // and if it's the case, the task has been claimed in advance
-            BOOL isFormSectionEnabled = YES;
-            if (![taskDetailsModel isFormDefined]) {
-                isFormSectionEnabled = NO;
-            } else {
-                if (![taskDetailsModel isCompletedTask] && [taskDetailsModel isClaimableTask]) {
-                    isFormSectionEnabled = NO;
-                }
-            }
-            
-            strongSelf.taskFormButton.enabled = isFormSectionEnabled;
-            
-            [strongSelf.taskDetailsTableView reloadData];
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-        
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
+        [strongSelf handleTaskDetailsResponseWithErrorStatus:error
+                                         registerCellActions:registerCellActions];
+    } cachedResultsBlock:^(NSError *error, BOOL registerCellActions) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleTaskDetailsResponseWithErrorStatus:error
+                                         registerCellActions:registerCellActions];
     }];
 }
 
 - (void)refreshTaskContributors {
-    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    }
-    
     __weak typeof(self) weakSelf = self;
     [self.dataSource taskContributorsWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            AFATableControllerTaskContributorsModel *taskContributorsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeContributors];
-            
-            strongSelf.noContentView.hidden = !taskContributorsModel.involvedPeople.count ? NO : YES;
-            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"];
-            
-            AFATableControllerTaskDetailsModel *taskDetailsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            strongSelf.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenContributorsNotEditableText, @"No contributors available not editable text") : NSLocalizedString(kLocalizationNoContentScreenContributorsText, @"No contributors available text");
-            
-            [strongSelf.taskDetailsTableView reloadData];
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-        
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
+        [strongSelf handleTaskContributorsListResponseWithErrorStatus:error];
+    } cachedResultsBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleTaskContributorsListResponseWithErrorStatus:error];
     }];
 }
 
 - (void)refreshTaskContent {
-    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    }
-    
     __weak typeof(self) weakSelf = self;
     [self.dataSource taskContentWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            [strongSelf.taskDetailsTableView reloadData];
-            
-            AFATableControllerContentModel *taskContentModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
-            AFATableControllerTaskDetailsModel *taskDetailsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            
-            // Display the no content view if appropiate
-            strongSelf.noContentView.hidden = !taskContentModel.attachedContentArr.count ? NO : YES;
-            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
-            
-            BOOL isTaskCompleted = (taskDetailsModel.currentTask.endDate && taskDetailsModel.currentTask.duration);
-            
-            strongSelf.noContentView.descriptionLabel.text = isTaskCompleted ? NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable") :  NSLocalizedString(kLocalizationNoContentScreenFilesText, @"No files available text");
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        // Mark that the refresh operation has ended
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+        [strongSelf handleTaskContentListResponseWithErrorStatus:error];
+    } cachedResultsBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleTaskContentListResponseWithErrorStatus:error];
     }];
 }
 
 - (void)refreshTaskComments {
-    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    }
-    
     __weak typeof(self) weakSelf = self;
     [self.dataSource taskCommentsWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            [strongSelf.taskDetailsTableView reloadData];
-            
-            AFATableControllerTaskDetailsModel *taskDetailsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            AFATableControllerCommentModel *commentModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeComments];
-            
-            // Display the no content view if appropiate
-            strongSelf.noContentView.hidden = !commentModel.commentListArr.count ? NO : YES;
-            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
-            strongSelf.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        // Mark that the refresh operation has ended
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+        [strongSelf handleTaskCommentListResponseWithErrorStatus:error];
+    } cachedResultsBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleTaskCommentListResponseWithErrorStatus:error];
     }];
 }
 
 - (void)refreshTaskChecklist {
-    if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & self.controllerState)) {
-        self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-    }
-    
     __weak typeof(self) weakSelf = self;
     [self.dataSource taskChecklistWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
-        
-        if (!error) {
-            [strongSelf.taskDetailsTableView reloadData];
-            
-            AFATableControllerTaskDetailsModel *taskDetailsModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
-            AFATableControllerChecklistModel *taskChecklistModel = [strongSelf.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeChecklist];
-            
-            // Display the no content view if appropiate
-            strongSelf.noContentView.hidden = !taskChecklistModel.checklistArr.count ? NO : YES;
-            strongSelf.noContentView.iconImageView.image = [UIImage imageNamed:@"checklist-large-icon"];
-            strongSelf.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenChecklistNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenChecklistEditableText, @"No comments available text") ;
-            
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-        } else {
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        // Mark that the refresh operation has ended
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+        [strongSelf handleTaskChecklistResponseWithErrorStatus:error];
+    } cachedResultsBlock:^(NSError *error) {
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf handleTaskChecklistResponseWithErrorStatus:error];
     }];
 }
 
 - (void)updateTaskDetails {
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
+    
     __weak typeof(self) weakSelf = self;
     [self.dataSource updateCurrentTaskDetailsWithCompletionBlock:^(BOOL isTaskUpdated, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
+        strongSelf.controllerState = AFATaskDetailsLoadingStateIdle;
         
         if (!isTaskUpdated) {
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskUpdateErrorText, @"Task update error")];
             [strongSelf.taskDetailsTableView reloadData];
         }
+        
     }];
 }
 
@@ -803,11 +679,12 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (void)claimTask {
-    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
     
     __weak typeof(self) weakSelf = self;
     [self.dataSource claimTaskWithCompletionBlock:^(BOOL isTaskClaimed, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
+        strongSelf.controllerState = AFATaskDetailsLoadingStateIdle;
         
         if (!error) {
             // Trigger a task details refresh
@@ -815,19 +692,16 @@ AFAModalPeoplePickerViewControllerDelegate>
         } else {
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
-        
-        // Mark that the refresh operation has ended
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
     }];
 }
 
 - (void)unclaimTask {
-    // Mark that a general refresh operation is in progress
-    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
     
     __weak typeof(self) weakSelf = self;
     [self.dataSource unclaimTaskWithCompletionBlock:^(BOOL isTaskClaimed, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
+        strongSelf.controllerState = AFATaskDetailsLoadingStateIdle;
         
         if (!error ) {
             // Trigger a task details refresh
@@ -835,54 +709,22 @@ AFAModalPeoplePickerViewControllerDelegate>
         } else {
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
-        
-        // Mark that the refresh operation has ended
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
     }];
 }
 
 - (void)updateChecklistOrder {
     // Mark that a general refresh operation is in progress
-    self.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
+    self.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
     
     __weak typeof(self) weakSelf = self;
     [self.dataSource updateChecklistOrderWithCompletionBlock:^(NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
+        strongSelf.controllerState = AFATaskDetailsLoadingStateIdle;
         
         if (error) {
             [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
         }
-        
-        // Mark that the refresh operation has ended
-        strongSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
     }];
-}
-
-
-#pragma mark -
-#pragma mark KVO bindings
-
-- (void)handleBindingsForTaskListViewController {
-    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
-    
-    __weak typeof(self) weakSelf = self;
-    [self.kvoManager observeObject:self
-                        forKeyPath:NSStringFromSelector(@selector(controllerState))
-                           options:NSKeyValueObservingOptionNew
-                             block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 
-                                 // Update progress status for underlaying models
-                                 if ([self.dataSource.tableController.model respondsToSelector:@selector(isRefreshInProgress)]) {
-                                     BOOL isRefreshInProgress = (AFATaskDetailsLoadingStateGeneralRefreshInProgress & self.controllerState);
-                                     
-                                     ((AFATableControllerContentModel *)strongSelf.dataSource.tableController.model).isRefreshInProgress = isRefreshInProgress;
-                                 }
-                                 
-                                 strongSelf.taskDetailsTableView.hidden = (AFATaskDetailsLoadingStateGeneralRefreshInProgress & strongSelf.controllerState) ? YES : NO;
-                                 strongSelf.loadingActivityView.hidden = (AFATaskDetailsLoadingStateGeneralRefreshInProgress & strongSelf.controllerState) ? NO : YES;
-                                 strongSelf.loadingActivityView.animating = (AFATaskDetailsLoadingStateGeneralRefreshInProgress & strongSelf.controllerState) ? YES : NO;
-                             }];
 }
 
 
@@ -1002,24 +844,201 @@ AFAModalPeoplePickerViewControllerDelegate>
         // is changed. We perform an additional refresh once content is requested to be downloaded
         // so it's status has the latest value
         __strong typeof(self) strongSelf = weakSelf;
+        NSInteger contentToDownloadIdx = ((NSIndexPath *)changeParameters[kCellFactoryCellParameterCellIndexpath]).row;
         
-        if (!(AFATaskDetailsLoadingStatePullToRefreshInProgress & strongSelf.controllerState)) {
-            strongSelf.controllerState |= AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-        }
-        
+        strongSelf.controllerState = AFATaskDetailsLoadingStateRefreshInProgress;
         [strongSelf.dataSource taskContentWithCompletionBlock:^(NSError *error) {
-            if (!error) {
-                NSInteger contentToDownloadIdx = ((NSIndexPath *)changeParameters[kCellFactoryCellParameterCellIndexpath]).row;
-                [strongSelf.contentPickerViewController dowloadContent:[weakSelf.dataSource attachedContentAtIndex:contentToDownloadIdx]
-                                                    allowCachedContent:YES];
-            } else {
-                [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
-            }
-            
-            weakSelf.controllerState &= ~AFATaskDetailsLoadingStateGeneralRefreshInProgress;
-            weakSelf.controllerState &= ~AFATaskDetailsLoadingStatePullToRefreshInProgress;
+            [weakSelf handleContentDownloadwithErrorStatus:error
+                                            forCellAtIndex:contentToDownloadIdx];
+        } cachedResultsBlock:^(NSError *error) {
+            [weakSelf handleContentDownloadwithErrorStatus:error
+                                            forCellAtIndex:contentToDownloadIdx];
         }];
     } forCellType:[contentCellFactory cellTypeForDownloadContent]];
+}
+
+
+#pragma mark -
+#pragma mark Content handling
+
+- (void)handleTaskDetailsResponseWithErrorStatus:(NSError *)error
+                             registerCellActions:(BOOL)registerCellActions {
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    if (registerCellActions) {
+        [self registerCellActions];
+    }
+    
+    if (!error) {
+        // For ad-hoc tasks expose an edit button option
+        if ([taskDetailsModel isAdhocTask] && ![taskDetailsModel isCompletedTask]) {
+            self.navigationItem.rightBarButtonItem = self.editBarButtonItem;
+        }
+        
+        // Enable the task form button if the task has a form key defined
+        // and if it's the case, the task has been claimed in advance
+        BOOL isFormSectionEnabled = YES;
+        if (![taskDetailsModel isFormDefined]) {
+            isFormSectionEnabled = NO;
+        } else {
+            if (![taskDetailsModel isCompletedTask] && [taskDetailsModel isClaimableTask]) {
+                isFormSectionEnabled = NO;
+            }
+        }
+        self.taskFormButton.enabled = isFormSectionEnabled;
+        
+        [self.taskDetailsTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    }
+    
+#warning handle error when loading task details
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = taskDetailsModel.currentTask ? YES : NO;
+    self.controllerState = isContentAvailable ? AFATaskDetailsLoadingStateIdle : AFATaskDetailsLoadingStateEmptyList;
+}
+
+- (void)handleTaskContributorsListResponseWithErrorStatus:(NSError *)error {
+    AFATableControllerTaskContributorsModel *taskContributorsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeContributors];
+    
+    if (!error) {
+        [self.taskDetailsTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"contributors-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenContributorsNotEditableText, @"No contributors available not editable text") : NSLocalizedString(kLocalizationNoContentScreenContributorsText, @"No contributors available text");
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = taskContributorsModel.involvedPeople.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFATaskDetailsLoadingStateIdle : AFATaskDetailsLoadingStateEmptyList;
+}
+
+- (void)handleTaskContentListResponseWithErrorStatus:(NSError *)error {
+    AFATableControllerContentModel *taskContentModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeFilesContent];
+    
+    if (!error) {
+        [self.taskDetailsTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"documents-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenFilesNotEditableText, @"No files available not editable") :  NSLocalizedString(kLocalizationNoContentScreenFilesText, @"No files available text");
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = taskContentModel.attachedContentArr.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFATaskDetailsLoadingStateIdle : AFATaskDetailsLoadingStateEmptyList;
+}
+
+- (void)handleTaskCommentListResponseWithErrorStatus:(NSError *)error {
+    AFATableControllerCommentModel *commentModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeComments];
+    
+    if (!error) {
+        [self.taskDetailsTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"comments-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenCommentsNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenCommentsText, @"No comments available text") ;
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = commentModel.commentListArr.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFATaskDetailsLoadingStateIdle : AFATaskDetailsLoadingStateEmptyList;
+}
+
+- (void)handleTaskChecklistResponseWithErrorStatus:(NSError *)error {
+    AFATableControllerChecklistModel *taskChecklistModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeChecklist];
+    
+    if (!error) {
+        [self.taskDetailsTableView reloadData];
+        
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+        }
+    }
+    
+    AFATableControllerTaskDetailsModel *taskDetailsModel = [self.dataSource reusableTableControllerModelForSectionType:AFATaskDetailsSectionTypeTaskDetails];
+    
+    self.noContentView.iconImageView.image = [UIImage imageNamed:@"checklist-large-icon"];
+    self.noContentView.descriptionLabel.text = [taskDetailsModel isCompletedTask] ? NSLocalizedString(kLocalizationNoContentScreenChecklistNotEditableText, @"No comments available not editable text") : NSLocalizedString(kLocalizationNoContentScreenChecklistEditableText, @"No comments available text");
+    
+    [self endRefreshOnRefreshControl];
+    
+    BOOL isContentAvailable = taskChecklistModel.checklistArr.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFATaskDetailsLoadingStateIdle : AFATaskDetailsLoadingStateEmptyList;
+}
+
+- (void)handleContentDownloadwithErrorStatus:(NSError *)error
+                              forCellAtIndex:(NSInteger)contentIndex
+{
+    if (!error) {
+        [self.contentPickerViewController dowloadContent:[self.dataSource attachedContentAtIndex:contentIndex]
+                                      allowCachedContent:YES];
+    } else {
+        if (error.code == NSURLErrorNotConnectedToInternet) {
+            [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+        } else {
+            [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogTaskContentFetchErrorText, @"Content fetching error")];
+        }
+    }
+    
+    self.controllerState = AFATaskDetailsLoadingStateIdle;
 }
 
 
@@ -1193,6 +1212,14 @@ AFAModalPeoplePickerViewControllerDelegate>
                      }];
 }
 
+- (void)endRefreshOnRefreshControl {
+    __weak typeof(self) weakSelf = self;
+    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.refreshControl endRefreshing];
+    }];
+}
+
 
 #pragma mark -
 #pragma mark AFAContentPickerViewController Delegate
@@ -1248,11 +1275,9 @@ AFAModalPeoplePickerViewControllerDelegate>
 #pragma mark -
 #pragma mark AFATaskFormViewControllerDelegate
 
-- (void)formDidLoad {
-    AFAFormServices *formService = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeFormServices];
-    ASDKFormEngineActionHandler *formEngineActionHandler = [formService formEngineActionHandler];
-    
-    if ([formEngineActionHandler isSaveFormActionAvailable]) {
+- (void)formDidLoadWithError:(NSError *)error {
+    if (!error &&
+        [self.taskFormViewController.taskFormRenderEngine.actionHandler isSaveFormActionAvailable]) {
         UIBarButtonItem *saveBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"save-icon"]
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
@@ -1260,6 +1285,8 @@ AFAModalPeoplePickerViewControllerDelegate>
         saveBarButtonItem.tintColor = [UIColor whiteColor];
         self.navigationItem.rightBarButtonItem = saveBarButtonItem;
     }
+    
+    self.controllerState = AFATaskDetailsLoadingStateIdle;
 }
 
 - (void)userDidCompleteForm {
@@ -1291,7 +1318,6 @@ AFAModalPeoplePickerViewControllerDelegate>
 - (void)popFormDetailController {
     [self.navigationController popViewControllerAnimated:YES];
 }
-
 
 
 #pragma mark -
@@ -1341,6 +1367,48 @@ AFAModalPeoplePickerViewControllerDelegate>
 
 - (void)didInvolveUserWithEmailAddress:(NSString *)emailAddress {
     [self refreshContentForCurrentSection];
+}
+
+
+#pragma mark -
+#pragma mark KVO bindings
+
+- (void)handleBindingsForTaskListViewController {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(controllerState))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 __strong typeof(self) strongSelf = weakSelf;
+                                 AFATaskDetailsLoadingState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
+                                 
+                                 // Update progress status for underlaying models
+                                 if ([self.dataSource.tableController.model respondsToSelector:@selector(isRefreshInProgress)]) {
+                                     BOOL isRefreshInProgress = (AFATaskDetailsLoadingStateRefreshInProgress == controllerState) ? YES : NO;
+                                     ((AFATableControllerContentModel *)strongSelf.dataSource.tableController.model).isRefreshInProgress = isRefreshInProgress;
+                                 }
+                                 
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     if (AFATaskDetailsLoadingStateIdle == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.taskDetailsTableView.hidden = NO;
+                                         weakSelf.noContentView.hidden = YES;
+                                     } else if (AFATaskDetailsLoadingStateRefreshInProgress == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = NO;
+                                         weakSelf.loadingActivityView.animating = YES;
+                                         weakSelf.taskDetailsTableView.hidden = YES;
+                                         weakSelf.noContentView.hidden = YES;
+                                     } else if (AFATaskDetailsLoadingStateEmptyList == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.taskDetailsTableView.hidden = YES;
+                                         weakSelf.noContentView.hidden = NO;
+                                     }
+                                 });
+                             }];
 }
 
 @end

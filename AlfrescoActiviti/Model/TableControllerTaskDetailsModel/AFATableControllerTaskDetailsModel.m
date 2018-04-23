@@ -19,7 +19,17 @@
 #import "AFATableControllerTaskDetailsModel.h"
 #import "AFATableControllerTaskDetailsCellFactory.h"
 
+
 @implementation AFATableControllerTaskDetailsModel
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _isConnectivityAvailable = YES;
+    }
+    
+    return self;
+}
 
 
 #pragma mark -

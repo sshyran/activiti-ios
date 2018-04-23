@@ -62,7 +62,9 @@
 }
 
 - (IBAction)hyperlinkTapped:(id)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.formField.hyperlinkURL]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.formField.hyperlinkURL]
+                                       options:@{}
+                             completionHandler:nil];
 }
 
 @end

@@ -17,10 +17,20 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "AFANavigationBarBannerAlertView.h"
+@import ActivitiSDK;
 
-@interface AFABaseThemedViewController : UIViewController
 
-@property (strong, nonatomic) NSString *navigationBarTitle;
-@property (strong, nonatomic) UIColor  *navigationBarThemeColor;
+@interface AFABaseThemedViewController : ASDKReachabilityViewController
+
+@property (strong, nonatomic) NSString                          *navigationBarTitle;
+@property (strong, nonatomic) UIColor                           *navigationBarThemeColor;
+
+- (void)showWarningMessage:(NSString *)warningMessage;
+- (void)showErrorMessage:(NSString *)errorMessage;
+- (void)showConfirmationMessage:(NSString *)confirmationMessage;
+- (void)didRestoredNetworkConnectivity;
+- (void)didLoseNetworkConnectivity;
+- (BOOL)isNetworkReachable;
 
 @end

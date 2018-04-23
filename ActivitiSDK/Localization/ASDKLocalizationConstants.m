@@ -45,6 +45,7 @@ NSString *kLocalizationFormDynamicTableRowHeaderText             = @"formDynamic
 NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText = @"formDynamicTableDeleteRowConfirmationText";
 NSString *kLocalizationFormValueEmpty                            = @"formValueEmpty";
 NSString *kLocalizationFormOptionClearText                       = @"formOptionClearText";
+NSString *kLocalizationFormFieldNoNetworkConnectionText          = @"formFieldNoNetworkConnectionText";
 
 
 #pragma mark -
@@ -108,3 +109,15 @@ NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText= @"integratio
 NSString *kLocalizationDynamicTableNoRowsText                     = @"dynamicTableControllerNoRowsText";
 NSString *kLocalizationDynamicTableNoRowsNotEditableText          = @"dynamicTableControllerNoRowsNotEditableText";
 NSString *kLocalizationDynamicTableIncompleteRowDataText          = @"dynamicTableControllerIncompleteRowDataText";
+
+
+#pragma mark -
+#pragma mark Default filter names
+
+NSString *kLocalizationDefaultFilterInvolvedTasksText            = @"defaultFilterInvolvedTasksText";
+NSString *kLocalizationDefaultFilterMyTasksText                  = @"defaultFilterMyTasksText";
+NSString *kLocalizationDefaultFilterQueuedTasksText              = @"defaultFilterQueuedTasksText";
+NSString *kLocalizationDefaultFilterCompletedTasksText           = @"defaultFilterCompletedTasksText";
+NSString *kLocalizationDefaultFilterRunningProcessText           = @"defaultFilterRunningProcessesText";
+NSString *kLocalizationDefaultFilterCompletedProcessesText       = @"defaultFilterCompletedProcessesText";
+NSString *kLocalizationDefaultFilterAllProcessesText             = @"defaultFilterAllProcessesText";

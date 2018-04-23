@@ -45,6 +45,7 @@ extern NSString *kLocalizationFormDynamicTableRowHeaderText;
 extern NSString *kLocalizationFormDynamicTableDeleteRowConfirmationText;
 extern NSString *kLocalizationFormValueEmpty;
 extern NSString *kLocalizationFormOptionClearText;
+extern NSString *kLocalizationFormFieldNoNetworkConnectionText;
 
 // Content picker component
 extern NSString *kLocalizationFormContentPickerComponentLocalContentText;
@@ -93,3 +94,12 @@ extern NSString *kLocalizationIntegrationBrowsingNoIntegrationAccountText;
 extern NSString *kLocalizationDynamicTableNoRowsText;
 extern NSString *kLocalizationDynamicTableNoRowsNotEditableText;
 extern NSString *kLocalizationDynamicTableIncompleteRowDataText;
+
+// Default filter names
+extern NSString *kLocalizationDefaultFilterInvolvedTasksText;
+extern NSString *kLocalizationDefaultFilterMyTasksText;
+extern NSString *kLocalizationDefaultFilterQueuedTasksText;
+extern NSString *kLocalizationDefaultFilterCompletedTasksText;
+extern NSString *kLocalizationDefaultFilterRunningProcessText;
+extern NSString *kLocalizationDefaultFilterCompletedProcessesText;
+extern NSString *kLocalizationDefaultFilterAllProcessesText;

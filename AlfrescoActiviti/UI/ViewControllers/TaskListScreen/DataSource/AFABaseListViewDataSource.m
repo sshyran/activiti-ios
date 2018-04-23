@@ -39,34 +39,43 @@
 - (NSArray *)processAdditionalEntries:(NSArray *)additionalEntriesArr
                    forExistingEntries:(NSArray *)existingEntriesArr
                                paging:(ASDKModelPaging *)paging {
-    if (paging.start) {
-        NSSet *existingEntriesSet = [[NSSet alloc] initWithArray:existingEntriesArr];
-        NSSet *serverEntriesSet = [[NSSet alloc] initWithArray:additionalEntriesArr];
-        
+    NSArray *entriesArr = nil;
+    
+    if (!paging.start) {
+        if (!additionalEntriesArr.count) {
+            return nil;
+        } else {
+            entriesArr = additionalEntriesArr;
+        }
+    } else if (existingEntriesArr.count) {
         // Make sure that the incoming data is not a subset of the existing collection
-        if (![serverEntriesSet isSubsetOfSet:existingEntriesSet]) {
-            NSMutableArray *serverEntriesArr = [NSMutableArray arrayWithArray:additionalEntriesArr];
-            [serverEntriesArr removeObjectsInArray:existingEntriesArr];
-            
-            // If so, add it to the already existing content and return the updated collection
+        NSArray *existingModelIDsArr = [existingEntriesArr valueForKeyPath:@"@distinctUnionOfObjects.modelID"];
+        NSPredicate *uniqueEntitiesPredicate = [NSPredicate predicateWithFormat:@"NOT (modelID IN %@)", existingModelIDsArr];
+        NSArray *serverEntriesArr = [additionalEntriesArr filteredArrayUsingPredicate:uniqueEntitiesPredicate];
+        
+        if (serverEntriesArr.count) {
             NSMutableArray *additionedEntries = [NSMutableArray arrayWithArray:existingEntriesArr];
             [additionedEntries addObjectsFromArray:serverEntriesArr];
-            
-            additionalEntriesArr = additionedEntries;
+            entriesArr = additionedEntries;
+        } else {
+            entriesArr = existingEntriesArr;
         }
+    } else {
+        entriesArr = additionalEntriesArr;
     }
     
-    return additionalEntriesArr;
+    return entriesArr;
 }
 
 - (NSInteger)totalPagesForPaging:(ASDKModelPaging *)paging
                      dataEntries:(NSArray *)dataEntries {
-    return ceilf((float) paging.pageCount / dataEntries.count);
+    return ceilf((float) paging.total / dataEntries.count);
 }
 - (NSInteger)preloadCellIndexForPaging:(ASDKModelPaging *)paging
                            dataEntries:(NSArray *)dataEntries {
     // Compute the preload index that will trigger a new request
-    if ([self totalPagesForPaging:paging dataEntries:dataEntries] > 1) {
+    if ([self totalPagesForPaging:paging
+                      dataEntries:dataEntries] > 1) {
         return dataEntries.count - kTaskPreloadCellThreshold;
     } else {
         return 0;

@@ -23,6 +23,7 @@
 
 // Models
 #import "AFAGenericFilterModel.h"
+#import "AFAListResponseModel.h"
 
 // Cells
 #import "AFATaskListStyleCell.h"
@@ -32,7 +33,12 @@
 
 // Managers
 #import "AFAProcessServices.h"
-#import "AFAServiceRepository.h"
+
+@interface AFAProcessListViewDataSource ()
+
+@property (strong, nonatomic) AFAProcessServices *fetchProcessInstanceListService;
+
+@end
 
 @implementation AFAProcessListViewDataSource
 
@@ -46,6 +52,7 @@
     if (self) {
         _processInstances = dataEntries;
         _themeColor = themeColor;
+        _fetchProcessInstanceListService = [AFAProcessServices new];
     }
     
     return self;
@@ -60,14 +67,24 @@
 }
 
 - (void)loadContentListForFilter:(AFAGenericFilterModel *)filter
-             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
-    AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
+             withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock
+                   cachedResults:(AFAListHandleCompletionBlock)cacheCompletionBlock {
     __weak typeof(self) weakSelf = self;
-    [processServices requestProcessInstanceListWithFilter:filter
-                                      withCompletionBlock:^(NSArray *processInstanceList, NSError *error, ASDKModelPaging *paging) {
-                                          __strong typeof(self) strongSelf = weakSelf;
-                                          completionBlock(strongSelf, processInstanceList, error, paging);
-                                      }];
+    [self.fetchProcessInstanceListService
+     requestProcessInstanceListWithFilter:filter
+     withCompletionBlock:^(NSArray *processInstanceList, NSError *error, ASDKModelPaging *paging) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         completionBlock(strongSelf, [strongSelf responseModelForProcessInstanceList:processInstanceList
+                                                                               error:error
+                                                                              paging:paging]);
+     } cachedResults:^(NSArray *processInstanceList, NSError *error, ASDKModelPaging *paging) {
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         completionBlock(strongSelf, [strongSelf responseModelForProcessInstanceList:processInstanceList
+                                                                               error:error
+                                                                              paging:paging]);
+     }];
 }
 
 - (void)processAdditionalEntries:(NSArray *)additionalEntriesArr
@@ -75,11 +92,27 @@
     _processInstances = [self processAdditionalEntries:additionalEntriesArr
                                     forExistingEntries:self.processInstances
                                                 paging:paging];
-    _totalPages = [self totalPagesForPaging:paging
-                                dataEntries:_processInstances];
+    
+    // When loading a new list, compute the total number of pages
+    // but reset it only when completely loading another list
+    if (!paging.start) {
+        _totalPages = [self totalPagesForPaging:paging
+                                    dataEntries:_processInstances];
+    }
+    
     _preloadCellIdx = [self preloadCellIndexForPaging:paging
                                           dataEntries:_processInstances];
+}
+
+- (AFAListResponseModel *)responseModelForProcessInstanceList:(NSArray *)processInstanceList
+                                                        error:(NSError *)error
+                                                       paging:(ASDKModelPaging *)paging {
+    AFAListResponseModel *response = [AFAListResponseModel new];
+    response.objectList = processInstanceList;
+    response.error = error;
+    response.paging = paging;
     
+    return response;
 }
 
 

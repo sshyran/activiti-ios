@@ -35,8 +35,7 @@
                                                       @"sortType"           : @"sort",
                                                       @"state"              : @"state",
                                                       @"assignmentType"     : @"assignment",
-                                                      @"applicationID"      : @"appId",
-                                                      @"processInstanceID"  : @"processInstanceId"}];
+                                                      @"applicationID"      : @"appId"}];
     
     return inheretedPropertyKeys;
 }

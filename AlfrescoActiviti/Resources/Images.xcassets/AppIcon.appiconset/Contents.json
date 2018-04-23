@@ -101,6 +101,12 @@
       "idiom" : "ipad",
       "filename" : "Alfresco_Process_Services_iPad-Pro-App-iOS-9-83.5pt@2x.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "1024x1024",
+      "idiom" : "ios-marketing",
+      "filename" : "Alfresco_Process_Services_Marketing_Icon_1024-1.png",
+      "scale" : "1x"
     }
   ],
   "info" : {

@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import "AFABaseModel.h"
 
+@class ASDKModelServerConfiguration;
+
 @interface AFACredentialModel : AFABaseModel
 
 @property (strong, nonatomic) NSString *hostname;
@@ -28,5 +30,6 @@
 @property (strong, nonatomic) NSString *serviceDocument;
 @property (assign, nonatomic) BOOL     rememberCredentials;
 @property (assign, nonatomic) BOOL     isCommunicationOverSecureLayer;
+@property (strong, nonatomic) ASDKModelServerConfiguration *serverConfiguration;
 
 @end

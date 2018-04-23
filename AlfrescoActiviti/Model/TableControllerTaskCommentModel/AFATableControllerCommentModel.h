@@ -25,5 +25,4 @@
 @property (strong, nonatomic) NSArray           *commentListArr;
 @property (strong, nonatomic) ASDKModelPaging   *paging;
 
-
 @end

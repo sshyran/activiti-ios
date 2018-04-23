@@ -18,7 +18,7 @@
 
 #import "AFAActivityView.h"
 
-CGFloat const titleScale           = .85f;
+static const CGFloat titleScale = .85f;
 
 @interface AFAActivityView ()
 

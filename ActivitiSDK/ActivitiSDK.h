@@ -73,6 +73,10 @@
 #import <ActivitiSDK/ASDKModelSite.h>
 #import <ActivitiSDK/ASDKModelIntegrationContent.h>
 #import <ActivitiSDK/ASDKFormFieldValueRequestRepresentation.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseModel.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseCollection.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseConfirmation.h>
+#import <ActivitiSDK/ASDKDataAccessorResponseProgress.h>
 
 #import <ActivitiSDK/ASDKIntegrationNetworksDataSource.h>
 #import <ActivitiSDK/ASDKIntegrationSitesDataSource.h>
@@ -133,6 +137,24 @@
 #import <ActivitiSDK/ASDKDiskServices.h>
 #import <ActivitiSDK/ASDKIntegrationNetworkServices.h>
 
+// Data accessors
+#import <ActivitiSDK/ASDKDataAccessor.h>
+#import <ActivitiSDK/ASDKProfileDataAccessor.h>
+#import <ActivitiSDK/ASDKApplicationsDataAccessor.h>
+#import <ActivitiSDK/ASDKTaskDataAccessor.h>
+#import <ActivitiSDK/ASDKFilterDataAccessor.h>
+#import <ActivitiSDK/ASDKProcessInstanceDataAccessor.h>
+#import <ActivitiSDK/ASDKQuerryDataAccessor.h>
+#import <ActivitiSDK/ASDKProcessDefinitionDataAccessor.h>
+#import <ActivitiSDK/ASDKIntegrationDataAccessor.h>
+#import <ActivitiSDK/ASDKUserDataAccessor.h>
+
+// Network delayed operation services
+#import <ActivitiSDK/ASDKNetworkDelayedOperationSaveFormService.h>
+
+// Persistence
+#import <ActivitiSDK/ASDKPersistenceStack.h>
+
 // Service categories
 #import <ActivitiSDK/NSURLSessionTask+ASDKAdditions.h>
 #import <ActivitiSDK/NSString+ASDKEmailValidation.h>
@@ -157,6 +179,7 @@
 #import <ActivitiSDK/ASDKAvatarInitialsView.h>
 #import <ActivitiSDK/ASDKIntegrationLoginWebViewViewController.h>
 #import <ActivitiSDK/ASDKIntegrationBrowsingViewController.h>
+#import <ActivitiSDK/ASDKReachabilityViewController.h>
 
 // UI Categories
 #import <ActivitiSDK/NSString+ASDKFontGlyphicons.h>
@@ -167,6 +190,7 @@
 // Constants
 #import <ActivitiSDK/ASDKNetworkServiceConstants.h>
 #import <ActivitiSDK/ASDKAPIEndpointDefinitionList.h>
+#import <ActivitiSDK/ASDKFormRenderEngineConstants.h>
 
 // Authentication providers
 #import <ActivitiSDK/ASDKBasicAuthentificationProvider.h>

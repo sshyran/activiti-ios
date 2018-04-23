@@ -32,35 +32,68 @@
 
 @interface AFAContentPickerDataSource ()
 
-@property (strong, nonatomic) NSArray *integrationAccountsArr;
+// Services
+@property (strong, nonatomic) AFAIntegrationServices    *fetchIntegrationAccountsService;
+
+// Models
+@property (strong, nonatomic) NSArray                   *integrationAccountsArr;
 
 @end
 
 @implementation AFAContentPickerDataSource
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _fetchIntegrationAccountsService = [AFAIntegrationServices new];
+    }
+    
+    return self;
+}
+
 
 #pragma mark -
 #pragma mark Public interface
 
-- (void)fetchIntegrationAccountsWithCompletionBlock:(void (^)(NSArray *accounts, NSError *error, ASDKModelPaging *paging))completionBlock {
+- (void)fetchIntegrationAccountsWithCompletionBlock:(AFAContentPickerIntegrationAccountsDataSourceCompletionBlock)completionBlock
+                                 cachedResultsBlock:(AFAContentPickerIntegrationAccountsDataSourceCompletionBlock)cachedResultsBlock {
     __weak typeof(self) weakSelf = self;
-    AFAIntegrationServices *integrationServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:(AFAServiceObjectTypeIntegrationServices)];
-    [integrationServices requestIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
+    [self.fetchIntegrationAccountsService requestIntegrationAccountsWithCompletionBlock:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
         __strong typeof(self) strongSelf = weakSelf;
         
         if (!error) {
-            // Filter out all but the Alfresco cloud services - development in progress
-            NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
-            NSArray *filtereAccountsdArr = [accounts filteredArrayUsingPredicate:searchPredicate];
-            strongSelf.integrationAccountsArr = filtereAccountsdArr;
+            [strongSelf handleIntegrationAccountListResponse:accounts];
         }
         
-        completionBlock(strongSelf.integrationAccounts, error, paging);
+        if (completionBlock) {
+            completionBlock(strongSelf.integrationAccounts, error, paging);
+        }
+    } cachedResults:^(NSArray *accounts, NSError *error, ASDKModelPaging *paging) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (!error) {
+            [strongSelf handleIntegrationAccountListResponse:accounts];
+        }
+        
+        if (cachedResultsBlock) {
+            cachedResultsBlock(strongSelf.integrationAccounts, error, paging);
+        }
     }];
 }
 
 - (NSArray *)integrationAccounts {
     return _integrationAccountsArr;
+}
+
+
+#pragma mark -
+#pragma mark Response handlers
+
+- (void)handleIntegrationAccountListResponse:(NSArray *)integrationAccountList {
+    // Filter out all but the Alfresco cloud services - development in progress
+    NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
+    NSArray *filtereAccountsdArr = [integrationAccountList filteredArrayUsingPredicate:searchPredicate];
+    self.integrationAccountsArr = filtereAccountsdArr;
 }
 
 

@@ -28,7 +28,8 @@
 @interface AFATableControllerChecklistModel : AFABaseModel <AFATableViewModelDelegate>
 
 @property (weak, nonatomic) id<AFATableControllerChecklistModelDelegate> delegate;
-@property (strong, nonatomic) NSArray *checklistArr;
+@property (strong, nonatomic) NSArray                                    *checklistArr;
+@property (assign, nonatomic) BOOL                                       isConnectivityAvailable;
 
 - (NSArray *)checkListIDs;
 

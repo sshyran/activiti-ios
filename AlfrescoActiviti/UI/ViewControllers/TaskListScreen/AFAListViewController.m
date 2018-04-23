@@ -39,6 +39,7 @@
 // Models
 #import "AFAGenericFilterModel.h"
 #import "ASDKModelTask.h"
+#import "AFAListResponseModel.h"
 
 // View models
 #import "AFATaskListViewModel.h"
@@ -51,7 +52,6 @@
 #import "AFATaskDetailsDataSource.h"
 
 // Managers
-#import "AFATaskServices.h"
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
 #import "AFAModalTaskDetailsCreateTaskAction.h"
@@ -61,12 +61,10 @@
 #import "ASDKRoundedBorderView.h"
 #import "AFAActivityView.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 typedef NS_ENUM(NSInteger, AFAListControllerState) {
-    AFAListControllerStateIdle,
+    AFAListControllerStateIdle = 0,
     AFAListControllerStateRefreshInProgress,
+    AFAListControllerStateEmptyList
 };
 
 typedef NS_ENUM(NSInteger, AFAListButtonType) {
@@ -92,6 +90,7 @@ UITableViewDelegate>
 @property (weak, nonatomic)   IBOutlet AFAActivityView                      *loadingActivityView;
 @property (weak, nonatomic)   IBOutlet UITextField                          *searchTextField;
 @property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *backBarButtonItem;
+@property (weak, nonatomic)   IBOutlet UIBarButtonItem                      *addBarButtonItem;
 @property (weak, nonatomic)   IBOutlet UIButton                             *taskListButton;
 @property (weak, nonatomic)   IBOutlet UIButton                             *processListButton;
 @property (weak, nonatomic)   IBOutlet UIView                               *underlineView;
@@ -109,7 +108,6 @@ UITableViewDelegate>
 
 // Internal state properties
 @property (strong, nonatomic) AFAGenericFilterModel                         *currentFilter;
-@property (strong, nonatomic) AFAListHandleCompletionBlock                  listResponseCompletionBlock;
 @property (assign, nonatomic) AFAListControllerState                        controllerState;
 @property (assign, nonatomic) BOOL                                          isAdvancedSearchInProgress;
 @property (strong, nonatomic) id<AFAListDataSourceProtocol>                 dataSource;
@@ -187,66 +185,13 @@ UITableViewDelegate>
     
     // Update the controller's state - Waiting for input from the filter controller
     [self updateSceneForCurrentViewModel];
-    self.controllerState = AFAListControllerStateRefreshInProgress;
-    
-    // Define the handler for task and process requests
-    __weak typeof(self) weakSelf = self;
-    self.listResponseCompletionBlock = ^(id<AFAListDataSourceProtocol>dataSource, NSArray *objectList, NSError *error, ASDKModelPaging *paging) {
-        __strong typeof(self) strongSelf = weakSelf;
-        
-        strongSelf.controllerState = AFAListControllerStateIdle;
-        
-        // Make sure the handling is performed for the current active data source
-        if ([dataSource class] != [strongSelf.dataSource class]) {
-                return;
-            }
-        
-        if (!error) {
-            // Display the last update date
-            if (strongSelf.refreshControl) {
-                strongSelf.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
-            }
-            
-            [strongSelf.dataSource processAdditionalEntries:objectList
-                                                  forPaging:paging];
-            NSArray *objectListForCurrentContentType = strongSelf.dataSource.dataEntries;
-            
-            // Check if we got an empty list
-            strongSelf.noRecordsLabel.hidden = objectListForCurrentContentType.count;
-            strongSelf.listTableView.hidden = objectListForCurrentContentType.count ? NO : YES;
-            strongSelf.refreshView.hidden = objectListForCurrentContentType.count;
-            
-            [strongSelf.listTableView reloadData];
-        } else {
-            strongSelf.noRecordsLabel.hidden = NO;
-            strongSelf.listTableView.hidden = YES;
-            strongSelf.refreshView.hidden = NO;
-            
-            [strongSelf.dataSource processAdditionalEntries:nil
-                                                  forPaging:nil];
-            [strongSelf.listTableView reloadData];
-            
-            [strongSelf showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-        }
-        
-        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-            [weakSelf.refreshControl endRefreshing];
-        }];
-        
-        // If an activity indicator is present in the table's footer view remove it
-        if (strongSelf.listTableView.tableFooterView) {
-            [UIView beginAnimations:nil
-                            context:NULL];
-            strongSelf.preloadingActivityView.animating = NO;
-            strongSelf.listTableView.tableFooterView = nil;
-            [UIView commitAnimations];
-        }
-    };
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self searchWithTerm:self.searchTextField.text];
+    
+    [self refreshUIForConnectivity:[self isNetworkReachable]];
 }
 
 
@@ -268,8 +213,9 @@ UITableViewDelegate>
     if ([kSegueIDTaskDetails isEqualToString:segue.identifier]) {
         AFATaskDetailsViewController *detailsViewController = (AFATaskDetailsViewController *)segue.destinationViewController;
         
-        ASDKModelTask *currentSelectedTask = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
-        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:currentSelectedTask.modelID
+        ASDKModelTask *selectedTask = self.dataSource.dataEntries[[self.listTableView indexPathForCell:(UITableViewCell *)sender].row];
+        AFATaskDetailsDataSource *taskDetailsDataSource = [[AFATaskDetailsDataSource alloc] initWithTaskID:selectedTask.modelID
+                                                                                              parentTaskID:selectedTask.parentTaskID
                                                                                                 themeColor:self.navigationBarThemeColor];
         
         detailsViewController.dataSource = taskDetailsDataSource;
@@ -293,22 +239,6 @@ UITableViewDelegate>
     }
 }
 
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDListUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
-}
-
 - (IBAction)unwindTaskListController:(UIStoryboardSegue *)segue {
 }
 
@@ -323,15 +253,38 @@ UITableViewDelegate>
 
 
 #pragma mark -
+#pragma mark Connectivity notifications
+
+- (void)didRestoredNetworkConnectivity {
+    [super didRestoredNetworkConnectivity];
+    
+    [self searchWithTerm:self.searchTextField.text];
+    
+    [self refreshUIForConnectivity:YES];
+}
+
+- (void)didLoseNetworkConnectivity {
+    [super didLoseNetworkConnectivity];
+    
+    [self searchWithTerm:self.searchTextField.text];
+    
+    [self refreshUIForConnectivity:NO];
+}
+
+- (void)refreshUIForConnectivity:(BOOL)isConnected {
+    self.addBarButtonItem.enabled = isConnected;
+}
+
+
+#pragma mark -
 #pragma mark Actions
 
 - (IBAction)onRefresh:(id)sender {
     // Perform the refresh operation only when there is a filter available
     if (self.currentFilter) {
-        self.refreshView.hidden = YES;
-        self.noRecordsLabel.hidden = YES;
-        
         [self searchWithTerm:self.searchTextField.text];
+    } else {
+        [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
     }
 }
 
@@ -344,7 +297,8 @@ UITableViewDelegate>
     // re-fetched any checked for updates
     self.searchTextField.text = nil;
     self.currentFilter.page = 0;
-    [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
+    
+    [self fetchContentList];
 }
 
 - (IBAction)onContentOverlayTap:(id)sender {
@@ -406,27 +360,100 @@ UITableViewDelegate>
 #pragma mark -
 #pragma mark Content handling
 
-- (void)fetchContentListWithCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
+- (void)fetchContentList {
     // Based on the chosen list content type fetch the list of tasks or the process
     // instance list with the default filter provided by the filter controller
     self.currentFilter.size = kDefaultTaskListFetchSize;
+    self.currentFilter.appDeploymentID = self.currentListViewModel.application.deploymentID;
+    
+    __weak typeof(self) weakSelf = self;
     [self.dataSource loadContentListForFilter:self.currentFilter
-                          withCompletionBlock:completionBlock];
+                          withCompletionBlock:^(id<AFAListDataSourceProtocol> dataSource, AFAListResponseModel *response) {
+                              __strong typeof(self) strongSelf = weakSelf;
+                              
+                              [strongSelf handleListRequestResponseFromDataSource:dataSource
+                                                                         response:response
+                                                                 isCachedResponse:NO];
+                          } cachedResults:^(id<AFAListDataSourceProtocol> dataSource, AFAListResponseModel *response) {
+                              __strong typeof(self) strongSelf = weakSelf;
+                              
+                              [strongSelf handleListRequestResponseFromDataSource:dataSource
+                                                                         response:response
+                                                                 isCachedResponse:YES];
+                          }];
 }
 
-- (void)fetchListForSearchTerm:(NSString *)searchTerm
-           withCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
+- (void)fetchListForSearchTerm:(NSString *)searchTerm {
     // Pass the existing defined filter
     self.currentFilter.text = searchTerm;
     self.currentFilter.page = 0;
     self.currentFilter.appDefinitionID = self.currentListViewModel.application.modelID;
     
-    [self fetchContentListWithCompletionBlock:completionBlock];
+    [self fetchContentList];
 }
 
-- (void)fetchNextPageForCurrentListWithCompletionBlock:(AFAListHandleCompletionBlock)completionBlock {
+- (void)fetchNextPageForCurrentList {
     self.currentFilter.page += 1;
-    [self fetchContentListWithCompletionBlock:completionBlock];
+    
+    [self fetchContentList];
+}
+
+- (void)handleListRequestResponseFromDataSource:(id<AFAListDataSourceProtocol>)dataSource
+                                       response:(AFAListResponseModel *)response
+                               isCachedResponse:(BOOL)isCachedResponse {
+    // Make sure the handling is performed for the current active data source
+    if ([dataSource class] != [self.dataSource class]) {
+        return;
+    }
+    
+    if (!response.error) {
+        // Display the last update date
+        if (self.refreshControl) {
+            self.refreshControl.attributedTitle = [[NSDate date] lastUpdatedFormattedString];
+        }
+        [self.dataSource processAdditionalEntries:response.objectList
+                                        forPaging:response.paging];
+        
+        [self.listTableView reloadData];
+    } else {
+        if (isCachedResponse) {
+            [self.dataSource processAdditionalEntries:nil
+                                            forPaging:nil];
+            [self.listTableView reloadData];
+        } else {
+            if (response.error.code == NSURLErrorNotConnectedToInternet) {
+                [self showWarningMessage:NSLocalizedString(kLocalizationOfflineProvidingCachedResultsText, @"Cached results text")];
+            } else {
+                [self showErrorMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
+            }
+        }
+    }
+    
+    BOOL isContentAvailable = self.dataSource.dataEntries.count ? YES : NO;
+    self.controllerState = isContentAvailable ? AFAListControllerStateIdle : AFAListControllerStateEmptyList;
+    
+    [self endRefreshOnRefreshControl];
+    
+    // If an activity indicator is present in the table's footer view remove it
+    if (self.listTableView.tableFooterView) {
+        [UIView beginAnimations:nil
+                        context:NULL];
+        self.preloadingActivityView.animating = NO;
+        self.listTableView.tableFooterView = nil;
+        [UIView commitAnimations];
+    }
+}
+
+
+#pragma mark -
+#pragma mark Convenience methods
+
+- (void)endRefreshOnRefreshControl {
+    __weak typeof(self) weakSelf = self;
+    [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+        __strong typeof(self) strongSelf = weakSelf;
+        [strongSelf.refreshControl endRefreshing];
+    }];
 }
 
 
@@ -434,24 +461,65 @@ UITableViewDelegate>
 #pragma mark AFAFilterViewController Delegate
 
 - (void)filterModelsDidLoadWithDefaultFilter:(AFAGenericFilterModel *)filterModel
-                                  filterType:(AFAFilterType)filterType {
-    // If no filter information is found don't continue with further requests
+                                  filterType:(AFAFilterType)filterType
+                            isCachedResponse:(BOOL)isCachedResponse
+                                       error:(NSError *)error {
+    // Pre-compute missing filters error
+    NSString *formattedMissingFiltersString = nil;
+    
     if (!filterModel) {
-        self.controllerState = AFAListControllerStateIdle;
-        self.noRecordsLabel.hidden = NO;
-        self.listTableView.hidden = YES;
-        self.refreshView.hidden = NO;
+        NSString *filterTypeString = nil;
+        if (filterType == AFAFilterTypeTask) {
+            filterTypeString = NSLocalizedString(kLocalizationListScreenTasksText, @"Tasks text");
+        } else {
+            filterTypeString = NSLocalizedString(kLocalizationListScreenProcessInstancesText, @"Process instances text");
+        }
         
-        [self showGenericNetworkErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAlertDialogGenericNetworkErrorText, @"Generic network error")];
-    } else {
-        if ((AFAFilterTypeTask == filterType &&
-             [self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) ||
-            (AFAFilterTypeProcessInstance == filterType &&
-             [self.dataSource isKindOfClass:[AFAProcessListViewDataSource class]])) {
-                // Store the filter reference for further reuse
-                self.currentFilter = filterModel;
-                [self fetchContentListWithCompletionBlock:self.listResponseCompletionBlock];
+        formattedMissingFiltersString = [NSString stringWithFormat:NSLocalizedString(kLocalizationListScreenMissingFiltersFormat, @"Missing filters error"), filterTypeString, filterTypeString];
+    }
+    
+    if (error) {
+        if (!filterModel) {
+            // If no cached data is available notify the user, otherwise fail silently
+            BOOL isSilentFail = NO;
+            
+            if (!isCachedResponse) {
+                if (!self.currentFilter) {
+                    self.controllerState = AFAListControllerStateEmptyList;
+                    [self showErrorMessage:formattedMissingFiltersString];
+                } else { // Faily silently
+                    isSilentFail = YES;
+                }
+            } else { // Fail silently
+                isSilentFail = YES;
             }
+            
+            if (isSilentFail) {
+                self.controllerState = AFAListControllerStateIdle;
+            }
+        }
+    } else {
+        if (!filterModel) {
+            // Remote filters are missing, notify the user
+            if (!isCachedResponse) {
+                self.controllerState = AFAListControllerStateEmptyList;
+                [self showErrorMessage:formattedMissingFiltersString];
+                self.currentFilter = nil;
+            } else {
+                self.controllerState = AFAListControllerStateEmptyList;
+                self.currentFilter = nil;
+            }
+        } else { // Positive flow
+            if ((AFAFilterTypeTask == filterType &&
+                 [self.dataSource isKindOfClass:[AFATaskListViewDataSource class]]) ||
+                (AFAFilterTypeProcessInstance == filterType &&
+                 [self.dataSource isKindOfClass:[AFAProcessListViewDataSource class]])) {
+                    // Store the filter reference for further reuse
+                    self.currentFilter = filterModel;
+                    
+                    [self fetchContentList];
+                }
+        }
     }
 }
 
@@ -470,8 +538,7 @@ UITableViewDelegate>
     if (self.currentFilter) {
         self.controllerState = AFAListControllerStateRefreshInProgress;
         
-        [self fetchListForSearchTerm:term
-                 withCompletionBlock:self.listResponseCompletionBlock];
+        [self fetchListForSearchTerm:term];
     }
 }
 
@@ -626,7 +693,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         // Display the activity view at the end of the table while content is fetched
         tableView.tableFooterView = self.loadingFooterView;
         self.preloadingActivityView.animating = YES;
-        [self fetchNextPageForCurrentListWithCompletionBlock:self.listResponseCompletionBlock];
+        
+        [self fetchNextPageForCurrentList];
     }
 }
 
@@ -670,21 +738,28 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                         forKeyPath:NSStringFromSelector(@selector(controllerState))
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
-                                 __strong typeof(self) strongSelf = weakSelf;
-                                 
-                                 AFAListControllerState controllerState = [change[NSKeyValueChangeNewKey] boolValue];
+                                 AFAListControllerState controllerState = [change[NSKeyValueChangeNewKey] integerValue];
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     if (AFAListControllerStateRefreshInProgress == controllerState) {
-                                         strongSelf.listTableView.hidden = YES;
-                                         strongSelf.refreshView.hidden = YES;
-                                         strongSelf.noRecordsLabel.hidden = YES;
-                                     } else {
-                                         // Check if there are any results to show before showing the task list tableview
-                                         strongSelf.listTableView.hidden = strongSelf.dataSource.dataEntries.count ? NO : YES;
+                                     if (AFAListControllerStateIdle == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.listTableView.hidden = NO;
+                                         weakSelf.refreshView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else if (AFAListControllerStateRefreshInProgress == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = NO;
+                                         weakSelf.loadingActivityView.animating = YES;
+                                         weakSelf.listTableView.hidden = YES;
+                                         weakSelf.refreshView.hidden = YES;
+                                         weakSelf.noRecordsLabel.hidden = YES;
+                                     } else if (AFAListControllerStateEmptyList == controllerState) {
+                                         weakSelf.loadingActivityView.hidden = YES;
+                                         weakSelf.loadingActivityView.animating = NO;
+                                         weakSelf.listTableView.hidden = YES;
+                                         weakSelf.refreshView.hidden = NO;
+                                         weakSelf.noRecordsLabel.hidden = NO;
                                      }
-                                     strongSelf.loadingActivityView.hidden = (AFAListControllerStateRefreshInProgress == controllerState) ? NO : YES;
-                                     strongSelf.loadingActivityView.animating = (AFAListControllerStateRefreshInProgress == controllerState) ? YES : NO;
                                  });
                              }];
 }

@@ -55,6 +55,9 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *alertContainerViewVerticalConstraint;
 @property (strong, nonatomic) JGProgressHUD             *progressHUD;
 
+// Services
+@property (strong, nonatomic) AFAProfileServices        *requestProfileService;
+
 @end
 
 @implementation AFAModalTaskDetailsViewController
@@ -68,6 +71,8 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
+        _requestProfileService = [AFAProfileServices new];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(keyboardWillChange:)
                                                      name:UIKeyboardWillChangeFrameNotification
@@ -196,8 +201,7 @@
         }
     };
 
-    AFAProfileServices *profileServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProfileServices];
-    [profileServices requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
+    [self.requestProfileService requestProfileWithCompletionBlock:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         if (!error) {
             if ([self.confirmAlertAction respondsToSelector:@selector(executeAlertActionWithModel:completionBlock:)]) {

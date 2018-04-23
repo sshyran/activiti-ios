@@ -197,7 +197,7 @@ withFormFieldValueRequestRepresentation:(ASDKFormFieldValueRequestRepresentation
 }
 
 - (void)completeFormForProcessDefinition:(ASDKModelProcessDefinition *)processDefinition
-withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
+withFormFieldValuesRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
                          completionBlock:(ASDKStarFormCompletionBlock)completionBlock {
     NSParameterAssert(processDefinition );
     NSParameterAssert(formFieldValuesRepresentation);
@@ -264,7 +264,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
 }
 
 - (void)saveFormForTaskID:(NSString *)taskID
-withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
+withFormFieldValuesRequestRepresentation:(ASDKFormFieldValueRequestRepresentation *)formFieldValuesRepresentation
           completionBlock:(ASDKFormSaveBlock)completionBlock {
     // Check mandatory properties
     NSParameterAssert(taskID);
@@ -815,7 +815,7 @@ withFormFieldValuesRequestrepresentation:(ASDKFormFieldValueRequestRepresentatio
     [self.networkOperations addObject:dataTask];
 }
 
-- (void)cancelAllTaskNetworkOperations {
+- (void)cancelAllNetworkOperations {
     [self.networkOperations makeObjectsPerformSelector:@selector(cancel)];
     [self.networkOperations removeAllObjects];
 }

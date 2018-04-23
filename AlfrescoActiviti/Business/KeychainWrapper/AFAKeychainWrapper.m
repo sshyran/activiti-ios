@@ -147,6 +147,10 @@ NSString *uuidKeychainIdentifier = @"uuidKeychainIdentifier";
 }
 
 + (NSData *)searchKeychainCopyMatchingIdentifier:(NSString *)identifier {
+    if (!identifier.length) {
+        return nil;
+    }
+    
     NSMutableDictionary *searchDictionary = [self keychainAccessAttributesDictionaryForIdentifier:identifier];
     // Limit search results to one.
     [searchDictionary setObject:(__bridge id)kSecMatchLimitOne forKey:(__bridge id)kSecMatchLimit];

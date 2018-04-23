@@ -32,9 +32,6 @@
 #import "AFAProcessServices.h"
 #import "AFAServiceRepository.h"
 
-// Segues
-#import "AFAPushFadeSegueUnwind.h"
-
 // Views
 #import <JGProgressHUD/JGProgressHUD.h>
 
@@ -44,7 +41,13 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem            *confirmBarButtonItem;
 @property (weak, nonatomic) IBOutlet UITextView                 *commentsTextView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint         *commentsTextViewBottomConstraint;
+
+// Internal state properties
 @property (strong, nonatomic) JGProgressHUD                     *progressHUD;
+
+// Services
+@property (strong, nonatomic) AFATaskServices                   *createTaskCommentService;
+@property (strong, nonatomic) AFAProcessServices                *createProcessInstanceCommentService;
 
 @end
 
@@ -54,7 +57,9 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.progressHUD = [self configureProgressHUD];
+        _progressHUD = [self configureProgressHUD];
+        _createTaskCommentService = [AFATaskServices new];
+        _createProcessInstanceCommentService = [AFAProcessServices new];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(keyboardWillChange:)
@@ -71,7 +76,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [self.backBarButtonItem setTitleTextAttributes:@{NSFontAttributeName           : [UIFont glyphiconFontWithSize:15],
                                                      NSForegroundColorAttributeName: [UIColor whiteColor]}
                                           forState:UIControlStateNormal];
@@ -100,33 +105,6 @@
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     self.commentsTextViewBottomConstraint.constant = CGRectGetHeight(keyboardFrame) + 8.0f;
     [self.view layoutIfNeeded];
-}
-
-
-#pragma mark - 
-#pragma mark Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
-- (UIStoryboardSegue *)segueForUnwindingToViewController:(UIViewController *)toViewController
-                                      fromViewController:(UIViewController *)fromViewController
-                                              identifier:(NSString *)identifier {
-    if ([kSegueIDTaskDetailsAddCommentsUnwind isEqualToString:identifier] ||
-        [kSegueIDProcessInstanceDetailsAddCommentsUnwind isEqualToString:identifier]) {
-        AFAPushFadeSegueUnwind *unwindSegue = [AFAPushFadeSegueUnwind segueWithIdentifier:identifier
-                                                                                   source:fromViewController
-                                                                              destination:toViewController
-                                                                           performHandler:^{}];
-        return unwindSegue;
-    }
-    
-    return [super segueForUnwindingToViewController:toViewController
-                                 fromViewController:fromViewController
-                                         identifier:identifier];
 }
 
 
@@ -171,15 +149,13 @@
         
         // Check whether we need to add a task or process instance comment
         if (self.taskID) {
-            AFATaskServices *taskServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeTaskServices];
-            [taskServices requestCreateComment:self.commentsTextView.text
-                                     forTaskID:self.taskID
-                               completionBlock:commentCompletionBlock];
+            [self.createTaskCommentService requestCreateComment:self.commentsTextView.text
+                                                      forTaskID:self.taskID
+                                                completionBlock:commentCompletionBlock];
         } else {
-            AFAProcessServices *processServices = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeProcessServices];
-            [processServices requestCreateComment:self.commentsTextView.text
-                             forProcessInstanceID:self.processInstanceID
-                                  completionBlock:commentCompletionBlock];
+            [self.createProcessInstanceCommentService requestCreateComment:self.commentsTextView.text
+                                                      forProcessInstanceID:self.processInstanceID
+                                                           completionBlock:commentCompletionBlock];
         }
     } else {
         [self showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationAddCommentScreenEmptyCommentErrorText, @"Add some text error text")];
