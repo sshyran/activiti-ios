@@ -17,6 +17,7 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
+@import ActivitiSDK;
 
 @class ASDKModelTask, ASDKFormRenderEngine;
 
@@ -29,7 +30,7 @@
 
 @end
 
-@interface AFATaskFormViewController : UIViewController
+@interface AFATaskFormViewController : ASDKReachabilityViewController
 
 @property (weak, nonatomic) id<AFATaskFormViewControllerDelegate>   delegate;
 @property (strong, nonatomic) ASDKFormRenderEngine                  *taskFormRenderEngine;

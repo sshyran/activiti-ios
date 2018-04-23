@@ -39,11 +39,15 @@
 @interface AFATaskFormViewController() <ASDKFormControllerNavigationProtocol,
                                         ASDKFormRenderEngineDelegate>
 
+// Views
 @property (weak, nonatomic)   IBOutlet AFAActivityView      *activityView;
 @property (weak, nonatomic)   IBOutlet AFANoContentView     *noContentView;
 @property (strong, nonatomic) JGProgressHUD                 *progressHUD;
 
+// Internal state
 @property (strong, nonatomic) ASDKModelTask                 *task;
+
+@property (strong, nonatomic) ASDKKVOManager                *kvoManager;
 
 @end
 
@@ -76,11 +80,7 @@
 - (void)formForTask:(ASDKModelTask *)task {
     if (![task.modelID isEqualToString:self.task.modelID]) {
         self.task = task;
-        
-        self.activityView.hidden = NO;
-        self.activityView.animating = YES;
-        
-        [self.taskFormRenderEngine setupWithTaskModel:self.task];
+        [self setupFormForCurrentTask];
     } else {
         if ([self.delegate respondsToSelector:@selector(formDidLoadWithError:)]) {
             [self.delegate formDidLoadWithError:nil];
@@ -90,6 +90,17 @@
 
 - (void)saveForm {
     [self.taskFormRenderEngine.actionHandler saveForm];
+}
+
+
+#pragma mark -
+#pragma mark Private interface
+
+- (void)setupFormForCurrentTask {
+    self.activityView.hidden = NO;
+    self.activityView.animating = YES;
+    
+    [self.taskFormRenderEngine setupWithTaskModel:self.task];
 }
 
 
@@ -246,6 +257,28 @@
     [indicatorView setColor:[UIColor whiteColor]];
     self.progressHUD.indicatorView = indicatorView;
     [self.progressHUD showInView:self.navigationController.view];
+}
+
+
+#pragma mark -
+#pragma mark KVO Bindings
+
+- (void)handleBindingsForNetworkConnectivity {
+    self.kvoManager = [ASDKKVOManager managerWithObserver:self];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.kvoManager observeObject:self
+                        forKeyPath:NSStringFromSelector(@selector(networkReachabilityStatus))
+                           options:NSKeyValueObservingOptionNew
+                             block:^(id observer, id object, NSDictionary *change) {
+                                 ASDKNetworkReachabilityStatus networkReachabilityStatus = [change[NSKeyValueChangeNewKey] boolValue];
+                                 
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     if (ASDKNetworkReachabilityStatusReachableViaWWANOrWifi == networkReachabilityStatus) {
+                                         [weakSelf setupFormForCurrentTask];
+                                     }
+                                 });
+                             }];
 }
 
 @end
