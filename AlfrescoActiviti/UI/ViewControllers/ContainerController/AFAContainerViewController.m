@@ -22,6 +22,7 @@
 
 // Categories
 #import "UIViewController+AFAAlertAddition.h"
+#import "UIColor+AFATheme.h"
 
 // Models
 #import "AFALoginViewModel.h"
@@ -66,6 +67,7 @@
 
 // State
 @property (assign, nonatomic) BOOL                          isDrawerMenuOpen;
+@property (strong, nonatomic) UIColor                       *themeColor;
 
 // Controllers
 @property (strong, nonatomic) AFADrawerMenuViewController   *drawerMenuViewController;
@@ -150,6 +152,11 @@
 
 - (BOOL)isDrawerMenuOpen {
     return _isDrawerMenuOpen;
+}
+
+- (void)toggleDrawerMenuWithThemeColor:(UIColor *)themeColor {
+    self.themeColor = themeColor;
+    [self toggleDrawerMenu];
 }
 
 - (void)toggleDrawerMenu {
@@ -289,8 +296,19 @@
     self.detailsContainerView.layer.shadowOpacity = isReverseAnimation ? .0f : .5f;
     self.detailsContainerView.layer.shadowRadius = isReverseAnimation ? .0f : 3.0f;
     
+    UIColor *containerBackgroundColor = isReverseAnimation ? self.themeColor : [UIColor windowBackgroundColor];
+    NSTimeInterval containerAnimationDelay = .0f;
+    NSTimeInterval backgroundColorAnimationDelay = .0f;
+    
+    if (isReverseAnimation) {
+        backgroundColorAnimationDelay = kOverlayAlphaChangeTime;
+    } else {
+        containerAnimationDelay = kOverlayAlphaChangeTime;
+        backgroundColorAnimationDelay = .0f;
+    }
+    
     [UIView animateWithDuration:kDefaultAnimationTime
-                          delay:.0f
+                          delay:containerAnimationDelay
          usingSpringWithDamping:isReverseAnimation ? 1.0f : .7f
           initialSpringVelocity:10.0f
                         options:UIViewAnimationOptionCurveEaseIn
@@ -304,6 +322,14 @@
                              self.menuContainerView.hidden = YES;
                          }
                      }];
+    
+    [UIView animateWithDuration:kOverlayAlphaChangeTime
+                          delay:backgroundColorAnimationDelay
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.view.backgroundColor = containerBackgroundColor;
+                     }
+                     completion:nil];
 }
 
 

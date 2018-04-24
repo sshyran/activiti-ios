@@ -22,7 +22,7 @@
 @protocol AFAContainerViewControllerDelegate <NSObject>
 
 - (BOOL)isDrawerMenuOpen;
-- (void)toggleDrawerMenu;
+- (void)toggleDrawerMenuWithThemeColor:(UIColor *)themeColor;
 - (void)logoutUser;
 - (void)showAdhocTasks;
 - (void)showApplications;
