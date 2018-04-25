@@ -245,6 +245,7 @@
     [self toggleDrawerMenu];
     
     AFASettingsViewController *settingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDSettingsViewController];
+    settingsViewController.navigationBarThemeColor = self.themeColor;
     settingsViewController.delegate = self;
     
     UIBarButtonItem *menuItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu-dots-icon"]
