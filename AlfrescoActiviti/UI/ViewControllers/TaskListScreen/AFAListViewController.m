@@ -95,6 +95,9 @@ UITableViewDelegate>
 @property (weak, nonatomic)   IBOutlet UIButton                             *processListButton;
 @property (weak, nonatomic)   IBOutlet UIView                               *underlineView;
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *underlineTaskListButtonConstraint;
+@property (weak, nonatomic)   IBOutlet NSLayoutConstraint *tabBarHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tabBarUnderlineBottomConstraint;
+
 
 // Advanced search related
 @property (weak, nonatomic)   IBOutlet UIButton                             *advancedSearchButton;
@@ -112,6 +115,7 @@ UITableViewDelegate>
 @property (assign, nonatomic) BOOL                                          isAdvancedSearchInProgress;
 @property (strong, nonatomic) id<AFAListDataSourceProtocol>                 dataSource;
 @property (strong, nonatomic) AFAListBaseViewModel                          *currentListViewModel;
+@property (assign, nonatomic) NSUInteger                                    initialTabBarHeight;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
@@ -185,6 +189,8 @@ UITableViewDelegate>
     
     // Update the controller's state - Waiting for input from the filter controller
     [self updateSceneForCurrentViewModel];
+    
+    self.initialTabBarHeight = self.tabBarHeightConstraint.constant;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -192,6 +198,14 @@ UITableViewDelegate>
     [self searchWithTerm:self.searchTextField.text];
     
     [self refreshUIForConnectivity:[self isNetworkReachable]];
+}
+
+- (void)viewDidLayoutSubviews {
+    // Adjust tab bar for view safe area
+    if (@available(iOS 11.0, *)) {
+        self.tabBarHeightConstraint.constant = self.initialTabBarHeight + self.view.safeAreaInsets.bottom;
+        self.tabBarUnderlineBottomConstraint.constant = self.view.safeAreaInsets.bottom;
+    }
 }
 
 

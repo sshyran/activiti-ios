@@ -50,6 +50,7 @@
 #import "AFAProfileViewController.h"
 #import "AFASettingsViewController.h"
 
+static CGFloat const kBackgroundThemeColorChangeAnimationDuration = .072f;
 
 @interface AFAContainerViewController () <AFAContainerViewControllerDelegate>
 
@@ -157,6 +158,13 @@
 - (void)toggleDrawerMenuWithThemeColor:(UIColor *)themeColor {
     self.themeColor = themeColor;
     [self toggleDrawerMenu];
+}
+
+- (void)changeThemeColor:(UIColor *)themeColor {
+    self.themeColor = themeColor;
+    
+    [self changeContainerBackgroundColor:themeColor
+                               withDelay:kBackgroundThemeColorChangeAnimationDuration];
 }
 
 - (void)toggleDrawerMenu {
@@ -325,13 +333,8 @@
                          }
                      }];
     
-    [UIView animateWithDuration:kOverlayAlphaChangeTime
-                          delay:backgroundColorAnimationDelay
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.view.backgroundColor = containerBackgroundColor;
-                     }
-                     completion:nil];
+    [self changeContainerBackgroundColor:containerBackgroundColor
+                               withDelay:backgroundColorAnimationDelay];
 }
 
 
@@ -372,6 +375,17 @@
         [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
                                   sender:nil];
     });
+}
+
+- (void)changeContainerBackgroundColor:(UIColor *)containerBackgroundColor
+                             withDelay:(NSTimeInterval)backgroundColorAnimationDelay {
+    [UIView animateWithDuration:kOverlayAlphaChangeTime
+                          delay:backgroundColorAnimationDelay
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         self.view.backgroundColor = containerBackgroundColor;
+                     }
+                     completion:nil];
 }
 
 @end

@@ -23,6 +23,7 @@
 
 - (BOOL)isDrawerMenuOpen;
 - (void)toggleDrawerMenuWithThemeColor:(UIColor *)themeColor;
+- (void)changeThemeColor:(UIColor *)themeColor;
 - (void)logoutUser;
 - (void)showAdhocTasks;
 - (void)showApplications;
