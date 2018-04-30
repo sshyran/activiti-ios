@@ -214,6 +214,8 @@ AFAModalPeoplePickerViewControllerDelegate>
 }
 
 - (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
     // Adjust tab bar for view's safe area
     if (@available(iOS 11.0, *)) {
         self.tabBarHeightConstraint.constant = self.initialTabBarHeight + self.view.safeAreaInsets.bottom;
