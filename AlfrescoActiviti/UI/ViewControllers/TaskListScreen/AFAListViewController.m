@@ -95,8 +95,8 @@ UITableViewDelegate>
 @property (weak, nonatomic)   IBOutlet UIButton                             *processListButton;
 @property (weak, nonatomic)   IBOutlet UIView                               *underlineView;
 @property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *underlineTaskListButtonConstraint;
-@property (weak, nonatomic)   IBOutlet NSLayoutConstraint *tabBarHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tabBarUnderlineBottomConstraint;
+@property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *tabBarHeightConstraint;
+@property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *tabBarUnderlineBottomConstraint;
 
 
 // Advanced search related
@@ -201,7 +201,7 @@ UITableViewDelegate>
 }
 
 - (void)viewDidLayoutSubviews {
-    // Adjust tab bar for view safe area
+    // Adjust tab bar for view's safe area
     if (@available(iOS 11.0, *)) {
         self.tabBarHeightConstraint.constant = self.initialTabBarHeight + self.view.safeAreaInsets.bottom;
         self.tabBarUnderlineBottomConstraint.constant = self.view.safeAreaInsets.bottom;
