@@ -68,7 +68,6 @@ extern NSString *kLocalizationContentPickerComponentNoContentNotEditableText;
 
 // People picker component
 extern NSString *kLocalizationPeoplePickerControllerTitleText;
-extern NSString *kLocalizationPeoplePickerControllerInstructionText;
 extern NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat;
 extern NSString *kLocalizationPeoplePickerControllerRemovingUserFormat;
 extern NSString *kLocalizationPeoplePickerControllerNoContributorsText;

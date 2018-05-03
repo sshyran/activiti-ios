@@ -165,7 +165,6 @@ NSString *kLocalizationContentPickerComponentContentNotAvailableErrorText= @"con
 #pragma mark People picker component
 
 NSString *kLocalizationPeoplePickerControllerTitleText            = @"peoplePickerControllerTitleText";
-NSString *kLocalizationPeoplePickerControllerInstructionText      = @"peoplePickerControllerInstructionText";
 NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat  = @"peoplePickerControllerInvolvingUserFormat";
 NSString *kLocalizationPeoplePickerControllerAssigningUserFormat  = @"peoplePickerControllerAssigningUserFormat";
 NSString *kLocalizationPeoplePickerControllerRemovingUserFormat   = @"peoplePickerControllerRemovingUserFormat";

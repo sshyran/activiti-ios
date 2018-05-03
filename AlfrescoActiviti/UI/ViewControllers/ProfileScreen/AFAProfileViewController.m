@@ -70,6 +70,7 @@ UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextField                *lastNameTextField;
 @property (strong, nonatomic) JGProgressHUD                     *progressHUD;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint         *contentPickerContainerBottomConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint         *contentPickerContainerHeightConstraint;
 @property (strong, nonatomic) AFAContentPickerViewController    *contentPickerViewController;
 @property (weak, nonatomic) IBOutlet UIView                     *contentPickerContainer;
 @property (weak, nonatomic) IBOutlet UIView                     *fullScreenOverlayView;
@@ -81,6 +82,7 @@ UITableViewDelegate>
 // Internal state properties
 @property (assign, nonatomic) AFAProfileControllerState         controllerState;
 @property (strong, nonatomic) UIImage                           *profileImage;
+@property (assign, nonatomic) CGFloat                           initialContentPickerContainerHeight;
 
 // Services
 @property (strong, nonatomic) AFAProfileServices                *requestProfileService;
@@ -149,6 +151,8 @@ UITableViewDelegate>
     // Set a provisory profile image placeholder
     AFAThumbnailManager *thumbnailManager = [[AFAServiceRepository sharedRepository] serviceObjectForPurpose:AFAServiceObjectTypeThumbnailManager];
     self.avatarView.profileImage = [thumbnailManager placeholderThumbnailImage];
+    
+    self.initialContentPickerContainerHeight = self.contentPickerContainerHeightConstraint.constant;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -218,11 +222,16 @@ UITableViewDelegate>
 - (void)toggleContentPickerComponent {
     NSInteger contentPickerConstant = 0;
     if (!self.contentPickerContainerBottomConstraint.constant) {
-        contentPickerConstant = -(CGRectGetHeight(self.contentPickerContainer.frame));
+        if (@available(iOS 11.0, *)) {
+            self.contentPickerContainerHeightConstraint.constant = self.initialContentPickerContainerHeight + self.view.safeAreaInsets.bottom;
+            contentPickerConstant = self.contentPickerContainerHeightConstraint.constant;;
+        } else {
+            contentPickerConstant = self.contentPickerContainerHeightConstraint.constant;
+        }
     }
     
     // Show the content picker container
-    if (!contentPickerConstant) {
+    if (contentPickerConstant) {
         self.contentPickerContainer.hidden = NO;
     }
     
@@ -236,7 +245,7 @@ UITableViewDelegate>
                          self.contentPickerContainerBottomConstraint.constant = contentPickerConstant;
                          [self.view layoutIfNeeded];
                      } completion:^(BOOL finished) {
-                         if (contentPickerConstant) {
+                         if (!contentPickerConstant) {
                              self.contentPickerContainer.hidden = YES;
                          }
                      }];

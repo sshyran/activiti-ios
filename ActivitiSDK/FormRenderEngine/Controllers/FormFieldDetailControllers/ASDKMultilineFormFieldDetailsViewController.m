@@ -94,6 +94,8 @@
 }
 
 - (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
     [self.multilineTextView setContentOffset:CGPointZero
                                     animated:NO];
 }

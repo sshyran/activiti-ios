@@ -69,7 +69,6 @@
 
 // People picker component
 "peoplePickerControllerTitleText"                               = "Add person";
-"peoplePickerControllerInstructionText"                         = "You add contributors by searching them using the search bar above.";
 "peoplePickerControllerInvolvingUserFormat"                     = "%@ is now involved";
 "peoplePickerControllerRemovingUserFormat"                      = "%@ is no longer involved";
 "peoplePickerControllerNoContributorsText"                      = "There aren't any involved people but you can add some by using the + button.";

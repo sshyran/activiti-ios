@@ -58,8 +58,6 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
 @property (weak, nonatomic) IBOutlet UITableView                *contributorsTableView;
 @property (weak, nonatomic) IBOutlet UILabel                    *noRecordsLabel;
 @property (weak, nonatomic) IBOutlet AFAActivityView            *loadingActivityView;
-@property (weak, nonatomic) IBOutlet UILabel                    *instructionsLabel;
-@property (weak, nonatomic) IBOutlet UIView                     *instructionsView;
 @property (weak, nonatomic) IBOutlet UITextField                *peopleSearchField;
 @property (strong, nonatomic) JGProgressHUD                     *progressHUD;
 
@@ -117,13 +115,11 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
                                           forState:UIControlStateNormal];
     self.backBarButtonItem.title = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft];
     self.navigationBarTitle = NSLocalizedString(kLocalizationPeoplePickerControllerTitleText, @"People picker screen title");
-    self.instructionsLabel.text = NSLocalizedString(kLocalizationPeoplePickerControllerInstructionText, @"Search instructions text");
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    self.instructionsView.hidden = NO;
     [self.peopleSearchField becomeFirstResponder];
 }
 
@@ -206,7 +202,6 @@ typedef NS_ENUM(NSInteger, AFAPeoplePickerControllerState) {
                                            
                                            BOOL isContentAvailable = users.count ? YES : NO;
                                            strongSelf.controllerState = isContentAvailable ? AFAPeoplePickerControllerStateIdle : AFAPeoplePickerControllerStateEmptyList;
-                                           self.instructionsView.hidden = isContentAvailable;
                                            
                                            if (!error) {
                                                strongSelf.contributorsArr = users;

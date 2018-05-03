@@ -79,10 +79,12 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
 @property (weak, nonatomic) IBOutlet AFANoContentView                       *noContentView;
 @property (strong, nonatomic) AFAContentPickerViewController                *contentPickerViewController;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem                      *addBarButtonItem;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint                     *tabBarHeightConstraint;
 
 // Internal state properties
 @property (assign, nonatomic) AFAProcessInstanceDetailsLoadingState         controllerState;
 @property (assign, nonatomic) NSInteger                                     currentSelectedSection;
+@property (assign, nonatomic) NSUInteger                                    initialTabBarHeight;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                                 *kvoManager;
@@ -140,6 +142,8 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
                             action:@selector(refreshContentForCurrentSection)
                   forControlEvents:UIControlEventValueChanged];
     tableViewController.refreshControl = self.refreshControl;
+    
+    self.initialTabBarHeight = self.tabBarHeightConstraint.constant;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -149,6 +153,14 @@ typedef NS_ENUM(NSUInteger, AFAProcessInstanceDetailsLoadingState) {
     [self refreshUIForConnectivity:isConnectivityAvailable];
     
     [self refreshContentForCurrentSection];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    if (@available(iOS 11.0, *)) {
+        self.tabBarHeightConstraint.constant = self.initialTabBarHeight + self.view.safeAreaInsets.bottom;
+    }
 }
 
 

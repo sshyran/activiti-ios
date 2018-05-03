@@ -22,6 +22,7 @@
 #import "AFALocalizationConstants.h"
 #import "AFABusinessConstants.h"
 #import "AFAUIConstants.h"
+#import "UIColor+AFATheme.h"
 
 // Categories
 #import "UIViewController+AFAAlertAddition.h"
@@ -76,7 +77,7 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
 #pragma mark -
 #pragma mark Life cycle
 
--(instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
@@ -121,6 +122,9 @@ typedef NS_ENUM(NSInteger, AFAApplicationListControllerState) {
     
     // Update the navigation bar theme color
     self.navigationBarThemeColor = [UIColor applicationThemeDefaultColor];
+    if (self.delegate) {
+        [self.delegate changeThemeColor:self.navigationBarThemeColor];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -279,6 +283,13 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath
                              animated:YES];
+    
+    if (self.delegate) {
+        ASDKModelApp *application = self.applicationListArr[indexPath.row];
+        UIColor *themeColor = [UIColor applicationColorForTheme:application.theme];
+        [self.delegate changeThemeColor:themeColor];
+    }
+    
     [self performSegueWithIdentifier:kSegueIDList
                               sender:[tableView cellForRowAtIndexPath:indexPath]];
 }

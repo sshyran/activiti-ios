@@ -22,6 +22,7 @@
 
 // Categories
 #import "UIViewController+AFAAlertAddition.h"
+#import "UIColor+AFATheme.h"
 
 // Models
 #import "AFALoginViewModel.h"
@@ -49,6 +50,7 @@
 #import "AFAProfileViewController.h"
 #import "AFASettingsViewController.h"
 
+static CGFloat const kBackgroundThemeColorChangeAnimationDuration = .072f;
 
 @interface AFAContainerViewController () <AFAContainerViewControllerDelegate>
 
@@ -66,6 +68,7 @@
 
 // State
 @property (assign, nonatomic) BOOL                          isDrawerMenuOpen;
+@property (strong, nonatomic) UIColor                       *themeColor;
 
 // Controllers
 @property (strong, nonatomic) AFADrawerMenuViewController   *drawerMenuViewController;
@@ -152,6 +155,18 @@
     return _isDrawerMenuOpen;
 }
 
+- (void)toggleDrawerMenuWithThemeColor:(UIColor *)themeColor {
+    self.themeColor = themeColor;
+    [self toggleDrawerMenu];
+}
+
+- (void)changeThemeColor:(UIColor *)themeColor {
+    self.themeColor = themeColor;
+    
+    [self changeContainerBackgroundColor:themeColor
+                               withDelay:kBackgroundThemeColorChangeAnimationDuration];
+}
+
 - (void)toggleDrawerMenu {
     [self.drawerMenuViewController refreshDrawerMenu];
     self.isDrawerMenuOpen = !self.isDrawerMenuOpen;
@@ -220,6 +235,7 @@
     [self toggleDrawerMenu];
     
     AFAProfileViewController *profileViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDProfileViewController];
+    profileViewController.navigationBarThemeColor = self.themeColor;
     profileViewController.delegate = self;
     
     UIBarButtonItem *menuItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu-dots-icon"]
@@ -237,6 +253,7 @@
     [self toggleDrawerMenu];
     
     AFASettingsViewController *settingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:kStoryboardIDSettingsViewController];
+    settingsViewController.navigationBarThemeColor = self.themeColor;
     settingsViewController.delegate = self;
     
     UIBarButtonItem *menuItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"menu-dots-icon"]
@@ -289,8 +306,19 @@
     self.detailsContainerView.layer.shadowOpacity = isReverseAnimation ? .0f : .5f;
     self.detailsContainerView.layer.shadowRadius = isReverseAnimation ? .0f : 3.0f;
     
+    UIColor *containerBackgroundColor = isReverseAnimation ? self.themeColor : [UIColor windowBackgroundColor];
+    NSTimeInterval containerAnimationDelay = .0f;
+    NSTimeInterval backgroundColorAnimationDelay = .0f;
+    
+    if (isReverseAnimation) {
+        backgroundColorAnimationDelay = kOverlayAlphaChangeTime;
+    } else {
+        containerAnimationDelay = kOverlayAlphaChangeTime;
+        backgroundColorAnimationDelay = .0f;
+    }
+    
     [UIView animateWithDuration:kDefaultAnimationTime
-                          delay:.0f
+                          delay:containerAnimationDelay
          usingSpringWithDamping:isReverseAnimation ? 1.0f : .7f
           initialSpringVelocity:10.0f
                         options:UIViewAnimationOptionCurveEaseIn
@@ -304,6 +332,9 @@
                              self.menuContainerView.hidden = YES;
                          }
                      }];
+    
+    [self changeContainerBackgroundColor:containerBackgroundColor
+                               withDelay:backgroundColorAnimationDelay];
 }
 
 
@@ -344,6 +375,17 @@
         [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
                                   sender:nil];
     });
+}
+
+- (void)changeContainerBackgroundColor:(UIColor *)containerBackgroundColor
+                             withDelay:(NSTimeInterval)backgroundColorAnimationDelay {
+    [UIView animateWithDuration:kOverlayAlphaChangeTime
+                          delay:backgroundColorAnimationDelay
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         self.view.backgroundColor = containerBackgroundColor;
+                     }
+                     completion:nil];
 }
 
 @end

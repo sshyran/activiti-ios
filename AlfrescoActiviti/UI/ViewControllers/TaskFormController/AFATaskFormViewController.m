@@ -40,7 +40,6 @@
                                         ASDKFormRenderEngineDelegate>
 
 // Views
-@property (weak, nonatomic)   IBOutlet AFAActivityView      *activityView;
 @property (weak, nonatomic)   IBOutlet AFANoContentView     *noContentView;
 @property (strong, nonatomic) JGProgressHUD                 *progressHUD;
 
@@ -97,9 +96,6 @@
 #pragma mark Private interface
 
 - (void)setupFormForCurrentTask {
-    self.activityView.hidden = NO;
-    self.activityView.animating = YES;
-    
     [self.taskFormRenderEngine setupWithTaskModel:self.task];
 }
 
@@ -167,9 +163,6 @@
             NSLocalizedString(kLocalizationAlertDialogTaskFormCannotSetUpErrorText, @"Form set up error");
         }
     }
-    
-    self.activityView.animating = NO;
-    self.activityView.hidden = YES;
     
     if ([self.delegate respondsToSelector:@selector(formDidLoadWithError:)]) {
         [self.delegate formDidLoadWithError:error];

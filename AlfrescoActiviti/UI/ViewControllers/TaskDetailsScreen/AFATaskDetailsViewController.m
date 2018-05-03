@@ -113,10 +113,15 @@ AFAModalPeoplePickerViewControllerDelegate>
 @property (strong, nonatomic) ASDKIntegrationBrowsingViewController         *integrationBrowsingController;
 @property (weak, nonatomic)   IBOutlet AFAConfirmationView                  *confirmationView;
 @property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer         *longPressGestureRecognizer;
+@property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *tabBarHeightConstraint;
+@property (weak, nonatomic)   IBOutlet NSLayoutConstraint                   *datepickerHeightConstraint;
 
 // Internal state properties
 @property (assign, nonatomic) AFATaskDetailsLoadingState                    controllerState;
 @property (assign, nonatomic) NSInteger                                     currentSelectedSection;
+@property (assign, nonatomic) NSUInteger                                    initialTabBarHeight;
+@property (assign, nonatomic) NSUInteger                                    initialDatePickerHeight;
+@property (assign, nonatomic) NSUInteger                                    initialContentPickerContainerHeight;
 
 // KVO
 @property (strong, nonatomic) ASDKKVOManager                                *kvoManager;
@@ -192,6 +197,9 @@ AFAModalPeoplePickerViewControllerDelegate>
     self.editBarButtonItem.tintColor = [UIColor whiteColor];
     
     self.confirmationView.delegate = self;
+    
+    self.initialTabBarHeight = self.tabBarHeightConstraint.constant;
+    self.initialDatePickerHeight = self.datepickerHeightConstraint.constant;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -205,6 +213,15 @@ AFAModalPeoplePickerViewControllerDelegate>
     [self refreshContentForCurrentSection];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    // Adjust tab bar for view's safe area
+    if (@available(iOS 11.0, *)) {
+        self.tabBarHeightConstraint.constant = self.initialTabBarHeight + self.view.safeAreaInsets.bottom;
+        self.datepickerHeightConstraint.constant = self.initialDatePickerHeight + self.view.safeAreaInsets.bottom;
+    }
+}
 
 #pragma mark -
 #pragma mark Navigation
@@ -1165,7 +1182,11 @@ AFAModalPeoplePickerViewControllerDelegate>
     NSInteger datePickerConstant = 0;
     NSInteger taskDetailsTableViewTopConstant = 0;
     if (!self.datePickerBottomConstraint.constant) {
-        datePickerConstant = -(CGRectGetHeight(self.datePicker.frame) + CGRectGetHeight(self.datePickerToolbar.frame) + 10);
+        if (@available(iOS 11, *)) {
+            datePickerConstant = -(self.datepickerHeightConstraint.constant + CGRectGetHeight(self.datePickerToolbar.frame) + self.view.safeAreaInsets.bottom);
+        } else {
+            datePickerConstant = -(self.datepickerHeightConstraint.constant + CGRectGetHeight(self.datePickerToolbar.frame) + 10);
+        }
     } else {
         if (self.taskDetailsTableView.contentSize.height + CGRectGetHeight(self.datePicker.frame) + CGRectGetHeight(self.datePickerToolbar.frame) - 10 > CGRectGetHeight(self.view.frame)) {
             taskDetailsTableViewTopConstant = -CGRectGetHeight(self.datePicker.frame) / 2;
@@ -1188,11 +1209,16 @@ AFAModalPeoplePickerViewControllerDelegate>
 - (void)toggleContentPickerComponent {
     NSInteger contentPickerConstant = 0;
     if (!self.contentPickerContainerBottomConstraint.constant) {
-        contentPickerConstant = -(CGRectGetHeight(self.contentPickerContainer.frame));
+        if (@available(iOS 11.0, *)) {
+            self.contentPickerContainerHeightConstraint.constant = self.initialContentPickerContainerHeight + self.view.safeAreaInsets.bottom;
+            contentPickerConstant = self.contentPickerContainerHeightConstraint.constant;
+        } else {
+            contentPickerConstant = self.contentPickerContainerHeightConstraint.constant;
+        }
     }
     
     // Show the content picker container
-    if (!contentPickerConstant) {
+    if (contentPickerConstant) {
         self.contentPickerContainer.hidden = NO;
     }
     
@@ -1206,7 +1232,7 @@ AFAModalPeoplePickerViewControllerDelegate>
                          self.contentPickerContainerBottomConstraint.constant = contentPickerConstant;
                          [self.view layoutIfNeeded];
                      } completion:^(BOOL finished) {
-                         if (contentPickerConstant) {
+                         if (!contentPickerConstant) {
                              self.contentPickerContainer.hidden = YES;
                          }
                      }];
@@ -1247,6 +1273,7 @@ AFAModalPeoplePickerViewControllerDelegate>
 - (void)contentPickerHasBeenPresentedWithNumberOfOptions:(NSUInteger)contentOptionCount
                                               cellHeight:(CGFloat)cellHeight {
     self.contentPickerContainerHeightConstraint.constant = contentOptionCount * cellHeight;
+    self.initialContentPickerContainerHeight = self.contentPickerContainerHeightConstraint.constant;
 }
 
 - (void)userPickerIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount {

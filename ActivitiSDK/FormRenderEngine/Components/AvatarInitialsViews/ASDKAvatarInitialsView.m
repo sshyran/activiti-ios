@@ -79,6 +79,7 @@ static const NSInteger kAvatarInitialsComponentCount = 2;
     }
     
     self.initialsString = initialsString;
+    self.initialsLabel.text = self.initialsString;
 }
 
 @end

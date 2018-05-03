@@ -47,7 +47,6 @@
 @property (weak, nonatomic) IBOutlet UITableView        *rowsWithVisibleColumnsTableView;
 @property (weak, nonatomic) IBOutlet ASDKNoContentView  *noRowsView;
 @property (weak, nonatomic) IBOutlet ASDKActivityView   *activityView;
-@property (weak, nonatomic) IBOutlet UIView             *blurEffectView;
 
 @property (strong, nonatomic) ASDKModelFormField        *currentFormField;
 @property (assign, nonatomic) NSInteger                 selectedRowIndex;
@@ -215,7 +214,6 @@
     
     self.activityView.animating = NO;
     self.activityView.hidden = YES;
-    self.blurEffectView.hidden = YES;
 }
 
 - (void)didCompleteFormWithError:(NSError *)error {
@@ -294,7 +292,6 @@ viewForHeaderInSection:(NSInteger)section {
     }
     self.dynamicTableRenderEngine.task = self.formConfiguration.task;
     
-    self.blurEffectView.hidden = NO;
     self.activityView.hidden = NO;
     self.activityView.animating = YES;
     self.selectedRowIndex = section;

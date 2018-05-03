@@ -48,8 +48,8 @@
 - (void)toggleMenu:(id)sender {
     [self toggleMenuBlur];
     
-    if ([self.delegate respondsToSelector:@selector(toggleDrawerMenu)]) {
-        [self.delegate toggleDrawerMenu];
+    if ([self.delegate respondsToSelector:@selector(toggleDrawerMenuWithThemeColor:)]) {
+        [self.delegate toggleDrawerMenuWithThemeColor:self.navigationBarThemeColor];
     }
 }
 
@@ -100,7 +100,9 @@
         [self.menuBlurImageView addGestureRecognizer:tapGestureRecognizer];
     }
     
-    self.menuBlurImageView.image = [self.view blurredSnapshot];
+    if (!self.menuBlurImageView.image) {
+        self.menuBlurImageView.image = [self.view blurredSnapshot];
+    }
     self.isSlided = self.menuBlurImageView.superview ? NO : YES;
     
     if (!self.menuBlurImageView.superview) {
@@ -116,6 +118,7 @@
                              self.menuBlurImageView.alpha = .0f;
                          } completion:^(BOOL finished) {
                              [self.menuBlurImageView removeFromSuperview];
+                             self.menuBlurImageView.image = nil;
                          }];
     }
 }

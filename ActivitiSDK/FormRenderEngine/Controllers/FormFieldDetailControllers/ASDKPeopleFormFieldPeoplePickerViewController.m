@@ -64,8 +64,6 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 @property (weak, nonatomic) IBOutlet UITableView                *contributorsTableView;
 @property (weak, nonatomic) IBOutlet UILabel                    *noRecordsLabel;
 @property (weak, nonatomic) IBOutlet ASDKActivityView           *loadingActivityView;
-@property (weak, nonatomic) IBOutlet UILabel                    *instructionsLabel;
-@property (weak, nonatomic) IBOutlet UIView                     *instructionsView;
 @property (weak, nonatomic) IBOutlet UITextField                *peopleSearchField;
 @property (strong, nonatomic) JGProgressHUD                     *progressHUD;
 
@@ -104,7 +102,6 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
                                                      NSForegroundColorAttributeName: [UIColor whiteColor]}
                                           forState:UIControlStateNormal];
     self.backBarButtonItem.title = [NSString iconStringForIconType:ASDKGlyphIconTypeChevronLeft];
-    self.instructionsLabel.text = ASDKLocalizedStringFromTable(kLocalizationPeoplePickerControllerInstructionText, ASDKLocalizationTable, @"Search instructions text");
     
     // pre select user
     self.selectedUser = self.currentFormField.values.firstObject;
@@ -139,10 +136,6 @@ typedef NS_ENUM(NSInteger, ASDKPeoplePickerControllerState) {
 #pragma mark UITextField Delegate
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if (!self.instructionsView.hidden) {
-        self.instructionsView.hidden = YES;
-    }
-    
     [self toggleContentTransparentOverlay];
     
     return YES;
