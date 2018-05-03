@@ -138,7 +138,6 @@ extern NSString *kLocalizationContentPickerComponentContentNotAvailableErrorText
 
 // People picker component
 extern NSString *kLocalizationPeoplePickerControllerTitleText;
-extern NSString *kLocalizationPeoplePickerControllerInstructionText;
 extern NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat;
 extern NSString *kLocalizationPeoplePickerControllerAssigningUserFormat;
 extern NSString *kLocalizationPeoplePickerControllerRemovingUserFormat;

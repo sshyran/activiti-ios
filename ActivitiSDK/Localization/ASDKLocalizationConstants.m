@@ -74,7 +74,6 @@ NSString *kLocalizationContentPickerComponentNoContentNotEditableText           
 #pragma mark People picker component
 
 NSString *kLocalizationPeoplePickerControllerTitleText                      = @"peoplePickerControllerTitleText";
-NSString *kLocalizationPeoplePickerControllerInstructionText                = @"peoplePickerControllerInstructionText";
 NSString *kLocalizationPeoplePickerControllerInvolvingUserFormat            = @"peoplePickerControllerInvolvingUserFormat";
 NSString *kLocalizationPeoplePickerControllerRemovingUserFormat             = @"peoplePickerControllerRemovingUserFormat";
 NSString *kLocalizationPeoplePickerControllerNoContributorsText             = @"peoplePickerControllerNoContributorsText";

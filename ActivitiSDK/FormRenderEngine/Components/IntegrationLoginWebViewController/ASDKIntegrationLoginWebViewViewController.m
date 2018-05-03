@@ -90,16 +90,13 @@ static const int activitiSDKLogLevel = ASDK_LOG_LEVEL_VERBOSE; // | ASDK_LOG_FLA
                                  [loginRequest setValue:[profileNetworkServices.tokenStorage csrfTokenString]
                                      forHTTPHeaderField:kASDKAPICSRFHeaderFieldParameter];
                                  
-                                 [self.webViewContainer loadRequest:loginRequest];
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     [self.webViewContainer loadRequest:loginRequest];
+                                 });
                              } else {
                                  ASDKLogVerbose(@"An error occured while retrieving the authentication cookie.");
                              }
     }];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 

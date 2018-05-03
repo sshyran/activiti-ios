@@ -68,6 +68,9 @@
 @property (strong, nonatomic) ASDKIntegrationBrowsingViewController                 *integrationBrowsingController;
 @property (strong, nonatomic) ASDKFormColorSchemeManager                            *colorSchemeManager;
 
+@property (assign, nonatomic) NSUInteger                                            initialContentPickerContainerHeight;
+
+// KVO
 @property (strong, nonatomic) ASDKKVOManager                                        *kvoManager;
 
 
@@ -189,11 +192,16 @@
 - (void)toggleContentPickerComponent {
     NSInteger contentPickerConstant = 0;
     if (!self.contentPickerContainerBottomConstraint.constant) {
-        contentPickerConstant = -(CGRectGetHeight(self.contentPickerContainer.frame));
+        if (@available(iOS 11.0, *)) {
+            self.contentPickerContainerHeightConstraint.constant = self.initialContentPickerContainerHeight + self.view.safeAreaInsets.bottom;
+            contentPickerConstant = self.contentPickerContainerHeightConstraint.constant;
+        } else {
+            contentPickerConstant = self.contentPickerContainerHeightConstraint.constant;
+        }
     }
     
     // Show the content picker container
-    if (!contentPickerConstant) {
+    if (contentPickerConstant) {
         self.contentPickerContainer.hidden = NO;
     }
     
@@ -207,7 +215,7 @@
                          self.contentPickerContainerBottomConstraint.constant = contentPickerConstant;
                          [self.view layoutIfNeeded];
                      } completion:^(BOOL finished) {
-                         if (contentPickerConstant) {
+                         if (!contentPickerConstant) {
                              self.contentPickerContainer.hidden = YES;
                          }
                      }];
@@ -397,6 +405,7 @@ editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)contentPickerHasBeenPresentedWithNumberOfOptions:(NSUInteger)contentOptionCount
                                               cellHeight:(CGFloat)cellHeight {
     self.contentPickerContainerHeightConstraint.constant = contentOptionCount * cellHeight;
+    self.initialContentPickerContainerHeight = self.contentPickerContainerHeightConstraint.constant;
 }
 
 - (void)userPickerIntegrationAccount:(ASDKModelIntegrationAccount *)integrationAccount {
