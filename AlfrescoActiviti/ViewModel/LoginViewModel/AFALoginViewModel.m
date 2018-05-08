@@ -246,7 +246,7 @@
 }
 
 - (void)requestLogoutForUnauthorizedAccess {
-    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:[self persistenceStackModelName]];
+    [AFAKeychainWrapper deleteItemFromKeychainWithIdentifier:[self offlinePersistenceStackModelName]];
     [self requestLogout];
 }
 

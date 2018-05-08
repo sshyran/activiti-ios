@@ -342,6 +342,7 @@ static CGFloat const kBackgroundThemeColorChangeAnimationDuration = .072f;
 #pragma mark Private interface
 
 - (void)handleUnAuthorizedRequestNotification {
+    [self.loginViewModel requestLogoutForUnauthorizedAccess];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
                                                                              message:NSLocalizedString(kLocalizationLoginUnauthorizedRequestErrorText, @"Unauthorized request text")
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -350,7 +351,10 @@ static CGFloat const kBackgroundThemeColorChangeAnimationDuration = .072f;
                                                              style:UIAlertActionStyleDefault
                                                            handler:^(UIAlertAction *action) {
                                                                __strong typeof(self) strongSelf = weakSelf;
-                                                               [strongSelf requestUserUnauthorizedLogout];
+                                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                                   [strongSelf performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
+                                                                                                   sender:nil];
+                                                               });
                                                            }];
     [alertController addAction:okButtonAction];
     
@@ -363,14 +367,6 @@ static CGFloat const kBackgroundThemeColorChangeAnimationDuration = .072f;
 
 - (void)requestUserLogout {
     [self.loginViewModel requestLogout];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
-                                  sender:nil];
-    });
-}
-
-- (void)requestUserUnauthorizedLogout {
-    [self.loginViewModel requestLogoutForUnauthorizedAccess];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self performSegueWithIdentifier:kSegueIDLoginAuthorizedUnwind
                                   sender:nil];
