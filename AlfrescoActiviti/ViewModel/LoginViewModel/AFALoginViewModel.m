@@ -31,6 +31,7 @@
 // Managers
 #import "AFAServiceRepository.h"
 #import "AFAKeychainWrapper.h"
+#import "ASDKReachabilityManager.h"
 
 @import ActivitiSDK;
 
@@ -39,7 +40,8 @@
 @property (strong, nonatomic) AFACredentialModel *credentialModel;
 
 // Services
-@property (strong, nonatomic) AFAProfileServices *requestProfileService;
+@property (strong, nonatomic) AFAProfileServices        *requestProfileService;
+@property (strong, nonatomic) ASDKReachabilityManager   *reachabilityManager;
 
 @end
 
@@ -69,6 +71,7 @@
         _credentialModel.serviceDocument = kASDKAPIApplicationPath;
         
         _requestProfileService = [AFAProfileServices new];
+        _reachabilityManager = [ASDKReachabilityManager new];
     }
     
     return self;
@@ -212,24 +215,26 @@
     } cachedResults:^(ASDKModelProfile *profile, NSError *error) {
         __strong typeof(self) strongSelf = weakSelf;
         
-        // Check first if the request wasn't previously canceled
-        if (AFALoginAuthenticationStateCanceled != strongSelf.authState &&
-            AFALoginAuthenticationStatePreparing != strongSelf.authState) {
-            if (!error && profile) {
-                // Store in the user defaults details of the current login
-                [strongSelf synchronizeToUserDefaultsServerConfiguration:serverConfiguration];
-                
-                if ([[AFAKeychainWrapper keychainStringFromMatchingIdentifier:offlinePersistenceStackModelName] isEqualToString:serverConfiguration.password]) {
-                    strongSelf.authState = AFALoginAuthenticationStateAuthorized;
-                    completionBlock(YES, nil);
+        if (ASDKNetworkReachabilityStatusReachableViaWWANOrWifi != [strongSelf.reachabilityManager requestInitialReachabilityStatus]) {
+            // Check first if the request wasn't previously canceled
+            if (AFALoginAuthenticationStateCanceled != strongSelf.authState &&
+                AFALoginAuthenticationStatePreparing != strongSelf.authState) {
+                if (!error && profile) {
+                    // Store in the user defaults details of the current login
+                    [strongSelf synchronizeToUserDefaultsServerConfiguration:serverConfiguration];
+                    
+                    if ([[AFAKeychainWrapper keychainStringFromMatchingIdentifier:offlinePersistenceStackModelName] isEqualToString:serverConfiguration.password]) {
+                        strongSelf.authState = AFALoginAuthenticationStateAuthorized;
+                        completionBlock(YES, nil);
+                    } else {
+                        NSError *invalidCredentialsError = [NSError errorWithDomain:AFALoginViewModelErrorDomain
+                                                                               code:kAFALoginViewModelInvalidCredentialErrorCode
+                                                                           userInfo:nil];
+                        errorHandlingBlock(invalidCredentialsError);
+                    }
                 } else {
-                    NSError *invalidCredentialsError = [NSError errorWithDomain:AFALoginViewModelErrorDomain
-                                                                           code:kAFALoginViewModelInvalidCredentialErrorCode
-                                                                       userInfo:nil];
-                    errorHandlingBlock(invalidCredentialsError);
+                    errorHandlingBlock(error);
                 }
-            } else {
-                errorHandlingBlock(error);
             }
         }
     }];
