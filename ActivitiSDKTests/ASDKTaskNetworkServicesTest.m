@@ -559,7 +559,7 @@
                                            XCTAssert(progress == 20);
                                            
                                            [uploadTaskContentExpectation fulfill];
-                                       } completionBlock:^(BOOL isContentUploaded, NSError *error) {}];
+                                       } completionBlock:^(ASDKModelContent *uploadedContent, NSError *error) {}];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -587,8 +587,8 @@
     [self.taskNetworkServices uploadContentWithModel:fileContent
                                            forTaskID:@"id"
                                        progressBlock:nil
-                                     completionBlock:^(BOOL isContentUploaded, NSError *error) {
-                                         XCTAssertTrue(isContentUploaded);
+                                     completionBlock:^(ASDKModelContent *uploadedContent, NSError *error) {
+                                         XCTAssertNotNil(uploadedContent);
                                          XCTAssertNil(error);
                                          
                                          [uploadTaskContentExpectation fulfill];
@@ -620,8 +620,8 @@
     [self.taskNetworkServices uploadContentWithModel:fileContent
                                            forTaskID:@"id"
                                        progressBlock:nil
-                                     completionBlock:^(BOOL isContentUploaded, NSError *error) {
-                                         XCTAssertFalse(isContentUploaded);
+                                     completionBlock:^(ASDKModelContent *uploadedContent, NSError *error) {
+                                         XCTAssertNil(uploadedContent);
                                          XCTAssertNotNil(error);
                                          
                                          [uploadTaskContentExpectation fulfill];
@@ -663,7 +663,7 @@
                                            XCTAssert(progress == 20);
                                            
                                            [uploadTaskContentExpectation fulfill];
-                                       } completionBlock:^(BOOL isContentUploaded, NSError *error) {}];
+                                       } completionBlock:^(ASDKModelContent *uploadedContent, NSError *error) {}];
     
     [self waitForExpectationsWithTimeout:.5f
                                  handler:nil];
@@ -692,9 +692,9 @@
                                          contentData:dummyData
                                            forTaskID:@"id"
                                        progressBlock:nil
-                                     completionBlock:^(BOOL isContentUploaded, NSError *error) {
+                                     completionBlock:^(ASDKModelContent *uploadedContent, NSError *error) {
                                          XCTAssertNil(error);
-                                         XCTAssertTrue(isContentUploaded);
+                                         XCTAssertNotNil(uploadedContent);
                                          
                                          [uploadTaskContentExpectation fulfill];
                                      }];
@@ -728,9 +728,9 @@
                                          contentData:dummyData
                                            forTaskID:@"id"
                                        progressBlock:nil
-                                     completionBlock:^(BOOL isContentUploaded, NSError *error) {
+                                     completionBlock:^(ASDKModelContent *uploadedContent, NSError *error) {
                                          XCTAssertNotNil(error);
-                                         XCTAssertFalse(isContentUploaded);
+                                         XCTAssertNil(uploadedContent);
                                          
                                          [uploadTaskContentExpectation fulfill];
                                      }];

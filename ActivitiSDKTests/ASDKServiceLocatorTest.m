@@ -56,7 +56,7 @@
 
 - (void)testThatItAddsService {
     // given
-    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
+    id internalService = OCMClassMock([ASDKNetworkService class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -67,7 +67,7 @@
 
 - (void)testThatItValidatesRegisteredService {
     // given
-    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
+    id internalService = OCMClassMock([ASDKNetworkService class]);
     
     // when
     [self.serviceLocator addService:internalService];
@@ -86,24 +86,24 @@
 
 - (void)testThatItValidatesRegisteredServiceForProtocol {
     // given
-    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
+    id internalService = OCMClassMock([ASDKNetworkService class]);
     
     // when
     [self.serviceLocator addService:internalService];
     
     // then
-    XCTAssertTrue([self.serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKFormRenderEngineProtocol)]);
+    XCTAssertTrue([self.serviceLocator isServiceRegisteredForProtocol:@protocol(ASDKNetworkServiceProtocol)]);
 }
 
 - (void)testThatItRetrievesServiceConformingToCertainProtocol {
     // given
-    id internalService = OCMClassMock([ASDKFormRenderEngine class]);
+    id internalService = OCMClassMock([ASDKNetworkService class]);
     
     // when
     [self.serviceLocator addService:internalService];
     
     // then
-    XCTAssertTrue(internalService == [self.serviceLocator serviceConformingToProtocol:@protocol(ASDKFormRenderEngineProtocol)]);
+    XCTAssertTrue(internalService == [self.serviceLocator serviceConformingToProtocol:@protocol(ASDKNetworkServiceProtocol)]);
 }
 
 - (void)testThatItRemovesServiceConformingToProtocol {
