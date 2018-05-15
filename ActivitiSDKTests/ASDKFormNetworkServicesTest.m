@@ -257,7 +257,7 @@
     // when
     self.formNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.formNetworkService completeFormForProcessDefinition:processDefinition
-                     withFormFieldValuesRequestrepresentation:formFieldValuesRepresentation
+                     withFormFieldValuesRequestRepresentation:formFieldValuesRepresentation
                                               completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
                                                   XCTAssertNotNil(processInstance);
                                                   XCTAssertNil(error);
@@ -292,7 +292,7 @@
     // when
     self.formNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.formNetworkService completeFormForProcessDefinition:processDefinition
-                     withFormFieldValuesRequestrepresentation:formFieldValuesRepresentation
+                     withFormFieldValuesRequestRepresentation:formFieldValuesRepresentation
                                               completionBlock:^(ASDKModelProcessInstance *processInstance, NSError *error) {
                                                   XCTAssertNil(processInstance);
                                                   XCTAssertNotNil(error);
@@ -324,7 +324,7 @@
     // when
     self.formNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.formNetworkService saveFormForTaskID:@"id"
-      withFormFieldValuesRequestrepresentation:formFieldValuesRepresentation
+      withFormFieldValuesRequestRepresentation:formFieldValuesRepresentation
                                completionBlock:^(BOOL isFormSaved, NSError *error) {
                                    XCTAssertTrue(isFormSaved);
                                    XCTAssertNil(error);
@@ -356,7 +356,7 @@
     // when
     self.formNetworkService.requestOperationManager = self.requestOperationManagerMock;
     [self.formNetworkService saveFormForTaskID:@"id"
-      withFormFieldValuesRequestrepresentation:formFieldValuesRepresentation
+      withFormFieldValuesRequestRepresentation:formFieldValuesRepresentation
                                completionBlock:^(BOOL isFormSaved, NSError *error) {
                                    XCTAssertFalse(isFormSaved);
                                    XCTAssertNotNil(error);
