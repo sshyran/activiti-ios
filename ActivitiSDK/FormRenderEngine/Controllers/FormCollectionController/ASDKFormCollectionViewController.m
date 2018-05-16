@@ -412,7 +412,9 @@ referenceSizeForHeaderInSection:(NSInteger)section {
                            options:NSKeyValueObservingOptionNew
                              block:^(id observer, id object, NSDictionary *change) {
                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                     [weakSelf.collectionView reloadData];
+                                     if (weakSelf.viewIfLoaded.window) {
+                                         [weakSelf.collectionView reloadData];
+                                     }
                                  });
                              }];
 }
