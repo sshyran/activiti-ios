@@ -6873,7 +6873,6 @@
 				137194861B6924DF00D4E1F0 /* Resources */,
 				A3BB4420BE1B0DA86FEDAFEB /* [CP] Embed Pods Frameworks */,
 				7649CFA1CFBD1DB6FD468635 /* [CP] Copy Pods Resources */,
-				1342062920B2DE9E00CB65D0 /* Bamboo tests */,
 			);
 			buildRules = (
 			);
@@ -7043,20 +7042,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./Fabric.framework/run e8a01a8f3b3d101465882d84e3cb5a8a5b6befe0 003c7d4d3f26f46c93a0597e9e41109a5469a1c817c6c299daea4bcda2c7aa1b";
-		};
-		1342062920B2DE9E00CB65D0 /* Bamboo tests */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bamboo tests";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ \"$RUN_UNIT_TEST_WITH_IOS_SIM\" = \"YES\" ]; then\ntest_bundle_path=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION\"\nios-sim launch \"$(dirname \"$TEST_HOST\")\" --setenv DYLD_INSERT_LIBRARIES=/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection --setenv XCInjectBundle=\"$test_bundle_path\" --setenv XCInjectBundleInto=\"$TEST_HOST\" --args -SenTest All \"$test_bundle_path\"\necho \"Finished running tests with ios-sim\"\nelse\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\nfi";
 		};
 		13F0E9311D368A0E00BF10A9 /* Cocoapods framework clean script */ = {
 			isa = PBXShellScriptBuildPhase;
