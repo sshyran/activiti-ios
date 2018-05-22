@@ -53,7 +53,7 @@
 "formContentPickerComponentLocalVersionAvailableText"           = "We found a local version of the content you're trying to download. Would you like to preview it, or get the latest version from the server?";
 "formContentPickerComponentPreviewLocalVersionText"             = "View local";
 "formContentPickerComponentGetLatestVersionText"                = "Get latest";
-"formContentPickerComponentAlfrescoContentText"                 = "Alfresco Cloud";
+"formContentPickerComponentAlfrescoContentText"                 = "Alfresco in the Cloud";
 "formContentPickerComponentBoxContentText"                      = "Box";
 "formContentPickerComponentDriveContentText"                    = "Google Drive";
 "formContentPickerComponentNoContentText"                       = "You have no available content but you can add some by using the + button.";

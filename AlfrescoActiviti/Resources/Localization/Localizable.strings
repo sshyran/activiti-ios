@@ -128,7 +128,7 @@
 "contentPickerComponentPreviewLocalVersionText"          = "View local";
 "contentPickerComponentGetLatestVersionText"             = "Get latest";
 "contentPickerComponentIntegrationAccountAvailableText"  = "Unable to fetch external integration accounts.";
-"contentPickerComponentAlfrescoContentText"              = "Alfresco Cloud";
+"contentPickerComponentAlfrescoContentText"              = "Alfresco in the Cloud";
 "contentPickerComponentBoxContentText"                   = "Box";
 "contentPickerComponentDriveContentText"                 = "Google Drive";
 "contentPickerComponentIntegrationLoginErrorText"        = "There seems to be an issue with authoring access to the current service.";
