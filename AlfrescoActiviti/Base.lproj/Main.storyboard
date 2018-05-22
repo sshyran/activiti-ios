@@ -207,12 +207,21 @@
                                                         <constraint firstAttribute="width" constant="300" id="q06-0b-WxC"/>
                                                     </constraints>
                                                 </view>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="alfresco-logo" translatesAutoresizingMaskIntoConstraints="NO" id="rNd-Uy-jcM">
-                                                    <rect key="frame" x="147.5" y="283.5" width="80" height="80"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="alfresco-logo" translatesAutoresizingMaskIntoConstraints="NO" id="rNd-Uy-jcM">
+                                                    <rect key="frame" x="52.5" y="280.5" width="270" height="86"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="86" id="ADE-0r-N31"/>
+                                                        <constraint firstAttribute="width" constant="270" id="faU-m6-hTH"/>
+                                                        <constraint firstAttribute="width" secondItem="rNd-Uy-jcM" secondAttribute="height" multiplier="135:43" id="sYw-SV-dB9"/>
+                                                    </constraints>
                                                 </imageView>
                                                 <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FfB-Lk-Z5o" customClass="AFAActivityView">
                                                     <rect key="frame" x="147.5" y="95" width="80" height="80"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="bnE-YM-f2v"/>
+                                                        <constraint firstAttribute="height" constant="80" id="zl7-sy-eo3"/>
+                                                    </constraints>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="innerCirclePadding">
                                                             <real key="value" value="7"/>
@@ -237,7 +246,6 @@
                                                 <constraint firstAttribute="centerX" secondItem="bRS-pD-ZXA" secondAttribute="centerX" id="F18-rs-fga"/>
                                                 <constraint firstAttribute="centerX" secondItem="0YR-MT-jHW" secondAttribute="centerX" id="Hhe-bu-Hx7"/>
                                                 <constraint firstAttribute="centerY" secondItem="bRS-pD-ZXA" secondAttribute="centerY" multiplier="0.8" id="KOC-OY-DeF"/>
-                                                <constraint firstItem="FfB-Lk-Z5o" firstAttribute="width" secondItem="rNd-Uy-jcM" secondAttribute="width" id="KdO-3A-Gqh"/>
                                                 <constraint firstItem="Pf5-di-bQb" firstAttribute="leading" secondItem="UZL-hg-4dv" secondAttribute="leading" id="MZc-cM-XBQ"/>
                                                 <constraint firstItem="Pf5-di-bQb" firstAttribute="top" secondItem="UZL-hg-4dv" secondAttribute="top" id="Mt6-K7-ASa"/>
                                                 <constraint firstItem="rNd-Uy-jcM" firstAttribute="centerY" secondItem="UZL-hg-4dv" secondAttribute="centerY" id="PdE-Ae-Kve"/>
@@ -249,12 +257,10 @@
                                                 <constraint firstItem="rNd-Uy-jcM" firstAttribute="centerX" secondItem="UZL-hg-4dv" secondAttribute="centerX" id="fxP-WX-dQ7"/>
                                                 <constraint firstItem="hpb-W4-LyP" firstAttribute="top" secondItem="0YR-MT-jHW" secondAttribute="top" multiplier="1.2" id="g6H-8H-hw5"/>
                                                 <constraint firstItem="bRS-pD-ZXA" firstAttribute="height" secondItem="hpb-W4-LyP" secondAttribute="height" id="hXl-hM-LTT"/>
-                                                <constraint firstItem="FfB-Lk-Z5o" firstAttribute="height" secondItem="rNd-Uy-jcM" secondAttribute="height" id="lPj-8M-AcL"/>
                                                 <constraint firstAttribute="centerY" secondItem="FfB-Lk-Z5o" secondAttribute="centerY" multiplier="2.4" id="p1a-K1-v83"/>
                                                 <constraint firstItem="rNd-Uy-jcM" firstAttribute="top" secondItem="UZL-hg-4dv" secondAttribute="top" constant="40" id="r2A-PL-MgL"/>
                                                 <constraint firstAttribute="trailing" secondItem="Pf5-di-bQb" secondAttribute="trailing" id="ubV-uz-jb5"/>
                                                 <constraint firstItem="FfB-Lk-Z5o" firstAttribute="centerX" secondItem="UZL-hg-4dv" secondAttribute="centerX" id="x9m-Yp-ndb"/>
-                                                <constraint firstItem="rNd-Uy-jcM" firstAttribute="width" secondItem="rNd-Uy-jcM" secondAttribute="height" multiplier="1:1" id="yg0-hb-39t"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -3848,7 +3854,7 @@
                                                     </constraints>
                                                 </view>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1v1-pc-WhL" userLabel="Clear button">
-                                                    <rect key="frame" x="260" y="8.5" width="30" height="30"/>
+                                                    <rect key="frame" x="260" y="8" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="35t-LA-YVn"/>
                                                         <constraint firstAttribute="width" constant="30" id="dVA-Mm-7JR"/>
@@ -3861,7 +3867,7 @@
                                                     </connections>
                                                 </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pat-ai-7w0" userLabel="Password button">
-                                                    <rect key="frame" x="260" y="8.5" width="30" height="30"/>
+                                                    <rect key="frame" x="260" y="8" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="Npk-Va-kvV"/>
                                                         <constraint firstAttribute="width" constant="30" id="mO7-cZ-V1k"/>
@@ -4003,7 +4009,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Section" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a9I-hN-W6E">
-                                                    <rect key="frame" x="8" y="18.5" width="284" height="17"/>
+                                                    <rect key="frame" x="8" y="19" width="284" height="17"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="12"/>
                                                     <color key="textColor" red="0.77647058820000003" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -5208,7 +5214,7 @@
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ddf-XW-Hvy">
-                                                    <rect key="frame" x="8" y="60" width="64" height="31.5"/>
+                                                    <rect key="frame" x="8" y="60" width="64" height="32"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="11"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -5289,7 +5295,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="action description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dI3-Ll-1UA">
-                                                    <rect key="frame" x="48" y="8" width="544" height="29.5"/>
+                                                    <rect key="frame" x="48" y="8" width="544" height="30"/>
                                                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -6138,7 +6144,7 @@
     <resources>
         <image name="active-task-icon" width="25" height="25"/>
         <image name="add-icon" width="25" height="25"/>
-        <image name="alfresco-logo" width="80" height="80"/>
+        <image name="alfresco-logo" width="270" height="86"/>
         <image name="auditlog-icon" width="25" height="25"/>
         <image name="check-icon" width="25" height="25"/>
         <image name="checklist-icon" width="25" height="25"/>
