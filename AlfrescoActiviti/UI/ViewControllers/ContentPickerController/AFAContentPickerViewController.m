@@ -116,19 +116,37 @@ UITableViewDelegate>
 #pragma mark Actions
 
 - (void)onTakePhoto {
-    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-    
-    [self presentViewController:self.imagePickerController
-                       animated:YES
-                     completion:nil];
+    __weak typeof(self) weakSelf = self;
+    [ASDKPhotosLibraryService requestPhotosAuthorizationWithCompletionBlock:^(BOOL isAuthorized) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (isAuthorized) {
+            strongSelf.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+            
+            [strongSelf presentViewController:strongSelf.imagePickerController
+                                     animated:YES
+                                   completion:nil];
+        } else {
+            [strongSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationContentPickerComponentNotAuthorizedText, @"Access not granted error")];
+        }
+    }];
 }
 
 - (void)onSelectPhoto {
-    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    [self presentViewController:self.imagePickerController
-                       animated:YES
-                     completion:nil];
+    __weak typeof(self) weakSelf = self;
+    [ASDKPhotosLibraryService requestPhotosAuthorizationWithCompletionBlock:^(BOOL isAuthorized) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (isAuthorized) {
+            strongSelf.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            
+            [strongSelf presentViewController:strongSelf.imagePickerController
+                                     animated:YES
+                                   completion:nil];
+        } else {
+            [strongSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationContentPickerComponentNotAuthorizedText, @"Access not granted error")];
+        }
+    }];
 }
 
 - (void)dowloadContent:(ASDKModelContent *)content
@@ -360,13 +378,7 @@ UITableViewDelegate>
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
     // Check if we are picking from the photo library
     if (UIImagePickerControllerSourceTypePhotoLibrary == picker.sourceType) {
-        PHAsset *selectedAsset = nil;
-        PHFetchResult *fetchResult = [PHAsset fetchAssetsWithALAssetURLs:@[info[UIImagePickerControllerReferenceURL]]
-                                                                 options:nil];
-        if (fetchResult && fetchResult.count) {
-            selectedAsset = [fetchResult lastObject];
-        }
-        
+        PHAsset *selectedAsset = info[UIImagePickerControllerPHAsset];
         if (selectedAsset) {
             CGRect cropRect = [info[UIImagePickerControllerCropRect] CGRectValue];
             NSInteger retinaScale = [UIScreen mainScreen].scale;
@@ -460,7 +472,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 
 #pragma mark -
-#pragma mark - Progress hud setup
+#pragma mark Progress hud setup
 
 - (void)showUploadProgressHUD {
     self.progressHUD.textLabel.text = NSLocalizedString(kLocalizationContentPickerComponentUploadingText, @"Uploading text");

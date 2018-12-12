@@ -68,6 +68,7 @@ NSString *kLocalizationFormContentPickerComponentBoxContentText                 
 NSString *kLocalizationFormContentPickerComponentDriveText                          = @"formContentPickerComponentDriveContentText";
 NSString *kLocalizationContentPickerComponentNoContentText                          = @"formContentPickerComponentNoContentText";
 NSString *kLocalizationContentPickerComponentNoContentNotEditableText               = @"formContentPickerComponentNoContentNotEditableText";
+NSString *kLocalizationFormContentPickerComponentNotAuthorizedText                  = @"formContentPickerComponentNotAuthorizedText";
 
 
 #pragma mark -

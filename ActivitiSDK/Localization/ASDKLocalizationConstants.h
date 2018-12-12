@@ -65,6 +65,7 @@ extern NSString *kLocalizationFormContentPickerComponentBoxContentText;
 extern NSString *kLocalizationFormContentPickerComponentDriveText;
 extern NSString *kLocalizationContentPickerComponentNoContentText;
 extern NSString *kLocalizationContentPickerComponentNoContentNotEditableText;
+extern NSString *kLocalizationFormContentPickerComponentNotAuthorizedText;
 
 // People picker component
 extern NSString *kLocalizationPeoplePickerControllerTitleText;

@@ -165,6 +165,7 @@
 #import <ActivitiSDK/ASDKFormColorSchemeManager.h>
 #import <ActivitiSDK/ASDKFormEngineActionHandler.h>
 #import <ActivitiSDK/ASDKFormPreProcessor.h>
+#import <ActivitiSDK/ASDKPhotosLibraryService.h>
 
 // KVO manager
 #import <ActivitiSDK/ASDKKVOManager.h>
