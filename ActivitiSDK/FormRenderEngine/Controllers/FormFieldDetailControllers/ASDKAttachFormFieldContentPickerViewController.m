@@ -51,6 +51,7 @@
 #import "ASDKIntegrationDataAccessor.h"
 #import "ASDKDiskServices.h"
 #import "ASDKKVOManager.h"
+#import "ASDKPhotosLibraryService.h"
 @import Photos;
 @import QuickLook;
 
@@ -137,19 +138,36 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 #pragma mark Actions
 
 - (void)onTakePhoto {
-    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-    
-    [self presentViewController:self.imagePickerController
-                       animated:YES
-                     completion:nil];
+    __weak typeof(self) weakSelf = self;
+    [ASDKPhotosLibraryService requestPhotosAuthorizationWithCompletionBlock:^(BOOL isAuthorized) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (isAuthorized) {
+            strongSelf.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [strongSelf presentViewController:strongSelf.imagePickerController
+                                     animated:YES
+                                   completion:nil];
+        } else {
+            [strongSelf showGenericErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentNotAuthorizedText, ASDKLocalizationTable, @"Access not granted error")];
+
+        }
+    }];
 }
 
 - (void)onSelectPhoto {
-    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    [self presentViewController:self.imagePickerController
-                       animated:YES
-                     completion:nil];
+    __weak typeof(self) weakSelf = self;
+    [ASDKPhotosLibraryService requestPhotosAuthorizationWithCompletionBlock:^(BOOL isAuthorized) {
+        __strong typeof(self) strongSelf = weakSelf;
+        
+        if (isAuthorized) {
+            self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:self.imagePickerController
+                               animated:YES
+                             completion:nil];
+        } else {
+            [strongSelf showGenericErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentNotAuthorizedText, ASDKLocalizationTable, @"Access not granted error")];
+        }
+    }];
 }
 
 - (void)dowloadContent:(ASDKModelContent *)content
@@ -184,12 +202,7 @@ typedef NS_ENUM(NSInteger, ASDKAttachFormFieldDetailsCellType) {
 didFinishPickingMediaWithInfo:(NSDictionary *)info {
     // Check if we are picking from the photo library
     if (UIImagePickerControllerSourceTypePhotoLibrary == picker.sourceType) {
-        PHAsset *selectedAsset = nil;
-        PHFetchResult *fetchResult = [PHAsset fetchAssetsWithALAssetURLs:@[info[UIImagePickerControllerReferenceURL]]
-                                                                 options:nil];
-        if (fetchResult && fetchResult.count) {
-            selectedAsset = [fetchResult lastObject];
-        }
+        PHAsset *selectedAsset = info[UIImagePickerControllerPHAsset];
         
         if (selectedAsset) {
             CGRect cropRect = [info[UIImagePickerControllerCropRect] CGRectValue];
@@ -281,7 +294,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 
 #pragma mark -
-#pragma mark - Progress hud setup
+#pragma mark Progress hud setup
 
 - (void)showUploadProgressHUD {
     self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentUploadingText, ASDKLocalizationTable, @"Uploading text");

@@ -273,6 +273,8 @@
 		135DB32E1B6B6920009138FC /* ASDKLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 135DB32C1B6B6920009138FC /* ASDKLogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135DB32F1B6B6920009138FC /* ASDKLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */; };
 		135EF5651B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 135EF5641B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m */; };
+		135FE78421C1414200A380EC /* ASDKPhotosLibraryService.h in Headers */ = {isa = PBXBuildFile; fileRef = 135FE78221C1414100A380EC /* ASDKPhotosLibraryService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		135FE78521C1414200A380EC /* ASDKPhotosLibraryService.m in Sources */ = {isa = PBXBuildFile; fileRef = 135FE78321C1414100A380EC /* ASDKPhotosLibraryService.m */; };
 		136130141D74788F00B23F71 /* AFATaskMembershipTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 136130131D74788F00B23F71 /* AFATaskMembershipTableViewCell.m */; };
 		1363A23D1D634315009EAC54 /* ASDKCSRFTokenStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 1363A23B1D634315009EAC54 /* ASDKCSRFTokenStorage.h */; };
 		1363A23E1D634315009EAC54 /* ASDKCSRFTokenStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 1363A23C1D634315009EAC54 /* ASDKCSRFTokenStorage.m */; };
@@ -1192,6 +1194,8 @@
 		135DB32D1B6B6920009138FC /* ASDKLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKLogFormatter.m; path = Logging/ASDKLogFormatter.m; sourceTree = "<group>"; };
 		135EF5631B9090E800ECD1B2 /* NSDate+AFAStringTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+AFAStringTransformation.h"; path = "Business/Categories/NSDate+AFAStringTransformation.h"; sourceTree = "<group>"; };
 		135EF5641B9090E800ECD1B2 /* NSDate+AFAStringTransformation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+AFAStringTransformation.m"; path = "Business/Categories/NSDate+AFAStringTransformation.m"; sourceTree = "<group>"; };
+		135FE78221C1414100A380EC /* ASDKPhotosLibraryService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKPhotosLibraryService.h; path = FormRenderEngine/PhotosLibraryService/ASDKPhotosLibraryService.h; sourceTree = "<group>"; };
+		135FE78321C1414100A380EC /* ASDKPhotosLibraryService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ASDKPhotosLibraryService.m; path = FormRenderEngine/PhotosLibraryService/ASDKPhotosLibraryService.m; sourceTree = "<group>"; };
 		136130121D74788F00B23F71 /* AFATaskMembershipTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFATaskMembershipTableViewCell.h; path = UI/Cells/TaskMembershipCell/AFATaskMembershipTableViewCell.h; sourceTree = "<group>"; };
 		136130131D74788F00B23F71 /* AFATaskMembershipTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFATaskMembershipTableViewCell.m; path = UI/Cells/TaskMembershipCell/AFATaskMembershipTableViewCell.m; sourceTree = "<group>"; };
 		1363A23B1D634315009EAC54 /* ASDKCSRFTokenStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASDKCSRFTokenStorage.h; path = NetworkServices/CSRFTokenStorage/ASDKCSRFTokenStorage.h; sourceTree = "<group>"; };
@@ -3073,6 +3077,15 @@
 			name = NSDate;
 			sourceTree = "<group>";
 		};
+		135FE78621C1414700A380EC /* PhotosLibraryService */ = {
+			isa = PBXGroup;
+			children = (
+				135FE78221C1414100A380EC /* ASDKPhotosLibraryService.h */,
+				135FE78321C1414100A380EC /* ASDKPhotosLibraryService.m */,
+			);
+			name = PhotosLibraryService;
+			sourceTree = "<group>";
+		};
 		136130151D74789400B23F71 /* TaskMembershipCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -3772,6 +3785,7 @@
 				139050E91CB3FE37004FEA89 /* VisibilityConditionsProcessor */,
 				13EBEC9D1CF73CD700EC8F96 /* FormColorSchemeManager */,
 				13EBECA51CF8470F00EC8F96 /* FormEngineActionHandler */,
+				135FE78621C1414700A380EC /* PhotosLibraryService */,
 			);
 			name = FormRenderEngine;
 			sourceTree = "<group>";
@@ -6504,6 +6518,7 @@
 				138C48BA1C50DDAD00B4F4FB /* ASDKProcessInstanceNetworkServices.h in Headers */,
 				13479E8D2046AD170057B898 /* ASDKModelDateFormField.h in Headers */,
 				137FC4311C68C94900243715 /* ASDKFormRenderEngineValueTransactionsProtocol.h in Headers */,
+				135FE78421C1414200A380EC /* ASDKPhotosLibraryService.h in Headers */,
 				1347E50A1F3C8EB900EC277F /* ASDKTaskFilterMapCacheMapper.h in Headers */,
 				139564E21C20512500BF6153 /* ASDKModelFileSourceFolder.h in Headers */,
 				8D3B50EF1C8733C5005BEEEB /* ASDKFormPreProcessorProtocol.h in Headers */,
@@ -6891,7 +6906,7 @@
 		137194451B6922DE00D4E1F0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Emanuel Lupu-Marinei";
 				TargetAttributes = {
 					1371944C1B6922DE00D4E1F0 = {
@@ -7495,6 +7510,7 @@
 				13771D2A200E218500AA3160 /* ASDKProcessDefinitionCacheMapper.m in Sources */,
 				132A18F61F273BB500966D49 /* ASDKCacheService.m in Sources */,
 				8D8F86051C8ED62000356A5B /* ASDKFormAttachFieldCollectionViewCell.m in Sources */,
+				135FE78521C1414200A380EC /* ASDKPhotosLibraryService.m in Sources */,
 				8D6ABE791CBCEA22008FACB4 /* ASDKDynamicTableFormFieldDetailsViewController.m in Sources */,
 				130D55512087648900BBDE74 /* ASDKFormFieldValueRepresentationCacheMapper.m in Sources */,
 				1319EF551C157EEF003FA6C1 /* UIFont+ASDKGlyphicons.m in Sources */,
@@ -7816,12 +7832,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -7855,7 +7873,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Alfresco Activiti";
@@ -7878,12 +7896,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -7910,7 +7930,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "Alfresco Activiti";
 				PROVISIONING_PROFILE = "213b908d-3e87-4ef3-b7fb-fe10925db92e";
@@ -8075,12 +8095,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -8107,7 +8129,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "Alfresco Activiti";
 				PROVISIONING_PROFILE = "b4719f20-4b43-48a7-b29c-ecd127369b7e";

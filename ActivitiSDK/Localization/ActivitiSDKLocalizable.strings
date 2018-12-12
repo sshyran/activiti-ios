@@ -58,6 +58,7 @@
 "formContentPickerComponentDriveContentText"                    = "Google Drive";
 "formContentPickerComponentNoContentText"                       = "You have no available content but you can add some by using the + button.";
 "formContentPickerComponentNoContentNotEditableText"            = "You have no available content.";
+"formContentPickerComponentNotAuthorizedText"                   = "The app is not authorized to access the Photos library. You can change that in the Settings app, on your device.";
 
 // Alert dialogs use
 "formAlertDialogOopsTitleText"                                  = "Oops...";
