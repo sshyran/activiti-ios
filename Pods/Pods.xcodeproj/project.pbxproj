@@ -13,6 +13,7 @@
 		02383C2B4E1888A456ECA08985512135 /* LIFEContainerModalDismissAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4753AE850A2E8025BBA8A85A42F79C /* LIFEContainerModalDismissAnimator.m */; };
 		02752355A149D599F9EF275F5D454115 /* NSNotificationCenter+OCMAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3958F1144AB49734F04298BEEFA0078F /* NSNotificationCenter+OCMAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		02865D4EBB41E6854B935B11792A068B /* LIFEImageEditorSegmentedControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 090D59EFAEEB9AD4E88B6E25BDE9E848 /* LIFEImageEditorSegmentedControl.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		031BF0CCD764DE294F3FD4B9F5CAF601 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BB039971F7D16215B5DE17B0ED0C75 /* DDDispatchQueueLogFormatter.m */; };
 		0381D7415AB3BF7CE4A90BE3E680A7D4 /* LIFEFloatingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5617CB104CEA49EB174136FBEA97405 /* LIFEFloatingButton.m */; };
 		03E6D8B5DE4657A3AB905E925FF340A7 /* LIFEImageEditorSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = DAFF3C6D156A921C70233E6FD8DE8727 /* LIFEImageEditorSegmentedControl.m */; };
 		0514777277308BE190E3078A1F4319AD /* LIFELoupeAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = BB7682F668F75D83617347C5895E7F60 /* LIFELoupeAnnotationView.m */; };
@@ -66,7 +67,6 @@
 		20C5E15D0FC87F7A8D8603B9814B1B96 /* LIFELocalizedStringProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E6F13A75B61488736BB83E5CC163643 /* LIFELocalizedStringProvider.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		2200278EC1E972A9A5B64DC75083C63C /* AFURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E4D223769C257F2BB1B370904F8D24C /* AFURLRequestSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2267FD15A596E0CA245383C4593770F2 /* LIFEGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = A0C7D8D57A28BE1361D5CC1453B3F0E0 /* LIFEGeometry.m */; };
-		232234398F5502352BE4AA91B35149BD /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = BBF7F7F571910AB67B42905BB33A36E7 /* DDMultiFormatter.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		24342600001C06F0BC02814B6CA40B45 /* LIFECategories.h in Headers */ = {isa = PBXBuildFile; fileRef = 08DF53A63AD803A2EB7AC58F4FE2BD09 /* LIFECategories.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		245CC6D4432F7489AA66000A76DF40E1 /* LIFEPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F49030D232FF71CD07F68046977ACF79 /* LIFEPickerViewController.m */; };
 		246E039534FBA2CB43F298CD364CFEE4 /* LIFEAlertActionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 672ED8247245C8C49A8B85C6E875608D /* LIFEAlertActionView.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -89,8 +89,10 @@
 		2B807EB507609C9960E5AD15C6D98C04 /* NSMethodSignature+OCMAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 65F393EC1BAC58DDC04ADE30ED07613D /* NSMethodSignature+OCMAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		2B89208E6B43B961CC43AEFE4E99CBA8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F21F8EBCB2CC1F52766CDE8FD332D52A /* Foundation.framework */; };
 		2BC71874A40F276845BFF5F95CB6F5E6 /* LIFEContainerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 575940CEF4D1B1273E4416AC970A97BD /* LIFEContainerViewController.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		2EF3F77EAD9286ED89E5461CA5466DDB /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8404CB9B3168F2A358957B6E64F17 /* DDAbstractDatabaseLogger.m */; };
 		2F90EF698FC5388FC84CA9C9D211A60A /* OCMBlockArgCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = A96E3618E1A8B73D5FB3F9973D703861 /* OCMBlockArgCaller.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		30B512325540DBDCD3DAED44B630DAD2 /* NSArray+LIFEAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC56E4C491BAE6D0E5FE51513126A72 /* NSArray+LIFEAdditions.m */; };
+		31482929F6D13D08420460AB3790BF0B /* DDASLLogCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F378C146B49CA762524A2003AC4251 /* DDASLLogCapture.m */; };
 		31E6BCF3C5C87F667B236133BB1B466B /* LIFEWindowBlindsAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4893A7C031773986CD3973EBB093B503 /* LIFEWindowBlindsAnimator.m */; };
 		31F375FB8EA3E466734C8F21AB6377C8 /* NSMethodSignature+OCMAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4943730822DF11746E3E0A4BD8E50FB6 /* NSMethodSignature+OCMAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		32349580F76A86BF33B9258711DCDB2C /* LIFEReportTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CC3E802D3A75A9C19F2088AD1E76F4D0 /* LIFEReportTableViewController.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -136,10 +138,12 @@
 		4A7636EFBD9726ECBED0BEAD55B05EA0 /* NSValueTransformer+MTLPredefinedTransformerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FDC545450D0A4763D13D2AB11DE2D7 /* NSValueTransformer+MTLPredefinedTransformerAdditions.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		4AB64B40323A75B4E404CE25F02B07F2 /* OCMIndirectReturnValueProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = FB9D29530525664605BA9E2F0BEDD379 /* OCMIndirectReturnValueProvider.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		4AD32D3079BC387299382485D1F2C009 /* EXTRuntimeExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = F2531262EBB58DEB29401DF327295126 /* EXTRuntimeExtensions.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4B12F242F5E54756549069F711FFCE2B /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 30066193D4F32255E5C26BF6F2391AC0 /* DDASLLogger.m */; };
 		4CF4663BA67FE082FE9DF5B95403BAE7 /* LIFESwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = EDCD96DD98F4EF84D829316DD7CD61E9 /* LIFESwizzler.m */; };
 		4D36456BC722DD6A5E8F9F173E9A2A0A /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 261B783A5F1EA008B108891F7483FC51 /* AFSecurityPolicy.m */; };
 		4DDD6C8FD565BBB160F8829FB28BA199 /* OCMInvocationStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C27D57F41110119471E48A3FC3E1D5 /* OCMInvocationStub.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4DF0B4BEC606E1620864C34515A827FF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F21F8EBCB2CC1F52766CDE8FD332D52A /* Foundation.framework */; };
+		4EAFB035DFEDAD5657BDF9A9D4CDD19A /* CocoaLumberjack-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D749293D01BB0716EB2C59B452110B /* CocoaLumberjack-dummy.m */; };
 		4F52E07A3FB2C98F382B9FEC42B70BF9 /* JGProgressHUDFadeAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 04E75593B93C9FA5DF515BC3D8478BD3 /* JGProgressHUDFadeAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F9838E7D1F8FF5237292A8496B9C5D3 /* LIFEVideoAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 5934CF3C24897930FE61F4FD8892A72A /* LIFEVideoAttachment.m */; };
 		503F52C90B180CC12E0D225F9A91D345 /* OCMArgAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 3969D61672C037F3F081BBC8D16596FC /* OCMArgAction.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -149,7 +153,6 @@
 		52CB920F6224411379AE603662603A86 /* LIFEGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 07785F524DBD6ED8E49A4382240060C7 /* LIFEGeometry.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		52CD94B76B446556C4F7D13A87FA2B32 /* NSDictionary+MTLJSONKeyPath.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C904AF9ACF4244D74F63357899695C /* NSDictionary+MTLJSONKeyPath.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		52D97852ACE3E22525578EFE5E8D8016 /* JGProgressHUDAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = CC35C865C3F07D6C177942449F7AEF66 /* JGProgressHUDAnimation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		53877443D34FEED9E6554D54C25F6C06 /* DDDispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = E6BB039971F7D16215B5DE17B0ED0C75 /* DDDispatchQueueLogFormatter.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		53D42D408759ECD8DC2560C3441B0D99 /* LIFEAVPlayerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1395DE85A9C4D61AAF6C5DDC22A484D7 /* LIFEAVPlayerViewController.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		546403439839B8B289A6630E2ED47E74 /* LIFEPickerInputField.h in Headers */ = {isa = PBXBuildFile; fileRef = B68925D61969CC70C0CEE40426C6CCCC /* LIFEPickerInputField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5496026DB9E7F5030940266BC3548970 /* OCMExceptionReturnValueProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F93CC29771B019BEFEDA48E8871C26D3 /* OCMExceptionReturnValueProvider.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -162,8 +165,7 @@
 		597663ADE2C7FE0F07736170ECF8357B /* OCMConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 20BA7FC24423D151070E60E94D1DAE96 /* OCMConstraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		59FA38D30EFE69D43CDC3696B988B0C6 /* OCMRealObjectForwarder.h in Headers */ = {isa = PBXBuildFile; fileRef = 767EE99BCE935CB10219093096BFE7C8 /* OCMRealObjectForwarder.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		5A01816C8E017AB71690F7D22973D1DE /* LIFERecordingShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = E59AAE2442A6562F1B0A7E32D1EDBBC1 /* LIFERecordingShrinker.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		5BCDBB0DB110F283C8DF1C62E854593B /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 69E8404CB9B3168F2A358957B6E64F17 /* DDAbstractDatabaseLogger.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
-		5BD39DB5F8854A672118767CD2AA0C32 /* CocoaLumberjack-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D749293D01BB0716EB2C59B452110B /* CocoaLumberjack-dummy.m */; };
+		5AE9C5AD320325123618A0B4BAC75F5E /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8803F4A32663B43DE56FBA604C65BDA9 /* DDFileLogger.m */; };
 		5C1E900E072989D0376DB6C03CC5A42B /* LIFEAlertAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DE3F385E056E846FA1EB33D0AB7C6E0D /* LIFEAlertAction.m */; };
 		5C8F331345034618C284E24204E8FC17 /* OCMockObject.m in Sources */ = {isa = PBXBuildFile; fileRef = CB39836C85BE80385AFC03E6C1B83018 /* OCMockObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5DAC058CFF4FE16F6F5FE5CF6AE6F0DF /* OCMock-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D4479A06223155CC834CE48037226C8F /* OCMock-dummy.m */; };
@@ -201,7 +203,6 @@
 		6E190E8A9EF4D787C38AC986F4406485 /* LIFEAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 0818BBF94BF6F7D35D2EBC82A9D76311 /* LIFEAppInfo.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		6E39F28AD361EAB024BB1C8584D588D7 /* EXTKeyPathCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 3618341EF9ACCDC1F5E15A56A8CD7742 /* EXTKeyPathCoding.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6E3A1D839F491994EF9C8ECBBB212209 /* JGProgressHUDErrorIndicatorView.h in Headers */ = {isa = PBXBuildFile; fileRef = BE7D92160E4B26C61E1E2476150255C8 /* JGProgressHUDErrorIndicatorView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6E3AC8FF522C752C17AAA09C81C6DE6B /* DDASLLogCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F378C146B49CA762524A2003AC4251 /* DDASLLogCapture.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		6E87B1D21A615445DECC8E49C824222C /* NSValue+OCMAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F40C986A7DB0801738944F082275FE1E /* NSValue+OCMAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6E898270870884209B8C34E523385F37 /* LIFEReportWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 98943FFC8B5733810391D36113B7EC5B /* LIFEReportWindow.m */; };
 		6F1C368D531EE4F089628B2D79A6A67B /* LIFEReportView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89417539BA8741477B4205ACC5D3B499 /* LIFEReportView.m */; };
@@ -215,10 +216,11 @@
 		727D2D810BFF713D8976146D5EAA719F /* LIFETextInputField.m in Sources */ = {isa = PBXBuildFile; fileRef = 948E37C370F77C8A72F06AC4614BD864 /* LIFETextInputField.m */; };
 		72D5AF8ACFF312C0FFBBA008B7B93BA8 /* NSMutableDictionary+LIFEAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C7A98353324887267794B4C0ED8802AE /* NSMutableDictionary+LIFEAdditions.m */; };
 		72E1DE5F86C697819547B95FE986BBD1 /* LIFEUserFacingAttachment.h in Headers */ = {isa = PBXBuildFile; fileRef = 313716183A8CAD14FC2563522D66305D /* LIFEUserFacingAttachment.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		7337B0E29053FD71A4181F82843623D0 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 30066193D4F32255E5C26BF6F2391AC0 /* DDASLLogger.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		739E01DA5D3EAD64EF6AB931A1F36918 /* LIFEBlurAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = A986E43C60AFC0775BE1F182D15EBE0F /* LIFEBlurAnnotationView.m */; };
+		73E13B35B77478C4D88FA75133C1FF55 /* DDMultiFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = BBF7F7F571910AB67B42905BB33A36E7 /* DDMultiFormatter.m */; };
 		73E63F6453C232A323EF51A6B6276EFA /* OCMStubRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5BF173C203A7C5D5D83528F50D663E /* OCMStubRecorder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		741360AE974915E129906E6CC8842814 /* LIFETextInputViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FE8E8DD751D56FAC046F8099972DE6B /* LIFETextInputViewController.m */; };
+		7496E27DE9DD9E6A15E6B98A47B42127 /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DC528EEFD9A2FE38A633F8D8E7BB2BC /* DDContextFilterLogFormatter.m */; };
 		74FD17A045D19C04220352EEB7962482 /* UIProgressView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 99FC2B5EDBB318810341228F61F7EC00 /* UIProgressView+AFNetworking.m */; };
 		7570BB51998107908B1A4FF184131970 /* LIFEPoweredByBuglifeView.h in Headers */ = {isa = PBXBuildFile; fileRef = AF8956BA3C10F6394F681C961BCE5479 /* LIFEPoweredByBuglifeView.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		766D6F514BA3121820382A077179BAAB /* JGProgressHUDFadeAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 621A7AFF47495FF41DD1BB67FC1E70BB /* JGProgressHUDFadeAnimation.m */; };
@@ -267,10 +269,10 @@
 		90CC3A7EF3B457F7F2CFF6AE59F7084F /* OCMLocation.h in Headers */ = {isa = PBXBuildFile; fileRef = 00538B85D505166DEC275E9013EA8328 /* OCMLocation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9126D72D2E8B12DD1C5E879194A93625 /* LIFETTYLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 1657C84518F2B113CB79920EDEA05258 /* LIFETTYLogger.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		918626C52F2AB42A8D4631AD2B9ED591 /* Pods-Shared-ActivitiSDK-ActivitiSDKTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 86E22688C85C67E85680E498D850403B /* Pods-Shared-ActivitiSDK-ActivitiSDKTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		925FEB1ACA5D24DF83219736E0370AB8 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F01C0B95B77035AC6A01E939218932 /* DDTTYLogger.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		929DA235143D8CA2E628A50C5BC2B41F /* LIFEFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 18ECA6D2189FD8E3AF103C82238D875B /* LIFEFileLogger.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		92ADF5714F978CA94DF7463D2AD1CD17 /* OCMock-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FD688AA8426EE5572866688677D35C1E /* OCMock-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		935C7585B9717ECFD693CBAFD3C54B0D /* UIControl+LIFEAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D5835FFCBA1458432E0E378A5E85CE /* UIControl+LIFEAdditions.m */; };
+		950166FD88169D8AC4DCAB9D5F9422AD /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBFF3D0185CFEBCC349261F8389DE4B /* DDLog.m */; };
 		9621324E5D9FA40FCD1639719CF663F0 /* OCMMacroState.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EA24C5B1754F24FA27861C9DB526146 /* OCMMacroState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		962FF7286A1897FD75E95E3F28B48214 /* LIFEAlertAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CA659DEF28293636985BE94E02F304 /* LIFEAlertAnimator.m */; };
 		96A21ABE1F8328EC8CBA0EE03297387E /* OCMRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5847211C2FB43AB9535DB40A416B6BE0 /* OCMRecorder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -278,6 +280,7 @@
 		96DCEDB603E605E472AE430F2D8989A3 /* DDLogMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D11DB4CFC5726764999DE2C989D5FA1 /* DDLogMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		96F3DD829B430DA05605EE4140F42389 /* Buglife+UIStuff.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E1D04BA27FC7CDB12CE3C6DB7C11052 /* Buglife+UIStuff.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		9706B8D633780587CD03F5235F4C36F4 /* JGProgressHUDErrorIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E113E5CB740EEA56CE76F68F0AB8C27 /* JGProgressHUDErrorIndicatorView.m */; };
+		9739C577C3C020B8501A80C13A8E4D48 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F01C0B95B77035AC6A01E939218932 /* DDTTYLogger.m */; };
 		9784DC1BDA8D650FC4A59EBA0FBAE600 /* LIFEToolButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 39587FF8175C84C32B25FB6262C4D132 /* LIFEToolButton.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		99649DC09C841A0D1A2908601B6FA03B /* LIFEStepsToReproduceCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 24699FD873EB1B18336064DEC5120533 /* LIFEStepsToReproduceCell.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		997FB298CA58058FCA5E849EA4F7A273 /* LIFEDeviceBatteryState.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B1291B9BD5A7EA40636E83B32CA6846 /* LIFEDeviceBatteryState.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -327,7 +330,6 @@
 		AE896444A32FCC7F4FC238E0DA47CD3B /* Pods-Shared-AlfrescoActiviti-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3853FCFD9B65368CA2195280548E023B /* Pods-Shared-AlfrescoActiviti-dummy.m */; };
 		AFA96E64D7FE2CFDF3174D65445D771D /* metamacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 138E260C57DEFFB719A901F24A32AA30 /* metamacros.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		B18F93FEFFD85F66BB83FDE18D691E77 /* LIFEImageEditorView.h in Headers */ = {isa = PBXBuildFile; fileRef = EA31A4A1E407BD5B3BAE673BDD44460F /* LIFEImageEditorView.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		B2A9038315E9ED4DF6B6812B262AD3D2 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBFF3D0185CFEBCC349261F8389DE4B /* DDLog.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		B2E607D2F7FE2C2675DA4CB4C7C4A6C2 /* LIFEContainerModalDismissAnimator.h in Headers */ = {isa = PBXBuildFile; fileRef = CAE13F2784D853D660454225A249EB07 /* LIFEContainerModalDismissAnimator.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		B306DE6ED09238F9A7678A9C4D6C8E2A /* OCMInvocationMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0C646BCCAC737920CC0B48AD481441 /* OCMInvocationMatcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B370C55F68D6627B8C260E7FC49CE11D /* MTLModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 408247CCF75615E8C60521B519AA1F86 /* MTLModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -362,7 +364,6 @@
 		C7D083E469AE00157970B1A55EB28A4B /* UIViewController+LIFEAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3961E6B7399D15F46FAFCB76C677D12C /* UIViewController+LIFEAdditions.m */; };
 		C7FA272FE994C5264997EFCC4CFF7B5B /* LIFEPoweredByBuglifeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 31BD521A71E2769939A5D012ABCEA5B7 /* LIFEPoweredByBuglifeView.m */; };
 		C816D401AC7F33C79386D846F9B58574 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D73B5B4F7FD9D46B9AB96113904EA88 /* UIKit.framework */; };
-		C85092F649AC62DF3AE3C3B853AD525A /* DDContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DC528EEFD9A2FE38A633F8D8E7BB2BC /* DDContextFilterLogFormatter.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		C8801A430FC22B5A558B504C4AAD6086 /* UIProgressView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 49C666BCF14933932D8F3F259BB8E1C0 /* UIProgressView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C92B5C07C66EEB440EB5469D8783374D /* LIFENetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4475FFFBDA85BEF7B06E0E5E67FBA300 /* LIFENetworkManager.m */; };
 		C93CB8613030411350B6C3582FF31F0D /* UIColor+LIFEAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E16C3F4A64D423B5D797F3E1011E310 /* UIColor+LIFEAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -432,7 +433,6 @@
 		E7AF4B2CB563079CEF5323584581A9A5 /* OCMInvocationMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = FAC52C6A2DC9A6CCC73A9077CAA08E50 /* OCMInvocationMatcher.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		E82404C9DF45DCD8F86596E3D3C18FA4 /* LIFEBugButtonWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2966DEB1F4A6EA861B718276072A7154 /* LIFEBugButtonWindow.m */; };
 		E91C60A06B73C349F01241ED23CF0E63 /* OCMArg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D6386D0D8E6FF16FAEB963B2EF79AD0 /* OCMArg.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E960C2DE2B88CE35671183EA77EA4626 /* DDOSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A1F0CC588A0EBE7869A2EC87466BAA /* DDOSLogger.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		E97454E99CA1DB6311047F94A2CCD7FD /* OCMObserverRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AC6C4FF17A1192E99EA747B4C76197D /* OCMObserverRecorder.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		E9BF337A24B2E342E4C7C611F821770F /* LIFEAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC0AE93E6879F9F4EFB634BDBD729A3 /* LIFEAttribute.m */; };
 		EA71F044C9D2B012BE0B3A8AC74A3CE0 /* LIFEInputField+Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = 80060D770FE08E220F54C1AA4F80CCAA /* LIFEInputField+Protected.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -448,11 +448,11 @@
 		F27654724B5BDFA4DF9E42A0529E48DD /* NSDictionary+MTLMappingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E27F1109FF14B70B481E077BAA817B8 /* NSDictionary+MTLMappingAdditions.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		F292556667BEE9F03359BF424D097B5D /* JGProgressHUDPieIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A0D5091FCC1CE08DDCA5DB87BF080DB /* JGProgressHUDPieIndicatorView.m */; };
 		F2E57FE5BD96E3921D33277F9715BE04 /* OCMBlockCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE27D32B519E44A4E3A60B1CDFBA47D /* OCMBlockCaller.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F349289ABE20D3208B140D0936255220 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8803F4A32663B43DE56FBA604C65BDA9 /* DDFileLogger.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		F3E77BD7FD5DF437456D8832637C0C3D /* OCMRealObjectForwarder.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F1155323B6E266273FB079386D6BD42 /* OCMRealObjectForwarder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F4437A3DFB04D98CEB295C6FF27E8256 /* OCMExceptionReturnValueProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 525F5B47C2AF1524DD1A72F50B68973D /* OCMExceptionReturnValueProvider.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		F52236420C11AEB1B363E1D05B597E08 /* LIFELogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E680F90E7B407D97A37185E535C75214 /* LIFELogger.m */; };
 		F66282A30330A6A7F8755CC39EBA20A7 /* LIFELoupeAnnotationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 375C18039F8DD77903FFE8BECA9246D3 /* LIFELoupeAnnotationView.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		F68830CE9FB6BA84F59F7DFD5111FDAC /* DDOSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A1F0CC588A0EBE7869A2EC87466BAA /* DDOSLogger.m */; };
 		F6DFBFD2397ABAE4982C1E3FFB575A6D /* AFAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = AF4F07BE40F0CECE0926D8AACB3C7331 /* AFAutoPurgingImageCache.m */; };
 		F9210793F29B28F57917AFF5EB564ED5 /* NSInvocation+OCMAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB24AB13D6BED4A3A354D1BD20C1032 /* NSInvocation+OCMAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F98D9C648DF38B35D94FE3860F31F0B5 /* OCMInvocationExpectation.h in Headers */ = {isa = PBXBuildFile; fileRef = 397EFB18CDC24E0F79F324905E9E7D71 /* OCMInvocationExpectation.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -2382,7 +2382,7 @@
 			buildConfigurationList = C4544CB135CE78C24920D7FA01FD29BA /* Build configuration list for PBXNativeTarget "CocoaLumberjack" */;
 			buildPhases = (
 				5BEAA1738D92DC3208842685D900F817 /* Headers */,
-				1E92231A017BA2C6C7942763D8BEF49C /* Sources */,
+				7A79478FC649D7C42E27A4A43D4F589C /* Sources */,
 				8EE5898BC53333CE64A031FCE50CED35 /* Frameworks */,
 				8896F7AC43D9D09F4AE96EF72E0DC14F /* Resources */,
 			);
@@ -2648,21 +2648,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1E92231A017BA2C6C7942763D8BEF49C /* Sources */ = {
+		7A79478FC649D7C42E27A4A43D4F589C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5BD39DB5F8854A672118767CD2AA0C32 /* CocoaLumberjack-dummy.m in Sources */,
-				5BCDBB0DB110F283C8DF1C62E854593B /* DDAbstractDatabaseLogger.m in Sources */,
-				6E3AC8FF522C752C17AAA09C81C6DE6B /* DDASLLogCapture.m in Sources */,
-				7337B0E29053FD71A4181F82843623D0 /* DDASLLogger.m in Sources */,
-				C85092F649AC62DF3AE3C3B853AD525A /* DDContextFilterLogFormatter.m in Sources */,
-				53877443D34FEED9E6554D54C25F6C06 /* DDDispatchQueueLogFormatter.m in Sources */,
-				F349289ABE20D3208B140D0936255220 /* DDFileLogger.m in Sources */,
-				B2A9038315E9ED4DF6B6812B262AD3D2 /* DDLog.m in Sources */,
-				232234398F5502352BE4AA91B35149BD /* DDMultiFormatter.m in Sources */,
-				E960C2DE2B88CE35671183EA77EA4626 /* DDOSLogger.m in Sources */,
-				925FEB1ACA5D24DF83219736E0370AB8 /* DDTTYLogger.m in Sources */,
+				4EAFB035DFEDAD5657BDF9A9D4CDD19A /* CocoaLumberjack-dummy.m in Sources */,
+				2EF3F77EAD9286ED89E5461CA5466DDB /* DDAbstractDatabaseLogger.m in Sources */,
+				31482929F6D13D08420460AB3790BF0B /* DDASLLogCapture.m in Sources */,
+				4B12F242F5E54756549069F711FFCE2B /* DDASLLogger.m in Sources */,
+				7496E27DE9DD9E6A15E6B98A47B42127 /* DDContextFilterLogFormatter.m in Sources */,
+				031BF0CCD764DE294F3FD4B9F5CAF601 /* DDDispatchQueueLogFormatter.m in Sources */,
+				5AE9C5AD320325123618A0B4BAC75F5E /* DDFileLogger.m in Sources */,
+				950166FD88169D8AC4DCAB9D5F9422AD /* DDLog.m in Sources */,
+				73E13B35B77478C4D88FA75133C1FF55 /* DDMultiFormatter.m in Sources */,
+				F68830CE9FB6BA84F59F7DFD5111FDAC /* DDOSLogger.m in Sources */,
+				9739C577C3C020B8501A80C13A8E4D48 /* DDTTYLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3147,6 +3147,72 @@
 			};
 			name = Debug;
 		};
+		16BC524EDE752B9BB72D7E267116A89A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
 		197CCFFCC45EC95D50F99A449468EF37 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6CA4ED14D680144E0B2C9DF865EE90E0 /* AFNetworking.xcconfig */;
@@ -3182,9 +3248,71 @@
 			};
 			name = Release;
 		};
-		204753A202CBFA879DD44599333FE260 /* Release */ = {
+		1DF68876DF2AD07A12482477C1AA7DB8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 69CE83CABFB1A944B5C336AD226DAABB /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		1FB1EA685975A8DAD237E5338594928E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 111850AD132553F7C7F94CD73E247427 /* Pods-AlfrescoActivitiTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -3197,12 +3325,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.modulemap";
+				MODULEMAP_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests.modulemap";
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-fembed-bitcode",
@@ -3255,6 +3383,45 @@
 			};
 			name = Debug;
 		};
+		27F57FE0DB61532A5685FF6AC81CCAEC /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 64CD0717B641FA74211F7EC840E2EDFF /* Pods-Shared-ActivitiSDK.appstore.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.modulemap";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-fembed-bitcode",
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = AppStore;
+		};
 		28AEAD0CD4DD410F9B0D7B1E740EB12D /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6CA4ED14D680144E0B2C9DF865EE90E0 /* AFNetworking.xcconfig */;
@@ -3289,6 +3456,44 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = AppStore;
+		};
+		2FAF62130E9CB1CA23E45C9948F0802D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C348546ABB3C64CB9737EBEEB8EC1CE /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.modulemap";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-fembed-bitcode",
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
 		};
 		3109F530E924CD9DBFF95266CA621F30 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3325,7 +3530,7 @@
 			};
 			name = Release;
 		};
-		3F199460D5813924765158183DD68735 /* Debug */ = {
+		3E3241B34C908291C26A91F8465281D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ECE2B3B0099E5A4A84C7F35A65EF0503 /* Pods-AlfrescoActivitiTests.debug.xcconfig */;
 			buildSettings = {
@@ -3342,7 +3547,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests.modulemap";
@@ -3363,9 +3568,9 @@
 			};
 			name = Debug;
 		};
-		579CD8AA7184F18B4F972B53728FF640 /* Release */ = {
+		4203C2FB3DA6AADEC5AD958B062D9415 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0CF513A00A00B3CED9F6F9039D031317 /* Pods-Shared-ActivitiSDK.release.xcconfig */;
+			baseConfigurationReference = AB4A49379392ECF8D857C1F6A6514EED /* Pods-Shared-AlfrescoActiviti.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -3378,12 +3583,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.modulemap";
+				MODULEMAP_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.modulemap";
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-fembed-bitcode",
@@ -3437,48 +3642,9 @@
 			};
 			name = AppStore;
 		};
-		60EB0E08FCB1680D56D9FA074DD0748A /* AppStore */ = {
+		5CA77CB820F1102DB4C79F465743B627 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57921526CC49FECD4B6FC7A2E001037B /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.appstore.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.modulemap";
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					"-fembed-bitcode",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = AppStore;
-		};
-		6905EDBEE5CF7BA0F1855709FA660158 /* AppStore */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 64CD0717B641FA74211F7EC840E2EDFF /* Pods-Shared-ActivitiSDK.appstore.xcconfig */;
+			baseConfigurationReference = 341702BF52F01FEBE5D182C5B0DEC384 /* Pods-Shared-ActivitiSDK.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -3493,7 +3659,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.modulemap";
@@ -3509,91 +3675,12 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = AppStore;
+			name = Debug;
 		};
-		6E19CA07EFC0268033EA13462F5E84A4 /* AppStore */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0562FEBF8FF1F366CD13F52059F053C7 /* Pods-Shared-AlfrescoActiviti.appstore.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.modulemap";
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					"-fembed-bitcode",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = AppStore;
-		};
-		802C04CEA6E6CB1AA17A67AC29250A60 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB4A49379392ECF8D857C1F6A6514EED /* Pods-Shared-AlfrescoActiviti.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.modulemap";
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					"-fembed-bitcode",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		8DDFA5FA8D4131BFD96E5E26F3672644 /* Debug */ = {
+		5D49349E5042139C0A39661741CD4A55 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -3628,16 +3715,13 @@
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_DEBUG=1",
-					"DEBUG=1",
+					"POD_CONFIGURATION_APP_STORE=1",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -3646,22 +3730,21 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 4.2;
 				SYMROOT = "${SRCROOT}/../build";
 			};
-			name = Debug;
+			name = AppStore;
 		};
-		92461B54CE54892114A1DB8324039C60 /* Debug */ = {
+		712095C296E71B11660B6515F2F0CE8D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C348546ABB3C64CB9737EBEEB8EC1CE /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.debug.xcconfig */;
+			baseConfigurationReference = 69CE83CABFB1A944B5C336AD226DAABB /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -3676,7 +3759,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.modulemap";
@@ -3692,10 +3775,50 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
+		};
+		77C043FE39D02B709FBA42DA3AC06DF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0CF513A00A00B3CED9F6F9039D031317 /* Pods-Shared-ActivitiSDK.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.modulemap";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-fembed-bitcode",
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
 		};
 		9804EF2A50BDBF772223C64D2EABEA99 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3801,71 +3924,47 @@
 			};
 			name = Debug;
 		};
-		A834624792A8027FEB1BF72169D61DA9 /* AppStore */ = {
+		BD65B0200E1D23E17D30733F50DAFF79 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39FE21128D042E834B2F4904ED406EFA /* Pods-Shared-AlfrescoActiviti.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_APP_STORE=1",
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.modulemap";
+				OTHER_CFLAGS = (
 					"$(inherited)",
+					"-fembed-bitcode",
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.2;
-				SYMROOT = "${SRCROOT}/../build";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
-			name = AppStore;
+			name = Debug;
 		};
-		A8D26041BFE3C1B1F3B057EC6B7BF037 /* Release */ = {
+		C4D43D319555B0F6AA8135EC86EB9E39 /* AppStore */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 111850AD132553F7C7F94CD73E247427 /* Pods-AlfrescoActivitiTests.release.xcconfig */;
+			baseConfigurationReference = 2EEEDA6C50F17DD4A15728EECF8841E3 /* Pods-AlfrescoActivitiTests.appstore.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -3880,7 +3979,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests.modulemap";
@@ -3900,45 +3999,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
-		};
-		C05F208547E29780148F0E7FA710D897 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 341702BF52F01FEBE5D182C5B0DEC384 /* Pods-Shared-ActivitiSDK.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.modulemap";
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					"-fembed-bitcode",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
+			name = AppStore;
 		};
 		CA974776A6133624838E31CB3DD1B734 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -3975,6 +4036,45 @@
 			};
 			name = Release;
 		};
+		CB4F2BAC0EC33EF058E47053CA438901 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0562FEBF8FF1F366CD13F52059F053C7 /* Pods-Shared-AlfrescoActiviti.appstore.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.modulemap";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-fembed-bitcode",
+				);
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = AppStore;
+		};
 		CDD881B8407BD90A22CBBE91CE088506 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DA5DE8600F87CB588DDAD1DDA8D63E43 /* Mantle.xcconfig */;
@@ -4010,71 +4110,9 @@
 			};
 			name = AppStore;
 		};
-		D5F759C82752B2EB010DB3CD3D69707C /* Release */ = {
+		D8103229756B6461915ECADB6890EE12 /* AppStore */ = {
 			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 4.2;
-				SYMROOT = "${SRCROOT}/../build";
-			};
-			name = Release;
-		};
-		DB2907BCB415490F2820422C328B7EF0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39FE21128D042E834B2F4904ED406EFA /* Pods-Shared-AlfrescoActiviti.debug.xcconfig */;
+			baseConfigurationReference = 57921526CC49FECD4B6FC7A2E001037B /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.appstore.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
@@ -4087,12 +4125,12 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Shared-AlfrescoActiviti/Pods-Shared-AlfrescoActiviti.modulemap";
+				MODULEMAP_FILE = "Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.modulemap";
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-fembed-bitcode",
@@ -4105,10 +4143,11 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = AppStore;
 		};
 		DCF7E6E4D48EC51B84D6B4D2CA059036 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -4144,45 +4183,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		E6BAC480FDDA9C34479218A355CE096A /* AppStore */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2EEEDA6C50F17DD4A15728EECF8841E3 /* Pods-AlfrescoActivitiTests.appstore.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-AlfrescoActivitiTests/Pods-AlfrescoActivitiTests.modulemap";
-				OTHER_CFLAGS = (
-					"$(inherited)",
-					"-fembed-bitcode",
-				);
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = AppStore;
 		};
 		E73426511B9267E02A182620C4B417F0 /* AppStore */ = {
 			isa = XCBuildConfiguration;
@@ -4304,9 +4304,9 @@
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A834624792A8027FEB1BF72169D61DA9 /* AppStore */,
-				8DDFA5FA8D4131BFD96E5E26F3672644 /* Debug */,
-				D5F759C82752B2EB010DB3CD3D69707C /* Release */,
+				5D49349E5042139C0A39661741CD4A55 /* AppStore */,
+				16BC524EDE752B9BB72D7E267116A89A /* Debug */,
+				1DF68876DF2AD07A12482477C1AA7DB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4334,9 +4334,9 @@
 		4294803BBE37156D8D2AC774F1FF7B76 /* Build configuration list for PBXNativeTarget "Pods-Shared-ActivitiSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6905EDBEE5CF7BA0F1855709FA660158 /* AppStore */,
-				C05F208547E29780148F0E7FA710D897 /* Debug */,
-				579CD8AA7184F18B4F972B53728FF640 /* Release */,
+				27F57FE0DB61532A5685FF6AC81CCAEC /* AppStore */,
+				5CA77CB820F1102DB4C79F465743B627 /* Debug */,
+				77C043FE39D02B709FBA42DA3AC06DF2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4354,9 +4354,9 @@
 		6B6B0A53C02553CE5C981D39E803C45F /* Build configuration list for PBXNativeTarget "Pods-AlfrescoActivitiTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E6BAC480FDDA9C34479218A355CE096A /* AppStore */,
-				3F199460D5813924765158183DD68735 /* Debug */,
-				A8D26041BFE3C1B1F3B057EC6B7BF037 /* Release */,
+				C4D43D319555B0F6AA8135EC86EB9E39 /* AppStore */,
+				3E3241B34C908291C26A91F8465281D5 /* Debug */,
+				1FB1EA685975A8DAD237E5338594928E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4364,9 +4364,9 @@
 		AC58B8F4CAB43FF77633D7621257D4F3 /* Build configuration list for PBXNativeTarget "Pods-Shared-AlfrescoActiviti" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6E19CA07EFC0268033EA13462F5E84A4 /* AppStore */,
-				DB2907BCB415490F2820422C328B7EF0 /* Debug */,
-				802C04CEA6E6CB1AA17A67AC29250A60 /* Release */,
+				CB4F2BAC0EC33EF058E47053CA438901 /* AppStore */,
+				BD65B0200E1D23E17D30733F50DAFF79 /* Debug */,
+				4203C2FB3DA6AADEC5AD958B062D9415 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -4384,9 +4384,9 @@
 		DC9F7C1CD154BBD4F07ECBE477989708 /* Build configuration list for PBXNativeTarget "Pods-Shared-ActivitiSDK-ActivitiSDKTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				60EB0E08FCB1680D56D9FA074DD0748A /* AppStore */,
-				92461B54CE54892114A1DB8324039C60 /* Debug */,
-				204753A202CBFA879DD44599333FE260 /* Release */,
+				D8103229756B6461915ECADB6890EE12 /* AppStore */,
+				2FAF62130E9CB1CA23E45C9948F0802D /* Debug */,
+				712095C296E71B11660B6515F2F0CE8D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
