@@ -28,7 +28,7 @@ PODS:
   - Mantle (2.1.0):
     - Mantle/extobjc (= 2.1.0)
   - Mantle/extobjc (2.1.0)
-  - OCMock (3.3.1)
+  - OCMock (3.4.3)
 
 DEPENDENCIES:
   - AFNetworking (~> 3.1)
@@ -59,7 +59,7 @@ SPEC CHECKSUMS:
   Fabric: 25d0963b691fc97be566392243ff0ecef5a68338
   JGProgressHUD: 12b20a8f4ffe05258f8635c1ab92816e451f904d
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
-  OCMock: f3f61e6eaa16038c30caa5798c5e49d3307b6f22
+  OCMock: 43565190abc78977ad44a61c0d20d7f0784d35ab
 
 PODFILE CHECKSUM: 1c4000aa9d2237f576ccba377c52dbc6f373aa57
 
