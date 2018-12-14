@@ -198,13 +198,9 @@ UITableViewDelegate>
                      content) {
                      strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
                      
-                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                         weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                         weakSelf.progressHUD.detailTextLabel.text = nil;
-                         
-                         weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                         weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                     });
+                     strongSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                     strongSelf.progressHUD.detailTextLabel.text = nil;
+                     strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
                      
                      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                          [weakSelf.progressHUD dismiss];
@@ -268,13 +264,9 @@ UITableViewDelegate>
             if (downloadedContentURL) {
                 strongSelf.currentSelectedDownloadResourceURL = downloadedContentURL;
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                    weakSelf.progressHUD.detailTextLabel.text = nil;
-                    
-                    weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                    weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                });
+                strongSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+                strongSelf.progressHUD.detailTextLabel.text = nil;
+                strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [weakSelf.progressHUD dismiss];
@@ -330,13 +322,9 @@ UITableViewDelegate>
         __strong typeof(self) strongSelf = weakSelf;
         
         if (isContentUploaded) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                weakSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
-                weakSelf.progressHUD.detailTextLabel.text = nil;
-                
-                weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-            });
+            strongSelf.progressHUD.textLabel.text = NSLocalizedString(kLocalizationSuccessText, @"Success text");
+            strongSelf.progressHUD.detailTextLabel.text = nil;
+            strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [weakSelf.progressHUD dismiss];
@@ -476,13 +464,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 - (void)showUploadProgressHUD {
     self.progressHUD.textLabel.text = NSLocalizedString(kLocalizationContentPickerComponentUploadingText, @"Uploading text");
-    self.progressHUD.indicatorView = [[JGProgressHUDPieIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
+    self.progressHUD.indicatorView = [[JGProgressHUDPieIndicatorView alloc] init];
     [self.progressHUD showInView:self.navigationController.view];
 }
 
 - (void)showDownloadProgressHUD {
     self.progressHUD.textLabel.text = NSLocalizedString(kLocalizationContentPickerComponentDownloadingText, @"Downloading text");
-    self.progressHUD.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
+    self.progressHUD.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] init];
     [self.progressHUD showInView:self.navigationController.view];
 }
 
@@ -498,8 +486,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     hud.interactionType = JGProgressHUDInteractionTypeBlockAllTouches;
     JGProgressHUDFadeZoomAnimation *zoomAnimation = [JGProgressHUDFadeZoomAnimation animation];
     hud.animation = zoomAnimation;
-    hud.layoutChangeAnimationDuration = .0f;
-    
     hud.detailTextLabel.text = [NSString stringWithFormat:NSLocalizedString(kLocalizationContentPickerComponentProgressPercentFormat, @"Percent format"), 0];
     
     return hud;

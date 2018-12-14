@@ -24,7 +24,7 @@ PODS:
   - Crashlytics (3.10.9):
     - Fabric (~> 1.7.13)
   - Fabric (1.7.13)
-  - JGProgressHUD (1.4)
+  - JGProgressHUD (2.0.3)
   - Mantle (2.1.0):
     - Mantle/extobjc (= 2.1.0)
   - Mantle/extobjc (2.1.0)
@@ -57,7 +57,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
   Crashlytics: 55e24fc23989680285a21cb1146578d9d18e432c
   Fabric: 25d0963b691fc97be566392243ff0ecef5a68338
-  JGProgressHUD: 1617b0940cf80bb53e8f7d6f0fd69252ea45d6d4
+  JGProgressHUD: 12b20a8f4ffe05258f8635c1ab92816e451f904d
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
   OCMock: f3f61e6eaa16038c30caa5798c5e49d3307b6f22
 
