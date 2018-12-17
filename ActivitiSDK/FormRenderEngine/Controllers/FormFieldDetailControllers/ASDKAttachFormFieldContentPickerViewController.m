@@ -298,13 +298,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 - (void)showUploadProgressHUD {
     self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentUploadingText, ASDKLocalizationTable, @"Uploading text");
-    self.progressHUD.indicatorView = [[JGProgressHUDPieIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
+    self.progressHUD.indicatorView = [[JGProgressHUDPieIndicatorView alloc] init];
     [self.progressHUD showInView:self.navigationController.view];
 }
 
 - (void)showDownloadProgressHUD {
     self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentDownloadingText, ASDKLocalizationTable, @"Downloading text");
-    self.progressHUD.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] initWithHUDStyle:self.progressHUD.style];
+    self.progressHUD.indicatorView = [[JGProgressHUDIndeterminateIndicatorView alloc] init];
     [self.progressHUD showInView:self.navigationController.view];
 }
 
@@ -316,11 +316,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 }
 
 - (JGProgressHUD *)configureProgressHUD {
-    JGProgressHUD *hud = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
+    JGProgressHUD *hud = [JGProgressHUD progressHUDWithStyle:JGProgressHUDStyleDark];
     hud.interactionType = JGProgressHUDInteractionTypeBlockAllTouches;
     JGProgressHUDFadeZoomAnimation *zoomAnimation = [JGProgressHUDFadeZoomAnimation animation];
     hud.animation = zoomAnimation;
-    hud.layoutChangeAnimationDuration = .0f;
     
     hud.detailTextLabel.text = [NSString stringWithFormat:ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentProgressPercentageFormat, ASDKLocalizationTable, @"Percent format"), 0];
     
@@ -503,15 +502,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         
         BOOL didContentUploadSucceeded = modelContent.isModelContentAvailable && !contentResponse.error;
         if (didContentUploadSucceeded) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                __strong typeof(self) strongSelf = weakSelf;
-                
-                strongSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
-                strongSelf.progressHUD.detailTextLabel.text = nil;
-                
-                strongSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-            });
+            self.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
+            self.progressHUD.detailTextLabel.text = nil;
+            self.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 __strong typeof(self) strongSelf = weakSelf;
@@ -610,13 +603,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                     fileContentResponse.content) {
                     strongSelf.currentSelectedDownloadResourceURL = fileContentResponse.contentURL;
                     
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        weakSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
-                        weakSelf.progressHUD.detailTextLabel.text = nil;
-                        
-                        weakSelf.progressHUD.layoutChangeAnimationDuration = 0.3;
-                        weakSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
-                    });
+                    strongSelf.progressHUD.textLabel.text = ASDKLocalizedStringFromTable(kLocalizationFormContentPickerComponentSuccessText, ASDKLocalizationTable,  @"Success text");
+                    strongSelf.progressHUD.detailTextLabel.text = nil;
+                    strongSelf.progressHUD.indicatorView = [[JGProgressHUDSuccessIndicatorView alloc] init];
                     
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [weakSelf.progressHUD dismiss];
