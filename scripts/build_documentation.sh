@@ -16,7 +16,10 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-test -x "$JAZZY" || die "Could not find jazzy in $PATH. Use \"[sudo] gem install jazz\""
+if ! which jazzy >/dev/null; then
+echo "Could not find jazzy. Use \"[sudo] gem install jazzy\""
+exit
+fi
 
 # -----------------------------------------------------------------------------
 # Build documentation
