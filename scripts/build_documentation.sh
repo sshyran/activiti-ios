@@ -25,38 +25,38 @@ fi
 # Build documentation
 #
 
-SOURCE=ActivitiSDK/
+SOURCE=ActivitiSDK
 SOURCE_FILES=($(find ActivitiSDK/ -maxdepth 5 -type f -exec basename {} \;))
 SOURCE_FILES_LOCATION=($(find ActivitiSDK/ -maxdepth 5 -type f))
 
 for f in "${SOURCE_FILES_LOCATION[@]}"
 do
-  cp $f $SOURCE
+cp $f $SOURCE
 done
 
 jazzy \
-  --objc \
-  --clean \
-  --author 'Alfresco' \
-    --author_url 'https://www.alfresco.com' \
-    --github_url 'https://github.com/Alfresco/activiti-ios' \
-    --sdk iphonesimulator \
-    --module 'ActivitiSDK' \
-    --framework-root . \
-    --umbrella-header $SOURCE/ActivitiSDK.h \
-    --hide-documentation-coverage \
-    --theme apple \
-    --readme README.md \
-    --exclude 'Pods/*' \
-    --output Help/
+--clean \
+--objc \
+--author 'Alfresco' \
+--author_url 'https://www.alfresco.com' \
+--github_url 'https://github.com/Alfresco/activiti-ios' \
+--sdk iphonesimulator \
+--module 'ActivitiSDK' \
+--framework-root . \
+--umbrella-header ActivitiSDK/ActivitiSDK.h \
+--hide-documentation-coverage \
+--theme apple \
+--readme README.md \
+--output Help \
+--exclude 'Pods/*'
 
 cd $SOURCE
 
 for f in  "${SOURCE_FILES[@]}"
 do
-  if [[ $f != ActivitiSDK.h ]] && 
-     [[ $f != Info.plist ]] ;
-  then
-    rm $f
-  fi
+if [[ $f != ActivitiSDK.h ]] &&
+[[ $f != Info.plist ]] ;
+then
+rm $f
+fi
 done
