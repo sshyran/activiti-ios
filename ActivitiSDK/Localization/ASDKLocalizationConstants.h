@@ -103,3 +103,8 @@ extern NSString *kLocalizationDefaultFilterCompletedTasksText;
 extern NSString *kLocalizationDefaultFilterRunningProcessText;
 extern NSString *kLocalizationDefaultFilterCompletedProcessesText;
 extern NSString *kLocalizationDefaultFilterAllProcessesText;
+
+// Cloud decommissioning
+
+extern NSString *kLocalizationAlfrescoCloudAddressText;
+extern NSString *kLocalizationAlfrescoCloudDecommissionText;

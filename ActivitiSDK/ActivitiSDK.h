@@ -166,6 +166,7 @@
 #import <ActivitiSDK/ASDKFormEngineActionHandler.h>
 #import <ActivitiSDK/ASDKFormPreProcessor.h>
 #import <ActivitiSDK/ASDKPhotosLibraryService.h>
+#import <ActivitiSDK/ASDKCloudDecommissionService.h>
 
 // KVO manager
 #import <ActivitiSDK/ASDKKVOManager.h>
