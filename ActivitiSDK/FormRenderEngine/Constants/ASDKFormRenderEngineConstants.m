@@ -96,6 +96,7 @@ NSInteger kASDKFormVisibilityConditionProcessorErrorCode        = 3;
 NSString *kASDKFormNotificationShowContentPicker                 = @"kASDKFormNotificationShowContentPicker";
 NSString *kASDKFormNotificationFormFieldContentSuccessfullUpload = @"kASDKFormNotificationFormFieldContentSuccessfullUpload";
 NSString *kASDKFormNotificationFormFieldContentSuccessfullDeleted= @"kASDKFormNotificationFormFieldContentSuccessfullDeleted";
+NSString *kASDKAlfrescoCloudDecommissioningAlertShownKey         = @"kASDKCloudDecommissioningAlertShown";
 
 
 #pragma mark -

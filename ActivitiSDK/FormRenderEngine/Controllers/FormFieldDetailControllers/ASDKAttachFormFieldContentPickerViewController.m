@@ -52,6 +52,7 @@
 #import "ASDKDiskServices.h"
 #import "ASDKKVOManager.h"
 #import "ASDKPhotosLibraryService.h"
+#import "ASDKCloudDecommissionService.h"
 @import Photos;
 @import QuickLook;
 
@@ -421,41 +422,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             break;
             
         default: { // Handle integration services cell behaviour
-            ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
-            
-            if (!account.isAccountAuthorized) {
-                __weak typeof(self) weakSelf = self;
-                self.integrationLoginController =
-                [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURLString
-                                                                            completionBlock:^(BOOL isAuthorized) {
-                                                                                if (isAuthorized) {
-                                                                                    __strong typeof(self) strongSelf = weakSelf;
-                                                                                    [self fetchIntegrationAccounts];
-                                                                                    [strongSelf showIntegrationLoginHUD];
-                                                                                    
-                                                                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                                        [weakSelf.progressHUD dismiss];
-                                                                                        
-                                                                                        if ([strongSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
-                                                                                            [strongSelf.delegate userPickerIntegrationAccount:account];
-                                                                                        }
-                                                                                    });
-                                                                                } else {
-                                                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                                                        [self showGenericErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationLoginErrorText, ASDKLocalizationTable,  @"Cannot author integration service")];
-                                                                                    });
-                                                                                }
-                                                                            }];
-                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationLoginController];
-                
-                [self presentViewController:navigationController
-                                   animated:YES
-                                 completion:nil];
-            } else {
-                if ([self.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
-                    [self.delegate userPickerIntegrationAccount:account];
-                }
-            }
+            [self handleIntegrationAccountSelectionForIndexPath:indexPath];
         }
             break;
     }
@@ -651,6 +618,53 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     } else {
         [self showGenericNetworkErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationBrowsingNoIntegrationAccountText, ASDKLocalizationTable, @"Failed title")];
     }
+}
+
+#pragma mark -
+#pragma mark Integration account selection handling
+
+- (void)handleIntegrationAccountSelectionForIndexPath:(NSIndexPath *)indexPath {
+    ASDKModelIntegrationAccount *account = self.integrationAccounts[indexPath.row - ASDKAttachFormFieldDetailsCellTypeEnumCount];
+    
+    __weak typeof(self) weakSelf = self;
+    [ASDKCloudDecommissionService
+     presentAlfrescoCloudDecommissioningAlertForAccount:account
+     inViewController:self
+     completionBlock:^{
+         __strong typeof(self) strongSelf = weakSelf;
+         
+         if (!account.isAccountAuthorized) {
+             strongSelf.integrationLoginController =
+             [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURLString
+                                                                         completionBlock:^(BOOL isAuthorized) {
+                                                                             if (isAuthorized) {
+                                                                                 [weakSelf fetchIntegrationAccounts];
+                                                                                 [weakSelf showIntegrationLoginHUD];
+                                                                                 
+                                                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                                                     [weakSelf.progressHUD dismiss];
+                                                                                     
+                                                                                     if ([weakSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                                                                                         [weakSelf.delegate userPickerIntegrationAccount:account];
+                                                                                     }
+                                                                                 });
+                                                                             } else {
+                                                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                     [weakSelf showGenericErrorAlertControllerWithMessage:ASDKLocalizedStringFromTable(kLocalizationIntegrationLoginErrorText, ASDKLocalizationTable,  @"Cannot author integration service")];
+                                                                                 });
+                                                                             }
+                                                                         }];
+             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:strongSelf.integrationLoginController];
+             
+             [strongSelf presentViewController:navigationController
+                                      animated:YES
+                                    completion:nil];
+         } else {
+             if ([strongSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                 [strongSelf.delegate userPickerIntegrationAccount:account];
+             }
+         }
+     }];
 }
 
 
