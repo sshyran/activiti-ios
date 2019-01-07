@@ -465,45 +465,55 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 - (void)handleIntegrationAccountSelectionForIndexPath:(NSIndexPath *)indexPath {
     ASDKModelIntegrationAccount *account = self.dataSource.integrationAccounts[indexPath.row - AFAContentPickerCellTypeEnumCount];
     
-    __weak typeof(self) weakSelf = self;
-    [ASDKCloudDecommissionService
-     presentAlfrescoCloudDecommissioningAlertForAccount:account
-     inViewController:self
-     completionBlock:^{
-         __strong typeof(self) strongSelf = weakSelf;
-         
-         if (!account.isAccountAuthorized) {
-             strongSelf.integrationLoginController =
-             [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURLString
-                                                                         completionBlock:^(BOOL isAuthorized) {
-                                                                             if (isAuthorized) {
-                                                                                 [weakSelf fetchIntegrationAccounts];
-                                                                                 [weakSelf showIntegrationLoginHUD];
-                                                                                 
-                                                                                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                                                                     [weakSelf.progressHUD dismiss];
-                                                                                     
-                                                                                     if ([weakSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
-                                                                                         [weakSelf.delegate userPickerIntegrationAccount:account];
-                                                                                     }
-                                                                                 });
-                                                                             } else {
-                                                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                                                     [weakSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationContentPickerComponentIntegrationLoginErrorText,  @"Cannot author integration service")];
-                                                                                 });
-                                                                             }
-                                                                         }];
-             UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:strongSelf.integrationLoginController];
-             
-             [strongSelf presentViewController:navigationController
-                                animated:YES
-                              completion:nil];
-         } else {
-             if ([strongSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
-                 [strongSelf.delegate userPickerIntegrationAccount:account];
-             }
-         }
-     }];
+    if (SHOW_CLOUD_DECOMMISSION_ALERT) {
+        __weak typeof(self) weakSelf = self;
+        [ASDKCloudDecommissionService
+         presentAlfrescoCloudDecommissioningAlertForAccount:account
+         inViewController:self
+         completionBlock:^{
+             __strong typeof(self) strongSelf = weakSelf;
+             [strongSelf handleIntegrationAccountSelectionWithAccount:account];
+         }];
+    } else {
+        [self handleIntegrationAccountSelectionWithAccount:account];
+    }
+}
+
+- (void)handleIntegrationAccountSelectionWithAccount:(ASDKModelIntegrationAccount *)account {
+    if (!account.isAccountAuthorized) {
+        __weak typeof(self) weakSelf = self;
+        self.integrationLoginController =
+        [[ASDKIntegrationLoginWebViewViewController alloc] initWithAuthorizationURL:account.authorizationURLString
+                                                                    completionBlock:^(BOOL isAuthorized) {
+                                                                        __strong typeof(self) strongSelf = weakSelf;
+                                                                        
+                                                                        if (isAuthorized) {
+                                                                            [strongSelf fetchIntegrationAccounts];
+                                                                            [strongSelf showIntegrationLoginHUD];
+                                                                            
+                                                                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                                                                [weakSelf.progressHUD dismiss];
+                                                                                
+                                                                                if ([weakSelf.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+                                                                                    [weakSelf.delegate userPickerIntegrationAccount:account];
+                                                                                }
+                                                                            });
+                                                                        } else {
+                                                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                [weakSelf showGenericErrorAlertControllerWithMessage:NSLocalizedString(kLocalizationContentPickerComponentIntegrationLoginErrorText,  @"Cannot author integration service")];
+                                                                            });
+                                                                        }
+                                                                    }];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.integrationLoginController];
+        
+        [self presentViewController:navigationController
+                                 animated:YES
+                               completion:nil];
+    } else {
+        if ([self.delegate respondsToSelector:@selector(userPickerIntegrationAccount:)]) {
+            [self.delegate userPickerIntegrationAccount:account];
+        }
+    }
 }
 
 
