@@ -597,20 +597,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 
 - (void)handleIntegrationAccountListDataAccessorResponse:(ASDKDataAccessorResponseBase *)response {
     ASDKDataAccessorResponseCollection *integrationAccountListResponse = (ASDKDataAccessorResponseCollection *)response;
-    NSArray *integrationAccountList = integrationAccountListResponse.collection;
     
     if (!integrationAccountListResponse.error) {
-        // Filter out all but the Alfresco cloud services - development in progress
-        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"integrationServiceID == %@", kASDKAPIServiceIDAlfrescoCloud];
-        NSArray *filtereAccountsdArr = [integrationAccountList filteredArrayUsingPredicate:searchPredicate];
-        self.integrationAccounts = filtereAccountsdArr;
+        // Remove all integrations for now
+        self.integrationAccounts = [NSArray new];
         
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong typeof(self) strongSelf = weakSelf;
             
             if (strongSelf.delegate) {
-                [strongSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + filtereAccountsdArr.count
+                [strongSelf.delegate contentPickerHasBeenPresentedWithNumberOfOptions:ASDKAttachFormFieldDetailsCellTypeEnumCount + strongSelf.integrationAccounts.count
                                                                            cellHeight:weakSelf.actionsTableView.rowHeight];
             }
             [strongSelf.actionsTableView reloadData];
