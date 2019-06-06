@@ -7874,6 +7874,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AlfrescoActiviti/AlfrescoActiviti.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = W8N95J537P;
 				ENABLE_CLOUD_DECOMMISSION_ALERT = 1;
 				INFOPLIST_FILE = AlfrescoActiviti/Info.plist;
