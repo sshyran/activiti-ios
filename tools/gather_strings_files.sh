@@ -61,15 +61,15 @@ fi
 
 
 # AlfrescoApp
-gather_locales_from_folder "$DIR_ROOT/AlfrescoApp/Supporting Files" "$DIR_OUTPUT/AlfrescoApp"
+gather_locales_from_folder "$DIR_ROOT/AlfrescoApp/Resources" "$DIR_OUTPUT/AlfrescoApp"
 
 # AlfrescoAppSettings
-gather_locales_from_folder "$DIR_ROOT/AlfrescoApp/Supporting Files/Settings.bundle" "$DIR_OUTPUT/AlfrescoAppSettings"
+gather_locales_from_folder "$DIR_ROOT/AlfrescoApp/Resources/Settings.bundle" "$DIR_OUTPUT/AlfrescoAppSettings"
 
 # AlfrescoDocumentPicker
-gather_locales_from_folder "$DIR_ROOT/AlfrescoDocumentPicker" "$DIR_OUTPUT/AlfrescoDocumentPicker"
+# gather_locales_from_folder "$DIR_ROOT/AlfrescoDocumentPicker" "$DIR_OUTPUT/AlfrescoDocumentPicker"
 
 # AlfrescoKit
-gather_locales_from_folder "$DIR_ROOT/AlfrescoSDK/AlfrescoKit/AlfrescoKit/Supporting Files" "$DIR_OUTPUT/AlfrescoKit"
+# gather_locales_from_folder "$DIR_ROOT/ActivitiSDK/AlfrescoKit/AlfrescoKit/Supporting Files" "$DIR_OUTPUT/AlfrescoKit"
 
 
