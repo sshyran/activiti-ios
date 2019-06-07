@@ -63,7 +63,7 @@ fi
 # AlfrescoActiviti
 gather_locales_from_folder "$DIR_ROOT/AlfrescoActiviti/Resources" "$DIR_OUTPUT/AlfrescoActiviti"
 
-# AlfrescoAppSettings
+# AlfrescoActivitiSettings
 gather_locales_from_folder "$DIR_ROOT/AlfrescoActiviti/Resources/Settings.bundle" "$DIR_OUTPUT/AlfrescoActivitiSettings"
 
 # AlfrescoDocumentPicker
