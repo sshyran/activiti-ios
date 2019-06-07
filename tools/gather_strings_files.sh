@@ -60,11 +60,11 @@ else
 fi
 
 
-# AlfrescoApp
-gather_locales_from_folder "$DIR_ROOT/AlfrescoApp/Resources" "$DIR_OUTPUT/AlfrescoApp"
+# AlfrescoActiviti
+gather_locales_from_folder "$DIR_ROOT/AlfrescoActiviti/Resources" "$DIR_OUTPUT/AlfrescoActiviti"
 
 # AlfrescoAppSettings
-gather_locales_from_folder "$DIR_ROOT/AlfrescoApp/Resources/Settings.bundle" "$DIR_OUTPUT/AlfrescoAppSettings"
+gather_locales_from_folder "$DIR_ROOT/AlfrescoActiviti/Resources/Settings.bundle" "$DIR_OUTPUT/AlfrescoActivitiSettings"
 
 # AlfrescoDocumentPicker
 # gather_locales_from_folder "$DIR_ROOT/AlfrescoDocumentPicker" "$DIR_OUTPUT/AlfrescoDocumentPicker"
