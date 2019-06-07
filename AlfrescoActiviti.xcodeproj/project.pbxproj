@@ -1904,6 +1904,7 @@
 		B3F3872F0ABF6037F73092F4 /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-ActivitiSDK-ActivitiSDKTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.release.xcconfig"; sourceTree = "<group>"; };
 		BA43C477693B190D3F010536 /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.appstore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-ActivitiSDK-ActivitiSDKTests.appstore.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.appstore.xcconfig"; sourceTree = "<group>"; };
 		C10331654767B56DCCA9DCAF /* Pods_Shared_ActivitiSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Shared_ActivitiSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E30248B522AAA083006C5A3B /* AlfrescoActiviti.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AlfrescoActiviti.xcconfig; sourceTree = "<group>"; };
 		EC312161980F1E807A9C95B2 /* Pods-Shared-ActivitiSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-ActivitiSDK.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-ActivitiSDK/Pods-Shared-ActivitiSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		F9DF599530562EE7DD5400D9 /* Pods-Shared-ActivitiSDK-ActivitiSDKTests.adhoc.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Shared-ActivitiSDK-ActivitiSDKTests.adhoc.xcconfig"; path = "Pods/Target Support Files/Pods-Shared-ActivitiSDK-ActivitiSDKTests/Pods-Shared-ActivitiSDK-ActivitiSDKTests.adhoc.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2715,6 +2716,7 @@
 		133B7FE01B78FA3300C17D06 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E30248B522AAA083006C5A3B /* AlfrescoActiviti.xcconfig */,
 				1310F2F31D927481002FF53F /* AlfrescoActiviti.entitlements */,
 				13BDA7401B7B632500A2CE40 /* Localization */,
 				137194621B6922DE00D4E1F0 /* LaunchScreen.xib */,
